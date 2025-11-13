@@ -1,5 +1,5 @@
 # Community Mod Framework
-![banner.png](docs/banner.png)
+![banner.png](/docs/banner.png)
 
 The Community Mod Framework aims to support compatibility between different mods.
 
