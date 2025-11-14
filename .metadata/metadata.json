@@ -1,7 +1,7 @@
 {
 	"name": "Community Mod Framework",
 	"id": "com.github.Europa-Universalis-5-Modding-Co-op.community-mod-framework",
-	"version" : "1.0.0",
+	"version" : "1.1.0",
     "game_id": "eu5",
 	"supported_game_version": "1.0.*",
 	"short_description": "The Community Mod Framework aims to support compatibility between different mods.",
