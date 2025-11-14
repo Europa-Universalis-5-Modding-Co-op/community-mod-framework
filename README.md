@@ -4,7 +4,7 @@
 The Community Mod Framework aims to support compatibility between different mods.
 
 ## Steam Page
-TBD
+https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
 
 ## Contents
 * [Philosophy](#philosophy)
