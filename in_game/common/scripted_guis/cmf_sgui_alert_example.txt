@@ -1,0 +1,8 @@
+﻿cmf_alert_example = {
+    # The Player country will be set as root
+    scope = country
+
+    effect = {
+        # This effect will be run when the alert is clicked
+    }
+}

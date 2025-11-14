@@ -1,0 +1,11 @@
+﻿l_english:
+ # This is what is called the root loc key it needs to be the same as the key
+ cmf_alert_example: "cmf_alert_example"
+ # <root_loc_key>_color = This is the alert color (blue/orange/red/red_war/black/yellow/green/purple)
+ cmf_alert_example_color: "orange"
+ # <root_loc_key>_icon = This should be a text icon which is used as the icon for the alert
+ cmf_alert_example_icon: "@advance!"
+ # <root_loc_key>_name = This is the name of the alert, which is shown in the tooltip header
+ cmf_alert_example_name: "Some Alert"
+ # <root_loc_key>_tooltip = This is the tooltip text of the alert, which is shown in the tooltip body
+ cmf_alert_example_tooltip: "This is a dynamic custom alert."

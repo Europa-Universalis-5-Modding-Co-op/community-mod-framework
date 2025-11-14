@@ -1,0 +1,8 @@
+﻿cmf_is_alert_shown = {
+    hidden_trigger = {
+        is_target_in_variable_list = {
+            name = cmf_active_alerts
+            target = flag:$alert$
+        }
+    }
+}

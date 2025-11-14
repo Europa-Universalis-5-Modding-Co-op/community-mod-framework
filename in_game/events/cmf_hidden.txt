@@ -1,0 +1,18 @@
+﻿namespace = cmf_hidden
+
+# This is a hidden event used
+# to suppress errors about variables
+# which are referenced by the GUI
+cmf_hidden.1 = {
+    hidden = yes
+
+    trigger = {
+        always = no
+    }
+
+    immediate = {
+        # Custom Alert
+        fix_variable_error = { variable = cmf_alert_example }
+        fix_variable_error = { variable = cmf_active_alerts }
+    }
+}
