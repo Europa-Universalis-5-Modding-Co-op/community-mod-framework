@@ -13,6 +13,7 @@ TBD
   * [Custom Alerts](#custom-alerts)
 * [Script Features](#script-features)
   * [Fixing Variable Errors](#fixing-variable-errors)
+* [Contributors](#contributors)
 
 # Philosophy
 
@@ -129,3 +130,6 @@ fix_variable_error = {
 Usage examples can be found [here](in_game/events/cmf_hidden.txt).
 
 **NOTE**: This works for both **variables** and **flags**.
+
+# Contributors
+- [Bahmut](https://steamcommunity.com/id/Bahmut/)
