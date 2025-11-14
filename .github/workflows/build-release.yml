@@ -77,7 +77,7 @@ jobs:
         # Report: Last and Next version
       - name: Update Version
         run: |
-          sed -i 's/"version" : "${{ steps.project.outputs.last-version }}"/"version" : "${{ steps.increment-version.outputs.next-version }}"/g' .metadata/metadata.json
+          sed -i 's/"version"\s*:\s*"${{ steps.project.outputs.last-version }}"/"version" : "${{ steps.increment-version.outputs.next-version }}"/g' .metadata/metadata.json
           git commit -am "Updated version to ${{ steps.increment-version.outputs.next-version }}"
           echo "# Versions" >> $GITHUB_STEP_SUMMARY
           echo "Last Version: **${{ steps.project.outputs.last-version }}**" >> $GITHUB_STEP_SUMMARY
