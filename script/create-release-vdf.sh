@@ -21,7 +21,7 @@ else
   exit 1
 fi
 
-title=$(grep -Po '(?<=\s\"name\"\s:\s\").+(?=\",)' "$mod_path/.metadata/metadata.json")
+title=$(grep -Po '(?<=\s\"name\":\s\").+(?=\",)' "$mod_path/.metadata/metadata.json")
 
 # Read mod id
 if [ -n "$3" ]
@@ -38,7 +38,7 @@ printf '"workshopitem"' >> workshop.vdf
 printf '\n' >> workshop.vdf
 printf '{' >> workshop.vdf
 printf '\n' >> workshop.vdf
-printf '\t"appid" "529340"' >> workshop.vdf
+printf '\t"appid" "3450310"' >> workshop.vdf
 printf '\n' >> workshop.vdf
 printf '\t"publishedfileid" "%s"' "$mod_id" >> workshop.vdf
 printf '\n' >> workshop.vdf
