@@ -9,3 +9,51 @@
  cmf_alert_example_name: "Some Alert"
  # <root_loc_key>_tooltip = This is the tooltip text of the alert, which is shown in the tooltip body
  cmf_alert_example_tooltip: "This is a dynamic custom alert."
+
+ cmf_alert_example_blue: "cmf_alert_example_blue"
+ cmf_alert_example_blue_color: "blue"
+ cmf_alert_example_blue_icon: "@advance!"
+ cmf_alert_example_blue_name: "Some Alert"
+ cmf_alert_example_blue_tooltip: "This is a dynamic custom alert."
+
+ cmf_alert_example_black: "cmf_alert_example_black"
+ cmf_alert_example_black_color: "black"
+ cmf_alert_example_black_icon: "@advance!"
+ cmf_alert_example_black_name: "Some Alert"
+ cmf_alert_example_black_tooltip: "This is a dynamic custom alert."
+
+ cmf_alert_example_red_war: "cmf_alert_example_red_war"
+ cmf_alert_example_red_war_color: "red_war"
+ cmf_alert_example_red_war_icon: "@advance!"
+ cmf_alert_example_red_war_name: "Some Alert"
+ cmf_alert_example_red_war_tooltip: "This is a dynamic custom alert."
+
+ cmf_alert_example_red: "cmf_alert_example_red"
+ cmf_alert_example_red_color: "red"
+ cmf_alert_example_red_icon: "@advance!"
+ cmf_alert_example_red_name: "Some Alert"
+ cmf_alert_example_red_tooltip: "This is a dynamic custom alert."
+
+ cmf_alert_example_orange: "cmf_alert_example_orange"
+ cmf_alert_example_orange_color: "orange"
+ cmf_alert_example_orange_icon: "@advance!"
+ cmf_alert_example_orange_name: "Some Alert"
+ cmf_alert_example_orange_tooltip: "This is a dynamic custom alert."
+
+ cmf_alert_example_yellow: "cmf_alert_example_yellow"
+ cmf_alert_example_yellow_color: "yellow"
+ cmf_alert_example_yellow_icon: "@advance!"
+ cmf_alert_example_yellow_name: "Some Alert"
+ cmf_alert_example_yellow_tooltip: "This is a dynamic custom alert."
+
+ cmf_alert_example_green: "cmf_alert_example_green"
+ cmf_alert_example_green_color: "green"
+ cmf_alert_example_green_icon: "@advance!"
+ cmf_alert_example_green_name: "Some Alert"
+ cmf_alert_example_green_tooltip: "This is a dynamic custom alert."
+
+ cmf_alert_example_purple: "cmf_alert_example_purple"
+ cmf_alert_example_purple_color: "purple"
+ cmf_alert_example_purple_icon: "@advance!"
+ cmf_alert_example_purple_name: "Some Alert"
+ cmf_alert_example_purple_tooltip: "This is a dynamic custom alert."

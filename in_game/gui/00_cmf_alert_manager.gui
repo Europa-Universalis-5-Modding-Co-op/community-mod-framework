@@ -17,7 +17,102 @@ types "cmf_types" {
 
         cmf_alert_spacer = {}
 
-        cmf_alerts = {}
+        hbox = {
+            visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_active_alerts'))]"
+            layoutpolicy_vertical = expanding
+            #spacing = -10
+
+            # Fallback = blue
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[And8(
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'black')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple'))
+                    )]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = blue_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = blue_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = green_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = yellow_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = orange_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = red_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = red_war_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = purple_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'black')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = black_alert
+                }
+            }
+        }
     }
 
     type cmf_alert_spacer = widget {
@@ -41,10 +136,9 @@ types "cmf_types" {
     }
 
     type cmf_alerts = hbox {
-        visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_active_alerts'))]"
         layoutpolicy_vertical = expanding
-        spacing = -10
         datamodel = "[GetPlayer.MakeScope.GetList('cmf_active_alerts')]"
+        #spacing = -10
 
         item = {
             cmf_alert = {}
@@ -55,59 +149,14 @@ types "cmf_types" {
         layoutpolicy_vertical = expanding
         minimumsize = { @alert_wide @alert_height }
         maximumsize = { @alert_wide @alert_height }
-
-        cmf_alert_button = {
-            visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue')]"
-            using = blue_alert
+        block "alert_button_visibility" {
+            visible = no
         }
 
         cmf_alert_button = {
-            visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')]"
-            using = orange_alert
-        }
-
-        cmf_alert_button = {
-            visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')]"
-            using = red_alert
-        }
-
-        cmf_alert_button = {
-            visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war')]"
-            using = red_war_alert
-        }
-
-        cmf_alert_button = {
-            visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'black')]"
-            using = black_alert
-        }
-
-        cmf_alert_button = {
-            visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')]"
-            using = yellow_alert
-        }
-
-        cmf_alert_button = {
-            visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')]"
-            using = green_alert
-        }
-
-        cmf_alert_button = {
-            visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple')]"
-            using = purple_alert
-        }
-
-        cmf_alert_button = {
-            visible = "[And8(
-                Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue')),
-                Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')),
-                Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')),
-                Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war')),
-                Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'black')),
-                Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')),
-                Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')),
-                Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple'))
-            )]"
-            using = blue_alert
+            block "alert_button_attributes" {
+                using = blue_alert
+            }
         }
 
         expand = {}

@@ -6,3 +6,68 @@
         # This effect will be run when the alert is clicked
     }
 }
+
+cmf_alert_example_blue = {
+    # The Player country will be set as root
+    scope = country
+
+    effect = {
+        # This effect will be run when the alert is clicked
+    }
+}
+cmf_alert_example_black = {
+    # The Player country will be set as root
+    scope = country
+
+    effect = {
+        # This effect will be run when the alert is clicked
+    }
+}
+cmf_alert_example_red_war = {
+    # The Player country will be set as root
+    scope = country
+
+    effect = {
+        # This effect will be run when the alert is clicked
+    }
+}
+cmf_alert_example_red = {
+    # The Player country will be set as root
+    scope = country
+
+    effect = {
+        # This effect will be run when the alert is clicked
+    }
+}
+cmf_alert_example_orange = {
+    # The Player country will be set as root
+    scope = country
+
+    effect = {
+        # This effect will be run when the alert is clicked
+    }
+}
+cmf_alert_example_yellow = {
+    # The Player country will be set as root
+    scope = country
+
+    effect = {
+        # This effect will be run when the alert is clicked
+    }
+}
+cmf_alert_example_green = {
+    # The Player country will be set as root
+    scope = country
+
+    effect = {
+        # This effect will be run when the alert is clicked
+    }
+}
+cmf_alert_example_purple = {
+    # The Player country will be set as root
+    scope = country
+
+    effect = {
+        # This effect will be run when the alert is clicked
+    }
+}
