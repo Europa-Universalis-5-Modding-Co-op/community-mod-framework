@@ -1,0 +1,234 @@
+﻿# this must be in sync with outliner.gui and message_log.gui
+@topbar_height = 40
+@panel_bar_height = 90
+
+types cmf_action_bar {
+
+    type cmf_action_bar_bottom_left = cmf_action_bar_bottom {
+        visible = "[And(
+            Not(LeftView.IsShown),
+            GetScriptedGui('sgui_cmf_action_bar_position').IsShown(GuiScope
+                .SetRoot(GetPlayer.MakeScope)
+                .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_bottom_left')))
+                .End
+            )
+        )]"
+        position = { 300 0 }
+        parentanchor = bottom|left
+    }
+
+    type cmf_action_bar_bottom_right = cmf_action_bar_bottom {
+        visible = "[And(
+            Not(RightView.IsShown),
+            Or(
+                Not(GetPlayer.MakeScope.Var('cmf_action_bar_position').IsSet),
+                GetScriptedGui('sgui_cmf_action_bar_position').IsShown(GuiScope
+                    .SetRoot(GetPlayer.MakeScope)
+                    .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_bottom_right')))
+                    .End
+                )
+            )
+        )]"
+        position = { -300 0 }
+        parentanchor = bottom|right
+    }
+
+    type cmf_action_bar_top = cmf_action_bar_top_tabs {
+        visible = "[And(
+            Not(LeftView.IsShown),
+            GetScriptedGui('sgui_cmf_action_bar_position').IsShown(GuiScope
+                .SetRoot(GetPlayer.MakeScope)
+                .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_top')))
+                .End
+            )
+        )]"
+        position = { 0 @[topbar_height + panel_bar_height] }
+        parentanchor = top|left
+    }
+
+    type cmf_action_bar_bottom = flowcontainer {
+        minimumsize = { -1 40 }
+        maximumsize = { -1 40 }
+        using = bg_mapmenu_tab
+        using = Animation_Show_Hide_UI
+        alwaystransparent = no
+        filter_mouse = left|right
+
+        icon = {
+            using = left_decoration_icon
+            size = { 50 40 }
+        }
+
+        cmf_action_bar_horizontal = {}
+
+        icon = {
+            using = right_decoration_icon
+            size = { 50 40 }
+        }
+    }
+
+    type cmf_action_bar_horizontal = flowcontainer {
+        margin = { 10 3 }
+        spacing = 4
+
+        cmf_action_bar_button = {}
+
+        cmf_action_bar_button = {}
+
+        cmf_action_bar_button = {}
+
+        cmf_action_bar_button = {
+            blockoverride "base_color" {
+                using = color_dark_purple_texture
+            }
+            blockoverride "icon" {
+                icon = {
+                    size = { 20 20 }
+                    parentanchor = center
+                    texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
+                }
+            }
+            blockoverride "action" {
+                on_action = "[AccessLogViewer.OpenLinkedLogViewer]"
+                on_action = "[GetVariableSystem.Set('cmf_action', 'cmf_settings')]"
+            }
+            blockoverride "button_tooltip_title" {
+                text = "cmf_action_bar_settings_tooltip_title"
+            }
+            blockoverride "button_tooltip_text" {
+                text = "cmf_action_bar_settings_tooltip_text"
+            }
+        }
+    }
+
+    type cmf_action_bar_top_tabs = hbox {
+        maximumsize = { 570 35 }
+        minimumsize = { 570 35 }
+
+        cmf_action_tab_button = {}
+
+        cmf_action_tab_button = {}
+
+        cmf_action_tab_button = {}
+
+        cmf_action_tab_button = {}
+
+        cmf_action_tab_button = {}
+
+        cmf_action_tab_button = {
+            blockoverride "icon" {
+                icon = {
+                    size = { 24 24 }
+                    parentanchor = center
+                    texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
+                }
+            }
+            blockoverride "action" {
+                on_action = "[AccessLogViewer.OpenLinkedLogViewer]"
+                on_action = "[GetVariableSystem.Set('cmf_action', 'cmf_settings')]"
+            }
+            blockoverride "button_tooltip_title" {
+                text = "cmf_action_bar_settings_tooltip_title"
+            }
+            blockoverride "button_tooltip_text" {
+                text = "cmf_action_bar_settings_tooltip_text"
+            }
+        }
+    }
+
+    type cmf_action_bar_button = button {
+        size = { 34 34 }
+
+        using = paper_card_texture
+        modify_texture = {
+            block "base_color" {
+                using = color_wood_brown_texture
+            }
+            blend_mode = add
+        }
+        modify_texture = {
+            using = paper_03_texture
+            blend_mode = overlay
+            alpha = 0.3
+        }
+
+        action_tooltip = {
+            click_type = left
+            title = "ALERT_CTA_LEFT_CLICK"
+            using = snd_UI_alert_openAndCycle
+            block "action" {}
+        }
+
+        tooltipwidget = {
+            ContextualTooltipType = {
+                lowpriotextcontext =  "[Localize('cmf_alert_example_blue')]"
+                ontextcontextchanged = "[SetCStringFromTextContext(PdxGuiWidget.AccessSelf)]"
+                blockoverride "title_text" {
+                    block "button_tooltip_title" {
+                        text = "TODO"
+                    }
+                }
+                blockoverride "tooltip_content" {
+                    TooltipTextBlock = {
+                        blockoverride "text" {
+                            block "button_tooltip_text" {
+                                text = "TODO"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        block "icon" {
+            textbox = {
+                size = { 20 20 }
+                parentanchor = center
+                align = center
+                raw_text = "@legitimacy!"
+            }
+        }
+    }
+
+    type cmf_action_tab_button = button_panel_tab_alt {
+        using = layoutpolicy_expanding
+
+        action_tooltip = {
+            click_type = left
+            title = "ALERT_CTA_LEFT_CLICK"
+            using = snd_UI_alert_openAndCycle
+            block "action" {}
+        }
+
+        tooltipwidget = {
+            ContextualTooltipType = {
+                lowpriotextcontext =  "[Localize('cmf_alert_example_blue')]"
+                ontextcontextchanged = "[SetCStringFromTextContext(PdxGuiWidget.AccessSelf)]"
+                blockoverride "title_text" {
+                    block "button_tooltip_title" {
+                        text = "TODO"
+                    }
+                }
+                blockoverride "tooltip_content" {
+                    TooltipTextBlock = {
+                        blockoverride "text" {
+                            block "button_tooltip_text" {
+                                text = "TODO"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        block "icon" {
+            textbox = {
+                size = { 20 20 }
+                parentanchor = center
+                align = center
+                raw_text = "@legitimacy!"
+            }
+        }
+    }
+
+}

@@ -1,0 +1,23 @@
+widget = {
+    name = "cmf_interaction_layer"
+    layer = topbar
+    size = { 100% 100% }
+    datacontext = "[GetPlayer]"
+    visible = "[Country.IsValid]"
+    alwaystransparent = yes
+
+    cmf_action_bar_top = {}
+    cmf_action_bar_bottom_left = {}
+    cmf_action_bar_bottom_right = {}
+}
+
+widget = {
+    name = "cmf_popup_layer"
+    layer = top
+    size = { 100% 100% }
+    datacontext = "[GetPlayer]"
+    visible = "[Country.IsValid]"
+    alwaystransparent = yes
+
+    cmf_settings_window = {}
+}

@@ -1,0 +1,24 @@
+﻿sgui_cmf_action_bar_position = {
+    scope = country
+
+    saved_scopes = {
+        position
+    }
+
+    is_shown = {
+        var:cmf_action_bar_position ?= scope:position
+    }
+
+    is_valid = {
+        NOT = {
+            var:cmf_action_bar_position ?= scope:position
+        }
+    }
+
+    effect = {
+        set_variable = {
+            name = cmf_action_bar_position
+            value = scope:position
+        }
+    }
+}

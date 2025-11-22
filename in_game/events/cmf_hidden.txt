@@ -5,6 +5,7 @@
 # which are referenced by the GUI
 cmf_hidden.1 = {
     hidden = yes
+    orphan = yes
 
     trigger = {
         always = no

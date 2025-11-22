@@ -4,10 +4,6 @@
 
 types "cmf_types" {
 
-    ###########################################################################
-    # ALERT MANAGER
-    ###########################################################################
-
     type alert_manager = hbox {
         visible = "[Not(IsLobbyOpen)]"
         minimumsize = { -1 @alert_height }
