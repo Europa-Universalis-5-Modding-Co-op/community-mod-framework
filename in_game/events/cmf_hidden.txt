@@ -5,6 +5,9 @@
 # which are referenced by the GUI
 cmf_hidden.1 = {
     hidden = yes
+    orphan = yes
+
+    title = cmf_settings_title
 
     trigger = {
         always = no
@@ -14,5 +17,9 @@ cmf_hidden.1 = {
         # Custom Alert
         fix_variable_error = { variable = cmf_alert_example }
         fix_variable_error = { variable = cmf_active_alerts }
+
+        # Action Bar
+        fix_variable_error = { variable = cmf_action_bar_elements }
+        fix_variable_error = { variable = cmf_action_bar_active_elements }
     }
 }

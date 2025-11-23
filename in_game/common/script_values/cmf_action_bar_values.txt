@@ -1,0 +1,3 @@
+﻿cmf_action_bar_bottom_left = 0
+cmf_action_bar_bottom_right = 1
+cmf_action_bar_top = 2
