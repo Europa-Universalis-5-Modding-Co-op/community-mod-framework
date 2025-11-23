@@ -1,4 +1,4 @@
-﻿l_english:
+﻿l_russian:
  # This is what is called the root loc key it needs to be the same as the key
  cmf_action_bar_element_example: "cmf_action_bar_element_example"
  # <root_loc_key>_color = This is the action bar button color

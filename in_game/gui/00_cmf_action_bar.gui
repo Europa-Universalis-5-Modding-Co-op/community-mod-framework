@@ -80,7 +80,314 @@ types cmf_action_bar {
             datamodel = "[GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements')]"
 
             item = {
-                cmf_action_bar_button = {}
+                widget = {
+                    size = { 34 34 }
+                    visible = "[GetScriptedGui(Scope.GetFlagName).IsShown(GuiScope
+                        .SetRoot(GetPlayer.MakeScope)
+                        .End
+                    )]"
+
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue')]"
+                        blockoverride "base_color" {
+                            using = color_blue_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'bone')]"
+                        blockoverride "base_color" {
+                            using = color_bone_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'brown_leather')]"
+                        blockoverride "base_color" {
+                            using = color_brown_leather_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'intense_bg_blue')]"
+                        blockoverride "base_color" {
+                            using = color_intense_bg_blue_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'dark_turquoise')]"
+                        blockoverride "base_color" {
+                            using = color_dark_turquoise_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'gold')]"
+                        blockoverride "base_color" {
+                            using = color_gold_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'gold_dark')]"
+                        blockoverride "base_color" {
+                            using = color_gold_dark_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'grey')]"
+                        blockoverride "base_color" {
+                            using = color_grey_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'intense_brown')]"
+                        blockoverride "base_color" {
+                            using = color_intense_brown_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'light_blue')]"
+                        blockoverride "base_color" {
+                            using = color_light_blue_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'bronze')]"
+                        blockoverride "base_color" {
+                            using = color_bronze_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'silver')]"
+                        blockoverride "base_color" {
+                            using = color_silver_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'super_dark_brown')]"
+                        blockoverride "base_color" {
+                            using = color_super_dark_brown_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'light_green')]"
+                        blockoverride "base_color" {
+                            using = color_light_green_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_blue')]"
+                        blockoverride "base_color" {
+                            using = color_mid_blue_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_green')]"
+                        blockoverride "base_color" {
+                            using = color_mid_green_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'low_green')]"
+                        blockoverride "base_color" {
+                            using = color_low_green_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_light_green')]"
+                        blockoverride "base_color" {
+                            using = color_mid_light_green_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_red')]"
+                        blockoverride "base_color" {
+                            using = color_mid_red_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'new_gold')]"
+                        blockoverride "base_color" {
+                            using = color_new_gold_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'paper')]"
+                        blockoverride "base_color" {
+                            using = color_paper_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'light_paper')]"
+                        blockoverride "base_color" {
+                            using = color_light_paper_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'progress_blue')]"
+                        blockoverride "base_color" {
+                            using = color_progress_blue_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')]"
+                        blockoverride "base_color" {
+                            using = color_red_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'dark_red')]"
+                        blockoverride "base_color" {
+                            using = color_dark_red_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'light_red')]"
+                        blockoverride "base_color" {
+                            using = color_light_red_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'desat_red')]"
+                        blockoverride "base_color" {
+                            using = color_desat_red_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'turquoise')]"
+                        blockoverride "base_color" {
+                            using = color_turquoise_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'white')]"
+                        blockoverride "base_color" {
+                            using = color_white_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')]"
+                        blockoverride "base_color" {
+                            using = color_yellow_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_yellow')]"
+                        blockoverride "base_color" {
+                            using = color_mid_yellow_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_orange')]"
+                        blockoverride "base_color" {
+                            using = color_mid_orange_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple')]"
+                        blockoverride "base_color" {
+                            using = color_purple_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple_02')]"
+                        blockoverride "base_color" {
+                            using = color_purple_02_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_purple')]"
+                        blockoverride "base_color" {
+                            using = color_mid_purple_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'dark_purple')]"
+                        blockoverride "base_color" {
+                            using = color_dark_purple_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'greyish')]"
+                        blockoverride "base_color" {
+                            using = color_greyish_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'whiteish')]"
+                        blockoverride "base_color" {
+                            using = color_whiteish_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'raw_paper')]"
+                        blockoverride "base_color" {
+                            using = color_raw_paper_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'wood_brown')]"
+                        blockoverride "base_color" {
+                            using = color_wood_brown_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'dark_green')]"
+                        blockoverride "base_color" {
+                            using = color_dark_green_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'muztard')]"
+                        blockoverride "base_color" {
+                            using = color_muztard_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'tool_blue')]"
+                        blockoverride "base_color" {
+                            using = color_tool_blue_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'market_green')]"
+                        blockoverride "base_color" {
+                            using = color_market_green_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'market_blue')]"
+                        blockoverride "base_color" {
+                            using = color_market_blue_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'market_red')]"
+                        blockoverride "base_color" {
+                            using = color_market_red_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'market_grey')]"
+                        blockoverride "base_color" {
+                            using = color_market_grey_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'enemy_red')]"
+                        blockoverride "base_color" {
+                            using = color_enemy_red_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'allied_blue')]"
+                        blockoverride "base_color" {
+                            using = color_allied_blue_texture
+                        }
+                    }
+                    cmf_action_bar_button = {
+                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'default_brown')]"
+                        blockoverride "base_color" {
+                            using = color_default_brown_texture
+                        }
+                    }
+                }
             }
         }
 

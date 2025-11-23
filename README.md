@@ -11,6 +11,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
 * [Setting Dependency](#setting-dependency)
 * [GUI Features](#gui-features)
   * [Custom Alerts](#custom-alerts)
+  * [Action Bar](#action-bar)
 * [Script Features](#script-features)
   * [Fixing Variable Errors](#fixing-variable-errors)
 * [Contributors](#contributors)
@@ -116,6 +117,130 @@ Here is an example which checks for the example alert defined above:
 ```
 visible = "[GetVariableSystem.HasValue('cmf_active_alert', 'cmf_alert_example')]"
 ```
+
+## Action Bar
+You can create and show custom action bar elements.
+This is achieved through a combination of localization keys and a scripted gui.
+
+### Setup
+Custom action bar buttons require a set of localization keys.
+
+The First and most important is the so-called root localization key.
+It is self-referential, as in both the key and the text are the **same**.
+Here are all needed localization keys:
+- `<root_loc_key>` - This is the internal action bar button name referenced by `cmf_add_action_bar_element` and `cmf_remove_action_bar_element`
+- `<root_loc_key>_color` - This is the action bar button color used when it is shown on the bottom (see [Supported Colors](#supported-colors))
+- `<root_loc_key>_icon` - This should be a text icon which is used as the icon for the action bar button
+- `<root_loc_key>_name` - This is the name of the action bar button, which is shown in the tooltip header
+- `<root_loc_key>_tooltip` - This is the tooltip text of the action bar button, which is shown in the tooltip body
+
+Here is an example:
+```yaml
+l_english:
+  cmf_action_bar_element_example: "cmf_action_bar_element_example"
+  cmf_action_bar_element_example_color: "gold"
+  cmf_action_bar_element_example_icon: "@advance!"
+  cmf_action_bar_element_example_name: "Some Action Bar Button"
+  cmf_action_bar_element_example_tooltip: "This is a dynamic custom Action Bar Button."
+```
+
+Next, we need a scripted gui with the **same** name as the root localization key.
+The scripted gui runs when the alert is clicked:
+```
+cmf_action_bar_element_example = {
+    # The Player country will be set as root
+    scope = country
+
+    is_valid = {
+        # Optional: Determines whether the button is enabled or not
+    }
+
+    is_shown = {
+        # Optional: Determines whether the button is visible or not
+    }
+
+    effect = {
+        # This effect will be run when the action bar button is clicked
+    }
+}
+```
+
+### Usage
+
+> **NOTE** These commands can be run in any scope
+
+To add a new action bar button, the `cmf_add_action_bar_element` effect is used:
+```
+cmf_add_action_bar_element = {
+    alert = cmf_action_bar_element_example
+}
+```
+The button can be removed using the `cmf_remove_action_bar_element` effect:
+```
+cmf_remove_action_bar_element = {
+    alert = cmf_action_bar_element_example
+}
+```
+This will permanently the button from the action button bar.
+
+### Supported Colors
+This is a list of supported colors:
+<details>
+
+<summary>Full List</summary>
+
+- `blue`
+- `bone`
+- `brown_leather`
+- `intense_bg_blue`
+- `dark_turquoise`
+- `gold`
+- `gold_dark`
+- `grey`
+- `intense_brown`
+- `light_blue`
+- `bronze`
+- `silver`
+- `super_dark_brown`
+- `light_green`
+- `mid_blue`
+- `mid_green`
+- `low_green`
+- `mid_light_green`
+- `mid_red`
+- `new_gold`
+- `paper`
+- `light_paper`
+- `progress_blue`
+- `red`
+- `dark_red`
+- `light_red`
+- `desat_red`
+- `turquoise`
+- `white`
+- `yellow`
+- `mid_yellow`
+- `mid_orange`
+- `purple`
+- `purple_02`
+- `mid_purple`
+- `dark_purple`
+- `greyish`
+- `whiteish`
+- `raw_paper`
+- `wood_brown`
+- `dark_green`
+- `muztard`
+- `tool_blue`
+- `market_green`
+- `market_blue`
+- `market_red`
+- `market_grey`
+- `enemy_red`
+- `allied_blue`
+- `default_brown`
+
+</details>
 
 # Script Features
 
