@@ -49,7 +49,7 @@ types cmf_action_bar {
         )]"
     }
 
-    type cmf_action_bar_bottom = flowcontainer {
+    type cmf_action_bar_bottom = hbox {
         minimumsize = { -1 40 }
         maximumsize = { -1 40 }
         using = bg_mapmenu_tab
@@ -71,13 +71,15 @@ types cmf_action_bar {
         }
     }
 
-    type cmf_action_bar_horizontal = flowcontainer {
+    type cmf_action_bar_horizontal = hbox {
         margin = { 10 3 }
         spacing = 4
+        set_parent_size_to_minimum = yes
 
-        flowcontainer = {
+        hbox = {
             spacing = 4
             datamodel = "[GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements')]"
+            visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))]"
 
             item = {
                 widget = {
@@ -483,15 +485,7 @@ types cmf_action_bar {
             start_sound = { soundeffect = "UI_gameStart_gui_in" }
         }
 
-        hbox = {
-            using = layoutpolicy_expanding
-            datamodel = "[GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements')]"
-            visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))]"
-
-            item = {
-                cmf_action_tab_button = {}
-            }
-        }
+        datamodel = "[GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements')]"
 
         cmf_action_tab_button = {
             blockoverride "visibility" {
@@ -558,6 +552,11 @@ types cmf_action_bar {
                         }
                     }
                 }
+            }
+        }
+
+        item = {
+            cmf_action_tab_button = {
             }
         }
     }

@@ -44,6 +44,9 @@ To set this mod as a dependency to your own mod, you will need to add this to yo
 ## Custom Alerts
 You can create and show custom alerts. This is achieved through a combination of localization keys and a scripted gui.
 
+### Screenshots
+[<img src="docs/screenshots/custom_alerts.png" width="150">](docs/screenshots/custom_alerts.png)
+
 ### Setup
 Custom alerts require a set of localization keys.
 
@@ -121,6 +124,10 @@ visible = "[GetVariableSystem.HasValue('cmf_active_alert', 'cmf_alert_example')]
 ## Action Bar
 You can create and show custom action bar elements.
 This is achieved through a combination of localization keys and a scripted gui.
+
+### Screenshots
+[<img src="docs/screenshots/action_bar.png" width="150">](docs/screenshots/action_bar.png)
+[<img src="docs/screenshots/action_bar_customizable.png" width="150">](docs/screenshots/action_bar_customizable.png)
 
 ### Setup
 Custom action bar buttons require a set of localization keys.

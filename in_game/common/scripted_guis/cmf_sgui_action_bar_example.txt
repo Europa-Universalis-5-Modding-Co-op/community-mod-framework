@@ -14,3 +14,20 @@
         # This effect will be run when the action bar button is clicked
     }
 }
+
+cmf_action_bar_element_example_second = {
+    # The Player country will be set as root
+    scope = country
+
+    is_valid = {
+        # Optional: Determines whether the button is enabled or not
+    }
+
+    is_shown = {
+        # Optional: Determines whether the button is visible or not
+    }
+
+    effect = {
+        # This effect will be run when the action bar button is clicked
+    }
+}
