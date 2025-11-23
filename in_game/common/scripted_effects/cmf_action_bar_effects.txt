@@ -1,0 +1,31 @@
+﻿cmf_add_action_bar_element = {
+    hidden_effect = {
+        fix_variable_error = { variable = $element$ }
+        add_to_global_variable_list = {
+            name = cmf_action_bar_elements
+            target = flag:$element$
+        }
+        every_country = {
+            add_to_variable_list = {
+                name = cmf_action_bar_active_elements
+                target = flag:$element$
+            }
+        }
+    }
+}
+
+cmf_remove_action_bar_element = {
+    hidden_effect = {
+        fix_variable_error = { variable = $element$ }
+        remove_list_global_variable = {
+            name = cmf_action_bar_elements
+            target = flag:$element$
+        }
+        every_country = {
+            remove_list_variable = {
+                name = cmf_action_bar_active_elements
+                target = flag:$element$
+            }
+        }
+    }
+}

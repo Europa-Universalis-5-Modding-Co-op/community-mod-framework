@@ -6,9 +6,16 @@ widget = {
     visible = "[Country.IsValid]"
     alwaystransparent = yes
 
-    cmf_action_bar_top = {}
-    cmf_action_bar_bottom_left = {}
-    cmf_action_bar_bottom_right = {}
+    # Action Bar
+    widget = {
+        size = { 100% 100% }
+        alwaystransparent = yes
+        visible = "[DataModelHasItems(GetGlobalList('cmf_action_bar_elements'))]"
+
+        cmf_action_bar_top = {}
+        cmf_action_bar_bottom_left = {}
+        cmf_action_bar_bottom_right = {}
+    }
 }
 
 widget = {

@@ -13,6 +13,8 @@
             size = { 960 750 }
         }
         parentanchor = center
+        alwaystransparent = no
+        allow_outside = no
 
         vbox = {
             alwaystransparent = yes
