@@ -6,6 +6,7 @@ types "cmf_types" {
 
     type alert_manager = hbox {
         visible = "[Not(IsLobbyOpen)]"
+        name = cmf_alert_manager
         minimumsize = { -1 @alert_height }
         maximumsize = { -1 @alert_height }
 
@@ -260,6 +261,7 @@ types "cmf_types" {
     # 1:1 base game copy
     # update this type for new updates
     type cmf_alert_manager = alerts_layout {
+        layoutpolicy_horizontal = expanding
         name = "alert_manager"
         visible = "[Not(IsLobbyOpen)]"
         ignoreinvisible = yes
