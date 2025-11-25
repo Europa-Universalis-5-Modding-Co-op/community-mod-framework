@@ -1,0 +1,12 @@
+sgui_cmf_is_building_shown = {
+    scope = building_type
+
+    is_shown = {
+        NOT = {
+            is_target_in_global_variable_list = {
+                name = cmf_hidden_buildings
+                target = this
+            }
+        }
+    }
+}

@@ -1,0 +1,6 @@
+hide_building = {
+	add_to_global_variable_list = {
+	     name = cmf_hidden_buildings
+	     target = $target$
+	}
+}
