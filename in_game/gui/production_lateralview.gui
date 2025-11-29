@@ -577,7 +577,8 @@ lateralview = {
 
 					blockoverride "scroll_list_layout" {
 						vbox = {
-							fixedgridbox = {
+							dynamicgridbox = {
+								layoutpolicy_horizontal = expanding
 								visible = "[And( ProductionView.Vars.NotExistOrHasValue( 'display', 'lists' ), Not(ProductionView.IsLocationFilterEnabled) )]"
 								addrow = 48
 								addcolumn = 100%
@@ -596,7 +597,7 @@ lateralview = {
 								}
 							}
 
-							fixedgridbox = {
+							dynamicgridbox = {
 								visible = "[And( ProductionView.Vars.NotExistOrHasValue( 'display', 'lists' ), ProductionView.IsLocationFilterEnabled )]"
 								addrow = 60
 								addcolumn = 100%
@@ -715,11 +716,12 @@ lateralview = {
 													maximumsize = {507 -1}
 													margin = { 5 7 }
 													margin_bottom = 0
-													fixedgridbox = {
+													dynamicgridbox = {
+														ignoreinvisible = yes
 														layoutpolicy_horizontal = expanding
 														visible = "[And(CategoryBuildingTypesItem.IsExpanded, Not(ProductionView.IsLocationFilterEnabled))]"
 														flipdirection = yes
-														datamodel_wrap = 9
+														datamodel_wrap = 11
 														addcolumn = 54
 														addrow = 60
 
