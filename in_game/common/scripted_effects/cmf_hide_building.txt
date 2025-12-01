@@ -1,13 +1,21 @@
 cmf_hide_building = {
 	add_to_global_variable_list = {
-	     name = cmf_hidden_buildings
+	     name = cmf_global_hidden_buildings
 	     target = $target$
+	}
+	$country$.add_to_variable_list = {
+		name = cmf_country_hidden_buildings
+		target = $target$
 	}
 }
 
 cmf_unhide_building = {
 	remove_list_global_variable = {
-		name = cmf_action_bar_active_elements
+		name = cmf_global_hidden_buildings
 		$target$
+	}
+	$country$.remove_list_variable = {
+		name = cmf_country_hidden_buildings
+		target = $target$
 	}
 }

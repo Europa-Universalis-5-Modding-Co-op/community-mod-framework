@@ -588,7 +588,11 @@ lateralview = {
 								item = {
 									widget = {
 										# CMF: disables visibility if building is in list of hidden buildings
-										visible = "[GetScriptedGui('sgui_cmf_is_building_shown').IsShown(GuiScope.SetRoot(BuildingItem.GetBuildingType.MakeScope).End)]"
+										visible = "[GetScriptedGui('sgui_cmf_is_building_shown').IsShown(GuiScope
+											.SetRoot(BuildingItem.GetBuildingType.MakeScope)
+											.AddScope('player', GetPlayer.MakeScope
+											.End
+										)]"
 										size = { 100% 48 }
 
 										vbox = {
@@ -608,7 +612,11 @@ lateralview = {
 								item = {
 									widget = {
 										# CMF: disables visibility if building is in list of hidden buildings
-										visible = "[GetScriptedGui('sgui_cmf_is_building_shown').IsShown(GuiScope.SetRoot(BuildingItem.GetBuildingType.MakeScope).End)]"
+										visible = "[GetScriptedGui('sgui_cmf_is_building_shown').IsShown(GuiScope
+											.SetRoot(BuildingItem.GetBuildingType.MakeScope)
+											.AddScope('player', GetPlayer.MakeScope
+											.End
+										)]"
 										size = { 100% 60 }
 										widget = {
 											size = { 97% 55 }
@@ -736,7 +744,11 @@ lateralview = {
 														item = {
 															widget = {
 																# CMF: disables visibility if building is in list of hidden buildings
-																visible = "[GetScriptedGui('sgui_cmf_is_building_shown').IsShown(GuiScope.SetRoot(BuildingItem.GetBuildingType.MakeScope).End)]"
+																visible = "[GetScriptedGui('sgui_cmf_is_building_shown').IsShown(GuiScope
+																	.SetRoot(BuildingItem.GetBuildingType.MakeScope)
+																	.AddScope('player', GetPlayer.MakeScope
+																	.End
+																)]"
 																size = { 50 55 }
 																datacontext = "[BuildingItem.GetBuildingType]"
 																allow_outside = yes
