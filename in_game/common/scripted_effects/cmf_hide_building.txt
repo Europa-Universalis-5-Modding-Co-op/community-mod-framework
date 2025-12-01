@@ -3,7 +3,7 @@
 # ARGS: building_type
 cmf_hide_building = {
 	add_to_global_variable_list = {
-		name = cmf_global_hidden_buildings
+		name = cmf_hidden_buildings
 		target = $building_type$
 	}
 }
@@ -13,7 +13,7 @@ cmf_hide_building = {
 # ARGS: building_type
 cmf_show_building = {
 	remove_list_global_variable = {
-		name = cmf_global_hidden_buildings
+		name = cmf_hidden_buildings
 		target = $building_type$
 	}
 }
