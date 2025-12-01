@@ -4,3 +4,10 @@ cmf_hide_building = {
 	     target = $target$
 	}
 }
+
+cmf_unhide_building = {
+	remove_list_global_variable = {
+		name = cmf_action_bar_active_elements
+		$target$
+	}
+}
