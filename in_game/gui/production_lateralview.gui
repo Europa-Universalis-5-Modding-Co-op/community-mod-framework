@@ -579,7 +579,7 @@ lateralview = {
 						vbox = {
 							# CMF: switched fixedgridbox to dynamicgridbox
 							dynamicgridbox = {
-								# CMF: added layoutpolic
+								# CMF: added layoutpolicy
 								layoutpolicy_horizontal = expanding
 								visible = "[And( ProductionView.Vars.NotExistOrHasValue( 'display', 'lists' ), Not(ProductionView.IsLocationFilterEnabled) )]"
 								addrow = 48
