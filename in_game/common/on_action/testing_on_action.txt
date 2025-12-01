@@ -1,0 +1,54 @@
+monthly_country_pulse = {
+	on_actions = {
+		example_country_hide_buildings_on_action
+		example_country_show_buildings_on_action
+	}
+}
+
+example_global_hide_buildings_on_action = {
+	trigger = {
+		NOT = {
+			has_global_variable_list = cmf_global_hidden_buildings
+		}
+	}
+	effect = {
+		cmf_global_hide_building = {
+			building_type = building_type:overseas_trading_post
+		}
+	}
+}
+
+example_global_show_buildings_on_action = {
+	trigger = {
+		has_global_variable_list = cmf_global_hidden_buildings
+	}
+	effect = {
+		cmf_global_show_building = {
+			building_type = building_type:overseas_trading_post
+		}
+	}
+}
+
+example_country_hide_buildings_on_action = {
+	trigger = {
+		NOT = {
+			has_variable_list = cmf_country_hidden_buildings
+		}
+	}
+	effect = {
+		cmf_country_hide_building = {
+			building_type = building_type:overseas_trading_post
+		}
+	}
+}
+
+example_country_show_buildings_on_action = {
+	trigger = {
+		has_variable_list = cmf_country_hidden_buildings
+	}
+	effect = {
+		cmf_country_show_building = {
+			building_type = building_type:overseas_trading_post
+		}
+	}
+}

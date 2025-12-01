@@ -590,6 +590,7 @@ lateralview = {
 										# CMF: disables visibility if building is in list of hidden buildings
 										visible = "[GetScriptedGui('sgui_cmf_is_building_shown').IsShown(GuiScope
 											.SetRoot(BuildingItem.GetBuildingType.MakeScope)
+											.AddScope('player', GetPlayer.MakeScope)
 											.End
 										)]"
 										size = { 100% 48 }
@@ -613,6 +614,7 @@ lateralview = {
 										# CMF: disables visibility if building is in list of hidden buildings
 										visible = "[GetScriptedGui('sgui_cmf_is_building_shown').IsShown(GuiScope
 											.SetRoot(BuildingItem.GetBuildingType.MakeScope)
+											.AddScope('player', GetPlayer.MakeScope)
 											.End
 										)]"
 										size = { 100% 60 }
@@ -744,6 +746,7 @@ lateralview = {
 																# CMF: disables visibility if building is in list of hidden buildings
 																visible = "[GetScriptedGui('sgui_cmf_is_building_shown').IsShown(GuiScope
 																	.SetRoot(BuildingItem.GetBuildingType.MakeScope)
+																	.AddScope('player', GetPlayer.MakeScope)
 																	.End
 																)]"
 																size = { 50 55 }

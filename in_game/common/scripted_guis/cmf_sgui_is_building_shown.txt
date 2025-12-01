@@ -1,10 +1,21 @@
 sgui_cmf_is_building_shown = {
 	scope = building_type
+	saved_scope = {
+		player
+	}
 	is_shown = {
 		NOT = {
-			is_target_in_global_variable_list = {
-				name = cmf_global_hidden_buildings
-				target = this
+			OR = {
+				is_target_in_global_variable_list = {
+					name = cmf_global_hidden_buildings
+					target = this
+				}
+				scope:player = {
+					is_target_in_variable_list = {
+						name = cmf_country_hidden_buildings
+						target = prev
+					}
+				}
 			}
 		}
 	}

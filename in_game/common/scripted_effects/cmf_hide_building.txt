@@ -1,9 +1,29 @@
+# Add a building type to the list of types to hide in a country scope
+# ROOT: country
+# ARGS: building_type
+cmf_country_hide_building = {
+	add_to_variable_list = {
+		name = cmf_country_hidden_buildings
+		target = $building_type$
+	}
+}
+
 # Add a building type to the list of types to hide in the global scope
 # ROOT: none
 # ARGS: building_type
-cmf_hide_building = {
+cmf_global_hide_building = {
 	add_to_global_variable_list = {
-		name = cmf_hidden_buildings
+		name = cmf_global_hidden_buildings
+		target = $building_type$
+	}
+}
+
+# Remove a building type from the list of types to hide in a country scope
+# ROOT: country
+# ARGS: building_type
+cmf_country_show_building = {
+	remove_list_variable = {
+		name = cmf_country_hidden_buildings
 		target = $building_type$
 	}
 }
@@ -11,9 +31,9 @@ cmf_hide_building = {
 # Remove a building type from the list of types to hide in the global scope
 # ROOT: none
 # ARGS: building_type
-cmf_show_building = {
+cmf_global_show_building = {
 	remove_list_global_variable = {
-		name = cmf_hidden_buildings
+		name = cmf_global_hidden_buildings
 		target = $building_type$
 	}
 }
