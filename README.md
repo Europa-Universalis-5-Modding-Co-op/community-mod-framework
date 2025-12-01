@@ -12,7 +12,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
 * [GUI Features](#gui-features)
   * [Custom Alerts](#custom-alerts)
   * [Action Bar](#action-bar)
-  * [Hiding Buildings from Production View](#hiding-buildings)
+  * [Hiding Buildings from Production View](#hiding-buildings-from-production-view)
 * [Script Features](#script-features)
   * [Fixing Variable Errors](#fixing-variable-errors)
 * [Contributors](#contributors)
