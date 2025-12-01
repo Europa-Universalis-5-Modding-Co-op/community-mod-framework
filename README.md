@@ -12,6 +12,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
 * [GUI Features](#gui-features)
   * [Custom Alerts](#custom-alerts)
   * [Action Bar](#action-bar)
+  * [Hiding Buildings from Production View](#hiding-buildings)
 * [Script Features](#script-features)
   * [Fixing Variable Errors](#fixing-variable-errors)
 * [Contributors](#contributors)
@@ -249,6 +250,38 @@ This is a list of supported colors:
 
 </details>
 
+## Hiding Buildings from Production View
+You can hide different building types from the Production -> Buildings view. CMF accomplishes this by storing a list of `building_types` in a global variable list called `cmf_hidden_buildings`. Any building types in this list will not be shown to the player in the Productions -> View.
+
+### Usage
+To hide a building from the player, you pass the building type you'd like to hide to the effect `cmf_hide_building`. To unhide the building, you pass the `building_type` to `cmf_unhide_building`. 
+
+Here's an example effect that will hide the Overseas Trading Post building type from the Buildings view.
+```
+cmf_hide_building = {
+  building_type = building_type:overseas_trading_post
+}
+```
+And here's one that will show it again:
+```
+cmf_show_building = {
+  building_type = building_type:overseas_trading_post
+}
+```
+
+You can also manipulate the `cmf_hidden_buildings` list yourself:
+```
+add_to_global_variable_list = {
+  name = cmf_hidden_buildings
+  target = building_type:overseas_trading_post
+}
+remove_list_global_variable = {
+  name = cmf_hidden_buildings
+  target = building_type:overseas_trading_post
+}
+```
+
+
 # Script Features
 
 ## Fixing Variable Errors
@@ -265,3 +298,4 @@ Usage examples can be found [here](in_game/events/cmf_hidden.txt).
 
 # Contributors
 - [Bahmut](https://steamcommunity.com/id/Bahmut/)
+- [Pickle](https://steamcommunity.com/id/pickled-dev)
