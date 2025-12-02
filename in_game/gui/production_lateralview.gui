@@ -34,7 +34,7 @@ template production_main_tabs {
 
 	button_main_tab_alt = {
 		using = layoutpolicy_expanding
-		blockoverride "tab_text"{
+		blockoverride "tab_text" {
 			text = "FOOD_PRODUCTION_TEXT"
 		}
 		onclick = "[OpenLateralView('food_production')]"
@@ -61,9 +61,9 @@ template production_view_subtabs {
 				button = {
 					size = {30 30}
 					using = header_button_template
-					blockoverride "header_button_template_push_properties"{using = button_tab_toggle_properties_template}
-					blockoverride "header_button_full_content"{}
-					blockoverride "header_button_template_texture"{using = pressed_button_texture_light}
+					blockoverride "header_button_template_push_properties" {using = button_tab_toggle_properties_template}
+					blockoverride "header_button_full_content" {}
+					blockoverride "header_button_template_texture" {using = pressed_button_texture_light}
 					tooltipwidget = {
 						LeftClickButtonTooltip = {
 							blockoverride "onclick_text" { text = "DISPLAY_LISTS" }
@@ -83,9 +83,9 @@ template production_view_subtabs {
 				button = {
 					size = {30 30}
 					using = header_button_template
-					blockoverride "header_button_template_push_properties"{using = button_tab_toggle_properties_template}
-					blockoverride "header_button_full_content"{}
-					blockoverride "header_button_template_texture"{using = pressed_button_texture_light}
+					blockoverride "header_button_template_push_properties" {using = button_tab_toggle_properties_template}
+					blockoverride "header_button_full_content" {}
+					blockoverride "header_button_template_texture" {using = pressed_button_texture_light}
 					tooltipwidget = {
 						LeftClickButtonTooltip = {
 							blockoverride "onclick_text" { text = "DISPLAY_CARDS" }
@@ -105,9 +105,9 @@ template production_view_subtabs {
 				button = {
 					size = {30 30}
 					using = header_button_template
-					blockoverride "header_button_template_push_properties"{using = button_tab_toggle_properties_template}
-					blockoverride "header_button_full_content"{}
-					blockoverride "header_button_template_texture"{using = pressed_button_texture_light}
+					blockoverride "header_button_template_push_properties" {using = button_tab_toggle_properties_template}
+					blockoverride "header_button_full_content" {}
+					blockoverride "header_button_template_texture" {using = pressed_button_texture_light}
 					tooltipwidget = {
 						LeftClickButtonTooltip = {
 							blockoverride "onclick_text" { text = "DISPLAY_FOREIGN" }
@@ -127,9 +127,9 @@ template production_view_subtabs {
 				button = {
 					size = {30 30}
 					using = header_button_template
-					blockoverride "header_button_template_push_properties"{using = button_tab_toggle_properties_template}
-					blockoverride "header_button_full_content"{}
-					blockoverride "header_button_template_texture"{using = pressed_button_texture_light}
+					blockoverride "header_button_template_push_properties" {using = button_tab_toggle_properties_template}
+					blockoverride "header_button_full_content" {}
+					blockoverride "header_button_template_texture" {using = pressed_button_texture_light}
 					tooltipwidget = {
 						LeftClickButtonTooltip = {
 							blockoverride "onclick_text" { text = "DISPLAY_ESTATE" }
@@ -344,8 +344,8 @@ template production_view_poptypes {
 					alpha = 0.8
 					blend_mode = overlay
 				}
-				blockoverride "estates_filter_button_inner_content"{}
-				blockoverride "estates_filter_button_tooltip"{
+				blockoverride "estates_filter_button_inner_content" {}
+				blockoverride "estates_filter_button_tooltip" {
 					# tooltipwidget = { BasicFunctionalTooltip = {} }
 					tooltipwidget = {
 						using = pop_filter_button_tt
@@ -365,7 +365,7 @@ lateralview = {
 			blockoverride "header_text" {
 				text = "THE_PRODUCTION_OVERVIEW_TITLE"
 			}
-			blockoverride "window_header_alt_color_texture"{
+			blockoverride "window_header_alt_color_texture" {
 				using = color_production_texture
 			}
 		}
@@ -396,7 +396,7 @@ lateralview = {
 					datacontext = "[ProductionView.GetBuildingsSortSearch.WithFilterTags('building')]"
 					name = "production_filtered_list"
 
-					blockoverride "subheader_upper_divider"{
+					blockoverride "subheader_upper_divider" {
 						# MARKET FILTERED
 						widget = {
 							visible = "[ProductionView.IsMarketFilterEnabled]"
@@ -540,11 +540,11 @@ lateralview = {
 						}
 					}
 
-					blockoverride "searchbar_extra_pre_content"{
+					blockoverride "searchbar_extra_pre_content" {
 						using = production_view_subtabs
 					}
 
-					blockoverride "custom_search_filter"{
+					blockoverride "custom_search_filter" {
 						using = production_view_poptypes
 					}
 
@@ -577,13 +577,11 @@ lateralview = {
 
 					blockoverride "scroll_list_layout" {
 						vbox = {
-							# CMF: switched fixedgridbox to dynamicgridbox
-							dynamicgridbox = {
-								# CMF: added layoutpolicy
-								layoutpolicy_horizontal = expanding
+							# CMF: switched fixedgridbox to vbox
+							vbox = {
 								visible = "[And( ProductionView.Vars.NotExistOrHasValue( 'display', 'lists' ), Not(ProductionView.IsLocationFilterEnabled) )]"
-								addrow = 48
-								addcolumn = 100%
+                                # CMF: Added layoutpolicy_horizontal and removed row properties
+                                layoutpolicy_horizontal = expanding
 								datamodel = "[ProductionView.GetBuildingItems]"
 								item = {
 									widget = {
@@ -593,7 +591,9 @@ lateralview = {
 											.AddScope('player', GetPlayer.MakeScope)
 											.End
 										)]"
-										size = { 100% 48 }
+                                        # CMF: Replaced width with layoutpolicy_horizontal
+										size = { -1 48 }
+                                        layoutpolicy_horizontal = expanding
 
 										vbox = {
 											margin_top = 5
@@ -603,11 +603,11 @@ lateralview = {
 									}
 								}
 							}
-							# CMF: switched fixedgridbox to dynamicgridbox
-							dynamicgridbox = {
+							# CMF: switched fixedgridbox to vbox
+                            vbox = {
 								visible = "[And( ProductionView.Vars.NotExistOrHasValue( 'display', 'lists' ), ProductionView.IsLocationFilterEnabled )]"
-								addrow = 60
-								addcolumn = 100%
+                                # CMF: Added layoutpolicy_horizontal and removed row properties
+                                layoutpolicy_horizontal = expanding
 								datamodel = "[ProductionView.GetBuildingItems]"
 								item = {
 									widget = {
@@ -617,9 +617,12 @@ lateralview = {
 											.AddScope('player', GetPlayer.MakeScope)
 											.End
 										)]"
-										size = { 100% 60 }
+                                        # CMF: Replaced width with layoutpolicy_horizontal
+										size = { -1 60 }
+                                        layoutpolicy_horizontal = expanding
 										widget = {
 											size = { 97% 55 }
+                                            layoutpolicy_horizontal = expanding
 											parentanchor = bottom|left
 
 											location_filtered_header_with_candidate = {}
@@ -852,7 +855,7 @@ lateralview = {
 																			datacontext = "[BuildingItem.GetBuildingType]"
 																			tooltipwidget = {
 																				using = BuildingType_tooltip
-																				blockoverride "building_type_tooltip_extra"{
+																				blockoverride "building_type_tooltip_extra" {
 																					TooltipContentSection = {
 																						visible = "[BuildingItem.HasBuildingsLackingInput]"
 
@@ -1041,7 +1044,7 @@ lateralview = {
 																			datacontext = "[BuildingItem.GetBuildingType]"
 																			tooltipwidget = {
 																				using = BuildingType_tooltip
-																				blockoverride "building_type_tooltip_extra"{
+																				blockoverride "building_type_tooltip_extra" {
 																					TooltipContentSection = {
 																						visible = "[BuildingItem.HasBuildingsLackingInput]"
 
@@ -1340,7 +1343,7 @@ lateralview = {
 					datacontext = "[ProductionView.GetForeignBuildingsSortSearch]"
 					name = "foreign_filtered_list"
 
-					blockoverride "subheader_upper_divider"{
+					blockoverride "subheader_upper_divider" {
 						# MARKET FILTERED
 						widget = {
 							visible = "[ProductionView.IsMarketFilterEnabled]"
@@ -1483,11 +1486,11 @@ lateralview = {
 						}
 					}
 
-					blockoverride "searchbar_extra_pre_content"{
+					blockoverride "searchbar_extra_pre_content" {
 						using = production_view_subtabs
 					}
 
-					blockoverride "custom_search_filter"{
+					blockoverride "custom_search_filter" {
 						using = production_view_poptypes
 					}
 
@@ -1520,7 +1523,7 @@ lateralview = {
 					datacontext = "[ProductionView.GetEstateBuildingsSortSearch]"
 					name = "estate_filtered_list"
 
-					blockoverride "subheader_upper_divider"{
+					blockoverride "subheader_upper_divider" {
 						# MARKET FILTERED
 						widget = {
 							visible = "[ProductionView.IsMarketFilterEnabled]"
@@ -1665,11 +1668,11 @@ lateralview = {
 						}
 					}
 
-					blockoverride "searchbar_extra_pre_content"{
+					blockoverride "searchbar_extra_pre_content" {
 						using = production_view_subtabs
 					}
 
-					blockoverride "custom_search_filter"{
+					blockoverride "custom_search_filter" {
 						using = production_view_poptypes
 					}
 
@@ -1870,7 +1873,7 @@ types Buildings {
 
 						tooltipwidget = {
 							using = BuildingType_tooltip
-							blockoverride "building_type_tooltip_missing_input"{
+							blockoverride "building_type_tooltip_missing_input" {
 								visible = "[BuildingItem.HasBuildingsLackingInput]"
 								textcontext = "[BuildingItem.GetBuildingsInputGoodsInformation]"
 							}
@@ -3504,7 +3507,7 @@ types Buildings {
 				size = {-1 21}
 				flag_estate_building_card = {
 					spacing = -1
-					blockoverride "flag_estate_building_card_extra"{
+					blockoverride "flag_estate_building_card_extra" {
 						button_square_minus = {
 							layoutpolicy_horizontal = expanding
 							size = { -1 21 }
@@ -4138,7 +4141,7 @@ types Buildings {
 
 	type flag_estate_building_card = hbox {
 		layoutpolicy_horizontal = expanding
-		block "flag_estate_building_card_extra"{}
+		block "flag_estate_building_card_extra" {}
 
 		country_flag_small = {
 			visible = "[BuildingType.IsForeign]"
@@ -4222,7 +4225,7 @@ select_menu_left = {
 						using = bg_cabinet_card_frame
 
 						market_card = {
-							blockoverride "market_card_title_action"{
+							blockoverride "market_card_title_action" {
 								action_tooltip = {
 									click_type = left
 									click_mode = single
