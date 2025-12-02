@@ -2944,8 +2944,21 @@ types Buildings {
 								text_single = {
 									size = { 60 20 }
 									autoresize = no
-									visible = "[Not(BuildingCandidate.GetBuilding.IsUnderConstruction)]"
+									visible = "[And(Not(BuildingCandidate.GetBuilding.IsUnderConstruction), Not(And(BuildingCandidate.GetBuilding.CanPlayerUpgrade, BuildingCandidate.GetBuilding.IsPlayerUpgrading)))]"
 									raw_text = "[BuildingCandidate.GetBuilding.GetLevel|0Y] / [BuildingCandidate.GetMaxLevel|0Y]"
+									align = center
+									default_format = "#overview_text"
+
+									sort_by_highlight = {
+										name = "level"
+									}
+								}
+
+								text_single = {
+									size = { 60 20 }
+									autoresize = no
+									visible = "[And3(Not(BuildingCandidate.GetBuilding.IsUnderConstruction), BuildingCandidate.GetBuilding.CanPlayerUpgrade, BuildingCandidate.GetBuilding.IsPlayerUpgrading)]"
+									raw_text = "[BuildingCandidate.GetBuilding.GetLevel|0Y](#G -[BuildingCandidate.GetBuilding.GetLevelsUnderUpgrade|0]#!) / [BuildingCandidate.GetMaxLevel|0Y]"
 									align = center
 									default_format = "#overview_text"
 
@@ -2961,6 +2974,10 @@ types Buildings {
 									raw_text = "[BuildingCandidate.GetBuilding.GetLevel|0Y] ([BuildingCandidate.GetBuilding.GetLevelsUnderConstruction|0+=]) / [BuildingCandidate.GetMaxLevel|0Y]"
 									align = center
 									default_format = "#overview_text"
+
+									sort_by_highlight = {
+										name = "level"
+									}
 								}
 
 								button_square_plus = {
@@ -3015,15 +3032,42 @@ types Buildings {
 										texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
 									}
 									datacontext = "[BuildingItem.GetBuildingType.GetNextReplaced(Player.Self)]"
-									enabled = "[CanBuildOrExpandBuilding(BuildingType.Self, Location.Self)]"
+									enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
 									action_tooltip = {
 										click_mode = single
 										click_type = left
+										click_modifier = default
 										title = "UPGRADE_BUILDING_ACTION"
-										enabled = "[CanBuildOrExpandBuilding(BuildingType.Self, Location.Self)]"
-										description = "[CanBuildOrExpandBuildingInfo(BuildingType.Self, Location.Self)]"
-										on_action = "[BuildOrExpandBuildingDefault(BuildingType.Self, Location.Self)]"
+										enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
+										description = "[CanUpgradeToBuildingInfo(BuildingType.Self, Location.Self)]"
+										cost = "[GetBuildOrExpandBuildingCostValue(BuildingType.Self, Location.Self)]"
+										on_action = "[UpgradeBuildingDefault(BuildingType.Self, Location.Self)]"
 									}
+
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										click_modifier = ctrl
+
+										title = "UPGRADE_BUILDING_ACTION_CTRL"
+										cost = "[GetBuildOrExpandBuildingCostValue(BuildingType.Self, Location.Self)]"
+										description = "[CanUpgradeToBuildingInfo(BuildingType.Self, Location.Self)]"
+										on_action = "[UpgradeBuildingCtrl(BuildingType.Self, Location.Self)]"
+										enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
+									}
+
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										click_modifier = shift
+
+										title = "UPGRADE_BUILDING_ACTION_SHIFT"
+										cost = "[GetBuildOrExpandBuildingCostValue(BuildingType.Self, Location.Self)]"
+										description = "[CanUpgradeToBuildingInfo(BuildingType.Self, Location.Self)]"
+										on_action = "[UpgradeBuildingShift(BuildingType.Self, Location.Self)]"
+										enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
+									}
+
 									tooltipwidget = {
 										using = construct_building_in_location_tt
 									}
@@ -3615,7 +3659,7 @@ types Buildings {
 							tooltipwidget = {
 								LeftClickButtonTooltip = {
 									blockoverride "onclick_text" {
-										text = "[SelectLocalization(IsMarketFaved(Market.Self), 'UNPIN_ACTION', 'PIN_ACTION')]"
+										text = "[SelectLocalization(IsMarketFaved(Market.Self), 'UNPIN_OUTLINER', 'PIN_OUTLINER')]"
 									}
 								}
 							}

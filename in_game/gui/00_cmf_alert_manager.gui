@@ -261,7 +261,9 @@ types "cmf_types" {
     # 1:1 base game copy
     # update this type for new updates
     type cmf_alert_manager = alerts_layout {
+        # CMF: Added layout policy
         layoutpolicy_horizontal = expanding
+
         name = "alert_manager"
         visible = "[Not(IsLobbyOpen)]"
         ignoreinvisible = yes
@@ -275,6 +277,267 @@ types "cmf_types" {
         bottomtotop = no #right side
 
         datacontext = "[InGameTopbar.AccessAlertManager]"
+
+        ###########################################################################
+        # RED ALERTS
+        ###########################################################################
+
+        ###########################
+        # Member Leaving Union
+        ###########################
+
+        alert_banner = {
+            name = "member_leaving_union"
+
+            action_tooltip = {
+                click_type = left
+                title = "ALERT_HAS_MEMBER_LEAVING_LEFT_CLICK"
+                using = snd_UI_alert_openAndCycle
+                on_action = "[OpenInternationalOrganizationView(AlertMemberLeavingUnion.GetUnion)]"
+            }
+
+            using = red_alert
+
+            blockoverride "icon_texture" {
+                texture = "gfx/interface/icons/international_organizations/union.dds"
+            }
+        }
+
+        ###########################
+        # Disease affecting your country
+        ###########################
+
+        alert_banner = {
+            name = "has_disease"
+
+            action_tooltip = {
+                click_type = left
+                title = "ALERT_CTA_LEFT_CLICK"
+                using = snd_UI_alert_openAndCycle
+                on_action = "[OpenLateralView('diseases')]"
+            }
+
+            onmousehierarchyenter = "[SetHighlightedTab('geography_group')]"
+            onmousehierarchyleave = "[ResetHighlightedTab]"
+
+            using = red_alert
+
+            blockoverride "icon_texture" {
+                texture = "gfx/interface/icons/alerts_icons/disease_outbreak.dds"
+            }
+        }
+
+        ###########################
+        # Constructions missing input
+        ###########################
+
+        alert_banner = {
+            name = "has_constructions_missing_input"
+
+            using = red_alert
+
+            tooltipwidget = {
+                ContextualTooltipType = {
+                    blockoverride "title_text" {
+                        text = "ALERT_CONSTRUCTIONS_MISSING_INPUT"
+                    }
+                    blockoverride "title_icon" {
+                        icon = {
+                            using = tooltip_title_icon_size
+                            texture = "gfx/interface/icons/alerts_icons/constructions_missing_input.dds"
+
+                        }
+                    }
+                    blockoverride "concept_link" {
+                        text = "[constructions|E]"
+                    }
+                    blockoverride "tooltip_content" {
+                        TooltipTextBlock = {
+                            blockoverride "text" {
+                                text = "ALERT_CONSTRUCTIONS_MISSING_INPUT_TEXT"
+                            }
+
+                            blockoverride "textblock_background_tint"  {
+                                modify_texture = {
+                                    using = color_red_texture
+                                }
+                            }
+                        }
+
+                        vbox = { #1 Market
+                            layoutpolicy_horizontal = expanding
+                            datacontext = "[GetCountryNeeds(Player.Self)]"
+                            datamodel = "[CountryNeeds.GetMarketNeeds]"
+                            visible = "[EqualTo_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)1' )]"
+                            spacing = 12
+
+                            item = {
+                                TooltipStringPairList = {
+                                    blockoverride "block_title" {
+                                        raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+                                    }
+                                    visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
+                                    textcontext = "[MarketCountryNeeds.GetGovernmentMissingGoodsInfo]"
+                                }
+                            }
+                        }
+
+                        vbox = { #-5 Markets
+                            layoutpolicy_horizontal = expanding
+                            datacontext = "[GetCountryNeeds(Player.Self)]"
+                            datamodel = "[CountryNeeds.GetMarketNeeds]"
+                            visible = "[And(LessThanOrEqualTo_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)4' ), GreaterThan_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)1' ))]"
+                            spacing = 12
+
+                            item = {
+                                TooltipScrolledStringPairList = {
+                                    blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
+                                    blockoverride "block_title" {
+                                        raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+                                    }
+                                    visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
+                                    textcontext = "[MarketCountryNeeds.GetGovernmentMissingGoodsInfo]"
+                                }
+                            }
+                        }
+
+                        TooltipListBase = { #+6 Markets
+                            datacontext = "[GetCountryNeeds(Player.Self)]"
+                            visible = "[GreaterThan_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)4' )]"
+
+                            TooltipListColumnContent = {
+                                TooltipTableColumn = {
+                                    blockoverride "column_title" {}
+                                    blockoverride "column_title_text" {
+                                        text = "[market|e]"
+                                    }
+                                    blockoverride "column_title_right" {
+                                        expand = {}
+                                    }
+
+                                    blockoverride "field_left" {
+                                        visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
+                                    }
+
+                                    blockoverride "field_text" {
+                                        default_format = "#subtle_name"
+                                        align = left|nobaseline
+                                        raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]"
+                                    }
+
+                                    blockoverride "field_right" { expand = {} }
+                                }
+
+                                TooltipTableColumn = {
+                                    blockoverride "column_title" {}
+                                    blockoverride "column_title_left" {
+                                        expand = {}
+                                    }
+                                    blockoverride "column_title_text" {
+                                        text = "[goods_demands|e]"
+                                        default_format = "#explanation_link"
+
+                                    }
+
+                                    blockoverride "field_text" { visible = no }
+                                    blockoverride "field_right" {
+                                        spacing = 7
+                                        expand = {}
+                                        visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
+                                        datacontext = "[GetMarketCountryNeeds(Player.Self, Market.Self)]"
+                                        datacontext = "[MarketCountryNeeds.GetMarket]"
+                                        tooltipwidget = { using = market_hub_gov_needs_tooltip }
+
+                                        text_single = {
+                                            visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
+                                            text = "[MarketCountryNeeds.GetGovernmentMissingGoodsAmount]"
+                                        }
+
+                                        icon = {
+                                            shaderfile = "gfx/FX/pdxgui_default.shader"
+                                            size = {15 15}
+                                            texture = "gfx/interface/icons/alerts_icons/constructions_missing_input.dds"
+
+                                            using = bg_banner_button_vertical
+
+                                            blockoverride "banner_button_extra" {}
+
+                                            blockoverride "banner_button_color" {
+                                                modify_texture = {
+                                                    using = color_red_texture
+                                                    alpha = 0.6
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                blockoverride "column_datamodel"  {
+                                    datacontext = "[GetCountryNeeds(Player.Self)]"
+                                    datamodel = "[CountryNeeds.GetMarketNeeds]"
+                                }
+                            }
+                        }
+                    }
+                    blockoverride "title_button" {
+                        hint_button = {
+                            action_tooltip = {
+                                title = "OPEN_HINT"
+                                on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_constructions_missing_input')]"
+                            }
+                        }
+                    }
+                    blockoverride "shift_left_extra" {
+                        replacement_shift_item = {}
+                    }
+                }
+            }
+
+            action_tooltip = {
+                click_type = left
+                title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
+                using = snd_UI_alert_openAndCycle
+                on_action = "[AlertConstructionMissingInput.Next]"
+            }
+
+            action_tooltip = {
+                click_modifier = shift
+                click_type = left
+                title = "ALERT_HINT"
+                using = snd_UI_alert_openAndCycle
+                on_action = "[AlertPopNeeds.Next]"
+                on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_constructions_missing_input')]"
+            }
+
+            blockoverride "icon_texture" {
+                texture = "gfx/interface/icons/alerts_icons/constructions_missing_input.dds"
+            }
+
+            onmousehierarchyenter = "[SetHighlightedTab('production_group')]"
+            onmousehierarchyleave = "[ResetHighlightedTab]"
+        }
+
+        ###########################
+        # Starving provinces
+        ###########################
+
+        alert_banner = {
+            name = "has_starving_provinces"
+
+            action_tooltip = {
+                click_type = left
+                title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+                using = snd_UI_alert_openAndCycle
+                on_action = "[AlertStarvingProvinces.Next]"
+            }
+
+            using = red_alert
+            using = alert_list_tooltip
+
+            blockoverride "icon_texture" {
+                texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds"
+            }
+        }
 
         ###########################################################################
         # ORANGE ALERTS
@@ -594,7 +857,7 @@ types "cmf_types" {
                                                                             }
 
                                                                             blockoverride "concept_link" {
-                                                                                text = "[truce|E]"
+                                                                                text = [truce|E]
                                                                             }
 
                                                                             blockoverride "tooltip_content" {
@@ -626,7 +889,7 @@ types "cmf_types" {
                                                                             }
 
                                                                             blockoverride "concept_link" {
-                                                                                text = "[war|E]"
+                                                                                text = [war|E]
                                                                             }
 
                                                                             blockoverride "tooltip_content" {
@@ -658,7 +921,7 @@ types "cmf_types" {
                                                                             }
 
                                                                             blockoverride "concept_link" {
-                                                                                text = "[opinion|E]"
+                                                                                text = [opinion|E]
                                                                             }
 
                                                                             blockoverride "tooltip_content" {
@@ -780,27 +1043,6 @@ types "cmf_types" {
 
             blockoverride "icon_texture" {
                 texture = "gfx/interface/icons/alerts_icons/above_diplomatic_relations_limit.dds"
-            }
-        }
-
-        ###########################
-        # Member Leaving Union
-        ###########################
-
-        alert_banner = {
-            name = "member_leaving_union"
-
-            action_tooltip = {
-                click_type = left
-                title = "ALERT_HAS_MEMBER_LEAVING_LEFT_CLICK"
-                using = snd_UI_alert_openAndCycle
-                on_action = "[OpenInternationalOrganizationView(AlertMemberLeavingUnion.GetUnion)]"
-            }
-
-            using = orange_alert
-
-            blockoverride "icon_texture" {
-                texture = "gfx/interface/icons/international_organizations/union.dds"
             }
         }
 
@@ -1747,7 +1989,7 @@ types "cmf_types" {
                                     }
 
                                     blockoverride "column_title_text" {
-                                        text = "[great_power_score|e]"
+                                        text = "[great_power_rank|e]"
                                         default_format = "#explanation_link"
                                     }
 
@@ -1987,30 +2229,6 @@ types "cmf_types" {
 
             blockoverride "icon_texture" {
                 texture = "gfx/interface/icons/alerts_icons/unhappy_estates.dds"
-            }
-        }
-
-        ###########################
-        # Disease affecting your country
-        ###########################
-
-        alert_banner = {
-            name = "has_disease"
-
-            action_tooltip = {
-                click_type = left
-                title = "ALERT_CTA_LEFT_CLICK"
-                using = snd_UI_alert_openAndCycle
-                on_action = "[OpenLateralView('diseases')]"
-            }
-
-            onmousehierarchyenter = "[SetHighlightedTab('geography_group')]"
-            onmousehierarchyleave = "[ResetHighlightedTab]"
-
-            using = red_alert
-
-            blockoverride "icon_texture" {
-                texture = "gfx/interface/icons/alerts_icons/disease_outbreak.dds"
             }
         }
 
@@ -2259,6 +2477,10 @@ types "cmf_types" {
         situation_banner = {
             name = "PARLIAMENT_IN_SESSION"
 
+            tooltipmeta = {
+                texture = "[GetConceptTexture('parliament')]"
+            }
+
             using = alert_tooltip
 
             action_tooltip = {
@@ -2273,107 +2495,86 @@ types "cmf_types" {
 
             using = purple_alert
 
-            # blockoverride "personalized_colour_alert_texture" { texture = "[ParliamentInSession.GetTexture]"}
+            blockoverride "icon_texture_obj" {
+                vbox = {
+                    spacing = 3
+                    margin_top = 16
+                    margin_bottom = 25
 
-            blockoverride "alert_banner_texture" { visible = no }
+                    piechart = {
+                        alwaystransparent = yes
+                        size = { 33 33 }
+                        using = piechart_angles
 
-            widget = {
-                piechart = {
-                    visible = "[GreaterThan_CFixedPoint(ParliamentInSession.GetParliament.GetParliamentIssueSupport, '(CFixedPoint)0.5')]"
-                    size = { 37 37 }
-                    position = { 4 27 }
-                    using = piechart_angles
-
-                    background = {
-                        texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
-                        texture_density = 2
-                        alpha = 0.5
-                        modify_texture = {
-                            using = color_dark_brown_texture
-                            blend_mode = multiply
+                        background = {
+                            texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+                            texture_density = 2
+                            alpha = 0.5
+                            modify_texture = {
+                                using = color_dark_brown_texture
+                                blend_mode = multiply
+                            }
                         }
+
+                        icon = {
+                            texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+                            size = { 100% 100% }
+                            parentanchor = center
+                            color = { 0.45 0.59  0.67 1 }
+                            alpha = 0.3
+                        }
+
+                        pieslice_no_highlight = {
+                            alwaystransparent = yes
+                            texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+                            value = "[ParliamentInSession.GetParliament.GetParliamentDurationProgress]"
+                            color = { 1 1 1 1 }
+                        }
+
+                        pieslice_no_highlight = {
+                            alwaystransparent = yes
+                            texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+                            value = "[Subtract_float('(float)1.0', FixedPointToFloat(ParliamentInSession.GetParliament.GetParliamentDurationProgress))]"
+                            color = { 1 1 1 0 }
+                        }
+
+                        icon = {
+                            texture = "gfx/interface/icons/flat_icons/parliament.dds"
+                            size = { 58% 58% }
+                            using = overlay_color_light_green
+                            parentanchor = center
+                            visible = "[ParliamentInSession.GetParliament.WillParliamentIssuePass]"
+                        }
+                        icon = {
+                            texture = "gfx/interface/icons/flat_icons/parliament.dds"
+                            size = { 58% 58% }
+                            using = overlay_color_red
+                            parentanchor = center
+                            visible = "[Not(ParliamentInSession.GetParliament.WillParliamentIssuePass)]"
+                        }
+                        using = bg_circle_piechart
                     }
 
-                    pieslice = {
-                        texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
-                        value = "[ParliamentInSession.GetParliament.GetBaseParliamentIssueSupport]"
-                        color = { 0.3 0.8 0.3 1 }
-                        alpha = 1
+                    text_single = {
+                        autoresize = no
+                        size = { 35 20 }
+                        fontsize = 14
+                        align = center
+                        visible = "[ParliamentInSession.GetParliament.WillParliamentIssuePass]"
+
+                        text = "[ParliamentInSession.GetParliament.GetParliamentIssueSupport|0+%]"
                     }
 
-                    pieslice = {
-                        texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
-                        value = "[ParliamentInSession.GetParliament.GetAddedParliamentIssueSupport]"
-                        color = { 0.3 0.8 0.3 1 }
-                        alpha = 0.8
-                    }
+                    text_single = {
+                        autoresize = no
+                        size = { 35 20 }
+                        fontsize = 14
+                        align = center
+                        visible = "[Not(ParliamentInSession.GetParliament.WillParliamentIssuePass)]"
 
-                    pieslice = {
-                        texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
-                        value = "[Subtract_float('(float)1.0', FixedPointToFloat(ParliamentInSession.GetParliament.GetParliamentIssueSupport))]"
-                        color = { 1 1 1 0 }
-                    }
-
-                    icon = {
-                        texture = "gfx/interface/icons/flat_icons/parliament_support.dds"
-                        size = { 45% 45% }
-                        parentanchor = center
-                    }
-                    tooltipwidget = {
-                        using = parliament_support_tooltip
+                        text = "[ParliamentInSession.GetParliament.GetParliamentIssueSupport|R0%]"
                     }
                 }
-                piechart = {
-                    visible = "[LessThan_CFixedPoint(ParliamentInSession.GetParliament.GetParliamentIssueSupport, '(CFixedPoint)0.5')]"
-                    size = { 37 37 }
-                    position = { 4 27 }
-                    using = piechart_angles
-
-                    background = {
-                        texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
-                        texture_density = 2
-                        alpha = 0.5
-                        modify_texture = {
-                            using = color_dark_brown_texture
-                            blend_mode = multiply
-                        }
-                    }
-
-                    pieslice = {
-                        texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-                        value = "[ParliamentInSession.GetParliament.GetBaseParliamentIssueSupport]"
-                        color = { 1 1 1 1 }
-                        alpha = 1
-
-                    }
-
-                    pieslice = {
-                        texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-                        value = "[ParliamentInSession.GetParliament.GetAddedParliamentIssueSupport]"
-                        color = { 1 1 1 1 }
-                        alpha = 0.8
-
-                    }
-
-                    pieslice = {
-                        texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
-                        value = "[Subtract_float('(float)1.0', FixedPointToFloat(ParliamentInSession.GetParliament.GetParliamentIssueSupport))]"
-                        color = { 1 1 1 0 }
-                    }
-
-                    icon = {
-                        texture = "gfx/interface/icons/flat_icons/parliament_support.dds"
-                        size = { 45% 45% }
-                        parentanchor = center
-                    }
-                    tooltipwidget = {
-                        using = parliament_support_tooltip
-                    }
-                }
-            }
-            blockoverride "icon_texture_obj" {}
-            blockoverride "icon_texture" {
-                texture = "gfx/interface/icons/alerts_icons/parliament_in_session.dds"
             }
         }
 
@@ -2573,6 +2774,28 @@ types "cmf_types" {
 
             blockoverride "icon_texture" {
                 texture = "gfx/interface/icons/alerts_icons/army_without_leader.dds"
+            }
+        }
+
+        ###########################
+        # Relation about to be broken
+        ###########################
+
+        alert_banner = {
+            name = "relation_about_to_be_broken"
+
+            action_tooltip = {
+                click_type = left
+                title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+                using = snd_UI_alert_openAndCycle
+                on_action = "[AlertRelationAboutToBeBroken.Next]"
+            }
+
+            using = alert_list_tooltip
+            using = yellow_alert
+
+            blockoverride "icon_texture" {
+                texture = "gfx/interface/icons/alerts_icons/relation_about_to_be_broken.dds"
             }
         }
 
@@ -3173,218 +3396,6 @@ types "cmf_types" {
 
             blockoverride "icon_texture" {
                 texture = "gfx/interface/icons/alerts_icons/lack_pop_promotion_to_fill_rgo.dds"
-            }
-        }
-
-        ###########################
-        # Constructions missing input
-        ###########################
-
-        alert_banner = {
-            name = "has_constructions_missing_input"
-
-            using = red_alert
-
-            tooltipwidget = {
-                ContextualTooltipType = {
-                    blockoverride "title_text" {
-                        text = "ALERT_CONSTRUCTIONS_MISSING_INPUT"
-                    }
-                    blockoverride "title_icon" {
-                        icon = {
-                            using = tooltip_title_icon_size
-                            texture = "gfx/interface/icons/alerts_icons/constructions_missing_input.dds"
-
-                        }
-                    }
-                    blockoverride "concept_link" {
-                        text = "[constructions|E]"
-                    }
-                    blockoverride "tooltip_content" {
-                        TooltipTextBlock = {
-                            blockoverride "text" {
-                                text = "ALERT_CONSTRUCTIONS_MISSING_INPUT_TEXT"
-                            }
-
-                            blockoverride "textblock_background_tint"  {
-                                modify_texture = {
-                                    using = color_red_texture
-                                }
-                            }
-                        }
-
-                        vbox = { #1 Market
-                            layoutpolicy_horizontal = expanding
-                            datacontext = "[GetCountryNeeds(Player.Self)]"
-                            datamodel = "[CountryNeeds.GetMarketNeeds]"
-                            visible = "[EqualTo_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)1' )]"
-                            spacing = 12
-
-                            item = {
-                                TooltipStringPairList = {
-                                    blockoverride "block_title" {
-                                        raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
-                                    }
-                                    visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
-                                    textcontext = "[MarketCountryNeeds.GetGovernmentMissingGoodsInfo]"
-                                }
-                            }
-                        }
-
-                        vbox = { #-5 Markets
-                            layoutpolicy_horizontal = expanding
-                            datacontext = "[GetCountryNeeds(Player.Self)]"
-                            datamodel = "[CountryNeeds.GetMarketNeeds]"
-                            visible = "[And(LessThanOrEqualTo_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)4' ), GreaterThan_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)1' ))]"
-                            spacing = 12
-
-                            item = {
-                                TooltipScrolledStringPairList = {
-                                    blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
-                                    blockoverride "block_title" {
-                                        raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
-                                    }
-                                    visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
-                                    textcontext = "[MarketCountryNeeds.GetGovernmentMissingGoodsInfo]"
-                                }
-                            }
-                        }
-
-                        TooltipListBase = { #+6 Markets
-                            datacontext = "[GetCountryNeeds(Player.Self)]"
-                            visible = "[GreaterThan_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)4' )]"
-
-                            TooltipListColumnContent = {
-                                TooltipTableColumn = {
-                                    blockoverride "column_title" {}
-                                    blockoverride "column_title_text" {
-                                        text = "[market|e]"
-                                    }
-                                    blockoverride "column_title_right" {
-                                        expand = {}
-                                    }
-
-                                    blockoverride "field_left" {
-                                        visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
-                                    }
-
-                                    blockoverride "field_text" {
-                                        default_format = "#subtle_name"
-                                        align = left|nobaseline
-                                        raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]"
-                                    }
-
-                                    blockoverride "field_right" { expand = {} }
-                                }
-
-                                TooltipTableColumn = {
-                                    blockoverride "column_title" {}
-                                    blockoverride "column_title_left" {
-                                        expand = {}
-                                    }
-                                    blockoverride "column_title_text" {
-                                        text = "[goods_demands|e]"
-                                        default_format = "#explanation_link"
-
-                                    }
-
-                                    blockoverride "field_text" { visible = no }
-                                    blockoverride "field_right" {
-                                        spacing = 7
-                                        expand = {}
-                                        visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
-                                        datacontext = "[GetMarketCountryNeeds(Player.Self, Market.Self)]"
-                                        datacontext = "[MarketCountryNeeds.GetMarket]"
-                                        tooltipwidget = { using = market_hub_gov_needs_tooltip }
-
-                                        text_single = {
-                                            visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
-                                            text = "[MarketCountryNeeds.GetGovernmentMissingGoodsAmount]"
-                                        }
-
-                                        icon = {
-                                            shaderfile = "gfx/FX/pdxgui_default.shader"
-                                            size = {15 15}
-                                            texture = "gfx/interface/icons/alerts_icons/constructions_missing_input.dds"
-
-                                            using = bg_banner_button_vertical
-
-                                            blockoverride "banner_button_extra" {}
-
-                                            blockoverride "banner_button_color" {
-                                                modify_texture = {
-                                                    using = color_red_texture
-                                                    alpha = 0.6
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                blockoverride "column_datamodel"  {
-                                    datacontext = "[GetCountryNeeds(Player.Self)]"
-                                    datamodel = "[CountryNeeds.GetMarketNeeds]"
-                                }
-                            }
-                        }
-                    }
-                    blockoverride "title_button" {
-                        hint_button = {
-                            action_tooltip = {
-                                title = "OPEN_HINT"
-                                on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_constructions_missing_input')]"
-                            }
-                        }
-                    }
-                    blockoverride "shift_left_extra" {
-                        replacement_shift_item = {}
-                    }
-                }
-            }
-
-            action_tooltip = {
-                click_type = left
-                title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
-                using = snd_UI_alert_openAndCycle
-                on_action = "[AlertConstructionMissingInput.Next]"
-            }
-
-            action_tooltip = {
-                click_modifier = shift
-                click_type = left
-                title = "ALERT_HINT"
-                using = snd_UI_alert_openAndCycle
-                on_action = "[AlertPopNeeds.Next]"
-                on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_constructions_missing_input')]"
-            }
-
-            blockoverride "icon_texture" {
-                texture = "gfx/interface/icons/alerts_icons/constructions_missing_input.dds"
-            }
-
-            onmousehierarchyenter = "[SetHighlightedTab('production_group')]"
-            onmousehierarchyleave = "[ResetHighlightedTab]"
-        }
-
-        ###########################
-        # Starving provinces
-        ###########################
-
-        alert_banner = {
-            name = "has_starving_provinces"
-
-            action_tooltip = {
-                click_type = left
-                title = "ALERT_CTA_CYCLE_LEFT_CLICK"
-                using = snd_UI_alert_openAndCycle
-                on_action = "[AlertStarvingProvinces.Next]"
-            }
-
-            using = red_alert
-            using = alert_list_tooltip
-
-            blockoverride "icon_texture" {
-                texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds"
             }
         }
 
@@ -5400,8 +5411,6 @@ types "cmf_types" {
                                             blockoverride "character_frame_texture" {
                                                 texture = "gfx/interface/component_decoration/character_frames/character_non_stretchable_frame_2.dds"
                                             }
-
-                                            raw_text = "what else is there?"
                                         }
                                     }
 
@@ -5412,7 +5421,7 @@ types "cmf_types" {
                                         multiline = yes
                                         size = { 300 60 }
                                         align = left|nobaseline
-                                        text = "[Character.GetName]"
+                                        text = "[Character.GetName], [Character.GetAge|Y]"
                                     }
                                 }
                             }
