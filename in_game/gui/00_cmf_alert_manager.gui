@@ -289,6 +289,31 @@ types "cmf_types" {
         alert_banner = {
             name = "member_leaving_union"
 
+            tooltipwidget = {
+                ContextualTooltipType = {
+                    blockoverride "title_icon" {
+                        icon = {
+                            using = tooltip_title_icon_size
+                            texture = "gfx/interface/icons/international_organizations/union.dds"
+                        }
+                    }
+
+                    blockoverride "title_text" {
+                        text = "ALERT_HAS_MEMBER_LEAVING_UNION_TITLE"
+                    }
+                    blockoverride "tooltip_content" {
+                        TooltipBlockList = {
+                            textcontext = "[AlertItem.GetTooltip]"
+                        }
+                        TooltipTextBlock = {
+                            blockoverride "text" {
+                                text = "ALERT_HAS_MEMBER_LEAVING_UNION_TEXT"
+                            }
+                        }
+                    }
+                }
+            }
+
             action_tooltip = {
                 click_type = left
                 title = "ALERT_HAS_MEMBER_LEAVING_LEFT_CLICK"
@@ -682,6 +707,12 @@ types "cmf_types" {
                         text = "[TitleDescTooltip.GetTitle]"
                     }
 
+                    blockoverride "title_button" {
+                        mapmode_tooltip_button = {
+                            datacontext = "[GetMapMode('antagonism')]"
+                        }
+                    }
+
                     blockoverride "tooltip_content" {
                         block "tooltip_content" {
                             TooltipRequirementsList = {
@@ -698,7 +729,76 @@ types "cmf_types" {
                                 blockoverride "block_title" {
                                     text = "LIST_OF_POTENTIAL_COALITION_COUNTRIES_TT"
                                 }
-
+                                widget = {
+                                    size = { 690 30 }
+                                    hbox = {
+                                        background = {
+                                            using = tile_background_squared_texture
+                                            frame_grid = { 1 2 }
+                                            spriteborder_bottom = 0
+                                            alpha = 0.4
+                                            modify_texture = {
+                                                using = color_turquoise_texture
+                                            }
+                                        }
+                                        layoutpolicy_horizontal = expanding
+                                        hbox = {
+                                            #spacing = 3
+                                            text_single = {
+                                                minimumsize = { 150 20 }
+                                                align = left|nobaseline
+                                                using = Font_Size_Small
+                                                text = "[country|e]"
+                                            }
+                                        }
+                                        hbox = {
+                                            #spacing = 3
+                                            text_single = {
+                                                minimumsize = { 90 20 }
+                                                align = left|nobaseline
+                                                using = Font_Size_Small
+                                                text = "[antagonism|e]"
+                                            }
+                                        }
+                                        hbox = {
+                                            #spacing = 3
+                                            text_single = {
+                                                minimumsize = { 50 20 }
+                                                align = left|nobaseline
+                                                using = Font_Size_Small
+                                                text = "ARMY_SIZE_WITH_CONCEPT"
+                                            }
+                                        }
+                                        hbox = {
+                                            #spacing = 3
+                                            text_single = {
+                                                maximumsize = { 60 20 }
+                                                align = left|nobaseline
+                                                using = Font_Size_Small
+                                                text = "NAVY_SIZE_WITH_CONCEPT"
+                                            }
+                                        }
+                                        hbox = {
+                                            #spacing = 3
+                                            text_single = {
+                                                maximumsize = { 110 20 }
+                                                align = left|nobaseline
+                                                using = Font_Size_Small
+                                                text = "[great_power_rank|e]"
+                                            }
+                                        }
+                                        hbox = {
+                                            #spacing = 3
+                                            text_single = {
+                                                maximumsize = { 60 20 }
+                                                align = left|nobaseline
+                                                using = Font_Size_Small
+                                                text = "STATUS_ANTAGONISM_ALERT_TT"
+                                            }
+                                        }
+                                    }
+                                }
+                                margin = { 0 5 }
                                 TooltipListScrollArea = {
                                     blockoverride "block_scrollarea" {
                                         maximumsize = { -1 665 }
@@ -719,13 +819,13 @@ types "cmf_types" {
 
                                                     hbox = {
                                                         using = layoutpolicy_expanding
-                                                        margin = { 3 0 }
-                                                        spacing = 2
+                                                        margin = { 10 0 }
+                                                        spacing = 1
 
                                                         #COUNTRY
                                                         widget = {
                                                             layoutpolicy_vertical = expanding
-                                                            size = { 200 -1 }
+                                                            size = { 170 -1 }
                                                             hbox = {
                                                                 spacing = 2
                                                                 country_flag_small = {}
@@ -766,7 +866,7 @@ types "cmf_types" {
                                                         #ARMY SIZE
                                                         widget = {
                                                             layoutpolicy_vertical = expanding
-                                                            size = { 90 -1 }
+                                                            size = { 120 -1 }
                                                             tagtooltip_enabled = yes
                                                             tooltip = "[army|e]"
                                                             hbox = {
@@ -789,7 +889,7 @@ types "cmf_types" {
                                                         #NAVY SIZE
                                                         widget = {
                                                             layoutpolicy_vertical = expanding
-                                                            size = { 90 -1 }
+                                                            size = { 100 -1 }
                                                             tagtooltip_enabled = yes
                                                             tooltip = "[navy|e]"
                                                             hbox = {
@@ -812,14 +912,14 @@ types "cmf_types" {
                                                         #GREAT POWER RANK
                                                         widget = {
                                                             layoutpolicy_vertical = expanding
-                                                            size = { 120 -1 }
+                                                            size = { 70 -1 }
                                                             tagtooltip_enabled = yes
-                                                            tooltip = "[great_power_score|e]"
+                                                            tooltip = "[great_power_rank|e]"
                                                             hbox = {
                                                                 spacing = 2
                                                                 icon = {
                                                                     size = { 30 30 }
-                                                                    texture = "[GetConceptTexture('great_power_score')]"
+                                                                    texture = "[GetConceptTexture('great_power_rank')]"
                                                                 }
 
                                                                 text_single = {
@@ -835,13 +935,34 @@ types "cmf_types" {
                                                         #STATUS
                                                         widget = {
                                                             layoutpolicy_vertical = expanding
-                                                            size = { 62 -1 }
+                                                            size = { 60 -1 }
                                                             hbox = {
                                                                 spacing = 2
-                                                                icon = {
-                                                                    texture = "gfx/interface/icons/diplomatic_status/truce.dds"
+                                                                piechart = {
+                                                                    size = { 25 25 }
                                                                     visible = "[Country.GetDiplomacy.GetRelation(GetPlayer.Self).HasTruce]"
-                                                                    size = { 30 30 }
+
+                                                                    using = bg_circle_piechart
+                                                                    using = piechart_angles
+
+                                                                    pieslice = {
+                                                                        texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+                                                                        value = "[Country.GetDiplomacy.GetRelation(GetPlayer.Self).GetTruceProgress]"
+                                                                        color = { 0.01 0.6 0.9 1 }
+                                                                    }
+
+                                                                    pieslice = {
+                                                                        texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+                                                                        value = "[Subtract_float('(float)100.0', Country.GetDiplomacy.GetRelation(GetPlayer.Self).GetTruceProgress)]"
+                                                                        color = { 1 1 1 0 }
+                                                                    }
+
+                                                                    icon = {
+                                                                        texture = "gfx/interface/icons/diplomatic_status/truce.dds"
+                                                                        size = { 85% 85% }
+                                                                        parentanchor = center
+                                                                    }
+
                                                                     tooltipwidget = {
                                                                         ContextualTooltipType = {
                                                                             blockoverride "title_icon" {
@@ -871,9 +992,43 @@ types "cmf_types" {
                                                                     }
                                                                 }
                                                                 icon = {
+                                                                    datacontext = "[Country]"
+                                                                    texture = "gfx/interface/icons/international_organizations/coalition.dds"
+                                                                    visible = "[Country.GetDiplomacy.HasCoalitionAgainst(Player.Self)]"
+                                                                    size = { 25 25 }
+                                                                    tooltipwidget = {
+                                                                        ContextualTooltipType = {
+                                                                            blockoverride "title_icon" {
+                                                                                icon = {
+                                                                                    size = { 50 50 }
+                                                                                    texture = "gfx/interface/icons/international_organizations/coalition.dds"
+                                                                                }
+                                                                            }
+
+                                                                            blockoverride "title_text" {
+                                                                                datacontext = "[Country]"
+                                                                                text = "COALITION_AGAINST_US_TITLE"
+                                                                            }
+
+                                                                            blockoverride "concept_link" {
+                                                                                text = [coalition|E]
+                                                                            }
+
+                                                                            blockoverride "tooltip_content" {
+                                                                                TooltipTextBlock = {
+                                                                                    blockoverride "text" {
+                                                                                        text = "COALITION_AGAINST_US_DESC"
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                icon = {
+                                                                    datacontext = "[Country]"
                                                                     texture = "gfx/interface/icons/diplomatic_status/war.dds"
                                                                     visible = "[Country.GetDiplomacy.GetRelation(GetPlayer.Self).HasWar]"
-                                                                    size = { 30 30 }
+                                                                    size = { 25 25 }
                                                                     tooltipwidget = {
                                                                         ContextualTooltipType = {
                                                                             blockoverride "title_icon" {
@@ -905,7 +1060,7 @@ types "cmf_types" {
                                                                 icon = {
                                                                     texture = "gfx/interface/icons/diplomatic_status/opinion_improvement_active.dds"
                                                                     visible = "[GreaterThan_CFixedPoint(Country.GetDiplomacy.GetOpinionOf(GetPlayer), '(CFixedPoint)0')]"
-                                                                    size = { 30 30 }
+                                                                    size = { 25 25 }
                                                                     tooltipwidget = {
                                                                         ContextualTooltipType = {
                                                                             blockoverride "title_icon" {
@@ -2497,9 +2652,8 @@ types "cmf_types" {
 
             blockoverride "icon_texture_obj" {
                 vbox = {
-                    spacing = 3
-                    margin_top = 16
-                    margin_bottom = 25
+                    margin_top = 13
+                    margin_bottom = 22
 
                     piechart = {
                         alwaystransparent = yes
@@ -2555,9 +2709,11 @@ types "cmf_types" {
                         using = bg_circle_piechart
                     }
 
+                    expand = {}
+
                     text_single = {
                         autoresize = no
-                        size = { 35 20 }
+                        size = { 35 15 }
                         fontsize = 14
                         align = center
                         visible = "[ParliamentInSession.GetParliament.WillParliamentIssuePass]"
@@ -2567,7 +2723,7 @@ types "cmf_types" {
 
                     text_single = {
                         autoresize = no
-                        size = { 35 20 }
+                        size = { 35 15 }
                         fontsize = 14
                         align = center
                         visible = "[Not(ParliamentInSession.GetParliament.WillParliamentIssuePass)]"
@@ -3225,50 +3381,53 @@ types "cmf_types" {
 
                     blockoverride "tooltip_content" {
                         block "tooltip_content" {
-                            TooltipListBase = { ### Disloyal Countries List
-                                blockoverride "block_title" {
+                            TooltipTextBlock = {
+                                blockoverride "text" {
                                     text = "ALERT_BUILDINGS_MISSING_EMPLOYEES"
                                 }
 
-                                TooltipScrolledContentSection = {
+                                # blockoverride "textblock_background_tint"  {
+                                # 	modify_texture = {
+                                # 		using = color_yellow_texture
+                                # 	}
+                                # }
+                            }
+                            TooltipListBase = {
+                                # blockoverride "block_title" {
+                                # 	text = "ALERT_BUILDINGS_MISSING_EMPLOYEES"
+                                # }
+
+                                TooltipListScrollArea = {
                                     blockoverride "block_scrollarea" {
                                         maximumsize = { -1 400 }
                                     }
-                                    blockoverride "section_content" {
-                                        spacing = 0
-                                        datamodel = "[AlertLackPopPromotion.GetLocations]"
-                                        item = {
-                                            vbox = {
-                                                layoutpolicy_horizontal = expanding
-                                                background = {
-                                                    visible = "[IsOdd_int32(PdxGuiWidget.GetIndexInDataModel)]"
-                                                    using = tooltip_table_field_texture
-                                                }
-                                                datamodel = "[SLocationWithLowPromotion.GetPops]"
-                                                item = {
-                                                    fixedgridbox = {
-                                                        addcolumn = 420
-                                                        addrow = 30
+                                    blockoverride "scrollarea_content" {
+                                        fixedgridbox = {
+                                            addcolumn = 420
+                                            addrow = 30
 
-                                                        datamodel = "[SPopTypeWithLowPromotion.GetBuildings]"
-                                                        item = {
-                                                            widget = {
-                                                                size = { 100% 30 }
-                                                                hbox = {
-                                                                    margin = { 10 0 }
-                                                                    spacing = 10
+                                            datamodel = "[AlertLackPopPromotion.GetBuildings]"
+                                            item = {
+                                                widget = {
+                                                    size = { 100% 30 }
+                                                    background = {
+                                                        visible = "[IsOdd_int32(PdxGuiWidget.GetIndexInDataModel)]"
+                                                        using = tooltip_table_field_texture
+                                                    }
 
-                                                                    text_single = {
-                                                                        align = nobaseline
-                                                                        text = "ALERT_BUILDINGS_MISSING_EMPLOYEES_BUILDING"
-                                                                    }
-                                                                    expand = {}
+                                                    hbox = {
+                                                        using = layoutpolicy_expanding
+                                                        margin = { 10 0 }
+                                                        spacing = 10
 
-                                                                    text_single = {
-                                                                        text = "[SelectLocalization(SBuildingWithMissingEmployees.HasMonthsNeeded, SBuildingWithMissingEmployees.GetMonths, 'ALERT_BUILDINGS_MISSING_EMPLOYEES_BUILDING_NONE')]"
-                                                                    }
-                                                                }
-                                                            }
+                                                        text_single = {
+                                                            align = nobaseline
+                                                            text = "ALERT_BUILDINGS_MISSING_EMPLOYEES_BUILDING"
+                                                        }
+                                                        expand = {}
+
+                                                        text_single = {
+                                                            text = "[SelectLocalization(SBuildingWithMissingEmployees.HasMonthsNeeded, SBuildingWithMissingEmployees.GetMonths, 'ALERT_BUILDINGS_MISSING_EMPLOYEES_BUILDING_NONE')]"
                                                         }
                                                     }
                                                 }
@@ -3332,10 +3491,21 @@ types "cmf_types" {
 
                     blockoverride "tooltip_content" {
                         block "tooltip_content" {
-                            TooltipListBase = { ### Disloyal Countries List
-                                blockoverride "block_title" {
+                            TooltipTextBlock = {
+                                blockoverride "text" {
                                     text = "ALERT_RGO_MISSING_EMPLOYEES"
                                 }
+
+                                # blockoverride "textblock_background_tint"  {
+                                # 	modify_texture = {
+                                # 		using = color_yellow_texture
+                                # 	}
+                                # }
+                            }
+                            TooltipListBase = { ### Disloyal Countries List
+                                # blockoverride "block_title" {
+                                # 	text = "ALERT_RGO_MISSING_EMPLOYEES"
+                                # }
 
                                 TooltipListScrollArea = {
                                     blockoverride "block_scrollarea" {
@@ -5386,10 +5556,10 @@ types "cmf_types" {
                                 text = "ALERT_CHILD_UNEDUCATED_PLURAL"
                                 default_format = "#color_white"
                             }
-                            blockoverride "rowlist_datamodel_is_empty" { visible = "[IsDataModelEmpty(Player.GetLivingCharacters)]"}
-                            blockoverride "rowlist_datamodel_has_items" { visible = "[DataModelHasItems(Player.GetLivingCharacters)]"}
+                            blockoverride "rowlist_datamodel_is_empty" { visible = "[IsDataModelEmpty(AlertHasUneducatedChild.GetUneducatedChildren)]"}
+                            blockoverride "rowlist_datamodel_has_items" { visible = "[DataModelHasItems(AlertHasUneducatedChild.GetUneducatedChildren)]"}
                             blockoverride "rowlist_datamodel" {
-                                datamodel = "[Player.GetLivingCharacters]"
+                                datamodel = "[AlertHasUneducatedChild.GetUneducatedChildren]"
                                 ignoreinvisible = yes
                             }
                             blockoverride "visibility" {
@@ -5442,6 +5612,54 @@ types "cmf_types" {
             blockoverride "icon_texture" {
                 texture = "gfx/interface/icons/alerts_icons/has_uneducated_child.dds"
             }
+        }
+
+        ###################################
+        # We can ask for money
+        ###################################
+
+        alert_banner = {
+            name = "can_ask_for_money"
+
+            action_tooltip = {
+                click_type = left
+                title = "ALERT_CTA_LEFT_CLICK"
+                using = snd_UI_alert_openAndCycle
+                on_action = "[AlertCanAskForMoney.OnAction]"
+            }
+
+            using = green_alert
+
+            blockoverride "icon_texture" {
+                texture = "gfx/interface/icons/diplomatic_actions/friendly_actions.dds"
+            }
+
+            onmousehierarchyenter = "[SetHighlightedTab('diplomacy_group')]"
+            onmousehierarchyleave = "[ResetHighlightedTab]"
+        }
+
+        ###################################
+        # We can ask subject to improve cultural view
+        ###################################
+
+        alert_banner = {
+            name = "can_improve_subject_cultural_view"
+
+            action_tooltip = {
+                click_type = left
+                title = "ALERT_CTA_LEFT_CLICK"
+                using = snd_UI_alert_openAndCycle
+                on_action = "[AlertCanImproveSubjectCulturalView.OnAction]"
+            }
+
+            using = green_alert
+
+            blockoverride "icon_texture" {
+                texture = "gfx/interface/icons/diplomatic_actions/subject_actions.dds"
+            }
+
+            onmousehierarchyenter = "[SetHighlightedTab('diplomacy_group')]"
+            onmousehierarchyleave = "[ResetHighlightedTab]"
         }
 
         ###########################
@@ -5757,6 +5975,7 @@ types "cmf_types" {
             blockoverride "icon_texture" {
                 texture = "gfx/interface/icons/alerts_icons/control_groups.dds"
             }
+            blockoverride "action_tooltip_left" { }
         }
     }
 

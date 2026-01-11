@@ -1,8 +1,10 @@
-sgui_cmf_is_building_shown = {
+﻿sgui_cmf_is_building_shown = {
 	scope = building_type
-	saved_scope = {
+
+	saved_scopes = {
 		player
 	}
+
 	is_shown = {
 		NOT = {
 			OR = {

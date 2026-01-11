@@ -645,8 +645,7 @@ lateralview = {
 											set_parent_size_to_minimum = yes
 											minimumsize = { 527 -1 }
 											ignoreinvisible = yes
-											margin = {0 5}
-
+											margin = { 0 3 }
 
 											vbox = {
 												layoutpolicy_horizontal = expanding
@@ -706,10 +705,75 @@ lateralview = {
 														expand = {}
 
 														text_single = {
-															text = "[CategoryBuildingTypesItem.GetBuildingTypesAmount]"
-															align = nobaseline
-															maximumsize = {100 -1}
-														}
+															# visible = "[CategoryBuildingTypesItem.HasProducingBuildingsBuilt]"
+															visible = "[And(
+																Not(CategoryBuildingTypesItem.HasUpkeepBuildingsBuilt),
+																CategoryBuildingTypesItem.HasProducingBuildingsBuilt
+															)]"
+                                                            raw_text = "[CategoryBuildingTypesItem.GetTotalNetProfit|+=2]@tax_base!"
+                                                            align = right
+                                                            autoresize = no
+                                                            size = {90 20}
+															tooltipmeta = {
+																texture = "[GetConceptTexture('tax_base')]"
+																game_concept = "[tax_base|E]"
+																title = "BUILDING_CATEGORY_INCOME_TT_TITLE"
+															}
+															tooltipwidget = {
+																using = BuildingCategory_income_tooltip
+															}
+                                                        }
+
+														text_single = {
+															visible = "[And(
+																Not(CategoryBuildingTypesItem.HasUpkeepBuildingsBuilt),
+																CategoryBuildingTypesItem.HasProducingBuildingsBuilt
+															)]"
+															# visible = "[CategoryBuildingTypesItem.HasProducingBuildingsBuilt]"
+                                                            raw_text = "[CategoryBuildingTypesItem.GetTotalIncome|+=2]@income!"
+                                                            align = right
+                                                            autoresize = no
+                                                            size = {90 20}
+															tooltipmeta = {
+																texture = "[GetConceptTexture('income')]"
+																game_concept = "[income|E]"
+																title = "BUILDING_CATEGORY_TAX_BASE_TT_TITLE"
+															}
+															tooltipwidget = {
+																using = BuildingCategory_income_tooltip
+															}
+                                                        }
+
+                                                        text_single = {
+															visible = "[CategoryBuildingTypesItem.HasUpkeepBuildingsBuilt]"
+                                                            raw_text = "#R -[CategoryBuildingTypesItem.GetTotalMaintenanceCost|2]#!@expense!"
+                                                            align = right
+                                                            autoresize = no
+                                                            size = {90 20}
+															tooltipmeta = {
+																texture = "[GetConceptTexture('expense')]"
+																game_concept = "[expense|E]"
+																title = "BUILDING_CATEGORY_UPKEEP_TT_TITLE"
+															}
+															tooltipwidget = {
+																using = BuildingCategory_upkeep_tooltip
+															}
+                                                        }
+
+                                                        text_single = {
+                                                            visible = no
+															# text = "[CategoryBuildingTypesItem.GetTotalBuilt]"
+                                                            align = right
+                                                            autoresize = no
+                                                            size = {40 20}
+                                                        }
+
+                                                        text_single = {
+                                                            text = "[CategoryBuildingTypesItem.GetBuildingTypesAmount]"
+                                                            align = right
+                                                            autoresize = no
+                                                            size = {40 20}
+                                                        }
 														icon = {
 															size = { 18 18 }
 															visible = "[Not(CategoryBuildingTypesItem.IsExpanded)]"
@@ -728,9 +792,10 @@ lateralview = {
 
 												vbox = {
 													layoutpolicy_horizontal = expanding
-													maximumsize = {507 -1}
-													margin = { 5 7 }
-													margin_bottom = 0
+													visible = "[CategoryBuildingTypesItem.IsExpanded]"
+													margin = { 5 10 }
+													margin_bottom = 2
+
 													# CMF: switched fixedgridbox to dynamicgridbox
 													dynamicgridbox = {
 														# CMF: hide invisible items
@@ -762,79 +827,10 @@ lateralview = {
 																	widget = {
 																		using = layoutpolicy_expanding
 
-																		vbox = {
-																			using = layoutpolicy_expanding
-																			margin = { 2 4 }
-																			margin_bottom = 2
-
-																			expand = {}
-
-																			widget = {
-																				layoutpolicy_horizontal = expanding
-																				size = { -1 17 }
-																				using = bg_text_mask_container_brown
-																				hbox = {
-																					text_single = {
-																						layoutpolicy_horizontal = expanding
-																						size = { -1 16 }
-																						autoresize = no
-																						align = center
-																						visible = "[Not(BuildingItem.AreBuildingsUnderConstruction)]"
-																						text = "[BuildingItem.GetTotalLevel]"
-																						
-																						tooltipwidget = {
-																							SimpleContextualStringPairTooltipType = {
-																								blockoverride "title_icon_texture" {
-																									texture = "[GetBuildingIcon(BuildingItem.GetBuildingType.Self)]"
-																								}
-
-																								lowpriotextcontext =  "NUMBER_BUILDING"
-																							}
-																						}
-																					}
-																					text_single = {
-																						layoutpolicy_horizontal = expanding
-																						size = { -1 16 }
-																						autoresize = no
-																						align = center
-																						visible = "[BuildingItem.AreBuildingsUnderConstruction]"
-																						raw_text = "[BuildingItem.GetTotalLevel] [BuildingItem.GetTotalLevelsUnderConstruction|0+=]"
-
-																						tooltipwidget = {
-																							SimpleContextualStringPairTooltipType = {
-																								blockoverride "title_icon_texture" {
-																									texture = "[GetBuildingIcon(BuildingItem.GetBuildingType.Self)]"
-																								}
-
-																								lowpriotextcontext =  "NUMBER_BUILDING"
-																							}
-																						}
-																					}
-																				}
-																				sort_by_highlight = {
-																					size = { 30 110% }
-																					name = "level"
-																				}
-																			}
-																		}
-
-																		background = {
-																			using = bg_round_corners_alt_texture
-																			margin = {-1 -1}
-																			modify_texture = {
-																				color = "[BuildingItem.GetBuildingType.GetPopType.GetColor]"
-																				# blend_mode = multiply
-																				alpha = 0.8
-																			}
-																			modify_texture = {
-																				using = overlay_cloth_texture
-																				blend_mode = overlay
-																				alpha = 0.1
-																			}
-																		}
-
 																		card_header_button_04 = {
 																			size = { 100% 100% }
+																			# filter_mouse = none
+																			# alwaystransparent = yes
 
 																			action_tooltip = {
 																				click_type = left
@@ -870,6 +866,84 @@ lateralview = {
 																						}
 																					}
 																				}
+																			}
+																		}
+
+																		vbox = {
+																			using = layoutpolicy_expanding
+																			margin = { 2 4 }
+																			margin_bottom = 2
+
+																			expand = {}
+
+																			widget = {
+																				layoutpolicy_horizontal = expanding
+																				size = { -1 17 }
+																				using = bg_text_mask_container_brown
+																				hbox = {
+																					text_single = {
+																						layoutpolicy_horizontal = expanding
+																						size = { -1 16 }
+																						autoresize = no
+																						align = center
+																						visible = "[Not(BuildingItem.AreBuildingsUnderConstruction)]"
+																						text = "[BuildingItem.GetTotalLevel]"
+																					}
+																					text_single = {
+																						layoutpolicy_horizontal = expanding
+																						size = { -1 16 }
+																						autoresize = no
+																						align = center
+																						visible = "[BuildingItem.AreBuildingsUnderConstruction]"
+																						raw_text = "[BuildingItem.GetTotalLevel] [BuildingItem.GetTotalLevelsUnderConstruction|0+=]"
+
+																					}
+																				}
+																				hbox = {
+																					visible = "[BuildingItem.GetBuildingType.IsProducing]"
+																					using = layoutpolicy_expanding
+
+																					tooltipmeta = {
+																						texture = "[GetBuildingIcon(BuildingItem.GetBuildingType.Self)]"
+																						game_concept = "[building|E]"
+																						title = "BUILDING_TYPE_INCOME_TT_TITLE"
+																					}
+																					tooltipwidget = {
+																						using = BuildingType_income_tooltip
+																					}
+																				}
+																				hbox = {
+																					visible = "[Not(BuildingItem.GetBuildingType.IsProducing)]"
+																					using = layoutpolicy_expanding
+
+																					tooltipmeta = {
+																						texture = "[GetBuildingIcon(BuildingItem.GetBuildingType.Self)]"
+																						game_concept = "[building_maintenance|E]"
+																						title = "BUILDING_TYPE_UPKEEP_TT_TITLE"
+																					}
+																					tooltipwidget = {
+																						using = BuildingType_upkeep_tooltip
+																					}
+																				}
+																				sort_by_highlight = {
+																					size = { 30 110% }
+																					name = "level"
+																				}
+																			}
+																		}
+
+																		background = {
+																			using = bg_round_corners_alt_texture
+																			margin = {-1 -1}
+																			modify_texture = {
+																				color = "[BuildingItem.GetBuildingType.GetPopType.GetColor]"
+																				# blend_mode = multiply
+																				alpha = 0.8
+																			}
+																			modify_texture = {
+																				using = overlay_cloth_texture
+																				blend_mode = overlay
+																				alpha = 0.1
 																			}
 																		}
 

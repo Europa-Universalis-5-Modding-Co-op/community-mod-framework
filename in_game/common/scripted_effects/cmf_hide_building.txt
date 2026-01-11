@@ -1,4 +1,4 @@
-# Add a building type to the list of types to hide in a country scope
+﻿# Add a building type to the list of types to hide in a country scope
 # ROOT: country
 # ARGS: building_type
 cmf_country_hide_building = {
