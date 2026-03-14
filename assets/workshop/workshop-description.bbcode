@@ -1,23 +1,39 @@
-﻿[h1]Overview:[/h1]
-...
+[h1]Community Mod Framework[/h1]
 
-[h1]Features:[/h1]
-[olist]
- [*][b]Feature 1:[/b] Feature 1 description
+The [b]Community Mod Framework (CMF)[/b] is a shared utility mod that provides a mod menu and modding tools for Europa Universalis V.
+This framework makes several changes to GUI files. While generally scripted for compatibility, it will collide with other mods that touch these files.
+
+[b]This framework is structured to be load order agnostic by using the Europa Universalis V file loading behavior, but it is good practice to place this mod before/above any other mods in your mod loader.[/b]
+
+Documentation available on GitHub: $REPLACE_ME$
+
+Any questions, feel free to reach out via the Modding Co-op: https://discord.gg/aUV49QbqYm
+
+[h1]Features[/h1]
+[list]
+[*][b]Community Mod Menu (CMM):[/b] A shared in-game mod settings window. Mod authors register settings dynamically through a simple API — no need to build a custom settings UI.
   [list]
-   [*][b]Sub-Feature 1:[/b] Feature 1 sub-feature description
-   [*][b]Sub-Feature 2:[/b] Feature 1 sub-feature description
+   [*]Toggle, button, numeric, slider (double click to drag), dropdown, text (singleplayer-only), and list settings
+   [*]Per-mod tabs, groups, and search
+   [*]Global settings with host-only multiplayer editing
+   [*]CMM Visual Editor tool for code-free setup
   [/list]
- [*][b]Feature 2:[/b] Feature 2 description
- [*][b]...[/b]
-[/olist]
+[*][b]Custom Alerts:[/b] Create and show custom alerts in the alert bar through localization keys and scripted GUIs.
+[*][b]Action Bar:[/b] Add custom action bar buttons with localization keys and scripted GUIs.
+[*][b]Building Hiding:[/b] Hide building types from the Production -> Buildings view.
+[/list]
 
-[h1]Planned/Upcoming:[/h1]
-[olist]
- [*][b]Planned Feature 1:[/b] Planned Feature 1 description
- [*][b]Planned Feature 2:[/b] Planned Feature 2 description
- [*][b]...[/b]
-[/olist]
+[h1]Contributors[/h1]
+[list]
+[*]Bahmut
+[*]Conner
+[*]Pickle
+[/list]
+
+[h1]Mods using CMF[/h1]
+[list]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
+[/list]
 
 [h1]Native Localizations:[/h1]
 [list]

@@ -1,7 +1,7 @@
-# Community Mod Framework
-![banner.png](/docs/banner.png)
+# Community Mod Framework (CMF)
+![banner](assets/images/cmf/banner.png)
 
-The Community Mod Framework aims to support compatibility between different mods.
+A shared mod framework and menu for **Europa Universalis 5**. Includes the Community Mod Menu (CMM), custom alerts, action bar elements, and more.
 
 ## Steam Page
 https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
@@ -9,6 +9,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
 ## Contents
 * [Philosophy](#philosophy)
 * [Setting Dependency](#setting-dependency)
+* [Community Mod Menu (CMM)](#community-mod-menu-cmm)
 * [GUI Features](#gui-features)
   * [Custom Alerts](#custom-alerts)
   * [Action Bar](#action-bar)
@@ -27,18 +28,26 @@ The goal is to provide mods that make use of it, new ways to show content or hoo
 # Setting Dependency
 
 To set this mod as a dependency to your own mod, you will need to add this to your `metadata.json` file:
-```
+```json
   "relationships" : [
     {
       "rel_type" : "dependency",
-      "id" : "com.github.Europa-Universalis-5-Modding-Co-op.community-mod-framework",
+      "id" : "community.mod.framework",
       "display_name" : "Community Mod Framework",
       "resource_type" : "mod",
-      "version" : "1.*"
+      "version" : "2.*"
     }
   ]
 ```
 **Also remember to add the mod to your required items on your own mods steam page.**
+
+# Community Mod Menu (CMM)
+
+CMM is a shared in-game mod settings window included in CMF. It allows mod authors to register settings dynamically through a simple API — no need to build a custom settings UI.
+
+**Supported setting types:** toggle, button, numeric, slider, dropdown, text, and list settings — with per-mod tabs, groups, search, and global settings with host-only multiplayer editing.
+
+For full integration docs, see the [CMM Wiki Page](https://eu5.paradoxwikis.com/Community_Mod_Menu).
 
 # GUI Features
 
@@ -46,7 +55,7 @@ To set this mod as a dependency to your own mod, you will need to add this to yo
 You can create and show custom alerts. This is achieved through a combination of localization keys and a scripted gui.
 
 ### Screenshots
-[<img src="docs/screenshots/custom_alerts.png" width="150">](docs/screenshots/custom_alerts.png)
+[<img src="assets/images/cmf/custom_alerts.png" width="150">](assets/images/cmf/custom_alerts.png)
 
 ### Setup
 Custom alerts require a set of localization keys.
@@ -127,8 +136,8 @@ You can create and show custom action bar elements.
 This is achieved through a combination of localization keys and a scripted gui.
 
 ### Screenshots
-[<img src="docs/screenshots/action_bar.png" width="150">](docs/screenshots/action_bar.png)
-[<img src="docs/screenshots/action_bar_customizable.png" width="150">](docs/screenshots/action_bar_customizable.png)
+[<img src="assets/images/cmf/action_bar.png" width="150">](assets/images/cmf/action_bar.png)
+[<img src="assets/images/cmf/action_bar_customizable.png" width="150">](assets/images/cmf/action_bar_customizable.png)
 
 ### Setup
 Custom action bar buttons require a set of localization keys.
@@ -328,4 +337,9 @@ Usage examples can be found [here](in_game/events/cmf_hidden.txt).
 
 # Contributors
 - [Bahmut](https://steamcommunity.com/id/Bahmut/)
+- [Conner](https://steamcommunity.com/profiles/76561198080282941)
 - [Pickle](https://steamcommunity.com/id/pickled-dev)
+
+# License
+
+GPL-3.0. See [LICENSE](LICENSE).
