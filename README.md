@@ -47,7 +47,7 @@ CMM is a shared in-game mod settings window included in CMF. It allows mod autho
 
 **Supported setting types:** toggle, button, numeric, slider, dropdown, text, and list settings — with per-mod tabs, groups, search, and global settings with host-only multiplayer editing.
 
-For full integration docs, see the [CMM Wiki Page](https://eu5.paradoxwikis.com/Community_Mod_Menu).
+For the full docs, see the [CMM Wiki Page](https://eu5.paradoxwikis.com/Community_Mod_Menu).
 
 # GUI Features
 
@@ -342,4 +342,4 @@ Usage examples can be found [here](in_game/events/cmf_hidden.txt).
 
 # License
 
-GPL-3.0. See [LICENSE](LICENSE).
+ISC. See [LICENSE](LICENSE).
