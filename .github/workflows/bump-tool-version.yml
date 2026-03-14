@@ -1,0 +1,39 @@
+name: Bump Visual Editor patch version
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - 'tools/cmm-visual-editor/**'
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'Bump CMM Visual Editor')"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bump patch version
+        run: |
+          FILE="tools/cmm-visual-editor/pyproject.toml"
+          CURRENT=$(grep -oP 'version = "\K[^"]+' "$FILE")
+          MAJOR=$(echo "$CURRENT" | cut -d. -f1)
+          MINOR=$(echo "$CURRENT" | cut -d. -f2)
+          PATCH=$(echo "$CURRENT" | cut -d. -f3)
+          NEW="$MAJOR.$MINOR.$((PATCH + 1))"
+          sed -i "s/version = \"$CURRENT\"/version = \"$NEW\"/" "$FILE"
+          echo "Bumped $CURRENT -> $NEW"
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tools/cmm-visual-editor/pyproject.toml
+          git diff --cached --quiet && echo "No change" && exit 0
+          git commit -m "Bump CMM Visual Editor to $(grep -oP 'version = "\K[^"]+' tools/cmm-visual-editor/pyproject.toml)"
+          git push

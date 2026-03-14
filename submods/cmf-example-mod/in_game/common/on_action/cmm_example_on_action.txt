@@ -1,0 +1,12 @@
+﻿# Hook this mod into CMM shared registration on_action.
+cmm_on_mod_registration = {
+	on_actions = {
+		cmm_example_on_register_mod
+	}
+}
+
+cmm_example_on_register_mod = {
+	effect = {
+		cmm_example_register_mod = yes
+	}
+}

@@ -1,0 +1,1541 @@
+﻿# Begin a slider drag interaction.
+# Scope: country
+# Args: none
+CMM_StartSliderDrag = {
+	effect = {
+		set_variable = { name = cmm_slider_dragging value = 1 }
+	}
+}
+
+# End a slider drag interaction.
+# Scope: country
+# Args: none
+CMM_StopSliderDrag = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			remove_variable = cmm_slider_dragging
+		}
+	}
+}
+
+# Mark the next slider interaction as visual slot `0`.
+# Scope: country
+# Args: none
+CMM_MarkSliderSelection_0 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 0 }
+	}
+}
+
+CMM_MarkSliderSelection_1 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 1 }
+	}
+}
+
+CMM_MarkSliderSelection_2 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 2 }
+	}
+}
+
+CMM_MarkSliderSelection_3 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 3 }
+	}
+}
+
+CMM_MarkSliderSelection_4 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 4 }
+	}
+}
+
+CMM_MarkSliderSelection_5 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 5 }
+	}
+}
+
+CMM_MarkSliderSelection_6 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 6 }
+	}
+}
+
+CMM_MarkSliderSelection_7 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 7 }
+	}
+}
+
+CMM_MarkSliderSelection_8 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 8 }
+	}
+}
+
+CMM_MarkSliderSelection_9 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 9 }
+	}
+}
+
+CMM_MarkSliderSelection_10 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 10 }
+	}
+}
+
+CMM_MarkSliderSelection_11 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 11 }
+	}
+}
+
+CMM_MarkSliderSelection_12 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 12 }
+	}
+}
+
+CMM_MarkSliderSelection_13 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 13 }
+	}
+}
+
+CMM_MarkSliderSelection_14 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 14 }
+	}
+}
+
+CMM_MarkSliderSelection_15 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 15 }
+	}
+}
+
+CMM_MarkSliderSelection_16 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 16 }
+	}
+}
+
+CMM_MarkSliderSelection_17 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 17 }
+	}
+}
+
+CMM_MarkSliderSelection_18 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 18 }
+	}
+}
+
+CMM_MarkSliderSelection_19 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 19 }
+	}
+}
+
+CMM_MarkSliderSelection_20 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 20 }
+	}
+}
+
+CMM_MarkSliderSelection_21 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 21 }
+	}
+}
+
+CMM_MarkSliderSelection_22 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 22 }
+	}
+}
+
+CMM_MarkSliderSelection_23 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 23 }
+	}
+}
+
+CMM_MarkSliderSelection_24 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 24 }
+	}
+}
+
+CMM_MarkSliderSelection_25 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 25 }
+	}
+}
+
+CMM_MarkSliderSelection_26 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 26 }
+	}
+}
+
+CMM_MarkSliderSelection_27 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 27 }
+	}
+}
+
+CMM_MarkSliderSelection_28 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 28 }
+	}
+}
+
+CMM_MarkSliderSelection_29 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 29 }
+	}
+}
+
+CMM_MarkSliderSelection_30 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 30 }
+	}
+}
+
+CMM_MarkSliderSelection_31 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 31 }
+	}
+}
+
+CMM_MarkSliderSelection_32 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 32 }
+	}
+}
+
+CMM_MarkSliderSelection_33 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 33 }
+	}
+}
+
+CMM_MarkSliderSelection_34 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 34 }
+	}
+}
+
+CMM_MarkSliderSelection_35 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 35 }
+	}
+}
+
+CMM_MarkSliderSelection_36 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 36 }
+	}
+}
+
+CMM_MarkSliderSelection_37 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 37 }
+	}
+}
+
+CMM_MarkSliderSelection_38 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 38 }
+	}
+}
+
+CMM_MarkSliderSelection_39 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 39 }
+	}
+}
+
+CMM_MarkSliderSelection_40 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 40 }
+	}
+}
+
+CMM_MarkSliderSelection_41 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 41 }
+	}
+}
+
+CMM_MarkSliderSelection_42 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 42 }
+	}
+}
+
+CMM_MarkSliderSelection_43 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 43 }
+	}
+}
+
+CMM_MarkSliderSelection_44 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 44 }
+	}
+}
+
+CMM_MarkSliderSelection_45 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 45 }
+	}
+}
+
+CMM_MarkSliderSelection_46 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 46 }
+	}
+}
+
+CMM_MarkSliderSelection_47 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 47 }
+	}
+}
+
+CMM_MarkSliderSelection_48 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 48 }
+	}
+}
+
+CMM_MarkSliderSelection_49 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 49 }
+	}
+}
+
+CMM_MarkSliderSelection_50 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 50 }
+	}
+}
+
+CMM_MarkSliderSelection_51 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 51 }
+	}
+}
+
+CMM_MarkSliderSelection_52 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 52 }
+	}
+}
+
+CMM_MarkSliderSelection_53 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 53 }
+	}
+}
+
+CMM_MarkSliderSelection_54 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 54 }
+	}
+}
+
+CMM_MarkSliderSelection_55 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 55 }
+	}
+}
+
+CMM_MarkSliderSelection_56 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 56 }
+	}
+}
+
+CMM_MarkSliderSelection_57 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 57 }
+	}
+}
+
+CMM_MarkSliderSelection_58 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 58 }
+	}
+}
+
+CMM_MarkSliderSelection_59 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 59 }
+	}
+}
+
+CMM_MarkSliderSelection_60 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 60 }
+	}
+}
+
+CMM_MarkSliderSelection_61 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 61 }
+	}
+}
+
+CMM_MarkSliderSelection_62 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 62 }
+	}
+}
+
+CMM_MarkSliderSelection_63 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 63 }
+	}
+}
+
+CMM_MarkSliderSelection_64 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 64 }
+	}
+}
+
+CMM_MarkSliderSelection_65 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 65 }
+	}
+}
+
+CMM_MarkSliderSelection_66 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 66 }
+	}
+}
+
+CMM_MarkSliderSelection_67 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 67 }
+	}
+}
+
+CMM_MarkSliderSelection_68 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 68 }
+	}
+}
+
+CMM_MarkSliderSelection_69 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 69 }
+	}
+}
+
+CMM_MarkSliderSelection_70 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 70 }
+	}
+}
+
+CMM_MarkSliderSelection_71 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 71 }
+	}
+}
+
+CMM_MarkSliderSelection_72 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 72 }
+	}
+}
+
+CMM_MarkSliderSelection_73 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 73 }
+	}
+}
+
+CMM_MarkSliderSelection_74 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 74 }
+	}
+}
+
+CMM_MarkSliderSelection_75 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 75 }
+	}
+}
+
+CMM_MarkSliderSelection_76 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 76 }
+	}
+}
+
+CMM_MarkSliderSelection_77 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 77 }
+	}
+}
+
+CMM_MarkSliderSelection_78 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 78 }
+	}
+}
+
+CMM_MarkSliderSelection_79 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 79 }
+	}
+}
+
+CMM_MarkSliderSelection_80 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 80 }
+	}
+}
+
+CMM_MarkSliderSelection_81 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 81 }
+	}
+}
+
+CMM_MarkSliderSelection_82 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 82 }
+	}
+}
+
+CMM_MarkSliderSelection_83 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 83 }
+	}
+}
+
+CMM_MarkSliderSelection_84 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 84 }
+	}
+}
+
+CMM_MarkSliderSelection_85 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 85 }
+	}
+}
+
+CMM_MarkSliderSelection_86 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 86 }
+	}
+}
+
+CMM_MarkSliderSelection_87 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 87 }
+	}
+}
+
+CMM_MarkSliderSelection_88 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 88 }
+	}
+}
+
+CMM_MarkSliderSelection_89 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 89 }
+	}
+}
+
+CMM_MarkSliderSelection_90 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 90 }
+	}
+}
+
+CMM_MarkSliderSelection_91 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 91 }
+	}
+}
+
+CMM_MarkSliderSelection_92 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 92 }
+	}
+}
+
+CMM_MarkSliderSelection_93 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 93 }
+	}
+}
+
+CMM_MarkSliderSelection_94 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 94 }
+	}
+}
+
+CMM_MarkSliderSelection_95 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 95 }
+	}
+}
+
+CMM_MarkSliderSelection_96 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 96 }
+	}
+}
+
+CMM_MarkSliderSelection_97 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 97 }
+	}
+}
+
+CMM_MarkSliderSelection_98 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 98 }
+	}
+}
+
+CMM_MarkSliderSelection_99 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 99 }
+	}
+}
+
+CMM_MarkSliderSelection_100 = {
+	effect = {
+		set_variable = { name = cmm_slider_index_to_apply value = 100 }
+	}
+}
+
+# Conditionally mark visual slot `0` during a slider drag.
+# Scope: country
+# Args: none
+CMM_SliderDragHover_0 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 0 }
+		}
+	}
+}
+
+CMM_SliderDragHover_1 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 1 }
+		}
+	}
+}
+
+CMM_SliderDragHover_2 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 2 }
+		}
+	}
+}
+
+CMM_SliderDragHover_3 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 3 }
+		}
+	}
+}
+
+CMM_SliderDragHover_4 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 4 }
+		}
+	}
+}
+
+CMM_SliderDragHover_5 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 5 }
+		}
+	}
+}
+
+CMM_SliderDragHover_6 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 6 }
+		}
+	}
+}
+
+CMM_SliderDragHover_7 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 7 }
+		}
+	}
+}
+
+CMM_SliderDragHover_8 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 8 }
+		}
+	}
+}
+
+CMM_SliderDragHover_9 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 9 }
+		}
+	}
+}
+
+CMM_SliderDragHover_10 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 10 }
+		}
+	}
+}
+
+CMM_SliderDragHover_11 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 11 }
+		}
+	}
+}
+
+CMM_SliderDragHover_12 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 12 }
+		}
+	}
+}
+
+CMM_SliderDragHover_13 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 13 }
+		}
+	}
+}
+
+CMM_SliderDragHover_14 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 14 }
+		}
+	}
+}
+
+CMM_SliderDragHover_15 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 15 }
+		}
+	}
+}
+
+CMM_SliderDragHover_16 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 16 }
+		}
+	}
+}
+
+CMM_SliderDragHover_17 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 17 }
+		}
+	}
+}
+
+CMM_SliderDragHover_18 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 18 }
+		}
+	}
+}
+
+CMM_SliderDragHover_19 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 19 }
+		}
+	}
+}
+
+CMM_SliderDragHover_20 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 20 }
+		}
+	}
+}
+
+CMM_SliderDragHover_21 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 21 }
+		}
+	}
+}
+
+CMM_SliderDragHover_22 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 22 }
+		}
+	}
+}
+
+CMM_SliderDragHover_23 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 23 }
+		}
+	}
+}
+
+CMM_SliderDragHover_24 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 24 }
+		}
+	}
+}
+
+CMM_SliderDragHover_25 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 25 }
+		}
+	}
+}
+
+CMM_SliderDragHover_26 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 26 }
+		}
+	}
+}
+
+CMM_SliderDragHover_27 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 27 }
+		}
+	}
+}
+
+CMM_SliderDragHover_28 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 28 }
+		}
+	}
+}
+
+CMM_SliderDragHover_29 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 29 }
+		}
+	}
+}
+
+CMM_SliderDragHover_30 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 30 }
+		}
+	}
+}
+
+CMM_SliderDragHover_31 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 31 }
+		}
+	}
+}
+
+CMM_SliderDragHover_32 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 32 }
+		}
+	}
+}
+
+CMM_SliderDragHover_33 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 33 }
+		}
+	}
+}
+
+CMM_SliderDragHover_34 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 34 }
+		}
+	}
+}
+
+CMM_SliderDragHover_35 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 35 }
+		}
+	}
+}
+
+CMM_SliderDragHover_36 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 36 }
+		}
+	}
+}
+
+CMM_SliderDragHover_37 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 37 }
+		}
+	}
+}
+
+CMM_SliderDragHover_38 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 38 }
+		}
+	}
+}
+
+CMM_SliderDragHover_39 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 39 }
+		}
+	}
+}
+
+CMM_SliderDragHover_40 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 40 }
+		}
+	}
+}
+
+CMM_SliderDragHover_41 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 41 }
+		}
+	}
+}
+
+CMM_SliderDragHover_42 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 42 }
+		}
+	}
+}
+
+CMM_SliderDragHover_43 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 43 }
+		}
+	}
+}
+
+CMM_SliderDragHover_44 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 44 }
+		}
+	}
+}
+
+CMM_SliderDragHover_45 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 45 }
+		}
+	}
+}
+
+CMM_SliderDragHover_46 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 46 }
+		}
+	}
+}
+
+CMM_SliderDragHover_47 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 47 }
+		}
+	}
+}
+
+CMM_SliderDragHover_48 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 48 }
+		}
+	}
+}
+
+CMM_SliderDragHover_49 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 49 }
+		}
+	}
+}
+
+CMM_SliderDragHover_50 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 50 }
+		}
+	}
+}
+
+CMM_SliderDragHover_51 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 51 }
+		}
+	}
+}
+
+CMM_SliderDragHover_52 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 52 }
+		}
+	}
+}
+
+CMM_SliderDragHover_53 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 53 }
+		}
+	}
+}
+
+CMM_SliderDragHover_54 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 54 }
+		}
+	}
+}
+
+CMM_SliderDragHover_55 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 55 }
+		}
+	}
+}
+
+CMM_SliderDragHover_56 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 56 }
+		}
+	}
+}
+
+CMM_SliderDragHover_57 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 57 }
+		}
+	}
+}
+
+CMM_SliderDragHover_58 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 58 }
+		}
+	}
+}
+
+CMM_SliderDragHover_59 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 59 }
+		}
+	}
+}
+
+CMM_SliderDragHover_60 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 60 }
+		}
+	}
+}
+
+CMM_SliderDragHover_61 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 61 }
+		}
+	}
+}
+
+CMM_SliderDragHover_62 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 62 }
+		}
+	}
+}
+
+CMM_SliderDragHover_63 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 63 }
+		}
+	}
+}
+
+CMM_SliderDragHover_64 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 64 }
+		}
+	}
+}
+
+CMM_SliderDragHover_65 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 65 }
+		}
+	}
+}
+
+CMM_SliderDragHover_66 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 66 }
+		}
+	}
+}
+
+CMM_SliderDragHover_67 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 67 }
+		}
+	}
+}
+
+CMM_SliderDragHover_68 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 68 }
+		}
+	}
+}
+
+CMM_SliderDragHover_69 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 69 }
+		}
+	}
+}
+
+CMM_SliderDragHover_70 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 70 }
+		}
+	}
+}
+
+CMM_SliderDragHover_71 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 71 }
+		}
+	}
+}
+
+CMM_SliderDragHover_72 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 72 }
+		}
+	}
+}
+
+CMM_SliderDragHover_73 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 73 }
+		}
+	}
+}
+
+CMM_SliderDragHover_74 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 74 }
+		}
+	}
+}
+
+CMM_SliderDragHover_75 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 75 }
+		}
+	}
+}
+
+CMM_SliderDragHover_76 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 76 }
+		}
+	}
+}
+
+CMM_SliderDragHover_77 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 77 }
+		}
+	}
+}
+
+CMM_SliderDragHover_78 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 78 }
+		}
+	}
+}
+
+CMM_SliderDragHover_79 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 79 }
+		}
+	}
+}
+
+CMM_SliderDragHover_80 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 80 }
+		}
+	}
+}
+
+CMM_SliderDragHover_81 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 81 }
+		}
+	}
+}
+
+CMM_SliderDragHover_82 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 82 }
+		}
+	}
+}
+
+CMM_SliderDragHover_83 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 83 }
+		}
+	}
+}
+
+CMM_SliderDragHover_84 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 84 }
+		}
+	}
+}
+
+CMM_SliderDragHover_85 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 85 }
+		}
+	}
+}
+
+CMM_SliderDragHover_86 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 86 }
+		}
+	}
+}
+
+CMM_SliderDragHover_87 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 87 }
+		}
+	}
+}
+
+CMM_SliderDragHover_88 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 88 }
+		}
+	}
+}
+
+CMM_SliderDragHover_89 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 89 }
+		}
+	}
+}
+
+CMM_SliderDragHover_90 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 90 }
+		}
+	}
+}
+
+CMM_SliderDragHover_91 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 91 }
+		}
+	}
+}
+
+CMM_SliderDragHover_92 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 92 }
+		}
+	}
+}
+
+CMM_SliderDragHover_93 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 93 }
+		}
+	}
+}
+
+CMM_SliderDragHover_94 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 94 }
+		}
+	}
+}
+
+CMM_SliderDragHover_95 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 95 }
+		}
+	}
+}
+
+CMM_SliderDragHover_96 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 96 }
+		}
+	}
+}
+
+CMM_SliderDragHover_97 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 97 }
+		}
+	}
+}
+
+CMM_SliderDragHover_98 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 98 }
+		}
+	}
+}
+
+CMM_SliderDragHover_99 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 99 }
+		}
+	}
+}
+
+CMM_SliderDragHover_100 = {
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_dragging }
+			set_variable = { name = cmm_slider_index_to_apply value = 100 }
+		}
+	}
+}

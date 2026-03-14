@@ -1,0 +1,263 @@
+﻿# Copied from base game
+@alert_height = 90
+@alert_wide = 40
+
+types "cmf_types" {
+
+    type cmf_settings_window = cmf_base_window {
+        visible = "[GetVariableSystem.Exists('cmf_settings')]"
+
+        state = {
+            name = _show
+            on_finish = "[GetScriptedGui('sgui_cmf_settings_setup').Execute(GuiScope
+                .SetRoot(GetPlayer.MakeScope)
+                .End
+            )]"
+        }
+
+        blockoverride "cmf_window_header_text" {
+            text = "cmf_settings_title"
+        }
+        blockoverride "cmf_window_header_close_onclick" {
+            onclick = "[GetVariableSystem.Clear('cmf_settings')]"
+        }
+        blockoverride "cmf_window_tab_visibility" {
+            visible = yes
+        }
+        blockoverride "cmf_window_tabs" {
+            cmf_tab = {
+                blockoverride "cmf_tab_onclick" {}
+                blockoverride "cmf_tab_selected" {
+                    down = yes
+                }
+                blockoverride "cmf_tab_text" {
+                    text = "cmf_settings_page_action_bar"
+                }
+            }
+        }
+        blockoverride "cmf_window_content" {
+            cmf_settings_group = {
+                blockoverride "cmf_settings_group_name" {
+                    text = "cmf_settings_action_bar_group_layout"
+                }
+                blockoverride "cmf_settings_group_content" {
+                    cmf_settings_element = {
+                        blockoverride "cmf_setting_name" {
+                            text = "cmf_settings_action_bar_position"
+                        }
+                        blockoverride "cmf_setting_icon" {
+                            texture = "gfx/interface/icons/flat_icons/art_works.dds"
+                        }
+                        blockoverride "cmf_setting_interaction" {
+                            button = {
+                                using = button_regular_texture
+                                using = button_common_template
+                                size = { 150 30 }
+                                text = "cmf_settings_action_bar_position_top"
+
+                                enabled = "[GetScriptedGui('sgui_cmf_setting_action_bar_position').IsValid(GuiScope
+                                    .SetRoot(GetPlayer.MakeScope)
+                                    .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_top')))
+                                    .End
+                                )]"
+
+                                action_tooltip = {
+                                    click_type = left
+                                    title = "cmf_settings_action_bar_position_activate"
+                                    on_action = "[GetScriptedGui('sgui_cmf_setting_action_bar_position').Execute(GuiScope
+                                        .SetRoot(GetPlayer.MakeScope)
+                                        .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_top')))
+                                        .End
+                                    )]"
+                                }
+                            }
+                            button = {
+                                using = button_regular_texture
+                                using = button_common_template
+                                size = { 150 30 }
+                                text = "cmf_settings_action_bar_position_bottom_left"
+
+                                enabled = "[GetScriptedGui('sgui_cmf_setting_action_bar_position').IsValid(GuiScope
+                                    .SetRoot(GetPlayer.MakeScope)
+                                    .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_bottom_left')))
+                                    .End
+                                )]"
+
+                                action_tooltip = {
+                                    click_type = left
+                                    title = "cmf_settings_action_bar_position_activate"
+                                    on_action = "[GetScriptedGui('sgui_cmf_setting_action_bar_position').Execute(GuiScope
+                                        .SetRoot(GetPlayer.MakeScope)
+                                        .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_bottom_left')))
+                                        .End
+                                    )]"
+                                }
+                            }
+                            button = {
+                                using = button_regular_texture
+                                using = button_common_template
+                                size = { 150 30 }
+                                text = "cmf_settings_action_bar_position_bottom_right"
+
+                                enabled = "[GetScriptedGui('sgui_cmf_setting_action_bar_position').IsValid(GuiScope
+                                    .SetRoot(GetPlayer.MakeScope)
+                                    .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_bottom_right')))
+                                    .End
+                                )]"
+
+                                action_tooltip = {
+                                    click_type = left
+                                    title = "cmf_settings_action_bar_position_activate"
+                                    on_action = "[GetScriptedGui('sgui_cmf_setting_action_bar_position').Execute(GuiScope
+                                        .SetRoot(GetPlayer.MakeScope)
+                                        .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_bottom_right')))
+                                        .End
+                                    )]"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            cmf_settings_group = {
+                blockoverride "cmf_settings_group_name" {
+                    text = "cmf_settings_action_bar_group_active_buttons"
+                }
+                blockoverride "cmf_settings_group_content" {
+                    vbox = {
+                        layoutpolicy_horizontal = expanding
+                        datamodel = "[GetGlobalList('cmf_action_bar_elements')]"
+
+                        item = {
+                            cmf_settings_action_bar_element = {}
+                        }
+                    }
+                }
+            }
+
+            expand = {}
+        }
+    }
+
+    type cmf_settings_group = vbox {
+        layoutpolicy_horizontal = expanding
+        margin = { 10 5 }
+        icon = {
+            size = { -1 40 }
+            layoutpolicy_horizontal = expanding
+            using = button_main_tab_texture
+            frame = 4
+
+            modify_texture = {
+                using = color_intense_bg_blue_texture
+                blend_mode = multiply
+            }
+
+            modify_texture = {
+                using = overlay_leather_texture
+                blend_mode = overlay
+                alpha = 0.2
+            }
+
+            text_single = {
+                size = { 100% 100% }
+                margin = { 40 0 }
+
+                using = button_common_textobj_font
+                fontsize = 18
+                margin_top = 10
+                autoresize = no
+
+                default_format = "#yellow_titles"
+
+                block "cmf_settings_group_name" {
+                    raw_text = "#r cmf_settings_group_name#!"
+                }
+            }
+        }
+
+        vbox = {
+            using = bg_secondary_section
+            margin = { 20 20 }
+            minimumsize = { -1 60 }
+            layoutpolicy_horizontal = expanding
+
+            block "cmf_settings_group_content" {}
+        }
+    }
+
+    type cmf_settings_element = hbox {
+        minimumsize = { -1 34 }
+        maximumsize = { -1 34 }
+        layoutpolicy_horizontal = expanding
+
+        block "cmf_setting_icon_block" {
+            icon = {
+                size = { 18 18 }
+                block "cmf_setting_icon" {
+                    texture = "gfx/interface/settings/on_restart.dds"
+                }
+            }
+        }
+
+        editor_textbox = {
+            using = text_single_template
+            using = text_default_text_template
+            using = Font_Type_Headers
+            elide = right
+            align = left|vcenter
+            autoresize = no
+            fontsize = 16
+            size = { 300 34 }
+
+            margin_right = 8
+            margin_left = 5
+            block "cmf_setting_name" {
+                raw_text = "#r cmf_setting_name#!"
+            }
+        }
+
+        hbox = {
+            minimumsize = { -1 34 }
+            maximumsize = { -1 34 }
+            spacing = 5
+            block "cmf_setting_interaction" {}
+        }
+
+        expand = {}
+    }
+
+    type cmf_settings_action_bar_element = cmf_settings_element {
+        blockoverride "cmf_setting_name" {
+            text = "[Localize(Concatenate(Scope.GetFlagName, '_name'))]"
+        }
+        blockoverride "cmf_setting_icon_block" {
+            textbox = {
+                size = { 18 18 }
+                align = center
+                text = "[Localize(Concatenate(Scope.GetFlagName, '_icon'))]"
+            }
+        }
+        blockoverride "cmf_setting_interaction" {
+            checkbutton = {
+                using = checkbox_square_alt_template
+                size = { 24 24 }
+                checked = "[GetScriptedGui('sgui_cmf_setting_action_bar_button_shown').IsShown(GuiScope
+                    .SetRoot(GetPlayer.MakeScope)
+                    .AddScope('button', MakeScopeFlag(Scope.GetFlagName))
+                    .End
+                )]"
+
+                using = snd_UI_checkbutton_diamond
+                onclick = "[GetScriptedGui('sgui_cmf_setting_action_bar_button_shown').Execute(GuiScope
+                    .SetRoot(GetPlayer.MakeScope)
+                    .AddScope('button', MakeScopeFlag(Scope.GetFlagName))
+                    .End
+                )]"
+                tooltip_enabled = no
+            }
+        }
+    }
+
+}

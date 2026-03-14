@@ -1,0 +1,298 @@
+﻿# Register a numeric setting for a mod (idempotent by mod_id + setting_id).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id unique within mod.
+# - tab_id (key): Owner tab id within mod.
+# - group_id (key): Owner group id within mod.
+# - default_value (number): Initial value; applied when the setting does not exist yet.
+# - min_value (number): Lower clamp bound.
+# - max_value (number): Upper clamp bound.
+# - step_value (number): Increase/decrease step size.
+cmm_register_numeric_setting = {
+	set_variable = { name = cmm_setting_is_global_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_is_slider_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_is_button_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_min_$mod_id$__$setting_id$ value = $min_value$ }
+	set_variable = { name = cmm_setting_max_$mod_id$__$setting_id$ value = $max_value$ }
+	set_variable = { name = cmm_setting_step_$mod_id$__$setting_id$ value = $step_value$ }
+
+	cmm_register_setting_metadata = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		tab_id = $tab_id$
+		group_id = $group_id$
+	}
+
+	if = {
+		limit = { NOT = { has_variable = $mod_id$__$setting_id$ } }
+		set_variable = { name = $mod_id$__$setting_id$ value = $default_value$ }
+	}
+
+	if = {
+		limit = { var:$mod_id$__$setting_id$ < $min_value$ }
+		set_variable = { name = $mod_id$__$setting_id$ value = $min_value$ }
+	}
+
+	if = {
+		limit = { var:$mod_id$__$setting_id$ > $max_value$ }
+		set_variable = { name = $mod_id$__$setting_id$ value = $max_value$ }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = var:cmm_setting_is_global_$mod_id$__$setting_id$
+			exists = var:cmm_setting_is_slider_$mod_id$__$setting_id$
+			exists = var:cmm_setting_is_button_$mod_id$__$setting_id$
+			exists = var:cmm_setting_min_$mod_id$__$setting_id$
+			exists = var:cmm_setting_max_$mod_id$__$setting_id$
+			exists = var:cmm_setting_step_$mod_id$__$setting_id$
+			exists = var:$mod_id$__$setting_id$
+		}
+	}
+}
+
+# Register a global numeric setting for a mod.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id unique within mod.
+# - tab_id (key): Owner tab id within mod.
+# - group_id (key): Owner group id within mod.
+# - default_value (number): Initial global value when missing.
+# - min_value (number): Lower clamp bound.
+# - max_value (number): Upper clamp bound.
+# - step_value (number): Increase/decrease step size.
+cmm_register_global_numeric_setting = {
+	set_variable = { name = cmm_setting_is_global_$mod_id$__$setting_id$ value = 1 }
+	set_variable = { name = cmm_setting_is_slider_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_is_button_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_min_$mod_id$__$setting_id$ value = $min_value$ }
+	set_variable = { name = cmm_setting_max_$mod_id$__$setting_id$ value = $max_value$ }
+	set_variable = { name = cmm_setting_step_$mod_id$__$setting_id$ value = $step_value$ }
+
+	cmm_register_setting_metadata = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		tab_id = $tab_id$
+		group_id = $group_id$
+	}
+
+	if = {
+		limit = { NOT = { has_global_variable = $mod_id$__$setting_id$ } }
+		set_global_variable = { name = $mod_id$__$setting_id$ value = $default_value$ }
+	}
+
+	if = {
+		limit = { global_var:$mod_id$__$setting_id$ < $min_value$ }
+		set_global_variable = { name = $mod_id$__$setting_id$ value = $min_value$ }
+	}
+
+	if = {
+		limit = { global_var:$mod_id$__$setting_id$ > $max_value$ }
+		set_global_variable = { name = $mod_id$__$setting_id$ value = $max_value$ }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = var:cmm_setting_is_global_$mod_id$__$setting_id$
+			exists = var:cmm_setting_is_slider_$mod_id$__$setting_id$
+			exists = var:cmm_setting_is_button_$mod_id$__$setting_id$
+			exists = var:cmm_setting_min_$mod_id$__$setting_id$
+			exists = var:cmm_setting_max_$mod_id$__$setting_id$
+			exists = var:cmm_setting_step_$mod_id$__$setting_id$
+			exists = global_var:$mod_id$__$setting_id$
+		}
+	}
+}
+
+# Increase a numeric setting and clamp to its max value.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_step_numeric_setting_up = {
+	if = {
+		limit = { var:cmm_setting_is_global_$setting$ = 1 }
+		set_variable = { name = cmm_tmp_numeric_value value = global_var:$setting$ }
+		change_variable = { name = cmm_tmp_numeric_value add = var:cmm_setting_step_$setting$ }
+
+		if = {
+			limit = { var:cmm_tmp_numeric_value > var:cmm_setting_max_$setting$ }
+			set_variable = { name = cmm_tmp_numeric_value value = var:cmm_setting_max_$setting$ }
+		}
+
+		set_global_variable = { name = $setting$ value = var:cmm_tmp_numeric_value }
+		remove_variable = cmm_tmp_numeric_value
+	}
+	else = {
+		change_variable = { name = $setting$ add = var:cmm_setting_step_$setting$ }
+
+		if = {
+			limit = { var:$setting$ > var:cmm_setting_max_$setting$ }
+			set_variable = { name = $setting$ value = var:cmm_setting_max_$setting$ }
+		}
+	}
+}
+
+# Increase a numeric setting by five intervals and clamp to max.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_step_numeric_setting_up_5x = {
+	cmm_step_numeric_setting_up = { setting = $setting$ }
+	cmm_step_numeric_setting_up = { setting = $setting$ }
+	cmm_step_numeric_setting_up = { setting = $setting$ }
+	cmm_step_numeric_setting_up = { setting = $setting$ }
+	cmm_step_numeric_setting_up = { setting = $setting$ }
+}
+
+# Decrease a numeric setting and clamp to its min value.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_step_numeric_setting_down = {
+	if = {
+		limit = { var:cmm_setting_is_global_$setting$ = 1 }
+		set_variable = { name = cmm_tmp_numeric_value value = global_var:$setting$ }
+		change_variable = { name = cmm_tmp_numeric_value subtract = var:cmm_setting_step_$setting$ }
+
+		if = {
+			limit = { var:cmm_tmp_numeric_value < var:cmm_setting_min_$setting$ }
+			set_variable = { name = cmm_tmp_numeric_value value = var:cmm_setting_min_$setting$ }
+		}
+
+		set_global_variable = { name = $setting$ value = var:cmm_tmp_numeric_value }
+		remove_variable = cmm_tmp_numeric_value
+	}
+	else = {
+		change_variable = { name = $setting$ subtract = var:cmm_setting_step_$setting$ }
+
+		if = {
+			limit = { var:$setting$ < var:cmm_setting_min_$setting$ }
+			set_variable = { name = $setting$ value = var:cmm_setting_min_$setting$ }
+		}
+	}
+}
+
+# Decrease a numeric setting by five intervals and clamp to min.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_step_numeric_setting_down_5x = {
+	cmm_step_numeric_setting_down = { setting = $setting$ }
+	cmm_step_numeric_setting_down = { setting = $setting$ }
+	cmm_step_numeric_setting_down = { setting = $setting$ }
+	cmm_step_numeric_setting_down = { setting = $setting$ }
+	cmm_step_numeric_setting_down = { setting = $setting$ }
+}
+
+# Set a numeric setting directly to its configured max value.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_set_numeric_setting_max = {
+	if = {
+		limit = { var:cmm_setting_is_global_$setting$ = 1 }
+		set_global_variable = { name = $setting$ value = var:cmm_setting_max_$setting$ }
+	}
+	else = {
+		set_variable = { name = $setting$ value = var:cmm_setting_max_$setting$ }
+	}
+}
+
+# Set a numeric setting directly to its configured min value.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_set_numeric_setting_min = {
+	if = {
+		limit = { var:cmm_setting_is_global_$setting$ = 1 }
+		set_global_variable = { name = $setting$ value = var:cmm_setting_min_$setting$ }
+	}
+	else = {
+		set_variable = { name = $setting$ value = var:cmm_setting_min_$setting$ }
+	}
+}
+
+# Apply the queued numeric step delta to a setting and clear the queue.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_apply_numeric_step_delta = {
+	if = {
+		limit = { var:cmm_setting_is_global_$setting$ = 1 }
+		set_variable = { name = cmm_tmp_numeric_value value = global_var:$setting$ }
+		set_variable = { name = cmm_tmp_numeric_delta value = var:cmm_setting_step_$setting$ }
+		change_variable = { name = cmm_tmp_numeric_delta multiply = var:cmm_numeric_step_delta_to_apply }
+		change_variable = { name = cmm_tmp_numeric_value add = var:cmm_tmp_numeric_delta }
+
+		if = {
+			limit = { var:cmm_tmp_numeric_value > var:cmm_setting_max_$setting$ }
+			set_variable = { name = cmm_tmp_numeric_value value = var:cmm_setting_max_$setting$ }
+		}
+
+		if = {
+			limit = { var:cmm_tmp_numeric_value < var:cmm_setting_min_$setting$ }
+			set_variable = { name = cmm_tmp_numeric_value value = var:cmm_setting_min_$setting$ }
+		}
+
+		set_global_variable = { name = $setting$ value = var:cmm_tmp_numeric_value }
+		remove_variable = cmm_tmp_numeric_value
+		remove_variable = cmm_tmp_numeric_delta
+	}
+	else = {
+		set_variable = { name = cmm_tmp_numeric_value value = var:$setting$ }
+		set_variable = { name = cmm_tmp_numeric_delta value = var:cmm_setting_step_$setting$ }
+		change_variable = { name = cmm_tmp_numeric_delta multiply = var:cmm_numeric_step_delta_to_apply }
+		change_variable = { name = cmm_tmp_numeric_value add = var:cmm_tmp_numeric_delta }
+
+		if = {
+			limit = { var:cmm_tmp_numeric_value > var:cmm_setting_max_$setting$ }
+			set_variable = { name = cmm_tmp_numeric_value value = var:cmm_setting_max_$setting$ }
+		}
+
+		if = {
+			limit = { var:cmm_tmp_numeric_value < var:cmm_setting_min_$setting$ }
+			set_variable = { name = cmm_tmp_numeric_value value = var:cmm_setting_min_$setting$ }
+		}
+
+		set_variable = { name = $setting$ value = var:cmm_tmp_numeric_value }
+		remove_variable = cmm_tmp_numeric_value
+		remove_variable = cmm_tmp_numeric_delta
+	}
+
+	remove_variable = cmm_numeric_step_delta_to_apply
+}
+
+# Apply the pending numeric step queue or jump marker to a setting and clear it.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_apply_numeric_change = {
+	if = {
+		limit = { has_variable = cmm_numeric_step_delta_to_apply }
+
+		cmm_apply_numeric_step_delta = {
+			setting = $setting$
+		}
+	}
+	else_if = {
+		limit = { has_variable = cmm_numeric_change_to_apply }
+
+		switch = {
+			trigger = var:cmm_numeric_change_to_apply
+			1 = { cmm_step_numeric_setting_up = { setting = $setting$ } }
+			2 = { cmm_step_numeric_setting_up_5x = { setting = $setting$ } }
+			3 = { cmm_set_numeric_setting_max = { setting = $setting$ } }
+			-1 = { cmm_step_numeric_setting_down = { setting = $setting$ } }
+			-2 = { cmm_step_numeric_setting_down_5x = { setting = $setting$ } }
+			-3 = { cmm_set_numeric_setting_min = { setting = $setting$ } }
+		}
+
+		remove_variable = cmm_numeric_change_to_apply
+	}
+}

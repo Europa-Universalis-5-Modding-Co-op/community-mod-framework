@@ -1,0 +1,17 @@
+﻿cmf_show_alert = {
+    hidden_effect = {
+        add_to_variable_list = {
+            name = cmf_active_alerts
+            target = flag:$alert$
+        }
+    }
+}
+
+cmf_remove_alert = {
+    hidden_effect = {
+        remove_list_variable = {
+            name = cmf_active_alerts
+            target = flag:$alert$
+        }
+    }
+}

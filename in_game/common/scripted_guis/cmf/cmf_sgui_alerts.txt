@@ -1,0 +1,14 @@
+﻿sgui_cmf_dismiss_alert = {
+    scope = country
+
+    saved_scopes = {
+        flag
+    }
+
+    effect = {
+        remove_list_variable = {
+            name = cmf_active_alerts
+            target = scope:flag
+        }
+    }
+}

@@ -1,0 +1,38 @@
+﻿# Register built-in CMM settings.
+# Scope: country
+# Args: none
+cmm_register_menu_settings = {
+	if = {
+		limit = { has_multiple_players = no }
+		cmm_register_global_bool_setting = {
+			mod_id = cmm_core
+			setting_id = enable_host_only_tools
+			tab_id = general
+			group_id = session
+			default_value = 1
+		}
+	}
+	else = {
+		cmm_register_global_bool_setting = {
+			mod_id = cmm_core
+			setting_id = enable_host_only_tools
+			tab_id = general
+			group_id = session
+			default_value = 0
+		}
+	}
+}
+
+# Store the current country as the CMM host country.
+# Scope: country
+# Args: none
+cmm_mark_host_country = {
+	set_global_variable = { name = cmm_core_host_country value = this }
+
+	if = {
+		limit = {
+			always = no
+			exists = global_var:cmm_core_host_country
+		}
+	}
+}

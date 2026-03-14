@@ -1,0 +1,170 @@
+﻿# Register a dropdown setting for a mod (idempotent by mod_id + setting_id).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id unique within mod.
+# - tab_id (key): Owner tab id within mod.
+# - group_id (key): Owner group id within mod.
+# - default_index (number): Initial selected option ordinal (`1..option_count`).
+# - option_count (number): Number of options (`>= 1`; numbered `1..option_count`).
+cmm_register_dropdown_setting = {
+	set_variable = { name = cmm_setting_is_global_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_is_slider_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_is_button_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_dropdown_count_$mod_id$__$setting_id$ value = $option_count$ }
+
+	if = {
+		limit = { var:cmm_setting_dropdown_count_$mod_id$__$setting_id$ < 1 }
+		set_variable = { name = cmm_setting_dropdown_count_$mod_id$__$setting_id$ value = 1 }
+	}
+
+	set_variable = {
+		name = cmm_setting_dropdown_last_index_$mod_id$__$setting_id$
+		value = var:cmm_setting_dropdown_count_$mod_id$__$setting_id$
+	}
+
+	cmm_register_setting_metadata = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		tab_id = $tab_id$
+		group_id = $group_id$
+	}
+
+	if = {
+		limit = { NOT = { has_variable = $mod_id$__$setting_id$ } }
+		set_variable = { name = $mod_id$__$setting_id$ value = $default_index$ }
+	}
+
+	if = {
+		limit = { var:$mod_id$__$setting_id$ < 1 }
+		set_variable = { name = $mod_id$__$setting_id$ value = 1 }
+	}
+
+	if = {
+		limit = { var:$mod_id$__$setting_id$ > var:cmm_setting_dropdown_last_index_$mod_id$__$setting_id$ }
+		set_variable = { name = $mod_id$__$setting_id$ value = var:cmm_setting_dropdown_last_index_$mod_id$__$setting_id$ }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = var:cmm_setting_is_global_$mod_id$__$setting_id$
+			exists = var:cmm_setting_is_slider_$mod_id$__$setting_id$
+			exists = var:cmm_setting_is_button_$mod_id$__$setting_id$
+			exists = var:cmm_setting_dropdown_count_$mod_id$__$setting_id$
+			exists = var:cmm_setting_dropdown_last_index_$mod_id$__$setting_id$
+			exists = var:$mod_id$__$setting_id$
+		}
+	}
+}
+
+# Register a global dropdown setting for a mod.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id unique within mod.
+# - tab_id (key): Owner tab id within mod.
+# - group_id (key): Owner group id within mod.
+# - default_index (number): Initial global selected option ordinal (`1..option_count`).
+# - option_count (number): Number of options (`>= 1`; numbered `1..option_count`).
+cmm_register_global_dropdown_setting = {
+	set_variable = { name = cmm_setting_is_global_$mod_id$__$setting_id$ value = 1 }
+	set_variable = { name = cmm_setting_is_slider_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_is_button_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_dropdown_count_$mod_id$__$setting_id$ value = $option_count$ }
+
+	if = {
+		limit = { var:cmm_setting_dropdown_count_$mod_id$__$setting_id$ < 1 }
+		set_variable = { name = cmm_setting_dropdown_count_$mod_id$__$setting_id$ value = 1 }
+	}
+
+	set_variable = {
+		name = cmm_setting_dropdown_last_index_$mod_id$__$setting_id$
+		value = var:cmm_setting_dropdown_count_$mod_id$__$setting_id$
+	}
+
+	cmm_register_setting_metadata = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		tab_id = $tab_id$
+		group_id = $group_id$
+	}
+
+	if = {
+		limit = { NOT = { has_global_variable = $mod_id$__$setting_id$ } }
+		set_global_variable = { name = $mod_id$__$setting_id$ value = $default_index$ }
+	}
+
+	if = {
+		limit = { global_var:$mod_id$__$setting_id$ < 1 }
+		set_global_variable = { name = $mod_id$__$setting_id$ value = 1 }
+	}
+
+	if = {
+		limit = { global_var:$mod_id$__$setting_id$ > var:cmm_setting_dropdown_last_index_$mod_id$__$setting_id$ }
+		set_global_variable = { name = $mod_id$__$setting_id$ value = var:cmm_setting_dropdown_last_index_$mod_id$__$setting_id$ }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = var:cmm_setting_is_global_$mod_id$__$setting_id$
+			exists = var:cmm_setting_is_slider_$mod_id$__$setting_id$
+			exists = var:cmm_setting_is_button_$mod_id$__$setting_id$
+			exists = var:cmm_setting_dropdown_count_$mod_id$__$setting_id$
+			exists = var:cmm_setting_dropdown_last_index_$mod_id$__$setting_id$
+			exists = global_var:$mod_id$__$setting_id$
+		}
+	}
+}
+
+# Apply the pending dropdown selected option ordinal to a setting and clear the marker.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_apply_dropdown_change = {
+	if = {
+		limit = { has_variable = cmm_dropdown_index_to_apply }
+
+		if = {
+			limit = { var:cmm_setting_is_global_$setting$ = 1 }
+			set_global_variable = { name = $setting$ value = var:cmm_dropdown_index_to_apply }
+
+			if = {
+				limit = { global_var:$setting$ < 1 }
+				set_global_variable = { name = $setting$ value = 1 }
+			}
+
+			if = {
+				limit = { global_var:$setting$ > var:cmm_setting_dropdown_last_index_$setting$ }
+				set_global_variable = { name = $setting$ value = var:cmm_setting_dropdown_last_index_$setting$ }
+			}
+		}
+		else = {
+			set_variable = { name = $setting$ value = var:cmm_dropdown_index_to_apply }
+
+			if = {
+				limit = { var:$setting$ < 1 }
+				set_variable = { name = $setting$ value = 1 }
+			}
+
+			if = {
+				limit = { var:$setting$ > var:cmm_setting_dropdown_last_index_$setting$ }
+				set_variable = { name = $setting$ value = var:cmm_setting_dropdown_last_index_$setting$ }
+			}
+		}
+
+		remove_variable = cmm_dropdown_index_to_apply
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = var:cmm_dropdown_index_to_apply
+			exists = var:cmm_setting_dropdown_last_index_$setting$
+		}
+	}
+}

@@ -1,0 +1,13 @@
+# Used for file search, ignoring folders I don't want to show up in searches.
+# Separate from .gitignore, as this one ignores less,
+# where there are some things that shouldn't be commited,
+# but I still want in search results.
+/.vscode
+/.idea
+.DS_Store
+.env
+__pycache__/
+local/
+!assets/local/AGENTS.md
+example-mod/example-mod.iml
+settings.local.json

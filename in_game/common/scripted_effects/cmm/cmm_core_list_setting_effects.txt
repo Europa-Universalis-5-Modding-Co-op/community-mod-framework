@@ -1,0 +1,213 @@
+﻿# Register a settings list for a mod (idempotent by mod_id + setting_id).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id unique within mod.
+# - tab_id (key): Owner tab id within mod.
+# - item_count (number): Number of list items (`1..20`).
+# - is_ordered (1/0): `1` shows row move controls, `0` hides them.
+cmm_register_settings_list = {
+	cmm_register_list_setting_internal = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		tab_id = $tab_id$
+		item_count = $item_count$
+		is_ordered = $is_ordered$
+	}
+}
+
+# Register shared list-setting metadata and storage for a mod (idempotent by mod_id + setting_id).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id unique within mod.
+# - tab_id (key): Owner tab id within mod.
+# - item_count (number): Number of list items (`1..20`).
+# - is_ordered (1/0): `1` shows row move controls, `0` hides them.
+cmm_register_list_setting_internal = {
+	set_variable = { name = cmm_setting_is_global_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_is_slider_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_is_button_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_list_is_ordered_$mod_id$__$setting_id$ value = $is_ordered$ }
+	set_variable = { name = cmm_setting_list_count_$mod_id$__$setting_id$ value = $item_count$ }
+
+	if = {
+		limit = { var:cmm_setting_list_is_ordered_$mod_id$__$setting_id$ > 0 }
+		set_variable = { name = cmm_setting_list_is_ordered_$mod_id$__$setting_id$ value = 1 }
+	}
+	else = {
+		set_variable = { name = cmm_setting_list_is_ordered_$mod_id$__$setting_id$ value = 0 }
+	}
+
+	if = {
+		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ < 1 }
+		set_variable = { name = cmm_setting_list_count_$mod_id$__$setting_id$ value = 1 }
+	}
+
+	if = {
+		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 20 }
+		set_variable = { name = cmm_setting_list_count_$mod_id$__$setting_id$ value = 20 }
+	}
+
+	set_variable = {
+		name = cmm_setting_list_last_index_$mod_id$__$setting_id$
+		value = var:cmm_setting_list_count_$mod_id$__$setting_id$
+	}
+	change_variable = { name = cmm_setting_list_last_index_$mod_id$__$setting_id$ add = -1 }
+
+	if = {
+		limit = { NOT = { has_variable = cmm_list_field_count_$mod_id$__$setting_id$ } }
+		set_variable = { name = cmm_list_field_count_$mod_id$__$setting_id$ value = 0 }
+	}
+
+	set_variable = {
+		name = cmm_list_item_column_name_$mod_id$__$setting_id$
+		value = flag:$mod_id$__$setting_id$_item_column_name
+	}
+
+	cmm_register_setting_metadata = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		tab_id = $tab_id$
+		group_id = $setting_id$
+	}
+
+	cmm_initialize_list_setting_item_metadata = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+	}
+
+	if = {
+		limit = { NOT = { has_variable = cmm_list_initialized_$mod_id$__$setting_id$ } }
+
+		cmm_initialize_list_setting_item_list = {
+			mod_id = $mod_id$
+			setting_id = $setting_id$
+		}
+
+		set_variable = { name = cmm_list_initialized_$mod_id$__$setting_id$ value = 1 }
+	}
+
+	cmm_suppress_list_setting_warnings = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+	}
+}
+
+# Register a bool field shared by every item in one list setting.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id unique within the list setting.
+# - default_value (1/0): Default checkbox state for new saves.
+cmm_register_list_bool_field = {
+	cmm_register_list_field_slot = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+	}
+
+	if = {
+		limit = {
+			AND = {
+				has_variable = cmm_setting_list_count_$mod_id$__$setting_id$
+				has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			}
+		}
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = { cmm_initialize_list_bool_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 default_value = $default_value$ } }
+			2 = { cmm_initialize_list_bool_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 default_value = $default_value$ } }
+			3 = { cmm_initialize_list_bool_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 default_value = $default_value$ } }
+			4 = { cmm_initialize_list_bool_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 default_value = $default_value$ } }
+			5 = { cmm_initialize_list_bool_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 default_value = $default_value$ } }
+		}
+	}
+
+	cmm_suppress_list_bool_field_warnings = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+	}
+}
+
+# Register a dropdown field shared by every item in one list setting.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id unique within the list setting.
+# - default_index (number): Default selected option ordinal for new saves.
+# - option_count (number): Number of options (`>= 1`; numbered `1..option_count`).
+cmm_register_list_dropdown_field = {
+	cmm_register_list_field_slot = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+	}
+
+	if = {
+		limit = {
+			AND = {
+				has_variable = cmm_setting_list_count_$mod_id$__$setting_id$
+				has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			}
+		}
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = { cmm_initialize_list_dropdown_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 default_index = $default_index$ option_count = $option_count$ } }
+			2 = { cmm_initialize_list_dropdown_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 default_index = $default_index$ option_count = $option_count$ } }
+			3 = { cmm_initialize_list_dropdown_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 default_index = $default_index$ option_count = $option_count$ } }
+			4 = { cmm_initialize_list_dropdown_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 default_index = $default_index$ option_count = $option_count$ } }
+			5 = { cmm_initialize_list_dropdown_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 default_index = $default_index$ option_count = $option_count$ } }
+		}
+	}
+
+	cmm_suppress_list_dropdown_field_warnings = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+	}
+}
+
+# Register a numeric field shared by every item in one list setting.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id unique within the list setting.
+# - default_value (number): Default numeric value for new saves.
+# - min_value (number): Lower clamp bound.
+# - max_value (number): Upper clamp bound.
+# - step_value (number): Increase/decrease step size.
+cmm_register_list_numeric_field = {
+	cmm_register_list_field_slot = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+	}
+
+	if = {
+		limit = {
+			AND = {
+				has_variable = cmm_setting_list_count_$mod_id$__$setting_id$
+				has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			}
+		}
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = { cmm_initialize_list_numeric_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			2 = { cmm_initialize_list_numeric_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			3 = { cmm_initialize_list_numeric_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			4 = { cmm_initialize_list_numeric_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			5 = { cmm_initialize_list_numeric_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+		}
+	}
+
+	cmm_suppress_list_numeric_field_warnings = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+	}
+}

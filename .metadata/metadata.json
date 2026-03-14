@@ -1,11 +1,11 @@
 {
 	"name": "Community Mod Framework",
-	"id": "com.github.Europa-Universalis-5-Modding-Co-op.community-mod-framework",
-	"version" : "1.4.0",
-    "game_id": "eu5",
-	"supported_game_version": "1.0.*",
-	"short_description": "The Community Mod Framework aims to support compatibility between different mods.",
-	"tags": [],
-	"relationships":	[],
+	"id": "community.mod.framework",
+	"version": "2.0.0",
+	"game_id": "eu5",
+	"supported_game_version": "1.1.*",
+	"short_description": "A shared mod framework and menu. Includes the Community Mod Menu (CMM), custom alerts, action bar elements, and more.",
+	"tags": ["Utilities", "User Interface"],
+	"relationships": [],
 	"game_custom_data": {}
 }

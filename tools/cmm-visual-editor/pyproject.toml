@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cmm-visual-editor"
+version = "0.1.0"
+description = "Visual editor for creating and managing EU5 Community Mod Menu settings"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+dependencies = []
+
+[project.scripts]
+cmm-visual-editor = "cmm_visual_editor.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cmm_visual_editor"]

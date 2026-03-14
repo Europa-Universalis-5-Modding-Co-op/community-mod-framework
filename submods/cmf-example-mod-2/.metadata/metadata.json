@@ -1,0 +1,22 @@
+﻿{
+    "name": "Community Mod Menu Example Mod 2",
+    "id": "community.mod.menu.example2",
+    "version": "0.1",
+    "game_id": "eu5",
+    "supported_game_version": "1.1.*",
+    "short_description": "A second example mod that integrates with Community Mod Menu.",
+    "tags": [
+        "Utilities",
+        "User Interface"
+    ],
+    "relationships": [
+        {
+            "rel_type": "dependency",
+            "id": "community.mod.menu.dev",
+            "display_name": "Community Mod Menu Dev",
+            "resource_type": "mod",
+            "version": "*"
+        }
+    ],
+    "game_custom_data": {}
+}

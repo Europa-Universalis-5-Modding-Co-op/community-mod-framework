@@ -1,0 +1,36 @@
+﻿# Run built-in CMM registration and the shared registration hook.
+# Scope: country
+# Args: none
+CMM_RegisterCoreMod = {
+	effect = {
+		cmm_register_menu_settings = yes
+		trigger_event_silently = {
+			on_action = cmm_on_mod_registration
+		}
+	}
+}
+
+# Store the current country as the CMM host country, then run built-in registration and the shared registration hook.
+# Scope: country
+# Args: none
+CMM_SetHostAndRegisterCoreMod = {
+	effect = {
+		cmm_mark_host_country = yes
+		cmm_register_menu_settings = yes
+		trigger_event_silently = {
+			on_action = cmm_on_mod_registration
+		}
+	}
+}
+
+# Toggle the core host-only-tools gate.
+# Scope: country
+# Args: none
+cmm_core__enable_host_only_tools_on_changed = {
+	scope = country
+	effect = {
+		cmm_toggle_bool_setting = {
+			setting = cmm_core__enable_host_only_tools
+		}
+	}
+}
