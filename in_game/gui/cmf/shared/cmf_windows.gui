@@ -103,6 +103,9 @@
             using = layoutpolicy_expanding
             block "cmf_tab_onclick" {}
             block "cmf_tab_selected" {}
+            block "cmf_tab_tooltip" {
+                tooltipwidget = { BasicFunctionalTooltip = {} }
+            }
             hbox = {
                 margin = { 5 0 }
                 margin_top = 4
