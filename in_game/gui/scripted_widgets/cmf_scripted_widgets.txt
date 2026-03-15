@@ -1,0 +1,2 @@
+gui/cmf/cmf_structure.gui = cmf_interaction_layer
+gui/cmf/cmf_structure.gui = cmf_popup_layer
