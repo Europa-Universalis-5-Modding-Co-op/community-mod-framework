@@ -1,9 +1,6 @@
 /.vscode
 /.idea
-/.config/
 .DS_Store
 .env
 __pycache__/
 local/
-*.bkp
-*.dtmp
