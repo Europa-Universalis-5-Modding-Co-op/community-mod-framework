@@ -13,8 +13,6 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
 * [GUI Features](#gui-features)
   * [Custom Alerts](#custom-alerts)
   * [Action Bar](#action-bar)
-* [Script Features](#script-features)
-  * [Fixing Variable Errors](#fixing-variable-errors)
 * [Contributors](#contributors)
 
 # Philosophy
@@ -259,23 +257,9 @@ This is a list of supported colors:
 </details>
 
 
-# Script Features
-
-## Fixing Variable Errors
-When you are using a variable only in the GUI or in localizations, the game creates errors and spams the error log.
-To avoid this, there is a helper scripted effect in CMF that suppresses these types of errors.
-```
-fix_variable_error = {
-	variable = variable_or_flag_name
-}
-```
-Usage examples can be found [here](in_game/events/cmf_hidden.txt).
-
-**NOTE**: This works for both **variables** and **flags**.
-
 # Contributors
 - [Bahmut](https://steamcommunity.com/id/Bahmut/)
-- [Conner](https://steamcommunity.com/profiles/76561198080282941)
+- [Conner](https://steamcommunity.com/id/ARealConner/)
 - [Pickle](https://steamcommunity.com/id/pickled-dev)
 
 # License
