@@ -91,7 +91,7 @@ jobs:
       - name: Build Release
         run: |
           mkdir ../steam-release
-          cp assets/workshop/workshop-description.bbcode ../steam-release/STEAM_PAGE.bbcode
+          cp assets/workshop/workshop-description.bbcode ../steam-release/
           mkdir ../mod-release
           cp -r .metadata ../mod-release/
           cp -r in_game ../mod-release/
@@ -141,7 +141,7 @@ jobs:
         run: |
           MOD_RELEASE=$(realpath ../mod-release)
           TITLE=$(grep -Po '(?<=\s"name":\s").+(?=",)' ../mod-release/.metadata/metadata.json)
-          DESCRIPTION=$(cat ../steam-release/STEAM_PAGE.bbcode)
+          DESCRIPTION=$(sed '/--NO-TRANSLATE-BELOW--/d' ../steam-release/workshop-description.bbcode | sed "s/\\\$item-id\\\$/${{ inputs.workshop-id }}/g")
           cat > ../steam-release/workshop.vdf <<VDFEOF
           "workshopitem"
           {
