@@ -1,0 +1,123 @@
+﻿# Mark the next dropdown interaction as a 0-based widget index while storing a 1-based public ordinal.
+# Scope: country
+# Args: none
+# Note: fixed index markers map 0-based widget positions to 1-based public ordinals and avoid AddScope/MakeScopeValue null promotions in dropdown item callbacks.
+CMM_MarkDropdownSelection_0 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 1 }
+    }
+}
+
+CMM_MarkDropdownSelection_1 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 2 }
+    }
+}
+
+CMM_MarkDropdownSelection_2 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 3 }
+    }
+}
+
+CMM_MarkDropdownSelection_3 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 4 }
+    }
+}
+
+CMM_MarkDropdownSelection_4 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 5 }
+    }
+}
+
+CMM_MarkDropdownSelection_5 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 6 }
+    }
+}
+
+CMM_MarkDropdownSelection_6 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 7 }
+    }
+}
+
+CMM_MarkDropdownSelection_7 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 8 }
+    }
+}
+
+CMM_MarkDropdownSelection_8 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 9 }
+    }
+}
+
+CMM_MarkDropdownSelection_9 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 10 }
+    }
+}
+
+CMM_MarkDropdownSelection_10 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 11 }
+    }
+}
+
+CMM_MarkDropdownSelection_11 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 12 }
+    }
+}
+
+CMM_MarkDropdownSelection_12 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 13 }
+    }
+}
+
+CMM_MarkDropdownSelection_13 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 14 }
+    }
+}
+
+CMM_MarkDropdownSelection_14 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 15 }
+    }
+}
+
+CMM_MarkDropdownSelection_15 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 16 }
+    }
+}
+
+CMM_MarkDropdownSelection_16 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 17 }
+    }
+}
+
+CMM_MarkDropdownSelection_17 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 18 }
+    }
+}
+
+CMM_MarkDropdownSelection_18 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 19 }
+    }
+}
+
+CMM_MarkDropdownSelection_19 = {
+    effect = {
+        set_variable = { name = cmm_dropdown_index_to_apply value = 20 }
+    }
+}

@@ -1,0 +1,139 @@
+﻿cmm_example__example_toggle_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_toggle_bool_setting = {
+			setting = cmm_example__example_toggle
+		}
+
+		if = {
+			limit = { var:cmm_example__example_toggle = 1 }
+			# enabled effect
+		}
+		else = {
+			# disabled effect
+		}
+	}
+}
+
+cmm_example__global_example_toggle_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_toggle_bool_setting = {
+			setting = cmm_example__global_example_toggle
+		}
+
+		if = {
+			limit = { global_var:cmm_example__global_example_toggle = 1 }
+			# enabled effect
+		}
+		else = {
+			# disabled effect
+		}
+	}
+}
+
+cmm_example__global_example_button_on_changed = {
+	scope = country
+
+	effect = {
+		# Global button effect
+	}
+}
+
+cmm_example__example_button_on_changed = {
+	scope = country
+
+	effect = {
+		# Button effect
+	}
+}
+
+cmm_example__example_numeric_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_numeric_change = {
+			setting = cmm_example__example_numeric
+		}
+		# optional custom logic
+	}
+}
+
+cmm_example__global_example_numeric_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_numeric_change = {
+			setting = cmm_example__global_example_numeric
+		}
+		# optional custom logic
+	}
+}
+
+cmm_example__example_slider_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_slider_change = {
+			setting = cmm_example__example_slider
+		}
+		# optional custom logic
+	}
+}
+
+cmm_example__global_example_slider_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_slider_change = {
+			setting = cmm_example__global_example_slider
+		}
+		# optional custom logic
+	}
+}
+
+cmm_example__example_dropdown_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_dropdown_change = {
+			setting = cmm_example__example_dropdown
+		}
+		# optional custom logic
+	}
+}
+
+cmm_example__example_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmm_example__example_list
+		}
+		# optional custom logic
+	}
+}
+
+cmm_example__example_unordered_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmm_example__example_unordered_list
+		}
+		# optional custom logic
+	}
+}
+
+cmm_example__global_example_dropdown_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_dropdown_change = {
+			setting = cmm_example__global_example_dropdown
+		}
+		# optional custom logic
+	}
+}

@@ -1,0 +1,31 @@
+﻿# Register all human countries at game start.
+# Scope: on_action
+# Args: none
+on_game_start = {
+	on_actions = {
+		delay = { days = 1 }
+		cmm_register_all_human_countries
+	}
+}
+
+# Register core + integrations for all human countries.
+# Scope: on_action
+# Args: none
+cmm_register_all_human_countries = {
+	effect = {
+		every_country = {
+			limit = { is_ai = no }
+			cmm_register_menu_settings = yes
+			trigger_event_silently = {
+				on_action = cmm_on_mod_registration
+			}
+		}
+	}
+}
+
+# Integration extension point.
+# Scope: country
+# Args: none
+cmm_on_mod_registration = {
+	on_actions = { }
+}

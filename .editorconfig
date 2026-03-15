@@ -1,0 +1,21 @@
+root = true
+
+[*]
+end_of_line = crlf
+indent_style = tab
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.sh]
+end_of_line = lf
+
+[*.{txt,yml,gui}]
+charset = utf-8-bom
+
+[*.yml]
+indent_style = space
+indent_size = 1
+
+[*.bbcode]
+indent_style = space
+indent_size = 1

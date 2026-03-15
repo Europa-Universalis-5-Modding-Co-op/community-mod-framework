@@ -1,0 +1,125 @@
+﻿types cmf_windows {
+
+    # Blocks:
+    # - cmf_window_size
+    # - cmf_window_header_text
+    # - cmf_window_header_close_onclick
+    # - cmf_window_tab_visibility (default no)
+    # - cmf_window_tabs
+    # - cmf_window_content
+    type cmf_base_window = window {
+        using = bg_window_default_alt
+        block "cmf_window_size" {
+            size = { 960 750 }
+        }
+        parentanchor = center
+        alwaystransparent = no
+        allow_outside = no
+
+        vbox = {
+            alwaystransparent = yes
+            using = window_margin_alt
+
+            window_header_alt = {
+                blockoverride "header_text" {
+                    block "cmf_window_header_text" {
+                        raw_text = "#r cmf_window_header#!"
+                    }
+                }
+            }
+
+            header_main_tabs = {
+                block "cmf_window_tab_visibility" {
+                    visible = no
+                }
+                blockoverride "content" {
+                    scrollarea = {
+                        alwaystransparent = yes
+                        layoutpolicy_horizontal = expanding
+                        layoutpolicy_vertical = fixed
+                        focuspolicy = all
+                        minimumsize = { 150 35 }
+                        scrollbaralign_vertical = left
+                        autoresizeviewport = yes
+                        autoresizescrollarea = yes
+
+                        viewportwidget = {
+                            widget = {
+                                scissor = no
+                            }
+                        }
+
+                        scrollwidget = {
+                            hbox = {
+                                alwaystransparent = no
+                                block "cmf_window_tabs" {}
+                            }
+                        }
+
+                        scrollbar_vertical = {
+                            using = Scrollbar_Vertical
+                        }
+
+                        scrollbar_horizontal = {
+                            using = SocialHorizontalScrollbar
+                        }
+                    }
+                }
+            }
+
+            vbox = {
+                using = layoutpolicy_expanding
+                using = bg_main_inner_alt
+                using = window_margin_alt
+
+                block "cmf_window_content" {}
+            }
+        }
+
+        widget = {
+            parentanchor = right
+            position = { -5 5 }
+            size = { 40 40 }
+
+            ui_direction_button_holder_right = {}
+
+            button_close_alt = {
+                blockoverride "close_onclick" {
+                    block "cmf_window_header_close_onclick" {}
+                }
+            }
+        }
+    }
+
+    # Blocks:
+    # - cmf_tab_text
+    # - cmf_tab_onclick
+    # - cmf_tab_selected (down attribute)
+    type cmf_tab = hbox {
+        using = layoutpolicy_expanding
+        size = { -1 40 }
+
+        button_main_tab_alt = {
+            using = layoutpolicy_expanding
+            block "cmf_tab_onclick" {}
+            block "cmf_tab_selected" {}
+            block "cmf_tab_tooltip" {
+                tooltipwidget = { BasicFunctionalTooltip = {} }
+            }
+            hbox = {
+                margin = { 5 0 }
+                margin_top = 4
+                text_single = {
+                    autoresize = no
+                    block "cmf_tab_text" {
+                        raw_text = "#r cmf_tab_text#!"
+                    }
+                    align = center
+                    using = layoutpolicy_expanding
+                    using = Font_Type_Headers
+                }
+            }
+        }
+    }
+
+}

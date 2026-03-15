@@ -1,0 +1,57 @@
+﻿cmm_example2__example_toggle_1_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_toggle_bool_setting = {
+			setting = cmm_example2__example_toggle_1
+		}
+
+		if = {
+			limit = { var:cmm_example2__example_toggle_1 = 1 }
+			# enabled effect
+		}
+		else = {
+			# disabled effect
+		}
+	}
+}
+
+cmm_example2__example_toggle_2_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_toggle_bool_setting = {
+			setting = cmm_example2__example_toggle_2
+		}
+
+		if = {
+			limit = { var:cmm_example2__example_toggle_2 = 1 }
+			# enabled effect
+		}
+		else = {
+			# disabled effect
+		}
+	}
+}
+
+cmm_example2__example_slider_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_slider_change = {
+			setting = cmm_example2__example_slider
+		}
+		# optional custom logic
+	}
+}
+
+cmm_example2__example_dropdown_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_dropdown_change = {
+			setting = cmm_example2__example_dropdown
+		}
+		# optional custom logic
+	}
+}

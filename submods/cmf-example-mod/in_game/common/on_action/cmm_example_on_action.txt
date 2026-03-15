@@ -1,0 +1,36 @@
+﻿# Register action bar elements once at game start (global list).
+on_game_start = {
+	on_actions = {
+		cmf_example_on_game_start
+	}
+}
+
+cmf_example_on_game_start = {
+	effect = {
+		cmf_add_action_bar_element = { element = cmf_action_bar_element_example }
+		cmf_add_action_bar_element = { element = cmf_action_bar_element_example_second }
+	}
+}
+
+# Hook this mod into CMM shared registration on_action.
+# Also shows all example alerts so they can be tested immediately.
+cmm_on_mod_registration = {
+	on_actions = {
+		cmm_example_on_register_mod
+	}
+}
+
+cmm_example_on_register_mod = {
+	effect = {
+		cmm_example_register_mod = yes
+		cmf_show_alert = { alert = cmf_alert_example }
+		cmf_show_alert = { alert = cmf_alert_example_blue }
+		cmf_show_alert = { alert = cmf_alert_example_black }
+		cmf_show_alert = { alert = cmf_alert_example_red_war }
+		cmf_show_alert = { alert = cmf_alert_example_red }
+		cmf_show_alert = { alert = cmf_alert_example_orange }
+		cmf_show_alert = { alert = cmf_alert_example_yellow }
+		cmf_show_alert = { alert = cmf_alert_example_green }
+		cmf_show_alert = { alert = cmf_alert_example_purple }
+	}
+}

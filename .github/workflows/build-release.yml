@@ -87,26 +87,22 @@ jobs:
         run: |
           git push origin
 
-        # Move files relevant for the steam release into a separate folder
-        # Remove all other folders and files that should not be in the release
-      - name: Clean Repository
+        # Stage release files: copy only mod content into a clean folder
+      - name: Build Release
         run: |
           mkdir ../steam-release
-          mv STEAM_PAGE.bbcode ../steam-release/STEAM_PAGE.bbcode
-          mv script/create-release-vdf.sh ../steam-release/create-release-vdf.sh
-          rm -rf .git/
-          rm -rf .github/
-          rm -rf docs/
-          rm -rf script/
-          rm -f .gitattributes
-          rm -f .gitignore
-          rm -f vic3-tiger.conf
-          rm -f README.md
+          cp assets/workshop/workshop-description.bbcode ../steam-release/
+          mkdir ../mod-release
+          cp -r .metadata ../mod-release/
+          cp -r in_game ../mod-release/
+          cp -r loading_screen ../mod-release/
+          cp -r main_menu ../mod-release/
 
         # Package clean mod folder into a zip file
       - name: Create Release Artifact
         run: |
-          zip -r release-${{ steps.increment-version.outputs.next-version }}.zip .
+          cd ../mod-release
+          zip -r ${{ github.workspace }}/release-${{ steps.increment-version.outputs.next-version }}.zip .
 
         # Attach mod package to the workflow run
       - name: Upload Release Artifact
@@ -116,8 +112,7 @@ jobs:
           path: release-${{ steps.increment-version.outputs.next-version }}.zip
 
         # Create a GitHub release
-        # Includes the list of commits
-        # Includes the mod package
+        # Includes the mod package and visual editor tool
       - name: Publish GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v2.2.1
@@ -125,7 +120,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: false
           prerelease: false
-          files: release-${{ steps.increment-version.outputs.next-version }}.zip
+          files: |
+            release-${{ steps.increment-version.outputs.next-version }}.zip
+            tools/cmm-visual-editor.bat
           tag_name: ${{ steps.increment-version.outputs.next-version }}
           name: ${{ steps.increment-version.outputs.next-version }}
           body: |
@@ -134,26 +131,32 @@ jobs:
             ### Commits:
             ${{ steps.commits.outputs.markdown }}
 
-
-        # Delete mod package so it is not published to steam
-      - name: Clean Release Artifact
-        run: |
-          rm -f release-${{ steps.increment-version.outputs.next-version }}.zip
-
         # Create mod metadata for the steam release
-        # Uses STEAM_PAGE.bbcode to update steam description
+        # Generate VDF inline for SteamCMD workshop upload
         # Report: Generated metadata
       - name: Create Workshop Metadata
         if: ${{ inputs.publish == 'true' }}
         id: metadata
         shell: bash
         run: |
-          ../steam-release/create-release-vdf.sh ${{ github.workspace }} ../steam-release/STEAM_PAGE.bbcode "${{ inputs.workshop-id }}"
-          mv workshop.vdf ../steam-release/workshop.vdf
+          MOD_RELEASE=$(realpath ../mod-release)
+          TITLE=$(grep -Po '(?<=\s"name":\s").+(?=",)' ../mod-release/.metadata/metadata.json)
+          DESCRIPTION=$(sed '/--NO-TRANSLATE-BELOW--/d' ../steam-release/workshop-description.bbcode | sed "s/\\\$item-id\\\$/${{ inputs.workshop-id }}/g")
+          cat > ../steam-release/workshop.vdf <<VDFEOF
+          "workshopitem"
+          {
+          	"appid" "3450310"
+          	"publishedfileid" "${{ inputs.workshop-id }}"
+          	"contentfolder" "${MOD_RELEASE}"
+          	"previewfile" "${MOD_RELEASE}/.metadata/thumbnail.png"
+          	"title" "${TITLE}"
+          	"description" "${DESCRIPTION}"
+          }
+          VDFEOF
           echo "vdf=$(realpath ../steam-release/workshop.vdf)" >> "$GITHUB_OUTPUT"
           echo "# Workflow Metadata" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "$(cat < ../steam-release/workshop.vdf)" >> $GITHUB_STEP_SUMMARY
+          cat ../steam-release/workshop.vdf >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Setup SteamCMD

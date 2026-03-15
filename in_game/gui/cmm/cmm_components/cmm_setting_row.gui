@@ -1,0 +1,91 @@
+﻿types CMMSettingRowTypes
+{
+	# Single setting row for bool, button, text, numeric, dropdown, slider, and list settings.
+	# Reads:
+	# - Scope.GetFlagName [string]: current setting key (`<mod_id>__<setting_id>`).
+	# - GetVariableSystem.Get('cmm_selected_mod') [string]: active mod id for row visibility filtering.
+	# - GetVariableSystem.Get('cmm_selected_tab') [string]: active tab key for row visibility filtering.
+	# - GetGlobalVariable(Scope.GetFlagName).GetValue [value]: current setting value for global settings.
+	# - Player.MakeScope.GetVariable(Scope.GetFlagName) [value]: current setting value for local settings.
+	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_text')) [flag]: localized button caption for button settings.
+	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_desc')) [flag]: localized setting description used by hover tooltips.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_min_', Scope.GetFlagName)) [value]: numeric minimum bound.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_max_', Scope.GetFlagName)) [value]: numeric maximum bound.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_text_character_limit_', Scope.GetFlagName)) [value]: text character limit.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_slider_visual_step_count_', Scope.GetFlagName)) [value]: slider visual slot count.
+	# - Player.MakeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName)) [list<flag>]: ordered item keys for list settings.
+	# Writes:
+	# - ExecuteConsoleCommand(...) [effect]: submits text settings through console-backed effect calls.
+	# - GetScriptedGui(Concatenate(Scope.GetFlagName, '_on_changed')).Execute(...) [effect]: applies shared post-change setting logic.
+	# - GetScriptedGui('CMM_MarkNumeric*').Execute(...) [effect]: stores pending numeric delta mode.
+	# - GetScriptedGui('CMM_MarkDropdownSelection_<index>').Execute(...) [effect]: stores pending dropdown selected index.
+	# - GetScriptedGui('CMM_MarkSliderSelection_<index>').Execute(...) [effect]: stores pending slider visual index.
+	# - GetScriptedGui('CMM_MarkList*').Execute(...) [effect]: stores pending list position, list action, and field-slot markers.
+	type cmm_setting_row = vbox {
+		layoutpolicy_horizontal = expanding
+		minimumsize = { 0 60 }
+		ignoreinvisible = yes
+		using = bg_window_default_alt
+		visible = "[CMMSettingRowVisible(Scope.GetFlagName)]"
+
+		hbox = {
+			visible = "[Not(CMMSettingIsList(Scope.GetFlagName))]"
+			layoutpolicy_horizontal = expanding
+			margin = { 12 4 }
+			spacing = 12
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				tagtooltip_enabled = yes
+				tooltip = "[CMMLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltip_enabled = "[CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+				text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
+			}
+
+			hbox = {
+				minimumsize = { 320 0 }
+				ignoreinvisible = yes
+
+				checkbox_square_alt = {
+					visible = "[CMMSettingIsBool(Scope.GetFlagName)]"
+					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+					onclick = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+					checked = "[CMMIsSettingEnabled(Scope.GetFlagName)]"
+					tooltip_enabled = no
+				}
+
+				button_regular = {
+					visible = "[CMMSettingIsButton(Scope.GetFlagName)]"
+					minimumsize = { 168 32 }
+					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+					text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_text')]"
+					onclick = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+					tooltip_enabled = no
+				}
+
+				cmm_dropdown_setting = {
+					visible = "[CMMSettingIsDropdown(Scope.GetFlagName)]"
+				}
+
+				cmm_text_setting = {
+					visible = "[CMMSettingIsText(Scope.GetFlagName)]"
+				}
+
+				cmm_slider_setting = {
+					visible = "[CMMSettingIsSlider(Scope.GetFlagName)]"
+				}
+
+				cmm_numeric_setting = {
+					visible = "[CMMSettingIsNumeric(Scope.GetFlagName)]"
+				}
+
+				expand = {}
+			}
+		}
+
+		cmm_list_setting = {
+			visible = "[CMMSettingIsList(Scope.GetFlagName)]"
+		}
+	}
+}

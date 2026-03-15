@@ -1,0 +1,12 @@
+﻿l_english:
+ cmf_settings_title: "Community Mod Framework"
+ cmf_settings_page_action_bar: "Action Bar"
+ cmf_settings_action_bar_group_layout: "Layout"
+ cmf_settings_action_bar_position_activate: "Activate this position"
+ cmf_settings_action_bar_position: "Action Bar Position"
+ cmf_settings_action_bar_position_top: "Top"
+ cmf_settings_action_bar_position_bottom_left: "Bottom Left"
+ cmf_settings_action_bar_position_bottom_right: "Bottom Right"
+ cmf_settings_action_bar_group_active_buttons: "Active Buttons"
+ cmf_settings_action_bar_group_active_button_activate: "Activate Button"
+ cmf_settings_action_bar_group_active_button_deactivate: "Deactivate Button"

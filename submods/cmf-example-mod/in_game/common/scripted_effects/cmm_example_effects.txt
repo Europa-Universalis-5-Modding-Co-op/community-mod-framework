@@ -1,0 +1,173 @@
+﻿# Root scope: country.
+cmm_example_register_mod = {
+	cmm_register_bool_setting = {
+		mod_id = cmm_example
+		setting_id = example_toggle
+		tab_id = general
+		group_id = general_toggles
+		default_value = 0
+	}
+
+	cmm_register_button_setting = {
+		mod_id = cmm_example
+		setting_id = example_button
+		tab_id = general
+		group_id = general_toggles
+	}
+
+	cmm_register_numeric_setting = {
+		mod_id = cmm_example
+		setting_id = example_numeric
+		tab_id = general
+		group_id = general_values
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	cmm_register_slider_setting = {
+		mod_id = cmm_example
+		setting_id = example_slider
+		tab_id = general
+		group_id = general_values
+		default_value = 50
+		min_value = 0
+		max_value = 100
+		step_value = 1
+	}
+
+	cmm_register_text_setting = {
+		mod_id = cmm_example
+		setting_id = example_text
+		tab_id = general
+		group_id = general_values
+		character_limit = 42
+		quote_text = 1
+	}
+
+	cmm_register_dropdown_setting = {
+		mod_id = cmm_example
+		setting_id = example_dropdown
+		tab_id = general
+		group_id = general_values
+		default_index = 1
+		option_count = 3
+	}
+
+	cmm_register_settings_list = {
+		mod_id = cmm_example
+		setting_id = example_list
+		tab_id = general
+		item_count = 5
+		is_ordered = 1
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmm_example
+		setting_id = example_list
+		field_id = enabled
+		default_value = 1
+	}
+
+	cmm_register_list_dropdown_field = {
+		mod_id = cmm_example
+		setting_id = example_list
+		field_id = mode
+		default_index = 1
+		option_count = 3
+	}
+
+	cmm_register_list_numeric_field = {
+		mod_id = cmm_example
+		setting_id = example_list
+		field_id = weight
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	cmm_register_settings_list = {
+		mod_id = cmm_example
+		setting_id = example_unordered_list
+		tab_id = general
+		item_count = 4
+		is_ordered = 0
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmm_example
+		setting_id = example_unordered_list
+		field_id = enabled
+		default_value = 1
+	}
+
+	cmm_register_list_dropdown_field = {
+		mod_id = cmm_example
+		setting_id = example_unordered_list
+		field_id = mode
+		default_index = 1
+		option_count = 3
+	}
+
+	cmm_register_list_numeric_field = {
+		mod_id = cmm_example
+		setting_id = example_unordered_list
+		field_id = weight
+		default_value = 3
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	cmm_register_global_bool_setting = {
+		mod_id = cmm_example
+		setting_id = global_example_toggle
+		tab_id = global
+		group_id = global_toggles
+		default_value = 0
+	}
+
+	cmm_register_global_button_setting = {
+		mod_id = cmm_example
+		setting_id = global_example_button
+		tab_id = global
+		group_id = global_toggles
+	}
+
+	cmm_register_global_numeric_setting = {
+		mod_id = cmm_example
+		setting_id = global_example_numeric
+		tab_id = global
+		group_id = global_values
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	cmm_register_global_slider_setting = {
+		mod_id = cmm_example
+		setting_id = global_example_slider
+		tab_id = global
+		group_id = global_values
+		default_value = 50
+		min_value = 0
+		max_value = 100
+		step_value = 1
+	}
+
+	cmm_register_global_dropdown_setting = {
+		mod_id = cmm_example
+		setting_id = global_example_dropdown
+		tab_id = global
+		group_id = global_values
+		default_index = 1
+		option_count = 3
+	}
+}
+
+cmm_example__example_text_on_changed = {
+	change_country_name = $text$
+}

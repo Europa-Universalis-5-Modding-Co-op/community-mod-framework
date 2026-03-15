@@ -1,4 +1,6 @@
-/.idea/
-/.config/
-*.bkp
-*.dtmp
+/.vscode
+/.idea
+.DS_Store
+.env
+__pycache__/
+local/

@@ -1,7 +1,7 @@
-# Community Mod Framework
-![banner.png](/docs/banner.png)
+# Community Mod Framework (CMF)
+![banner](assets/images/cmf/banner.png)
 
-The Community Mod Framework aims to support compatibility between different mods.
+A shared mod framework and menu for **Europa Universalis 5**. Includes the Community Mod Menu (CMM), custom alerts, action bar elements, and more.
 
 ## Steam Page
 https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
@@ -9,12 +9,10 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
 ## Contents
 * [Philosophy](#philosophy)
 * [Setting Dependency](#setting-dependency)
+* [Community Mod Menu (CMM)](#community-mod-menu-cmm)
 * [GUI Features](#gui-features)
   * [Custom Alerts](#custom-alerts)
   * [Action Bar](#action-bar)
-  * [Hiding Buildings from Production View](#hiding-buildings-from-production-view)
-* [Script Features](#script-features)
-  * [Fixing Variable Errors](#fixing-variable-errors)
 * [Contributors](#contributors)
 
 # Philosophy
@@ -27,18 +25,26 @@ The goal is to provide mods that make use of it, new ways to show content or hoo
 # Setting Dependency
 
 To set this mod as a dependency to your own mod, you will need to add this to your `metadata.json` file:
-```
+```json
   "relationships" : [
     {
       "rel_type" : "dependency",
-      "id" : "com.github.Europa-Universalis-5-Modding-Co-op.community-mod-framework",
+      "id" : "community.mod.framework",
       "display_name" : "Community Mod Framework",
       "resource_type" : "mod",
-      "version" : "1.*"
+      "version" : "2.*"
     }
   ]
 ```
 **Also remember to add the mod to your required items on your own mods steam page.**
+
+# Community Mod Menu (CMM)
+
+CMM is a shared in-game mod settings window included in CMF. It allows mod authors to register settings dynamically through a simple API — no need to build a custom settings UI.
+
+**Supported setting types:** toggle, button, numeric, slider, dropdown, text, and list settings — with per-mod tabs, groups, search, and global settings with host-only multiplayer editing.
+
+For the full docs, see the [CMM Wiki Page](https://eu5.paradoxwikis.com/Community_Mod_Menu).
 
 # GUI Features
 
@@ -46,7 +52,7 @@ To set this mod as a dependency to your own mod, you will need to add this to yo
 You can create and show custom alerts. This is achieved through a combination of localization keys and a scripted gui.
 
 ### Screenshots
-[<img src="docs/screenshots/custom_alerts.png" width="150">](docs/screenshots/custom_alerts.png)
+[<img src="assets/images/cmf/custom_alerts.png" width="150">](assets/images/cmf/custom_alerts.png)
 
 ### Setup
 Custom alerts require a set of localization keys.
@@ -127,8 +133,8 @@ You can create and show custom action bar elements.
 This is achieved through a combination of localization keys and a scripted gui.
 
 ### Screenshots
-[<img src="docs/screenshots/action_bar.png" width="150">](docs/screenshots/action_bar.png)
-[<img src="docs/screenshots/action_bar_customizable.png" width="150">](docs/screenshots/action_bar_customizable.png)
+[<img src="assets/images/cmf/action_bar.png" width="150">](assets/images/cmf/action_bar.png)
+[<img src="assets/images/cmf/action_bar_customizable.png" width="150">](assets/images/cmf/action_bar_customizable.png)
 
 ### Setup
 Custom action bar buttons require a set of localization keys.
@@ -250,82 +256,12 @@ This is a list of supported colors:
 
 </details>
 
-## Hiding Buildings from Production View
-You can hide different building types from the Production -> Buildings view. CMF accomplishes this by storing a list of `building_types` in a global variable list called `cmf_hidden_buildings`. Any building types in this list will not be shown to the player in the Productions -> View.
-
-### Usage
-You have two options for how to hide buildings, `cmf_global_hide_building` and `cmf_country_hide_building`.
-
-`cmf_global_hide_building` will make a global variable list of building types to hide. Here's an example effect that will hide the Overseas Trading Post building type from the Buildings view.
-```
-cmf_global_hide_building = {
-  building_type = building_type:overseas_trading_post
-}
-```
-And here's one that will show it again:
-```
-cmf_global_show_building = {
-  building_type = building_type:overseas_trading_post
-}
-```
-
-You can also manipulate the `cmf_global_hidden_buildings` list yourself:
-```
-add_to_global_variable_list = {
-  name = cmf_global_hidden_buildings
-  target = building_type:overseas_trading_post
-}
-remove_list_global_variable = {
-  name = cmf_global_hidden_buildings
-  target = building_type:overseas_trading_post
-}
-```
-`cmf_country_hide_building` will do the same thing, but save the variable list as a scope on a country.
-
-> **NOTE** While the effects can be run on any country scope, they will only actually hide a building type if they are run in scope of the player's country.
-
-```
-scope:my_country_example = {
-  # Hide the building
-  cmf_country_hide_building = {
-    building_type = building_type:overseas_trading_post
-  }
-  # Show the building
-  cmf_country_show_building = {
-    building_type = building_type:overseas_trading_post
-  }
-}
-```
-
-And once again, you can manipulate the list yourself directly:
-```
-scope:my_country_example = {
-  add_to_variable_list = {
-    name = cmf_country_hidden_buildings
-    target = building_type:overseas_trading_post
-  }
-  remove_list_variable = {
-    name = cmf_country_hidden_buildings
-    target = building_type:overseas_trading_post
-  }
-}
-```
-
-
-# Script Features
-
-## Fixing Variable Errors
-When you are using a variable only in the GUI or in localizations, the game creates errors and spams the error log.
-To avoid this, there is a helper scripted effect in CMF that suppresses these types of errors.
-```
-fix_variable_error = {
-	variable = variable_or_flag_name
-}
-```
-Usage examples can be found [here](in_game/events/cmf_hidden.txt).
-
-**NOTE**: This works for both **variables** and **flags**.
 
 # Contributors
 - [Bahmut](https://steamcommunity.com/id/Bahmut/)
+- [Conner](https://steamcommunity.com/id/ARealConner/)
 - [Pickle](https://steamcommunity.com/id/pickled-dev)
+
+# License
+
+ISC. See [LICENSE](LICENSE).

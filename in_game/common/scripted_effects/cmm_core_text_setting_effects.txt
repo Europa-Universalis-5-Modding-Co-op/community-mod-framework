@@ -1,0 +1,40 @@
+﻿# Register a text setting for a mod (idempotent by mod_id + setting_id).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id unique within mod.
+# - tab_id (key): Owner tab id within mod.
+# - group_id (key): Owner group id within mod.
+# - character_limit (number): Maximum editbox character count; clamped to at least `1`.
+# - quote_text (1/0): Wrap submitted text in double quotes before passing it to the effect callback.
+cmm_register_text_setting = {
+	set_variable = { name = cmm_setting_is_global_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_is_slider_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_is_button_$mod_id$__$setting_id$ value = 0 }
+	set_variable = { name = cmm_setting_text_character_limit_$mod_id$__$setting_id$ value = $character_limit$ }
+	set_variable = { name = cmm_setting_text_quote_$mod_id$__$setting_id$ value = $quote_text$ }
+
+	if = {
+		limit = { var:cmm_setting_text_character_limit_$mod_id$__$setting_id$ < 1 }
+		set_variable = { name = cmm_setting_text_character_limit_$mod_id$__$setting_id$ value = 1 }
+	}
+
+	cmm_register_setting_metadata = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		tab_id = $tab_id$
+		group_id = $group_id$
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = var:cmm_setting_is_global_$mod_id$__$setting_id$
+			exists = var:cmm_setting_is_slider_$mod_id$__$setting_id$
+			exists = var:cmm_setting_is_button_$mod_id$__$setting_id$
+			exists = var:cmm_setting_text_character_limit_$mod_id$__$setting_id$
+			exists = var:cmm_setting_text_quote_$mod_id$__$setting_id$
+		}
+	}
+}

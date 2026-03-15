@@ -1,0 +1,236 @@
+﻿types CMMListSettingTypes
+{
+	# List setting widget with optional per-item move controls and dynamic field columns.
+	# Reads:
+	# - Scope.GetFlagName [string]: current list setting key in root context or current item key in row context.
+	# - Player.MakeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName)) [list<flag>]: item keys for the active list setting.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_list_is_ordered_', Scope.GetFlagName)) [value]: whether move controls are shown for the active list setting.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for one item row.
+	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_name')) [flag]: localized item label for one item row.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_list_last_index_', <setting_key>)) [value]: last valid row position for move-button visibility.
+	# - GetVariableSystem.Get('cmm_list_hover_index') [string]: cached hovered row position for nested field interactions.
+	# Writes:
+	# - GetVariableSystem.Set('cmm_list_hover_index', ...) [effect]: caches the currently hovered row position.
+	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: stores the clicked row position.
+	# - GetScriptedGui('CMM_MarkListMove*').Execute(...) [effect]: stores the pending reorder action.
+	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies list changes via `cmm_apply_list_change`.
+	type cmm_list_setting = vbox {
+		layoutpolicy_horizontal = expanding
+		spacing = 1
+		margin = { 6 8 }
+
+		widget = {
+			layoutpolicy_horizontal = expanding
+			minimumsize = { 0 32 }
+			using = bg_square_outline_tile
+
+			background = {
+				using = color_dark_brown_texture
+				margin = { 2 2 }
+				alpha = 0.2
+			}
+
+			background = {
+				using = overlay_window_texture
+				margin = { 2 2 }
+				blend_mode = overlay
+				alpha = 0.1
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				margin = { 4 2 }
+				spacing = 8
+
+				widget = {
+					size = { 56 0 }
+					minimumsize = { 56 0 }
+					visible = "[CMMListSettingIsOrdered(Scope.GetFlagName)]"
+				}
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					autoresize = no
+					default_format = "#medium"
+					align = left|nobaseline
+					text = "[CMMMetadataFlag('cmm_list_item_column_name_', Scope.GetFlagName)]"
+				}
+
+				cmm_list_setting_header_fields = {}
+			}
+		}
+
+		widget = {
+			layoutpolicy_horizontal = expanding
+			minimumsize = { 0 2 }
+
+			background = {
+				using = color_grey_texture
+				alpha = 0.45
+			}
+
+			background = {
+				using = overlay_window_texture
+				blend_mode = overlay
+				alpha = 0.08
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 4
+			datamodel = "[Player.MakeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName))]"
+			datamodel_reuse_widgets = yes
+
+			item = {
+				cmm_list_setting_row_widget = {}
+			}
+		}
+	}
+
+	# Single list item row with optional movement controls and dynamic field cells.
+	# Reads:
+	# - Scope.GetFlagName [string]: current list item key (`<mod_id>__<setting_id>_item_<index>`).
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: current visible row index in the list datamodel.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for the row item.
+	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_name')) [flag]: localized row item label.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_list_is_ordered_', <setting_key>)) [value]: whether move controls are shown for the owner setting.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_list_last_index_', <setting_key>)) [value]: last valid visible row index.
+	# Writes:
+	# - GetVariableSystem.Set('cmm_list_hover_index', ...) [effect]: caches the currently hovered row position.
+	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: stores the clicked row position.
+	# - GetScriptedGui('CMM_MarkListMove*').Execute(...) [effect]: stores the pending reorder action for ordered lists.
+	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
+	type cmm_list_setting_row_widget = widget {
+		layoutpolicy_horizontal = expanding
+		minimumsize = { 0 32 }
+		onmousehierarchyenter = "[GetVariableSystem.Set('cmm_list_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+		using = bg_square_outline_tile
+
+		background = {
+			using = color_dark_brown_texture
+			margin = { 2 2 }
+			alpha = 0.16
+		}
+
+		background = {
+			using = overlay_window_texture
+			margin = { 2 2 }
+			blend_mode = overlay
+			alpha = 0.08
+		}
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			ignoreinvisible = yes
+			margin = { 4 2 }
+			spacing = 8
+
+			widget = {
+				size = { 56 28 }
+				minimumsize = { 56 28 }
+				visible = "[CMMListItemSettingIsOrdered(Scope.GetFlagName)]"
+
+				hbox = {
+					parentanchor = center
+					widgetanchor = center
+					spacing = 4
+
+					widget = {
+						size = { 26 26 }
+						minimumsize = { 26 26 }
+
+						button_default = {
+							size = { 24 24 }
+							parentanchor = center
+							widgetanchor = center
+							visible = "[Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)0'))]"
+							enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+
+							action_tooltip = {
+								click_mode = single
+								click_type = left
+								click_modifier = default
+								title = "CMM_LIST_MOVE_UP"
+								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+								on_action = "[CMMExecuteGui('CMM_MarkListMoveUp')]"
+								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							}
+
+							action_tooltip = {
+								click_mode = single
+								click_type = left
+								click_modifier = shift
+								title = "CMM_LIST_MOVE_TO_TOP"
+								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+								on_action = "[CMMExecuteGui('CMM_MarkListMoveToTop')]"
+								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							}
+
+							tooltipwidget = { BasicFunctionalTooltip = {} }
+
+							text_single = {
+								parentanchor = center
+								widgetanchor = center
+								position = { 2 0 }
+								raw_text = "↑"
+							}
+						}
+					}
+
+					widget = {
+						size = { 26 26 }
+						minimumsize = { 26 26 }
+
+						button_default = {
+							size = { 24 24 }
+							parentanchor = center
+							widgetanchor = center
+							visible = "[Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, CMMMetadataInt('cmm_setting_list_last_index_', CMMListItemOwnerSettingKey(Scope.GetFlagName))))]"
+							enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+
+							action_tooltip = {
+								click_mode = single
+								click_type = left
+								click_modifier = default
+								title = "CMM_LIST_MOVE_DOWN"
+								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+								on_action = "[CMMExecuteGui('CMM_MarkListMoveDown')]"
+								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							}
+
+							action_tooltip = {
+								click_mode = single
+								click_type = left
+								click_modifier = shift
+								title = "CMM_LIST_MOVE_TO_BOTTOM"
+								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+								on_action = "[CMMExecuteGui('CMM_MarkListMoveToBottom')]"
+								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							}
+
+							tooltipwidget = { BasicFunctionalTooltip = {} }
+
+							text_single = {
+								parentanchor = center
+								widgetanchor = center
+								position = { 2 0 }
+								raw_text = "↓"
+							}
+						}
+					}
+				}
+			}
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				align = left|nobaseline
+				text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
+			}
+
+			cmm_list_setting_row_fields = {}
+		}
+	}
+}
