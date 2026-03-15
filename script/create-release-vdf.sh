@@ -44,7 +44,7 @@ printf '\t"publishedfileid" "%s"' "$mod_id" >> workshop.vdf
 printf '\n' >> workshop.vdf
 printf '\t"contentfolder" "%s"' "$mod_path" >> workshop.vdf
 printf '\n' >> workshop.vdf
-printf '\t"previewfile" "%s/thumbnail.png"' "$mod_path" >> workshop.vdf
+printf '\t"previewfile" "%s/.metadata/thumbnail.png"' "$mod_path" >> workshop.vdf
 printf '\n' >> workshop.vdf
 printf '\t"title" "%s"' "$title" >> workshop.vdf
 printf '\n' >> workshop.vdf
