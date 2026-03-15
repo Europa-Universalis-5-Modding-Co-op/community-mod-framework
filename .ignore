@@ -7,7 +7,5 @@
 .DS_Store
 .env
 __pycache__/
-local/
-!assets/local/AGENTS.md
 example-mod/example-mod.iml
 settings.local.json
