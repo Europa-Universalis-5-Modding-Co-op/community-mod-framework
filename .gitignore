@@ -5,7 +5,5 @@
 .env
 __pycache__/
 local/
-example-mod/example-mod.iml
-settings.local.json
 *.bkp
 *.dtmp

@@ -3,7 +3,7 @@
 |logo=CMM_Logo.png
 |author=Conner
 |status=Upcoming
-|github=conner-olsen/eu5-community-mod-menu
+|github=Europa-Universalis-5-Modding-Co-op/community-mod-framework
 }}
 
 = Overview =
@@ -17,19 +17,19 @@ CMM provides a visual editor tool that lets you create and manage settings witho
 === Running ===
 Run the following in a terminal to download and launch the tool:
 <syntaxhighlight lang="powershell">
-curl.exe -sL https://raw.githubusercontent.com/conner-olsen/eu5-community-mod-menu/main/tools/cmm-visual-editor.bat -o "$env:TEMP\cmm-visual-editor.bat"; & "$env:TEMP\cmm-visual-editor.bat"
+curl.exe -sL https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/tools/cmm-visual-editor.bat -o "$env:TEMP\cmm-visual-editor.bat"; & "$env:TEMP\cmm-visual-editor.bat"
 </syntaxhighlight>
 This will launch the tool in your browser. It will install any dependencies if needed and will not leave any files behind after use.
 
 === Local Install ===
 To download the the persistent launcher, run the following in the directory you want to place it:
 <syntaxhighlight lang="powershell">
-curl.exe -sL https://raw.githubusercontent.com/conner-olsen/eu5-community-mod-menu/main/tools/cmm-visual-editor.bat -o cmm-visual-editor.bat
+curl.exe -sL https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/tools/cmm-visual-editor.bat -o cmm-visual-editor.bat
 </syntaxhighlight>
 
 Double-click/run the downloaded <code>cmm-visual-editor.bat</code> to launch. The local launcher automatically checks for updates on each launch.
 
-The launcher is also available for download on the [https://github.com/conner-olsen/eu5-community-mod-menu/releases releases page].
+The launcher is also available for download on the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/releases releases page].
 
 === Features ===
 * '''Visual editor''': Create and modify any setting type (toggle, button, numeric, slider, dropdown, text, settings list) with tabs, groups, and localization.
@@ -55,12 +55,12 @@ Custom logic you add to your scripted GUI callbacks or text effect callbacks is 
 
 = Manual Setup =
 
-The guide below will be based on the CMM Example Mod, which can be found [TODO here on the workshop] or [https://github.com/conner-olsen/eu5-community-mod-menu/tree/main/submods/example-mod here on GitHub], where <code>example-mod</code> is the root mod folder.
+The guide below will be based on the CMM Example Mod, which can be found [TODO here on the workshop] or [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/tree/main/submods/cmf-example-mod here on GitHub], where <code>cmf-example-mod</code> is the root mod folder.
 
 You can always use any file name you want, but they must be placed in the correct folder and have the correct file extension.
 
 == Basic Setup ==
-First, create an effect file such as <code>example-mod/in_game/common/scripted_effects/cmm_example_effects.txt</code>:
+First, create an effect file such as <code>cmf-example-mod/in_game/common/scripted_effects/cmm_example_effects.txt</code>:
 <syntaxhighlight lang="text">
 cmm_example_register_mod = { # The setup effect you create
 	# This will be where you register your settings
@@ -68,7 +68,7 @@ cmm_example_register_mod = { # The setup effect you create
 </syntaxhighlight>
 * <code>cmm_example_register_mod</code>, this is your registration effect and can be named whatever you want.
 
-Secondly create an <code>on_action</code> file such as <code>example-mod/in_game/common/on_action/cmm_example_on_action.txt</code>, with the following:
+Secondly create an <code>on_action</code> file such as <code>cmf-example-mod/in_game/common/on_action/cmm_example_on_action.txt</code>, with the following:
 <syntaxhighlight lang="text">
 cmm_on_mod_registration = {
 	on_actions = {
@@ -87,7 +87,7 @@ cmm_example_on_register_mod = {
 * <code>cmm_example_register_mod</code> is the effect that we created above, and must match the name you choose before.
 
 Then for later use create a <code>Scripted GUI</code> file, and a Localization file, such as:
-<code>example-mod/in_game/common/scripted_guis/cmm_example_scripted_gui.txt</code>
+<code>cmf-example-mod/in_game/common/scripted_guis/cmm_example_scripted_gui.txt</code>
 
 == Basic Settings ==
 === Toggle ===
@@ -492,7 +492,7 @@ your_effect = {
 </syntaxhighlight>
 
 == Localization ==
-Create or use an existing localization file your mod settings, such as <code>example-mod/main_menu/localization/english/cmm_example_mod_l_english.yml</code>
+Create or use an existing localization file your mod settings, such as <code>cmf-example-mod/main_menu/localization/english/cmm_example_mod_l_english.yml</code>
 
 CMM follows a standard naming scheme for all localization keys you must follow.
 

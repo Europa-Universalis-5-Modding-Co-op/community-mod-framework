@@ -30,9 +30,9 @@ shift
 goto :parse_args
 :args_done
 
-set CMM_SPEC=git+https://github.com/conner-olsen/eu5-community-mod-menu@!CMM_BRANCH!#subdirectory=tools/cmm-visual-editor
-set CMM_VERSION_URL=https://raw.githubusercontent.com/conner-olsen/eu5-community-mod-menu/!CMM_BRANCH!/tools/cmm-visual-editor/pyproject.toml
-set CMM_BAT_URL=https://raw.githubusercontent.com/conner-olsen/eu5-community-mod-menu/!CMM_BRANCH!/tools/cmm-visual-editor.bat
+set CMM_SPEC=git+https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework@!CMM_BRANCH!#subdirectory=tools/cmm-visual-editor
+set CMM_VERSION_URL=https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/!CMM_BRANCH!/tools/cmm-visual-editor/pyproject.toml
+set CMM_BAT_URL=https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/!CMM_BRANCH!/tools/cmm-visual-editor.bat
 
 REM Self-update check (skip for temp downloads)
 echo "%~f0" | findstr /i /c:"%TEMP%" >nul 2>&1
