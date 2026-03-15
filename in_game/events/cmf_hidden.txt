@@ -22,8 +22,5 @@ cmf_hidden.1 = {
         fix_variable_error = { variable = cmf_action_bar_elements }
         fix_variable_error = { variable = cmf_action_bar_active_elements }
 
-        # Hidden Buildings
-        fix_variable_error = { variable = cmf_country_hidden_buildings }
-        fix_variable_error = { variable = cmf_global_hidden_buildings }
     }
 }

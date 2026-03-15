@@ -13,7 +13,6 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
 * [GUI Features](#gui-features)
   * [Custom Alerts](#custom-alerts)
   * [Action Bar](#action-bar)
-  * [Hiding Buildings from Production View](#hiding-buildings-from-production-view)
 * [Script Features](#script-features)
   * [Fixing Variable Errors](#fixing-variable-errors)
 * [Contributors](#contributors)
@@ -258,67 +257,6 @@ This is a list of supported colors:
 - `default_brown`
 
 </details>
-
-## Hiding Buildings from Production View
-You can hide different building types from the Production -> Buildings view. CMF accomplishes this by storing a list of `building_types` in a global variable list called `cmf_hidden_buildings`. Any building types in this list will not be shown to the player in the Productions -> View.
-
-### Usage
-You have two options for how to hide buildings, `cmf_global_hide_building` and `cmf_country_hide_building`.
-
-`cmf_global_hide_building` will make a global variable list of building types to hide. Here's an example effect that will hide the Overseas Trading Post building type from the Buildings view.
-```
-cmf_global_hide_building = {
-  building_type = building_type:overseas_trading_post
-}
-```
-And here's one that will show it again:
-```
-cmf_global_show_building = {
-  building_type = building_type:overseas_trading_post
-}
-```
-
-You can also manipulate the `cmf_global_hidden_buildings` list yourself:
-```
-add_to_global_variable_list = {
-  name = cmf_global_hidden_buildings
-  target = building_type:overseas_trading_post
-}
-remove_list_global_variable = {
-  name = cmf_global_hidden_buildings
-  target = building_type:overseas_trading_post
-}
-```
-`cmf_country_hide_building` will do the same thing, but save the variable list as a scope on a country.
-
-> **NOTE** While the effects can be run on any country scope, they will only actually hide a building type if they are run in scope of the player's country.
-
-```
-scope:my_country_example = {
-  # Hide the building
-  cmf_country_hide_building = {
-    building_type = building_type:overseas_trading_post
-  }
-  # Show the building
-  cmf_country_show_building = {
-    building_type = building_type:overseas_trading_post
-  }
-}
-```
-
-And once again, you can manipulate the list yourself directly:
-```
-scope:my_country_example = {
-  add_to_variable_list = {
-    name = cmf_country_hidden_buildings
-    target = building_type:overseas_trading_post
-  }
-  remove_list_variable = {
-    name = cmf_country_hidden_buildings
-    target = building_type:overseas_trading_post
-  }
-}
-```
 
 
 # Script Features
