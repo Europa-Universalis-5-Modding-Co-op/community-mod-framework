@@ -1,6 +1,6 @@
 # CMM Visual Editor
 
-Visual editor for creating and managing EU5 Community Mod Menu (CMM) settings integrations.
+Visual editor for creating and managing EU5 Community Mod Framework (CMF) menu settings integrations.
 
 ## Development Setup
 

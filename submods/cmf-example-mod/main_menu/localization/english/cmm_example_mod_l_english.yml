@@ -1,7 +1,7 @@
 ﻿l_english:
  # Mod
  cmm_example_name: "CMM Example Mod"
- cmm_example_desc: "Reference integration mod for Community Mod Menu."
+ cmm_example_desc: "Reference integration mod for Community Mod Framework."
 
  # Tabs
  cmm_example__general_name: "General"

@@ -1,6 +1,6 @@
-﻿# Community Mod Menu Example Mod 2
+﻿# Community Mod Framework Example Mod 2
 
-Minimal test/integration mod for `community.mod.menu.dev`.
+Minimal test/integration mod for `community.mod.framework`.
 
 ## What it does
 

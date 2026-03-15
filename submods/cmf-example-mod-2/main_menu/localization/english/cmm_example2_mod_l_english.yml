@@ -1,6 +1,6 @@
 ﻿l_english:
  cmm_example2_name: "CMM Example Mod 2"
- cmm_example2_desc: "Second reference integration mod for Community Mod Menu."
+ cmm_example2_desc: "Second reference integration mod for Community Mod Framework."
  cmm_example2__toggles_name: "Toggles"
  cmm_example2__slider_dropdown_name: "Slider and Dropdown"
  cmm_example2__controls_name: "Controls"
