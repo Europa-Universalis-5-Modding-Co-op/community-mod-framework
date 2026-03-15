@@ -4,7 +4,7 @@
 	"version": "2.0.0",
 	"game_id": "eu5",
 	"supported_game_version": "1.1.*",
-	"short_description": "A shared mod framework and menu. Includes the Community Mod Menu (CMM), custom alerts, action bar elements, and more.",
+	"short_description": "A shared mod framework and menu to improve compatibility between different mods.",
 	"tags": ["Utilities", "User Interface"],
 	"relationships": [],
 	"game_custom_data": {}
