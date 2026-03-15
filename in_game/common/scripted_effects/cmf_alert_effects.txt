@@ -5,6 +5,14 @@
             target = flag:$alert$
         }
     }
+
+    # Benign warning suppression
+    if = {
+        limit = {
+            always = no
+            exists = flag:$alert$
+        }
+    }
 }
 
 cmf_remove_alert = {

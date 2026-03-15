@@ -1,6 +1,5 @@
 ﻿cmf_add_action_bar_element = {
     hidden_effect = {
-        fix_variable_error = { variable = $element$ }
         add_to_global_variable_list = {
             name = cmf_action_bar_elements
             target = flag:$element$
@@ -12,11 +11,19 @@
             }
         }
     }
+
+    # Benign warning suppression
+    if = {
+        limit = {
+            always = no
+            exists = flag:$element$
+            exists = global_var:cmf_action_bar_elements
+        }
+    }
 }
 
 cmf_remove_action_bar_element = {
     hidden_effect = {
-        fix_variable_error = { variable = $element$ }
         remove_list_global_variable = {
             name = cmf_action_bar_elements
             target = flag:$element$
