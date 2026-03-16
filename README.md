@@ -19,7 +19,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
 - **Custom Alerts** — Dynamic, dismissable notifications in the in-game alert bar.
 - **Action Bar Elements** — Custom buttons in the game's action bar.
 - **is_host Trigger** — Check if the current country is controlled by the host player.
-- **[Community Mod Toolkit (CMT)](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit)** — A companion set of development tools, such as a Workshop uploader and mod translator.
+- **[Community Mod Toolkit (CMT)](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit)** — A companion set of development tools, such as a mod template, workshop uploader and mod translator.
 
 ## Documentation
 
