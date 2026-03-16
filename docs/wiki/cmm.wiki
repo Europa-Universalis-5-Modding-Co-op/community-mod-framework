@@ -1,5 +1,5 @@
 {{Modding tool
-|type=Shared Mod Menu
+|type=Mod Menu Creator
 |logo=CMM_Logo.png
 |author=Conner
 |status=Upcoming
@@ -365,3 +365,4 @@ your_mod__your_toggle_on_changed = {
 {{Modding navbox
 |category=Modding tools
 }}
+[[Category:Community Mod Framework]]
