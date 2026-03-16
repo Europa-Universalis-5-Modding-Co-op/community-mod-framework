@@ -14,10 +14,10 @@ def generate_all(model: ModModel) -> dict:
 
     files = {}
     if mod_id:
-        files[f"in_game/common/on_action/{prefix}_menu_on_action.txt"] = _gen_on_action(prefix)
-        files[f"in_game/common/scripted_effects/{prefix}_menu_effects.txt"] = _gen_effects(model)
-        files[f"in_game/common/scripted_guis/{prefix}_menu_scripted_gui.txt"] = _gen_scripted_guis(model)
-        files[f"main_menu/localization/english/{prefix}_menu_l_english.yml"] = _gen_localization(model)
+        files[f"in_game/common/on_action/{prefix}_cmm_on_action.txt"] = _gen_on_action(prefix)
+        files[f"in_game/common/scripted_effects/{prefix}_cmm_effects.txt"] = _gen_effects(model)
+        files[f"in_game/common/scripted_guis/{prefix}_cmm_scripted_gui.txt"] = _gen_scripted_guis(model)
+        files[f"main_menu/localization/english/{prefix}_cmm_l_english.yml"] = _gen_localization(model)
         files[".metadata/metadata.json"] = _gen_metadata(model)
 
     return files

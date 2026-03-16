@@ -8,10 +8,10 @@ const CMMGenerator = {
         const modId = state.mod_id;
         if (!modId) return {};
         return {
-            [`in_game/common/on_action/${prefix}_menu_on_action.txt`]: this.genOnAction(prefix),
-            [`in_game/common/scripted_effects/${prefix}_menu_effects.txt`]: this.genEffects(state),
-            [`in_game/common/scripted_guis/${prefix}_menu_scripted_gui.txt`]: this.genScriptedGuis(state),
-            [`main_menu/localization/english/${prefix}_menu_l_english.yml`]: this.genLocalization(state),
+            [`in_game/common/on_action/${prefix}_cmm_on_action.txt`]: this.genOnAction(prefix),
+            [`in_game/common/scripted_effects/${prefix}_cmm_effects.txt`]: this.genEffects(state),
+            [`in_game/common/scripted_guis/${prefix}_cmm_scripted_gui.txt`]: this.genScriptedGuis(state),
+            [`main_menu/localization/english/${prefix}_cmm_l_english.yml`]: this.genLocalization(state),
             ['.metadata/metadata.json']: this.genMetadata(state),
         };
     },
