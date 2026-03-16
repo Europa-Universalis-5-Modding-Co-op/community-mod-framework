@@ -124,7 +124,7 @@ if !errorlevel! equ 0 (
 REM Forced update
 if !FORCE_UPDATE! equ 1 (
     echo Updating CMM Visual Editor from !CMM_BRANCH!...
-    "%PYTHON%" -m pipx install --force "!CMM_SPEC!" >nul 2>&1
+    "%PYTHON%" -m pipx install --force cmm-visual-editor@!CMM_SPEC! >nul 2>&1
     goto :run
 )
 
@@ -132,7 +132,7 @@ REM Local launcher - install if needed, check for updates, then run
 "%PYTHON%" -m pipx list --short 2>nul | findstr /b "cmm-visual-editor" >nul 2>&1
 if !errorlevel! neq 0 (
     echo Installing CMM Visual Editor...
-    "%PYTHON%" -m pipx install --force "!CMM_SPEC!" >nul 2>&1
+    "%PYTHON%" -m pipx install --force cmm-visual-editor@!CMM_SPEC! >nul 2>&1
     if !errorlevel! neq 0 (
         echo ERROR: Failed to install CMM Visual Editor.
         pause
@@ -157,10 +157,10 @@ for /f "delims=" %%v in ('curl.exe -sL --max-time 3 "!CMM_VERSION_URL!" 2^>nul')
 if defined LOCAL_VER if defined REMOTE_VER (
     if not "!LOCAL_VER!"=="!REMOTE_VER!" (
         echo Updating CMM Visual Editor !LOCAL_VER! -^> !REMOTE_VER!...
-        "%PYTHON%" -m pipx install --force "!CMM_SPEC!" >nul 2>&1
+        "%PYTHON%" -m pipx install --force cmm-visual-editor@!CMM_SPEC! >nul 2>&1
     )
 )
 
 :run
 echo Starting CMM Visual Editor...
-"%PYTHON%" -m cmm_visual_editor !EXTRA_ARGS!
+cmm-visual-editor !EXTRA_ARGS!
