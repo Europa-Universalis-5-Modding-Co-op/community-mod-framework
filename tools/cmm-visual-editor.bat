@@ -6,7 +6,7 @@ REM Installs all dependencies automatically and launches the tool.
 REM Flags:
 REM   --update   Force reinstall to latest version
 REM   --dev      Use the dev branch instead of main
-set BAT_VERSION=1 &REM:launcher-version
+set BAT_VERSION=1
 
 set CMM_BRANCH=main
 set FORCE_UPDATE=0
@@ -38,7 +38,7 @@ REM Self-update check (skip for temp downloads)
 echo "%~f0" | findstr /i /c:"%TEMP%" >nul 2>&1
 if !errorlevel! neq 0 (
     set REMOTE_BAT_VER=
-    for /f "delims=" %%v in ('curl.exe -sL --max-time 3 "!CMM_BAT_URL!" 2^>nul ^| findstr "launcher-version"') do (
+    for /f "delims=" %%v in ('curl.exe -sL --max-time 3 "!CMM_BAT_URL!" 2^>nul ^| findstr /r "^set.BAT_VERSION"') do (
         for /f "tokens=2 delims==" %%u in ("%%v") do (
             for /f %%w in ("%%u") do set "REMOTE_BAT_VER=%%w"
         )
