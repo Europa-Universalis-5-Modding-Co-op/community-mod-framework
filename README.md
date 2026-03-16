@@ -16,7 +16,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788
 
 - **[Community Mod Menu (CMM)](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Community-Mod-Menu)** — Shared in-game settings UI for mods (toggles, sliders, dropdowns, buttons, text inputs, settings lists).
 - **[Custom Alerts](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Custom-Alerts)** — Dynamic, dismissable notifications in the in-game alert bar.
-- **[Action Bar Elements](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar-Elements)** — Custom buttons in the game's action bar.
+- **[Action Bar](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar)** — Custom action bar with configurable buttons.
 - **[is_host Trigger](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger)** — Check if the current country is controlled by the host player.
 - **[Community Mod Toolkit (CMT)](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit)** — A companion set of development tools, such as a mod template, workshop uploader and mod translator.
 
