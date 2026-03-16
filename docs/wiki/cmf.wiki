@@ -1,7 +1,7 @@
 {{Modding tool
-|type=Shared Mod Framework
+|type=Mod Framework & Tools
 |logo=CMF_Logo.png
-|author=Conner
+|author=Conner, Bahmut
 |status=Upcoming
 |github=Europa-Universalis-5-Modding-Co-op/community-mod-framework
 }}
