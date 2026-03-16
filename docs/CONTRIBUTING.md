@@ -14,6 +14,7 @@ The goal is to provide mods that make use of it, new ways to show content or hoo
 * [Ground Rules](#ground-rules)
 * [File Naming](#file-naming)
 * [Variable Prefixing](#variable-prefixing)
+* [Documentation](#documentation)
 * [Community Engagement](#community-engagement)
 
 ## Ground Rules
@@ -31,6 +32,17 @@ All CMF files should use the `cmf_` prefix. This prevents conflicts with base ga
 If you add a variable, list, effect, trigger, etc. for use in CMF, please prefix it using `cmf_`. This is to prevent conflicts with both base game and other mods.
 
 It should be noted that, for functions which effectively add new features, we prefer generalized solutions which can be used by many different mods for consistent outcomes.
+
+## Documentation
+
+Documentation is maintained in two places:
+
+- **[GitHub wiki](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki)** — Full detailed documentation. The wiki is a separate git repo (`community-mod-framework.wiki.git`) and can be cloned and edited like any repo.
+- **Paradox wiki pages** (`docs/wiki/`) — Overview and quick reference pages in MediaWiki format for the [EU5 Paradox wiki](https://eu5.paradoxwikis.com/). These are less detailed and link to the GitHub wiki for full docs.
+
+When adding or changing features, update both:
+1. The GitHub wiki (detailed docs).
+2. The Paradox wiki pages in `docs/wiki/` (quick reference).
 
 ## Pull Request Reviews
 
