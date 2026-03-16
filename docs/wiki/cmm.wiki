@@ -247,9 +247,12 @@ your_mod__your_list_on_changed = {
 }
 </syntaxhighlight>
 
+=== How Ordering Works ===
+Each item has a stable identity number (1 through <code>item_count</code>) that never changes. Reordering only changes a separate display order list — field variables stay in place. <code>cmm_for_each_list_item</code> visits items in display order, but <code>$i$</code> resolves to the stable item number.
+
 === Reading List Values ===
 Field values are stored as: <code>var:[mod_id]__[setting_id]_item_[N]_field_[slot]</code>
-* <code>[N]</code> = item number (1 through <code>item_count</code>)
+* <code>[N]</code> = stable item number (1 through <code>item_count</code>)
 * <code>[slot]</code> = field registration order (1 through 5)
 
 === Iterating List Items ===
