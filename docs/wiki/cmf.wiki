@@ -20,6 +20,9 @@ The [[Community Mod Menu]] is a shared in-game settings UI that allows multiple 
 
 See the [[Community Mod Menu|CMM page]] for a quick reference.
 
+[[File:CMM_Visual_Editor.png|thumb|300px|The CMM Visual Editor.]]
+You can create your mod menu using the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor visual editor tool], which provides a graphical interface and a live preview to create your mod menu.
+
 = Custom Alerts =
 [[File:CMF_Custom_Alerts.png|thumb|300px|Custom alerts in the alert bar.]]
 
