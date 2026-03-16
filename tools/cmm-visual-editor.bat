@@ -38,7 +38,7 @@ REM Self-update check (skip for temp downloads)
 echo "%~f0" | findstr /i /c:"%TEMP%" >nul 2>&1
 if !errorlevel! neq 0 (
     set REMOTE_BAT_VER=
-    for /f "delims=" %%v in ('curl.exe -sL --max-time 3 "!CMM_BAT_URL!" 2^>nul ^| findstr /r "^set.BAT_VERSION"') do (
+    for /f "delims=" %%v in ('curl.exe -sL --max-time 3 "!CMM_BAT_URL!" 2^>nul ^| findstr /b /c:"set BAT_VERSION"') do (
         for /f "tokens=2 delims==" %%u in ("%%v") do (
             for /f %%w in ("%%u") do set "REMOTE_BAT_VER=%%w"
         )
