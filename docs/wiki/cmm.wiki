@@ -12,6 +12,7 @@ The Community Mod Menu (CMM) is part of the [[Community Mod Framework]] and allo
 [[File:CMM_Example_Mod.png|thumb|600px|The CMM Example Mod.]]
 
 = CMM Visual Editor =
+[[File:CMM_Visual_Editor.png|thumb|600px|The CMM Visual Editor.]]
 CMM provides a [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor visual editor tool] that generates all required files from a browser-based interface, with no manual coding required.
 
 Run in a terminal to launch:
