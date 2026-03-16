@@ -90,9 +90,32 @@ def _gen_effects(model: ModModel) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _setting_has_alias(setting: Setting, mod_id: str) -> str:
+    """Return the alias if the setting has one different from its default key, else empty."""
+    alias = (setting.alias or "").strip()
+    if not alias:
+        return ""
+    default_key = f"{mod_id}__{setting.setting_id}"
+    if alias == default_key:
+        return ""
+    return alias
+
+
+def _field_has_alias(field: ListField, mod_id: str, setting_id: str, slot: int) -> str:
+    """Return the alias if the field has one different from its default key, else empty."""
+    alias = (field.alias or "").strip()
+    if not alias:
+        return ""
+    default_key = f"{mod_id}__{setting_id}_item_$i$_field_{slot}"
+    if alias == default_key:
+        return ""
+    return alias
+
+
 def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, setting: Setting):
     st = setting.setting_type
     is_global = setting.is_global
+    qid = f"{mod_id}__{setting.setting_id}"
 
     if st == "list":
         list_source = setting.list_source or ""
@@ -130,6 +153,23 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
         for field in (setting.fields or []):
             lines.append("")
             _emit_list_field(lines, mod_id, setting.setting_id, field)
+
+        # List field alias sync (static lists only - item count known)
+        if not list_source:
+            item_count = _int(setting.item_count, 1)
+            for fi, field in enumerate(setting.fields or []):
+                slot = fi + 1
+                alias = _field_has_alias(field, mod_id, setting.setting_id, slot)
+                if alias:
+                    lines.append("")
+                    lines.append(f"\t# Sync list field alias: {field.field_id}")
+                    for i in range(1, item_count + 1):
+                        resolved_field = f"{qid}_item_{i}_field_{slot}"
+                        resolved_alias = alias.replace("$i$", str(i))
+                        lines.append(f"\tcmm_sync_list_field_alias = {{")
+                        lines.append(f"\t\tfield = {resolved_field}")
+                        lines.append(f"\t\talias = {resolved_alias}")
+                        lines.append(f"\t}}")
         return
 
     # Determine registration function name
@@ -170,6 +210,14 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
         lines.append(f"\t\tquote_text = {_int(setting.quote_text, 0)}")
 
     lines.append(f"\t}}")
+
+    # Setting alias sync (runs each registration = menu open)
+    alias = _setting_has_alias(setting, mod_id)
+    if alias and st not in ("button",):
+        lines.append(f"\tcmm_sync_setting_alias = {{")
+        lines.append(f"\t\tsetting = {qid}")
+        lines.append(f"\t\talias = {alias}")
+        lines.append(f"\t}}")
 
 
 def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField):
@@ -243,12 +291,12 @@ def _gen_scripted_guis(model: ModModel) -> str:
                 if setting.setting_type == "text":
                     continue  # text uses scripted effects
                 qid = f"{mod_id}__{setting.setting_id}"
-                blocks.append(_gen_callback_block(setting, qid))
+                blocks.append(_gen_callback_block(setting, qid, mod_id))
 
     return "\n\n".join(blocks) + "\n"
 
 
-def _gen_callback_block(setting: Setting, qid: str) -> str:
+def _gen_callback_block(setting: Setting, qid: str, mod_id: str = "") -> str:
     st = setting.setting_type
     is_global = setting.is_global
     var_prefix = "global_var" if is_global else "var"
@@ -280,6 +328,15 @@ def _gen_callback_block(setting: Setting, qid: str) -> str:
     elif st == "list":
         lines.append(f"\t\tcmm_apply_list_change = {{")
         lines.append(f"\t\t\tsetting = {qid}")
+        lines.append(f"\t\t}}")
+
+    # Alias sync after value change
+    alias = _setting_has_alias(setting, mod_id) if mod_id else ""
+    if alias and st not in ("button", "list"):
+        lines.append(f"")
+        lines.append(f"\t\tcmm_sync_setting_alias = {{")
+        lines.append(f"\t\t\tsetting = {qid}")
+        lines.append(f"\t\t\talias = {alias}")
         lines.append(f"\t\t}}")
 
     # Custom effect call

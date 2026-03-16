@@ -9,10 +9,22 @@ const SettingEditorComponent = {
             <span v-if="setting.is_global" class="global-badge">Global</span>
             <span v-if="accessor" class="accessor-group">
                 <span class="accessor-label">{{ accessorLabel }}</span>
-                <span class="setting-accessor" @click="copyAccessor" :title="'Click to copy: ' + accessor">
-                    <code>{{ accessor }}</code>
-                    <span v-if="copied" class="copied-flash">Copied!</span>
-                </span>
+                <template v-if="!editingAlias">
+                    <span class="setting-accessor" @click="copyAccessor" :title="'Click to copy: ' + accessor">
+                        <code>{{ accessor }}</code>
+                        <span v-if="copied" class="copied-flash">Copied!</span>
+                    </span>
+                    <button class="btn-icon btn-alias-edit" @click="startEditAlias" title="Edit accessor alias">&#9998;</button>
+                </template>
+                <template v-else>
+                    <span class="alias-edit-group">
+                        <span class="accessor-prefix">{{ accessorPrefix }}:</span>
+                        <input class="alias-edit-input" v-model="aliasInput" @keyup.enter="confirmAlias" @keyup.escape="cancelAlias" ref="aliasInput" :placeholder="defaultAccessorKey">
+                        <button class="btn-icon" @click="confirmAlias" title="Confirm">&#10003;</button>
+                        <button class="btn-icon" @click="cancelAlias" title="Cancel">&#10005;</button>
+                        <button v-if="setting.alias" class="btn-icon btn-danger" @click="clearAlias" title="Remove alias">&#8634;</button>
+                    </span>
+                </template>
             </span>
             <div class="setting-actions">
                 <button v-if="setting.setting_type === 'list' && modId && setting.setting_id && (setting.fields||[]).length" class="btn btn-sm btn-copy-template" @click="copyLoopTemplate" title="Copy iteration template to clipboard">
@@ -163,19 +175,30 @@ const SettingEditorComponent = {
     </div>
     `,
     data() {
-        return { copied: false, copiedTemplate: false };
+        return { copied: false, copiedTemplate: false, editingAlias: false, aliasInput: '' };
     },
     computed: {
         canBeGlobal() {
             return !['text', 'list'].includes(this.setting.setting_type);
         },
+        accessorPrefix() {
+            return this.setting.is_global ? 'global_var' : 'var';
+        },
+        defaultAccessorKey() {
+            if (!this.modId || !this.setting.setting_id) return '';
+            return `${this.modId}__${this.setting.setting_id}`;
+        },
         accessor() {
             if (!this.modId || !this.setting.setting_id) return '';
             if (['button', 'list'].includes(this.setting.setting_type)) return '';
-            const prefix = this.setting.is_global ? 'global_var' : 'var';
-            return `${prefix}:${this.modId}__${this.setting.setting_id}`;
+            const key = (this.setting.alias && this.setting.alias !== this.defaultAccessorKey)
+                ? this.setting.alias
+                : this.defaultAccessorKey;
+            return `${this.accessorPrefix}:${key}`;
         },
         accessorLabel() {
+            const hasAlias = this.setting.alias && this.setting.alias !== this.defaultAccessorKey;
+            if (hasAlias) return "Alias (synced):";
             if (!this.setting.is_global) return "To Access the Setting's Value (Country Scope):";
             return "To Access the Setting's Value:";
         },
@@ -221,6 +244,27 @@ const SettingEditorComponent = {
             if (['text', 'list'].includes(this.setting.setting_type)) {
                 this.setting.is_global = false;
             }
+        },
+        startEditAlias() {
+            this.aliasInput = this.setting.alias || this.defaultAccessorKey;
+            this.editingAlias = true;
+            this.$nextTick(() => { if (this.$refs.aliasInput) this.$refs.aliasInput.focus(); });
+        },
+        confirmAlias() {
+            const val = this.aliasInput.replace(/[^a-z0-9_$]/gi, '').toLowerCase();
+            if (val && val !== this.defaultAccessorKey) {
+                this.setting.alias = val;
+            } else {
+                this.setting.alias = '';
+            }
+            this.editingAlias = false;
+        },
+        cancelAlias() {
+            this.editingAlias = false;
+        },
+        clearAlias() {
+            this.setting.alias = '';
+            this.editingAlias = false;
         },
         syncOptions() {
             const count = Math.max(1, this.setting.option_count || 1);

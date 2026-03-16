@@ -55,11 +55,23 @@ const ListEditorComponent = {
                     <span class="setting-type-badge" :class="field.field_type">{{ field.field_type }}</span>
                     <span>{{ field.name || field.field_id || 'Field ' + (fi+1) }}</span>
                     <span v-if="fieldAccessor(fi)" class="accessor-group">
-                        <span class="accessor-label">Field Slot {{ fi + 1 }} Value (per item):</span>
-                        <span class="setting-accessor" @click="copyFieldAccessor(fi)" :title="'Click to copy: ' + fieldAccessor(fi)">
-                            <code>{{ fieldAccessor(fi) }}</code>
-                            <span v-if="copiedField === fi" class="copied-flash">Copied!</span>
-                        </span>
+                        <span class="accessor-label">{{ fieldAccessorLabel(fi) }}</span>
+                        <template v-if="editingFieldAlias !== fi">
+                            <span class="setting-accessor" @click="copyFieldAccessor(fi)" :title="'Click to copy: ' + fieldAccessor(fi)">
+                                <code>{{ fieldAccessor(fi) }}</code>
+                                <span v-if="copiedField === fi" class="copied-flash">Copied!</span>
+                            </span>
+                            <button class="btn-icon btn-alias-edit" @click="startEditFieldAlias(fi)" title="Edit accessor alias">&#9998;</button>
+                        </template>
+                        <template v-else>
+                            <span class="alias-edit-group">
+                                <span class="accessor-prefix">var:</span>
+                                <input class="alias-edit-input" v-model="fieldAliasInput" @keyup.enter="confirmFieldAlias(fi)" @keyup.escape="cancelFieldAlias" ref="fieldAliasInput" :placeholder="defaultFieldAccessorKey(fi)">
+                                <button class="btn-icon" @click="confirmFieldAlias(fi)" title="Confirm">&#10003;</button>
+                                <button class="btn-icon" @click="cancelFieldAlias" title="Cancel">&#10005;</button>
+                                <button v-if="field.alias" class="btn-icon btn-danger" @click="clearFieldAlias(fi)" title="Remove alias">&#8634;</button>
+                            </span>
+                        </template>
                     </span>
                     <button class="btn-icon btn-danger" @click="removeField(fi)">&times;</button>
                 </div>
@@ -136,13 +148,64 @@ const ListEditorComponent = {
         return {
             copiedField: -1,
             listMode: this.setting.list_source ? 'from_list' : 'static',
+            editingFieldAlias: -1,
+            fieldAliasInput: '',
         };
     },
     methods: {
-        fieldAccessor(fi) {
+        defaultFieldAccessorKey(fi) {
             if (!this.modId || !this.setting.setting_id) return '';
             const slot = fi + 1;
-            return `var:${this.modId}__${this.setting.setting_id}_item_$i$_field_${slot}`;
+            return `${this.modId}__${this.setting.setting_id}_item_$i$_field_${slot}`;
+        },
+        fieldAccessor(fi) {
+            if (!this.modId || !this.setting.setting_id) return '';
+            const field = (this.setting.fields || [])[fi];
+            const defaultKey = this.defaultFieldAccessorKey(fi);
+            if (field && field.alias && field.alias !== defaultKey) {
+                return `var:${field.alias}`;
+            }
+            return `var:${defaultKey}`;
+        },
+        fieldAccessorLabel(fi) {
+            const field = (this.setting.fields || [])[fi];
+            const defaultKey = this.defaultFieldAccessorKey(fi);
+            if (field && field.alias && field.alias !== defaultKey) {
+                return `Alias (synced, per item):`;
+            }
+            return `Field Slot ${fi + 1} Value (per item):`;
+        },
+        startEditFieldAlias(fi) {
+            const field = (this.setting.fields || [])[fi];
+            this.fieldAliasInput = (field && field.alias) || this.defaultFieldAccessorKey(fi);
+            this.editingFieldAlias = fi;
+            this.$nextTick(() => {
+                const refs = this.$refs.fieldAliasInput;
+                if (refs) {
+                    const el = Array.isArray(refs) ? refs[0] : refs;
+                    if (el) el.focus();
+                }
+            });
+        },
+        confirmFieldAlias(fi) {
+            const field = (this.setting.fields || [])[fi];
+            if (!field) return;
+            const val = this.fieldAliasInput.replace(/[^a-z0-9_$]/gi, '').toLowerCase();
+            const defaultKey = this.defaultFieldAccessorKey(fi);
+            if (val && val !== defaultKey) {
+                field.alias = val;
+            } else {
+                field.alias = '';
+            }
+            this.editingFieldAlias = -1;
+        },
+        cancelFieldAlias() {
+            this.editingFieldAlias = -1;
+        },
+        clearFieldAlias(fi) {
+            const field = (this.setting.fields || [])[fi];
+            if (field) field.alias = '';
+            this.editingFieldAlias = -1;
         },
         copyFieldAccessor(fi) {
             const text = this.fieldAccessor(fi);

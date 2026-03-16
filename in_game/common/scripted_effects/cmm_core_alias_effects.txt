@@ -1,0 +1,45 @@
+﻿# Sync a setting alias by copying the main variable value to the alias variable.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - alias (key): Alias variable name.
+cmm_sync_setting_alias = {
+	if = {
+		limit = { var:cmm_setting_is_global_$setting$ = 1 }
+		set_global_variable = { name = $alias$ value = global_var:$setting$ }
+	}
+	else = {
+		set_variable = { name = $alias$ value = var:$setting$ }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = var:cmm_setting_is_global_$setting$
+			exists = var:$setting$
+			exists = var:$alias$
+			exists = global_var:$setting$
+			exists = global_var:$alias$
+		}
+	}
+}
+
+# Sync a list field alias by copying the field variable value to the alias variable.
+# Scope: country
+# Args:
+# - field (key): Full field variable name (e.g. `<mod_id>__<setting_id>_item_1_field_1`).
+# - alias (key): Alias variable name.
+cmm_sync_list_field_alias = {
+	set_variable = { name = $alias$ value = var:$field$ }
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = var:$field$
+			exists = var:$alias$
+		}
+	}
+}
+

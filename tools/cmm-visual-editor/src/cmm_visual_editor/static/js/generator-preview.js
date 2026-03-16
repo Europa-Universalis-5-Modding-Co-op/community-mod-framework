@@ -93,8 +93,23 @@ ${prefix}_on_register_mod = {
         return lines.join('\n') + '\n';
     },
 
+    _settingHasAlias(setting, modId) {
+        const alias = (setting.alias || '').trim();
+        if (!alias) return '';
+        const defaultKey = `${modId}__${setting.setting_id}`;
+        return alias === defaultKey ? '' : alias;
+    },
+
+    _fieldHasAlias(field, modId, settingId, slot) {
+        const alias = (field.alias || '').trim();
+        if (!alias) return '';
+        const defaultKey = `${modId}__${settingId}_item_$i$_field_${slot}`;
+        return alias === defaultKey ? '' : alias;
+    },
+
     _emitRegistration(lines, modId, tabId, groupId, setting) {
         const st = setting.setting_type;
+        const qid = `${modId}__${setting.setting_id}`;
         if (st === 'list') {
             const listSource = setting.list_source || '';
             if (listSource) {
@@ -131,6 +146,28 @@ ${prefix}_on_register_mod = {
                 lines.push('');
                 this._emitListField(lines, modId, setting.setting_id, field);
             }
+
+            // List field alias sync (static lists only)
+            if (!listSource) {
+                const itemCount = setting.item_count || 1;
+                for (let fi = 0; fi < (setting.fields || []).length; fi++) {
+                    const field = setting.fields[fi];
+                    const slot = fi + 1;
+                    const alias = this._fieldHasAlias(field, modId, setting.setting_id, slot);
+                    if (alias) {
+                        lines.push('');
+                        lines.push(`\t# Sync list field alias: ${field.field_id}`);
+                        for (let i = 1; i <= itemCount; i++) {
+                            const resolvedField = `${qid}_item_${i}_field_${slot}`;
+                            const resolvedAlias = alias.replace(/\$i\$/g, String(i));
+                            lines.push(`\tcmm_sync_list_field_alias = {`);
+                            lines.push(`\t\tfield = ${resolvedField}`);
+                            lines.push(`\t\talias = ${resolvedAlias}`);
+                            lines.push(`\t}`);
+                        }
+                    }
+                }
+            }
             return;
         }
 
@@ -161,6 +198,15 @@ ${prefix}_on_register_mod = {
             lines.push(`\t\tquote_text = ${setting.quote_text || 0}`);
         }
         lines.push(`\t}`);
+
+        // Setting alias sync
+        const alias = this._settingHasAlias(setting, modId);
+        if (alias && st !== 'button') {
+            lines.push(`\tcmm_sync_setting_alias = {`);
+            lines.push(`\t\tsetting = ${qid}`);
+            lines.push(`\t\talias = ${alias}`);
+            lines.push(`\t}`);
+        }
     },
 
     _emitListField(lines, modId, settingId, field) {
@@ -235,14 +281,14 @@ ${prefix}_on_register_mod = {
                 for (const setting of (group.settings || [])) {
                     if (setting.setting_type === 'text') continue;
                     const qid = `${modId}__${setting.setting_id}`;
-                    blocks.push(this._genCallback(setting, qid));
+                    blocks.push(this._genCallback(setting, qid, modId));
                 }
             }
         }
         return blocks.join('\n\n') + '\n';
     },
 
-    _genCallback(setting, qid) {
+    _genCallback(setting, qid, modId) {
         const st = setting.setting_type;
         const varPrefix = setting.is_global ? 'global_var' : 'var';
         const lines = [];
@@ -272,6 +318,16 @@ ${prefix}_on_register_mod = {
         } else if (st === 'list') {
             lines.push(`\t\tcmm_apply_list_change = {`);
             lines.push(`\t\t\tsetting = ${qid}`);
+            lines.push(`\t\t}`);
+        }
+
+        // Alias sync after value change
+        const alias = modId ? this._settingHasAlias(setting, modId) : '';
+        if (alias && !['button', 'list'].includes(st)) {
+            lines.push('');
+            lines.push(`\t\tcmm_sync_setting_alias = {`);
+            lines.push(`\t\t\tsetting = ${qid}`);
+            lines.push(`\t\t\talias = ${alias}`);
             lines.push(`\t\t}`);
         }
 

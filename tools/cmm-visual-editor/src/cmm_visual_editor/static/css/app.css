@@ -729,5 +729,43 @@ body {
 .dropdown-options { margin-top: 8px; }
 .dropdown-options h5 { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
 
+/* Alias edit */
+.btn-alias-edit {
+    font-size: 11px;
+    padding: 1px 4px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.btn-alias-edit:hover { color: var(--accent); }
+
+.alias-edit-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-focus);
+    border-radius: 3px;
+    padding: 1px 4px;
+}
+
+.accessor-prefix {
+    font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.alias-edit-input {
+    font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 160px;
+    padding: 1px 2px;
+}
+
 /* List editor */
 .list-editor { margin-top: 4px; }

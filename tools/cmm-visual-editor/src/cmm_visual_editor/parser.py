@@ -97,6 +97,10 @@ def _build_model(
             mod_id = mid
             break
 
+    # Parse setting and field aliases from effects
+    setting_aliases = _parse_setting_aliases(effects)
+    field_aliases = _parse_field_aliases(effects)
+
     # Build tabs/groups/settings from registrations
     tabs_map = {}  # tab_id -> Tab
     groups_map = {}  # (tab_id, group_id) -> Group
@@ -151,7 +155,10 @@ def _build_model(
             group_order.append(gkey)
             tabs_map[tab_id].groups.append(g)
 
-        setting = _reg_to_setting(reg, mod_id, loc_map, list_fields, list_item_values)
+        setting = _reg_to_setting(
+            reg, mod_id, loc_map, list_fields, list_item_values,
+            setting_aliases, field_aliases,
+        )
         if setting:
             groups_map[gkey].settings.append(setting)
 
@@ -194,6 +201,59 @@ def _parse_localization(content: str) -> dict:
         if m:
             result[m.group(1)] = m.group(2)
     return result
+
+
+def _parse_setting_aliases(content: str) -> dict:
+    """Extract cmm_sync_setting_alias blocks -> {setting_key: alias}."""
+    aliases = {}
+    pattern = re.compile(
+        r"cmm_sync_setting_alias\s*=\s*\{", re.IGNORECASE
+    )
+    for m in pattern.finditer(content):
+        block_end = _find_closing_brace(content, m.end())
+        if block_end < 0:
+            continue
+        block = content[m.end():block_end]
+        params = _parse_params(block)
+        setting = params.get("setting", "")
+        alias = params.get("alias", "")
+        if setting and alias:
+            aliases[setting] = alias
+    return aliases
+
+
+def _parse_field_aliases(content: str) -> dict:
+    """Extract cmm_sync_list_field_alias blocks -> {field_key: alias}.
+
+    Returns the alias with item number replaced back to ``$i$`` so it
+    can be stored as a template.
+    """
+    raw = {}  # field_key -> alias (concrete item number)
+    pattern = re.compile(
+        r"cmm_sync_list_field_alias\s*=\s*\{", re.IGNORECASE
+    )
+    for m in pattern.finditer(content):
+        block_end = _find_closing_brace(content, m.end())
+        if block_end < 0:
+            continue
+        block = content[m.end():block_end]
+        params = _parse_params(block)
+        field = params.get("field", "")
+        alias = params.get("alias", "")
+        if field and alias:
+            raw[field] = alias
+
+    # Reconstruct template aliases from first concrete instance (item_1)
+    # field key: <qid>_item_1_field_<slot>  ->  alias with "1" replaced by "$i$"
+    aliases = {}
+    for field_key, alias_val in raw.items():
+        m2 = re.match(r"(.+)_item_(\d+)_field_(\d+)$", field_key)
+        if m2 and m2.group(2) == "1":
+            template_key = f"{m2.group(1)}_item_$i$_field_{m2.group(3)}"
+            # Replace the concrete item number "1" in the alias with "$i$"
+            template_alias = alias_val.replace("1", "$i$", 1)
+            aliases[template_key] = template_alias
+    return aliases
 
 
 def _parse_registrations(content: str, warnings: list) -> list:
@@ -298,6 +358,8 @@ def _parse_params(block: str) -> dict:
 def _reg_to_setting(
     reg: dict, mod_id: str, loc_map: dict, list_fields: dict,
     list_item_values: dict = None,
+    setting_aliases: dict = None,
+    field_aliases: dict = None,
 ) -> Setting:
     """Convert a registration dict to a Setting."""
     reg_type = reg.get("_type", "")
@@ -313,12 +375,16 @@ def _reg_to_setting(
     # Normalize list_from_list to list
     effective_type = "list" if reg_type == "list_from_list" else reg_type
 
+    # Look up setting alias
+    alias = (setting_aliases or {}).get(qid, "")
+
     setting = Setting(
         setting_id=sid,
         setting_type=effective_type,
         is_global=is_global,
         name=loc_map.get(f"{qid}_name", sid),
         desc=loc_map.get(f"{qid}_desc", ""),
+        alias=alias,
     )
 
     if effective_type == "bool":
@@ -367,8 +433,10 @@ def _reg_to_setting(
             setting.item_values = item_values
 
         fields = []
-        for freg in list_fields.get(sid, []):
-            fld = _parse_list_field(freg, mod_id, sid, loc_map)
+        for fi, freg in enumerate(list_fields.get(sid, [])):
+            fld = _parse_list_field(
+                freg, mod_id, sid, loc_map, fi, field_aliases,
+            )
             if fld:
                 fields.append(fld)
         setting.fields = fields
@@ -377,7 +445,8 @@ def _reg_to_setting(
 
 
 def _parse_list_field(
-    reg: dict, mod_id: str, setting_id: str, loc_map: dict
+    reg: dict, mod_id: str, setting_id: str, loc_map: dict,
+    field_index: int = 0, field_aliases: dict = None,
 ) -> ListField:
     fid = reg.get("field_id", "")
     ftype_raw = reg.get("_type", "")
@@ -391,10 +460,17 @@ def _parse_list_field(
         return None
 
     fqid = f"{mod_id}__{setting_id}__{fid}"
+
+    # Look up field alias
+    slot = field_index + 1
+    alias_key = f"{mod_id}__{setting_id}_item_$i$_field_{slot}"
+    alias = (field_aliases or {}).get(alias_key, "")
+
     field = ListField(
         field_id=fid,
         field_type=ftype,
         name=loc_map.get(f"{fqid}_name", fid),
+        alias=alias,
     )
 
     if ftype == "bool":

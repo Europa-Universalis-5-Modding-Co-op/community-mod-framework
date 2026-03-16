@@ -25,6 +25,8 @@ class ListField:
     min_value: Optional[float] = None
     max_value: Optional[float] = None
     step_value: Optional[float] = None
+    # alias
+    alias: str = ""
 
 
 @dataclass
@@ -61,6 +63,8 @@ class Setting:
     on_changed_effect: Optional[str] = None
     pass_value_param: Optional[str] = None
     no_pass_value: Optional[bool] = None
+    # alias
+    alias: str = ""
 
 
 @dataclass
@@ -136,6 +140,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["pass_value_param"] = s.pass_value_param
         if s.no_pass_value:
             d["no_pass_value"] = s.no_pass_value
+        if s.alias:
+            d["alias"] = s.alias
         return d
 
     def _list_field(f: ListField) -> dict:
@@ -144,6 +150,8 @@ def model_to_dict(model: ModModel) -> dict:
             "field_type": f.field_type,
             "name": f.name,
         }
+        if f.alias:
+            d["alias"] = f.alias
         if f.field_type == "bool":
             d["default_value"] = f.default_value
         elif f.field_type == "dropdown":
@@ -207,6 +215,7 @@ def dict_to_model(data: dict) -> ModModel:
             min_value=f.get("min_value"),
             max_value=f.get("max_value"),
             step_value=f.get("step_value"),
+            alias=f.get("alias", ""),
         )
 
     def _parse_setting(s: dict) -> Setting:
@@ -236,6 +245,7 @@ def dict_to_model(data: dict) -> ModModel:
             on_changed_effect=s.get("on_changed_effect"),
             pass_value_param=s.get("pass_value_param"),
             no_pass_value=s.get("no_pass_value"),
+            alias=s.get("alias", ""),
         )
 
     return ModModel(
