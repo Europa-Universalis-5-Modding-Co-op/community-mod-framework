@@ -163,4 +163,5 @@ if defined LOCAL_VER if defined REMOTE_VER (
 
 :run
 echo Starting CMM Visual Editor...
-cmm-visual-editor !EXTRA_ARGS!
+set "PATH=%USERPROFILE%\.local\bin;%PATH%"
+cmm-visual-editor.exe !EXTRA_ARGS!
