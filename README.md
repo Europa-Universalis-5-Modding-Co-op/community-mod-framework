@@ -53,7 +53,7 @@ The goal is to provide mods that make use of it, new ways to show content or hoo
 
 - [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788)
 - [Example Mod](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/tree/main/submods/cmf-example-mod)
-- [Community Mod Toolkit](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit) — Development tools (visual editor, upload, translation)
+- [Community Mod Toolkit](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit)
 - [Contributing](docs/CONTRIBUTING.md)
 - [Discord](https://discord.gg/aUV49QbqYm)
 
