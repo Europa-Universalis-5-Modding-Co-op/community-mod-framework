@@ -149,5 +149,5 @@ See the [[Community Mod Toolkit|CMT page]] for details.
 * [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/tree/main/submods/cmf-example-mod Example Mod (GitHub)]
 
 {{Modding navbox
-|category=Modding tools
+|category=Community Mod Framework
 }}
