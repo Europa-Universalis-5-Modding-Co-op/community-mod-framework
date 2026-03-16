@@ -4,6 +4,7 @@
 |author=Conner
 |status=Upcoming
 |github=Europa-Universalis-5-Modding-Co-op/community-mod-framework
+|nocat=true
 }}
 
 = Overview =
