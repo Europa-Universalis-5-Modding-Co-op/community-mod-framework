@@ -44,47 +44,25 @@ your_mod_on_register = {
 
 Then create a Scripted GUI file and a localization file for your settings.
 
-= Setting Types =
+= Settings =
+Each setting type has its own registration effect and parameters. All settings require a Scripted GUI callback named <code>[mod_id]__[setting_id]_on_changed</code> (except text, which uses a scripted effect callback).
 
-== Quick Reference ==
+All types except text and settings list have global variants (<code>cmm_register_global_*</code>) that store values in <code>global_var:</code> instead of <code>var:</code> and are host-editable in multiplayer.
 
-{| class="wikitable"
-! Type !! Registration Effect !! Callback Helper !! Value
-|-
-| Toggle || <code>cmm_register_bool_setting</code> || <code>cmm_toggle_bool_setting</code> || <code>var:</code> (0/1)
-|-
-| Dropdown || <code>cmm_register_dropdown_setting</code> || <code>cmm_apply_dropdown_change</code> || <code>var:</code> (ordinal from 1)
-|-
-| Button || <code>cmm_register_button_setting</code> || ''(custom effect)'' || No stored value
-|-
-| Numeric || <code>cmm_register_numeric_setting</code> || <code>cmm_apply_numeric_change</code> || <code>var:</code> (number)
-|-
-| Slider || <code>cmm_register_slider_setting</code> || <code>cmm_apply_slider_change</code> || <code>var:</code> (number)
-|-
-| Text || <code>cmm_register_text_setting</code> || ''(scripted effect callback)'' || <code>$text$</code> param
-|-
-| Settings List || <code>cmm_register_settings_list</code> || <code>cmm_apply_list_change</code> || Per-field variables
-|}
-
-All types except text and settings list have global variants (<code>cmm_register_global_*</code>) that store values in <code>global_var:</code> and are host-editable in multiplayer.
-
-== Registration Pattern ==
-All settings share this pattern — register the setting, then create a <code>[mod_id]__[setting_id]_on_changed</code> Scripted GUI callback:
-
+== Toggle ==
+[[File:CMM_Toggle.png|thumb|right|A CMM toggle.]]
 <syntaxhighlight lang="text">
-# Registration (inside your registration effect)
 cmm_register_bool_setting = {
 	mod_id = your_mod
 	setting_id = your_toggle
 	tab_id = general
 	group_id = general_toggles
-	default_value = 0
+	default_value = 0           # 0 = Disabled, 1 = Enabled
 }
-
-# Scripted GUI callback
+</syntaxhighlight>
+<syntaxhighlight lang="text">
 your_mod__your_toggle_on_changed = {
 	scope = country
-
 	effect = {
 		cmm_toggle_bool_setting = {
 			setting = your_mod__your_toggle
@@ -92,17 +70,251 @@ your_mod__your_toggle_on_changed = {
 	}
 }
 </syntaxhighlight>
+Value: <code>var:your_mod__your_toggle</code> — <code>0</code> (disabled) or <code>1</code> (enabled).
 
-Text settings use a '''scripted effect''' callback instead. The submitted text is available as <code>$text$</code>.
+== Dropdown ==
+[[File:CMM_Dropdown.png|thumb|right|A CMM dropdown.]]
+<syntaxhighlight lang="text">
+cmm_register_dropdown_setting = {
+	mod_id = your_mod
+	setting_id = your_dropdown
+	tab_id = general
+	group_id = general_values
+	default_index = 1  # Default selected option (starting from 1)
+	option_count = 3   # Total number of options
+}
+</syntaxhighlight>
+<syntaxhighlight lang="text">
+your_mod__your_dropdown_on_changed = {
+	scope = country
+	effect = {
+		cmm_apply_dropdown_change = {
+			setting = your_mod__your_dropdown
+		}
+	}
+}
+</syntaxhighlight>
+Value: <code>var:your_mod__your_dropdown</code> — selected option ordinal (starting from 1).
 
-== Reading Values ==
-* Basic settings: <code>var:[mod_id]__[setting_id]</code>
-* Global settings: <code>global_var:[mod_id]__[setting_id]</code>
-* List fields: <code>var:[mod_id]__[setting_id]_item_[N]_field_[slot]</code>
-* List item values: <code>scope:cmm_list_current_item_value</code> (inside <code>cmm_for_each_list_item</code>)
+== Button ==
+[[File:CMM_Button.png|thumb|right|A CMM button.]]
+<syntaxhighlight lang="text">
+cmm_register_button_setting = {
+	mod_id = your_mod
+	setting_id = your_button
+	tab_id = general
+	group_id = general_toggles
+}
+</syntaxhighlight>
+<syntaxhighlight lang="text">
+your_mod__your_button_on_changed = {
+	scope = country
+	effect = {
+		# Your custom effect here
+	}
+}
+</syntaxhighlight>
+No stored value — the callback fires once when clicked.
 
-== Conditional Visibility ==
-Any Scripted GUI callback can include <code>is_shown</code> to conditionally hide a setting:
+== Numeric ==
+[[File:CMM_Numeric.png|thumb|right|A CMM numeric stepper.]]
+<syntaxhighlight lang="text">
+cmm_register_numeric_setting = {
+	mod_id = your_mod
+	setting_id = your_numeric
+	tab_id = general
+	group_id = general_values
+	default_value = 5
+	min_value = 0
+	max_value = 10
+	step_value = 1    # Ctrl+click = 5x step, Shift+click = jump to min/max
+}
+</syntaxhighlight>
+<syntaxhighlight lang="text">
+your_mod__your_numeric_on_changed = {
+	scope = country
+	effect = {
+		cmm_apply_numeric_change = {
+			setting = your_mod__your_numeric
+		}
+	}
+}
+</syntaxhighlight>
+Value: <code>var:your_mod__your_numeric</code> — current numeric value.
+
+== Slider ==
+[[File:CMM_Slider.png|thumb|right|A CMM slider.]]
+<syntaxhighlight lang="text">
+cmm_register_slider_setting = {
+	mod_id = your_mod
+	setting_id = your_slider
+	tab_id = general
+	group_id = general_values
+	default_value = 50
+	min_value = 0
+	max_value = 100
+	step_value = 1
+}
+</syntaxhighlight>
+<syntaxhighlight lang="text">
+your_mod__your_slider_on_changed = {
+	scope = country
+	effect = {
+		cmm_apply_slider_change = {
+			setting = your_mod__your_slider
+		}
+	}
+}
+</syntaxhighlight>
+Value: <code>var:your_mod__your_slider</code> — current slider value. Players can click to jump, double click to drag, or use the <code>-</code>/<code>+</code> buttons.
+
+== Text ==
+[[File:CMM_Text.png|thumb|right|A CMM text input.]]
+{{box|Text settings are '''singleplayer only'''.}}
+<syntaxhighlight lang="text">
+cmm_register_text_setting = {
+	mod_id = your_mod
+	setting_id = your_text
+	tab_id = general
+	group_id = general_values
+	character_limit = 42  # Minimum 1
+	quote_text = 1        # 1 = wrap in double quotes, 0 = no wrap
+}
+</syntaxhighlight>
+Text settings use a '''scripted effect''' callback (not a Scripted GUI):
+<syntaxhighlight lang="text">
+your_mod__your_text_on_changed = {
+	# $text$ contains the submitted text
+	change_country_name = $text$
+}
+</syntaxhighlight>
+
+== Settings List ==
+[[File:CMM_Ordered_Settings_List.png|thumb|right|An ordered list setting in CMM.]]
+A table of items where each row has one or more field columns (toggles, dropdowns, or numeric steppers). Lists can optionally be ordered.
+
+=== Registering a List ===
+<syntaxhighlight lang="text">
+cmm_register_settings_list = {
+	mod_id = your_mod
+	setting_id = your_list
+	tab_id = general
+	item_count = 5    # Number of rows (1-20)
+	is_ordered = 1    # 1 = players can reorder, 0 = fixed order
+}
+</syntaxhighlight>
+
+=== Registering Fields ===
+Register fields after the list. Each field becomes a column:
+<syntaxhighlight lang="text">
+cmm_register_list_bool_field = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = enabled
+	default_value = 1
+}
+
+cmm_register_list_dropdown_field = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = mode
+	default_index = 1
+	option_count = 3
+}
+
+cmm_register_list_numeric_field = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = weight
+	default_value = 5
+	min_value = 0
+	max_value = 10
+	step_value = 1
+}
+</syntaxhighlight>
+
+=== List Callback ===
+<syntaxhighlight lang="text">
+your_mod__your_list_on_changed = {
+	scope = country
+	effect = {
+		cmm_apply_list_change = {
+			setting = your_mod__your_list
+		}
+	}
+}
+</syntaxhighlight>
+
+=== Reading List Values ===
+Field values are stored as: <code>var:[mod_id]__[setting_id]_item_[N]_field_[slot]</code>
+* <code>[N]</code> = item number (1 through <code>item_count</code>)
+* <code>[slot]</code> = field registration order (1 through 5)
+
+=== Iterating List Items ===
+<syntaxhighlight lang="text">
+cmm_for_each_list_item = {
+	setting = your_mod__your_list
+	effect = your_mod__your_list_each_item
+}
+
+your_mod__your_list_each_item = {
+	# $i$ = resolved item number, respects player reordering
+	if = {
+		limit = {
+			var:your_mod__your_list_item_$i$_field_1 = 1
+		}
+		# Item $i$ has field 1 (enabled) set to true
+	}
+}
+</syntaxhighlight>
+
+=== Attaching Values ===
+Attach game object scopes to list items for use during iteration:
+<syntaxhighlight lang="text">
+cmm_set_list_item_value = {
+	mod_id = your_mod
+	setting_id = your_list
+	item = 1
+	value = building_type:fine_cloth_guild
+}
+</syntaxhighlight>
+Access during iteration as <code>scope:cmm_list_current_item_value</code>.
+
+=== Dynamic Lists ===
+Build lists dynamically instead of specifying a fixed <code>item_count</code>:
+<syntaxhighlight lang="text">
+cmm_begin_settings_list = {
+	mod_id = your_mod
+	setting_id = your_list
+	tab_id = general
+	is_ordered = 0
+}
+
+cmm_add_settings_list_item = {
+	mod_id = your_mod
+	setting_id = your_list
+	value = building_type:fine_cloth_guild
+	name = fine_cloth_guild              # Localization key for row label
+}
+
+cmm_finish_settings_list = { mod_id = your_mod setting_id = your_list }
+# Register fields after this
+</syntaxhighlight>
+
+Or build from an existing country variable list:
+<syntaxhighlight lang="text">
+cmm_register_settings_list_from_list = {
+	mod_id = your_mod
+	setting_id = your_list
+	tab_id = general
+	is_ordered = 0
+	list = my_variable_list  # Country variable list of scopes (max 20)
+}
+# Register fields after this
+</syntaxhighlight>
+
+= Conditional Visibility =
+Any Scripted GUI callback can include <code>is_shown</code> to conditionally hide a setting. Works for all types except text.
 
 <syntaxhighlight lang="text">
 your_mod__your_toggle_on_changed = {
@@ -121,8 +333,6 @@ your_mod__your_toggle_on_changed = {
 </syntaxhighlight>
 
 = Localization =
-
-== Quick Reference ==
 
 {| class="wikitable"
 ! Key Pattern !! Description
