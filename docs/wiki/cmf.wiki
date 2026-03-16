@@ -1,5 +1,5 @@
 {{Modding tool
-|type=Mod Framework & Tools
+|type=Mod Framework & Toolkit
 |logo=CMF_Logo.png
 |author=Conner, Bahmut
 |status=Upcoming
@@ -149,5 +149,5 @@ See the [[Community Mod Toolkit|CMT page]] for details.
 * [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/tree/main/submods/cmf-example-mod Example Mod (GitHub)]
 
 {{Modding navbox
-|category=Community Mod Framework
+|category=Modding tools
 }}
