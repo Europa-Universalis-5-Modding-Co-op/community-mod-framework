@@ -553,8 +553,11 @@ cmm_apply_list_change = {
 }
 
 # Iterate over every item in a list setting and call a user-provided effect for each.
-# The effect receives `$i$` as the resolved item number (1-20), so the caller can
-# use it directly in variable names, e.g. `var:mymod__my_list_item_$i$_field_1`.
+# The effect receives `$i$` as the resolved item number (1-20) and `$setting$` as the
+# composite key, so the caller can construct variable names like
+# `var:$setting$_item_$i$_field_1`.
+# If the item has a value (set via cmm_set_list_item_value or cmm_add_settings_list_item),
+# it is available as `scope:cmm_list_current_item_value` inside the called effect.
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
@@ -570,8 +573,22 @@ cmm_for_each_list_item = {
 	}
 }
 
+# Internal: save the item's value scope (if set) and invoke the user-provided effect.
+# The value is read from the single-element variable list `<setting>_item_<item>_value`
+# and exposed as `scope:cmm_list_current_item_value` inside the called effect.
+# If no value was set for the item, the scope is simply not available.
+# Scope: country
+# Args: setting (key), item (number), effect (key)
+cmm_save_list_item_value_and_call = {
+	every_in_list = {
+		variable = $setting$_item_$item$_value
+		save_scope_as = cmm_list_current_item_value
+	}
+	$effect$ = { setting = $setting$ i = $item$ }
+}
+
 # Internal dispatcher: resolve the current saved item flag to its item number,
-# then call the user-provided effect with that number.
+# save its value scope, then call the user-provided effect with that number.
 # Scope: country
 # Args:
 # - setting (key): Composite setting key.
@@ -579,82 +596,82 @@ cmm_for_each_list_item = {
 cmm_resolve_list_item_and_call = {
 	if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_1 }
-		$effect$ = { setting = $setting$ i = 1 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 1 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_2 }
-		$effect$ = { setting = $setting$ i = 2 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 2 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_3 }
-		$effect$ = { setting = $setting$ i = 3 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 3 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_4 }
-		$effect$ = { setting = $setting$ i = 4 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 4 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_5 }
-		$effect$ = { setting = $setting$ i = 5 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 5 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_6 }
-		$effect$ = { setting = $setting$ i = 6 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 6 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_7 }
-		$effect$ = { setting = $setting$ i = 7 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 7 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_8 }
-		$effect$ = { setting = $setting$ i = 8 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 8 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_9 }
-		$effect$ = { setting = $setting$ i = 9 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 9 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_10 }
-		$effect$ = { setting = $setting$ i = 10 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 10 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_11 }
-		$effect$ = { setting = $setting$ i = 11 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 11 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_12 }
-		$effect$ = { setting = $setting$ i = 12 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 12 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_13 }
-		$effect$ = { setting = $setting$ i = 13 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 13 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_14 }
-		$effect$ = { setting = $setting$ i = 14 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 14 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_15 }
-		$effect$ = { setting = $setting$ i = 15 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 15 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_16 }
-		$effect$ = { setting = $setting$ i = 16 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 16 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_17 }
-		$effect$ = { setting = $setting$ i = 17 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 17 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_18 }
-		$effect$ = { setting = $setting$ i = 18 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 18 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_19 }
-		$effect$ = { setting = $setting$ i = 19 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 19 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_item_20 }
-		$effect$ = { setting = $setting$ i = 20 }
+		cmm_save_list_item_value_and_call = { setting = $setting$ item = 20 effect = $effect$ }
 	}
 }

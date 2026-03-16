@@ -226,6 +226,8 @@ const app = createApp({
                 is_ordered: 1,
                 item_column_name: 'Item',
                 item_names: ['Item A', 'Item B', 'Item C'],
+                item_values: ['', '', ''],
+                list_source: '',
                 fields: [],
                 on_changed_effect: '',
                 pass_value_param: '',

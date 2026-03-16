@@ -103,8 +103,9 @@ def _build_model(
     tab_order = []
     group_order = []
 
-    # First pass: collect all list fields
+    # First pass: collect all list fields and item values
     list_fields = {}  # setting_id -> [field_regs]
+    list_item_values = {}  # setting_id -> {item_number: value}
     for reg in registrations:
         reg_type = reg.get("_type", "")
         if reg_type.startswith("list_") and "_field" in reg_type:
@@ -112,12 +113,22 @@ def _build_model(
             if sid not in list_fields:
                 list_fields[sid] = []
             list_fields[sid].append(reg)
+        elif reg_type == "list_item_value":
+            sid = reg.get("setting_id", "")
+            item = _to_int(reg.get("item", "0"))
+            value = reg.get("value", "")
+            if sid and item > 0 and value:
+                if sid not in list_item_values:
+                    list_item_values[sid] = {}
+                list_item_values[sid][item] = value
 
     # Second pass: build tabs/groups/settings
     for reg in registrations:
         reg_type = reg.get("_type", "")
 
         if reg_type.startswith("list_") and "_field" in reg_type:
+            continue  # already collected above
+        if reg_type == "list_item_value":
             continue  # already collected above
 
         tab_id = reg.get("tab_id", "general")
@@ -140,7 +151,7 @@ def _build_model(
             group_order.append(gkey)
             tabs_map[tab_id].groups.append(g)
 
-        setting = _reg_to_setting(reg, mod_id, loc_map, list_fields)
+        setting = _reg_to_setting(reg, mod_id, loc_map, list_fields, list_item_values)
         if setting:
             groups_map[gkey].settings.append(setting)
 
@@ -191,7 +202,9 @@ def _parse_registrations(content: str, warnings: list) -> list:
     pattern = re.compile(
         r"(cmm_register_(?:global_)?(?:bool_setting|button_setting|numeric_setting|"
         r"slider_setting|dropdown_setting|text_setting|settings_list|"
-        r"list_bool_field|list_dropdown_field|list_numeric_field))\s*=\s*\{",
+        r"settings_list_from_list|"
+        r"list_bool_field|list_dropdown_field|list_numeric_field)|"
+        r"cmm_set_list_item_value)\s*=\s*\{",
         re.IGNORECASE,
     )
 
@@ -232,8 +245,12 @@ def _func_to_type(func_name: str) -> str:
         return "list_dropdown_field"
     if "list_numeric_field" in fn:
         return "list_numeric_field"
+    if "settings_list_from_list" in fn:
+        return "list_from_list"
     if "settings_list" in fn:
         return "list"
+    if "set_list_item_value" in fn:
+        return "list_item_value"
     if "bool_setting" in fn:
         return "bool"
     if "button_setting" in fn:
@@ -279,35 +296,41 @@ def _parse_params(block: str) -> dict:
 
 
 def _reg_to_setting(
-    reg: dict, mod_id: str, loc_map: dict, list_fields: dict
+    reg: dict, mod_id: str, loc_map: dict, list_fields: dict,
+    list_item_values: dict = None,
 ) -> Setting:
     """Convert a registration dict to a Setting."""
     reg_type = reg.get("_type", "")
     if reg_type.startswith("list_") and "_field" in reg_type:
         return None  # fields handled separately
+    if reg_type == "list_item_value":
+        return None  # item values handled separately
 
     sid = reg.get("setting_id", "")
     is_global = reg.get("_is_global", False)
     qid = f"{mod_id}__{sid}"
 
+    # Normalize list_from_list to list
+    effective_type = "list" if reg_type == "list_from_list" else reg_type
+
     setting = Setting(
         setting_id=sid,
-        setting_type=reg_type,
+        setting_type=effective_type,
         is_global=is_global,
         name=loc_map.get(f"{qid}_name", sid),
         desc=loc_map.get(f"{qid}_desc", ""),
     )
 
-    if reg_type == "bool":
+    if effective_type == "bool":
         setting.default_value = _to_int(reg.get("default_value", "0"))
-    elif reg_type == "button":
+    elif effective_type == "button":
         setting.button_text = loc_map.get(f"{qid}_text", "Run")
-    elif reg_type in ("numeric", "slider"):
+    elif effective_type in ("numeric", "slider"):
         setting.default_value = _to_float(reg.get("default_value", "0"))
         setting.min_value = _to_float(reg.get("min_value", "0"))
         setting.max_value = _to_float(reg.get("max_value", "100"))
         setting.step_value = _to_float(reg.get("step_value", "1"))
-    elif reg_type == "dropdown":
+    elif effective_type == "dropdown":
         setting.default_index = _to_int(reg.get("default_index", "1"))
         setting.option_count = _to_int(reg.get("option_count", "1"))
         options = []
@@ -315,19 +338,33 @@ def _reg_to_setting(
             oname = loc_map.get(f"{qid}_option_{i}_name", f"Option {i}")
             options.append(DropdownOption(index=i, name=oname))
         setting.options = options
-    elif reg_type == "text":
+    elif effective_type == "text":
         setting.character_limit = _to_int(reg.get("character_limit", "42"))
         setting.quote_text = _to_int(reg.get("quote_text", "0"))
-    elif reg_type == "list":
-        setting.item_count = _to_int(reg.get("item_count", "1"))
+    elif effective_type == "list":
         setting.is_ordered = _to_int(reg.get("is_ordered", "0"))
         setting.item_column_name = loc_map.get(f"{qid}_item_column_name", "Item")
 
-        item_names = []
-        for i in range(1, setting.item_count + 1):
-            iname = loc_map.get(f"{qid}_item_{i}_name", f"Item {i}")
-            item_names.append(iname)
-        setting.item_names = item_names
+        if reg_type == "list_from_list":
+            setting.list_source = reg.get("list", "")
+            setting.item_count = 1
+            setting.item_names = []
+        else:
+            setting.item_count = _to_int(reg.get("item_count", "1"))
+            item_names = []
+            for i in range(1, setting.item_count + 1):
+                iname = loc_map.get(f"{qid}_item_{i}_name", f"Item {i}")
+                item_names.append(iname)
+            setting.item_names = item_names
+
+        # Collect item values
+        values_map = (list_item_values or {}).get(sid, {})
+        if values_map:
+            item_values = []
+            count = setting.item_count or 1
+            for i in range(1, count + 1):
+                item_values.append(values_map.get(i, ""))
+            setting.item_values = item_values
 
         fields = []
         for freg in list_fields.get(sid, []):

@@ -184,7 +184,8 @@ const SettingEditorComponent = {
         copyLoopTemplate() {
             const qid = `${this.modId}__${this.setting.setting_id}`;
             const fields = this.setting.fields || [];
-            const itemCount = this.setting.item_count || 1;
+            const itemCount = this.setting.list_source ? 'N' : (this.setting.item_count || 1);
+            const hasValues = (this.setting.item_values || []).some(v => v) || !!this.setting.list_source;
             const lines = [];
             lines.push(`cmm_for_each_list_item = {`);
             lines.push(`\tsetting = ${qid}`);
@@ -193,11 +194,14 @@ const SettingEditorComponent = {
             lines.push(``);
             lines.push(`${qid}_each_item = {`);
             lines.push(`\t# $i$ is the resolved item number (1-${itemCount})`);
+            if (hasValues) {
+                lines.push(`\t# scope:cmm_list_current_item_value  (attached game object)`);
+            }
             for (let fi = 0; fi < fields.length; fi++) {
                 const slot = fi + 1;
                 const ftype = fields[fi].field_type;
                 const fid = fields[fi].field_id || `field_${slot}`;
-                lines.push(`\t# var:${qid}_item_$i$_field_${slot}  (${fid}, ${ftype})`);
+                lines.push(`\t# var:$setting$_item_$i$_field_${slot}  (${fid}, ${ftype})`);
             }
             lines.push(`}`);
             navigator.clipboard.writeText(lines.join('\n'));

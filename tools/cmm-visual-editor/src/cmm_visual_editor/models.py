@@ -54,6 +54,8 @@ class Setting:
     is_ordered: Optional[int] = None
     item_column_name: Optional[str] = None
     item_names: Optional[list] = None
+    item_values: Optional[list] = None  # per-item scope values (e.g. "building_type:fine_cloth_guild")
+    list_source: Optional[str] = None  # variable list name for cmm_register_settings_list_from_list
     fields: Optional[list] = None
     # callback
     on_changed_effect: Optional[str] = None
@@ -125,6 +127,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["is_ordered"] = s.is_ordered
             d["item_column_name"] = s.item_column_name or ""
             d["item_names"] = s.item_names or []
+            d["item_values"] = s.item_values or []
+            d["list_source"] = s.list_source or ""
             d["fields"] = [_list_field(f) for f in (s.fields or [])]
         if s.on_changed_effect:
             d["on_changed_effect"] = s.on_changed_effect
@@ -226,6 +230,8 @@ def dict_to_model(data: dict) -> ModModel:
             is_ordered=s.get("is_ordered"),
             item_column_name=s.get("item_column_name"),
             item_names=s.get("item_names"),
+            item_values=s.get("item_values"),
+            list_source=s.get("list_source"),
             fields=[_parse_list_field(f) for f in s.get("fields", [])],
             on_changed_effect=s.get("on_changed_effect"),
             pass_value_param=s.get("pass_value_param"),

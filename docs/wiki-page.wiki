@@ -438,6 +438,133 @@ cmm_example__example_list_each_item = {
 * <code>effect</code>: The name of your scripted effect to call for each item.
 * <code>$i$</code>: Automatically substituted with the item number, allowing you to construct variable names like <code>var:cmm_example__example_list_item_$i$_field_1</code>.
 
+==== Attaching Values to List Items ====
+You can attach a game object scope to each item in a settings list. This lets you associate a building type, trade good, or any other game object with a row so you can access it during iteration.
+
+Call <code>cmm_set_list_item_value</code> inside your registration effect, after <code>cmm_register_settings_list</code>:
+<syntaxhighlight lang="text">
+cmm_example_register_mod = {
+	cmm_register_settings_list = {
+		mod_id = cmm_example
+		setting_id = example_list
+		tab_id = general
+		item_count = 3
+		is_ordered = 0
+	}
+
+	cmm_set_list_item_value = { mod_id = cmm_example setting_id = example_list item = 1 value = building_type:fine_cloth_guild }
+	cmm_set_list_item_value = { mod_id = cmm_example setting_id = example_list item = 2 value = building_type:grain_depot }
+	cmm_set_list_item_value = { mod_id = cmm_example setting_id = example_list item = 3 value = building_type:silk_workshop }
+
+	cmm_register_list_bool_field = {
+		mod_id = cmm_example
+		setting_id = example_list
+		field_id = enabled
+		default_value = 1
+	}
+}
+</syntaxhighlight>
+
+During iteration, the value is available as <code>scope:cmm_list_current_item_value</code>:
+<syntaxhighlight lang="text">
+cmm_example__example_list_each_item = {
+	# $setting$ = cmm_example__example_list, $i$ = item number
+	# scope:cmm_list_current_item_value = the attached game object scope
+	if = {
+		limit = {
+			AND = {
+				var:$setting$_item_$i$_field_1 = 1  # enabled
+				scope:cmm_list_current_item_value = building_type:fine_cloth_guild
+			}
+		}
+		# This item is enabled and refers to the fine_cloth_guild building
+	}
+}
+</syntaxhighlight>
+
+The item's display name in the CMM menu comes from its localization key (<code>[Your_Mod_ID]__[Your_Setting_ID]_item_[index]_name</code>) and is independent of the attached value.
+
+==== Registering a List from a Game List ====
+When your list items correspond directly to game objects (such as building types, trade goods, etc.) you can build the list dynamically using <code>cmm_begin_settings_list</code> / <code>cmm_add_settings_list_item</code> / <code>cmm_finish_settings_list</code> instead of specifying a fixed <code>item_count</code>.
+
+Each call to <code>cmm_add_settings_list_item</code> takes a <code>value</code> (the game object scope to attach) and a <code>name</code> (the localization key for the row label). The value is accessible during iteration as <code>scope:cmm_list_current_item_value</code>.
+
+<syntaxhighlight lang="text">
+cmm_example_register_mod = {
+	cmm_begin_settings_list = {
+		mod_id = cmm_example
+		setting_id = building_list
+		tab_id = buildings
+		is_ordered = 0
+	}
+
+	# Add items one by one — name is the localization key for the row label, value is the attached game object
+	cmm_add_settings_list_item = { mod_id = cmm_example setting_id = building_list value = building_type:fine_cloth_guild name = fine_cloth_guild }
+	cmm_add_settings_list_item = { mod_id = cmm_example setting_id = building_list value = building_type:grain_depot name = grain_depot }
+	cmm_add_settings_list_item = { mod_id = cmm_example setting_id = building_list value = building_type:silk_workshop name = silk_workshop }
+
+	# Must call this before registering fields
+	cmm_finish_settings_list = { mod_id = cmm_example setting_id = building_list }
+
+	cmm_register_list_bool_field = {
+		mod_id = cmm_example
+		setting_id = building_list
+		field_id = enabled
+		default_value = 1
+	}
+}
+</syntaxhighlight>
+
+Then iterate with <code>cmm_for_each_list_item</code> and read each item's value:
+<syntaxhighlight lang="text">
+cmm_for_each_list_item = {
+	setting = cmm_example__building_list
+	effect = cmm_example__building_list_each_item
+}
+
+cmm_example__building_list_each_item = {
+	# scope:cmm_list_current_item_value = the attached building_type scope
+	if = {
+		limit = {
+			AND = {
+				var:$setting$_item_$i$_field_1 = 1  # enabled
+				scope:cmm_list_current_item_value = building_type:fine_cloth_guild
+			}
+		}
+		# This item is the fine_cloth_guild building and is enabled
+	}
+}
+</syntaxhighlight>
+
+Alternatively, use <code>cmm_register_settings_list_from_list</code> to build a settings list directly from an existing country variable list. Each entry in the source list becomes one row, and its scope is automatically stored as the item value:
+<syntaxhighlight lang="text">
+cmm_example_register_mod = {
+	# Assumes my_buildings_list is a country variable list of building_type scopes
+	cmm_register_settings_list_from_list = {
+		mod_id = cmm_example
+		setting_id = building_list
+		tab_id = buildings
+		is_ordered = 0
+		list = my_buildings_list
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmm_example
+		setting_id = building_list
+		field_id = enabled
+		default_value = 1
+	}
+}
+</syntaxhighlight>
+
+Key rules for the dynamic API:
+* Items are auto-numbered starting from 1 in the order you call <code>cmm_add_settings_list_item</code>.
+* Maximum 20 items (same limit as the static API). Items beyond 20 are silently ignored.
+* <code>cmm_finish_settings_list</code> must be called before any field registration (<code>cmm_register_list_bool_field</code>, etc.).
+* The entire begin/add/finish block runs on every registration cycle, but is idempotent — items are only added on the first run.
+* The Scripted GUI callback and localization for the list name, column header (<code>_item_column_name</code>), and field headers follow the same patterns as a static list.
+* Row labels require <code>_item_N_name</code> localization keys when using <code>cmm_register_settings_list_from_list</code>. When using <code>cmm_add_settings_list_item</code>, the <code>name</code> parameter sets the localization key for each row.
+
 
 === Global Settings ===
 Global settings are stored in global variables instead of country variables, making them shared across all players. In multiplayer, only the host can edit global settings.

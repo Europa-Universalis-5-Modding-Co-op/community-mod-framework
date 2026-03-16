@@ -264,6 +264,22 @@ body {
     color: var(--text-muted);
 }
 
+.list-item-row {
+    flex-wrap: nowrap;
+}
+
+.item-name-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.item-value-input {
+    flex: 2;
+    min-width: 0;
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
+}
+
 /* Buttons */
 .btn {
     padding: 6px 14px;

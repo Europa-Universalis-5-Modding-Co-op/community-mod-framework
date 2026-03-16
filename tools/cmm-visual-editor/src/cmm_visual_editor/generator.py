@@ -95,14 +95,36 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
     is_global = setting.is_global
 
     if st == "list":
-        # List registration: no group_id
-        lines.append(f"\tcmm_register_settings_list = {{")
-        lines.append(f"\t\tmod_id = {mod_id}")
-        lines.append(f"\t\tsetting_id = {setting.setting_id}")
-        lines.append(f"\t\ttab_id = {tab_id}")
-        lines.append(f"\t\titem_count = {_int(setting.item_count, 1)}")
-        lines.append(f"\t\tis_ordered = {_int(setting.is_ordered, 0)}")
-        lines.append(f"\t}}")
+        list_source = setting.list_source or ""
+        if list_source:
+            # From-list registration
+            lines.append(f"\tcmm_register_settings_list_from_list = {{")
+            lines.append(f"\t\tmod_id = {mod_id}")
+            lines.append(f"\t\tsetting_id = {setting.setting_id}")
+            lines.append(f"\t\ttab_id = {tab_id}")
+            lines.append(f"\t\tis_ordered = {_int(setting.is_ordered, 0)}")
+            lines.append(f"\t\tlist = {list_source}")
+            lines.append(f"\t}}")
+        else:
+            # Static list registration
+            lines.append(f"\tcmm_register_settings_list = {{")
+            lines.append(f"\t\tmod_id = {mod_id}")
+            lines.append(f"\t\tsetting_id = {setting.setting_id}")
+            lines.append(f"\t\ttab_id = {tab_id}")
+            lines.append(f"\t\titem_count = {_int(setting.item_count, 1)}")
+            lines.append(f"\t\tis_ordered = {_int(setting.is_ordered, 0)}")
+            lines.append(f"\t}}")
+
+            # Item values
+            for i, val in enumerate(setting.item_values or [], start=1):
+                if val:
+                    lines.append("")
+                    lines.append(f"\tcmm_set_list_item_value = {{")
+                    lines.append(f"\t\tmod_id = {mod_id}")
+                    lines.append(f"\t\tsetting_id = {setting.setting_id}")
+                    lines.append(f"\t\titem = {i}")
+                    lines.append(f"\t\tvalue = {val}")
+                    lines.append(f"\t}}")
 
         # List fields
         for field in (setting.fields or []):
@@ -183,11 +205,15 @@ def _emit_list_iteration_boilerplate(lines: list, mod_id: str, setting: Setting)
     """Emit a commented-out iteration template for a list setting."""
     qid = f"{mod_id}__{setting.setting_id}"
     fields = setting.fields or []
+    has_values = any(v for v in (setting.item_values or [])) or bool(setting.list_source)
+    item_count = _int(setting.item_count, 1) if not setting.list_source else "N"
 
     lines.append("")
     lines.append(f"# ─── How to iterate: {qid} ───")
     lines.append(f"# Call cmm_for_each_list_item to loop through items. It calls your effect")
     lines.append(f"# with $i$ set to the item number, so you can use it in variable names.")
+    if has_values:
+        lines.append(f"# scope:cmm_list_current_item_value holds the attached game object scope.")
     lines.append(f"# Scope: country")
     lines.append(f"#")
     lines.append(f"# cmm_for_each_list_item = {{")
@@ -196,12 +222,14 @@ def _emit_list_iteration_boilerplate(lines: list, mod_id: str, setting: Setting)
     lines.append(f"# }}")
     lines.append(f"#")
     lines.append(f"# {qid}_each_item = {{")
-    lines.append(f"#     # $i$ is the resolved item number (1-{_int(setting.item_count, 1)})")
+    lines.append(f"#     # $i$ is the resolved item number (1-{item_count})")
+    if has_values:
+        lines.append(f"#     # scope:cmm_list_current_item_value  (attached game object)")
     for fi, field in enumerate(fields):
         slot = fi + 1
         ftype = field.field_type
         fid = field.field_id or f"field_{slot}"
-        lines.append(f"#     # var:{qid}_item_$i$_field_{slot}  ({fid}, {ftype})")
+        lines.append(f"#     # var:$setting$_item_$i$_field_{slot}  ({fid}, {ftype})")
     lines.append(f"# }}")
 
 
@@ -332,8 +360,9 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
 
     elif st == "list":
         lines.append(f' {qid}_item_column_name: "{_esc(setting.item_column_name or "Item")}"')
-        for i, name in enumerate(setting.item_names or [], start=1):
-            lines.append(f' {qid}_item_{i}_name: "{_esc(name)}"')
+        if not setting.list_source:
+            for i, name in enumerate(setting.item_names or [], start=1):
+                lines.append(f' {qid}_item_{i}_name: "{_esc(name)}"')
 
         for field in (setting.fields or []):
             fqid = f"{qid}__{field.field_id}"

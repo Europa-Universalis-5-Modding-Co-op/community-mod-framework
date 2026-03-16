@@ -96,13 +96,37 @@ ${prefix}_on_register_mod = {
     _emitRegistration(lines, modId, tabId, groupId, setting) {
         const st = setting.setting_type;
         if (st === 'list') {
-            lines.push(`\tcmm_register_settings_list = {`);
-            lines.push(`\t\tmod_id = ${modId}`);
-            lines.push(`\t\tsetting_id = ${setting.setting_id}`);
-            lines.push(`\t\ttab_id = ${tabId}`);
-            lines.push(`\t\titem_count = ${setting.item_count || 1}`);
-            lines.push(`\t\tis_ordered = ${setting.is_ordered || 0}`);
-            lines.push(`\t}`);
+            const listSource = setting.list_source || '';
+            if (listSource) {
+                lines.push(`\tcmm_register_settings_list_from_list = {`);
+                lines.push(`\t\tmod_id = ${modId}`);
+                lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+                lines.push(`\t\ttab_id = ${tabId}`);
+                lines.push(`\t\tis_ordered = ${setting.is_ordered || 0}`);
+                lines.push(`\t\tlist = ${listSource}`);
+                lines.push(`\t}`);
+            } else {
+                lines.push(`\tcmm_register_settings_list = {`);
+                lines.push(`\t\tmod_id = ${modId}`);
+                lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+                lines.push(`\t\ttab_id = ${tabId}`);
+                lines.push(`\t\titem_count = ${setting.item_count || 1}`);
+                lines.push(`\t\tis_ordered = ${setting.is_ordered || 0}`);
+                lines.push(`\t}`);
+
+                for (let i = 0; i < (setting.item_values || []).length; i++) {
+                    const val = setting.item_values[i];
+                    if (val) {
+                        lines.push('');
+                        lines.push(`\tcmm_set_list_item_value = {`);
+                        lines.push(`\t\tmod_id = ${modId}`);
+                        lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+                        lines.push(`\t\titem = ${i + 1}`);
+                        lines.push(`\t\tvalue = ${val}`);
+                        lines.push(`\t}`);
+                    }
+                }
+            }
             for (const field of (setting.fields || [])) {
                 lines.push('');
                 this._emitListField(lines, modId, setting.setting_id, field);
@@ -171,13 +195,17 @@ ${prefix}_on_register_mod = {
 
     _emitListIterationBoilerplate(lines, modId, setting) {
         const qid = `${modId}__${setting.setting_id}`;
-        const itemCount = setting.item_count || 1;
+        const itemCount = setting.list_source ? 'N' : (setting.item_count || 1);
         const fields = setting.fields || [];
+        const hasValues = (setting.item_values || []).some(v => v) || !!setting.list_source;
 
         lines.push('');
         lines.push(`# ─── How to iterate: ${qid} ───`);
         lines.push(`# Call cmm_for_each_list_item to loop through items. It calls your effect`);
         lines.push(`# with $i$ set to the item number, so you can use it in variable names.`);
+        if (hasValues) {
+            lines.push(`# scope:cmm_list_current_item_value holds the attached game object scope.`);
+        }
         lines.push(`# Scope: country`);
         lines.push(`#`);
         lines.push(`# cmm_for_each_list_item = {`);
@@ -187,11 +215,14 @@ ${prefix}_on_register_mod = {
         lines.push(`#`);
         lines.push(`# ${qid}_each_item = {`);
         lines.push(`#     # $i$ is the resolved item number (1-${itemCount})`);
+        if (hasValues) {
+            lines.push(`#     # scope:cmm_list_current_item_value  (attached game object)`);
+        }
         for (let fi = 0; fi < fields.length; fi++) {
             const slot = fi + 1;
             const ftype = fields[fi].field_type;
             const fid = fields[fi].field_id || `field_${slot}`;
-            lines.push(`#     # var:${qid}_item_$i$_field_${slot}  (${fid}, ${ftype})`);
+            lines.push(`#     # var:$setting$_item_$i$_field_${slot}  (${fid}, ${ftype})`);
         }
         lines.push(`# }`);
     },
@@ -324,8 +355,10 @@ ${prefix}_on_register_mod = {
             }
         } else if (setting.setting_type === 'list') {
             lines.push(` ${qid}_item_column_name: "${this._esc(setting.item_column_name || 'Item')}"`);
-            for (let i = 0; i < (setting.item_names || []).length; i++) {
-                lines.push(` ${qid}_item_${i + 1}_name: "${this._esc(setting.item_names[i])}"`);
+            if (!setting.list_source) {
+                for (let i = 0; i < (setting.item_names || []).length; i++) {
+                    lines.push(` ${qid}_item_${i + 1}_name: "${this._esc(setting.item_names[i])}"`);
+                }
             }
             for (const field of (setting.fields || [])) {
                 const fqid = `${qid}__${field.field_id}`;

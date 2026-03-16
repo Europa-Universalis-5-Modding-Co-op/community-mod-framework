@@ -2,11 +2,27 @@ const ListEditorComponent = {
     props: ['setting', 'modId'],
     template: `
     <div class="list-editor">
-        <div class="field-grid">
+        <div class="field-row">
+            <label>List Source</label>
+            <select v-model="listMode" @change="onListModeChange">
+                <option value="static">Static (fixed item count)</option>
+                <option value="from_list">From Variable List</option>
+            </select>
+        </div>
+
+        <div v-if="listMode === 'from_list'" class="field-row">
+            <label>Variable List Name</label>
+            <input v-model="setting.list_source" placeholder="my_buildings_list">
+        </div>
+
+        <div v-if="listMode === 'static'" class="field-grid">
             <div class="field-row">
                 <label>Item Count (1-20)</label>
                 <input type="number" v-model.number="setting.item_count" min="1" max="20" @input="syncItemNames">
             </div>
+        </div>
+
+        <div class="field-grid">
             <div class="field-row">
                 <label>Ordered</label>
                 <select v-model.number="setting.is_ordered">
@@ -20,11 +36,12 @@ const ListEditorComponent = {
             <input v-model="setting.item_column_name" placeholder="Item">
         </div>
 
-        <div class="subsection">
-            <h5>Item Names</h5>
-            <div v-for="(name, i) in setting.item_names" :key="i" class="field-row compact">
+        <div v-if="listMode === 'static'" class="subsection">
+            <h5>Items</h5>
+            <div v-for="(name, i) in setting.item_names" :key="i" class="field-row compact list-item-row">
                 <label class="compact-label">{{ i + 1 }}</label>
-                <input :value="name" @input="setting.item_names[i] = $event.target.value" :placeholder="'Item ' + (i+1)">
+                <input :value="name" @input="setting.item_names[i] = $event.target.value" :placeholder="'Item ' + (i+1)" class="item-name-input">
+                <input :value="(setting.item_values||[])[i] || ''" @input="setItemValue(i, $event.target.value)" placeholder="value (e.g. building_type:fine_cloth_guild)" class="item-value-input">
             </div>
         </div>
 
@@ -116,7 +133,10 @@ const ListEditorComponent = {
     </div>
     `,
     data() {
-        return { copiedField: -1 };
+        return {
+            copiedField: -1,
+            listMode: this.setting.list_source ? 'from_list' : 'static',
+        };
     },
     methods: {
         fieldAccessor(fi) {
@@ -140,6 +160,28 @@ const ListEditorComponent = {
             }
             while (this.setting.item_names.length > count) {
                 this.setting.item_names.pop();
+            }
+            // Sync item_values array length
+            if (!this.setting.item_values) this.setting.item_values = [];
+            while (this.setting.item_values.length < count) {
+                this.setting.item_values.push('');
+            }
+            while (this.setting.item_values.length > count) {
+                this.setting.item_values.pop();
+            }
+        },
+        setItemValue(index, value) {
+            if (!this.setting.item_values) this.setting.item_values = [];
+            while (this.setting.item_values.length <= index) {
+                this.setting.item_values.push('');
+            }
+            this.setting.item_values[index] = value;
+        },
+        onListModeChange() {
+            if (this.listMode === 'from_list') {
+                this.setting.list_source = this.setting.list_source || '';
+            } else {
+                this.setting.list_source = '';
             }
         },
         addField() {
