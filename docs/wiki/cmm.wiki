@@ -1,8 +1,8 @@
 {{Modding tool
-|type=Mod Menu Creator
+|type=Visual Editor
 |logo=CMM_Logo.png
 |author=Conner
-|status=Upcoming
+|status=Released
 |github=Europa-Universalis-5-Modding-Co-op/community-mod-framework
 |nocat=true
 }}
