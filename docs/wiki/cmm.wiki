@@ -362,7 +362,6 @@ your_mod__your_toggle_on_changed = {
 * [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki Full Documentation (GitHub Wiki)]
 * [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/tree/main/submods/cmf-example-mod Example Mod (GitHub)]
 
-[[Category:Community Mod Framework]]
 {{Modding navbox
-|category=Modding tools
+|category=Community Mod Framework
 }}
