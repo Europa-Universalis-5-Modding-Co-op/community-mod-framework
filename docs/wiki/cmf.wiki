@@ -1,0 +1,51 @@
+{{Modding tool
+|type=Shared Mod Framework
+|logo=CMF_Logo.png
+|author=Conner
+|status=Upcoming
+|github=Europa-Universalis-5-Modding-Co-op/community-mod-framework
+}}
+
+= Overview =
+The Community Mod Framework (CMF) is a shared mod framework for Europa Universalis 5 that provides a set of features mods can use to integrate with the game without conflicting with each other.
+
+The framework is designed to be invisible when no dependent mods are active.
+
+CMF is available on the [https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788 Steam Workshop].
+
+= Components =
+
+== Community Mod Menu (CMM) ==
+[[File:CMM_Example_Mod.png|thumb|300px|The Community Mod Menu.]]
+
+The [[Community Mod Menu]] is a shared in-game settings UI that allows multiple mods to hook into a single menu through a registration API. It supports toggles, sliders, dropdowns, buttons, text inputs, and settings lists.
+
+See the [[Community Mod Menu|CMM page]] for a quick reference, or the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki GitHub wiki] for full documentation.
+
+== CMF Features ==
+CMF provides several standalone features beyond the mod menu:
+
+* '''[[Community Mod Framework Features|Custom Alerts]]''' — Dynamic, dismissable notifications in the in-game alert bar.
+* '''[[Community Mod Framework Features|Action Bar Elements]]''' — Custom buttons in the game's action bar.
+* '''[[Community Mod Framework Features|is_host Trigger]]''' — Trigger to check if the current country is controlled by the host player.
+
+See the [[Community Mod Framework Features|CMF Features page]] for a quick reference.
+
+== Community Mod Toolkit (CMT) ==
+The [[Community Mod Toolkit]] is a companion set of development tools for EU5 mod authors. It provides a structured mod template and automation tools that work together through shared configuration:
+
+* '''CMM Visual Editor''' — Browser-based interface for designing CMM settings without manual coding.
+* '''Upload Tool''' — Automated Steam Workshop deployment with submod support.
+* '''Translation Tool''' — Automated localization via DeepL or Gemini AI for all EU5-supported languages.
+
+See the [[Community Mod Toolkit|CMT page]] for details.
+
+= Links =
+* [https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788 Steam Workshop]
+* [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework GitHub Repository]
+* [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki Full Documentation (GitHub Wiki)]
+* [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/tree/main/submods/cmf-example-mod Example Mod (GitHub)]
+
+{{Modding navbox
+|category=Modding tools
+}}

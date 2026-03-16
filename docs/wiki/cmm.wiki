@@ -1,0 +1,157 @@
+{{Modding tool
+|type=Shared Mod Menu
+|logo=CMM_Logo.png
+|author=Conner
+|status=Upcoming
+|github=Europa-Universalis-5-Modding-Co-op/community-mod-framework
+}}
+
+= Overview =
+The Community Mod Menu (CMM) is part of the [[Community Mod Framework]] and allows multiple mods to hook into a single shared in-game settings menu through a registration API. For full documentation, see the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki GitHub wiki].
+
+[[File:CMM_Example_Mod.png|thumb|600px|The CMM Example Mod.]]
+
+= CMM Visual Editor =
+CMM provides a [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor visual editor tool] that generates all required files from a browser-based interface, with no manual coding required.
+
+Run in a terminal to launch:
+<syntaxhighlight lang="powershell">
+curl.exe -sL https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/tools/cmm-visual-editor.bat -o "$env:TEMP\cmm-visual-editor.bat"; & "$env:TEMP\cmm-visual-editor.bat"
+</syntaxhighlight>
+
+= Basic Setup =
+Register your mod by creating a registration effect and hooking it into CMM's <code>on_action</code>:
+
+<syntaxhighlight lang="text">
+# in_game/common/scripted_effects/your_effects.txt
+your_mod_register = {
+	# Register settings here
+}
+
+# in_game/common/on_action/your_on_action.txt
+cmm_on_mod_registration = {
+	on_actions = {
+		your_mod_on_register
+	}
+}
+
+your_mod_on_register = {
+	effect = {
+		your_mod_register = yes
+	}
+}
+</syntaxhighlight>
+
+Then create a Scripted GUI file and a localization file for your settings.
+
+= Setting Types =
+
+== Quick Reference ==
+
+{| class="wikitable"
+! Type !! Registration Effect !! Callback Helper !! Value
+|-
+| Toggle || <code>cmm_register_bool_setting</code> || <code>cmm_toggle_bool_setting</code> || <code>var:</code> (0/1)
+|-
+| Dropdown || <code>cmm_register_dropdown_setting</code> || <code>cmm_apply_dropdown_change</code> || <code>var:</code> (ordinal from 1)
+|-
+| Button || <code>cmm_register_button_setting</code> || ''(custom effect)'' || No stored value
+|-
+| Numeric || <code>cmm_register_numeric_setting</code> || <code>cmm_apply_numeric_change</code> || <code>var:</code> (number)
+|-
+| Slider || <code>cmm_register_slider_setting</code> || <code>cmm_apply_slider_change</code> || <code>var:</code> (number)
+|-
+| Text || <code>cmm_register_text_setting</code> || ''(scripted effect callback)'' || <code>$text$</code> param
+|-
+| Settings List || <code>cmm_register_settings_list</code> || <code>cmm_apply_list_change</code> || Per-field variables
+|}
+
+All types except text and settings list have global variants (<code>cmm_register_global_*</code>) that store values in <code>global_var:</code> and are host-editable in multiplayer.
+
+== Registration Pattern ==
+All settings share this pattern — register the setting, then create a <code>[mod_id]__[setting_id]_on_changed</code> Scripted GUI callback:
+
+<syntaxhighlight lang="text">
+# Registration (inside your registration effect)
+cmm_register_bool_setting = {
+	mod_id = your_mod
+	setting_id = your_toggle
+	tab_id = general
+	group_id = general_toggles
+	default_value = 0
+}
+
+# Scripted GUI callback
+your_mod__your_toggle_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_toggle_bool_setting = {
+			setting = your_mod__your_toggle
+		}
+	}
+}
+</syntaxhighlight>
+
+Text settings use a '''scripted effect''' callback instead. The submitted text is available as <code>$text$</code>.
+
+== Reading Values ==
+* Basic settings: <code>var:[mod_id]__[setting_id]</code>
+* Global settings: <code>global_var:[mod_id]__[setting_id]</code>
+* List fields: <code>var:[mod_id]__[setting_id]_item_[N]_field_[slot]</code>
+* List item values: <code>scope:cmm_list_current_item_value</code> (inside <code>cmm_for_each_list_item</code>)
+
+== Conditional Visibility ==
+Any Scripted GUI callback can include <code>is_shown</code> to conditionally hide a setting:
+
+<syntaxhighlight lang="text">
+your_mod__your_toggle_on_changed = {
+	scope = country
+
+	is_shown = {
+		var:your_mod__some_other_setting = 1
+	}
+
+	effect = {
+		cmm_toggle_bool_setting = {
+			setting = your_mod__your_toggle
+		}
+	}
+}
+</syntaxhighlight>
+
+= Localization =
+
+== Quick Reference ==
+
+{| class="wikitable"
+! Key Pattern !! Description
+|-
+| <code>[mod_id]_name</code> / <code>_desc</code> || Mod name / description
+|-
+| <code>[mod_id]__[tab_id]_name</code> / <code>_desc</code> || Tab name / description
+|-
+| <code>[mod_id]__[group_id]_name</code> / <code>_desc</code> || Group name / description
+|-
+| <code>[mod_id]__[setting_id]_name</code> / <code>_desc</code> || Setting name / description
+|-
+| <code>[mod_id]__[setting_id]_option_[N]_name</code> || Dropdown option label
+|-
+| <code>[mod_id]__[setting_id]_text</code> || Button text
+|-
+| <code>[mod_id]__[setting_id]_item_column_name</code> || List item column header
+|-
+| <code>[mod_id]__[setting_id]_item_[N]_name</code> || List row label
+|-
+| <code>[mod_id]__[setting_id]__[field_id]_name</code> || List field column label
+|-
+| <code>[mod_id]__[setting_id]__[field_id]_option_[N]_name</code> || List dropdown field option
+|}
+
+= Links =
+* [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki Full Documentation (GitHub Wiki)]
+* [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/tree/main/submods/cmf-example-mod Example Mod (GitHub)]
+
+{{Modding navbox
+|category=Modding tools
+}}
