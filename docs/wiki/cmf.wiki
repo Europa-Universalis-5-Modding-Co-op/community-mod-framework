@@ -80,6 +80,7 @@ All effects require '''country scope'''.
 |}
 
 = Action Bar Elements =
+[[File:CMF_Action_Bar.png|thumb|300px|Custom action bar buttons.]]
 The Action Bar Elements system allows mods to add custom buttons to the in-game action bar. Buttons can show/hide and enable/disable based on conditions, and execute custom effects when clicked.
 
 == Setup ==
