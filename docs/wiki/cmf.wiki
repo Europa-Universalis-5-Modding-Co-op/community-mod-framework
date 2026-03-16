@@ -79,9 +79,9 @@ All effects require '''country scope'''.
 | <code>cmf_is_alert_shown = { alert = <root_key> }</code> || Check if an alert is shown (trigger)
 |}
 
-= Action Bar Elements =
+= Action Bar =
 [[File:CMF_Action_Bar.png|thumb|300px|Custom action bar buttons.]]
-The Action Bar Elements system allows mods to add custom buttons to the in-game action bar. Buttons can show/hide and enable/disable based on conditions, and execute custom effects when clicked.
+The Action Bar allows mods to add custom buttons to the game. Buttons can show/hide and enable/disable based on conditions, and execute custom effects when clicked.
 
 == Setup ==
 Each button requires localization keys and a Scripted GUI, following the same pattern as alerts.
