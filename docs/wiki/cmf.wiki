@@ -1,15 +1,14 @@
-{{Modding tool
+{| class="wikitable" style="width: 100%; text-align: center;"
+|-
+| '''Community Mod Framework''' || [[Community Mod Menu]] || [[Community Mod Toolkit]]
+|}
+{{Mod
 |type=Mod Framework & Toolkit
 |logo=CMF_Logo.png
 |author=Conner, Bahmut
 |status=Released
 |github=Europa-Universalis-5-Modding-Co-op/community-mod-framework
 }}
-
-{| class="wikitable" style="width: 100%; text-align: center;"
-|-
-| '''Community Mod Framework''' || [[Community Mod Menu]] || [[Community Mod Toolkit]]
-|}
 
 = Overview =
 The Community Mod Framework (CMF) is a shared mod framework for Europa Universalis 5 that provides a set of features mods can use to integrate with the game without conflicting with each other. It includes a shared in-game mod menu, a custom action bar, dynamic alerts, utility triggers, and a companion development toolkit with a visual editor, workshop uploader, and mod translator.
@@ -150,5 +149,5 @@ See the [[Community Mod Toolkit|CMT page]] for details.
 
 [[Category:Community Mod Framework]]
 {{Modding navbox
-|category=Modding tools
+|category=Mods
 }}

@@ -1,3 +1,7 @@
+{| class="wikitable" style="width: 100%; text-align: center;"
+|-
+| [[Community Mod Framework]] || '''Community Mod Menu''' || [[Community Mod Toolkit]]
+|}
 {{Modding tool
 |type=Visual Editor
 |logo=CMM_Logo.png
@@ -6,11 +10,6 @@
 |github=Europa-Universalis-5-Modding-Co-op/community-mod-framework
 |nocat=true
 }}
-
-{| class="wikitable" style="width: 100%; text-align: center;"
-|-
-| [[Community Mod Framework]] || '''Community Mod Menu''' || [[Community Mod Toolkit]]
-|}
 
 = Overview =
 The Community Mod Menu (CMM) is part of the [[Community Mod Framework]] and allows multiple mods to hook into a single shared in-game settings menu through a registration API. For full documentation, see the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki GitHub wiki].
