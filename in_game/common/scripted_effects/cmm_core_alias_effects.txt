@@ -30,6 +30,47 @@ cmm_sync_setting_alias = {
 # Args:
 # - field (key): Full field variable name (e.g. `<mod_id>__<setting_id>_item_1_field_1`).
 # - alias (key): Alias variable name.
+# Sync a dropdown option alias. Sets the alias variable if the dropdown
+# value matches the index, removes it otherwise.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - index (int): Option index to match against.
+# - alias (key): Variable name to set/remove.
+cmm_sync_dropdown_option_alias = {
+	if = {
+		limit = { var:cmm_setting_is_global_$setting$ = 1 }
+		if = {
+			limit = { global_var:$setting$ = $index$ }
+			set_global_variable = { name = $alias$ value = yes }
+		}
+		else = {
+			remove_global_variable = $alias$
+		}
+	}
+	else = {
+		if = {
+			limit = { var:$setting$ = $index$ }
+			set_variable = { name = $alias$ value = yes }
+		}
+		else = {
+			remove_variable = $alias$
+		}
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = var:cmm_setting_is_global_$setting$
+			exists = var:$setting$
+			exists = var:$alias$
+			exists = global_var:$setting$
+			exists = global_var:$alias$
+		}
+	}
+}
+
 cmm_sync_list_field_alias = {
 	set_variable = { name = $alias$ value = var:$field$ }
 

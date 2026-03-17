@@ -100,6 +100,7 @@ def _build_model(
     # Parse setting and field aliases from effects
     setting_aliases = _parse_setting_aliases(effects)
     field_aliases = _parse_field_aliases(effects)
+    option_aliases = _parse_option_aliases(effects)
 
     # Build tabs/groups/settings from registrations
     tabs_map = {}  # tab_id -> Tab
@@ -157,7 +158,7 @@ def _build_model(
 
         setting = _reg_to_setting(
             reg, mod_id, loc_map, list_fields, list_item_values,
-            setting_aliases, field_aliases,
+            setting_aliases, field_aliases, option_aliases,
         )
         if setting:
             groups_map[gkey].settings.append(setting)
@@ -200,6 +201,28 @@ def _parse_localization(content: str) -> dict:
         m = re.match(r'(\S+):\s*"(.*)"', line)
         if m:
             result[m.group(1)] = m.group(2)
+    return result
+
+
+def _parse_option_aliases(content: str) -> dict:
+    """Extract cmm_sync_dropdown_option_alias blocks -> {qid: {index: alias}}."""
+    result = {}
+    pattern = re.compile(
+        r"cmm_sync_dropdown_option_alias\s*=\s*\{", re.IGNORECASE
+    )
+    for m in pattern.finditer(content):
+        block_end = _find_closing_brace(content, m.end())
+        if block_end < 0:
+            continue
+        block = content[m.end():block_end]
+        params = _parse_params(block)
+        setting = params.get("setting", "")
+        index = _to_int(params.get("index", "0"))
+        alias = params.get("alias", "")
+        if setting and index > 0 and alias:
+            if setting not in result:
+                result[setting] = {}
+            result[setting][index] = alias
     return result
 
 
@@ -360,6 +383,7 @@ def _reg_to_setting(
     list_item_values: dict = None,
     setting_aliases: dict = None,
     field_aliases: dict = None,
+    option_aliases: dict = None,
 ) -> Setting:
     """Convert a registration dict to a Setting."""
     reg_type = reg.get("_type", "")
@@ -399,10 +423,11 @@ def _reg_to_setting(
     elif effective_type == "dropdown":
         setting.default_index = _to_int(reg.get("default_index", "1"))
         setting.option_count = _to_int(reg.get("option_count", "1"))
+        opt_alias_map = (option_aliases or {}).get(qid, {})
         options = []
         for i in range(1, setting.option_count + 1):
             oname = loc_map.get(f"{qid}_option_{i}_name", f"Option {i}")
-            options.append(DropdownOption(index=i, name=oname))
+            options.append(DropdownOption(index=i, name=oname, alias=opt_alias_map.get(i, "")))
         setting.options = options
     elif effective_type == "text":
         setting.character_limit = _to_int(reg.get("character_limit", "42"))

@@ -107,6 +107,27 @@ ${prefix}_on_register_mod = {
         return alias === defaultKey ? '' : alias;
     },
 
+    _getOptionAliases(setting) {
+        const aliases = [];
+        for (const opt of (setting.options || [])) {
+            const a = (opt.alias || '').trim();
+            if (a) aliases.push([opt.index, a]);
+        }
+        return aliases;
+    },
+
+    _emitOptionAliasSync(lines, setting, qid, indent) {
+        const aliases = this._getOptionAliases(setting);
+        if (!aliases.length) return;
+        for (const [idx, alias] of aliases) {
+            lines.push(`${indent}cmm_sync_dropdown_option_alias = {`);
+            lines.push(`${indent}\tsetting = ${qid}`);
+            lines.push(`${indent}\tindex = ${idx}`);
+            lines.push(`${indent}\talias = ${alias}`);
+            lines.push(`${indent}}`);
+        }
+    },
+
     _emitRegistration(lines, modId, tabId, groupId, setting) {
         const st = setting.setting_type;
         const qid = `${modId}__${setting.setting_id}`;
@@ -206,6 +227,11 @@ ${prefix}_on_register_mod = {
             lines.push(`\t\tsetting = ${qid}`);
             lines.push(`\t\talias = ${alias}`);
             lines.push(`\t}`);
+        }
+
+        // Dropdown option alias sync
+        if (st === 'dropdown') {
+            this._emitOptionAliasSync(lines, setting, qid, '\t');
         }
     },
 
@@ -329,6 +355,11 @@ ${prefix}_on_register_mod = {
             lines.push(`\t\t\tsetting = ${qid}`);
             lines.push(`\t\t\talias = ${alias}`);
             lines.push(`\t\t}`);
+        }
+
+        // Dropdown option alias sync after value change
+        if (st === 'dropdown') {
+            this._emitOptionAliasSync(lines, setting, qid, '\t\t');
         }
 
         // Custom effect call

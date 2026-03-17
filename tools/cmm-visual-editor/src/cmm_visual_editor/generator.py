@@ -90,6 +90,29 @@ def _gen_effects(model: ModModel) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _get_option_aliases(setting: Setting) -> list:
+    """Return list of (index, alias) for dropdown options that have aliases."""
+    aliases = []
+    for opt in (setting.options or []):
+        a = (getattr(opt, 'alias', '') or '').strip()
+        if a:
+            aliases.append((opt.index, a))
+    return aliases
+
+
+def _emit_option_alias_sync(lines: list, setting: Setting, qid: str, indent: str = "\t"):
+    """Emit cmm_sync_dropdown_option_alias calls for aliased options."""
+    aliases = _get_option_aliases(setting)
+    if not aliases:
+        return
+    for idx, alias in aliases:
+        lines.append(f"{indent}cmm_sync_dropdown_option_alias = {{")
+        lines.append(f"{indent}\tsetting = {qid}")
+        lines.append(f"{indent}\tindex = {idx}")
+        lines.append(f"{indent}\talias = {alias}")
+        lines.append(f"{indent}}}")
+
+
 def _setting_has_alias(setting: Setting, mod_id: str) -> str:
     """Return the alias if the setting has one different from its default key, else empty."""
     alias = (setting.alias or "").strip()
@@ -219,6 +242,10 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
         lines.append(f"\t\talias = {alias}")
         lines.append(f"\t}}")
 
+    # Dropdown option alias sync (runs each registration = menu open)
+    if st == "dropdown":
+        _emit_option_alias_sync(lines, setting, qid, indent="\t")
+
 
 def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField):
     ft = field.field_type
@@ -338,6 +365,10 @@ def _gen_callback_block(setting: Setting, qid: str, mod_id: str = "") -> str:
         lines.append(f"\t\t\tsetting = {qid}")
         lines.append(f"\t\t\talias = {alias}")
         lines.append(f"\t\t}}")
+
+    # Dropdown option alias sync after value change
+    if st == "dropdown":
+        _emit_option_alias_sync(lines, setting, qid, indent="\t\t")
 
     # Custom effect call
     if setting.on_changed_effect:

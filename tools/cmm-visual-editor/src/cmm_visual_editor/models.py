@@ -8,6 +8,7 @@ from typing import Any, Optional
 class DropdownOption:
     index: int
     name: str
+    alias: str = ""
 
 
 @dataclass
@@ -120,7 +121,7 @@ def model_to_dict(model: ModModel) -> dict:
             d["default_index"] = s.default_index
             d["option_count"] = s.option_count
             d["options"] = [
-                {"index": o.index, "name": o.name}
+                {"index": o.index, "name": o.name, **({"alias": o.alias} if o.alias else {})}
                 for o in (s.options or [])
             ]
         elif s.setting_type == "text":
@@ -158,7 +159,7 @@ def model_to_dict(model: ModModel) -> dict:
             d["default_index"] = f.default_index
             d["option_count"] = f.option_count
             d["options"] = [
-                {"index": o.index, "name": o.name}
+                {"index": o.index, "name": o.name, **({"alias": o.alias} if o.alias else {})}
                 for o in (f.options or [])
             ]
         elif f.field_type == "numeric":
@@ -201,7 +202,7 @@ def dict_to_model(data: dict) -> ModModel:
     """Convert a JSON dict back to a ModModel."""
 
     def _parse_option(o: Any) -> DropdownOption:
-        return DropdownOption(index=o["index"], name=o.get("name", ""))
+        return DropdownOption(index=o["index"], name=o.get("name", ""), alias=o.get("alias", ""))
 
     def _parse_list_field(f: dict) -> ListField:
         return ListField(

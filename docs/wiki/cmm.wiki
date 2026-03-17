@@ -319,14 +319,36 @@ cmm_register_settings_list_from_list = {
 </syntaxhighlight>
 
 = Setting Aliases =
-Assign an '''alias''' variable that mirrors a setting value. Add <code>cmm_sync_setting_alias</code> in both your registration effect and <code>_on_changed</code> callback:
+Assign an '''alias''' variable that mirrors a setting value. Add the sync call in both your registration effect and <code>_on_changed</code> callback.
+
+== Setting Alias ==
 <syntaxhighlight lang="text">
 cmm_sync_setting_alias = {
 	setting = your_mod__your_toggle
 	alias = your_mod_toggle
 }
 </syntaxhighlight>
-For list fields: <code>cmm_sync_list_field_alias = { field = ... alias = ... }</code> with a concrete item number per item.
+Access: <code>var:your_mod_toggle</code>
+
+== List Field Alias ==
+<syntaxhighlight lang="text">
+cmm_sync_list_field_alias = {
+	field = your_mod__your_list_item_1_field_1
+	alias = your_mod_enabled_1
+}
+</syntaxhighlight>
+One call per concrete item number.
+
+== Dropdown Option Alias ==
+Sets a variable when that option is selected, removes it otherwise:
+<syntaxhighlight lang="text">
+cmm_sync_dropdown_option_alias = {
+	setting = your_mod__your_dropdown
+	index = 2
+	alias = using_feature_b
+}
+</syntaxhighlight>
+Check with: <code>has_variable = using_feature_b</code>
 
 = Conditional Visibility =
 Any Scripted GUI callback can include <code>is_shown</code> to conditionally hide a setting. Works for all types except text.
