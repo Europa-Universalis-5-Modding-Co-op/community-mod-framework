@@ -911,6 +911,28 @@ cmm_suppress_list_setting_warnings = {
 			exists = var:$mod_id$__$setting_id$_item_19_value
 			exists = var:$mod_id$__$setting_id$_item_20_value
 		}
+		# Suppress "used but never set" for variable lists set at runtime
+		set_variable = { name = cmm_list_add_counter_$mod_id$__$setting_id$ value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_1_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_2_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_3_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_4_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_5_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_6_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_7_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_8_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_9_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_10_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_11_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_12_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_13_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_14_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_15_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_16_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_17_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_18_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_19_value value = 0 }
+		set_variable = { name = $mod_id$__$setting_id$_item_20_value value = 0 }
 	}
 }
 
