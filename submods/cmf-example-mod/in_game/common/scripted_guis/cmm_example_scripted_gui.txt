@@ -1,4 +1,4 @@
-cmm_example__example_list_on_changed = {
+﻿cmm_example__example_list_on_changed = {
 	scope = country
 
 	effect = {
