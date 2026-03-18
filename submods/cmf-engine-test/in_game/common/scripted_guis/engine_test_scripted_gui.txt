@@ -1,0 +1,472 @@
+﻿# Engine validation scripted GUI.
+# Receives scope:setting via AddScope from the GUI button.
+# Tests three assumptions about variable maps + AddScope interaction.
+engine_test_run = {
+	scope = country
+
+	saved_scopes = {
+		setting
+	}
+
+	effect = {
+		# Reset all results before running
+		set_variable = { name = engine_test_1_passed value = 0 }
+		set_variable = { name = engine_test_2_passed value = 0 }
+		set_variable = { name = engine_test_3_passed value = 0 }
+
+		# ── Test 1 ──────────────────────────────────────────────
+		# Can scope:setting (a flag passed via AddScope) be used
+		# as a variable map key?
+		# If this line crashes, all three tests stay at 0 (FAIL).
+		add_to_variable_map = {
+			name = engine_test_map
+			key = scope:setting
+			value = 42
+		}
+		set_variable = { name = engine_test_1_passed value = 1 }
+
+		# ── Test 2 ──────────────────────────────────────────────
+		# Can "variable_map(name|scope:setting)" resolve the
+		# stored value back through the same scope reference?
+		if = {
+			limit = {
+				"variable_map(engine_test_map|scope:setting)" >= 42
+			}
+			set_variable = { name = engine_test_2_passed value = 1 }
+		}
+
+		# ── Test 3 ──────────────────────────────────────────────
+		# Can the map value be stored in a local variable and
+		# used for arithmetic?
+		set_local_variable = {
+			name = temp
+			value = "variable_map(engine_test_map|scope:setting)"
+		}
+		change_local_variable = {
+			name = temp
+			add = 1
+		}
+		if = {
+			limit = { local_var:temp >= 43 }
+			set_variable = { name = engine_test_3_passed value = 1 }
+		}
+
+		# ── Seeds for cross-context tests (run by global suite) ──
+		# Write with hardcoded flag: key. Global suite will try to
+		# UPDATE these entries using scope:setting.
+		add_to_variable_map = {
+			name = engine_test_cross
+			key = flag:engine_test_key_a
+			value = 55
+		}
+		add_to_global_variable_map = {
+			name = engine_test_gmap_update
+			key = flag:engine_test_key_a
+			value = 10
+		}
+		add_to_variable_map = {
+			name = engine_test_cmap_update
+			key = flag:engine_test_key_a
+			value = 10
+		}
+
+		# Mark that the test suite has been executed
+		set_variable = { name = engine_test_has_run value = 1 }
+	}
+}
+
+# Global variable map engine validation scripted GUI.
+# Tests whether add_to_global_variable_map works from scripted GUI context.
+# Receives scope:setting via AddScope from the GUI button.
+engine_test_run_global = {
+	scope = country
+
+	saved_scopes = {
+		setting
+	}
+
+	effect = {
+		# Reset all global test results
+		set_variable = { name = engine_test_4_passed value = 0 }
+		set_variable = { name = engine_test_5_passed value = 0 }
+		set_variable = { name = engine_test_6_passed value = 0 }
+		set_variable = { name = engine_test_7_passed value = 0 }
+		set_variable = { name = engine_test_8_passed value = 0 }
+		set_variable = { name = engine_test_9_passed value = 0 }
+		set_variable = { name = engine_test_10_passed value = 0 }
+
+		# ── Test 4 ──────────────────────────────────────────────
+		# Global map write + read via scope:setting key.
+		# This is the exact pattern used by CMM auto-apply for global settings.
+		add_to_global_variable_map = {
+			name = engine_test_gmap4
+			key = scope:setting
+			value = 42
+		}
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap4|scope:setting)" >= 42
+			}
+			set_variable = { name = engine_test_4_passed value = 1 }
+		}
+
+		# ── Test 5 ──────────────────────────────────────────────
+		# Global map write + read via hardcoded flag key.
+		# Isolates: is it scope:setting or global map writes in general?
+		add_to_global_variable_map = {
+			name = engine_test_gmap5
+			key = flag:engine_test_hardcoded
+			value = 42
+		}
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap5|flag:engine_test_hardcoded)" >= 42
+			}
+			set_variable = { name = engine_test_5_passed value = 1 }
+		}
+
+		# ── Test 6 ──────────────────────────────────────────────
+		# set_global_variable from scripted GUI context.
+		# Baseline: do ANY global writes work from scripted GUI?
+		set_global_variable = { name = engine_test_gvar6 value = 42 }
+		if = {
+			limit = { global_var:engine_test_gvar6 >= 42 }
+			set_variable = { name = engine_test_6_passed value = 1 }
+		}
+
+		# ── Test 7 ──────────────────────────────────────────────
+		# Global map write with scope:setting, read with hardcoded flag.
+		# scope:setting = flag:engine_test_key_a (set via MakeScopeFlag).
+		# If test 4 fails but this passes: reading via scope:setting is
+		# broken for global maps, but the write works.
+		add_to_global_variable_map = {
+			name = engine_test_gmap7
+			key = scope:setting
+			value = 42
+		}
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap7|flag:engine_test_key_a)" >= 42
+			}
+			set_variable = { name = engine_test_7_passed value = 1 }
+		}
+
+		# ── Test 8 ──────────────────────────────────────────────
+		# Read global map written by on_action (hardcoded flag key).
+		# on_action wrote: engine_test_gmap8[flag:engine_test_preseeded] = 10
+		# Tests: can scripted GUI read global maps at all?
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap8|flag:engine_test_preseeded)" >= 10
+			}
+			set_variable = { name = engine_test_8_passed value = 1 }
+		}
+
+		# ── Test 9 ──────────────────────────────────────────────
+		# Read global map written by on_action via scope:setting key.
+		# on_action wrote: engine_test_gmap9[flag:engine_test_key_a] = 77
+		# scope:setting = flag:engine_test_key_a
+		# Tests: does scope:setting work as a read key for global maps?
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap9|scope:setting)" >= 77
+			}
+			set_variable = { name = engine_test_9_passed value = 1 }
+		}
+
+		# ── Test 10 ─────────────────────────────────────────────
+		# Check if test 4's global write landed in the COUNTRY map.
+		# If test 4 fails but this passes: add_to_global_variable_map
+		# is writing to the country scope instead of global scope.
+		if = {
+			limit = {
+				has_variable_map = engine_test_gmap4
+				"variable_map(engine_test_gmap4|scope:setting)" >= 42
+			}
+			set_variable = { name = engine_test_10_passed value = 1 }
+		}
+
+		# ── Test 11 ─────────────────────────────────────────────
+		# Cross-context country map read: engine_test_run wrote
+		# engine_test_cross[flag:engine_test_key_a] = 55 in a
+		# previous scripted GUI call. Can we read it here using
+		# scope:setting (= MakeScopeFlag('engine_test_key_a'))?
+		# This is the exact pattern CMM uses: registration writes
+		# with flag:, auto-apply reads with scope:setting.
+		set_variable = { name = engine_test_11_passed value = 0 }
+		if = {
+			limit = {
+				has_variable_map = engine_test_cross
+				"variable_map(engine_test_cross|scope:setting)" >= 55
+			}
+			set_variable = { name = engine_test_11_passed value = 1 }
+		}
+
+		# ── Test 12 ─────────────────────────────────────────────
+		# UPDATE global map entry: engine_test_run seeded
+		# engine_test_gmap_update[flag:engine_test_key_a] = 10.
+		# Try to overwrite it using scope:setting, then read back
+		# with hardcoded flag: to see if the update took effect.
+		# This is the exact CMM pattern: registration writes with
+		# flag:, auto-apply updates with scope:setting.
+		set_variable = { name = engine_test_12_passed value = 0 }
+		add_to_global_variable_map = {
+			name = engine_test_gmap_update
+			key = scope:setting
+			value = 99
+		}
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap_update|flag:engine_test_key_a)" >= 99
+			}
+			set_variable = { name = engine_test_12_passed value = 1 }
+		}
+
+		# ── Test 13 ─────────────────────────────────────────────
+		# UPDATE country map entry: engine_test_run seeded
+		# engine_test_cmap_update[flag:engine_test_key_a] = 10.
+		# Same test but for country-scoped maps.
+		set_variable = { name = engine_test_13_passed value = 0 }
+		add_to_variable_map = {
+			name = engine_test_cmap_update
+			key = scope:setting
+			value = 99
+		}
+		if = {
+			limit = {
+				"variable_map(engine_test_cmap_update|flag:engine_test_key_a)" >= 99
+			}
+			set_variable = { name = engine_test_13_passed value = 1 }
+		}
+
+		# ── Test 14 ─────────────────────────────────────────────
+		# WORKAROUND: store scope:setting in a variable, then use
+		# var: as the map key. Does this match the flag: key?
+		set_variable = { name = engine_test_14_passed value = 0 }
+		set_variable = { name = engine_test_tmp_fk value = scope:setting }
+		add_to_global_variable_map = {
+			name = engine_test_gmap_update
+			key = var:engine_test_tmp_fk
+			value = 77
+		}
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap_update|flag:engine_test_key_a)" >= 77
+			}
+			set_variable = { name = engine_test_14_passed value = 1 }
+		}
+		remove_variable = engine_test_tmp_fk
+
+		# ── Test 15 ─────────────────────────────────────────────
+		# After test 12 wrote with scope:setting, read back with
+		# scope:setting. If PASS, the write DID create an entry
+		# (just not one that flag: can find — two separate entries).
+		# If FAIL, the write silently did nothing at all.
+		set_variable = { name = engine_test_15_passed value = 0 }
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap_update|scope:setting)" >= 99
+			}
+			set_variable = { name = engine_test_15_passed value = 1 }
+		}
+
+		# ── Test 16 ─────────────────────────────────────────────
+		# Verify scope:setting actually resolves to the correct flag.
+		# Store it in a variable and compare to flag:engine_test_key_a.
+		set_variable = { name = engine_test_16_passed value = 0 }
+		set_variable = { name = engine_test_scope_val value = scope:setting }
+		if = {
+			limit = {
+				var:engine_test_scope_val = flag:engine_test_key_a
+			}
+			set_variable = { name = engine_test_16_passed value = 1 }
+		}
+		remove_variable = engine_test_scope_val
+
+		# ── Test 17 ─────────────────────────────────────────────
+		# Can remove_from_global_variable_map with scope:setting
+		# remove an entry created with flag:?
+		# Uses engine_test_gmap8 (seeded by on_action with
+		# flag:engine_test_preseeded = 10). We use a DIFFERENT
+		# scope:setting here — this test will only pass if scope
+		# keys match for removal. Note: scope:setting is
+		# flag:engine_test_key_a, NOT flag:engine_test_preseeded,
+		# so we need a separate map. Re-seed a fresh map here.
+		add_to_global_variable_map = {
+			name = engine_test_gmap_remove
+			key = flag:engine_test_key_a
+			value = 50
+		}
+		remove_from_global_variable_map = {
+			name = engine_test_gmap_remove
+			key = scope:setting
+		}
+		set_variable = { name = engine_test_17_passed value = 0 }
+		if = {
+			limit = {
+				NOT = {
+					is_key_in_global_variable_map = {
+						name = engine_test_gmap_remove
+						target = flag:engine_test_key_a
+					}
+				}
+			}
+			set_variable = { name = engine_test_17_passed value = 1 }
+		}
+
+		# ── Test 18 ─────────────────────────────────────────────
+		# WORKAROUND: remove then re-add. Seed a fresh global map
+		# with flag:, then remove with scope:setting, then add with
+		# scope:setting, then read with flag: to verify.
+		add_to_global_variable_map = {
+			name = engine_test_gmap18
+			key = flag:engine_test_key_a
+			value = 10
+		}
+		remove_from_global_variable_map = {
+			name = engine_test_gmap18
+			key = scope:setting
+		}
+		add_to_global_variable_map = {
+			name = engine_test_gmap18
+			key = scope:setting
+			value = 99
+		}
+		set_variable = { name = engine_test_18_passed value = 0 }
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap18|flag:engine_test_key_a)" >= 99
+			}
+			set_variable = { name = engine_test_18_passed value = 1 }
+		}
+
+		# ── Test 19 ─────────────────────────────────────────────
+		# Same workaround but for country-scoped maps.
+		add_to_variable_map = {
+			name = engine_test_cmap19
+			key = flag:engine_test_key_a
+			value = 10
+		}
+		remove_from_variable_map = {
+			name = engine_test_cmap19
+			key = scope:setting
+		}
+		add_to_variable_map = {
+			name = engine_test_cmap19
+			key = scope:setting
+			value = 99
+		}
+		set_variable = { name = engine_test_19_passed value = 0 }
+		if = {
+			limit = {
+				"variable_map(engine_test_cmap19|flag:engine_test_key_a)" >= 99
+			}
+			set_variable = { name = engine_test_19_passed value = 1 }
+		}
+
+		# ── Test 20 ─────────────────────────────────────────────
+		# Can local_var: be used as a map key inside quoted scope
+		# link strings? Store scope:setting in a local variable,
+		# then use local_var: inside "variable_map(...)" to read
+		# a country-scoped map entry written with flag:.
+		# engine_test_cross[flag:engine_test_key_a] = 55 was
+		# seeded by engine_test_run.
+		set_variable = { name = engine_test_20_passed value = 0 }
+		set_local_variable = { name = engine_test_lv value = flag:engine_test_key_a }
+		if = {
+			limit = {
+				has_variable_map = engine_test_cross
+				"variable_map(engine_test_cross|local_var:engine_test_lv)" >= 55
+			}
+			set_variable = { name = engine_test_20_passed value = 1 }
+		}
+
+		# ── Test 21 ─────────────────────────────────────────────
+		# Same as test 20 but for global_variable_map.
+		# engine_test_gmap9[flag:engine_test_key_a] = 77 was
+		# seeded by on_game_start on_action.
+		set_variable = { name = engine_test_21_passed value = 0 }
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap9|local_var:engine_test_lv)" >= 77
+			}
+			set_variable = { name = engine_test_21_passed value = 1 }
+		}
+
+		# ── Test 22 ─────────────────────────────────────────────
+		# Does add_to_variable_map UPDATE an existing entry when
+		# both the original and the new write use the same flag:
+		# key? This determines whether add_to is "add or update"
+		# vs "add only, no-op if exists."
+		# Seed with value 10, then overwrite with value 99.
+		set_variable = { name = engine_test_22_passed value = 0 }
+		add_to_variable_map = {
+			name = engine_test_ff_cmap
+			key = flag:engine_test_key_a
+			value = 10
+		}
+		add_to_variable_map = {
+			name = engine_test_ff_cmap
+			key = flag:engine_test_key_a
+			value = 99
+		}
+		if = {
+			limit = {
+				"variable_map(engine_test_ff_cmap|flag:engine_test_key_a)" >= 99
+			}
+			set_variable = { name = engine_test_22_passed value = 1 }
+		}
+
+		# ── Test 23 ─────────────────────────────────────────────
+		# Same as test 22 but for global variable maps.
+		# Does add_to_global_variable_map update an existing
+		# global entry with the same flag: key?
+		set_variable = { name = engine_test_23_passed value = 0 }
+		add_to_global_variable_map = {
+			name = engine_test_ff_gmap
+			key = flag:engine_test_key_a
+			value = 10
+		}
+		add_to_global_variable_map = {
+			name = engine_test_ff_gmap
+			key = flag:engine_test_key_a
+			value = 99
+		}
+		if = {
+			limit = {
+				"global_variable_map(engine_test_ff_gmap|flag:engine_test_key_a)" >= 99
+			}
+			set_variable = { name = engine_test_23_passed value = 1 }
+		}
+
+		# ── Test 24 ─────────────────────────────────────────────
+		# Can local_var: be used in the MAP NAME position of a
+		# quoted scope link? i.e. "variable_map(local_var:X|...)"
+		# Uses engine_test_cross (seeded by engine_test_run).
+		set_variable = { name = engine_test_24_passed value = 0 }
+		set_local_variable = { name = engine_test_map_name value = flag:engine_test_cross }
+		if = {
+			limit = {
+				"variable_map(local_var:engine_test_map_name|flag:engine_test_key_a)" >= 55
+			}
+			set_variable = { name = engine_test_24_passed value = 1 }
+		}
+
+		# ── Test 25 ─────────────────────────────────────────────
+		# Can var: be used in the MAP NAME position of a
+		# quoted scope link? i.e. "variable_map(var:X|...)"
+		# Uses engine_test_cross (seeded by engine_test_run).
+		set_variable = { name = engine_test_25_passed value = 0 }
+		set_variable = { name = engine_test_map_name_v value = flag:engine_test_cross }
+		if = {
+			limit = {
+				"variable_map(var:engine_test_map_name_v|flag:engine_test_key_a)" >= 55
+			}
+			set_variable = { name = engine_test_25_passed value = 1 }
+		}
+		remove_variable = engine_test_map_name_v
+
+		# Mark that the global test suite has been executed
+		set_variable = { name = engine_test_global_has_run value = 1 }
+	}
+}
