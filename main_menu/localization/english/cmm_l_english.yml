@@ -31,6 +31,8 @@
  CMM_NO_MODS_REGISTERED: "No mods are currently registered in CMM."
  CMM_NO_SETTINGS_FOR_MOD: "This mod has not registered any settings yet."
  CMM_NO_SETTINGS_FOR_TAB: "No settings are registered in this tab."
+ CMM_RESET_TO_DEFAULTS: "Reset to Defaults"
+ CMM_RESET_TO_DEFAULTS_TOOLTIP: "Reset all settings for all mods to their registered default values."
  cmm_core_name: "Mod Menu"
  cmm_core_desc: "Core CMM utility settings."
  cmm_core__general_name: "General"

@@ -1,0 +1,221 @@
+﻿# Auto-apply: toggle a bool setting via scope:setting.
+# Scope: country
+# Args: scope:setting (flag) — the setting key to toggle.
+cmm_auto_toggle_bool = {
+	scope = country
+	saved_scopes = { setting }
+	effect = {
+		if = {
+			limit = { "variable_map(cmm_is_global|scope:setting)" >= 1 }
+			if = {
+				limit = { "global_variable_map(cmm|scope:setting)" >= 1 }
+				remove_from_global_variable_map = { name = cmm key = scope:setting }
+				add_to_global_variable_map = { name = cmm key = scope:setting value = 0 }
+			}
+			else = {
+				remove_from_global_variable_map = { name = cmm key = scope:setting }
+				add_to_global_variable_map = { name = cmm key = scope:setting value = 1 }
+			}
+		}
+		else = {
+			if = {
+				limit = { "variable_map(cmm|scope:setting)" >= 1 }
+				remove_from_variable_map = { name = cmm key = scope:setting }
+				add_to_variable_map = { name = cmm key = scope:setting value = 0 }
+			}
+			else = {
+				remove_from_variable_map = { name = cmm key = scope:setting }
+				add_to_variable_map = { name = cmm key = scope:setting value = 1 }
+			}
+		}
+
+		set_variable = { name = cmm_changed_setting value = scope:setting }
+		trigger_event_silently = {
+			on_action = cmm_on_setting_changed
+		}
+		remove_variable = cmm_changed_setting
+	}
+}
+
+# Auto-apply: apply pending dropdown selection via scope:setting.
+# Scope: country
+# Args: scope:setting (flag) — the setting key to update.
+cmm_auto_apply_dropdown = {
+	scope = country
+	saved_scopes = { setting }
+	effect = {
+		if = {
+			limit = { has_variable = cmm_dropdown_index_to_apply }
+
+			set_local_variable = { name = cmm_tmp_last value = "variable_map(cmm_dropdown_last_index|scope:setting)" }
+
+			set_variable = { name = cmm_tmp_new_val value = var:cmm_dropdown_index_to_apply }
+			if = {
+				limit = { var:cmm_tmp_new_val < 1 }
+				set_variable = { name = cmm_tmp_new_val value = 1 }
+			}
+			if = {
+				limit = { var:cmm_tmp_new_val > local_var:cmm_tmp_last }
+				set_variable = { name = cmm_tmp_new_val value = local_var:cmm_tmp_last }
+			}
+
+			if = {
+				limit = { "variable_map(cmm_is_global|scope:setting)" >= 1 }
+				remove_from_global_variable_map = { name = cmm key = scope:setting }
+				add_to_global_variable_map = { name = cmm key = scope:setting value = var:cmm_tmp_new_val }
+			}
+			else = {
+				remove_from_variable_map = { name = cmm key = scope:setting }
+				add_to_variable_map = { name = cmm key = scope:setting value = var:cmm_tmp_new_val }
+			}
+
+			remove_variable = cmm_tmp_new_val
+			remove_variable = cmm_dropdown_index_to_apply
+		}
+
+		set_variable = { name = cmm_changed_setting value = scope:setting }
+		trigger_event_silently = {
+			on_action = cmm_on_setting_changed
+		}
+		remove_variable = cmm_changed_setting
+
+		# Benign warning suppression
+		if = {
+			limit = {
+				always = no
+				exists = var:cmm_dropdown_index_to_apply
+				exists = var:cmm_tmp_new_val
+				exists = local_var:cmm_tmp_last
+				exists = var:cmm_changed_setting
+			}
+		}
+	}
+}
+
+# Auto-apply: apply pending numeric change via scope:setting.
+# Scope: country
+# Args: scope:setting (flag) — the setting key to update.
+cmm_auto_apply_numeric = {
+	scope = country
+	saved_scopes = { setting }
+	effect = {
+		cmm_auto_apply_numeric_from_scope = yes
+
+		# Benign warning suppression
+		if = {
+			limit = {
+				always = no
+				exists = var:cmm_changed_setting
+			}
+		}
+	}
+}
+
+# Auto-apply: apply pending slider change via scope:setting.
+# Scope: country
+# Args: scope:setting (flag) — the setting key to update.
+cmm_auto_apply_slider = {
+	scope = country
+	saved_scopes = { setting }
+	effect = {
+		if = {
+			limit = { has_variable = cmm_slider_index_to_apply }
+
+			set_local_variable = { name = cmm_tmp_actual_last value = "variable_map(cmm_slider_actual_last_index|scope:setting)" }
+			set_local_variable = { name = cmm_tmp_step value = "variable_map(cmm_step|scope:setting)" }
+			set_local_variable = { name = cmm_tmp_min value = "variable_map(cmm_min|scope:setting)" }
+			set_local_variable = { name = cmm_tmp_max value = "variable_map(cmm_max|scope:setting)" }
+
+			set_variable = { name = cmm_tmp_slider_actual_index value = var:cmm_slider_index_to_apply }
+			change_variable = { name = cmm_tmp_slider_actual_index multiply = local_var:cmm_tmp_actual_last }
+			change_variable = { name = cmm_tmp_slider_actual_index divide = 100 }
+			round_variable = {
+				name = cmm_tmp_slider_actual_index
+				nearest = 1
+			}
+
+			set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_step }
+			change_variable = { name = cmm_tmp_slider_value multiply = var:cmm_tmp_slider_actual_index }
+			change_variable = { name = cmm_tmp_slider_value add = local_var:cmm_tmp_min }
+
+			if = {
+				limit = { var:cmm_tmp_slider_value < local_var:cmm_tmp_min }
+				set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_min }
+			}
+
+			if = {
+				limit = { var:cmm_tmp_slider_value > local_var:cmm_tmp_max }
+				set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_max }
+			}
+
+			if = {
+				limit = { "variable_map(cmm_is_global|scope:setting)" >= 1 }
+				remove_from_global_variable_map = { name = cmm key = scope:setting }
+				add_to_global_variable_map = { name = cmm key = scope:setting value = var:cmm_tmp_slider_value }
+			}
+			else = {
+				remove_from_variable_map = { name = cmm key = scope:setting }
+				add_to_variable_map = { name = cmm key = scope:setting value = var:cmm_tmp_slider_value }
+			}
+
+			remove_variable = cmm_tmp_slider_actual_index
+			remove_variable = cmm_tmp_slider_value
+			remove_variable = cmm_slider_index_to_apply
+
+			if = {
+				limit = { has_variable = cmm_numeric_step_delta_to_apply }
+				remove_variable = cmm_numeric_step_delta_to_apply
+			}
+
+			if = {
+				limit = { has_variable = cmm_numeric_change_to_apply }
+				remove_variable = cmm_numeric_change_to_apply
+			}
+
+			set_variable = { name = cmm_changed_setting value = scope:setting }
+			trigger_event_silently = {
+				on_action = cmm_on_setting_changed
+			}
+			remove_variable = cmm_changed_setting
+		}
+		else = {
+			cmm_auto_apply_numeric_from_scope = yes
+		}
+
+		# Benign warning suppression
+		if = {
+			limit = {
+				always = no
+				exists = local_var:cmm_tmp_actual_last
+				exists = local_var:cmm_tmp_step
+				exists = local_var:cmm_tmp_min
+				exists = local_var:cmm_tmp_max
+				exists = var:cmm_slider_index_to_apply
+				exists = var:cmm_changed_setting
+			}
+		}
+	}
+}
+
+# Auto-apply: fire callback for button press via scope:setting.
+# Scope: country
+# Args: scope:setting (flag) — the setting key pressed.
+cmm_auto_apply_button = {
+	scope = country
+	saved_scopes = { setting }
+	effect = {
+		set_variable = { name = cmm_changed_setting value = scope:setting }
+		trigger_event_silently = {
+			on_action = cmm_on_setting_changed
+		}
+		remove_variable = cmm_changed_setting
+
+		# Benign warning suppression
+		if = {
+			limit = {
+				always = no
+				exists = var:cmm_changed_setting
+			}
+		}
+	}
+}

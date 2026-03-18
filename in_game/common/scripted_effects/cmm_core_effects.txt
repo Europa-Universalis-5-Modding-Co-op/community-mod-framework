@@ -1,8 +1,58 @@
-﻿# Register a mod (idempotent by mod_id).
+﻿# Pre-initialize all CMM variable maps so quoted scope links never access a nonexistent map.
+# Idempotent: add_to_variable_map is a no-op for existing keys.
+# Scope: country
+# Args: none
+cmm_init_variable_maps = {
+	add_to_variable_map = { name = cmm key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_type key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_is_global key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_default key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_min key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_max key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_step key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_dropdown_count key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_dropdown_last_index key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_slider_actual_step_count key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_slider_actual_last_index key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_text_char_limit key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_text_quote key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_list_count key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_list_last_index key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_list_is_ordered key = flag:cmm_init value = 0 }
+	add_to_global_variable_map = { name = cmm key = flag:cmm_init value = 0 }
+
+	# Suppress "set but never used" warnings for map names and init flag
+	if = {
+		limit = {
+			always = no
+			exists = flag:cmm_init
+			has_variable_map = cmm
+			has_variable_map = cmm_type
+			has_variable_map = cmm_is_global
+			has_variable_map = cmm_default
+			has_variable_map = cmm_min
+			has_variable_map = cmm_max
+			has_variable_map = cmm_step
+			has_variable_map = cmm_dropdown_count
+			has_variable_map = cmm_dropdown_last_index
+			has_variable_map = cmm_slider_actual_step_count
+			has_variable_map = cmm_slider_actual_last_index
+			has_variable_map = cmm_text_char_limit
+			has_variable_map = cmm_text_quote
+			has_variable_map = cmm_list_count
+			has_variable_map = cmm_list_last_index
+			has_variable_map = cmm_list_is_ordered
+			has_global_variable_map = cmm
+		}
+	}
+}
+
+# Register a mod (idempotent by mod_id).
 # Scope: country
 # Args:
 # - mod_id (key): Mod identifier; derives `<mod_id>_name` and `<mod_id>_desc`.
 cmm_register_mod = {
+	cmm_init_variable_maps = yes
 	set_variable = { name = $mod_id$_name value = flag:$mod_id$_name }
 	set_variable = { name = $mod_id$_desc value = flag:$mod_id$_desc }
 

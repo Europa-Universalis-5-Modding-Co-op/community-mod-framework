@@ -29,3 +29,11 @@ cmm_register_all_human_countries = {
 cmm_on_mod_registration = {
 	on_actions = { }
 }
+
+# Setting change extension point. Fires after auto-apply updates a setting value.
+# var:cmm_changed_setting contains the flag key of the changed setting.
+# Scope: country
+# Args: none
+cmm_on_setting_changed = {
+	on_actions = { }
+}

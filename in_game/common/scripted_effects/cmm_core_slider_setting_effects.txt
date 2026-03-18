@@ -3,55 +3,72 @@
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 cmm_quantize_slider_setting = {
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	set_local_variable = { name = cmm_tmp_min value = "variable_map(cmm_min|local_var:cmm_tmp_flag)" }
+	set_local_variable = { name = cmm_tmp_max value = "variable_map(cmm_max|local_var:cmm_tmp_flag)" }
+	set_local_variable = { name = cmm_tmp_step value = "variable_map(cmm_step|local_var:cmm_tmp_flag)" }
 	if = {
-		limit = { var:cmm_setting_is_global_$setting$ = 1 }
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
 
-		set_variable = { name = cmm_tmp_slider_value value = global_var:$setting$ }
-		change_variable = { name = cmm_tmp_slider_value subtract = var:cmm_setting_min_$setting$ }
-		change_variable = { name = cmm_tmp_slider_value divide = var:cmm_setting_step_$setting$ }
+		set_variable = { name = cmm_tmp_slider_value value = "global_variable_map(cmm|local_var:cmm_tmp_flag)" }
+		change_variable = { name = cmm_tmp_slider_value subtract = local_var:cmm_tmp_min }
+		change_variable = { name = cmm_tmp_slider_value divide = local_var:cmm_tmp_step }
 		round_variable = {
 			name = cmm_tmp_slider_value
 			nearest = 1
 		}
-		change_variable = { name = cmm_tmp_slider_value multiply = var:cmm_setting_step_$setting$ }
-		change_variable = { name = cmm_tmp_slider_value add = var:cmm_setting_min_$setting$ }
+		change_variable = { name = cmm_tmp_slider_value multiply = local_var:cmm_tmp_step }
+		change_variable = { name = cmm_tmp_slider_value add = local_var:cmm_tmp_min }
 
 		if = {
-			limit = { var:cmm_tmp_slider_value < var:cmm_setting_min_$setting$ }
-			set_variable = { name = cmm_tmp_slider_value value = var:cmm_setting_min_$setting$ }
+			limit = { var:cmm_tmp_slider_value < local_var:cmm_tmp_min }
+			set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_min }
 		}
 
 		if = {
-			limit = { var:cmm_tmp_slider_value > var:cmm_setting_max_$setting$ }
-			set_variable = { name = cmm_tmp_slider_value value = var:cmm_setting_max_$setting$ }
+			limit = { var:cmm_tmp_slider_value > local_var:cmm_tmp_max }
+			set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_max }
 		}
 
-		set_global_variable = { name = $setting$ value = var:cmm_tmp_slider_value }
+		remove_from_global_variable_map = { name = cmm key = flag:$setting$ }
+		add_to_global_variable_map = { name = cmm key = flag:$setting$ value = var:cmm_tmp_slider_value }
 		remove_variable = cmm_tmp_slider_value
 	}
 	else = {
-		set_variable = { name = cmm_tmp_slider_value value = var:$setting$ }
-		change_variable = { name = cmm_tmp_slider_value subtract = var:cmm_setting_min_$setting$ }
-		change_variable = { name = cmm_tmp_slider_value divide = var:cmm_setting_step_$setting$ }
+		set_variable = { name = cmm_tmp_slider_value value = "variable_map(cmm|local_var:cmm_tmp_flag)" }
+		change_variable = { name = cmm_tmp_slider_value subtract = local_var:cmm_tmp_min }
+		change_variable = { name = cmm_tmp_slider_value divide = local_var:cmm_tmp_step }
 		round_variable = {
 			name = cmm_tmp_slider_value
 			nearest = 1
 		}
-		change_variable = { name = cmm_tmp_slider_value multiply = var:cmm_setting_step_$setting$ }
-		change_variable = { name = cmm_tmp_slider_value add = var:cmm_setting_min_$setting$ }
+		change_variable = { name = cmm_tmp_slider_value multiply = local_var:cmm_tmp_step }
+		change_variable = { name = cmm_tmp_slider_value add = local_var:cmm_tmp_min }
 
 		if = {
-			limit = { var:cmm_tmp_slider_value < var:cmm_setting_min_$setting$ }
-			set_variable = { name = cmm_tmp_slider_value value = var:cmm_setting_min_$setting$ }
+			limit = { var:cmm_tmp_slider_value < local_var:cmm_tmp_min }
+			set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_min }
 		}
 
 		if = {
-			limit = { var:cmm_tmp_slider_value > var:cmm_setting_max_$setting$ }
-			set_variable = { name = cmm_tmp_slider_value value = var:cmm_setting_max_$setting$ }
+			limit = { var:cmm_tmp_slider_value > local_var:cmm_tmp_max }
+			set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_max }
 		}
 
-		set_variable = { name = $setting$ value = var:cmm_tmp_slider_value }
+		remove_from_variable_map = { name = cmm key = flag:$setting$ }
+		add_to_variable_map = { name = cmm key = flag:$setting$ value = var:cmm_tmp_slider_value }
 		remove_variable = cmm_tmp_slider_value
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = local_var:cmm_tmp_flag
+			exists = local_var:cmm_tmp_min
+			exists = local_var:cmm_tmp_max
+			exists = local_var:cmm_tmp_step
+		}
 	}
 }
 
@@ -67,33 +84,35 @@ cmm_quantize_slider_setting = {
 # - max_value (number): Upper clamp bound.
 # - step_value (number): Logical slider step size.
 cmm_register_slider_setting = {
-	set_variable = { name = cmm_setting_is_global_$mod_id$__$setting_id$ value = 0 }
-	set_variable = { name = cmm_setting_is_slider_$mod_id$__$setting_id$ value = 1 }
-	set_variable = { name = cmm_setting_is_button_$mod_id$__$setting_id$ value = 0 }
-	set_variable = { name = cmm_setting_min_$mod_id$__$setting_id$ value = $min_value$ }
-	set_variable = { name = cmm_setting_max_$mod_id$__$setting_id$ value = $max_value$ }
-	set_variable = { name = cmm_setting_step_$mod_id$__$setting_id$ value = $step_value$ }
+	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 4 }
+	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = 0 }
+	add_to_variable_map = { name = cmm_default key = flag:$mod_id$__$setting_id$ value = $default_value$ }
+	add_to_variable_map = { name = cmm_min key = flag:$mod_id$__$setting_id$ value = $min_value$ }
+	add_to_variable_map = { name = cmm_max key = flag:$mod_id$__$setting_id$ value = $max_value$ }
+	add_to_variable_map = { name = cmm_step key = flag:$mod_id$__$setting_id$ value = $step_value$ }
 
-	set_variable = { name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ value = $max_value$ }
-	change_variable = { name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ subtract = $min_value$ }
-	change_variable = { name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ divide = $step_value$ }
+	set_variable = { name = cmm_tmp_step_count value = $max_value$ }
+	change_variable = { name = cmm_tmp_step_count subtract = $min_value$ }
+	change_variable = { name = cmm_tmp_step_count divide = $step_value$ }
 	round_variable = {
-		name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$
+		name = cmm_tmp_step_count
 		nearest = 1
 	}
-	change_variable = { name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ add = 1 }
+	change_variable = { name = cmm_tmp_step_count add = 1 }
 
 	if = {
-		limit = { var:cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ < 2 }
-		set_variable = { name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ value = 2 }
+		limit = { var:cmm_tmp_step_count < 2 }
+		set_variable = { name = cmm_tmp_step_count value = 2 }
 	}
 
-	set_variable = { name = cmm_setting_slider_visual_step_count_$mod_id$__$setting_id$ value = 101 }
+	add_to_variable_map = { name = cmm_slider_actual_step_count key = flag:$mod_id$__$setting_id$ value = var:cmm_tmp_step_count }
 
-	set_variable = { name = cmm_setting_slider_actual_last_index_$mod_id$__$setting_id$ value = var:cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ }
-	change_variable = { name = cmm_setting_slider_actual_last_index_$mod_id$__$setting_id$ add = -1 }
-	set_variable = { name = cmm_setting_slider_visual_last_index_$mod_id$__$setting_id$ value = var:cmm_setting_slider_visual_step_count_$mod_id$__$setting_id$ }
-	change_variable = { name = cmm_setting_slider_visual_last_index_$mod_id$__$setting_id$ add = -1 }
+	set_variable = { name = cmm_tmp_last_index value = var:cmm_tmp_step_count }
+	change_variable = { name = cmm_tmp_last_index add = -1 }
+	add_to_variable_map = { name = cmm_slider_actual_last_index key = flag:$mod_id$__$setting_id$ value = var:cmm_tmp_last_index }
+
+	remove_variable = cmm_tmp_step_count
+	remove_variable = cmm_tmp_last_index
 
 	cmm_register_setting_metadata = {
 		mod_id = $mod_id$
@@ -103,18 +122,23 @@ cmm_register_slider_setting = {
 	}
 
 	if = {
-		limit = { NOT = { has_variable = $mod_id$__$setting_id$ } }
-		set_variable = { name = $mod_id$__$setting_id$ value = $default_value$ }
+		limit = { NOT = { is_key_in_variable_map = { name = cmm target = flag:$mod_id$__$setting_id$ } } }
+		add_to_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $default_value$ }
+	}
+
+	set_local_variable = { name = cmm_tmp_flag value = flag:$mod_id$__$setting_id$ }
+	set_local_variable = { name = cmm_tmp_val value = "variable_map(cmm|local_var:cmm_tmp_flag)" }
+
+	if = {
+		limit = { local_var:cmm_tmp_val < $min_value$ }
+		remove_from_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
+		add_to_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $min_value$ }
 	}
 
 	if = {
-		limit = { var:$mod_id$__$setting_id$ < $min_value$ }
-		set_variable = { name = $mod_id$__$setting_id$ value = $min_value$ }
-	}
-
-	if = {
-		limit = { var:$mod_id$__$setting_id$ > $max_value$ }
-		set_variable = { name = $mod_id$__$setting_id$ value = $max_value$ }
+		limit = { local_var:cmm_tmp_val > $max_value$ }
+		remove_from_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
+		add_to_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $max_value$ }
 	}
 
 	cmm_quantize_slider_setting = {
@@ -125,17 +149,10 @@ cmm_register_slider_setting = {
 	if = {
 		limit = {
 			always = no
-			exists = var:cmm_setting_is_global_$mod_id$__$setting_id$
-			exists = var:cmm_setting_is_slider_$mod_id$__$setting_id$
-			exists = var:cmm_setting_is_button_$mod_id$__$setting_id$
-			exists = var:cmm_setting_min_$mod_id$__$setting_id$
-			exists = var:cmm_setting_max_$mod_id$__$setting_id$
-			exists = var:cmm_setting_step_$mod_id$__$setting_id$
-			exists = var:cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$
-			exists = var:cmm_setting_slider_visual_step_count_$mod_id$__$setting_id$
-			exists = var:cmm_setting_slider_actual_last_index_$mod_id$__$setting_id$
-			exists = var:cmm_setting_slider_visual_last_index_$mod_id$__$setting_id$
-			exists = var:$mod_id$__$setting_id$
+			exists = var:cmm_tmp_step_count
+			exists = var:cmm_tmp_last_index
+			exists = local_var:cmm_tmp_flag
+			exists = local_var:cmm_tmp_val
 		}
 	}
 }
@@ -152,33 +169,35 @@ cmm_register_slider_setting = {
 # - max_value (number): Upper clamp bound.
 # - step_value (number): Logical slider step size.
 cmm_register_global_slider_setting = {
-	set_variable = { name = cmm_setting_is_global_$mod_id$__$setting_id$ value = 1 }
-	set_variable = { name = cmm_setting_is_slider_$mod_id$__$setting_id$ value = 1 }
-	set_variable = { name = cmm_setting_is_button_$mod_id$__$setting_id$ value = 0 }
-	set_variable = { name = cmm_setting_min_$mod_id$__$setting_id$ value = $min_value$ }
-	set_variable = { name = cmm_setting_max_$mod_id$__$setting_id$ value = $max_value$ }
-	set_variable = { name = cmm_setting_step_$mod_id$__$setting_id$ value = $step_value$ }
+	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 4 }
+	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = 1 }
+	add_to_variable_map = { name = cmm_default key = flag:$mod_id$__$setting_id$ value = $default_value$ }
+	add_to_variable_map = { name = cmm_min key = flag:$mod_id$__$setting_id$ value = $min_value$ }
+	add_to_variable_map = { name = cmm_max key = flag:$mod_id$__$setting_id$ value = $max_value$ }
+	add_to_variable_map = { name = cmm_step key = flag:$mod_id$__$setting_id$ value = $step_value$ }
 
-	set_variable = { name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ value = $max_value$ }
-	change_variable = { name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ subtract = $min_value$ }
-	change_variable = { name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ divide = $step_value$ }
+	set_variable = { name = cmm_tmp_step_count value = $max_value$ }
+	change_variable = { name = cmm_tmp_step_count subtract = $min_value$ }
+	change_variable = { name = cmm_tmp_step_count divide = $step_value$ }
 	round_variable = {
-		name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$
+		name = cmm_tmp_step_count
 		nearest = 1
 	}
-	change_variable = { name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ add = 1 }
+	change_variable = { name = cmm_tmp_step_count add = 1 }
 
 	if = {
-		limit = { var:cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ < 2 }
-		set_variable = { name = cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ value = 2 }
+		limit = { var:cmm_tmp_step_count < 2 }
+		set_variable = { name = cmm_tmp_step_count value = 2 }
 	}
 
-	set_variable = { name = cmm_setting_slider_visual_step_count_$mod_id$__$setting_id$ value = 101 }
+	add_to_variable_map = { name = cmm_slider_actual_step_count key = flag:$mod_id$__$setting_id$ value = var:cmm_tmp_step_count }
 
-	set_variable = { name = cmm_setting_slider_actual_last_index_$mod_id$__$setting_id$ value = var:cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$ }
-	change_variable = { name = cmm_setting_slider_actual_last_index_$mod_id$__$setting_id$ add = -1 }
-	set_variable = { name = cmm_setting_slider_visual_last_index_$mod_id$__$setting_id$ value = var:cmm_setting_slider_visual_step_count_$mod_id$__$setting_id$ }
-	change_variable = { name = cmm_setting_slider_visual_last_index_$mod_id$__$setting_id$ add = -1 }
+	set_variable = { name = cmm_tmp_last_index value = var:cmm_tmp_step_count }
+	change_variable = { name = cmm_tmp_last_index add = -1 }
+	add_to_variable_map = { name = cmm_slider_actual_last_index key = flag:$mod_id$__$setting_id$ value = var:cmm_tmp_last_index }
+
+	remove_variable = cmm_tmp_step_count
+	remove_variable = cmm_tmp_last_index
 
 	cmm_register_setting_metadata = {
 		mod_id = $mod_id$
@@ -188,18 +207,23 @@ cmm_register_global_slider_setting = {
 	}
 
 	if = {
-		limit = { NOT = { has_global_variable = $mod_id$__$setting_id$ } }
-		set_global_variable = { name = $mod_id$__$setting_id$ value = $default_value$ }
+		limit = { NOT = { is_key_in_global_variable_map = { name = cmm target = flag:$mod_id$__$setting_id$ } } }
+		add_to_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $default_value$ }
+	}
+
+	set_local_variable = { name = cmm_tmp_flag value = flag:$mod_id$__$setting_id$ }
+	set_local_variable = { name = cmm_tmp_val value = "global_variable_map(cmm|local_var:cmm_tmp_flag)" }
+
+	if = {
+		limit = { local_var:cmm_tmp_val < $min_value$ }
+		remove_from_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
+		add_to_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $min_value$ }
 	}
 
 	if = {
-		limit = { global_var:$mod_id$__$setting_id$ < $min_value$ }
-		set_global_variable = { name = $mod_id$__$setting_id$ value = $min_value$ }
-	}
-
-	if = {
-		limit = { global_var:$mod_id$__$setting_id$ > $max_value$ }
-		set_global_variable = { name = $mod_id$__$setting_id$ value = $max_value$ }
+		limit = { local_var:cmm_tmp_val > $max_value$ }
+		remove_from_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
+		add_to_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $max_value$ }
 	}
 
 	cmm_quantize_slider_setting = {
@@ -210,17 +234,10 @@ cmm_register_global_slider_setting = {
 	if = {
 		limit = {
 			always = no
-			exists = var:cmm_setting_is_global_$mod_id$__$setting_id$
-			exists = var:cmm_setting_is_slider_$mod_id$__$setting_id$
-			exists = var:cmm_setting_is_button_$mod_id$__$setting_id$
-			exists = var:cmm_setting_min_$mod_id$__$setting_id$
-			exists = var:cmm_setting_max_$mod_id$__$setting_id$
-			exists = var:cmm_setting_step_$mod_id$__$setting_id$
-			exists = var:cmm_setting_slider_actual_step_count_$mod_id$__$setting_id$
-			exists = var:cmm_setting_slider_visual_step_count_$mod_id$__$setting_id$
-			exists = var:cmm_setting_slider_actual_last_index_$mod_id$__$setting_id$
-			exists = var:cmm_setting_slider_visual_last_index_$mod_id$__$setting_id$
-			exists = global_var:$mod_id$__$setting_id$
+			exists = var:cmm_tmp_step_count
+			exists = var:cmm_tmp_last_index
+			exists = local_var:cmm_tmp_flag
+			exists = local_var:cmm_tmp_val
 		}
 	}
 }
@@ -230,38 +247,58 @@ cmm_register_global_slider_setting = {
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 cmm_set_slider_setting_from_visual_index = {
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	set_local_variable = { name = cmm_tmp_actual_last value = "variable_map(cmm_slider_actual_last_index|local_var:cmm_tmp_flag)" }
+	set_local_variable = { name = cmm_tmp_step value = "variable_map(cmm_step|local_var:cmm_tmp_flag)" }
+	set_local_variable = { name = cmm_tmp_min value = "variable_map(cmm_min|local_var:cmm_tmp_flag)" }
+	set_local_variable = { name = cmm_tmp_max value = "variable_map(cmm_max|local_var:cmm_tmp_flag)" }
+
 	set_variable = { name = cmm_tmp_slider_actual_index value = var:cmm_slider_index_to_apply }
-	change_variable = { name = cmm_tmp_slider_actual_index multiply = var:cmm_setting_slider_actual_last_index_$setting$ }
-	change_variable = { name = cmm_tmp_slider_actual_index divide = var:cmm_setting_slider_visual_last_index_$setting$ }
+	change_variable = { name = cmm_tmp_slider_actual_index multiply = local_var:cmm_tmp_actual_last }
+	change_variable = { name = cmm_tmp_slider_actual_index divide = 100 }
 	round_variable = {
 		name = cmm_tmp_slider_actual_index
 		nearest = 1
 	}
 
-	set_variable = { name = cmm_tmp_slider_value value = var:cmm_setting_step_$setting$ }
+	set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_step }
 	change_variable = { name = cmm_tmp_slider_value multiply = var:cmm_tmp_slider_actual_index }
-	change_variable = { name = cmm_tmp_slider_value add = var:cmm_setting_min_$setting$ }
+	change_variable = { name = cmm_tmp_slider_value add = local_var:cmm_tmp_min }
 
 	if = {
-		limit = { var:cmm_tmp_slider_value < var:cmm_setting_min_$setting$ }
-		set_variable = { name = cmm_tmp_slider_value value = var:cmm_setting_min_$setting$ }
+		limit = { var:cmm_tmp_slider_value < local_var:cmm_tmp_min }
+		set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_min }
 	}
 
 	if = {
-		limit = { var:cmm_tmp_slider_value > var:cmm_setting_max_$setting$ }
-		set_variable = { name = cmm_tmp_slider_value value = var:cmm_setting_max_$setting$ }
+		limit = { var:cmm_tmp_slider_value > local_var:cmm_tmp_max }
+		set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_max }
 	}
 
 	if = {
-		limit = { var:cmm_setting_is_global_$setting$ = 1 }
-		set_global_variable = { name = $setting$ value = var:cmm_tmp_slider_value }
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		remove_from_global_variable_map = { name = cmm key = flag:$setting$ }
+		add_to_global_variable_map = { name = cmm key = flag:$setting$ value = var:cmm_tmp_slider_value }
 	}
 	else = {
-		set_variable = { name = $setting$ value = var:cmm_tmp_slider_value }
+		remove_from_variable_map = { name = cmm key = flag:$setting$ }
+		add_to_variable_map = { name = cmm key = flag:$setting$ value = var:cmm_tmp_slider_value }
 	}
 
 	remove_variable = cmm_tmp_slider_actual_index
 	remove_variable = cmm_tmp_slider_value
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = local_var:cmm_tmp_flag
+			exists = local_var:cmm_tmp_actual_last
+			exists = local_var:cmm_tmp_step
+			exists = local_var:cmm_tmp_min
+			exists = local_var:cmm_tmp_max
+		}
+	}
 }
 
 # Apply the pending slider track selection or queued slider button step change.

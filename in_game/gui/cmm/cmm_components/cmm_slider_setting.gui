@@ -5,16 +5,15 @@
 	# - Scope.GetFlagName [string]: current setting key in root context (`<mod_id>__<setting_id>`).
 	# - GetGlobalVariable(Scope.GetFlagName).GetValue [value]: current slider value for global settings.
 	# - Player.MakeScope.GetVariable(Scope.GetFlagName) [value]: current slider value for local settings.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_min_', Scope.GetFlagName)) [value]: slider minimum bound.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_max_', Scope.GetFlagName)) [value]: slider maximum bound.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_step_', Scope.GetFlagName)) [value]: slider logical step size.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_slider_visual_step_count_', Scope.GetFlagName)) [value]: number of clickable visual slider slots.
+	# - cmm_min variable map [value]: slider minimum bound (keyed by setting flag).
+	# - cmm_max variable map [value]: slider maximum bound (keyed by setting flag).
+	# - cmm_step variable map [value]: slider logical step size (keyed by setting flag).
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: current visual slot index inside the repeated track datamodel.
 	# Writes:
 	# - cmm_numeric_step_delta_to_apply [value]: pending accumulated slider +/- step delta for `cmm_apply_slider_change`.
 	# - cmm_numeric_change_to_apply [value]: pending slider min/max jump mode for `cmm_apply_slider_change`.
 	# - cmm_slider_index_to_apply [value]: pending visual slot index for `cmm_apply_slider_change`.
-	# - <mod_id>__<setting_id> callbacks [effect]: applies slider changes via `_on_changed`.
+	# - GetScriptedGui('cmm_auto_apply_slider').Execute(...) [effect]: applies setting changes via auto-apply scripted GUI.
 	type cmm_slider_setting = widget {
 		size = { 320 34 }
 		minimumsize = { 320 34 }
@@ -62,11 +61,11 @@
 
 							click_modifiers = {
 								ondefault = "[CMMExecuteGui('CMM_MarkNumericDecrease')]"
-								ondefault = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+								ondefault = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 								onctrl = "[CMMExecuteGui('CMM_MarkNumericDecrease5x')]"
-								onctrl = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+								onctrl = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 								onshift = "[CMMExecuteGui('CMM_MarkNumericDecreaseToMin')]"
-								onshift = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+								onshift = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 							}
 
 							tooltipwidget = {
@@ -86,9 +85,9 @@
 							direction = horizontal
 							size = { 100% 20 }
 							minimumsize = { -1 14 }
-							min = "[CMMMetadataValue('cmm_setting_min_', Scope.GetFlagName)]"
-							max = "[CMMMetadataValue('cmm_setting_max_', Scope.GetFlagName)]"
-							step = "[CMMMetadataValue('cmm_setting_step_', Scope.GetFlagName)]"
+							min = "[CMMMapValue('cmm_min', Scope.GetFlagName)]"
+							max = "[CMMMapValue('cmm_max', Scope.GetFlagName)]"
+							step = "[CMMMapValue('cmm_step', Scope.GetFlagName)]"
 							wheelstep = 0
 							value = "[CMMSettingValue(Scope.GetFlagName)]"
 							enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
@@ -112,7 +111,7 @@
 								minimumsize = { 9 20 }
 								allow_outside = yes
 								onmousehierarchyenter = "[CMMExecuteGui('CMM_SliderDragHover_0')]"
-								onmousehierarchyenter = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+								onmousehierarchyenter = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 
 								button = {
 									size = { 100% 20 }
@@ -121,7 +120,7 @@
 									enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 									onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
 									onpressed = "[CMMExecuteGui('CMM_MarkSliderSelection_0')]"
-									onpressed = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+									onpressed = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 									onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
 									tooltip_enabled = no
 								}
@@ -133,7 +132,7 @@
 
 								hbox = {
 									size = { 100% 20 }
-									datamodel = "[DataModelRepeatedItem(CMMMetadataInt('cmm_setting_slider_visual_step_count_', Scope.GetFlagName))]"
+									datamodel = "[DataModelRepeatedItem('(int32)101')]"
 									datamodel_reuse_widgets = yes
 
 									item = {
@@ -142,7 +141,7 @@
 											minimumsize = { 2 20 }
 											allow_outside = yes
 											onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_SliderDragHover_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
-											onmousehierarchyenter = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+											onmousehierarchyenter = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 
 											button = {
 												size = { 100% 20 }
@@ -151,7 +150,7 @@
 												enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 												onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
 												onpressed = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
-												onpressed = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+												onpressed = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 												onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
 												tooltip_enabled = no
 											}
@@ -165,7 +164,7 @@
 								minimumsize = { 9 20 }
 								allow_outside = yes
 								onmousehierarchyenter = "[CMMExecuteGui('CMM_SliderDragHover_100')]"
-								onmousehierarchyenter = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+								onmousehierarchyenter = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 
 								button = {
 									size = { 100% 20 }
@@ -174,7 +173,7 @@
 									enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 									onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
 									onpressed = "[CMMExecuteGui('CMM_MarkSliderSelection_100')]"
-									onpressed = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+									onpressed = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 									onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
 									tooltip_enabled = no
 								}
@@ -213,11 +212,11 @@
 
 							click_modifiers = {
 								ondefault = "[CMMExecuteGui('CMM_MarkNumericIncrease')]"
-								ondefault = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+								ondefault = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 								onctrl = "[CMMExecuteGui('CMM_MarkNumericIncrease5x')]"
-								onctrl = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+								onctrl = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 								onshift = "[CMMExecuteGui('CMM_MarkNumericIncreaseToMax')]"
-								onshift = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+								onshift = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 							}
 
 							tooltipwidget = {

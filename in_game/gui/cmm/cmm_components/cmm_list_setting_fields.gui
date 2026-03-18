@@ -21,7 +21,7 @@
 				autoresize = no
 				default_format = "#medium"
 				align = center|nobaseline
-				text = "[CMMListFieldMetadataFlag(Scope.GetFlagName, ToString_int32(PdxGuiWidget.GetIndexInDataModel), '_name_')]"
+				text = "[CMMListFieldMetadataFlag(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)), '_name_')]"
 			}
 		}
 	}
@@ -57,15 +57,15 @@
 		onmousehierarchyenter = "[GetVariableSystem.Set('cmm_list_hover_field_slot', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 
 		cmm_list_setting_bool_field = {
-			visible = "[CMMListFieldIsBool(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+			visible = "[CMMListFieldIsBool(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 		}
 
 		cmm_list_setting_numeric_field = {
-			visible = "[CMMListFieldIsNumeric(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+			visible = "[CMMListFieldIsNumeric(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 		}
 
 		cmm_list_setting_dropdown_field = {
-			visible = "[CMMListFieldIsDropdown(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+			visible = "[CMMListFieldIsDropdown(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 		}
 	}
 
@@ -89,7 +89,7 @@
 			parentanchor = center
 			widgetanchor = center
 			enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
-			checked = "[CMMValueEqualsOne(CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(PdxGuiWidget.GetIndexInDataModel)))]"
+			checked = "[CMMValueEqualsOne(CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 			tooltip_enabled = no
 		}
 
@@ -258,7 +258,7 @@
 					size = { 100% 100% }
 					align = center|nobaseline
 					autoresize = no
-					text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+					text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				}
 			}
 		}

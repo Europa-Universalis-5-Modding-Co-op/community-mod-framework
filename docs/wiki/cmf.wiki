@@ -113,11 +113,11 @@ All effects require '''country scope'''.
 {| class="wikitable"
 ! Effect !! Description
 |-
-| <code>cmf_show_alert = { alert = <root_key> }</code> || Show an alert
+| <code>cmf_add_alert = { alert = <root_key> }</code> || Add an alert
 |-
 | <code>cmf_remove_alert = { alert = <root_key> }</code> || Remove an alert
 |-
-| <code>cmf_is_alert_shown = { alert = <root_key> }</code> || Check if an alert is shown (trigger)
+| <code>cmf_is_alert_active = { alert = <root_key> }</code> || Check if an alert is active (trigger)
 |}
 
 == is_host Trigger ==

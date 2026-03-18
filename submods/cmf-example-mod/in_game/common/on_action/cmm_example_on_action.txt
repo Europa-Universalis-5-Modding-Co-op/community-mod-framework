@@ -23,14 +23,45 @@ cmm_on_mod_registration = {
 cmm_example_on_register_mod = {
 	effect = {
 		cmm_example_register_mod = yes
-		cmf_show_alert = { alert = cmf_alert_example }
-		cmf_show_alert = { alert = cmf_alert_example_blue }
-		cmf_show_alert = { alert = cmf_alert_example_black }
-		cmf_show_alert = { alert = cmf_alert_example_red_war }
-		cmf_show_alert = { alert = cmf_alert_example_red }
-		cmf_show_alert = { alert = cmf_alert_example_orange }
-		cmf_show_alert = { alert = cmf_alert_example_yellow }
-		cmf_show_alert = { alert = cmf_alert_example_green }
-		cmf_show_alert = { alert = cmf_alert_example_purple }
+		cmf_add_alert = { alert = cmf_alert_example }
+		cmf_add_alert = { alert = cmf_alert_example_blue }
+		cmf_add_alert = { alert = cmf_alert_example_black }
+		cmf_add_alert = { alert = cmf_alert_example_red_war }
+		cmf_add_alert = { alert = cmf_alert_example_red }
+		cmf_add_alert = { alert = cmf_alert_example_orange }
+		cmf_add_alert = { alert = cmf_alert_example_yellow }
+		cmf_add_alert = { alert = cmf_alert_example_green }
+		cmf_add_alert = { alert = cmf_alert_example_purple }
+	}
+}
+
+# Hook into CMM setting change on_action for optional post-change side effects.
+cmm_on_setting_changed = {
+	on_actions = {
+		cmm_example_on_setting_changed
+	}
+}
+
+cmm_example_on_setting_changed = {
+	effect = {
+		if = {
+			limit = { var:cmm_changed_setting = flag:cmm_example__example_toggle }
+			set_local_variable = { name = cmm_tmp_flag value = flag:cmm_example__example_toggle }
+			if = {
+				limit = { "variable_map(cmm|local_var:cmm_tmp_flag)" >= 1 }
+				cmf_add_alert = { alert = cmf_alert_example }
+			}
+			else = {
+				cmf_remove_alert = { alert = cmf_alert_example }
+			}
+		}
+
+		# Benign warning suppression
+		if = {
+			limit = {
+				always = no
+				exists = local_var:cmm_tmp_flag
+			}
+		}
 	}
 }

@@ -23,14 +23,12 @@ CMM_SetHostAndRegisterCoreMod = {
 	}
 }
 
-# Toggle the core host-only-tools gate.
+# Reset all settings for all mods to their registered default values.
 # Scope: country
 # Args: none
-cmm_core__enable_host_only_tools_on_changed = {
+CMM_ResetToDefaults = {
 	scope = country
 	effect = {
-		cmm_toggle_bool_setting = {
-			setting = cmm_core__enable_host_only_tools
-		}
+		cmm_reset_to_defaults = yes
 	}
 }

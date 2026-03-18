@@ -39,9 +39,9 @@ cmm_initialize_list_item_metadata = {
 
 # Add one stable item identity to the ordered list storage.
 # Scope: country
-# Args: mod_id (key), setting_id (key), item (number)
+# Args: mod_id (key), setting_id (key), item (number), vt (variable/global_variable)
 cmm_add_list_item_identity = {
-	add_to_variable_list = {
+	add_to_$vt$_list = {
 		name = cmm_list_items_$mod_id$__$setting_id$
 		target = flag:$mod_id$__$setting_id$_item_$item$
 	}
@@ -242,89 +242,89 @@ cmm_reinitialize_dynamic_list_item_metadata = {
 
 # Build the initial ordered identity list for one setting.
 # Scope: country
-# Args: mod_id (key), setting_id (key)
+# Args: mod_id (key), setting_id (key), vt (variable/global_variable)
 cmm_initialize_list_setting_item_list = {
-	clear_variable_list = cmm_list_items_$mod_id$__$setting_id$
+	clear_$vt$_list = cmm_list_items_$mod_id$__$setting_id$
 
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 0 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 1 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 1 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 1 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 2 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 2 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 2 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 3 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 3 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 3 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 4 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 4 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 4 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 5 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 5 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 5 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 6 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 6 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 6 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 7 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 7 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 7 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 8 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 8 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 8 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 9 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 9 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 9 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 10 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 10 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 10 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 11 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 11 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 11 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 12 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 12 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 12 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 13 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 13 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 13 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 14 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 14 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 14 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 15 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 15 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 15 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 16 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 16 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 16 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 17 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 17 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 17 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 18 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 18 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 18 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 19 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 19 vt = $vt$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 19 }
-		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 20 }
+		cmm_add_list_item_identity = { mod_id = $mod_id$ setting_id = $setting_id$ item = 20 vt = $vt$ }
 	}
 }
 
@@ -336,20 +336,42 @@ cmm_initialize_list_setting_item_list = {
 # - slot (number): Field slot index (`1..5`).
 # - item (number): Stable item identity ordinal (`1..20`).
 # - default_value (1/0): Default checkbox state for new saves.
+# - vt (variable/global_variable): Variable type for map commands.
+# - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 cmm_initialize_list_bool_field_item = {
 	if = {
-		limit = { NOT = { has_variable = $mod_id$__$setting_id$_item_$item$_field_$slot$ } }
-		set_variable = { name = $mod_id$__$setting_id$_item_$item$_field_$slot$ value = $default_value$ }
+		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ } } }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ value = $default_value$ }
+	}
+
+	set_local_variable = { name = cmm_tmp_fk value = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ }
+	if = {
+		limit = { $is_global$ >= 1 }
+		set_local_variable = { name = cmm_field_val value = "global_variable_map(cmm|local_var:cmm_tmp_fk)" }
+	}
+	else = {
+		set_local_variable = { name = cmm_field_val value = "variable_map(cmm|local_var:cmm_tmp_fk)" }
 	}
 
 	if = {
-		limit = { var:$mod_id$__$setting_id$_item_$item$_field_$slot$ < 0 }
-		set_variable = { name = $mod_id$__$setting_id$_item_$item$_field_$slot$ value = 0 }
+		limit = { local_var:cmm_field_val < 0 }
+		remove_from_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ value = 0 }
 	}
 
 	if = {
-		limit = { var:$mod_id$__$setting_id$_item_$item$_field_$slot$ > 1 }
-		set_variable = { name = $mod_id$__$setting_id$_item_$item$_field_$slot$ value = 1 }
+		limit = { local_var:cmm_field_val > 1 }
+		remove_from_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ value = 1 }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = local_var:cmm_tmp_fk
+			exists = local_var:cmm_field_val
+		}
 	}
 }
 
@@ -361,6 +383,8 @@ cmm_initialize_list_bool_field_item = {
 # - field_id (key): Field id unique within the list setting.
 # - slot (number): Field slot index (`1..5`).
 # - default_value (1/0): Default checkbox state for new saves.
+# - vt (variable/global_variable): Variable type for map commands.
+# - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 cmm_initialize_list_bool_field_slot = {
 	set_variable = {
 		name = cmm_list_field_$slot$_type_$mod_id$__$setting_id$
@@ -373,83 +397,83 @@ cmm_initialize_list_bool_field_slot = {
 
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 0 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 1 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 1 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 1 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 2 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 2 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 2 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 3 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 3 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 3 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 4 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 4 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 4 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 5 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 5 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 5 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 6 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 6 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 6 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 7 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 7 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 7 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 8 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 8 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 8 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 9 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 9 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 9 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 10 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 10 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 10 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 11 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 11 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 11 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 12 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 12 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 12 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 13 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 13 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 13 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 14 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 14 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 14 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 15 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 15 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 15 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 16 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 16 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 16 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 17 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 17 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 17 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 18 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 18 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 18 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 19 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 19 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 19 }
-		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 20 default_value = $default_value$ }
+		cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 20 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 }
 
@@ -461,20 +485,42 @@ cmm_initialize_list_bool_field_slot = {
 # - slot (number): Field slot index (`1..5`).
 # - item (number): Stable item identity ordinal (`1..20`).
 # - default_index (number): Default selected option ordinal for new saves.
+# - vt (variable/global_variable): Variable type for map commands.
+# - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 cmm_initialize_list_dropdown_field_item = {
 	if = {
-		limit = { NOT = { has_variable = $mod_id$__$setting_id$_item_$item$_field_$slot$ } }
-		set_variable = { name = $mod_id$__$setting_id$_item_$item$_field_$slot$ value = $default_index$ }
+		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ } } }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ value = $default_index$ }
+	}
+
+	set_local_variable = { name = cmm_tmp_fk value = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ }
+	if = {
+		limit = { $is_global$ >= 1 }
+		set_local_variable = { name = cmm_field_val value = "global_variable_map(cmm|local_var:cmm_tmp_fk)" }
+	}
+	else = {
+		set_local_variable = { name = cmm_field_val value = "variable_map(cmm|local_var:cmm_tmp_fk)" }
 	}
 
 	if = {
-		limit = { var:$mod_id$__$setting_id$_item_$item$_field_$slot$ < 1 }
-		set_variable = { name = $mod_id$__$setting_id$_item_$item$_field_$slot$ value = 1 }
+		limit = { local_var:cmm_field_val < 1 }
+		remove_from_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ value = 1 }
 	}
 
 	if = {
-		limit = { var:$mod_id$__$setting_id$_item_$item$_field_$slot$ > var:cmm_list_field_$slot$_dropdown_last_index_$mod_id$__$setting_id$ }
-		set_variable = { name = $mod_id$__$setting_id$_item_$item$_field_$slot$ value = var:cmm_list_field_$slot$_dropdown_last_index_$mod_id$__$setting_id$ }
+		limit = { local_var:cmm_field_val > var:cmm_list_field_$slot$_dropdown_last_index_$mod_id$__$setting_id$ }
+		remove_from_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ value = var:cmm_list_field_$slot$_dropdown_last_index_$mod_id$__$setting_id$ }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = local_var:cmm_tmp_fk
+			exists = local_var:cmm_field_val
+		}
 	}
 }
 
@@ -487,6 +533,8 @@ cmm_initialize_list_dropdown_field_item = {
 # - slot (number): Field slot index (`1..5`).
 # - default_index (number): Default selected option ordinal for new saves.
 # - option_count (number): Number of options (`>= 1`; numbered `1..option_count`).
+# - vt (variable/global_variable): Variable type for map commands.
+# - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 cmm_initialize_list_dropdown_field_slot = {
 	set_variable = {
 		name = cmm_list_field_$slot$_type_$mod_id$__$setting_id$
@@ -520,83 +568,83 @@ cmm_initialize_list_dropdown_field_slot = {
 
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 0 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 1 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 1 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 1 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 2 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 2 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 2 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 3 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 3 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 3 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 4 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 4 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 4 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 5 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 5 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 5 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 6 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 6 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 6 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 7 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 7 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 7 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 8 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 8 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 8 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 9 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 9 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 9 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 10 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 10 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 10 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 11 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 11 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 11 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 12 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 12 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 12 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 13 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 13 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 13 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 14 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 14 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 14 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 15 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 15 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 15 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 16 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 16 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 16 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 17 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 17 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 17 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 18 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 18 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 18 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 19 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 19 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 19 }
-		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 20 default_index = $default_index$ }
+		cmm_initialize_list_dropdown_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 20 default_index = $default_index$ vt = $vt$ is_global = $is_global$ }
 	}
 }
 
@@ -608,20 +656,42 @@ cmm_initialize_list_dropdown_field_slot = {
 # - slot (number): Field slot index (`1..5`).
 # - item (number): Stable item identity ordinal (`1..20`).
 # - default_value (number): Default numeric value for new saves.
+# - vt (variable/global_variable): Variable type for map commands.
+# - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 cmm_initialize_list_numeric_field_item = {
 	if = {
-		limit = { NOT = { has_variable = $mod_id$__$setting_id$_item_$item$_field_$slot$ } }
-		set_variable = { name = $mod_id$__$setting_id$_item_$item$_field_$slot$ value = $default_value$ }
+		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ } } }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ value = $default_value$ }
+	}
+
+	set_local_variable = { name = cmm_tmp_fk value = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ }
+	if = {
+		limit = { $is_global$ >= 1 }
+		set_local_variable = { name = cmm_field_val value = "global_variable_map(cmm|local_var:cmm_tmp_fk)" }
+	}
+	else = {
+		set_local_variable = { name = cmm_field_val value = "variable_map(cmm|local_var:cmm_tmp_fk)" }
 	}
 
 	if = {
-		limit = { var:$mod_id$__$setting_id$_item_$item$_field_$slot$ < var:cmm_list_field_$slot$_min_$mod_id$__$setting_id$ }
-		set_variable = { name = $mod_id$__$setting_id$_item_$item$_field_$slot$ value = var:cmm_list_field_$slot$_min_$mod_id$__$setting_id$ }
+		limit = { local_var:cmm_field_val < var:cmm_list_field_$slot$_min_$mod_id$__$setting_id$ }
+		remove_from_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ value = var:cmm_list_field_$slot$_min_$mod_id$__$setting_id$ }
 	}
 
 	if = {
-		limit = { var:$mod_id$__$setting_id$_item_$item$_field_$slot$ > var:cmm_list_field_$slot$_max_$mod_id$__$setting_id$ }
-		set_variable = { name = $mod_id$__$setting_id$_item_$item$_field_$slot$ value = var:cmm_list_field_$slot$_max_$mod_id$__$setting_id$ }
+		limit = { local_var:cmm_field_val > var:cmm_list_field_$slot$_max_$mod_id$__$setting_id$ }
+		remove_from_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_item_$item$_f$slot$ value = var:cmm_list_field_$slot$_max_$mod_id$__$setting_id$ }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			exists = local_var:cmm_tmp_fk
+			exists = local_var:cmm_field_val
+		}
 	}
 }
 
@@ -636,6 +706,8 @@ cmm_initialize_list_numeric_field_item = {
 # - min_value (number): Lower clamp bound.
 # - max_value (number): Upper clamp bound.
 # - step_value (number): Increase/decrease step size.
+# - vt (variable/global_variable): Variable type for map commands.
+# - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 cmm_initialize_list_numeric_field_slot = {
 	set_variable = {
 		name = cmm_list_field_$slot$_type_$mod_id$__$setting_id$
@@ -660,83 +732,83 @@ cmm_initialize_list_numeric_field_slot = {
 
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 0 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 1 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 1 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 1 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 2 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 2 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 2 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 3 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 3 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 3 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 4 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 4 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 4 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 5 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 5 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 5 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 6 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 6 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 6 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 7 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 7 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 7 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 8 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 8 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 8 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 9 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 9 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 9 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 10 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 10 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 10 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 11 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 11 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 11 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 12 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 12 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 12 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 13 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 13 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 13 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 14 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 14 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 14 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 15 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 15 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 15 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 16 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 16 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 16 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 17 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 17 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 17 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 18 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 18 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 18 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 19 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 19 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 	if = {
 		limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 19 }
-		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 20 default_value = $default_value$ }
+		cmm_initialize_list_numeric_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 20 default_value = $default_value$ vt = $vt$ is_global = $is_global$ }
 	}
 }
 
@@ -749,9 +821,6 @@ cmm_suppress_list_setting_warnings = {
 	if = {
 		limit = {
 			always = no
-			exists = var:cmm_setting_is_global_$mod_id$__$setting_id$
-			exists = var:cmm_setting_is_slider_$mod_id$__$setting_id$
-			exists = var:cmm_setting_is_button_$mod_id$__$setting_id$
 			exists = var:cmm_setting_list_is_ordered_$mod_id$__$setting_id$
 			exists = var:cmm_setting_list_count_$mod_id$__$setting_id$
 			exists = var:cmm_setting_list_last_index_$mod_id$__$setting_id$

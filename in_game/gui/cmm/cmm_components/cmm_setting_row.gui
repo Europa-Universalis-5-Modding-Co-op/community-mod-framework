@@ -16,7 +16,7 @@
 	# - Player.MakeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName)) [list<flag>]: ordered item keys for list settings.
 	# Writes:
 	# - ExecuteConsoleCommand(...) [effect]: submits text settings through console-backed effect calls.
-	# - GetScriptedGui(Concatenate(Scope.GetFlagName, '_on_changed')).Execute(...) [effect]: applies shared post-change setting logic.
+	# - GetScriptedGui('cmm_auto_*').Execute(...) [effect]: applies setting changes via auto-apply scripted GUIs.
 	# - GetScriptedGui('CMM_MarkNumeric*').Execute(...) [effect]: stores pending numeric delta mode.
 	# - GetScriptedGui('CMM_MarkDropdownSelection_<index>').Execute(...) [effect]: stores pending dropdown selected index.
 	# - GetScriptedGui('CMM_MarkSliderSelection_<index>').Execute(...) [effect]: stores pending slider visual index.
@@ -50,7 +50,7 @@
 				checkbox_square_alt = {
 					visible = "[CMMSettingIsBool(Scope.GetFlagName)]"
 					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
-					onclick = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+					onclick = "[CMMExecuteAutoApply('cmm_auto_toggle_bool', Scope.GetFlagName)]"
 					checked = "[CMMIsSettingEnabled(Scope.GetFlagName)]"
 					tooltip_enabled = no
 				}
@@ -60,7 +60,7 @@
 					minimumsize = { 168 32 }
 					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 					text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_text')]"
-					onclick = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+					onclick = "[CMMExecuteAutoApply('cmm_auto_apply_button', Scope.GetFlagName)]"
 					tooltip_enabled = no
 				}
 
