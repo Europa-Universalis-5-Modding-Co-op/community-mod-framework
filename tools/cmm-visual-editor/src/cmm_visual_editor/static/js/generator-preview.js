@@ -7,13 +7,21 @@ const CMMGenerator = {
         const prefix = state.file_prefix || state.mod_id;
         const modId = state.mod_id;
         if (!modId) return {};
-        return {
+        const hasLists = (state.tabs || []).some(t =>
+            (t.groups || []).some(g =>
+                (g.settings || []).some(s => s.setting_type === 'list')
+            )
+        );
+        const files = {
             [`in_game/common/on_action/${prefix}_cmm_on_action.txt`]: this.genOnAction(prefix),
             [`in_game/common/scripted_effects/${prefix}_cmm_effects.txt`]: this.genEffects(state),
-            [`in_game/common/scripted_guis/${prefix}_cmm_scripted_gui.txt`]: this.genScriptedGuis(state),
             [`main_menu/localization/english/${prefix}_cmm_l_english.yml`]: this.genLocalization(state),
             ['.metadata/metadata.json']: this.genMetadata(state),
         };
+        if (hasLists) {
+            files[`in_game/common/scripted_guis/${prefix}_cmm_scripted_gui.txt`] = this.genScriptedGuis(state);
+        }
+        return files;
     },
 
     genOnAction(prefix) {
@@ -327,9 +335,6 @@ ${prefix}_on_callback = {
                     blocks.push(this._genListCallback(qid));
                 }
             }
-        }
-        if (!blocks.length) {
-            return '# No scripted GUIs needed \u2014 all setting types use auto-apply.\n';
         }
         return blocks.join('\n\n') + '\n';
     },

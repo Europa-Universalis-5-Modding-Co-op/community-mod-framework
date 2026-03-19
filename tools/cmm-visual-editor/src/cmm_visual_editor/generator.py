@@ -16,7 +16,12 @@ def generate_all(model: ModModel) -> dict:
     if mod_id:
         files[f"in_game/common/on_action/{prefix}_cmm_on_action.txt"] = _gen_on_action(prefix)
         files[f"in_game/common/scripted_effects/{prefix}_cmm_effects.txt"] = _gen_effects(model)
-        files[f"in_game/common/scripted_guis/{prefix}_cmm_scripted_gui.txt"] = _gen_scripted_guis(model)
+        has_lists = any(
+            s.setting_type == "list"
+            for t in model.tabs for g in t.groups for s in g.settings
+        )
+        if has_lists:
+            files[f"in_game/common/scripted_guis/{prefix}_cmm_scripted_gui.txt"] = _gen_scripted_guis(model)
         files[f"main_menu/localization/english/{prefix}_cmm_l_english.yml"] = _gen_localization(model)
         files[".metadata/metadata.json"] = _gen_metadata(model)
 
@@ -391,8 +396,6 @@ def _gen_scripted_guis(model: ModModel) -> str:
                 qid = f"{mod_id}__{setting.setting_id}"
                 blocks.append(_gen_list_callback_block(qid))
 
-    if not blocks:
-        return "# No scripted GUIs needed — all setting types use auto-apply.\n"
     return "\n\n".join(blocks) + "\n"
 
 
