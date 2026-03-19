@@ -134,6 +134,19 @@ if = {
 }
 </syntaxhighlight>
 
+== cmf_suppress Effect ==
+CMF provides a <code>cmf_suppress</code> effect to silence "used but never set" and "set but never used" engine warnings. Call inside an <code>always = no</code> dead branch:
+
+<syntaxhighlight lang="text">
+if = {
+	limit = { always = no }
+	cmf_suppress = { v = my_variable }
+	cmf_suppress = { v = my_flag_name }
+}
+</syntaxhighlight>
+
+Group multiple calls in one <code>if</code> block so the engine evaluates <code>always = no</code> only once.
+
 == Community Mod Toolkit (CMT) ==
 The [[Community Mod Toolkit]] is a companion set of development tools for EU5 mod authors. It provides a structured mod template and automation tools that work together through shared configuration:
 
