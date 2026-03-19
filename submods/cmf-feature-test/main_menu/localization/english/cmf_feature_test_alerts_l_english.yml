@@ -1,0 +1,48 @@
+﻿l_english:
+ cmf_alert_ft_orange: "cmf_alert_ft_orange"
+ cmf_alert_ft_orange_color: "orange"
+ cmf_alert_ft_orange_icon: "@advance!"
+ cmf_alert_ft_orange_name: "Test Alert (Orange)"
+ cmf_alert_ft_orange_tooltip: "Orange alert. Left-click fires callback and re-adds. Right-click dismisses."
+
+ cmf_alert_ft_blue: "cmf_alert_ft_blue"
+ cmf_alert_ft_blue_color: "blue"
+ cmf_alert_ft_blue_icon: "@legitimacy!"
+ cmf_alert_ft_blue_name: "Test Alert (Blue)"
+ cmf_alert_ft_blue_tooltip: "Blue alert. Toggled by primary action bar button."
+
+ cmf_alert_ft_black: "cmf_alert_ft_black"
+ cmf_alert_ft_black_color: "black"
+ cmf_alert_ft_black_icon: "@corruption!"
+ cmf_alert_ft_black_name: "Test Alert (Black)"
+ cmf_alert_ft_black_tooltip: "Black alert."
+
+ cmf_alert_ft_red_war: "cmf_alert_ft_red_war"
+ cmf_alert_ft_red_war_color: "red_war"
+ cmf_alert_ft_red_war_icon: "@army_maintenance!"
+ cmf_alert_ft_red_war_name: "Test Alert (Red War)"
+ cmf_alert_ft_red_war_tooltip: "Red war alert."
+
+ cmf_alert_ft_red: "cmf_alert_ft_red"
+ cmf_alert_ft_red_color: "red"
+ cmf_alert_ft_red_icon: "@overextension!"
+ cmf_alert_ft_red_name: "Test Alert (Red)"
+ cmf_alert_ft_red_tooltip: "Red alert."
+
+ cmf_alert_ft_yellow: "cmf_alert_ft_yellow"
+ cmf_alert_ft_yellow_color: "yellow"
+ cmf_alert_ft_yellow_icon: "@gold_income!"
+ cmf_alert_ft_yellow_name: "Test Alert (Yellow)"
+ cmf_alert_ft_yellow_tooltip: "Yellow alert."
+
+ cmf_alert_ft_green: "cmf_alert_ft_green"
+ cmf_alert_ft_green_color: "green"
+ cmf_alert_ft_green_icon: "@stability!"
+ cmf_alert_ft_green_name: "Test Alert (Green)"
+ cmf_alert_ft_green_tooltip: "Green alert. Toggled by secondary action bar button."
+
+ cmf_alert_ft_purple: "cmf_alert_ft_purple"
+ cmf_alert_ft_purple_color: "purple"
+ cmf_alert_ft_purple_icon: "@prestige!"
+ cmf_alert_ft_purple_name: "Test Alert (Purple)"
+ cmf_alert_ft_purple_tooltip: "Purple alert."

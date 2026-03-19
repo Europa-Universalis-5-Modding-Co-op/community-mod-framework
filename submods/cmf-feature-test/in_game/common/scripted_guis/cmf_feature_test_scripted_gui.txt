@@ -1,0 +1,10 @@
+﻿# Action bar element scripted GUI — tests is_shown and is_valid.
+cmf_action_bar_ft_primary = {
+	scope = country
+	is_shown = {
+		always = yes
+	}
+	is_valid = {
+		"variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1
+	}
+}

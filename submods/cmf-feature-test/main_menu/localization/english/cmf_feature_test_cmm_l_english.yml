@@ -1,0 +1,165 @@
+﻿l_english:
+ # Mod
+ cmf_feature_test_name: "CMF Feature Test"
+ cmf_feature_test_desc: "Comprehensive feature test for all CMF/CMM APIs."
+
+ # ── Tabs ──
+ cmf_feature_test__settings_name: "Settings"
+ cmf_feature_test__settings_desc: "Country-scoped setting types."
+ cmf_feature_test__global_name: "Global"
+ cmf_feature_test__global_desc: "Global setting variants."
+ cmf_feature_test__lists_name: "Lists"
+ cmf_feature_test__lists_desc: "Country-scoped settings lists."
+ cmf_feature_test__global_lists_name: "Global Lists"
+ cmf_feature_test__global_lists_desc: "Global settings list variants."
+
+ # ── Groups ──
+ cmf_feature_test__toggles_name: "Toggles"
+ cmf_feature_test__toggles_desc: "Bool and button settings."
+ cmf_feature_test__values_name: "Values"
+ cmf_feature_test__values_desc: "Numeric, slider, and dropdown settings."
+ cmf_feature_test__text_settings_name: "Text"
+ cmf_feature_test__text_settings_desc: "Text input settings."
+ cmf_feature_test__conditional_name: "Conditional"
+ cmf_feature_test__conditional_desc: "Settings with conditional visibility."
+ cmf_feature_test__global_toggles_name: "Toggles"
+ cmf_feature_test__global_toggles_desc: "Global bool and button settings."
+ cmf_feature_test__global_values_name: "Values"
+ cmf_feature_test__global_values_desc: "Global numeric, slider, and dropdown settings."
+
+ # ── Settings Tab: Toggles ──
+ cmf_feature_test__toggle_name: "Toggle"
+ cmf_feature_test__toggle_desc: "Bool setting. Controls conditional visibility and alert toggling."
+ cmf_feature_test__button_name: "Action Button"
+ cmf_feature_test__button_text: "Run"
+ cmf_feature_test__button_desc: "Button setting. Fires callback on click."
+
+ # ── Settings Tab: Values ──
+ cmf_feature_test__numeric_name: "Numeric"
+ cmf_feature_test__numeric_desc: "Numeric setting. Range 0-100, step 5."
+ cmf_feature_test__slider_name: "Slider"
+ cmf_feature_test__slider_desc: "Slider setting. Range 0-100, step 10."
+ cmf_feature_test__dropdown_name: "Dropdown"
+ cmf_feature_test__dropdown_desc: "Dropdown setting with 5 options and option aliases."
+ cmf_feature_test__dropdown_option_1_name: "Option Alpha"
+ cmf_feature_test__dropdown_option_1_desc: "First dropdown option."
+ cmf_feature_test__dropdown_option_2_name: "Option Beta"
+ cmf_feature_test__dropdown_option_2_desc: "Second dropdown option."
+ cmf_feature_test__dropdown_option_3_name: "Option Gamma"
+ cmf_feature_test__dropdown_option_3_desc: "Third dropdown option."
+ cmf_feature_test__dropdown_option_4_name: "Option Delta"
+ cmf_feature_test__dropdown_option_4_desc: "Fourth dropdown option."
+ cmf_feature_test__dropdown_option_5_name: "Option Epsilon"
+ cmf_feature_test__dropdown_option_5_desc: "Fifth dropdown option."
+
+ # ── Settings Tab: Text ──
+ cmf_feature_test__text_plain_name: "Plain Text"
+ cmf_feature_test__text_plain_desc: "Text setting without quote wrapping. Changes country name."
+ cmf_feature_test__text_quoted_name: "Quoted Text"
+ cmf_feature_test__text_quoted_desc: "Text setting with quote wrapping. Changes country name."
+
+ # ── Settings Tab: Conditional ──
+ cmf_feature_test__conditional_numeric_name: "Conditional Numeric"
+ cmf_feature_test__conditional_numeric_desc: "Only visible when Toggle is enabled."
+
+ # ── Global Tab: Toggles ──
+ cmf_feature_test__global_toggle_name: "Global Toggle"
+ cmf_feature_test__global_toggle_desc: "Global bool setting. Host-only in multiplayer."
+ cmf_feature_test__global_button_name: "Global Action Button"
+ cmf_feature_test__global_button_text: "Execute"
+ cmf_feature_test__global_button_desc: "Global button setting. Host-only in multiplayer."
+
+ # ── Global Tab: Values ──
+ cmf_feature_test__global_numeric_name: "Global Numeric"
+ cmf_feature_test__global_numeric_desc: "Global numeric setting. Range 0-100, step 5."
+ cmf_feature_test__global_slider_name: "Global Slider"
+ cmf_feature_test__global_slider_desc: "Global slider setting. Range 0-100, step 10."
+ cmf_feature_test__global_dropdown_name: "Global Dropdown"
+ cmf_feature_test__global_dropdown_desc: "Global dropdown setting with 5 options."
+ cmf_feature_test__global_dropdown_option_1_name: "Option Alpha"
+ cmf_feature_test__global_dropdown_option_2_name: "Option Beta"
+ cmf_feature_test__global_dropdown_option_3_name: "Option Gamma"
+ cmf_feature_test__global_dropdown_option_4_name: "Option Delta"
+ cmf_feature_test__global_dropdown_option_5_name: "Option Epsilon"
+
+ # ── Lists Tab: Ordered List ──
+ cmf_feature_test__ordered_list_name: "Ordered List"
+ cmf_feature_test__ordered_list_desc: "Static ordered list with 5 items, 3 fields, and item values."
+ cmf_feature_test__ordered_list_item_column_name: "Item"
+ cmf_feature_test__ordered_list_i1_name: "Alpha"
+ cmf_feature_test__ordered_list_i2_name: "Beta"
+ cmf_feature_test__ordered_list_i3_name: "Gamma"
+ cmf_feature_test__ordered_list_i4_name: "Delta"
+ cmf_feature_test__ordered_list_i5_name: "Epsilon"
+ cmf_feature_test__ordered_list__enabled_name: "Enabled"
+ cmf_feature_test__ordered_list__mode_name: "Mode"
+ cmf_feature_test__ordered_list__weight_name: "Weight"
+ cmf_feature_test__ordered_list__mode_option_1_name: "Low"
+ cmf_feature_test__ordered_list__mode_option_2_name: "Standard"
+ cmf_feature_test__ordered_list__mode_option_3_name: "High"
+
+ # ── Lists Tab: Unordered List ──
+ cmf_feature_test__unordered_list_name: "Unordered List"
+ cmf_feature_test__unordered_list_desc: "Static unordered list with 3 items and 3 fields."
+ cmf_feature_test__unordered_list_item_column_name: "Item"
+ cmf_feature_test__unordered_list_i1_name: "Static A"
+ cmf_feature_test__unordered_list_i2_name: "Static B"
+ cmf_feature_test__unordered_list_i3_name: "Static C"
+ cmf_feature_test__unordered_list__enabled_name: "Enabled"
+ cmf_feature_test__unordered_list__mode_name: "Mode"
+ cmf_feature_test__unordered_list__weight_name: "Weight"
+ cmf_feature_test__unordered_list__mode_option_1_name: "Low"
+ cmf_feature_test__unordered_list__mode_option_2_name: "Standard"
+ cmf_feature_test__unordered_list__mode_option_3_name: "High"
+
+ # ── Lists Tab: Dynamic List ──
+ cmf_feature_test__dynamic_list_name: "Dynamic List"
+ cmf_feature_test__dynamic_list_desc: "Dynamic item-by-item list with 4 items and 2 fields."
+ cmf_feature_test__dynamic_list_item_column_name: "Item"
+ cmf_feature_test__dynamic_list_i1_name: "Dynamic A"
+ cmf_feature_test__dynamic_list_i2_name: "Dynamic B"
+ cmf_feature_test__dynamic_list_i3_name: "Dynamic C"
+ cmf_feature_test__dynamic_list_i4_name: "Dynamic D"
+ cmf_feature_test__dynamic_list__active_name: "Active"
+ cmf_feature_test__dynamic_list__priority_name: "Priority"
+
+ # ── Lists Tab: From-List ──
+ cmf_feature_test__from_list_name: "From-List"
+ cmf_feature_test__from_list_desc: "Unordered list built from a country variable list."
+ cmf_feature_test__from_list_item_column_name: "Item"
+ cmf_feature_test__from_list_i1_name: "From Alpha"
+ cmf_feature_test__from_list_i2_name: "From Beta"
+ cmf_feature_test__from_list_i3_name: "From Gamma"
+ cmf_feature_test__from_list__active_name: "Active"
+ cmf_feature_test__from_list__priority_name: "Priority"
+
+ # ── Global Lists Tab: Global Ordered List ──
+ cmf_feature_test__global_ordered_list_name: "Global Ordered List"
+ cmf_feature_test__global_ordered_list_desc: "Global static ordered list with 4 items and 2 fields."
+ cmf_feature_test__global_ordered_list_item_column_name: "Item"
+ cmf_feature_test__global_ordered_list_i1_name: "Global A"
+ cmf_feature_test__global_ordered_list_i2_name: "Global B"
+ cmf_feature_test__global_ordered_list_i3_name: "Global C"
+ cmf_feature_test__global_ordered_list_i4_name: "Global D"
+ cmf_feature_test__global_ordered_list__active_name: "Active"
+ cmf_feature_test__global_ordered_list__priority_name: "Priority"
+
+ # ── Global Lists Tab: Global Dynamic List ──
+ cmf_feature_test__global_dynamic_list_name: "Global Dynamic List"
+ cmf_feature_test__global_dynamic_list_desc: "Global dynamic item-by-item list with 3 items and 2 fields."
+ cmf_feature_test__global_dynamic_list_item_column_name: "Item"
+ cmf_feature_test__global_dynamic_list_i1_name: "Global Dyn A"
+ cmf_feature_test__global_dynamic_list_i2_name: "Global Dyn B"
+ cmf_feature_test__global_dynamic_list_i3_name: "Global Dyn C"
+ cmf_feature_test__global_dynamic_list__active_name: "Active"
+ cmf_feature_test__global_dynamic_list__priority_name: "Priority"
+
+ # ── Global Lists Tab: Global From-List ──
+ cmf_feature_test__global_from_list_name: "Global From-List"
+ cmf_feature_test__global_from_list_desc: "Global unordered list built from a global variable list."
+ cmf_feature_test__global_from_list_item_column_name: "Item"
+ cmf_feature_test__global_from_list_i1_name: "Global From Alpha"
+ cmf_feature_test__global_from_list_i2_name: "Global From Beta"
+ cmf_feature_test__global_from_list_i3_name: "Global From Gamma"
+ cmf_feature_test__global_from_list__active_name: "Active"
+ cmf_feature_test__global_from_list__priority_name: "Priority"
