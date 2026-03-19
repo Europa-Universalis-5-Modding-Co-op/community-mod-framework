@@ -7,20 +7,14 @@
 # - group_id (key): Owner group id within mod.
 # - default_value (1/0): Initial value; applied when the setting does not exist yet.
 cmm_register_bool_setting = {
-	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 1 }
-	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = 0 }
-	add_to_variable_map = { name = cmm_default key = flag:$mod_id$__$setting_id$ value = $default_value$ }
-
-	cmm_register_setting_metadata = {
+	cmm_register_bool_setting_internal = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		tab_id = $tab_id$
 		group_id = $group_id$
-	}
-
-	if = {
-		limit = { NOT = { is_key_in_variable_map = { name = cmm target = flag:$mod_id$__$setting_id$ } } }
-		add_to_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $default_value$ }
+		default_value = $default_value$
+		is_global = 0
+		vt = variable
 	}
 }
 
@@ -33,8 +27,23 @@ cmm_register_bool_setting = {
 # - group_id (key): Owner group id within mod.
 # - default_value (1/0): Initial global value when missing.
 cmm_register_global_bool_setting = {
+	cmm_register_bool_setting_internal = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		tab_id = $tab_id$
+		group_id = $group_id$
+		default_value = $default_value$
+		is_global = 1
+		vt = global_variable
+	}
+}
+
+# Internal: shared registration for bool settings.
+# Scope: country
+# Args: mod_id (key), setting_id (key), tab_id (key), group_id (key), default_value (1/0), is_global (1/0), vt (variable/global_variable)
+cmm_register_bool_setting_internal = {
 	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 1 }
-	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = 1 }
+	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = $is_global$ }
 	add_to_variable_map = { name = cmm_default key = flag:$mod_id$__$setting_id$ value = $default_value$ }
 
 	cmm_register_setting_metadata = {
@@ -45,8 +54,8 @@ cmm_register_global_bool_setting = {
 	}
 
 	if = {
-		limit = { NOT = { is_key_in_global_variable_map = { name = cmm target = flag:$mod_id$__$setting_id$ } } }
-		add_to_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $default_value$ }
+		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$ } } }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $default_value$ }
 	}
 }
 
@@ -58,26 +67,10 @@ cmm_toggle_bool_setting = {
 	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
 	if = {
 		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
-		if = {
-			limit = { "global_variable_map(cmm|local_var:cmm_tmp_flag)" >= 1 }
-			remove_from_global_variable_map = { name = cmm key = flag:$setting$ }
-			add_to_global_variable_map = { name = cmm key = flag:$setting$ value = 0 }
-		}
-		else = {
-			remove_from_global_variable_map = { name = cmm key = flag:$setting$ }
-			add_to_global_variable_map = { name = cmm key = flag:$setting$ value = 1 }
-		}
+		cmm_toggle_bool_setting_branch = { setting = $setting$ vt = global_variable vm = global_variable_map }
 	}
 	else = {
-		if = {
-			limit = { "variable_map(cmm|local_var:cmm_tmp_flag)" >= 1 }
-			remove_from_variable_map = { name = cmm key = flag:$setting$ }
-			add_to_variable_map = { name = cmm key = flag:$setting$ value = 0 }
-		}
-		else = {
-			remove_from_variable_map = { name = cmm key = flag:$setting$ }
-			add_to_variable_map = { name = cmm key = flag:$setting$ value = 1 }
-		}
+		cmm_toggle_bool_setting_branch = { setting = $setting$ vt = variable vm = variable_map }
 	}
 
 	# Benign warning suppression
@@ -86,5 +79,20 @@ cmm_toggle_bool_setting = {
 			always = no
 			exists = local_var:cmm_tmp_flag
 		}
+	}
+}
+
+# Internal: toggle a bool setting value using the appropriate variable type.
+# Scope: country
+# Args: setting (key), vt (variable/global_variable), vm (variable_map/global_variable_map)
+cmm_toggle_bool_setting_branch = {
+	if = {
+		limit = { "$vm$(cmm|local_var:cmm_tmp_flag)" >= 1 }
+		remove_from_$vt$_map = { name = cmm key = flag:$setting$ }
+		add_to_$vt$_map = { name = cmm key = flag:$setting$ value = 0 }
+	}
+	else = {
+		remove_from_$vt$_map = { name = cmm key = flag:$setting$ }
+		add_to_$vt$_map = { name = cmm key = flag:$setting$ value = 1 }
 	}
 }

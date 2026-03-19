@@ -8,56 +8,10 @@
 # - default_index (number): Initial selected option ordinal (`1..option_count`).
 # - option_count (number): Number of options (`>= 1`; numbered `1..option_count`).
 cmm_register_dropdown_setting = {
-	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 2 }
-	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = 0 }
-	add_to_variable_map = { name = cmm_default key = flag:$mod_id$__$setting_id$ value = $default_index$ }
-
-	set_variable = { name = cmm_tmp_dd_count value = $option_count$ }
-	if = {
-		limit = { var:cmm_tmp_dd_count < 1 }
-		set_variable = { name = cmm_tmp_dd_count value = 1 }
-	}
-	add_to_variable_map = { name = cmm_dropdown_count key = flag:$mod_id$__$setting_id$ value = var:cmm_tmp_dd_count }
-	add_to_variable_map = { name = cmm_dropdown_last_index key = flag:$mod_id$__$setting_id$ value = var:cmm_tmp_dd_count }
-	remove_variable = cmm_tmp_dd_count
-
-	cmm_register_setting_metadata = {
-		mod_id = $mod_id$
-		setting_id = $setting_id$
-		tab_id = $tab_id$
-		group_id = $group_id$
-	}
-
-	if = {
-		limit = { NOT = { is_key_in_variable_map = { name = cmm target = flag:$mod_id$__$setting_id$ } } }
-		add_to_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $default_index$ }
-	}
-
-	set_local_variable = { name = cmm_tmp_flag value = flag:$mod_id$__$setting_id$ }
-	set_local_variable = { name = cmm_tmp_val value = "variable_map(cmm|local_var:cmm_tmp_flag)" }
-	set_local_variable = { name = cmm_tmp_last value = "variable_map(cmm_dropdown_last_index|local_var:cmm_tmp_flag)" }
-
-	if = {
-		limit = { local_var:cmm_tmp_val < 1 }
-		remove_from_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
-		add_to_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = 1 }
-	}
-
-	if = {
-		limit = { local_var:cmm_tmp_val > local_var:cmm_tmp_last }
-		remove_from_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
-		add_to_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = local_var:cmm_tmp_last }
-	}
-
-	# Benign warning suppression
-	if = {
-		limit = {
-			always = no
-			exists = var:cmm_tmp_dd_count
-			exists = local_var:cmm_tmp_flag
-			exists = local_var:cmm_tmp_val
-			exists = local_var:cmm_tmp_last
-		}
+	cmm_register_dropdown_setting_internal = {
+		mod_id = $mod_id$ setting_id = $setting_id$ tab_id = $tab_id$ group_id = $group_id$
+		default_index = $default_index$ option_count = $option_count$
+		is_global = 0 vt = variable vm = variable_map
 	}
 }
 
@@ -71,8 +25,21 @@ cmm_register_dropdown_setting = {
 # - default_index (number): Initial global selected option ordinal (`1..option_count`).
 # - option_count (number): Number of options (`>= 1`; numbered `1..option_count`).
 cmm_register_global_dropdown_setting = {
+	cmm_register_dropdown_setting_internal = {
+		mod_id = $mod_id$ setting_id = $setting_id$ tab_id = $tab_id$ group_id = $group_id$
+		default_index = $default_index$ option_count = $option_count$
+		is_global = 1 vt = global_variable vm = global_variable_map
+	}
+}
+
+# Register shared dropdown-setting metadata and storage for a mod (idempotent by mod_id + setting_id).
+# Scope: country
+# Args: mod_id (key), setting_id (key), tab_id (key), group_id (key), default_index (number),
+#   option_count (number), is_global (1/0), vt (variable/global_variable),
+#   vm (variable_map/global_variable_map)
+cmm_register_dropdown_setting_internal = {
 	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 2 }
-	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = 1 }
+	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = $is_global$ }
 	add_to_variable_map = { name = cmm_default key = flag:$mod_id$__$setting_id$ value = $default_index$ }
 
 	set_variable = { name = cmm_tmp_dd_count value = $option_count$ }
@@ -92,24 +59,24 @@ cmm_register_global_dropdown_setting = {
 	}
 
 	if = {
-		limit = { NOT = { is_key_in_global_variable_map = { name = cmm target = flag:$mod_id$__$setting_id$ } } }
-		add_to_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $default_index$ }
+		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$ } } }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $default_index$ }
 	}
 
 	set_local_variable = { name = cmm_tmp_flag value = flag:$mod_id$__$setting_id$ }
-	set_local_variable = { name = cmm_tmp_val value = "global_variable_map(cmm|local_var:cmm_tmp_flag)" }
+	set_local_variable = { name = cmm_tmp_val value = "$vm$(cmm|local_var:cmm_tmp_flag)" }
 	set_local_variable = { name = cmm_tmp_last value = "variable_map(cmm_dropdown_last_index|local_var:cmm_tmp_flag)" }
 
 	if = {
 		limit = { local_var:cmm_tmp_val < 1 }
-		remove_from_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
-		add_to_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = 1 }
+		remove_from_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = 1 }
 	}
 
 	if = {
 		limit = { local_var:cmm_tmp_val > local_var:cmm_tmp_last }
-		remove_from_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
-		add_to_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = local_var:cmm_tmp_last }
+		remove_from_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = local_var:cmm_tmp_last }
 	}
 
 	# Benign warning suppression
