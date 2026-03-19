@@ -308,17 +308,7 @@ cmm_sync_setting_alias = {
 	alias = your_mod_toggle
 }
 </syntaxhighlight>
-Access: <code>var:your_mod_toggle</code>
-
-=== List Field Alias ===
-<syntaxhighlight lang="text">
-cmm_sync_list_field_alias = {
-	setting = your_mod__your_list
-	field = your_mod__your_list_i1_f1
-	alias = your_mod_enabled_1
-}
-</syntaxhighlight>
-One call per concrete item number.
+Access: <code>var:your_mod_toggle</code>. Also works for list fields — pass the field map key (e.g. <code>your_mod__your_list_i1_f1</code>) as <code>setting</code>.
 
 === Dropdown Option Alias ===
 Sets a variable when that option is selected, removes it otherwise:
