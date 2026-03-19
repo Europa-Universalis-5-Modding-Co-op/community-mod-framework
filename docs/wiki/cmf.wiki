@@ -50,7 +50,7 @@ l_english:
 |-
 | <code>cmf_remove_action_bar_element = { element = <root_key> }</code> || Remove a button
 |-
-| <code>cmf_register_action_bar_element_gui = { element = <root_key> }</code> || Enable optional Scripted GUI for <code>is_shown</code>/<code>is_valid</code>
+| <code>cmf_register_scripted_gui = { element = <root_key> }</code> || Enable optional Scripted GUI for <code>is_shown</code>/<code>is_valid</code>
 |}
 
 Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the element flag).

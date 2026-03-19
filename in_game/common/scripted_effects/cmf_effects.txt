@@ -1,0 +1,13 @@
+﻿# Register that an element has a scripted GUI for is_shown/is_valid.
+# Works for action bar elements, and can be extended to alerts or CMM settings in the future.
+# The scripted GUI must be named the same as the element.
+# Scope: country
+# Args: element (flag)
+cmf_register_scripted_gui = {
+    hidden_effect = {
+        every_country = {
+            remove_from_variable_map = { name = cmf_has_sgui key = flag:$element$ }
+            add_to_variable_map = { name = cmf_has_sgui key = flag:$element$ value = 1 }
+        }
+    }
+}

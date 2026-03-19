@@ -85,7 +85,7 @@ types cmf_action_bar {
                 widget = {
                     size = { 34 34 }
                     visible = "[Or(
-                        Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_ab_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
+                        Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
                         GetScriptedGui(Scope.GetFlagName).IsShown(GuiScope
                             .SetRoot(GetPlayer.MakeScope)
                             .End
@@ -568,7 +568,7 @@ types cmf_action_bar {
         size = { 34 34 }
         block "visibility" {
             enabled = "[Or(
-                Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_ab_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
+                Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
                 GetScriptedGui(Scope.GetFlagName).IsValid(GuiScope
                     .SetRoot(GetPlayer.MakeScope)
                     .End
@@ -634,14 +634,14 @@ types cmf_action_bar {
         using = layoutpolicy_expanding
         block "visibility" {
             visible = "[Or(
-                Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_ab_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
+                Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
                 GetScriptedGui(Scope.GetFlagName).IsShown(GuiScope
                     .SetRoot(GetPlayer.MakeScope)
                     .End
                 )
             )]"
             enabled = "[Or(
-                Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_ab_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
+                Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
                 GetScriptedGui(Scope.GetFlagName).IsValid(GuiScope
                     .SetRoot(GetPlayer.MakeScope)
                     .End

@@ -12,7 +12,7 @@ cmf_add_action_bar_element = {
                 name = cmf_action_bar_active_elements
                 target = flag:$element$
             }
-            add_to_variable_map = { name = cmf_ab_has_sgui key = flag:$element$ value = 0 }
+            add_to_variable_map = { name = cmf_has_sgui key = flag:$element$ value = 0 }
         }
     }
 
@@ -22,7 +22,7 @@ cmf_add_action_bar_element = {
             always = no
             exists = flag:$element$
             exists = global_var:cmf_action_bar_elements
-            has_variable_map = cmf_ab_has_sgui
+            has_variable_map = cmf_has_sgui
         }
     }
 }
@@ -41,20 +41,7 @@ cmf_remove_action_bar_element = {
                 name = cmf_action_bar_active_elements
                 target = flag:$element$
             }
-            remove_from_variable_map = { name = cmf_ab_has_sgui key = flag:$element$ }
-        }
-    }
-}
-
-# Register that an action bar element has a scripted GUI for is_shown/is_valid.
-# Call after cmf_add_action_bar_element. The scripted GUI must be named the same as the element.
-# Scope: country
-# Args: element (flag)
-cmf_register_action_bar_element_gui = {
-    hidden_effect = {
-        every_country = {
-            remove_from_variable_map = { name = cmf_ab_has_sgui key = flag:$element$ }
-            add_to_variable_map = { name = cmf_ab_has_sgui key = flag:$element$ value = 1 }
+            remove_from_variable_map = { name = cmf_has_sgui key = flag:$element$ }
         }
     }
 }
