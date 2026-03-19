@@ -64,6 +64,22 @@ macro = {
     replace_with = "CMMValueEqualsOne(CMMMetadataValue(Prefix, Key))"
 }
 
+# Args: MapName (string), SettingKey (string)
+# Returns: value
+macro = {
+    description = "Read a value from a country-scoped variable map by setting key"
+    definition = "CMMMapValue(MapName,SettingKey)"
+    replace_with = "Player.MakeScope.GetVariableFromVariableMap(MapName, MakeScopeFlag(SettingKey)).GetValue"
+}
+
+# Args: MapName (string), SettingKey (string)
+# Returns: int32
+macro = {
+    description = "Read an integer from a country-scoped variable map by setting key"
+    definition = "CMMMapInt(MapName,SettingKey)"
+    replace_with = "FixedPointToInt(CMMMapValue(MapName, SettingKey))"
+}
+
 # Args: Key (string), Suffix (string)
 # Returns: string
 macro = {
@@ -120,6 +136,22 @@ macro = {
     replace_with = "CMMOptionLabel(OptionRoot, CMMWidgetIndexToOrdinal(Index))"
 }
 
+# Args: OptionRoot (string), Index (int32)
+# Returns: string
+macro = {
+    description = "Localized dropdown option description"
+    definition = "CMMOptionDesc(OptionRoot,Index)"
+    replace_with = "Localize(Concatenate(Concatenate(OptionRoot, '_option_'), Concatenate(ToString_int32(Index), '_desc')))"
+}
+
+# Args: OptionRoot (string), Index (int32)
+# Returns: boolean
+macro = {
+    description = "True when a dropdown option description exists"
+    definition = "CMMHasOptionDesc(OptionRoot,Index)"
+    replace_with = "Not(EqualTo_string(CMMOptionDesc(OptionRoot, Index), Concatenate(Concatenate(OptionRoot, '_option_'), Concatenate(ToString_int32(Index), '_desc'))))"
+}
+
 # Args: Name (string)
 # Returns: boolean
 macro = {
@@ -150,6 +182,14 @@ macro = {
     description = "Execute one scripted GUI callback resolved from prefix plus suffix"
     definition = "CMMExecuteGuiSuffix(Prefix,Suffix)"
     replace_with = "CMMExecuteGui(Concatenate(Prefix, Suffix))"
+}
+
+# Args: GuiName (string), SettingKey (string)
+# Returns: none
+macro = {
+    description = "Execute an auto-apply scripted GUI with setting scope"
+    definition = "CMMExecuteAutoApply(GuiName,SettingKey)"
+    replace_with = "GetScriptedGui(GuiName).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('setting', MakeScopeFlag(SettingKey)).End)"
 }
 
 # Args: Name (string)

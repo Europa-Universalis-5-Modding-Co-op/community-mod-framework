@@ -8,16 +8,17 @@
 # - character_limit (number): Maximum editbox character count; clamped to at least `1`.
 # - quote_text (1/0): Wrap submitted text in double quotes before passing it to the effect callback.
 cmm_register_text_setting = {
-	set_variable = { name = cmm_setting_is_global_$mod_id$__$setting_id$ value = 0 }
-	set_variable = { name = cmm_setting_is_slider_$mod_id$__$setting_id$ value = 0 }
-	set_variable = { name = cmm_setting_is_button_$mod_id$__$setting_id$ value = 0 }
-	set_variable = { name = cmm_setting_text_character_limit_$mod_id$__$setting_id$ value = $character_limit$ }
-	set_variable = { name = cmm_setting_text_quote_$mod_id$__$setting_id$ value = $quote_text$ }
+	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 5 }
+	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = 0 }
+	add_to_variable_map = { name = cmm_text_quote key = flag:$mod_id$__$setting_id$ value = $quote_text$ }
 
+	set_variable = { name = cmm_tmp_char_limit value = $character_limit$ }
 	if = {
-		limit = { var:cmm_setting_text_character_limit_$mod_id$__$setting_id$ < 1 }
-		set_variable = { name = cmm_setting_text_character_limit_$mod_id$__$setting_id$ value = 1 }
+		limit = { var:cmm_tmp_char_limit < 1 }
+		set_variable = { name = cmm_tmp_char_limit value = 1 }
 	}
+	add_to_variable_map = { name = cmm_text_char_limit key = flag:$mod_id$__$setting_id$ value = var:cmm_tmp_char_limit }
+	remove_variable = cmm_tmp_char_limit
 
 	cmm_register_setting_metadata = {
 		mod_id = $mod_id$
@@ -30,11 +31,7 @@ cmm_register_text_setting = {
 	if = {
 		limit = {
 			always = no
-			exists = var:cmm_setting_is_global_$mod_id$__$setting_id$
-			exists = var:cmm_setting_is_slider_$mod_id$__$setting_id$
-			exists = var:cmm_setting_is_button_$mod_id$__$setting_id$
-			exists = var:cmm_setting_text_character_limit_$mod_id$__$setting_id$
-			exists = var:cmm_setting_text_quote_$mod_id$__$setting_id$
+			exists = var:cmm_tmp_char_limit
 		}
 	}
 }

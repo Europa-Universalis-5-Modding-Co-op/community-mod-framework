@@ -16,7 +16,12 @@ def generate_all(model: ModModel) -> dict:
     if mod_id:
         files[f"in_game/common/on_action/{prefix}_cmm_on_action.txt"] = _gen_on_action(prefix)
         files[f"in_game/common/scripted_effects/{prefix}_cmm_effects.txt"] = _gen_effects(model)
-        files[f"in_game/common/scripted_guis/{prefix}_cmm_scripted_gui.txt"] = _gen_scripted_guis(model)
+        has_lists = any(
+            s.setting_type == "list"
+            for t in model.tabs for g in t.groups for s in g.settings
+        )
+        if has_lists:
+            files[f"in_game/common/scripted_guis/{prefix}_cmm_scripted_gui.txt"] = _gen_scripted_guis(model)
         files[f"main_menu/localization/english/{prefix}_cmm_l_english.yml"] = _gen_localization(model)
         files[".metadata/metadata.json"] = _gen_metadata(model)
 
@@ -25,8 +30,8 @@ def generate_all(model: ModModel) -> dict:
 
 def _gen_on_action(prefix: str) -> str:
     return (
-        f"# Hook this mod into CMM shared registration on_action.\n"
-        f"cmm_on_mod_registration = {{\n"
+        f"# Hook this mod into CMF shared registration on_action.\n"
+        f"cmf_on_mod_registration = {{\n"
         f"\ton_actions = {{\n"
         f"\t\t{prefix}_on_register_mod\n"
         f"\t}}\n"
@@ -35,6 +40,19 @@ def _gen_on_action(prefix: str) -> str:
         f"{prefix}_on_register_mod = {{\n"
         f"\teffect = {{\n"
         f"\t\t{prefix}_register_mod = yes\n"
+        f"\t}}\n"
+        f"}}\n"
+        f"\n"
+        f"# Unified callback hook for setting changes, alert clicks, action bar clicks.\n"
+        f"cmf_on_callback = {{\n"
+        f"\ton_actions = {{\n"
+        f"\t\t{prefix}_on_callback\n"
+        f"\t}}\n"
+        f"}}\n"
+        f"\n"
+        f"{prefix}_on_callback = {{\n"
+        f"\teffect = {{\n"
+        f"\t\t{prefix}_handle_callback = yes\n"
         f"\t}}\n"
         f"}}\n"
     )
@@ -65,6 +83,9 @@ def _gen_effects(model: ModModel) -> str:
                 if setting.setting_type == "list" and setting.fields:
                     _emit_list_iteration_boilerplate(lines, mod_id, setting)
 
+    # Callback handler effect
+    _emit_callback_handler(lines, model)
+
     # Text setting effects (text callbacks are scripted effects, not scripted GUIs)
     for tab in model.tabs:
         for group in tab.groups:
@@ -88,6 +109,60 @@ def _gen_effects(model: ModModel) -> str:
                     lines.append("}")
 
     return "\n".join(lines) + "\n"
+
+
+def _emit_callback_handler(lines: list, model: ModModel):
+    """Generate {prefix}_handle_callback effect with alias sync and custom effect cases."""
+    prefix = model.file_prefix or model.mod_id
+    mod_id = model.mod_id
+
+    # Collect cases: settings with aliases or custom effects (non-text, non-list)
+    cases = []
+    for tab in model.tabs:
+        for group in tab.groups:
+            for setting in group.settings:
+                st = setting.setting_type
+                if st in ("text", "list"):
+                    continue
+                qid = f"{mod_id}__{setting.setting_id}"
+                alias = _setting_has_alias(setting, mod_id) if st != "button" else ""
+                option_aliases = _get_option_aliases(setting) if st == "dropdown" else []
+                custom_effect = setting.on_changed_effect or ""
+                if alias or option_aliases or custom_effect:
+                    cases.append((qid, st, alias, option_aliases, custom_effect))
+
+    lines.append("")
+    lines.append(f"# Callback handler for cmf_on_callback.")
+    lines.append(f"# var:cmf_callback is the flag of the setting, alert, or action bar element that was interacted with.")
+    lines.append(f"# Scope: country")
+    lines.append(f"{prefix}_handle_callback = {{")
+    lines.append(f"\tswitch = {{")
+    lines.append(f"\t\ttrigger = var:cmf_callback")
+
+    if cases:
+        for qid, st, alias, option_aliases, custom_effect in cases:
+            lines.append(f"\t\tflag:{qid} = {{")
+            if alias:
+                lines.append(f"\t\t\tcmm_sync_setting_alias = {{")
+                lines.append(f"\t\t\t\tsetting = {qid}")
+                lines.append(f"\t\t\t\talias = {alias}")
+                lines.append(f"\t\t\t}}")
+            for idx, opt_alias in option_aliases:
+                lines.append(f"\t\t\tcmm_sync_dropdown_option_alias = {{")
+                lines.append(f"\t\t\t\tsetting = {qid}")
+                lines.append(f"\t\t\t\tindex = {idx}")
+                lines.append(f"\t\t\t\talias = {opt_alias}")
+                lines.append(f"\t\t\t}}")
+            if custom_effect:
+                lines.append(f"\t\t\t{custom_effect} = yes")
+            lines.append(f"\t\t}}")
+    else:
+        lines.append(f"\t\t# flag:{mod_id}__my_setting = {{")
+        lines.append(f"\t\t# \t# Custom side effects when this setting changes")
+        lines.append(f"\t\t# }}")
+
+    lines.append(f"\t}}")
+    lines.append(f"}}")
 
 
 def _get_option_aliases(setting: Setting) -> list:
@@ -129,7 +204,7 @@ def _field_has_alias(field: ListField, mod_id: str, setting_id: str, slot: int) 
     alias = (field.alias or "").strip()
     if not alias:
         return ""
-    default_key = f"{mod_id}__{setting_id}_item_$i$_field_{slot}"
+    default_key = f"{mod_id}__{setting_id}_i$i$_f{slot}"
     if alias == default_key:
         return ""
     return alias
@@ -142,9 +217,10 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
 
     if st == "list":
         list_source = setting.list_source or ""
+        global_prefix = "global_" if is_global else ""
         if list_source:
             # From-list registration
-            lines.append(f"\tcmm_register_settings_list_from_list = {{")
+            lines.append(f"\tcmm_register_{global_prefix}settings_list_from_list = {{")
             lines.append(f"\t\tmod_id = {mod_id}")
             lines.append(f"\t\tsetting_id = {setting.setting_id}")
             lines.append(f"\t\ttab_id = {tab_id}")
@@ -153,7 +229,7 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
             lines.append(f"\t}}")
         else:
             # Static list registration
-            lines.append(f"\tcmm_register_settings_list = {{")
+            lines.append(f"\tcmm_register_{global_prefix}settings_list = {{")
             lines.append(f"\t\tmod_id = {mod_id}")
             lines.append(f"\t\tsetting_id = {setting.setting_id}")
             lines.append(f"\t\ttab_id = {tab_id}")
@@ -187,10 +263,10 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
                     lines.append("")
                     lines.append(f"\t# Sync list field alias: {field.field_id}")
                     for i in range(1, item_count + 1):
-                        resolved_field = f"{qid}_item_{i}_field_{slot}"
+                        resolved_field = f"{qid}_i{i}_f{slot}"
                         resolved_alias = alias.replace("$i$", str(i))
-                        lines.append(f"\tcmm_sync_list_field_alias = {{")
-                        lines.append(f"\t\tfield = {resolved_field}")
+                        lines.append(f"\tcmm_sync_setting_alias = {{")
+                        lines.append(f"\t\tsetting = {resolved_field}")
                         lines.append(f"\t\talias = {resolved_alias}")
                         lines.append(f"\t}}")
         return
@@ -205,7 +281,7 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
         "text": "text_setting",
     }
     func_name = prefix_map.get(st, st)
-    if is_global and st not in ("text", "list"):
+    if is_global and st != "text":
         reg_func = f"cmm_register_global_{func_name}"
     else:
         reg_func = f"cmm_register_{func_name}"
@@ -304,7 +380,7 @@ def _emit_list_iteration_boilerplate(lines: list, mod_id: str, setting: Setting)
         slot = fi + 1
         ftype = field.field_type
         fid = field.field_id or f"field_{slot}"
-        lines.append(f"#     # var:$setting$_item_$i$_field_{slot}  ({fid}, {ftype})")
+        lines.append(f'#     # "variable_map(cmm|flag:$setting$_i$i$_f{slot})"  ({fid}, {ftype})')
     lines.append(f"# }}")
 
 
@@ -315,74 +391,23 @@ def _gen_scripted_guis(model: ModModel) -> str:
     for tab in model.tabs:
         for group in tab.groups:
             for setting in group.settings:
-                if setting.setting_type == "text":
-                    continue  # text uses scripted effects
+                if setting.setting_type != "list":
+                    continue  # only list settings need _on_changed scripted GUIs
                 qid = f"{mod_id}__{setting.setting_id}"
-                blocks.append(_gen_callback_block(setting, qid, mod_id))
+                blocks.append(_gen_list_callback_block(qid))
 
     return "\n\n".join(blocks) + "\n"
 
 
-def _gen_callback_block(setting: Setting, qid: str, mod_id: str = "") -> str:
-    st = setting.setting_type
-    is_global = setting.is_global
-    var_prefix = "global_var" if is_global else "var"
-
+def _gen_list_callback_block(qid: str) -> str:
     lines = []
     lines.append(f"{qid}_on_changed = {{")
     lines.append(f"\tscope = country")
     lines.append(f"")
     lines.append(f"\teffect = {{")
-
-    if st == "bool":
-        lines.append(f"\t\tcmm_toggle_bool_setting = {{")
-        lines.append(f"\t\t\tsetting = {qid}")
-        lines.append(f"\t\t}}")
-    elif st == "button":
-        pass  # no CMM helper for buttons
-    elif st == "numeric":
-        lines.append(f"\t\tcmm_apply_numeric_change = {{")
-        lines.append(f"\t\t\tsetting = {qid}")
-        lines.append(f"\t\t}}")
-    elif st == "slider":
-        lines.append(f"\t\tcmm_apply_slider_change = {{")
-        lines.append(f"\t\t\tsetting = {qid}")
-        lines.append(f"\t\t}}")
-    elif st == "dropdown":
-        lines.append(f"\t\tcmm_apply_dropdown_change = {{")
-        lines.append(f"\t\t\tsetting = {qid}")
-        lines.append(f"\t\t}}")
-    elif st == "list":
-        lines.append(f"\t\tcmm_apply_list_change = {{")
-        lines.append(f"\t\t\tsetting = {qid}")
-        lines.append(f"\t\t}}")
-
-    # Alias sync after value change
-    alias = _setting_has_alias(setting, mod_id) if mod_id else ""
-    if alias and st not in ("button", "list"):
-        lines.append(f"")
-        lines.append(f"\t\tcmm_sync_setting_alias = {{")
-        lines.append(f"\t\t\tsetting = {qid}")
-        lines.append(f"\t\t\talias = {alias}")
-        lines.append(f"\t\t}}")
-
-    # Dropdown option alias sync after value change
-    if st == "dropdown":
-        _emit_option_alias_sync(lines, setting, qid, indent="\t\t")
-
-    # Custom effect call
-    if setting.on_changed_effect:
-        lines.append(f"")
-        if not setting.no_pass_value and st not in ("button", "list"):
-            param = setting.pass_value_param or "value"
-            lines.append(f"\t\t{setting.on_changed_effect} = {{")
-            lines.append(f"\t\t\t{param} = {var_prefix}:{qid}")
-            lines.append(f"\t\t}}")
-        else:
-            lines.append(f"\t\t{setting.on_changed_effect} = yes")
-    elif st == "button":
-        lines.append(f"\t\t# Button effect")
-
+    lines.append(f"\t\tcmm_apply_list_change = {{")
+    lines.append(f"\t\t\tsetting = {qid}")
+    lines.append(f"\t\t}}")
     lines.append(f"\t}}")
     lines.append(f"}}")
     return "\n".join(lines)
@@ -450,7 +475,7 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
         lines.append(f' {qid}_item_column_name: "{_esc(setting.item_column_name or "Item")}"')
         if not setting.list_source:
             for i, name in enumerate(setting.item_names or [], start=1):
-                lines.append(f' {qid}_item_{i}_name: "{_esc(name)}"')
+                lines.append(f' {qid}_i{i}_name: "{_esc(name)}"')
 
         for field in (setting.fields or []):
             fqid = f"{qid}__{field.field_id}"
@@ -547,17 +572,14 @@ def _merge_scripted_guis(generated: str, existing: str) -> str:
 
 
 def _merge_effects(generated: str, existing: str) -> str:
-    """Overwrite registration block, preserve existing text callbacks."""
-    existing_callbacks = _extract_named_blocks(existing, "_on_changed")
-    if not existing_callbacks:
-        return generated
-
+    """Overwrite registration block, preserve existing text callbacks and callback handler."""
     result = generated
-    for name, existing_block in existing_callbacks.items():
-        gen_blocks = _extract_named_blocks(result, "_on_changed")
-        if name in gen_blocks:
-            result = result.replace(gen_blocks[name], existing_block)
-
+    for suffix in ("_on_changed", "_handle_callback"):
+        existing_blocks = _extract_named_blocks(existing, suffix)
+        for name, existing_block in existing_blocks.items():
+            gen_blocks = _extract_named_blocks(result, suffix)
+            if name in gen_blocks:
+                result = result.replace(gen_blocks[name], existing_block)
     return result
 
 

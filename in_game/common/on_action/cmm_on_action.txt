@@ -17,7 +17,7 @@ cmm_register_all_human_countries = {
 			limit = { is_ai = no }
 			cmm_register_menu_settings = yes
 			trigger_event_silently = {
-				on_action = cmm_on_mod_registration
+				on_action = cmf_on_mod_registration
 			}
 		}
 	}
@@ -26,6 +26,15 @@ cmm_register_all_human_countries = {
 # Integration extension point.
 # Scope: country
 # Args: none
-cmm_on_mod_registration = {
+cmf_on_mod_registration = {
+	on_actions = { }
+}
+
+# Unified callback extension point. Fires after auto-apply updates a setting,
+# an alert is clicked, or an action bar button is clicked.
+# var:cmf_callback contains the flag key of the target (setting, alert, or element).
+# Scope: country
+# Args: none
+cmf_on_callback = {
 	on_actions = { }
 }

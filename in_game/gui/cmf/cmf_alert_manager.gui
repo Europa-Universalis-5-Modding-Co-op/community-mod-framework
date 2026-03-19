@@ -214,8 +214,9 @@ types "cmf_types" {
             click_type = left
             title = "ALERT_CTA_LEFT_CLICK"
             using = snd_UI_alert_openAndCycle
-            on_action = "[GetScriptedGui(Scope.GetFlagName).Execute(GuiScope
+            on_action = "[GetScriptedGui('cmf_auto_alert_clicked').Execute(GuiScope
                     .SetRoot(GetPlayer.MakeScope)
+                    .AddScope('alert', MakeScopeFlag(Scope.GetFlagName))
                     .End
                 )]"
             on_action = "[GetVariableSystem.Set('cmf_active_alert', Scope.GetFlagName)]"

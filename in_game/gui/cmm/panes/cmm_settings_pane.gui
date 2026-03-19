@@ -52,6 +52,20 @@
 				expand = {}
 			}
 		}
+
+		hbox = {
+			visible = "[CMMHasRegisteredMods]"
+			margin = { 0 8 }
+
+			expand = {}
+
+			button_regular = {
+				minimumsize = { 168 32 }
+				onclick = "[CMMExecuteGui('CMM_ResetToDefaults')]"
+				text = "CMM_RESET_TO_DEFAULTS"
+				tooltip = "CMM_RESET_TO_DEFAULTS_TOOLTIP"
+			}
+		}
 	}
 
 	# Tab bar for the selected mod.

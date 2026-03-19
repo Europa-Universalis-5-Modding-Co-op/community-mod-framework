@@ -37,7 +37,7 @@ macro = {
 macro = {
     description = "True when one list setting shows row move controls"
     definition = "CMMListSettingIsOrdered(SettingKey)"
-    replace_with = "CMMMetadataEqualsOne('cmm_setting_list_is_ordered_', SettingKey)"
+    replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_list_is_ordered', SettingKey))"
 }
 
 # Args: ItemKey (string)
@@ -85,7 +85,7 @@ macro = {
 macro = {
     description = "List item field variable accessor"
     definition = "CMMListItemFieldVar(ItemKey,SlotKey)"
-    replace_with = "CMMVar(Concatenate(ItemKey, Concatenate('_field_', SlotKey)))"
+    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey))))"
 }
 
 # Args: ItemKey (string), SlotKey (string)

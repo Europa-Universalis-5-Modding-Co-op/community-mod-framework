@@ -26,34 +26,12 @@ curl.exe -sL https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-o
 </syntaxhighlight>
 
 = Basic Setup =
-Register your mod by creating a registration effect and hooking it into CMM's <code>on_action</code>:
-
-<syntaxhighlight lang="text">
-# in_game/common/scripted_effects/your_effects.txt
-your_mod_register = {
-	# Register settings here
-}
-
-# in_game/common/on_action/your_on_action.txt
-cmm_on_mod_registration = {
-	on_actions = {
-		your_mod_on_register
-	}
-}
-
-your_mod_on_register = {
-	effect = {
-		your_mod_register = yes
-	}
-}
-</syntaxhighlight>
-
-Then create a Scripted GUI file and a localization file for your settings.
+Follow the [[Community Mod Framework#Basic Setup|CMF Basic Setup]] to create your registration effect and <code>cmf_on_mod_registration</code> on_action hook. Then create a localization file for your settings.
 
 = Settings =
-Each setting type has its own registration effect and parameters. All settings require a Scripted GUI callback named <code>[mod_id]__[setting_id]_on_changed</code> (except text, which uses a scripted effect callback).
+Most settings work automatically — just register them and CMM handles the UI and value storage. Only text and settings list require callbacks. All other types use auto-apply and work out of the box.
 
-All types except text and settings list have global variants (<code>cmm_register_global_*</code>) that store values in <code>global_var:</code> instead of <code>var:</code> and are host-editable in multiplayer.
+All types except text have global variants (<code>cmm_register_global_*</code>) that store values in global variable maps and are host-editable in multiplayer.
 
 == Toggle ==
 [[File:CMM_Toggle.png|thumb|right|A CMM toggle.]]
@@ -66,17 +44,7 @@ cmm_register_bool_setting = {
 	default_value = 0           # 0 = Disabled, 1 = Enabled
 }
 </syntaxhighlight>
-<syntaxhighlight lang="text">
-your_mod__your_toggle_on_changed = {
-	scope = country
-	effect = {
-		cmm_toggle_bool_setting = {
-			setting = your_mod__your_toggle
-		}
-	}
-}
-</syntaxhighlight>
-Value: <code>var:your_mod__your_toggle</code> — <code>0</code> (disabled) or <code>1</code> (enabled).
+Value: <code>"variable_map(cmm|flag:your_mod__your_toggle)"</code> — <code>0</code> (disabled) or <code>1</code> (enabled).
 
 == Dropdown ==
 [[File:CMM_Dropdown.png|thumb|right|A CMM dropdown.]]
@@ -90,17 +58,7 @@ cmm_register_dropdown_setting = {
 	option_count = 3   # Total number of options
 }
 </syntaxhighlight>
-<syntaxhighlight lang="text">
-your_mod__your_dropdown_on_changed = {
-	scope = country
-	effect = {
-		cmm_apply_dropdown_change = {
-			setting = your_mod__your_dropdown
-		}
-	}
-}
-</syntaxhighlight>
-Value: <code>var:your_mod__your_dropdown</code> — selected option ordinal (starting from 1).
+Value: <code>"variable_map(cmm|flag:your_mod__your_dropdown)"</code> — selected option ordinal (starting from 1). Options support optional <code>_option_[N]_desc</code> tooltip localization keys.
 
 == Button ==
 [[File:CMM_Button.png|thumb|right|A CMM button.]]
@@ -112,15 +70,7 @@ cmm_register_button_setting = {
 	group_id = general_toggles
 }
 </syntaxhighlight>
-<syntaxhighlight lang="text">
-your_mod__your_button_on_changed = {
-	scope = country
-	effect = {
-		# Your custom effect here
-	}
-}
-</syntaxhighlight>
-No stored value — the callback fires once when clicked.
+No stored value — hook into <code>cmf_on_callback</code> to run an effect when clicked.
 
 == Numeric ==
 [[File:CMM_Numeric.png|thumb|right|A CMM numeric stepper.]]
@@ -136,17 +86,7 @@ cmm_register_numeric_setting = {
 	step_value = 1    # Ctrl+click = 5x step, Shift+click = jump to min/max
 }
 </syntaxhighlight>
-<syntaxhighlight lang="text">
-your_mod__your_numeric_on_changed = {
-	scope = country
-	effect = {
-		cmm_apply_numeric_change = {
-			setting = your_mod__your_numeric
-		}
-	}
-}
-</syntaxhighlight>
-Value: <code>var:your_mod__your_numeric</code> — current numeric value.
+Value: <code>"variable_map(cmm|flag:your_mod__your_numeric)"</code> — current numeric value.
 
 == Slider ==
 [[File:CMM_Slider.png|thumb|right|A CMM slider.]]
@@ -162,17 +102,51 @@ cmm_register_slider_setting = {
 	step_value = 1
 }
 </syntaxhighlight>
+Value: <code>"variable_map(cmm|flag:your_mod__your_slider)"</code> — current slider value. Players can click to jump, double click to drag, or use the <code>-</code>/<code>+</code> buttons.
+
+= Reading Setting Values =
+
+== Basic Settings ==
+Setting values are stored in the <code>cmm</code> variable map, keyed by <code>flag:[mod_id]__[setting_id]</code>:
 <syntaxhighlight lang="text">
-your_mod__your_slider_on_changed = {
-	scope = country
+if = {
+	limit = {
+		"variable_map(cmm|flag:your_mod__your_toggle)" >= 1
+	}
+	# Effect when toggle is enabled
+}
+</syntaxhighlight>
+
+Global settings use <code>global_variable_map</code>:
+<syntaxhighlight lang="text">
+"global_variable_map(cmm|flag:your_mod__your_global_toggle)" >= 1
+</syntaxhighlight>
+
+When the setting key comes from a macro, use a local variable (macros don't expand inside quotes):
+<syntaxhighlight lang="text">
+set_local_variable = { name = cmm_tmp value = flag:$setting$ }
+"variable_map(cmm|local_var:cmm_tmp)" >= 1
+</syntaxhighlight>
+
+== Reacting to Changes ==
+CMF fires <code>cmf_on_callback</code> after any setting is changed through the UI, an alert is clicked, or an action bar button is clicked. Hook into it in an on_action file (<code>in_game/common/on_action/</code>), the same way as <code>cmf_on_mod_registration</code>:
+<syntaxhighlight lang="text">
+cmf_on_callback = {
+	on_actions = { your_mod_on_callback }
+}
+
+your_mod_on_callback = {
 	effect = {
-		cmm_apply_slider_change = {
-			setting = your_mod__your_slider
+		if = {
+			limit = { var:cmf_callback = flag:your_mod__your_toggle }
+			# Runs when your_toggle changes
 		}
 	}
 }
 </syntaxhighlight>
-Value: <code>var:your_mod__your_slider</code> — current slider value. Players can click to jump, double click to drag, or use the <code>-</code>/<code>+</code> buttons.
+<code>var:cmf_callback</code> is set to the flag of the element that was interacted with.
+
+= Advanced =
 
 == Text ==
 [[File:CMM_Text.png|thumb|right|A CMM text input.]]
@@ -197,7 +171,7 @@ your_mod__your_text_on_changed = {
 
 == Settings List ==
 [[File:CMM_Ordered_Settings_List.png|thumb|right|An ordered list setting in CMM.]]
-A table of items where each row has one or more field columns (toggles, dropdowns, or numeric steppers). Lists can optionally be ordered.
+A table of items where each row has one or more field columns (toggles, dropdowns, or numeric steppers). Lists can optionally be ordered. Settings lists require a Scripted GUI callback.
 
 === Registering a List ===
 <syntaxhighlight lang="text">
@@ -240,6 +214,7 @@ cmm_register_list_numeric_field = {
 </syntaxhighlight>
 
 === List Callback ===
+Settings lists require a Scripted GUI callback (unlike other types which use auto-apply):
 <syntaxhighlight lang="text">
 your_mod__your_list_on_changed = {
 	scope = country
@@ -252,10 +227,10 @@ your_mod__your_list_on_changed = {
 </syntaxhighlight>
 
 === How Ordering Works ===
-Each item has a stable identity number (1 through <code>item_count</code>) that never changes. Reordering only changes a separate display order list — field variables stay in place. <code>cmm_for_each_list_item</code> visits items in display order, but <code>$i$</code> resolves to the stable item number.
+Each item has a stable identity number (1 through <code>item_count</code>) that never changes. Reordering only changes a separate display order list — field values stay in place. <code>cmm_for_each_list_item</code> visits items in display order, but <code>$i$</code> resolves to the stable item number.
 
 === Reading List Values ===
-Field values are stored as: <code>var:[mod_id]__[setting_id]_item_[N]_field_[slot]</code>
+Field values are stored in the <code>cmm</code> variable map as: <code>"variable_map(cmm|flag:[mod_id]__[setting_id]_i[N]_f[slot])"</code>
 * <code>[N]</code> = stable item number (1 through <code>item_count</code>)
 * <code>[slot]</code> = field registration order (1 through 5)
 
@@ -268,9 +243,10 @@ cmm_for_each_list_item = {
 
 your_mod__your_list_each_item = {
 	# $i$ = resolved item number, respects player reordering
+	set_local_variable = { name = cmm_tmp value = flag:your_mod__your_list_i$i$_f1 }
 	if = {
 		limit = {
-			var:your_mod__your_list_item_$i$_field_1 = 1
+			"variable_map(cmm|local_var:cmm_tmp)" >= 1
 		}
 		# Item $i$ has field 1 (enabled) set to true
 	}
@@ -322,28 +298,19 @@ cmm_register_settings_list_from_list = {
 # Register fields after this
 </syntaxhighlight>
 
-= Setting Aliases =
-Assign an '''alias''' variable that mirrors a setting value. Add the sync call in both your registration effect and <code>_on_changed</code> callback.
+== Setting Aliases ==
+Assign an '''alias''' variable that mirrors a setting value. Add the sync call in your registration effect and <code>cmf_on_callback</code> callback.
 
-== Setting Alias ==
+=== Setting Alias ===
 <syntaxhighlight lang="text">
 cmm_sync_setting_alias = {
 	setting = your_mod__your_toggle
 	alias = your_mod_toggle
 }
 </syntaxhighlight>
-Access: <code>var:your_mod_toggle</code>
+Access: <code>var:your_mod_toggle</code>. Also works for list fields — pass the field map key (e.g. <code>your_mod__your_list_i1_f1</code>) as <code>setting</code>.
 
-== List Field Alias ==
-<syntaxhighlight lang="text">
-cmm_sync_list_field_alias = {
-	field = your_mod__your_list_item_1_field_1
-	alias = your_mod_enabled_1
-}
-</syntaxhighlight>
-One call per concrete item number.
-
-== Dropdown Option Alias ==
+=== Dropdown Option Alias ===
 Sets a variable when that option is selected, removes it otherwise:
 <syntaxhighlight lang="text">
 cmm_sync_dropdown_option_alias = {
@@ -353,25 +320,6 @@ cmm_sync_dropdown_option_alias = {
 }
 </syntaxhighlight>
 Check with: <code>has_variable = using_feature_b</code>
-
-= Conditional Visibility =
-Any Scripted GUI callback can include <code>is_shown</code> to conditionally hide a setting. Works for all types except text.
-
-<syntaxhighlight lang="text">
-your_mod__your_toggle_on_changed = {
-	scope = country
-
-	is_shown = {
-		var:your_mod__some_other_setting = 1
-	}
-
-	effect = {
-		cmm_toggle_bool_setting = {
-			setting = your_mod__your_toggle
-		}
-	}
-}
-</syntaxhighlight>
 
 = Localization =
 
@@ -388,11 +336,13 @@ your_mod__your_toggle_on_changed = {
 |-
 | <code>[mod_id]__[setting_id]_option_[N]_name</code> || Dropdown option label
 |-
+| <code>[mod_id]__[setting_id]_option_[N]_desc</code> || Dropdown option tooltip (optional)
+|-
 | <code>[mod_id]__[setting_id]_text</code> || Button text
 |-
 | <code>[mod_id]__[setting_id]_item_column_name</code> || List item column header
 |-
-| <code>[mod_id]__[setting_id]_item_[N]_name</code> || List row label
+| <code>[mod_id]__[setting_id]_i[N]_name</code> || List row label
 |-
 | <code>[mod_id]__[setting_id]__[field_id]_name</code> || List field column label
 |-

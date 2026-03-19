@@ -1,0 +1,55 @@
+﻿# Register action bar elements and alerts.
+# Scope: country
+cmf_example_register_mod = {
+	# Action bar elements (idempotent — safe from per-country hook)
+	cmf_add_action_bar_element = { element = cmf_action_bar_element_example }
+	cmf_add_action_bar_element = { element = cmf_action_bar_element_example_second }
+
+	# Alerts
+	cmf_add_alert = { alert = cmf_alert_example }
+	cmf_add_alert = { alert = cmf_alert_example_blue }
+	cmf_add_alert = { alert = cmf_alert_example_black }
+	cmf_add_alert = { alert = cmf_alert_example_red_war }
+	cmf_add_alert = { alert = cmf_alert_example_red }
+	cmf_add_alert = { alert = cmf_alert_example_orange }
+	cmf_add_alert = { alert = cmf_alert_example_yellow }
+	cmf_add_alert = { alert = cmf_alert_example_green }
+	cmf_add_alert = { alert = cmf_alert_example_purple }
+}
+
+# Callback handler for cmf_on_callback.
+# var:cmf_callback is the flag of the setting, alert, or action bar element that was interacted with.
+# Scope: country
+cmf_example_handle_callback = {
+	switch = {
+		trigger = var:cmf_callback
+		flag:cmm_example__example_toggle = {
+			# Toggle the example alert when the example toggle is changed.
+			if = {
+				limit = { "variable_map(cmm|flag:cmm_example__example_toggle)" >= 1 }
+				cmf_add_alert = { alert = cmf_alert_example }
+			}
+			else = {
+				cmf_remove_alert = { alert = cmf_alert_example }
+			}
+		}
+		# flag:cmm_example__example_button = {
+		# 	# A CMM button was clicked
+		# }
+		# flag:cmf_alert_example = {
+		# 	# An alert was clicked
+		# }
+		# flag:cmf_action_bar_element_example = {
+		# 	# An action bar button was clicked
+		# }
+		# fallback = {
+		# 	# No match
+		# }
+	}
+
+	# The above switch is equivalent to:
+	# if = {
+	# 	limit = { var:cmf_callback = flag:cmm_example__example_toggle }
+	# 	# ...
+	# }
+}

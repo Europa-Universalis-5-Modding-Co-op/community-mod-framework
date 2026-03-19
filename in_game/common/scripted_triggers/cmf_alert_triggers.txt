@@ -1,4 +1,4 @@
-﻿cmf_is_alert_shown = {
+﻿cmf_is_alert_active = {
     hidden_trigger = {
         is_target_in_variable_list = {
             name = cmf_active_alerts

@@ -1,5 +1,5 @@
-﻿# Hook this mod into CMM shared registration on_action.
-cmm_on_mod_registration = {
+﻿# Hook this mod into CMF shared registration on_action.
+cmf_on_mod_registration = {
 	on_actions = {
 		cmm_example2_on_register_mod
 	}

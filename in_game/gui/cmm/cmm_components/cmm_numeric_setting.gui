@@ -5,12 +5,12 @@
 	# - Scope.GetFlagName [string]: current setting key in root context (`<mod_id>__<setting_id>`).
 	# - GetGlobalVariable(Scope.GetFlagName).GetValue [value]: current numeric value for global settings.
 	# - Player.MakeScope.GetVariable(Scope.GetFlagName) [value]: current numeric value for local settings.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_min_', Scope.GetFlagName)) [value]: numeric minimum bound.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_max_', Scope.GetFlagName)) [value]: numeric maximum bound.
+	# - cmm_min variable map [value]: numeric minimum bound (keyed by setting flag).
+	# - cmm_max variable map [value]: numeric maximum bound (keyed by setting flag).
 	# Writes:
 	# - cmm_numeric_step_delta_to_apply [value]: pending accumulated numeric +/- step delta for `cmm_apply_numeric_change`.
 	# - cmm_numeric_change_to_apply [value]: pending numeric min/max jump mode for `cmm_apply_numeric_change`.
-	# - <mod_id>__<setting_id> callbacks [effect]: applies numeric changes via `_on_changed`.
+	# - GetScriptedGui('cmm_auto_apply_numeric').Execute(...) [effect]: applies setting changes via auto-apply scripted GUI.
 	type cmm_numeric_setting = hbox {
 		spacing = 6
 		minimumsize = { 120 0 }
@@ -47,11 +47,11 @@
 
 				click_modifiers = {
 					ondefault = "[CMMExecuteGui('CMM_MarkNumericDecrease')]"
-					ondefault = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+					ondefault = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
 					onctrl = "[CMMExecuteGui('CMM_MarkNumericDecrease5x')]"
-					onctrl = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+					onctrl = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
 					onshift = "[CMMExecuteGui('CMM_MarkNumericDecreaseToMin')]"
-					onshift = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+					onshift = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
 				}
 
 				tooltipwidget = {
@@ -101,7 +101,7 @@
 										textbox = {
 											using = text_single_template
 											align = left|nobaseline
-											raw_text = "[CMMMetadataValue('cmm_setting_min_', Scope.GetFlagName)] - [CMMMetadataValue('cmm_setting_max_', Scope.GetFlagName)]"
+											raw_text = "[CMMMapValue('cmm_min', Scope.GetFlagName)] - [CMMMapValue('cmm_max', Scope.GetFlagName)]"
 										}
 									}
 								}
@@ -146,11 +146,11 @@
 
 				click_modifiers = {
 					ondefault = "[CMMExecuteGui('CMM_MarkNumericIncrease')]"
-					ondefault = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+					ondefault = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
 					onctrl = "[CMMExecuteGui('CMM_MarkNumericIncrease5x')]"
-					onctrl = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+					onctrl = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
 					onshift = "[CMMExecuteGui('CMM_MarkNumericIncreaseToMax')]"
-					onshift = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+					onshift = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
 				}
 
 				tooltipwidget = {

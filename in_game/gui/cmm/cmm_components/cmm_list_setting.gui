@@ -7,7 +7,7 @@
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_list_is_ordered_', Scope.GetFlagName)) [value]: whether move controls are shown for the active list setting.
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for one item row.
 	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_name')) [flag]: localized item label for one item row.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_list_last_index_', <setting_key>)) [value]: last valid row position for move-button visibility.
+	# - cmm_list_last_index variable map [value]: last valid row position for move-button visibility (keyed by setting flag).
 	# - GetVariableSystem.Get('cmm_list_hover_index') [string]: cached hovered row position for nested field interactions.
 	# Writes:
 	# - GetVariableSystem.Set('cmm_list_hover_index', ...) [effect]: caches the currently hovered row position.
@@ -97,7 +97,7 @@
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for the row item.
 	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_name')) [flag]: localized row item label.
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_list_is_ordered_', <setting_key>)) [value]: whether move controls are shown for the owner setting.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_list_last_index_', <setting_key>)) [value]: last valid visible row index.
+	# - cmm_list_last_index variable map [value]: last valid visible row index (keyed by setting flag).
 	# Writes:
 	# - GetVariableSystem.Set('cmm_list_hover_index', ...) [effect]: caches the currently hovered row position.
 	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: stores the clicked row position.
@@ -188,7 +188,7 @@
 							size = { 24 24 }
 							parentanchor = center
 							widgetanchor = center
-							visible = "[Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, CMMMetadataInt('cmm_setting_list_last_index_', CMMListItemOwnerSettingKey(Scope.GetFlagName))))]"
+							visible = "[Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, CMMMapInt('cmm_list_last_index', CMMListItemOwnerSettingKey(Scope.GetFlagName))))]"
 							enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
 
 							action_tooltip = {

@@ -10,14 +10,14 @@
 	# Writes:
 	# - GetVariableSystem.Set('cmm_dropdown_hover_index') [string]: tracks hovered/active 0-based widget option index.
 	# - cmm_dropdown_index_to_apply [value]: pending selected 1-based dropdown ordinal for `cmm_apply_dropdown_change`.
-	# - <mod_id>__<setting_id> callbacks [effect]: applies selected ordinal to setting via `_on_changed`.
+	# - GetScriptedGui('cmm_auto_apply_dropdown').Execute(...) [effect]: applies setting changes via auto-apply scripted GUI.
 	type cmm_dropdown_setting = dropDown {
 		size = { 168 30 }
 		alwaystransparent = no
 		datamodel = "[DataModelRepeatedItem(CMMDropdownOptionCount(Scope.GetFlagName))]"
 		selectedindex = "[CMMDropdownSelectedIndex(Scope.GetFlagName)]"
 		onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', GetVariableSystem.Get('cmm_dropdown_hover_index'))]"
-		onselectionchanged = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+		onselectionchanged = "[CMMExecuteAutoApply('cmm_auto_apply_dropdown', Scope.GetFlagName)]"
 
 		active_item = {
 			widget = {
@@ -62,7 +62,9 @@
 				button_dropdown = {
 					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 					onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
-					tooltip_enabled = no
+					tooltip = "[CMMOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"
+					tooltip_enabled = "[CMMHasOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"
+					tooltipwidget = { BasicFunctionalTooltip = {} }
 				}
 
 				text_single = {

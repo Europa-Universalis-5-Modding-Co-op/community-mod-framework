@@ -5,7 +5,7 @@ CMM_RegisterCoreMod = {
 	effect = {
 		cmm_register_menu_settings = yes
 		trigger_event_silently = {
-			on_action = cmm_on_mod_registration
+			on_action = cmf_on_mod_registration
 		}
 	}
 }
@@ -18,19 +18,17 @@ CMM_SetHostAndRegisterCoreMod = {
 		cmm_mark_host_country = yes
 		cmm_register_menu_settings = yes
 		trigger_event_silently = {
-			on_action = cmm_on_mod_registration
+			on_action = cmf_on_mod_registration
 		}
 	}
 }
 
-# Toggle the core host-only-tools gate.
+# Reset all settings for all mods to their registered default values.
 # Scope: country
 # Args: none
-cmm_core__enable_host_only_tools_on_changed = {
+CMM_ResetToDefaults = {
 	scope = country
 	effect = {
-		cmm_toggle_bool_setting = {
-			setting = cmm_core__enable_host_only_tools
-		}
+		cmm_reset_to_defaults = yes
 	}
 }

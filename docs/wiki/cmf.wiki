@@ -17,6 +17,32 @@ The framework is designed to be invisible when no dependent mods are active.
 
 CMF is available on the [https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788 Steam Workshop]. For full documentation, see the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki GitHub wiki].
 
+= Basic Setup =
+Hook your mod into CMF's shared registration on_action. This runs for each human player on game start and when the mod menu opens. Not all features require it, but it is the standard entry point for registering CMM settings, action bar buttons, and alerts.
+
+<syntaxhighlight lang="text">
+# in_game/common/scripted_effects/your_effects.txt
+your_mod_register = {
+	# Register settings, action bar elements, alerts, etc.
+}
+
+# in_game/common/on_action/your_on_action.txt
+cmf_on_mod_registration = {
+	on_actions = {
+		your_mod_on_register
+	}
+}
+
+your_mod_on_register = {
+	effect = {
+		your_mod_register = yes
+		# You can optionally split registration into as many effects as you like:
+		# your_mod_register_cmm_settings = yes
+		# your_mod_register_action_bar = yes
+	}
+}
+</syntaxhighlight>
+
 = Features =
 
 == Community Mod Menu (CMM) ==
@@ -33,7 +59,7 @@ You can create your mod menu using the [https://github.com/Europa-Universalis-5-
 [[File:CMF_Action_Bar.png|thumb|300px|Custom action bar buttons.]]
 The Action Bar allows mods to add custom buttons to the game. Buttons can show/hide and enable/disable based on conditions, and execute custom effects when clicked.
 
-Each button requires localization keys and a Scripted GUI:
+Each button requires localization keys. A Scripted GUI is optional (only for dynamic visibility/enabled state):
 <syntaxhighlight lang="yaml">
 l_english:
  cmf_action_bar_element_example: "cmf_action_bar_element_example"
@@ -41,24 +67,6 @@ l_english:
  cmf_action_bar_element_example_icon: "@advance!"
  cmf_action_bar_element_example_name: "Some Button"
  cmf_action_bar_element_example_tooltip: "This is a custom Action Bar Button."
-</syntaxhighlight>
-
-<syntaxhighlight lang="text">
-cmf_action_bar_element_example = {
-	scope = country
-
-	is_valid = {
-		# Optional: button greyed out when false
-	}
-
-	is_shown = {
-		# Optional: button hidden when false
-	}
-
-	effect = {
-		# Runs when button is clicked
-	}
-}
 </syntaxhighlight>
 
 {| class="wikitable"
@@ -69,12 +77,14 @@ cmf_action_bar_element_example = {
 | <code>cmf_remove_action_bar_element = { element = <root_key> }</code> || Remove a button
 |}
 
+Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the element flag).
+
 == Custom Alerts ==
 [[File:CMF_Custom_Alerts.png|thumb|300px|Custom alerts in the alert bar.]]
 
 The Custom Alerts system allows mods to display dynamic, dismissable notifications in the in-game alert bar. Alerts are color-coded and interactive — players can click them to trigger an effect, or right-click to dismiss.
 
-Each alert requires localization keys and a Scripted GUI:
+Each alert requires localization keys. No Scripted GUI is needed:
 <syntaxhighlight lang="yaml">
 l_english:
  cmf_alert_example: "cmf_alert_example"
@@ -98,27 +108,19 @@ l_english:
 | <code><root_key>_tooltip</code> || Tooltip body text
 |}
 
-<syntaxhighlight lang="text">
-cmf_alert_example = {
-	scope = country
-
-	effect = {
-		# Runs when the player clicks the alert
-	}
-}
-</syntaxhighlight>
-
 All effects require '''country scope'''.
 
 {| class="wikitable"
 ! Effect !! Description
 |-
-| <code>cmf_show_alert = { alert = <root_key> }</code> || Show an alert
+| <code>cmf_add_alert = { alert = <root_key> }</code> || Add an alert
 |-
 | <code>cmf_remove_alert = { alert = <root_key> }</code> || Remove an alert
 |-
-| <code>cmf_is_alert_shown = { alert = <root_key> }</code> || Check if an alert is shown (trigger)
+| <code>cmf_is_alert_active = { alert = <root_key> }</code> || Check if an alert is active (trigger)
 |}
+
+Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
 
 == is_host Trigger ==
 CMF provides a trigger to check if the current country is controlled by the host player. Always evaluates to yes in singleplayer.
@@ -140,6 +142,33 @@ The [[Community Mod Toolkit]] is a companion set of development tools for EU5 mo
 * '''Translation Tool''' — Automated localization via DeepL or Gemini AI for all EU5-supported languages.
 
 See the [[Community Mod Toolkit|CMT page]] for details.
+
+= Additional Configuration =
+
+== Conditional Visibility ==
+Any CMM setting or CMF element (action bar buttons) can optionally use a Scripted GUI for dynamic visibility or enabled state. Create a Scripted GUI named after the element and register it with <code>cmf_register_scripted_gui</code>:
+
+<syntaxhighlight lang="text">
+# Register the GUI (call after adding the element):
+cmf_register_scripted_gui = { element = cmf_action_bar_element_example }
+</syntaxhighlight>
+
+<syntaxhighlight lang="text">
+# Action bar: is_shown controls visibility, is_valid controls enabled/greyed out
+cmf_action_bar_element_example = {
+	scope = country
+	is_shown = { ... }
+	is_valid = { ... }
+}
+
+# CMM setting: is_shown controls visibility (named [mod_id]__[setting_id]_on_changed)
+your_mod__your_toggle_on_changed = {
+	scope = country
+	is_shown = {
+		"variable_map(cmm|flag:your_mod__some_other_setting)" >= 1
+	}
+}
+</syntaxhighlight>
 
 = Links =
 * [https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788 Steam Workshop]

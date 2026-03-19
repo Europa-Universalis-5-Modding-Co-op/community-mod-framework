@@ -1,13 +1,28 @@
-﻿cmf_add_action_bar_element = {
+﻿# Register an action bar element globally and for all current countries.
+# Idempotent — safe to call multiple times (e.g. from per-country registration hooks).
+# Scope: country
+# Args: element (flag)
+cmf_add_action_bar_element = {
     hidden_effect = {
-        add_to_global_variable_list = {
-            name = cmf_action_bar_elements
-            target = flag:$element$
-        }
-        every_country = {
-            add_to_variable_list = {
-                name = cmf_action_bar_active_elements
+        if = {
+            limit = {
+                NOT = {
+                    is_target_in_global_variable_list = {
+                        name = cmf_action_bar_elements
+                        target = flag:$element$
+                    }
+                }
+            }
+            add_to_global_variable_list = {
+                name = cmf_action_bar_elements
                 target = flag:$element$
+            }
+            every_country = {
+                add_to_variable_list = {
+                    name = cmf_action_bar_active_elements
+                    target = flag:$element$
+                }
+                add_to_variable_map = { name = cmf_has_sgui key = flag:$element$ value = 0 }
             }
         }
     }
@@ -18,10 +33,14 @@
             always = no
             exists = flag:$element$
             exists = global_var:cmf_action_bar_elements
+            has_variable_map = cmf_has_sgui
         }
     }
 }
 
+# Remove an action bar element globally and from all countries.
+# Scope: country
+# Args: element (flag)
 cmf_remove_action_bar_element = {
     hidden_effect = {
         remove_list_global_variable = {
@@ -33,6 +52,7 @@ cmf_remove_action_bar_element = {
                 name = cmf_action_bar_active_elements
                 target = flag:$element$
             }
+            remove_from_variable_map = { name = cmf_has_sgui key = flag:$element$ }
         }
     }
 }

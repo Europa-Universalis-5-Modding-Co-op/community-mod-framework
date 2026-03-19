@@ -1,0 +1,33 @@
+﻿# Hook this mod into CMF shared registration on_action.
+cmf_on_mod_registration = {
+	on_actions = {
+		cmf_example_on_register_mod
+	}
+}
+
+cmf_example_on_register_mod = {
+	effect = {
+		# CMM settings
+		cmm_example_register_mod = yes
+
+		# Action bar elements and alerts (via a separate effect)
+		cmf_example_register_mod = yes
+
+		# You can also register inline:
+		# cmf_add_action_bar_element = { element = cmf_action_bar_element_example }
+		# cmf_add_alert = { alert = cmf_alert_example }
+	}
+}
+
+# Unified callback hook — handles setting changes, alert clicks, and action bar clicks.
+cmf_on_callback = {
+	on_actions = {
+		cmf_example_on_callback
+	}
+}
+
+cmf_example_on_callback = {
+	effect = {
+		cmf_example_handle_callback = yes
+	}
+}
