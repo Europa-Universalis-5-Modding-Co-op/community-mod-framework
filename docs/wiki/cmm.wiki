@@ -313,7 +313,8 @@ Access: <code>var:your_mod_toggle</code>
 === List Field Alias ===
 <syntaxhighlight lang="text">
 cmm_sync_list_field_alias = {
-	field = your_mod__your_list_item_1_field_1
+	setting = your_mod__your_list
+	field = your_mod__your_list_item_1_f1
 	alias = your_mod_enabled_1
 }
 </syntaxhighlight>
