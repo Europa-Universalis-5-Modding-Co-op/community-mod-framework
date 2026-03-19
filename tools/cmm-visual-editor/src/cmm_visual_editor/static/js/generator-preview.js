@@ -17,8 +17,8 @@ const CMMGenerator = {
     },
 
     genOnAction(prefix) {
-        return `# Hook this mod into CMM shared registration on_action.
-cmm_on_mod_registration = {
+        return `# Hook this mod into CMF shared registration on_action.
+cmf_on_mod_registration = {
 \ton_actions = {
 \t\t${prefix}_on_register_mod
 \t}
@@ -27,6 +27,19 @@ cmm_on_mod_registration = {
 ${prefix}_on_register_mod = {
 \teffect = {
 \t\t${prefix}_register_mod = yes
+\t}
+}
+
+# Unified callback hook for setting changes, alert clicks, action bar clicks.
+cmf_on_callback = {
+\ton_actions = {
+\t\t${prefix}_on_callback
+\t}
+}
+
+${prefix}_on_callback = {
+\teffect = {
+\t\t${prefix}_handle_callback = yes
 \t}
 }
 `;
@@ -61,6 +74,9 @@ ${prefix}_on_register_mod = {
                 }
             }
         }
+
+        // Callback handler effect
+        this._emitCallbackHandler(lines, state);
 
         // Text effects
         for (const tab of (state.tabs || [])) {
@@ -103,7 +119,7 @@ ${prefix}_on_register_mod = {
     _fieldHasAlias(field, modId, settingId, slot) {
         const alias = (field.alias || '').trim();
         if (!alias) return '';
-        const defaultKey = `${modId}__${settingId}_item_$i$_field_${slot}`;
+        const defaultKey = `${modId}__${settingId}_i$i$_f${slot}`;
         return alias === defaultKey ? '' : alias;
     },
 
@@ -133,8 +149,9 @@ ${prefix}_on_register_mod = {
         const qid = `${modId}__${setting.setting_id}`;
         if (st === 'list') {
             const listSource = setting.list_source || '';
+            const globalPrefix = setting.is_global ? 'global_' : '';
             if (listSource) {
-                lines.push(`\tcmm_register_settings_list_from_list = {`);
+                lines.push(`\tcmm_register_${globalPrefix}settings_list_from_list = {`);
                 lines.push(`\t\tmod_id = ${modId}`);
                 lines.push(`\t\tsetting_id = ${setting.setting_id}`);
                 lines.push(`\t\ttab_id = ${tabId}`);
@@ -142,7 +159,7 @@ ${prefix}_on_register_mod = {
                 lines.push(`\t\tlist = ${listSource}`);
                 lines.push(`\t}`);
             } else {
-                lines.push(`\tcmm_register_settings_list = {`);
+                lines.push(`\tcmm_register_${globalPrefix}settings_list = {`);
                 lines.push(`\t\tmod_id = ${modId}`);
                 lines.push(`\t\tsetting_id = ${setting.setting_id}`);
                 lines.push(`\t\ttab_id = ${tabId}`);
@@ -179,10 +196,10 @@ ${prefix}_on_register_mod = {
                         lines.push('');
                         lines.push(`\t# Sync list field alias: ${field.field_id}`);
                         for (let i = 1; i <= itemCount; i++) {
-                            const resolvedField = `${qid}_item_${i}_field_${slot}`;
+                            const resolvedField = `${qid}_i${i}_f${slot}`;
                             const resolvedAlias = alias.replace(/\$i\$/g, String(i));
-                            lines.push(`\tcmm_sync_list_field_alias = {`);
-                            lines.push(`\t\tfield = ${resolvedField}`);
+                            lines.push(`\tcmm_sync_setting_alias = {`);
+                            lines.push(`\t\tsetting = ${resolvedField}`);
                             lines.push(`\t\talias = ${resolvedAlias}`);
                             lines.push(`\t}`);
                         }
@@ -194,7 +211,7 @@ ${prefix}_on_register_mod = {
 
         const prefixMap = { bool: 'bool_setting', button: 'button_setting', numeric: 'numeric_setting', slider: 'slider_setting', dropdown: 'dropdown_setting', text: 'text_setting' };
         const funcName = prefixMap[st] || st;
-        const regFunc = (setting.is_global && !['text', 'list'].includes(st)) ? `cmm_register_global_${funcName}` : `cmm_register_${funcName}`;
+        const regFunc = (setting.is_global && st !== 'text') ? `cmm_register_global_${funcName}` : `cmm_register_${funcName}`;
 
         lines.push(`\t${regFunc} = {`);
         lines.push(`\t\tmod_id = ${modId}`);
@@ -294,7 +311,7 @@ ${prefix}_on_register_mod = {
             const slot = fi + 1;
             const ftype = fields[fi].field_type;
             const fid = fields[fi].field_id || `field_${slot}`;
-            lines.push(`#     # var:$setting$_item_$i$_field_${slot}  (${fid}, ${ftype})`);
+            lines.push(`#     # "variable_map(cmm|flag:$setting$_i$i$_f${slot})"  (${fid}, ${ftype})`);
         }
         lines.push(`# }`);
     },
@@ -305,81 +322,91 @@ ${prefix}_on_register_mod = {
         for (const tab of (state.tabs || [])) {
             for (const group of (tab.groups || [])) {
                 for (const setting of (group.settings || [])) {
-                    if (setting.setting_type === 'text') continue;
+                    if (setting.setting_type !== 'list') continue;
                     const qid = `${modId}__${setting.setting_id}`;
-                    blocks.push(this._genCallback(setting, qid, modId));
+                    blocks.push(this._genListCallback(qid));
                 }
             }
+        }
+        if (!blocks.length) {
+            return '# No scripted GUIs needed \u2014 all setting types use auto-apply.\n';
         }
         return blocks.join('\n\n') + '\n';
     },
 
-    _genCallback(setting, qid, modId) {
-        const st = setting.setting_type;
-        const varPrefix = setting.is_global ? 'global_var' : 'var';
+    _genListCallback(qid) {
         const lines = [];
         lines.push(`${qid}_on_changed = {`);
         lines.push(`\tscope = country`);
         lines.push('');
         lines.push(`\teffect = {`);
+        lines.push(`\t\tcmm_apply_list_change = {`);
+        lines.push(`\t\t\tsetting = ${qid}`);
+        lines.push(`\t\t}`);
+        lines.push(`\t}`);
+        lines.push(`}`);
+        return lines.join('\n');
+    },
 
-        if (st === 'bool') {
-            lines.push(`\t\tcmm_toggle_bool_setting = {`);
-            lines.push(`\t\t\tsetting = ${qid}`);
-            lines.push(`\t\t}`);
-        } else if (st === 'button') {
-            // no CMM helper for buttons
-        } else if (st === 'numeric') {
-            lines.push(`\t\tcmm_apply_numeric_change = {`);
-            lines.push(`\t\t\tsetting = ${qid}`);
-            lines.push(`\t\t}`);
-        } else if (st === 'slider') {
-            lines.push(`\t\tcmm_apply_slider_change = {`);
-            lines.push(`\t\t\tsetting = ${qid}`);
-            lines.push(`\t\t}`);
-        } else if (st === 'dropdown') {
-            lines.push(`\t\tcmm_apply_dropdown_change = {`);
-            lines.push(`\t\t\tsetting = ${qid}`);
-            lines.push(`\t\t}`);
-        } else if (st === 'list') {
-            lines.push(`\t\tcmm_apply_list_change = {`);
-            lines.push(`\t\t\tsetting = ${qid}`);
-            lines.push(`\t\t}`);
-        }
+    _emitCallbackHandler(lines, state) {
+        const prefix = state.file_prefix || state.mod_id;
+        const modId = state.mod_id;
 
-        // Alias sync after value change
-        const alias = modId ? this._settingHasAlias(setting, modId) : '';
-        if (alias && !['button', 'list'].includes(st)) {
-            lines.push('');
-            lines.push(`\t\tcmm_sync_setting_alias = {`);
-            lines.push(`\t\t\tsetting = ${qid}`);
-            lines.push(`\t\t\talias = ${alias}`);
-            lines.push(`\t\t}`);
-        }
-
-        // Dropdown option alias sync after value change
-        if (st === 'dropdown') {
-            this._emitOptionAliasSync(lines, setting, qid, '\t\t');
-        }
-
-        // Custom effect call
-        if (setting.on_changed_effect) {
-            lines.push('');
-            if (!setting.no_pass_value && !['button', 'list'].includes(st)) {
-                const param = setting.pass_value_param || 'value';
-                lines.push(`\t\t${setting.on_changed_effect} = {`);
-                lines.push(`\t\t\t${param} = ${varPrefix}:${qid}`);
-                lines.push(`\t\t}`);
-            } else {
-                lines.push(`\t\t${setting.on_changed_effect} = yes`);
+        // Collect cases: settings with aliases or custom effects (non-text, non-list)
+        const cases = [];
+        for (const tab of (state.tabs || [])) {
+            for (const group of (tab.groups || [])) {
+                for (const setting of (group.settings || [])) {
+                    const st = setting.setting_type;
+                    if (st === 'text' || st === 'list') continue;
+                    const qid = `${modId}__${setting.setting_id}`;
+                    const alias = st !== 'button' ? this._settingHasAlias(setting, modId) : '';
+                    const optionAliases = st === 'dropdown' ? this._getOptionAliases(setting) : [];
+                    const customEffect = setting.on_changed_effect || '';
+                    if (alias || optionAliases.length || customEffect) {
+                        cases.push({ qid, st, alias, optionAliases, customEffect });
+                    }
+                }
             }
-        } else if (st === 'button') {
-            lines.push(`\t\t# Button effect`);
+        }
+
+        lines.push('');
+        lines.push(`# Callback handler for cmf_on_callback.`);
+        lines.push(`# var:cmf_callback is the flag of the setting, alert, or action bar element that was interacted with.`);
+        lines.push(`# Scope: country`);
+        lines.push(`${prefix}_handle_callback = {`);
+        lines.push(`\tswitch = {`);
+        lines.push(`\t\ttrigger = var:cmf_callback`);
+
+        if (cases.length) {
+            for (const c of cases) {
+                lines.push(`\t\tflag:${c.qid} = {`);
+                if (c.alias) {
+                    lines.push(`\t\t\tcmm_sync_setting_alias = {`);
+                    lines.push(`\t\t\t\tsetting = ${c.qid}`);
+                    lines.push(`\t\t\t\talias = ${c.alias}`);
+                    lines.push(`\t\t\t}`);
+                }
+                for (const [idx, optAlias] of c.optionAliases) {
+                    lines.push(`\t\t\tcmm_sync_dropdown_option_alias = {`);
+                    lines.push(`\t\t\t\tsetting = ${c.qid}`);
+                    lines.push(`\t\t\t\tindex = ${idx}`);
+                    lines.push(`\t\t\t\talias = ${optAlias}`);
+                    lines.push(`\t\t\t}`);
+                }
+                if (c.customEffect) {
+                    lines.push(`\t\t\t${c.customEffect} = yes`);
+                }
+                lines.push(`\t\t}`);
+            }
+        } else {
+            lines.push(`\t\t# flag:${modId}__my_setting = {`);
+            lines.push(`\t\t# \t# Custom side effects when this setting changes`);
+            lines.push(`\t\t# }`);
         }
 
         lines.push(`\t}`);
         lines.push(`}`);
-        return lines.join('\n');
     },
 
     genLocalization(state) {
@@ -444,7 +471,7 @@ ${prefix}_on_register_mod = {
             lines.push(` ${qid}_item_column_name: "${this._esc(setting.item_column_name || 'Item')}"`);
             if (!setting.list_source) {
                 for (let i = 0; i < (setting.item_names || []).length; i++) {
-                    lines.push(` ${qid}_item_${i + 1}_name: "${this._esc(setting.item_names[i])}"`);
+                    lines.push(` ${qid}_i${i + 1}_name: "${this._esc(setting.item_names[i])}"`);
                 }
             }
             for (const field of (setting.fields || [])) {
