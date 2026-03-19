@@ -151,7 +151,7 @@ set_local_variable = { name = cmm_tmp value = flag:$setting$ }
 </syntaxhighlight>
 
 == Reacting to Changes ==
-CMF fires <code>cmf_on_callback</code> after any setting is changed through the UI, an alert is clicked, or an action bar button is clicked. Hook into it the same way as <code>cmm_on_mod_registration</code>:
+CMF fires <code>cmf_on_callback</code> after any setting is changed through the UI, an alert is clicked, or an action bar button is clicked. Hook into it in an on_action file (<code>in_game/common/on_action/</code>), the same way as <code>cmm_on_mod_registration</code>:
 <syntaxhighlight lang="text">
 cmf_on_callback = {
 	on_actions = { your_mod_on_callback }
