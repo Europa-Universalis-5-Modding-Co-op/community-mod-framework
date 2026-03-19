@@ -147,9 +147,53 @@ your_mod__your_text_on_changed = {
 }
 </syntaxhighlight>
 
+= Reading Setting Values =
+
+== Basic Settings ==
+Setting values are stored in the <code>cmm</code> variable map, keyed by <code>flag:[mod_id]__[setting_id]</code>:
+<syntaxhighlight lang="text">
+if = {
+	limit = {
+		"variable_map(cmm|flag:your_mod__your_toggle)" >= 1
+	}
+	# Effect when toggle is enabled
+}
+</syntaxhighlight>
+
+Global settings use <code>global_variable_map</code>:
+<syntaxhighlight lang="text">
+"global_variable_map(cmm|flag:your_mod__your_global_toggle)" >= 1
+</syntaxhighlight>
+
+When the setting key comes from a macro, use a local variable (macros don't expand inside quotes):
+<syntaxhighlight lang="text">
+set_local_variable = { name = cmm_tmp value = flag:$setting$ }
+"variable_map(cmm|local_var:cmm_tmp)" >= 1
+</syntaxhighlight>
+
+== Reacting to Changes ==
+CMF fires <code>cmf_on_callback</code> after any setting is changed through the UI, an alert is clicked, or an action bar button is clicked. Hook into it the same way as <code>cmm_on_mod_registration</code>:
+<syntaxhighlight lang="text">
+cmf_on_callback = {
+	on_actions = { your_mod_on_callback }
+}
+
+your_mod_on_callback = {
+	effect = {
+		if = {
+			limit = { var:cmf_callback = flag:your_mod__your_toggle }
+			# Runs when your_toggle changes
+		}
+	}
+}
+</syntaxhighlight>
+<code>var:cmf_callback</code> is set to the flag of the element that was interacted with.
+
+= Advanced =
+
 == Settings List ==
 [[File:CMM_Ordered_Settings_List.png|thumb|right|An ordered list setting in CMM.]]
-A table of items where each row has one or more field columns (toggles, dropdowns, or numeric steppers). Lists can optionally be ordered.
+A table of items where each row has one or more field columns (toggles, dropdowns, or numeric steppers). Lists can optionally be ordered. Settings lists require a Scripted GUI callback.
 
 === Registering a List ===
 <syntaxhighlight lang="text">
@@ -276,28 +320,10 @@ cmm_register_settings_list_from_list = {
 # Register fields after this
 </syntaxhighlight>
 
-= Reacting to Changes =
-CMM fires <code>cmf_on_callback</code> after any setting is changed through the UI. Hook into it the same way as <code>cmm_on_mod_registration</code>:
-<syntaxhighlight lang="text">
-cmf_on_callback = {
-	on_actions = { your_mod_on_callback }
-}
-
-your_mod_on_callback = {
-	effect = {
-		if = {
-			limit = { var:cmf_callback = flag:your_mod__your_toggle }
-			# Runs when your_toggle changes
-		}
-	}
-}
-</syntaxhighlight>
-<code>var:cmf_callback</code> is set to the flag of the setting that changed.
-
-= Setting Aliases =
+== Setting Aliases ==
 Assign an '''alias''' variable that mirrors a setting value. Add the sync call in your registration effect and <code>cmf_on_callback</code> callback.
 
-== Setting Alias ==
+=== Setting Alias ===
 <syntaxhighlight lang="text">
 cmm_sync_setting_alias = {
 	setting = your_mod__your_toggle
@@ -306,7 +332,7 @@ cmm_sync_setting_alias = {
 </syntaxhighlight>
 Access: <code>var:your_mod_toggle</code>
 
-== List Field Alias ==
+=== List Field Alias ===
 <syntaxhighlight lang="text">
 cmm_sync_list_field_alias = {
 	field = your_mod__your_list_item_1_field_1
@@ -315,7 +341,7 @@ cmm_sync_list_field_alias = {
 </syntaxhighlight>
 One call per concrete item number.
 
-== Dropdown Option Alias ==
+=== Dropdown Option Alias ===
 Sets a variable when that option is selected, removes it otherwise:
 <syntaxhighlight lang="text">
 cmm_sync_dropdown_option_alias = {
@@ -325,19 +351,6 @@ cmm_sync_dropdown_option_alias = {
 }
 </syntaxhighlight>
 Check with: <code>has_variable = using_feature_b</code>
-
-= Conditional Visibility =
-Create a Scripted GUI named <code>[mod_id]__[setting_id]_on_changed</code> with an <code>is_shown</code> block to conditionally hide a setting. No <code>effect</code> block is needed — auto-apply handles the value.
-
-<syntaxhighlight lang="text">
-your_mod__your_toggle_on_changed = {
-	scope = country
-
-	is_shown = {
-		"variable_map(cmm|flag:your_mod__some_other_setting)" >= 1
-	}
-}
-</syntaxhighlight>
 
 = Localization =
 
