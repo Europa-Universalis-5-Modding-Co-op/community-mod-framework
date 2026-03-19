@@ -10,20 +10,12 @@ cmf_example_on_register_mod = {
 		# CMM settings
 		cmm_example_register_mod = yes
 
-		# Action bar elements (idempotent — safe from per-country hook)
-		cmf_add_action_bar_element = { element = cmf_action_bar_element_example }
-		cmf_add_action_bar_element = { element = cmf_action_bar_element_example_second }
+		# Action bar elements and alerts (via a separate effect)
+		cmf_example_register_mod = yes
 
-		# Alerts
-		cmf_add_alert = { alert = cmf_alert_example }
-		cmf_add_alert = { alert = cmf_alert_example_blue }
-		cmf_add_alert = { alert = cmf_alert_example_black }
-		cmf_add_alert = { alert = cmf_alert_example_red_war }
-		cmf_add_alert = { alert = cmf_alert_example_red }
-		cmf_add_alert = { alert = cmf_alert_example_orange }
-		cmf_add_alert = { alert = cmf_alert_example_yellow }
-		cmf_add_alert = { alert = cmf_alert_example_green }
-		cmf_add_alert = { alert = cmf_alert_example_purple }
+		# You can also register inline:
+		# cmf_add_action_bar_element = { element = cmf_action_bar_element_example }
+		# cmf_add_alert = { alert = cmf_alert_example }
 	}
 }
 
