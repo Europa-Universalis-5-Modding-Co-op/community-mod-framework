@@ -179,7 +179,7 @@ const SettingEditorComponent = {
     },
     computed: {
         canBeGlobal() {
-            return !['text', 'list'].includes(this.setting.setting_type);
+            return this.setting.setting_type !== 'text';
         },
         accessorPrefix() {
             return this.setting.is_global ? 'global_var' : 'var';
