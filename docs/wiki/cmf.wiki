@@ -36,6 +36,9 @@ cmf_on_mod_registration = {
 your_mod_on_register = {
 	effect = {
 		your_mod_register = yes
+		# You can optionally split registration into as many effects as you like:
+		# your_mod_register_cmm_settings = yes
+		# your_mod_register_action_bar = yes
 	}
 }
 </syntaxhighlight>
