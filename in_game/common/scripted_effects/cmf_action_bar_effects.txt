@@ -1,18 +1,29 @@
 ﻿# Register an action bar element globally and for all current countries.
+# Idempotent — safe to call multiple times (e.g. from per-country registration hooks).
 # Scope: country
 # Args: element (flag)
 cmf_add_action_bar_element = {
     hidden_effect = {
-        add_to_global_variable_list = {
-            name = cmf_action_bar_elements
-            target = flag:$element$
-        }
-        every_country = {
-            add_to_variable_list = {
-                name = cmf_action_bar_active_elements
+        if = {
+            limit = {
+                NOT = {
+                    is_target_in_global_variable_list = {
+                        name = cmf_action_bar_elements
+                        target = flag:$element$
+                    }
+                }
+            }
+            add_to_global_variable_list = {
+                name = cmf_action_bar_elements
                 target = flag:$element$
             }
-            add_to_variable_map = { name = cmf_has_sgui key = flag:$element$ value = 0 }
+            every_country = {
+                add_to_variable_list = {
+                    name = cmf_action_bar_active_elements
+                    target = flag:$element$
+                }
+                add_to_variable_map = { name = cmf_has_sgui key = flag:$element$ value = 0 }
+            }
         }
     }
 

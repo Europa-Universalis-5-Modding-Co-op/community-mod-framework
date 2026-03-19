@@ -17,6 +17,29 @@ The framework is designed to be invisible when no dependent mods are active.
 
 CMF is available on the [https://steamcommunity.com/sharedfiles/filedetails/?id=3605358788 Steam Workshop]. For full documentation, see the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki GitHub wiki].
 
+= Basic Setup =
+Hook your mod into CMF's shared registration on_action. This runs for each human player on game start and when the mod menu opens. Not all features require it, but it is the standard entry point for registering CMM settings, action bar buttons, and alerts.
+
+<syntaxhighlight lang="text">
+# in_game/common/scripted_effects/your_effects.txt
+your_mod_register = {
+	# Register settings, action bar elements, alerts, etc.
+}
+
+# in_game/common/on_action/your_on_action.txt
+cmf_on_mod_registration = {
+	on_actions = {
+		your_mod_on_register
+	}
+}
+
+your_mod_on_register = {
+	effect = {
+		your_mod_register = yes
+	}
+}
+</syntaxhighlight>
+
 = Features =
 
 == Community Mod Menu (CMM) ==

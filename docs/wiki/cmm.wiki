@@ -26,29 +26,7 @@ curl.exe -sL https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-o
 </syntaxhighlight>
 
 = Basic Setup =
-Register your mod by creating a registration effect and hooking it into CMM's <code>on_action</code>:
-
-<syntaxhighlight lang="text">
-# in_game/common/scripted_effects/your_effects.txt
-your_mod_register = {
-	# Register settings here
-}
-
-# in_game/common/on_action/your_on_action.txt
-cmm_on_mod_registration = {
-	on_actions = {
-		your_mod_on_register
-	}
-}
-
-your_mod_on_register = {
-	effect = {
-		your_mod_register = yes
-	}
-}
-</syntaxhighlight>
-
-Then create a localization file for your settings.
+Follow the [[Community Mod Framework#Basic Setup|CMF Basic Setup]] to create your registration effect and <code>cmf_on_mod_registration</code> on_action hook. Then create a localization file for your settings.
 
 = Settings =
 Most settings work automatically — just register them and CMM handles the UI and value storage. Only text and settings list require callbacks. All other types use auto-apply and work out of the box.
@@ -151,7 +129,7 @@ set_local_variable = { name = cmm_tmp value = flag:$setting$ }
 </syntaxhighlight>
 
 == Reacting to Changes ==
-CMF fires <code>cmf_on_callback</code> after any setting is changed through the UI, an alert is clicked, or an action bar button is clicked. Hook into it in an on_action file (<code>in_game/common/on_action/</code>), the same way as <code>cmm_on_mod_registration</code>:
+CMF fires <code>cmf_on_callback</code> after any setting is changed through the UI, an alert is clicked, or an action bar button is clicked. Hook into it in an on_action file (<code>in_game/common/on_action/</code>), the same way as <code>cmf_on_mod_registration</code>:
 <syntaxhighlight lang="text">
 cmf_on_callback = {
 	on_actions = { your_mod_on_callback }
