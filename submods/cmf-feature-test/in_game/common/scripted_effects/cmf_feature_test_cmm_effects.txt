@@ -425,6 +425,9 @@ cmf_feature_test_register_cmm = {
 	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 3 alias = cft_dd_opt_3 }
 	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 4 alias = cft_dd_opt_4 }
 	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 5 alias = cft_dd_opt_5 }
+
+	# Suppress "set but never used" for from-list variable list target flags.
+	cmf_feature_test_suppress_from_list_flags = yes
 }
 
 # Text setting callback — plain text (no quotes).
@@ -438,39 +441,27 @@ cmf_feature_test__text_quoted_on_changed = {
 }
 
 # Helper effect called by cmm_for_each_list_item for the ordered list.
-# $i$ = item number (1-based, in display order), $setting$ = composite key.
+# Receives $i$ (item number) and $setting$ (composite key) as macro arguments.
 # scope:cmm_list_current_item_value = attached game scope (root country).
 # Scope: country
 cmf_feature_test_process_list_item = {
-	# Read field values for this item to verify the iteration API works.
-	# Use local variable indirection to avoid variable_map flag: parse issues.
-	set_local_variable = { name = cft_fk_1 value = flag:$setting$_i$i$_f1 }
-	set_local_variable = { name = cft_fk_2 value = flag:$setting$_i$i$_f2 }
-	set_local_variable = { name = cft_fk_3 value = flag:$setting$_i$i$_f3 }
-	set_local_variable = {
-		name = cft_test_field_1
-		value = "variable_map(cmm|local_var:cft_fk_1)"
-	}
-	set_local_variable = {
-		name = cft_test_field_2
-		value = "variable_map(cmm|local_var:cft_fk_2)"
-	}
-	set_local_variable = {
-		name = cft_test_field_3
-		value = "variable_map(cmm|local_var:cft_fk_3)"
+	# Verify iteration works by reading the item value scope.
+	if = {
+		limit = { exists = scope:cmm_list_current_item_value }
+		save_scope_as = cft_test_item_value
 	}
 
-	# Benign warning suppression
+	# Benign warning suppression — references $i$ and $setting$ so the engine
+	# recognizes this as a parameterized effect (required by cmm_for_each_list_item).
 	if = {
 		limit = {
 			always = no
-			exists = local_var:cft_fk_1
-			exists = local_var:cft_fk_2
-			exists = local_var:cft_fk_3
-			exists = local_var:cft_test_field_1
-			exists = local_var:cft_test_field_2
-			exists = local_var:cft_test_field_3
+			exists = local_var:cft_item_index
+			exists = local_var:cft_setting_key
 		}
+		set_local_variable = { name = cft_item_index value = $i$ }
+		set_local_variable = { name = cft_setting_key value = flag:$setting$ }
+		save_scope_as = cft_test_item_value
 	}
 }
 
