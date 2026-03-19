@@ -1,3 +1,0 @@
-﻿# Example Mod 2 uses auto-apply for all settings.
-# No _on_changed scripted GUIs are needed.
-# To add optional callbacks, hook into cmf_on_callback on_action.
