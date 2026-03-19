@@ -142,10 +142,6 @@
 			size = { 0 40 }
 			using = button_main_tab_texture
 			frame = 4
-			tagtooltip_enabled = yes
-			tooltip = "[CMMLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
-			tooltip_enabled = "[CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
-			tooltipwidget = { BasicFunctionalTooltip = {} }
 
 			modify_texture = {
 				using = color_intense_bg_blue_texture
@@ -167,6 +163,10 @@
 				autoresize = no
 				default_format = "#yellow_titles"
 				text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
+				tagtooltip_enabled = yes
+				tooltip = "[CMMLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltip_enabled = "[CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltipwidget = { BasicFunctionalTooltip = {} }
 			}
 		}
 
