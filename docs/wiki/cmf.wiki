@@ -33,7 +33,7 @@ You can create your mod menu using the [https://github.com/Europa-Universalis-5-
 [[File:CMF_Action_Bar.png|thumb|300px|Custom action bar buttons.]]
 The Action Bar allows mods to add custom buttons to the game. Buttons can show/hide and enable/disable based on conditions, and execute custom effects when clicked.
 
-Each button requires localization keys and a Scripted GUI:
+Each button requires localization keys. A Scripted GUI is optional (only for dynamic visibility/enabled state):
 <syntaxhighlight lang="yaml">
 l_english:
  cmf_action_bar_element_example: "cmf_action_bar_element_example"
@@ -41,24 +41,6 @@ l_english:
  cmf_action_bar_element_example_icon: "@advance!"
  cmf_action_bar_element_example_name: "Some Button"
  cmf_action_bar_element_example_tooltip: "This is a custom Action Bar Button."
-</syntaxhighlight>
-
-<syntaxhighlight lang="text">
-cmf_action_bar_element_example = {
-	scope = country
-
-	is_valid = {
-		# Optional: button greyed out when false
-	}
-
-	is_shown = {
-		# Optional: button hidden when false
-	}
-
-	effect = {
-		# Runs when button is clicked
-	}
-}
 </syntaxhighlight>
 
 {| class="wikitable"
@@ -69,12 +51,14 @@ cmf_action_bar_element_example = {
 | <code>cmf_remove_action_bar_element = { element = <root_key> }</code> || Remove a button
 |}
 
+Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the element flag).
+
 == Custom Alerts ==
 [[File:CMF_Custom_Alerts.png|thumb|300px|Custom alerts in the alert bar.]]
 
 The Custom Alerts system allows mods to display dynamic, dismissable notifications in the in-game alert bar. Alerts are color-coded and interactive — players can click them to trigger an effect, or right-click to dismiss.
 
-Each alert requires localization keys and a Scripted GUI:
+Each alert requires localization keys. No Scripted GUI is needed:
 <syntaxhighlight lang="yaml">
 l_english:
  cmf_alert_example: "cmf_alert_example"
@@ -98,16 +82,6 @@ l_english:
 | <code><root_key>_tooltip</code> || Tooltip body text
 |}
 
-<syntaxhighlight lang="text">
-cmf_alert_example = {
-	scope = country
-
-	effect = {
-		# Runs when the player clicks the alert
-	}
-}
-</syntaxhighlight>
-
 All effects require '''country scope'''.
 
 {| class="wikitable"
@@ -119,6 +93,8 @@ All effects require '''country scope'''.
 |-
 | <code>cmf_is_alert_active = { alert = <root_key> }</code> || Check if an alert is active (trigger)
 |}
+
+Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
 
 == is_host Trigger ==
 CMF provides a trigger to check if the current country is controlled by the host player. Always evaluates to yes in singleplayer.

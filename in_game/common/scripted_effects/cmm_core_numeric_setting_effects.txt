@@ -493,11 +493,11 @@ cmm_auto_apply_numeric_from_scope = {
 		remove_variable = cmm_numeric_change_to_apply
 	}
 
-	set_variable = { name = cmm_changed_setting value = scope:setting }
+	set_variable = { name = cmf_callback value = scope:setting }
 	trigger_event_silently = {
-		on_action = cmm_on_setting_changed
+		on_action = cmf_on_callback
 	}
-	remove_variable = cmm_changed_setting
+	remove_variable = cmf_callback
 
 	# Benign warning suppression
 	if = {
@@ -509,7 +509,7 @@ cmm_auto_apply_numeric_from_scope = {
 			exists = var:cmm_numeric_step_delta_to_apply
 			exists = var:cmm_numeric_change_to_apply
 			exists = var:cmm_tmp_5x
-			exists = var:cmm_changed_setting
+			exists = var:cmf_callback
 		}
 	}
 }

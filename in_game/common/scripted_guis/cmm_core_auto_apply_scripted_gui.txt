@@ -29,11 +29,11 @@ cmm_auto_toggle_bool = {
 			}
 		}
 
-		set_variable = { name = cmm_changed_setting value = scope:setting }
+		set_variable = { name = cmf_callback value = scope:setting }
 		trigger_event_silently = {
-			on_action = cmm_on_setting_changed
+			on_action = cmf_on_callback
 		}
-		remove_variable = cmm_changed_setting
+		remove_variable = cmf_callback
 	}
 }
 
@@ -73,11 +73,11 @@ cmm_auto_apply_dropdown = {
 			remove_variable = cmm_dropdown_index_to_apply
 		}
 
-		set_variable = { name = cmm_changed_setting value = scope:setting }
+		set_variable = { name = cmf_callback value = scope:setting }
 		trigger_event_silently = {
-			on_action = cmm_on_setting_changed
+			on_action = cmf_on_callback
 		}
-		remove_variable = cmm_changed_setting
+		remove_variable = cmf_callback
 
 		# Benign warning suppression
 		if = {
@@ -86,7 +86,7 @@ cmm_auto_apply_dropdown = {
 				exists = var:cmm_dropdown_index_to_apply
 				exists = var:cmm_tmp_new_val
 				exists = local_var:cmm_tmp_last
-				exists = var:cmm_changed_setting
+				exists = var:cmf_callback
 			}
 		}
 	}
@@ -105,7 +105,7 @@ cmm_auto_apply_numeric = {
 		if = {
 			limit = {
 				always = no
-				exists = var:cmm_changed_setting
+				exists = var:cmf_callback
 			}
 		}
 	}
@@ -172,11 +172,11 @@ cmm_auto_apply_slider = {
 				remove_variable = cmm_numeric_change_to_apply
 			}
 
-			set_variable = { name = cmm_changed_setting value = scope:setting }
+			set_variable = { name = cmf_callback value = scope:setting }
 			trigger_event_silently = {
-				on_action = cmm_on_setting_changed
+				on_action = cmf_on_callback
 			}
-			remove_variable = cmm_changed_setting
+			remove_variable = cmf_callback
 		}
 		else = {
 			cmm_auto_apply_numeric_from_scope = yes
@@ -191,7 +191,7 @@ cmm_auto_apply_slider = {
 				exists = local_var:cmm_tmp_min
 				exists = local_var:cmm_tmp_max
 				exists = var:cmm_slider_index_to_apply
-				exists = var:cmm_changed_setting
+				exists = var:cmf_callback
 			}
 		}
 	}
@@ -204,17 +204,17 @@ cmm_auto_apply_button = {
 	scope = country
 	saved_scopes = { setting }
 	effect = {
-		set_variable = { name = cmm_changed_setting value = scope:setting }
+		set_variable = { name = cmf_callback value = scope:setting }
 		trigger_event_silently = {
-			on_action = cmm_on_setting_changed
+			on_action = cmf_on_callback
 		}
-		remove_variable = cmm_changed_setting
+		remove_variable = cmf_callback
 
 		# Benign warning suppression
 		if = {
 			limit = {
 				always = no
-				exists = var:cmm_changed_setting
+				exists = var:cmf_callback
 			}
 		}
 	}

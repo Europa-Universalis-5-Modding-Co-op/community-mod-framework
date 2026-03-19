@@ -35,17 +35,18 @@ cmm_example_on_register_mod = {
 	}
 }
 
-# Hook into CMM setting change on_action for optional post-change side effects.
-cmm_on_setting_changed = {
+# Unified callback hook — handles setting changes, alert clicks, and action bar clicks.
+cmf_on_callback = {
 	on_actions = {
-		cmm_example_on_setting_changed
+		cmm_example_on_callback
 	}
 }
 
-cmm_example_on_setting_changed = {
+cmm_example_on_callback = {
 	effect = {
+		# Toggle the example alert when the example toggle is changed.
 		if = {
-			limit = { var:cmm_changed_setting = flag:cmm_example__example_toggle }
+			limit = { var:cmf_callback = flag:cmm_example__example_toggle }
 			set_local_variable = { name = cmm_tmp_flag value = flag:cmm_example__example_toggle }
 			if = {
 				limit = { "variable_map(cmm|local_var:cmm_tmp_flag)" >= 1 }

@@ -591,8 +591,9 @@ types cmf_action_bar {
             click_type = left
             title = cmf_action_bar_open_action
             block "action" {
-                on_action = "[GetScriptedGui(Scope.GetFlagName).Execute(GuiScope
+                on_action = "[GetScriptedGui('cmf_auto_action_bar_clicked').Execute(GuiScope
                     .SetRoot(GetPlayer.MakeScope)
+                    .AddScope('element', MakeScopeFlag(Scope.GetFlagName))
                     .End
                 )]"
             }
@@ -644,8 +645,9 @@ types cmf_action_bar {
             click_type = left
             title = cmf_action_bar_open_action
             block "action" {
-                on_action = "[GetScriptedGui(Scope.GetFlagName).Execute(GuiScope
+                on_action = "[GetScriptedGui('cmf_auto_action_bar_clicked').Execute(GuiScope
                     .SetRoot(GetPlayer.MakeScope)
+                    .AddScope('element', MakeScopeFlag(Scope.GetFlagName))
                     .End
                 )]"
             }

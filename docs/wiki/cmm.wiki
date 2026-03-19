@@ -92,7 +92,7 @@ cmm_register_button_setting = {
 	group_id = general_toggles
 }
 </syntaxhighlight>
-No stored value — hook into <code>cmm_on_setting_changed</code> to run an effect when clicked.
+No stored value — hook into <code>cmf_on_callback</code> to run an effect when clicked.
 
 == Numeric ==
 [[File:CMM_Numeric.png|thumb|right|A CMM numeric stepper.]]
@@ -277,25 +277,25 @@ cmm_register_settings_list_from_list = {
 </syntaxhighlight>
 
 = Reacting to Changes =
-CMM fires <code>cmm_on_setting_changed</code> after any setting is changed through the UI. Hook into it the same way as <code>cmm_on_mod_registration</code>:
+CMM fires <code>cmf_on_callback</code> after any setting is changed through the UI. Hook into it the same way as <code>cmm_on_mod_registration</code>:
 <syntaxhighlight lang="text">
-cmm_on_setting_changed = {
-	on_actions = { your_mod_on_setting_changed }
+cmf_on_callback = {
+	on_actions = { your_mod_on_callback }
 }
 
-your_mod_on_setting_changed = {
+your_mod_on_callback = {
 	effect = {
 		if = {
-			limit = { var:cmm_changed_setting = flag:your_mod__your_toggle }
+			limit = { var:cmf_callback = flag:your_mod__your_toggle }
 			# Runs when your_toggle changes
 		}
 	}
 }
 </syntaxhighlight>
-<code>var:cmm_changed_setting</code> is set to the flag of the setting that changed.
+<code>var:cmf_callback</code> is set to the flag of the setting that changed.
 
 = Setting Aliases =
-Assign an '''alias''' variable that mirrors a setting value. Add the sync call in your registration effect and <code>cmm_on_setting_changed</code> callback.
+Assign an '''alias''' variable that mirrors a setting value. Add the sync call in your registration effect and <code>cmf_on_callback</code> callback.
 
 == Setting Alias ==
 <syntaxhighlight lang="text">

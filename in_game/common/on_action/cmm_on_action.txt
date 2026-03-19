@@ -30,10 +30,11 @@ cmm_on_mod_registration = {
 	on_actions = { }
 }
 
-# Setting change extension point. Fires after auto-apply updates a setting value.
-# var:cmm_changed_setting contains the flag key of the changed setting.
+# Unified callback extension point. Fires after auto-apply updates a setting,
+# an alert is clicked, or an action bar button is clicked.
+# var:cmf_callback contains the flag key of the target (setting, alert, or element).
 # Scope: country
 # Args: none
-cmm_on_setting_changed = {
+cmf_on_callback = {
 	on_actions = { }
 }
