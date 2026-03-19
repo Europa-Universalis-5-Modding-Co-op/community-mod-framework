@@ -443,29 +443,49 @@ cmf_feature_test__text_quoted_on_changed = {
 # Scope: country
 cmf_feature_test_process_list_item = {
 	# Read field values for this item to verify the iteration API works.
-	# Field 1 (bool enabled): variable_map(cmm|flag:$setting$_i$i$_f1)
-	# Field 2 (dropdown mode): variable_map(cmm|flag:$setting$_i$i$_f2)
-	# Field 3 (numeric weight): variable_map(cmm|flag:$setting$_i$i$_f3)
+	# Use local variable indirection to avoid variable_map flag: parse issues.
+	set_local_variable = { name = cft_fk_1 value = flag:$setting$_i$i$_f1 }
+	set_local_variable = { name = cft_fk_2 value = flag:$setting$_i$i$_f2 }
+	set_local_variable = { name = cft_fk_3 value = flag:$setting$_i$i$_f3 }
 	set_local_variable = {
 		name = cft_test_field_1
-		value = "variable_map(cmm|flag:$setting$_i$i$_f1)"
+		value = "variable_map(cmm|local_var:cft_fk_1)"
 	}
 	set_local_variable = {
 		name = cft_test_field_2
-		value = "variable_map(cmm|flag:$setting$_i$i$_f2)"
+		value = "variable_map(cmm|local_var:cft_fk_2)"
 	}
 	set_local_variable = {
 		name = cft_test_field_3
-		value = "variable_map(cmm|flag:$setting$_i$i$_f3)"
+		value = "variable_map(cmm|local_var:cft_fk_3)"
 	}
 
 	# Benign warning suppression
 	if = {
 		limit = {
 			always = no
+			exists = local_var:cft_fk_1
+			exists = local_var:cft_fk_2
+			exists = local_var:cft_fk_3
 			exists = local_var:cft_test_field_1
 			exists = local_var:cft_test_field_2
 			exists = local_var:cft_test_field_3
+		}
+	}
+}
+
+# Suppress "set but never used" for from-list variable list target scopes.
+# These user-chosen flags can't be suppressed by the core.
+cmf_feature_test_suppress_from_list_flags = {
+	if = {
+		limit = {
+			always = no
+			exists = flag:cft_item_alpha
+			exists = flag:cft_item_beta
+			exists = flag:cft_item_gamma
+			exists = flag:cft_global_item_alpha
+			exists = flag:cft_global_item_beta
+			exists = flag:cft_global_item_gamma
 		}
 	}
 }

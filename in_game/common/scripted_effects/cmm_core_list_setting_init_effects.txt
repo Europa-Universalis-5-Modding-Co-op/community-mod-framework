@@ -561,6 +561,32 @@ cmm_suppress_list_setting_warnings = {
 		set_variable = { name = $mod_id$__$setting_id$_i18_value value = 0 }
 		set_variable = { name = $mod_id$__$setting_id$_i19_value value = 0 }
 		set_variable = { name = $mod_id$__$setting_id$_i20_value value = 0 }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i1_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i2_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i3_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i4_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i5_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i6_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i7_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i8_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i9_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i10_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i11_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i12_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i13_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i14_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i15_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i16_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i17_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i18_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i19_name }
+		set_variable = { name = cmm_suppress_flag_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$_i20_name }
+		set_variable = { name = cmm_list_field_1_dropdown_last_index_$mod_id$__$setting_id$ value = 0 }
+		set_variable = { name = cmm_list_field_2_dropdown_last_index_$mod_id$__$setting_id$ value = 0 }
+		set_variable = { name = cmm_list_field_3_dropdown_last_index_$mod_id$__$setting_id$ value = 0 }
+		set_variable = { name = cmm_list_field_4_dropdown_last_index_$mod_id$__$setting_id$ value = 0 }
+		set_variable = { name = cmm_list_field_5_dropdown_last_index_$mod_id$__$setting_id$ value = 0 }
+		exists = var:cmm_suppress_flag_$mod_id$__$setting_id$
 	}
 }
 
