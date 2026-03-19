@@ -44,11 +44,9 @@ cmm_register_numeric_setting_internal = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_flag
-			exists = local_var:cmm_tmp_val
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { name = cmm_tmp_val }
 	}
 }
 
@@ -136,13 +134,11 @@ cmm_step_numeric_setting = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_flag
-			exists = local_var:cmm_tmp_step
-			exists = local_var:cmm_tmp_min
-			exists = local_var:cmm_tmp_max
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { name = cmm_tmp_step }
+		cmf_suppress = { name = cmm_tmp_min }
+		cmf_suppress = { name = cmm_tmp_max }
 	}
 }
 
@@ -205,11 +201,9 @@ cmm_set_numeric_setting_max = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_flag
-			exists = local_var:cmm_tmp_max
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { name = cmm_tmp_max }
 	}
 }
 
@@ -232,11 +226,9 @@ cmm_set_numeric_setting_min = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_flag
-			exists = local_var:cmm_tmp_min
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { name = cmm_tmp_min }
 	}
 }
 
@@ -292,13 +284,11 @@ cmm_apply_numeric_step_delta = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_flag
-			exists = local_var:cmm_tmp_step
-			exists = local_var:cmm_tmp_min
-			exists = local_var:cmm_tmp_max
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { name = cmm_tmp_step }
+		cmf_suppress = { name = cmm_tmp_min }
+		cmf_suppress = { name = cmm_tmp_max }
 	}
 }
 
@@ -454,15 +444,13 @@ cmm_auto_apply_numeric_from_scope = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_step
-			exists = local_var:cmm_tmp_min
-			exists = local_var:cmm_tmp_max
-			exists = var:cmm_numeric_step_delta_to_apply
-			exists = var:cmm_numeric_change_to_apply
-			exists = var:cmm_tmp_5x
-			exists = var:cmf_callback
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_step }
+		cmf_suppress = { name = cmm_tmp_min }
+		cmf_suppress = { name = cmm_tmp_max }
+		cmf_suppress = { name = cmm_numeric_step_delta_to_apply }
+		cmf_suppress = { name = cmm_numeric_change_to_apply }
+		cmf_suppress = { name = cmm_tmp_5x }
+		cmf_suppress = { name = cmf_callback }
 	}
 }

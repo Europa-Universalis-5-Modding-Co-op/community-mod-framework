@@ -91,9 +91,7 @@ cmm_toggle_bool_setting = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_flag
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
 	}
 }

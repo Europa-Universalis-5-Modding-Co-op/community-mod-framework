@@ -29,9 +29,7 @@ cmm_register_text_setting = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = var:cmm_tmp_char_limit
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_char_limit }
 	}
 }

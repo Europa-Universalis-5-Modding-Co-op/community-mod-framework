@@ -16,12 +16,9 @@ cmm_sync_setting_alias = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_flag
-			exists = var:$alias$
-			exists = global_var:$alias$
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { name = $alias$ }
 	}
 }
 
@@ -56,12 +53,9 @@ cmm_sync_dropdown_option_alias = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_flag
-			exists = var:$alias$
-			exists = global_var:$alias$
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { name = $alias$ }
 	}
 }
 

@@ -1,0 +1,13 @@
+﻿# Suppress "used but never set" and "set but never used" engine warnings for a name.
+# Scope: country
+# Args: name (key)
+cmf_suppress = {
+	if = {
+		limit = {
+			always = no
+			exists = var:$name$
+			exists = flag:$name$
+		}
+		set_variable = { name = $name$ value = flag:$name$ }
+	}
+}

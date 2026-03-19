@@ -31,10 +31,10 @@ cmf_add_action_bar_element = {
     if = {
         limit = {
             always = no
-            exists = flag:$element$
-            exists = global_var:cmf_action_bar_elements
             has_variable_map = cmf_has_sgui
         }
+        cmf_suppress = { name = $element$ }
+        cmf_suppress = { name = cmf_action_bar_elements }
     }
 }
 

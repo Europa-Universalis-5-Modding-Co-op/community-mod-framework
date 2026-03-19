@@ -15,11 +15,8 @@ cmm_register_button_setting_internal = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = flag:$mod_id$__$setting_id$_text
-			exists = var:$mod_id$__$setting_id$_text
-		}
+		limit = { always = no }
+		cmf_suppress = { name = $mod_id$__$setting_id$_text }
 	}
 }
 

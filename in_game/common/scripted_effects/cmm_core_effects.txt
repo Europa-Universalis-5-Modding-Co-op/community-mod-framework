@@ -21,11 +21,10 @@ cmm_init_variable_maps = {
 	add_to_variable_map = { name = cmm_list_is_ordered key = flag:cmm_init value = 0 }
 	add_to_global_variable_map = { name = cmm key = flag:cmm_init value = 0 }
 
-	# Suppress "set but never used" warnings for map names and init flag
+	# Benign warning suppression
 	if = {
 		limit = {
 			always = no
-			exists = flag:cmm_init
 			has_variable_map = cmm
 			has_variable_map = cmm_type
 			has_variable_map = cmm_is_global
@@ -44,6 +43,7 @@ cmm_init_variable_maps = {
 			has_variable_map = cmm_list_is_ordered
 			has_global_variable_map = cmm
 		}
+		cmf_suppress = { name = cmm_init }
 	}
 }
 
@@ -69,16 +69,12 @@ cmm_register_mod = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = flag:$mod_id$
-			exists = flag:$mod_id$_name
-			exists = flag:$mod_id$_desc
-			exists = var:cmm_registered_mod_ids
-			exists = var:cmm_registered_mod_$mod_id$
-			exists = var:$mod_id$_name
-			exists = var:$mod_id$_desc
-		}
+		limit = { always = no }
+		cmf_suppress = { name = $mod_id$ }
+		cmf_suppress = { name = $mod_id$_name }
+		cmf_suppress = { name = $mod_id$_desc }
+		cmf_suppress = { name = cmm_registered_mod_ids }
+		cmf_suppress = { name = cmm_registered_mod_$mod_id$ }
 	}
 }
 
@@ -114,16 +110,13 @@ cmm_register_tab = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = flag:$mod_id$__$tab_id$
-			exists = flag:$mod_id$__$tab_id$_name
-			exists = var:cmm_registered_tab_keys
-			exists = var:cmm_registered_tab_$mod_id$__$tab_id$
-			exists = var:cmm_mod_default_tab_$mod_id$
-			exists = var:cmm_tab_owner_mod_id_$mod_id$__$tab_id$
-			exists = var:$mod_id$__$tab_id$_name
-		}
+		limit = { always = no }
+		cmf_suppress = { name = $mod_id$__$tab_id$ }
+		cmf_suppress = { name = $mod_id$__$tab_id$_name }
+		cmf_suppress = { name = cmm_registered_tab_keys }
+		cmf_suppress = { name = cmm_registered_tab_$mod_id$__$tab_id$ }
+		cmf_suppress = { name = cmm_mod_default_tab_$mod_id$ }
+		cmf_suppress = { name = cmm_tab_owner_mod_id_$mod_id$__$tab_id$ }
 	}
 }
 
@@ -157,19 +150,15 @@ cmm_register_group = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = flag:$mod_id$__$group_id$
-			exists = flag:$mod_id$__$group_id$_name
-			exists = flag:$mod_id$__$group_id$_desc
-			exists = flag:$mod_id$__$tab_id$
-			exists = var:cmm_registered_group_keys
-			exists = var:cmm_registered_group_$mod_id$__$group_id$
-			exists = var:cmm_group_owner_mod_id_$mod_id$__$group_id$
-			exists = var:cmm_group_owner_tab_key_$mod_id$__$group_id$
-			exists = var:$mod_id$__$group_id$_name
-			exists = var:$mod_id$__$group_id$_desc
-		}
+		limit = { always = no }
+		cmf_suppress = { name = $mod_id$__$group_id$ }
+		cmf_suppress = { name = $mod_id$__$group_id$_name }
+		cmf_suppress = { name = $mod_id$__$group_id$_desc }
+		cmf_suppress = { name = $mod_id$__$tab_id$ }
+		cmf_suppress = { name = cmm_registered_group_keys }
+		cmf_suppress = { name = cmm_registered_group_$mod_id$__$group_id$ }
+		cmf_suppress = { name = cmm_group_owner_mod_id_$mod_id$__$group_id$ }
+		cmf_suppress = { name = cmm_group_owner_tab_key_$mod_id$__$group_id$ }
 	}
 }
 
@@ -219,24 +208,20 @@ cmm_register_setting_metadata = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = flag:$mod_id$__$setting_id$
-			exists = flag:$mod_id$__$tab_id$
-			exists = flag:$mod_id$__$group_id$
-			exists = flag:$mod_id$__$setting_id$_name
-			exists = flag:$mod_id$__$setting_id$_desc
-			exists = flag:$mod_id$__$group_id$_name
-			exists = var:cmm_registered_setting_keys
-			exists = var:cmm_registered_setting_$mod_id$__$setting_id$
-			exists = var:cmm_setting_owner_mod_id_$mod_id$__$setting_id$
-			exists = var:cmm_setting_owner_tab_key_$mod_id$__$setting_id$
-			exists = var:cmm_setting_owner_group_key_$mod_id$__$setting_id$
-			exists = var:cmm_group_setting_keys_$mod_id$__$group_id$
-			exists = var:cmm_tab_setting_count_$mod_id$__$tab_id$
-			exists = var:$mod_id$__$setting_id$_name
-			exists = var:$mod_id$__$setting_id$_desc
-		}
+		limit = { always = no }
+		cmf_suppress = { name = $mod_id$__$setting_id$ }
+		cmf_suppress = { name = $mod_id$__$tab_id$ }
+		cmf_suppress = { name = $mod_id$__$group_id$ }
+		cmf_suppress = { name = $mod_id$__$setting_id$_name }
+		cmf_suppress = { name = $mod_id$__$setting_id$_desc }
+		cmf_suppress = { name = $mod_id$__$group_id$_name }
+		cmf_suppress = { name = cmm_registered_setting_keys }
+		cmf_suppress = { name = cmm_registered_setting_$mod_id$__$setting_id$ }
+		cmf_suppress = { name = cmm_setting_owner_mod_id_$mod_id$__$setting_id$ }
+		cmf_suppress = { name = cmm_setting_owner_tab_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { name = cmm_setting_owner_group_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { name = cmm_group_setting_keys_$mod_id$__$group_id$ }
+		cmf_suppress = { name = cmm_tab_setting_count_$mod_id$__$tab_id$ }
 	}
 }
 

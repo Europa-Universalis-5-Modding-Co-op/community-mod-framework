@@ -33,10 +33,8 @@ cmf_auto_alert_clicked = {
 
         # Benign warning suppression
         if = {
-            limit = {
-                always = no
-                exists = var:cmf_callback
-            }
+            limit = { always = no }
+            cmf_suppress = { name = cmf_callback }
         }
     }
 }

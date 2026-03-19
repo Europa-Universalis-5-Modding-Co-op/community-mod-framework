@@ -29,10 +29,9 @@ cmm_register_menu_settings = {
 cmm_mark_host_country = {
 	set_global_variable = { name = cmm_core_host_country value = this }
 
+	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = global_var:cmm_core_host_country
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_core_host_country }
 	}
 }

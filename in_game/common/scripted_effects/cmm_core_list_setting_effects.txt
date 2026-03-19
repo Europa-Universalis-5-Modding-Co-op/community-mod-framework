@@ -135,7 +135,10 @@ cmm_init_list_bool_field_at_slot = {
 		cmm_initialize_list_bool_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ vt = variable is_global = 0 }
 	}
 	# Benign warning suppression
-	if = { limit = { always = no exists = local_var:cmm_tmp_flag } }
+	if = {
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
+	}
 }
 
 # Register a bool field shared by every item in one list setting.
@@ -189,7 +192,10 @@ cmm_init_list_dropdown_field_at_slot = {
 		cmm_initialize_list_dropdown_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_index = $default_index$ option_count = $option_count$ vt = variable is_global = 0 }
 	}
 	# Benign warning suppression
-	if = { limit = { always = no exists = local_var:cmm_tmp_flag } }
+	if = {
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
+	}
 }
 
 # Register a dropdown field shared by every item in one list setting.
@@ -244,7 +250,10 @@ cmm_init_list_numeric_field_at_slot = {
 		cmm_initialize_list_numeric_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ vt = variable is_global = 0 }
 	}
 	# Benign warning suppression
-	if = { limit = { always = no exists = local_var:cmm_tmp_flag } }
+	if = {
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
+	}
 }
 
 # Register a numeric field shared by every item in one list setting.

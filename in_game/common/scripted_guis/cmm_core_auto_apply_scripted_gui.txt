@@ -81,13 +81,11 @@ cmm_auto_apply_dropdown = {
 
 		# Benign warning suppression
 		if = {
-			limit = {
-				always = no
-				exists = var:cmm_dropdown_index_to_apply
-				exists = var:cmm_tmp_new_val
-				exists = local_var:cmm_tmp_last
-				exists = var:cmf_callback
-			}
+			limit = { always = no }
+			cmf_suppress = { name = cmm_dropdown_index_to_apply }
+			cmf_suppress = { name = cmm_tmp_new_val }
+			cmf_suppress = { name = cmm_tmp_last }
+			cmf_suppress = { name = cmf_callback }
 		}
 	}
 }
@@ -103,10 +101,8 @@ cmm_auto_apply_numeric = {
 
 		# Benign warning suppression
 		if = {
-			limit = {
-				always = no
-				exists = var:cmf_callback
-			}
+			limit = { always = no }
+			cmf_suppress = { name = cmf_callback }
 		}
 	}
 }
@@ -184,15 +180,13 @@ cmm_auto_apply_slider = {
 
 		# Benign warning suppression
 		if = {
-			limit = {
-				always = no
-				exists = local_var:cmm_tmp_actual_last
-				exists = local_var:cmm_tmp_step
-				exists = local_var:cmm_tmp_min
-				exists = local_var:cmm_tmp_max
-				exists = var:cmm_slider_index_to_apply
-				exists = var:cmf_callback
-			}
+			limit = { always = no }
+			cmf_suppress = { name = cmm_tmp_actual_last }
+			cmf_suppress = { name = cmm_tmp_step }
+			cmf_suppress = { name = cmm_tmp_min }
+			cmf_suppress = { name = cmm_tmp_max }
+			cmf_suppress = { name = cmm_slider_index_to_apply }
+			cmf_suppress = { name = cmf_callback }
 		}
 	}
 }
@@ -212,10 +206,8 @@ cmm_auto_apply_button = {
 
 		# Benign warning suppression
 		if = {
-			limit = {
-				always = no
-				exists = var:cmf_callback
-			}
+			limit = { always = no }
+			cmf_suppress = { name = cmf_callback }
 		}
 	}
 }

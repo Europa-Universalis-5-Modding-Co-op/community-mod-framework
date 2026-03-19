@@ -124,13 +124,11 @@ cmm_register_slider_setting_internal = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = var:cmm_tmp_step_count
-			exists = var:cmm_tmp_last_index
-			exists = local_var:cmm_tmp_flag
-			exists = local_var:cmm_tmp_val
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_step_count }
+		cmf_suppress = { name = cmm_tmp_last_index }
+		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { name = cmm_tmp_val }
 	}
 }
 
@@ -150,10 +148,8 @@ cmm_quantize_slider_setting = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_flag
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
 	}
 }
 
@@ -197,12 +193,10 @@ cmm_quantize_slider_value = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_min
-			exists = local_var:cmm_tmp_max
-			exists = local_var:cmm_tmp_step
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_min }
+		cmf_suppress = { name = cmm_tmp_max }
+		cmf_suppress = { name = cmm_tmp_step }
 	}
 }
 
@@ -254,14 +248,12 @@ cmm_set_slider_setting_from_visual_index = {
 
 	# Benign warning suppression
 	if = {
-		limit = {
-			always = no
-			exists = local_var:cmm_tmp_flag
-			exists = local_var:cmm_tmp_actual_last
-			exists = local_var:cmm_tmp_step
-			exists = local_var:cmm_tmp_min
-			exists = local_var:cmm_tmp_max
-		}
+		limit = { always = no }
+		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { name = cmm_tmp_actual_last }
+		cmf_suppress = { name = cmm_tmp_step }
+		cmf_suppress = { name = cmm_tmp_min }
+		cmf_suppress = { name = cmm_tmp_max }
 	}
 }
 
