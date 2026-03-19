@@ -117,7 +117,7 @@ The [[Community Mod Toolkit]] is a companion set of development tools for EU5 mo
 
 See the [[Community Mod Toolkit|CMT page]] for details.
 
-= Advanced =
+= Additional Configuration =
 
 == Conditional Visibility ==
 Any CMM setting or CMF element (action bar buttons) can optionally use a Scripted GUI for dynamic visibility or enabled state. Create a Scripted GUI named after the element and register it with <code>cmf_register_scripted_gui</code>:
