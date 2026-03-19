@@ -230,7 +230,7 @@ your_mod__your_list_on_changed = {
 Each item has a stable identity number (1 through <code>item_count</code>) that never changes. Reordering only changes a separate display order list — field values stay in place. <code>cmm_for_each_list_item</code> visits items in display order, but <code>$i$</code> resolves to the stable item number.
 
 === Reading List Values ===
-Field values are stored in the <code>cmm</code> variable map as: <code>"variable_map(cmm|flag:[mod_id]__[setting_id]_item_[N]_f[slot])"</code>
+Field values are stored in the <code>cmm</code> variable map as: <code>"variable_map(cmm|flag:[mod_id]__[setting_id]_i[N]_f[slot])"</code>
 * <code>[N]</code> = stable item number (1 through <code>item_count</code>)
 * <code>[slot]</code> = field registration order (1 through 5)
 
@@ -243,7 +243,7 @@ cmm_for_each_list_item = {
 
 your_mod__your_list_each_item = {
 	# $i$ = resolved item number, respects player reordering
-	set_local_variable = { name = cmm_tmp value = flag:your_mod__your_list_item_$i$_f1 }
+	set_local_variable = { name = cmm_tmp value = flag:your_mod__your_list_i$i$_f1 }
 	if = {
 		limit = {
 			"variable_map(cmm|local_var:cmm_tmp)" >= 1
@@ -314,7 +314,7 @@ Access: <code>var:your_mod_toggle</code>
 <syntaxhighlight lang="text">
 cmm_sync_list_field_alias = {
 	setting = your_mod__your_list
-	field = your_mod__your_list_item_1_f1
+	field = your_mod__your_list_i1_f1
 	alias = your_mod_enabled_1
 }
 </syntaxhighlight>
@@ -352,7 +352,7 @@ Check with: <code>has_variable = using_feature_b</code>
 |-
 | <code>[mod_id]__[setting_id]_item_column_name</code> || List item column header
 |-
-| <code>[mod_id]__[setting_id]_item_[N]_name</code> || List row label
+| <code>[mod_id]__[setting_id]_i[N]_name</code> || List row label
 |-
 | <code>[mod_id]__[setting_id]__[field_id]_name</code> || List field column label
 |-

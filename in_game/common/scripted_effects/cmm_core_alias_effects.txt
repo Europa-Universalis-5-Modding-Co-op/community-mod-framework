@@ -68,7 +68,7 @@ cmm_sync_dropdown_option_alias = {
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
-# - field (key): Field map key (e.g. `<mod_id>__<setting_id>_item_1_f1`).
+# - field (key): Field map key (e.g. `<mod_id>__<setting_id>_i1_f1`).
 # - alias (key): Alias variable name.
 cmm_sync_list_field_alias = {
 	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }

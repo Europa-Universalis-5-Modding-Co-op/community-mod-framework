@@ -326,8 +326,8 @@ cmm_register_list_numeric_field = {
 # - item (number): Item ordinal to tag (`1..item_count`).
 # - value (scope): Game scope to attach (e.g. `building_type:fine_cloth_guild`).
 cmm_set_list_item_value = {
-	clear_variable_list = $mod_id$__$setting_id$_item_$item$_value
-	add_to_variable_list = { name = $mod_id$__$setting_id$_item_$item$_value target = $value$ }
+	clear_variable_list = $mod_id$__$setting_id$_i$item$_value
+	add_to_variable_list = { name = $mod_id$__$setting_id$_i$item$_value target = $value$ }
 }
 
 # Begin a dynamic settings list whose items are added one by one via cmm_add_settings_list_item
@@ -448,144 +448,144 @@ cmm_add_settings_list_item_internal = {
 		switch = {
 			trigger = var:cmm_list_add_counter_$mod_id$__$setting_id$
 			1 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_1 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_1_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_1_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_1_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_1 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i1 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i1_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i1_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i1_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i1 }
 			}
 			2 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_2 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_2_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_2_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_2_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_2 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i2 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i2_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i2_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i2_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i2 }
 			}
 			3 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_3 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_3_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_3_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_3_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_3 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i3 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i3_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i3_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i3_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i3 }
 			}
 			4 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_4 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_4_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_4_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_4_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_4 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i4 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i4_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i4_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i4_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i4 }
 			}
 			5 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_5 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_5_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_5_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_5_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_5 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i5 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i5_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i5_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i5_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i5 }
 			}
 			6 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_6 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_6_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_6_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_6_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_6 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i6 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i6_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i6_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i6_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i6 }
 			}
 			7 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_7 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_7_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_7_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_7_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_7 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i7 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i7_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i7_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i7_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i7 }
 			}
 			8 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_8 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_8_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_8_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_8_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_8 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i8 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i8_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i8_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i8_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i8 }
 			}
 			9 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_9 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_9_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_9_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_9_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_9 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i9 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i9_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i9_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i9_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i9 }
 			}
 			10 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_10 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_10_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_10_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_10_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_10 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i10 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i10_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i10_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i10_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i10 }
 			}
 			11 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_11 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_11_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_11_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_11_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_11 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i11 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i11_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i11_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i11_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i11 }
 			}
 			12 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_12 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_12_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_12_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_12_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_12 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i12 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i12_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i12_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i12_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i12 }
 			}
 			13 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_13 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_13_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_13_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_13_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_13 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i13 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i13_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i13_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i13_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i13 }
 			}
 			14 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_14 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_14_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_14_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_14_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_14 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i14 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i14_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i14_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i14_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i14 }
 			}
 			15 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_15 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_15_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_15_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_15_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_15 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i15 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i15_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i15_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i15_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i15 }
 			}
 			16 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_16 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_16_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_16_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_16_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_16 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i16 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i16_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i16_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i16_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i16 }
 			}
 			17 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_17 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_17_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_17_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_17_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_17 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i17 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i17_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i17_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i17_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i17 }
 			}
 			18 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_18 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_18_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_18_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_18_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_18 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i18 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i18_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i18_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i18_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i18 }
 			}
 			19 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_19 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_19_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_19_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_19_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_19 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i19 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i19_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i19_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i19_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i19 }
 			}
 			20 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_20 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_20_name value = flag:$name$ }
-				clear_variable_list = $mod_id$__$setting_id$_item_20_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_20_value target = $value$ }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_20 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i20 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i20_name value = flag:$name$ }
+				clear_variable_list = $mod_id$__$setting_id$_i20_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i20_value target = $value$ }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i20 }
 			}
 		}
 	}
@@ -639,144 +639,144 @@ cmm_add_staged_settings_list_item_internal = {
 		switch = {
 			trigger = var:cmm_list_add_counter_$mod_id$__$setting_id$
 			1 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_1 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_1_name value = flag:$mod_id$__$setting_id$_item_1_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_1_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_1_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_1 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i1 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i1_name value = flag:$mod_id$__$setting_id$_i1_name }
+				clear_variable_list = $mod_id$__$setting_id$_i1_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i1_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i1 }
 			}
 			2 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_2 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_2_name value = flag:$mod_id$__$setting_id$_item_2_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_2_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_2_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_2 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i2 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i2_name value = flag:$mod_id$__$setting_id$_i2_name }
+				clear_variable_list = $mod_id$__$setting_id$_i2_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i2_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i2 }
 			}
 			3 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_3 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_3_name value = flag:$mod_id$__$setting_id$_item_3_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_3_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_3_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_3 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i3 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i3_name value = flag:$mod_id$__$setting_id$_i3_name }
+				clear_variable_list = $mod_id$__$setting_id$_i3_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i3_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i3 }
 			}
 			4 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_4 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_4_name value = flag:$mod_id$__$setting_id$_item_4_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_4_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_4_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_4 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i4 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i4_name value = flag:$mod_id$__$setting_id$_i4_name }
+				clear_variable_list = $mod_id$__$setting_id$_i4_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i4_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i4 }
 			}
 			5 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_5 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_5_name value = flag:$mod_id$__$setting_id$_item_5_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_5_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_5_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_5 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i5 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i5_name value = flag:$mod_id$__$setting_id$_i5_name }
+				clear_variable_list = $mod_id$__$setting_id$_i5_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i5_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i5 }
 			}
 			6 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_6 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_6_name value = flag:$mod_id$__$setting_id$_item_6_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_6_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_6_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_6 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i6 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i6_name value = flag:$mod_id$__$setting_id$_i6_name }
+				clear_variable_list = $mod_id$__$setting_id$_i6_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i6_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i6 }
 			}
 			7 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_7 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_7_name value = flag:$mod_id$__$setting_id$_item_7_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_7_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_7_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_7 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i7 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i7_name value = flag:$mod_id$__$setting_id$_i7_name }
+				clear_variable_list = $mod_id$__$setting_id$_i7_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i7_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i7 }
 			}
 			8 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_8 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_8_name value = flag:$mod_id$__$setting_id$_item_8_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_8_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_8_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_8 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i8 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i8_name value = flag:$mod_id$__$setting_id$_i8_name }
+				clear_variable_list = $mod_id$__$setting_id$_i8_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i8_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i8 }
 			}
 			9 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_9 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_9_name value = flag:$mod_id$__$setting_id$_item_9_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_9_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_9_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_9 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i9 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i9_name value = flag:$mod_id$__$setting_id$_i9_name }
+				clear_variable_list = $mod_id$__$setting_id$_i9_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i9_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i9 }
 			}
 			10 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_10 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_10_name value = flag:$mod_id$__$setting_id$_item_10_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_10_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_10_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_10 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i10 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i10_name value = flag:$mod_id$__$setting_id$_i10_name }
+				clear_variable_list = $mod_id$__$setting_id$_i10_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i10_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i10 }
 			}
 			11 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_11 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_11_name value = flag:$mod_id$__$setting_id$_item_11_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_11_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_11_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_11 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i11 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i11_name value = flag:$mod_id$__$setting_id$_i11_name }
+				clear_variable_list = $mod_id$__$setting_id$_i11_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i11_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i11 }
 			}
 			12 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_12 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_12_name value = flag:$mod_id$__$setting_id$_item_12_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_12_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_12_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_12 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i12 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i12_name value = flag:$mod_id$__$setting_id$_i12_name }
+				clear_variable_list = $mod_id$__$setting_id$_i12_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i12_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i12 }
 			}
 			13 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_13 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_13_name value = flag:$mod_id$__$setting_id$_item_13_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_13_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_13_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_13 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i13 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i13_name value = flag:$mod_id$__$setting_id$_i13_name }
+				clear_variable_list = $mod_id$__$setting_id$_i13_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i13_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i13 }
 			}
 			14 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_14 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_14_name value = flag:$mod_id$__$setting_id$_item_14_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_14_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_14_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_14 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i14 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i14_name value = flag:$mod_id$__$setting_id$_i14_name }
+				clear_variable_list = $mod_id$__$setting_id$_i14_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i14_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i14 }
 			}
 			15 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_15 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_15_name value = flag:$mod_id$__$setting_id$_item_15_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_15_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_15_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_15 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i15 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i15_name value = flag:$mod_id$__$setting_id$_i15_name }
+				clear_variable_list = $mod_id$__$setting_id$_i15_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i15_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i15 }
 			}
 			16 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_16 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_16_name value = flag:$mod_id$__$setting_id$_item_16_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_16_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_16_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_16 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i16 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i16_name value = flag:$mod_id$__$setting_id$_i16_name }
+				clear_variable_list = $mod_id$__$setting_id$_i16_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i16_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i16 }
 			}
 			17 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_17 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_17_name value = flag:$mod_id$__$setting_id$_item_17_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_17_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_17_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_17 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i17 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i17_name value = flag:$mod_id$__$setting_id$_i17_name }
+				clear_variable_list = $mod_id$__$setting_id$_i17_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i17_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i17 }
 			}
 			18 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_18 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_18_name value = flag:$mod_id$__$setting_id$_item_18_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_18_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_18_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_18 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i18 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i18_name value = flag:$mod_id$__$setting_id$_i18_name }
+				clear_variable_list = $mod_id$__$setting_id$_i18_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i18_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i18 }
 			}
 			19 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_19 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_19_name value = flag:$mod_id$__$setting_id$_item_19_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_19_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_19_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_19 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i19 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i19_name value = flag:$mod_id$__$setting_id$_i19_name }
+				clear_variable_list = $mod_id$__$setting_id$_i19_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i19_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i19 }
 			}
 			20 = {
-				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_item_20 value = flag:$mod_id$__$setting_id$ }
-				set_variable = { name = $mod_id$__$setting_id$_item_20_name value = flag:$mod_id$__$setting_id$_item_20_name }
-				clear_variable_list = $mod_id$__$setting_id$_item_20_value
-				add_to_variable_list = { name = $mod_id$__$setting_id$_item_20_value target = scope:cmm_list_staged_item_value }
-				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_item_20 }
+				set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i20 value = flag:$mod_id$__$setting_id$ }
+				set_variable = { name = $mod_id$__$setting_id$_i20_name value = flag:$mod_id$__$setting_id$_i20_name }
+				clear_variable_list = $mod_id$__$setting_id$_i20_value
+				add_to_variable_list = { name = $mod_id$__$setting_id$_i20_value target = scope:cmm_list_staged_item_value }
+				add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i20 }
 			}
 		}
 	}
