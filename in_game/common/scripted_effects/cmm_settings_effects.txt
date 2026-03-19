@@ -32,6 +32,6 @@ cmm_mark_host_country = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_core_host_country }
+		cmf_suppress = { v = cmm_core_host_country }
 	}
 }

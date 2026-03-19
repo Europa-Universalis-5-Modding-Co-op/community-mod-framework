@@ -82,10 +82,10 @@ cmm_auto_apply_dropdown = {
 		# Benign warning suppression
 		if = {
 			limit = { always = no }
-			cmf_suppress = { name = cmm_dropdown_index_to_apply }
-			cmf_suppress = { name = cmm_tmp_new_val }
-			cmf_suppress = { name = cmm_tmp_last }
-			cmf_suppress = { name = cmf_callback }
+			cmf_suppress = { v = cmm_dropdown_index_to_apply }
+			cmf_suppress = { v = cmm_tmp_new_val }
+			cmf_suppress = { v = cmm_tmp_last }
+			cmf_suppress = { v = cmf_callback }
 		}
 	}
 }
@@ -102,7 +102,7 @@ cmm_auto_apply_numeric = {
 		# Benign warning suppression
 		if = {
 			limit = { always = no }
-			cmf_suppress = { name = cmf_callback }
+			cmf_suppress = { v = cmf_callback }
 		}
 	}
 }
@@ -181,12 +181,12 @@ cmm_auto_apply_slider = {
 		# Benign warning suppression
 		if = {
 			limit = { always = no }
-			cmf_suppress = { name = cmm_tmp_actual_last }
-			cmf_suppress = { name = cmm_tmp_step }
-			cmf_suppress = { name = cmm_tmp_min }
-			cmf_suppress = { name = cmm_tmp_max }
-			cmf_suppress = { name = cmm_slider_index_to_apply }
-			cmf_suppress = { name = cmf_callback }
+			cmf_suppress = { v = cmm_tmp_actual_last }
+			cmf_suppress = { v = cmm_tmp_step }
+			cmf_suppress = { v = cmm_tmp_min }
+			cmf_suppress = { v = cmm_tmp_max }
+			cmf_suppress = { v = cmm_slider_index_to_apply }
+			cmf_suppress = { v = cmf_callback }
 		}
 	}
 }
@@ -207,7 +207,7 @@ cmm_auto_apply_button = {
 		# Benign warning suppression
 		if = {
 			limit = { always = no }
-			cmf_suppress = { name = cmf_callback }
+			cmf_suppress = { v = cmf_callback }
 		}
 	}
 }

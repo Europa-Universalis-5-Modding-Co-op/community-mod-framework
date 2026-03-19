@@ -9,7 +9,7 @@
     # Benign warning suppression
     if = {
         limit = { always = no }
-        cmf_suppress = { name = $alert$ }
+        cmf_suppress = { v = $alert$ }
     }
 }
 

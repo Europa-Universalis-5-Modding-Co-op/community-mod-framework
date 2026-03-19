@@ -125,10 +125,10 @@ cmm_register_slider_setting_internal = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_step_count }
-		cmf_suppress = { name = cmm_tmp_last_index }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = cmm_tmp_val }
+		cmf_suppress = { v = cmm_tmp_step_count }
+		cmf_suppress = { v = cmm_tmp_last_index }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_val }
 	}
 }
 
@@ -149,7 +149,7 @@ cmm_quantize_slider_setting = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_flag }
 	}
 }
 
@@ -194,9 +194,9 @@ cmm_quantize_slider_value = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_min }
-		cmf_suppress = { name = cmm_tmp_max }
-		cmf_suppress = { name = cmm_tmp_step }
+		cmf_suppress = { v = cmm_tmp_min }
+		cmf_suppress = { v = cmm_tmp_max }
+		cmf_suppress = { v = cmm_tmp_step }
 	}
 }
 
@@ -249,11 +249,11 @@ cmm_set_slider_setting_from_visual_index = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = cmm_tmp_actual_last }
-		cmf_suppress = { name = cmm_tmp_step }
-		cmf_suppress = { name = cmm_tmp_min }
-		cmf_suppress = { name = cmm_tmp_max }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_actual_last }
+		cmf_suppress = { v = cmm_tmp_step }
+		cmf_suppress = { v = cmm_tmp_min }
+		cmf_suppress = { v = cmm_tmp_max }
 	}
 }
 

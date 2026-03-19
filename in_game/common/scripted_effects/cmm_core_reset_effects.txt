@@ -27,6 +27,6 @@ cmm_reset_to_defaults = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_reset_default }
+		cmf_suppress = { v = cmm_reset_default }
 	}
 }

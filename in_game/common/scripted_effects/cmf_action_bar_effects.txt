@@ -33,8 +33,8 @@ cmf_add_action_bar_element = {
             always = no
             has_variable_map = cmf_has_sgui
         }
-        cmf_suppress = { name = $element$ }
-        cmf_suppress = { name = cmf_action_bar_elements }
+        cmf_suppress = { v = $element$ }
+        cmf_suppress = { v = cmf_action_bar_elements }
     }
 }
 

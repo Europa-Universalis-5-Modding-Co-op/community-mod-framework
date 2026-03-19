@@ -45,8 +45,8 @@ cmm_register_numeric_setting_internal = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = cmm_tmp_val }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_val }
 	}
 }
 
@@ -135,10 +135,10 @@ cmm_step_numeric_setting = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = cmm_tmp_step }
-		cmf_suppress = { name = cmm_tmp_min }
-		cmf_suppress = { name = cmm_tmp_max }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_step }
+		cmf_suppress = { v = cmm_tmp_min }
+		cmf_suppress = { v = cmm_tmp_max }
 	}
 }
 
@@ -202,8 +202,8 @@ cmm_set_numeric_setting_max = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = cmm_tmp_max }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_max }
 	}
 }
 
@@ -227,8 +227,8 @@ cmm_set_numeric_setting_min = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = cmm_tmp_min }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_min }
 	}
 }
 
@@ -285,10 +285,10 @@ cmm_apply_numeric_step_delta = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = cmm_tmp_step }
-		cmf_suppress = { name = cmm_tmp_min }
-		cmf_suppress = { name = cmm_tmp_max }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_step }
+		cmf_suppress = { v = cmm_tmp_min }
+		cmf_suppress = { v = cmm_tmp_max }
 	}
 }
 
@@ -445,12 +445,12 @@ cmm_auto_apply_numeric_from_scope = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_step }
-		cmf_suppress = { name = cmm_tmp_min }
-		cmf_suppress = { name = cmm_tmp_max }
-		cmf_suppress = { name = cmm_numeric_step_delta_to_apply }
-		cmf_suppress = { name = cmm_numeric_change_to_apply }
-		cmf_suppress = { name = cmm_tmp_5x }
-		cmf_suppress = { name = cmf_callback }
+		cmf_suppress = { v = cmm_tmp_step }
+		cmf_suppress = { v = cmm_tmp_min }
+		cmf_suppress = { v = cmm_tmp_max }
+		cmf_suppress = { v = cmm_numeric_step_delta_to_apply }
+		cmf_suppress = { v = cmm_numeric_change_to_apply }
+		cmf_suppress = { v = cmm_tmp_5x }
+		cmf_suppress = { v = cmf_callback }
 	}
 }

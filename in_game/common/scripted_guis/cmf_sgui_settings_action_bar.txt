@@ -59,7 +59,7 @@ cmf_auto_action_bar_clicked = {
         # Benign warning suppression
         if = {
             limit = { always = no }
-            cmf_suppress = { name = cmf_callback }
+            cmf_suppress = { v = cmf_callback }
         }
     }
 }

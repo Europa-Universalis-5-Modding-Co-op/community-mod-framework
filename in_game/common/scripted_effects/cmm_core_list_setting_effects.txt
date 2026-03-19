@@ -137,7 +137,7 @@ cmm_init_list_bool_field_at_slot = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_flag }
 	}
 }
 
@@ -194,7 +194,7 @@ cmm_init_list_dropdown_field_at_slot = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_flag }
 	}
 }
 
@@ -252,7 +252,7 @@ cmm_init_list_numeric_field_at_slot = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_flag }
 	}
 }
 

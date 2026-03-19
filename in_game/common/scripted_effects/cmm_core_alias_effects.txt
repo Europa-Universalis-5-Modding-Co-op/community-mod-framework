@@ -17,8 +17,8 @@ cmm_sync_setting_alias = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = $alias$ }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = $alias$ }
 	}
 }
 
@@ -54,8 +54,8 @@ cmm_sync_dropdown_option_alias = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = $alias$ }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = $alias$ }
 	}
 }
 

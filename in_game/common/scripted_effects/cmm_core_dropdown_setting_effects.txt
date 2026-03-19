@@ -87,10 +87,10 @@ cmm_register_dropdown_setting_internal = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_dd_count }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = cmm_tmp_val }
-		cmf_suppress = { name = cmm_tmp_last }
+		cmf_suppress = { v = cmm_tmp_dd_count }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_val }
+		cmf_suppress = { v = cmm_tmp_last }
 	}
 }
 
@@ -132,9 +132,9 @@ cmm_apply_dropdown_change = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_dropdown_index_to_apply }
-		cmf_suppress = { name = cmm_tmp_new_val }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = cmm_tmp_last }
+		cmf_suppress = { v = cmm_dropdown_index_to_apply }
+		cmf_suppress = { v = cmm_tmp_new_val }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_last }
 	}
 }

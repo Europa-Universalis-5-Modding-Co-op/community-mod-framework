@@ -106,8 +106,8 @@ cmm_list_prepare_bool_field_value_from_slot_item = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_fk }
-		cmf_suppress = { name = cmm_field_val }
+		cmf_suppress = { v = cmm_tmp_fk }
+		cmf_suppress = { v = cmm_field_val }
 	}
 }
 
@@ -146,7 +146,7 @@ cmm_list_prepare_numeric_field_value_from_slot_item = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_fk }
+		cmf_suppress = { v = cmm_tmp_fk }
 	}
 }
 
@@ -220,7 +220,7 @@ cmm_list_apply_numeric_field_slot = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_fk }
+		cmf_suppress = { v = cmm_tmp_fk }
 	}
 }
 
@@ -344,8 +344,8 @@ cmm_list_apply_field_slot_at_item = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_fk }
-		cmf_suppress = { name = cmm_field_val }
+		cmf_suppress = { v = cmm_tmp_fk }
+		cmf_suppress = { v = cmm_field_val }
 	}
 }
 
@@ -678,8 +678,8 @@ cmm_apply_list_change = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
-		cmf_suppress = { name = cmm_tmp_is_global_list }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_is_global_list }
 	}
 }
 
@@ -720,7 +720,7 @@ cmm_for_each_list_item = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_flag }
 	}
 }
 

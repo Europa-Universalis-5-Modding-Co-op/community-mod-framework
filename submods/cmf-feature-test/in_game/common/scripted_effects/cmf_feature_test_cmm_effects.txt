@@ -455,8 +455,8 @@ cmf_feature_test_process_list_item = {
 	# recognizes this as a parameterized effect (required by cmm_for_each_list_item).
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cft_item_index }
-		cmf_suppress = { name = cft_setting_key }
+		cmf_suppress = { v = cft_item_index }
+		cmf_suppress = { v = cft_setting_key }
 		set_local_variable = { name = cft_item_index value = $i$ }
 		set_local_variable = { name = cft_setting_key value = flag:$setting$ }
 		save_scope_as = cft_test_item_value
@@ -468,11 +468,11 @@ cmf_feature_test_process_list_item = {
 cmf_feature_test_suppress_from_list_flags = {
 	if = {
 		limit = { always = no }
-		cmf_suppress = { name = cft_item_alpha }
-		cmf_suppress = { name = cft_item_beta }
-		cmf_suppress = { name = cft_item_gamma }
-		cmf_suppress = { name = cft_global_item_alpha }
-		cmf_suppress = { name = cft_global_item_beta }
-		cmf_suppress = { name = cft_global_item_gamma }
+		cmf_suppress = { v = cft_item_alpha }
+		cmf_suppress = { v = cft_item_beta }
+		cmf_suppress = { v = cft_item_gamma }
+		cmf_suppress = { v = cft_global_item_alpha }
+		cmf_suppress = { v = cft_global_item_beta }
+		cmf_suppress = { v = cft_global_item_gamma }
 	}
 }
