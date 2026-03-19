@@ -84,9 +84,12 @@ types cmf_action_bar {
             item = {
                 widget = {
                     size = { 34 34 }
-                    visible = "[GetScriptedGui(Scope.GetFlagName).IsShown(GuiScope
-                        .SetRoot(GetPlayer.MakeScope)
-                        .End
+                    visible = "[Or(
+                        Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_ab_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
+                        GetScriptedGui(Scope.GetFlagName).IsShown(GuiScope
+                            .SetRoot(GetPlayer.MakeScope)
+                            .End
+                        )
                     )]"
 
                     cmf_action_bar_button = {
@@ -564,13 +567,12 @@ types cmf_action_bar {
     type cmf_action_bar_button = button {
         size = { 34 34 }
         block "visibility" {
-            enabled = "[GetScriptedGui(Scope.GetFlagName).IsValid(GuiScope
-                .SetRoot(GetPlayer.MakeScope)
-                .End
-            )]"
-            visible = "[GetScriptedGui(Scope.GetFlagName).IsShown(GuiScope
-                .SetRoot(GetPlayer.MakeScope)
-                .End
+            enabled = "[Or(
+                Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_ab_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
+                GetScriptedGui(Scope.GetFlagName).IsValid(GuiScope
+                    .SetRoot(GetPlayer.MakeScope)
+                    .End
+                )
             )]"
         }
 
@@ -631,13 +633,19 @@ types cmf_action_bar {
     type cmf_action_tab_button = button_panel_tab_alt {
         using = layoutpolicy_expanding
         block "visibility" {
-            enabled = "[GetScriptedGui(Scope.GetFlagName).IsValid(GuiScope
-                .SetRoot(GetPlayer.MakeScope)
-                .End
+            visible = "[Or(
+                Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_ab_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
+                GetScriptedGui(Scope.GetFlagName).IsShown(GuiScope
+                    .SetRoot(GetPlayer.MakeScope)
+                    .End
+                )
             )]"
-            visible = "[GetScriptedGui(Scope.GetFlagName).IsShown(GuiScope
-                .SetRoot(GetPlayer.MakeScope)
-                .End
+            enabled = "[Or(
+                Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_ab_has_sgui', MakeScopeFlag(Scope.GetFlagName)).GetValue, '(CFixedPoint)0')),
+                GetScriptedGui(Scope.GetFlagName).IsValid(GuiScope
+                    .SetRoot(GetPlayer.MakeScope)
+                    .End
+                )
             )]"
         }
 
