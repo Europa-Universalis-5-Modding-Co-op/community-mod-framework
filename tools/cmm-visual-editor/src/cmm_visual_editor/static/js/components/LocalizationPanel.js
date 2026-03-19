@@ -28,7 +28,7 @@ const LocalizationPanelComponent = {
                         if (s.setting_type === 'list') {
                             keys.push({ key: `${qid}_item_column_name`, value: s.item_column_name || '', category: 'List' });
                             for (let i = 0; i < (s.item_names || []).length; i++) {
-                                keys.push({ key: `${qid}_item_${i + 1}_name`, value: s.item_names[i], category: 'List' });
+                                keys.push({ key: `${qid}_i${i + 1}_name`, value: s.item_names[i], category: 'List' });
                             }
                             for (const f of (s.fields || [])) {
                                 const fqid = `${qid}__${f.field_id}`;

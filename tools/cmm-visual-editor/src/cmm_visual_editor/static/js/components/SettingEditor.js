@@ -224,7 +224,7 @@ const SettingEditorComponent = {
                 const slot = fi + 1;
                 const ftype = fields[fi].field_type;
                 const fid = fields[fi].field_id || `field_${slot}`;
-                lines.push(`\t# var:$setting$_item_$i$_field_${slot}  (${fid}, ${ftype})`);
+                lines.push(`\t# "variable_map(cmm|flag:$setting$_i$i$_f${slot})"  (${fid}, ${ftype})`);
             }
             lines.push(`}`);
             navigator.clipboard.writeText(lines.join('\n'));

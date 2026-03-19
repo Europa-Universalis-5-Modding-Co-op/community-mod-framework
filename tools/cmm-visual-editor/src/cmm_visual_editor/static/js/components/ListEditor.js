@@ -156,7 +156,7 @@ const ListEditorComponent = {
         defaultFieldAccessorKey(fi) {
             if (!this.modId || !this.setting.setting_id) return '';
             const slot = fi + 1;
-            return `${this.modId}__${this.setting.setting_id}_item_$i$_field_${slot}`;
+            return `${this.modId}__${this.setting.setting_id}_i$i$_f${slot}`;
         },
         fieldAccessor(fi) {
             if (!this.modId || !this.setting.setting_id) return '';

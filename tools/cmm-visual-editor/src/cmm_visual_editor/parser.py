@@ -31,7 +31,7 @@ def parse_mod_directory(directory: Path) -> Tuple[ModModel, list]:
             warnings.append(f"Could not read {f}: {e}")
             continue
 
-        if "on_action" in name and ("cmf_on_mod_registration" in text or "cmm_on_mod_registration" in text):
+        if "on_action" in name and "cmf_on_mod_registration" in text:
             on_action_content = text
         elif "scripted_gui" in str(f.parent).lower() or "scripted_gui" in name:
             if "_on_changed" in text:
@@ -248,9 +248,9 @@ def _parse_setting_aliases(content: str) -> dict:
 def _parse_field_aliases(content: str) -> dict:
     """Extract list field aliases from cmm_sync_setting_alias blocks.
 
-    Distinguishes field aliases (keys ending in ``_iN_fN`` or ``_item_N_field_N``)
-    from regular setting aliases. Returns the alias with item number replaced
-    back to ``$i$`` so it can be stored as a template.
+    Distinguishes field aliases (keys ending in ``_iN_fN``) from regular
+    setting aliases. Returns the alias with item number replaced back to
+    ``$i$`` so it can be stored as a template.
     """
     raw = {}  # field_key -> alias (concrete item number)
     pattern = re.compile(
@@ -265,22 +265,13 @@ def _parse_field_aliases(content: str) -> dict:
         setting = params.get("setting", "")
         alias = params.get("alias", "")
         if setting and alias:
-            # Only collect if it looks like a field key (_iN_fN or _item_N_field_N)
-            if re.search(r'_i\d+_f\d+$', setting) or re.search(r'_item_\d+_field_\d+$', setting):
+            if re.search(r'_i\d+_f\d+$', setting):
                 raw[setting] = alias
 
-    # Reconstruct template aliases from first concrete instance (i1 or item_1)
+    # Reconstruct template aliases from first concrete instance (i1)
     aliases = {}
     for field_key, alias_val in raw.items():
-        # Try new format: _i1_fN
         m2 = re.match(r"(.+)_i(\d+)_f(\d+)$", field_key)
-        if m2 and m2.group(2) == "1":
-            template_key = f"{m2.group(1)}_i$i$_f{m2.group(3)}"
-            template_alias = alias_val.replace("1", "$i$", 1)
-            aliases[template_key] = template_alias
-            continue
-        # Try old format: _item_1_field_N
-        m2 = re.match(r"(.+)_item_(\d+)_field_(\d+)$", field_key)
         if m2 and m2.group(2) == "1":
             template_key = f"{m2.group(1)}_i$i$_f{m2.group(3)}"
             template_alias = alias_val.replace("1", "$i$", 1)
@@ -453,7 +444,7 @@ def _reg_to_setting(
             setting.item_count = _to_int(reg.get("item_count", "1"))
             item_names = []
             for i in range(1, setting.item_count + 1):
-                iname = loc_map.get(f"{qid}_i{i}_name", loc_map.get(f"{qid}_item_{i}_name", f"Item {i}"))
+                iname = loc_map.get(f"{qid}_i{i}_name", f"Item {i}")
                 item_names.append(iname)
             setting.item_names = item_names
 
