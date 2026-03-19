@@ -13,10 +13,15 @@ const LocalizationPanelComponent = {
                 keys.push({ key: `${modId}__${tab.tab_id}_name`, value: tab.name, category: 'Tabs' });
                 for (const group of (tab.groups || [])) {
                     keys.push({ key: `${modId}__${group.group_id}_name`, value: group.name, category: 'Groups' });
+                    if (group.desc) {
+                        keys.push({ key: `${modId}__${group.group_id}_desc`, value: group.desc, category: 'Groups' });
+                    }
                     for (const s of (group.settings || [])) {
                         const qid = `${modId}__${s.setting_id}`;
-                        keys.push({ key: `${qid}_name`, value: s.name, category: 'Settings' });
-                        keys.push({ key: `${qid}_desc`, value: s.desc, category: 'Settings' });
+                        if (s.setting_type !== 'list') {
+                            keys.push({ key: `${qid}_name`, value: s.name, category: 'Settings' });
+                            keys.push({ key: `${qid}_desc`, value: s.desc, category: 'Settings' });
+                        }
                         if (s.setting_type === 'button') {
                             keys.push({ key: `${qid}_text`, value: s.button_text || '', category: 'Settings' });
                         }

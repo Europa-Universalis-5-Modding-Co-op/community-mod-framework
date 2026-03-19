@@ -146,6 +146,7 @@ cmm_register_group = {
 		set_variable = { name = cmm_group_owner_mod_id_$mod_id$__$group_id$ value = flag:$mod_id$ }
 		set_variable = { name = cmm_group_owner_tab_key_$mod_id$__$group_id$ value = flag:$mod_id$__$tab_id$ }
 		set_variable = { name = $mod_id$__$group_id$_name value = flag:$mod_id$__$group_id$_name }
+		set_variable = { name = $mod_id$__$group_id$_desc value = flag:$mod_id$__$group_id$_desc }
 
 		# Global group key list; used by settings-panel group datamodel iteration.
 		add_to_variable_list = {
@@ -160,12 +161,14 @@ cmm_register_group = {
 			always = no
 			exists = flag:$mod_id$__$group_id$
 			exists = flag:$mod_id$__$group_id$_name
+			exists = flag:$mod_id$__$group_id$_desc
 			exists = flag:$mod_id$__$tab_id$
 			exists = var:cmm_registered_group_keys
 			exists = var:cmm_registered_group_$mod_id$__$group_id$
 			exists = var:cmm_group_owner_mod_id_$mod_id$__$group_id$
 			exists = var:cmm_group_owner_tab_key_$mod_id$__$group_id$
 			exists = var:$mod_id$__$group_id$_name
+			exists = var:$mod_id$__$group_id$_desc
 		}
 	}
 }

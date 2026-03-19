@@ -188,7 +188,7 @@ const app = createApp({
         function addGroup() {
             const tab = selectedTab.value;
             if (!tab) return;
-            tab.groups.push({ group_id: '', name: '', settings: [] });
+            tab.groups.push({ group_id: '', name: '', desc: '', settings: [] });
             selectedGroupIdx.value = tab.groups.length - 1;
         }
 

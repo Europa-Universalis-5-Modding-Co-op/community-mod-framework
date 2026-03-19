@@ -72,6 +72,7 @@ class Setting:
 class Group:
     group_id: str
     name: str = ""
+    desc: str = ""
     settings: list = field(default_factory=list)
 
 
@@ -188,6 +189,7 @@ def model_to_dict(model: ModModel) -> dict:
                     {
                         "group_id": g.group_id,
                         "name": g.name,
+                        "desc": g.desc,
                         "settings": [_setting(s) for s in g.settings],
                     }
                     for g in t.groups
@@ -268,6 +270,7 @@ def dict_to_model(data: dict) -> ModModel:
                     Group(
                         group_id=g["group_id"],
                         name=g.get("name", ""),
+                        desc=g.get("desc", ""),
                         settings=[_parse_setting(s) for s in g.get("settings", [])],
                     )
                     for g in t.get("groups", [])

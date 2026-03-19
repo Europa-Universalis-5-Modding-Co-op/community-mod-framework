@@ -54,11 +54,11 @@ const SettingEditorComponent = {
                         <option value="list">Settings List</option>
                     </select>
                 </div>
-                <div class="field-row">
+                <div class="field-row" v-if="setting.setting_type !== 'list'">
                     <label>Display Name <span class="required">*</span></label>
                     <input v-model="setting.name" placeholder="My Setting">
                 </div>
-                <div class="field-row">
+                <div class="field-row" v-if="setting.setting_type !== 'list'">
                     <label>Description</label>
                     <input v-model="setting.desc" placeholder="What this setting does.">
                 </div>

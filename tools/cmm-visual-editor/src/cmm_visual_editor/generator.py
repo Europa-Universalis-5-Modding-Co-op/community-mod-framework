@@ -435,13 +435,15 @@ def _gen_localization(model: ModModel) -> str:
     for tab in model.tabs:
         for group in tab.groups:
             if group.group_id not in seen_groups:
-                seen_groups[group.group_id] = group.name
+                seen_groups[group.group_id] = group
 
     if seen_groups:
         lines.append("")
         lines.append(" # Groups")
-        for gid, gname in seen_groups.items():
-            lines.append(f' {mod_id}__{gid}_name: "{_esc(gname)}"')
+        for gid, group in seen_groups.items():
+            lines.append(f' {mod_id}__{gid}_name: "{_esc(group.name)}"')
+            if group.desc:
+                lines.append(f' {mod_id}__{gid}_desc: "{_esc(group.desc)}"')
 
     # Settings by tab and group
     for tab in model.tabs:
@@ -461,17 +463,8 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
     qid = f"{mod_id}__{setting.setting_id}"
     st = setting.setting_type
 
-    lines.append(f' {qid}_name: "{_esc(setting.name)}"')
-    lines.append(f' {qid}_desc: "{_esc(setting.desc)}"')
-
-    if st == "button":
-        lines.append(f' {qid}_text: "{_esc(setting.button_text or "Run")}"')
-
-    elif st == "dropdown":
-        for opt in (setting.options or []):
-            lines.append(f' {qid}_option_{opt.index}_name: "{_esc(opt.name)}"')
-
-    elif st == "list":
+    if st == "list":
+        # Lists use the group name as their display name; no setting-level name/desc.
         lines.append(f' {qid}_item_column_name: "{_esc(setting.item_column_name or "Item")}"')
         if not setting.list_source:
             for i, name in enumerate(setting.item_names or [], start=1):
@@ -483,6 +476,17 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
             if field.field_type == "dropdown":
                 for opt in (field.options or []):
                     lines.append(f' {fqid}_option_{opt.index}_name: "{_esc(opt.name)}"')
+        return
+
+    lines.append(f' {qid}_name: "{_esc(setting.name)}"')
+    lines.append(f' {qid}_desc: "{_esc(setting.desc)}"')
+
+    if st == "button":
+        lines.append(f' {qid}_text: "{_esc(setting.button_text or "Run")}"')
+
+    elif st == "dropdown":
+        for opt in (setting.options or []):
+            lines.append(f' {qid}_option_{opt.index}_name: "{_esc(opt.name)}"')
 
 
 def _gen_metadata(model: ModModel) -> str:

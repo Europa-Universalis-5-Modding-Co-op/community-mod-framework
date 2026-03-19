@@ -151,6 +151,7 @@ def _build_model(
             g = Group(
                 group_id=group_id,
                 name=loc_map.get(f"{mod_id}__{group_id}_name", group_id),
+                desc=loc_map.get(f"{mod_id}__{group_id}_desc", ""),
             )
             groups_map[gkey] = g
             group_order.append(gkey)

@@ -433,15 +433,18 @@ ${prefix}_on_callback = {
             for (const tab of state.tabs) {
                 for (const group of (tab.groups || [])) {
                     if (!seenGroups[group.group_id]) {
-                        seenGroups[group.group_id] = group.name;
+                        seenGroups[group.group_id] = group;
                     }
                 }
             }
             if (Object.keys(seenGroups).length) {
                 lines.push('');
                 lines.push(' # Groups');
-                for (const [gid, gname] of Object.entries(seenGroups)) {
-                    lines.push(` ${modId}__${gid}_name: "${this._esc(gname)}"`);
+                for (const [gid, group] of Object.entries(seenGroups)) {
+                    lines.push(` ${modId}__${gid}_name: "${this._esc(group.name)}"`);
+                    if (group.desc) {
+                        lines.push(` ${modId}__${gid}_desc: "${this._esc(group.desc)}"`);
+                    }
                 }
             }
 
@@ -463,16 +466,9 @@ ${prefix}_on_callback = {
 
     _emitSettingLoc(lines, modId, setting) {
         const qid = `${modId}__${setting.setting_id}`;
-        lines.push(` ${qid}_name: "${this._esc(setting.name)}"`);
-        lines.push(` ${qid}_desc: "${this._esc(setting.desc)}"`);
 
-        if (setting.setting_type === 'button') {
-            lines.push(` ${qid}_text: "${this._esc(setting.button_text || 'Run')}"`);
-        } else if (setting.setting_type === 'dropdown') {
-            for (const opt of (setting.options || [])) {
-                lines.push(` ${qid}_option_${opt.index}_name: "${this._esc(opt.name)}"`);
-            }
-        } else if (setting.setting_type === 'list') {
+        if (setting.setting_type === 'list') {
+            // Lists use the group name as their display name; no setting-level name/desc.
             lines.push(` ${qid}_item_column_name: "${this._esc(setting.item_column_name || 'Item')}"`);
             if (!setting.list_source) {
                 for (let i = 0; i < (setting.item_names || []).length; i++) {
@@ -487,6 +483,18 @@ ${prefix}_on_callback = {
                         lines.push(` ${fqid}_option_${opt.index}_name: "${this._esc(opt.name)}"`);
                     }
                 }
+            }
+            return;
+        }
+
+        lines.push(` ${qid}_name: "${this._esc(setting.name)}"`);
+        lines.push(` ${qid}_desc: "${this._esc(setting.desc)}"`);
+
+        if (setting.setting_type === 'button') {
+            lines.push(` ${qid}_text: "${this._esc(setting.button_text || 'Run')}"`);
+        } else if (setting.setting_type === 'dropdown') {
+            for (const opt of (setting.options || [])) {
+                lines.push(` ${qid}_option_${opt.index}_name: "${this._esc(opt.name)}"`);
             }
         }
     },
