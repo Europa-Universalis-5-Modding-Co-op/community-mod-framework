@@ -6,7 +6,7 @@ REM Installs all dependencies automatically and launches the tool.
 REM Flags:
 REM   --update   Force reinstall to latest version
 REM   --dev      Use the dev branch instead of main
-set BAT_VERSION=1
+set BAT_VERSION=2
 
 set CMM_BRANCH=main
 set FORCE_UPDATE=0
