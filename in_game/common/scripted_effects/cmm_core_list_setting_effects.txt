@@ -87,11 +87,6 @@ cmm_register_list_setting_internal = {
 		set_variable = { name = cmm_list_field_count_$mod_id$__$setting_id$ value = 0 }
 	}
 
-	set_variable = {
-		name = cmm_list_item_column_name_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$_item_column_name
-	}
-
 	cmm_register_setting_metadata = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
@@ -99,13 +94,18 @@ cmm_register_list_setting_internal = {
 		group_id = $setting_id$
 	}
 
-	cmm_initialize_list_setting_item_metadata = {
-		mod_id = $mod_id$
-		setting_id = $setting_id$
-	}
-
 	if = {
 		limit = { NOT = { has_variable = cmm_list_initialized_$mod_id$__$setting_id$ } }
+
+		set_variable = {
+			name = cmm_list_item_column_name_$mod_id$__$setting_id$
+			value = flag:$mod_id$__$setting_id$_item_column_name
+		}
+
+		cmm_initialize_list_setting_item_metadata = {
+			mod_id = $mod_id$
+			setting_id = $setting_id$
+		}
 
 		cmm_initialize_list_setting_item_list = {
 			mod_id = $mod_id$
@@ -335,11 +335,6 @@ cmm_begin_settings_list_internal = {
 		set_variable = { name = cmm_list_field_count_$mod_id$__$setting_id$ value = 0 }
 	}
 
-	set_variable = {
-		name = cmm_list_item_column_name_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$_item_column_name
-	}
-
 	cmm_register_setting_metadata = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
@@ -349,11 +344,14 @@ cmm_begin_settings_list_internal = {
 
 	if = {
 		limit = { NOT = { has_variable = cmm_list_initialized_$mod_id$__$setting_id$ } }
+
+		set_variable = {
+			name = cmm_list_item_column_name_$mod_id$__$setting_id$
+			value = flag:$mod_id$__$setting_id$_item_column_name
+		}
+
 		set_variable = { name = cmm_list_add_counter_$mod_id$__$setting_id$ value = 0 }
 		clear_$vt$_list = cmm_list_items_$mod_id$__$setting_id$
-	}
-	else = {
-		cmm_reinitialize_dynamic_list_item_metadata = { mod_id = $mod_id$ setting_id = $setting_id$ }
 	}
 }
 

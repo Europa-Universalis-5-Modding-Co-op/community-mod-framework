@@ -73,41 +73,6 @@ cmm_initialize_list_setting_item_metadata = {
 	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 19 } cmm_initialize_list_item_metadata = { mod_id = $mod_id$ setting_id = $setting_id$ item = 20 } }
 }
 
-# Internal: re-initialize one dynamic list item's owner and name from stored value.
-# Scope: country
-# Args: mod_id (key), setting_id (key), item (number)
-cmm_reinitialize_dynamic_list_item_at = {
-	set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i$item$ value = flag:$mod_id$__$setting_id$ }
-	set_variable = { name = $mod_id$__$setting_id$_i$item$_name value = var:$mod_id$__$setting_id$_i$item$_value }
-}
-
-# Re-initialize owner and name variables from stored _value for every active dynamic list item.
-# Used by cmm_begin_settings_list on subsequent registration calls so value-based names persist.
-# Scope: country
-# Args: mod_id (key), setting_id (key)
-cmm_reinitialize_dynamic_list_item_metadata = {
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 0 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 1 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 1 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 2 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 2 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 3 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 3 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 4 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 4 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 5 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 5 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 6 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 6 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 7 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 7 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 8 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 8 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 9 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 9 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 10 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 10 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 11 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 11 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 12 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 12 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 13 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 13 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 14 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 14 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 15 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 15 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 16 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 16 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 17 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 17 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 18 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 18 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 19 } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 19 } cmm_reinitialize_dynamic_list_item_at = { mod_id = $mod_id$ setting_id = $setting_id$ item = 20 } }
-}
-
 # Build the initial ordered identity list for one setting.
 # Scope: country
 # Args: mod_id (key), setting_id (key), vt (variable/global_variable)
