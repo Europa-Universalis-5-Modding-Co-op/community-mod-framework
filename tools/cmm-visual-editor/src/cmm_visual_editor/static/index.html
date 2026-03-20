@@ -70,7 +70,7 @@
                             <input v-model="selectedTab.tab_id" placeholder="general" @input="sanitizeId(selectedTab, 'tab_id')">
                         </div>
                         <div class="field-row">
-                            <label>Tab Name</label>
+                            <label>Display Name</label>
                             <input v-model="selectedTab.name" :placeholder="selectedTab.tab_id || 'General'">
                         </div>
 
@@ -94,11 +94,11 @@
                                 <input v-model="selectedGroup.group_id" placeholder="general" @input="sanitizeId(selectedGroup, 'group_id')">
                             </div>
                             <div class="field-row">
-                                <label>Group Name</label>
+                                <label>Display Name</label>
                                 <input v-model="selectedGroup.name" :placeholder="selectedGroup.group_id || 'General'">
                             </div>
                             <div class="field-row">
-                                <label>Description <span class="field-hint">(optional tooltip)</span></label>
+                                <label>Description</label>
                                 <input v-model="selectedGroup.desc" placeholder="Tooltip shown on hover over the group header.">
                             </div>
 
