@@ -167,8 +167,8 @@ def _build_model(
     model = ModModel(
         mod_id=mod_id,
         file_prefix=prefix or mod_id,
-        mod_name=loc_map.get(f"{mod_id}_name", mod_id),
-        mod_desc=loc_map.get(f"{mod_id}_desc", ""),
+        mod_name=loc_map.get(f"{mod_id}_name", "") or meta.get("name", "") or mod_id,
+        mod_desc=loc_map.get(f"{mod_id}_desc", "") or meta.get("short_description", ""),
         metadata_name=meta.get("name", ""),
         metadata_id=meta.get("id", ""),
         metadata_version=meta.get("version", "0.1"),
