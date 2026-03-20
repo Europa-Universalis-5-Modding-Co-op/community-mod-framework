@@ -485,7 +485,7 @@ ${prefix}_on_callback = {
         }
 
         lines.push('');
-        lines.push(' # Flag keys (self-referencing to suppress engine warnings)');
+        lines.push(' # Optional: self-referencing flag keys to suppress IDE warnings (safe to remove)');
         for (const key of flagKeys) {
             lines.push(` ${key}: "${key}"`);
         }

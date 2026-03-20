@@ -1,4 +1,4 @@
-﻿types CMMDropdownSettingTypes
+types CMMDropdownSettingTypes
 {
 	# Dropdown setting widget for one CMM setting row.
 	# Reads:
@@ -63,8 +63,12 @@
 					focuspolicy = all
 					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 					onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
-					tooltip = "[CMMOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"
-					tooltip_enabled = "[CMMHasOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						title = "[CMMOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"
+						visible = "[CMMHasOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"
+					}
 					tooltipwidget = { BasicFunctionalTooltip = {} }
 				}
 

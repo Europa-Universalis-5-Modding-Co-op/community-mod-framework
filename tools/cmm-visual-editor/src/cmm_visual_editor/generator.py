@@ -458,7 +458,7 @@ def _gen_localization(model: ModModel) -> str:
             for setting in group.settings:
                 _emit_setting_loc(lines, mod_id, setting)
 
-    # Self-referencing flag keys (suppress engine localization warnings)
+    # Self-referencing flag keys (optional, safe to remove — no EU5 errors/warnings will occur)
     flag_keys = [mod_id]
     for tab in model.tabs:
         flag_keys.append(f"{mod_id}__{tab.tab_id}")
@@ -473,7 +473,7 @@ def _gen_localization(model: ModModel) -> str:
                         flag_keys.append(f"{mod_id}__{setting.setting_id}__{field.field_id}")
 
     lines.append("")
-    lines.append(" # Flag keys (self-referencing to suppress engine warnings)")
+    lines.append(" # Optional: self-referencing flag keys to suppress IDE warnings (safe to remove if you want)")
     for key in flag_keys:
         lines.append(f' {key}: "{key}"')
 
