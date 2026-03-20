@@ -171,7 +171,7 @@ const app = createApp({
 
         // ── Mutations (all go through history) ───────────────────
         function sanitizeId(obj, key) {
-            obj[key] = obj[key].replace(/[^a-z0-9_]/gi, '').toLowerCase();
+            obj[key] = obj[key].replace(/[^a-zA-Z0-9_]/g, '');
         }
 
         function addTab() {

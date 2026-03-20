@@ -55,8 +55,8 @@ const SettingEditorComponent = {
                     </select>
                 </div>
                 <div class="field-row" v-if="setting.setting_type !== 'list'">
-                    <label>Display Name <span class="required">*</span></label>
-                    <input v-model="setting.name" placeholder="My Setting">
+                    <label>Display Name</label>
+                    <input v-model="setting.name" :placeholder="setting.setting_id || 'My Setting'">
                 </div>
                 <div class="field-row" v-if="setting.setting_type !== 'list'">
                     <label>Description</label>
@@ -238,7 +238,7 @@ const SettingEditorComponent = {
             setTimeout(() => { this.copied = false; }, 1200);
         },
         sanitizeId() {
-            this.setting.setting_id = this.setting.setting_id.replace(/[^a-z0-9_]/gi, '').toLowerCase();
+            this.setting.setting_id = this.setting.setting_id.replace(/[^a-zA-Z0-9_]/g, '');
         },
         onTypeChange() {
             if (['text', 'list'].includes(this.setting.setting_type)) {

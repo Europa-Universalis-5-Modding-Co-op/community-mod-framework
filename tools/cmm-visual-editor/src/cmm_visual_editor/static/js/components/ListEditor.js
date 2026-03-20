@@ -271,7 +271,7 @@ const ListEditorComponent = {
             this.setting.fields.splice(i, 1);
         },
         sanitizeFieldId(field) {
-            field.field_id = field.field_id.replace(/[^a-z0-9_]/gi, '').toLowerCase();
+            field.field_id = field.field_id.replace(/[^a-zA-Z0-9_]/g, '');
         },
         onFieldTypeChange(field) {
             // Reset defaults based on type

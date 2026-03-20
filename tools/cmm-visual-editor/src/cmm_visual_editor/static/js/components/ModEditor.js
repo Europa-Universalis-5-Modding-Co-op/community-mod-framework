@@ -7,7 +7,7 @@ const ModEditorComponent = {
         <div class="field-row">
             <label>Mod ID <span class="required">*</span></label>
             <input v-model="state.mod_id" placeholder="my_mod" @input="onModIdChange">
-            <span class="field-hint">Lowercase, underscores only. Used in all generated identifiers.</span>
+            <span class="field-hint">Letters, numbers, underscores only. Used in all generated identifiers.</span>
         </div>
         <div class="field-row">
             <label>File Prefix</label>
@@ -54,7 +54,7 @@ const ModEditorComponent = {
     `,
     methods: {
         onModIdChange() {
-            this.state.mod_id = this.state.mod_id.replace(/[^a-z0-9_]/gi, '').toLowerCase();
+            this.state.mod_id = this.state.mod_id.replace(/[^a-zA-Z0-9_]/g, '');
         },
         onTagsChange(e) {
             this.state.metadata_tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
