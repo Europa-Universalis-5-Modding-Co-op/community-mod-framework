@@ -463,6 +463,33 @@ ${prefix}_on_callback = {
             }
         }
 
+        // Self-referencing flag keys (suppress engine localization warnings)
+        const flagKeys = [modId];
+        const seenFlagGroupIds = new Set();
+        for (const tab of (state.tabs || [])) {
+            flagKeys.push(`${modId}__${tab.tab_id}`);
+            for (const group of (tab.groups || [])) {
+                if (!seenFlagGroupIds.has(group.group_id)) {
+                    seenFlagGroupIds.add(group.group_id);
+                    flagKeys.push(`${modId}__${group.group_id}`);
+                }
+                for (const s of (group.settings || [])) {
+                    flagKeys.push(`${modId}__${s.setting_id}`);
+                    if (s.setting_type === 'list') {
+                        for (const field of (s.fields || [])) {
+                            flagKeys.push(`${modId}__${s.setting_id}__${field.field_id}`);
+                        }
+                    }
+                }
+            }
+        }
+
+        lines.push('');
+        lines.push(' # Flag keys (self-referencing to suppress engine warnings)');
+        for (const key of flagKeys) {
+            lines.push(` ${key}: "${key}"`);
+        }
+
         return lines.join('\n') + '\n';
     },
 

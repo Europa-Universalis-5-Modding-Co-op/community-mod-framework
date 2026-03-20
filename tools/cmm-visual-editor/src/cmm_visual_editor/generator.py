@@ -458,6 +458,25 @@ def _gen_localization(model: ModModel) -> str:
             for setting in group.settings:
                 _emit_setting_loc(lines, mod_id, setting)
 
+    # Self-referencing flag keys (suppress engine localization warnings)
+    flag_keys = [mod_id]
+    for tab in model.tabs:
+        flag_keys.append(f"{mod_id}__{tab.tab_id}")
+    for gid in seen_groups:
+        flag_keys.append(f"{mod_id}__{gid}")
+    for tab in model.tabs:
+        for group in tab.groups:
+            for setting in group.settings:
+                flag_keys.append(f"{mod_id}__{setting.setting_id}")
+                if setting.setting_type == "list":
+                    for field in (setting.fields or []):
+                        flag_keys.append(f"{mod_id}__{setting.setting_id}__{field.field_id}")
+
+    lines.append("")
+    lines.append(" # Flag keys (self-referencing to suppress engine warnings)")
+    for key in flag_keys:
+        lines.append(f' {key}: "{key}"')
+
     return "\n".join(lines) + "\n"
 
 
