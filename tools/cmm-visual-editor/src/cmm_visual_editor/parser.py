@@ -428,7 +428,8 @@ def _reg_to_setting(
         options = []
         for i in range(1, setting.option_count + 1):
             oname = loc_map.get(f"{qid}_option_{i}_name", f"Option {i}")
-            options.append(DropdownOption(index=i, name=oname, alias=opt_alias_map.get(i, "")))
+            odesc = loc_map.get(f"{qid}_option_{i}_desc", "")
+            options.append(DropdownOption(index=i, name=oname, desc=odesc, alias=opt_alias_map.get(i, "")))
         setting.options = options
     elif effective_type == "text":
         setting.character_limit = _to_int(reg.get("character_limit", "42"))
@@ -507,7 +508,8 @@ def _parse_list_field(
         options = []
         for i in range(1, field.option_count + 1):
             oname = loc_map.get(f"{fqid}_option_{i}_name", f"Option {i}")
-            options.append(DropdownOption(index=i, name=oname))
+            odesc = loc_map.get(f"{fqid}_option_{i}_desc", "")
+            options.append(DropdownOption(index=i, name=oname, desc=odesc))
         field.options = options
     elif ftype == "numeric":
         field.default_value = _to_float(reg.get("default_value", "0"))

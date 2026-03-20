@@ -481,6 +481,9 @@ ${prefix}_on_callback = {
                 if (field.field_type === 'dropdown') {
                     for (const opt of (field.options || [])) {
                         lines.push(` ${fqid}_option_${opt.index}_name: "${this._esc(opt.name)}"`);
+                        if (opt.desc) {
+                            lines.push(` ${fqid}_option_${opt.index}_desc: "${this._esc(opt.desc)}"`);
+                        }
                     }
                 }
             }
@@ -495,6 +498,9 @@ ${prefix}_on_callback = {
         } else if (setting.setting_type === 'dropdown') {
             for (const opt of (setting.options || [])) {
                 lines.push(` ${qid}_option_${opt.index}_name: "${this._esc(opt.name)}"`);
+                if (opt.desc) {
+                    lines.push(` ${qid}_option_${opt.index}_desc: "${this._esc(opt.desc)}"`);
+                }
             }
         }
     },

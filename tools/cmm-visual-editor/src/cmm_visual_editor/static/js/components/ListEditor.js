@@ -118,6 +118,7 @@ const ListEditorComponent = {
                     <div v-for="(opt, oi) in (field.options||[])" :key="oi" class="field-row compact">
                         <label class="compact-label">{{ oi + 1 }}</label>
                         <input v-model="opt.name" :placeholder="'Option ' + (oi+1)">
+                        <input v-model="opt.desc" placeholder="tooltip (optional)">
                     </div>
                 </div>
 
@@ -282,7 +283,7 @@ const ListEditorComponent = {
             if (!field.options) field.options = [];
             while (field.options.length < count) {
                 const i = field.options.length + 1;
-                field.options.push({ index: i, name: `Option ${i}` });
+                field.options.push({ index: i, name: `Option ${i}`, desc: '' });
             }
             while (field.options.length > count) {
                 field.options.pop();

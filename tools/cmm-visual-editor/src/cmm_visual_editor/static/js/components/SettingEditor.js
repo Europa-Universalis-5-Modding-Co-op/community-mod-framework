@@ -272,7 +272,7 @@ const SettingEditorComponent = {
             if (!this.setting.options) this.setting.options = [];
             while (this.setting.options.length < count) {
                 const i = this.setting.options.length + 1;
-                this.setting.options.push({ index: i, name: `Option ${i}` });
+                this.setting.options.push({ index: i, name: `Option ${i}`, desc: '' });
             }
             while (this.setting.options.length > count) {
                 this.setting.options.pop();

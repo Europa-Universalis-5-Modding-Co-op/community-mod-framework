@@ -476,6 +476,8 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
             if field.field_type == "dropdown":
                 for opt in (field.options or []):
                     lines.append(f' {fqid}_option_{opt.index}_name: "{_esc(opt.name)}"')
+                    if opt.desc:
+                        lines.append(f' {fqid}_option_{opt.index}_desc: "{_esc(opt.desc)}"')
         return
 
     lines.append(f' {qid}_name: "{_esc(setting.name)}"')
@@ -487,6 +489,8 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
     elif st == "dropdown":
         for opt in (setting.options or []):
             lines.append(f' {qid}_option_{opt.index}_name: "{_esc(opt.name)}"')
+            if opt.desc:
+                lines.append(f' {qid}_option_{opt.index}_desc: "{_esc(opt.desc)}"')
 
 
 def _gen_metadata(model: ModModel) -> str:
