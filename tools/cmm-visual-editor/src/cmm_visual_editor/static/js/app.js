@@ -51,7 +51,7 @@ const History = {
         // Deep-clone so _current isn't shared with reactive state
         const copy = JSON.parse(JSON.stringify(snap));
         Object.keys(copy).forEach(k => { state[k] = copy[k]; });
-        this._paused = false;
+        nextTick(() => { this._paused = false; });
     },
 
     clear() {
@@ -106,6 +106,7 @@ const app = createApp({
         let historyTimer = null;
         // Debounced push – coalesces rapid keystrokes into one snapshot
         function schedulePush() {
+            if (History._paused) return;
             if (historyTimer) clearTimeout(historyTimer);
             historyTimer = setTimeout(() => {
                 History.push(state);
