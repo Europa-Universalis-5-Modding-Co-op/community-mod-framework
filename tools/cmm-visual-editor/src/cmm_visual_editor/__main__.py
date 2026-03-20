@@ -33,13 +33,12 @@ def find_mod_directory(start=None):
 
 
 def get_version():
-    """Read version from pyproject.toml."""
-    pyproject = Path(__file__).parent.parent.parent / "pyproject.toml"
-    if pyproject.is_file():
-        for line in pyproject.read_text().splitlines():
-            if line.startswith("version"):
-                return line.split('"')[1]
-    return "unknown"
+    """Get installed package version."""
+    from importlib.metadata import version, PackageNotFoundError
+    try:
+        return version("cmm-visual-editor")
+    except PackageNotFoundError:
+        return "unknown"
 
 
 def main():
