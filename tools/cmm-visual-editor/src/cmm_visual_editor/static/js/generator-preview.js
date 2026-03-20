@@ -248,7 +248,8 @@ ${prefix}_on_callback = {
         // Setting alias sync
         const alias = this._settingHasAlias(setting, modId);
         if (alias && st !== 'button') {
-            lines.push(`\tcmm_sync_setting_alias = {`);
+            const syncFunc = st === 'bool' ? 'cmm_sync_bool_alias' : 'cmm_sync_setting_alias';
+            lines.push(`\t${syncFunc} = {`);
             lines.push(`\t\tsetting = ${qid}`);
             lines.push(`\t\talias = ${alias}`);
             lines.push(`\t}`);
@@ -387,7 +388,8 @@ ${prefix}_on_callback = {
             for (const c of cases) {
                 lines.push(`\t\tflag:${c.qid} = {`);
                 if (c.alias) {
-                    lines.push(`\t\t\tcmm_sync_setting_alias = {`);
+                    const syncFunc = c.st === 'bool' ? 'cmm_sync_bool_alias' : 'cmm_sync_setting_alias';
+                    lines.push(`\t\t\t${syncFunc} = {`);
                     lines.push(`\t\t\t\tsetting = ${c.qid}`);
                     lines.push(`\t\t\t\talias = ${c.alias}`);
                     lines.push(`\t\t\t}`);
@@ -426,7 +428,7 @@ ${prefix}_on_callback = {
             lines.push('');
             lines.push(' # Tabs');
             for (const tab of state.tabs) {
-                lines.push(` ${modId}__${tab.tab_id}_name: "${this._esc(tab.name)}"`);
+                lines.push(` ${modId}__${tab.tab_id}_name: "${this._esc(tab.name || tab.tab_id)}"`);
             }
 
             const seenGroups = {};
@@ -441,7 +443,7 @@ ${prefix}_on_callback = {
                 lines.push('');
                 lines.push(' # Groups');
                 for (const [gid, group] of Object.entries(seenGroups)) {
-                    lines.push(` ${modId}__${gid}_name: "${this._esc(group.name)}"`);
+                    lines.push(` ${modId}__${gid}_name: "${this._esc(group.name || gid)}"`);
                     if (group.desc) {
                         lines.push(` ${modId}__${gid}_desc: "${this._esc(group.desc)}"`);
                     }
@@ -477,7 +479,7 @@ ${prefix}_on_callback = {
             }
             for (const field of (setting.fields || [])) {
                 const fqid = `${qid}__${field.field_id}`;
-                lines.push(` ${fqid}_name: "${this._esc(field.name)}"`);
+                lines.push(` ${fqid}_name: "${this._esc(field.name || field.field_id)}"`);
                 if (field.field_type === 'dropdown') {
                     for (const opt of (field.options || [])) {
                         lines.push(` ${fqid}_option_${opt.index}_name: "${this._esc(opt.name)}"`);
@@ -490,7 +492,7 @@ ${prefix}_on_callback = {
             return;
         }
 
-        lines.push(` ${qid}_name: "${this._esc(setting.name)}"`);
+        lines.push(` ${qid}_name: "${this._esc(setting.name || setting.setting_id)}"`);
         lines.push(` ${qid}_desc: "${this._esc(setting.desc)}"`);
 
         if (setting.setting_type === 'button') {

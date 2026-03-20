@@ -310,6 +310,16 @@ cmm_sync_setting_alias = {
 </syntaxhighlight>
 Access: <code>var:your_mod_toggle</code>. Also works for list fields — pass the field map key (e.g. <code>your_mod__your_list_i1_f1</code>) as <code>setting</code>.
 
+=== Bool Alias ===
+Sets the alias variable when the toggle is on, removes it when off. <code>cmm_sync_setting_alias</code> also works for bools (copies the numeric value), but this variant supports the <code>has_variable</code> pattern:
+<syntaxhighlight lang="text">
+cmm_sync_bool_alias = {
+	setting = your_mod__your_toggle
+	alias = your_mod_toggle
+}
+</syntaxhighlight>
+Check with: <code>has_variable = your_mod_toggle</code>
+
 === Dropdown Option Alias ===
 Sets a variable when that option is selected, removes it otherwise:
 <syntaxhighlight lang="text">

@@ -192,6 +192,10 @@ const SettingEditorComponent = {
             if (!this.modId || !this.setting.setting_id) return '';
             if (['button', 'list'].includes(this.setting.setting_type)) return '';
             if (this.hasAlias) {
+                if (this.setting.setting_type === 'bool') {
+                    const func = this.setting.is_global ? 'has_global_variable' : 'has_variable';
+                    return `${func} = ${this.setting.alias}`;
+                }
                 const prefix = this.setting.is_global ? 'global_var' : 'var';
                 return `${prefix}:${this.setting.alias}`;
             }

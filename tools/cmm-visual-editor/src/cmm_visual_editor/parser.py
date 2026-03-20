@@ -228,10 +228,10 @@ def _parse_option_aliases(content: str) -> dict:
 
 
 def _parse_setting_aliases(content: str) -> dict:
-    """Extract cmm_sync_setting_alias blocks -> {setting_key: alias}."""
+    """Extract cmm_sync_setting_alias and cmm_sync_bool_alias blocks -> {setting_key: alias}."""
     aliases = {}
     pattern = re.compile(
-        r"cmm_sync_setting_alias\s*=\s*\{", re.IGNORECASE
+        r"cmm_sync_(?:setting|bool)_alias\s*=\s*\{", re.IGNORECASE
     )
     for m in pattern.finditer(content):
         block_end = _find_closing_brace(content, m.end())

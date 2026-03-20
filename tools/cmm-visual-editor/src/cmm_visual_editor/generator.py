@@ -143,7 +143,8 @@ def _emit_callback_handler(lines: list, model: ModModel):
         for qid, st, alias, option_aliases, custom_effect in cases:
             lines.append(f"\t\tflag:{qid} = {{")
             if alias:
-                lines.append(f"\t\t\tcmm_sync_setting_alias = {{")
+                sync_func = "cmm_sync_bool_alias" if st == "bool" else "cmm_sync_setting_alias"
+                lines.append(f"\t\t\t{sync_func} = {{")
                 lines.append(f"\t\t\t\tsetting = {qid}")
                 lines.append(f"\t\t\t\talias = {alias}")
                 lines.append(f"\t\t\t}}")
@@ -313,7 +314,8 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
     # Setting alias sync (runs each registration = menu open)
     alias = _setting_has_alias(setting, mod_id)
     if alias and st not in ("button",):
-        lines.append(f"\tcmm_sync_setting_alias = {{")
+        sync_func = "cmm_sync_bool_alias" if st == "bool" else "cmm_sync_setting_alias"
+        lines.append(f"\t{sync_func} = {{")
         lines.append(f"\t\tsetting = {qid}")
         lines.append(f"\t\talias = {alias}")
         lines.append(f"\t}}")
@@ -428,7 +430,7 @@ def _gen_localization(model: ModModel) -> str:
         lines.append("")
         lines.append(" # Tabs")
         for tab in model.tabs:
-            lines.append(f' {mod_id}__{tab.tab_id}_name: "{_esc(tab.name)}"')
+            lines.append(f' {mod_id}__{tab.tab_id}_name: "{_esc(tab.name or tab.tab_id)}"')
 
     # Groups (deduplicated by group_id)
     seen_groups = {}
@@ -441,7 +443,7 @@ def _gen_localization(model: ModModel) -> str:
         lines.append("")
         lines.append(" # Groups")
         for gid, group in seen_groups.items():
-            lines.append(f' {mod_id}__{gid}_name: "{_esc(group.name)}"')
+            lines.append(f' {mod_id}__{gid}_name: "{_esc(group.name or gid)}"')
             if group.desc:
                 lines.append(f' {mod_id}__{gid}_desc: "{_esc(group.desc)}"')
 
@@ -472,7 +474,7 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
 
         for field in (setting.fields or []):
             fqid = f"{qid}__{field.field_id}"
-            lines.append(f' {fqid}_name: "{_esc(field.name)}"')
+            lines.append(f' {fqid}_name: "{_esc(field.name or field.field_id)}"')
             if field.field_type == "dropdown":
                 for opt in (field.options or []):
                     lines.append(f' {fqid}_option_{opt.index}_name: "{_esc(opt.name)}"')
@@ -480,7 +482,7 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
                         lines.append(f' {fqid}_option_{opt.index}_desc: "{_esc(opt.desc)}"')
         return
 
-    lines.append(f' {qid}_name: "{_esc(setting.name)}"')
+    lines.append(f' {qid}_name: "{_esc(setting.name or setting.setting_id)}"')
     lines.append(f' {qid}_desc: "{_esc(setting.desc)}"')
 
     if st == "button":
