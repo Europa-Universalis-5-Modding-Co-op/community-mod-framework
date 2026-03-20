@@ -4,14 +4,14 @@
 on_game_start = {
 	on_actions = {
 		delay = { days = 1 }
-		cmm_register_all_human_countries
+		cmf_register_all_human_countries
 	}
 }
 
 # Register core + integrations for all human countries.
 # Scope: on_action
 # Args: none
-cmm_register_all_human_countries = {
+cmf_register_all_human_countries = {
 	effect = {
 		every_country = {
 			limit = { is_ai = no }
