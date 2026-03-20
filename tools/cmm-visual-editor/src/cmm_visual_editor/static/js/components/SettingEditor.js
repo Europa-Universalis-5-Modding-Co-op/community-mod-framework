@@ -125,7 +125,7 @@ const SettingEditorComponent = {
                         <input type="number" v-model.number="setting.option_count" min="1" @input="syncOptions">
                     </div>
                 </div>
-                <dropdown-options :setting="setting"></dropdown-options>
+                <dropdown-options :setting="setting" :mod-id="modId"></dropdown-options>
             </div>
 
             <!-- Text -->

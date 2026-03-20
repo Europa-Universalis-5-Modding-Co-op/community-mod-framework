@@ -729,12 +729,22 @@ body {
 .dropdown-options { margin-top: 8px; }
 .dropdown-options h5 { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
 
-.option-alias-input {
+.dropdown-option-row {
+    margin-bottom: 4px;
+}
+
+.dropdown-option-row .field-row.compact input {
     flex: 1;
+    width: auto;
     min-width: 0;
-    font-family: var(--font-mono, monospace);
-    font-size: 11px;
-    color: var(--accent);
+}
+
+.option-alias-area {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-left: 32px;
+    margin-top: 1px;
 }
 
 /* Alias edit */
