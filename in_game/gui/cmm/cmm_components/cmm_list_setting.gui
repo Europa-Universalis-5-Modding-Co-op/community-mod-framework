@@ -3,7 +3,8 @@
 	# List setting widget with optional per-item move controls and dynamic field columns.
 	# Reads:
 	# - Scope.GetFlagName [string]: current list setting key in root context or current item key in row context.
-	# - Player.MakeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName)) [list<flag>]: item keys for the active list setting.
+	# - Player.MakeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName)) [list<flag>]: item keys for country-scoped list settings.
+	# - GetGlobalList(Concatenate('cmm_list_items_', Scope.GetFlagName)) [list<flag>]: item keys for global list settings.
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_list_is_ordered_', Scope.GetFlagName)) [value]: whether move controls are shown for the active list setting.
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for one item row.
 	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_name')) [flag]: localized item label for one item row.
@@ -81,7 +82,20 @@
 		vbox = {
 			layoutpolicy_horizontal = expanding
 			spacing = 4
+			visible = "[Not(CMMSettingIsGlobal(Scope.GetFlagName))]"
 			datamodel = "[Player.MakeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName))]"
+			datamodel_reuse_widgets = yes
+
+			item = {
+				cmm_list_setting_row_widget = {}
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 4
+			visible = "[CMMSettingIsGlobal(Scope.GetFlagName)]"
+			datamodel = "[GetGlobalList(Concatenate('cmm_list_items_', Scope.GetFlagName))]"
 			datamodel_reuse_widgets = yes
 
 			item = {
