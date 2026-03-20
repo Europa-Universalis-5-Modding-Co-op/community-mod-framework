@@ -63,7 +63,7 @@
 
 			expand = {}
 
-			button_regular = {
+			button_regular_diamond = {
 				minimumsize = { 168 32 }
 				onclick = "[CMMExecuteGui('CMM_ResetToDefaults')]"
 				text = "CMM_RESET_TO_DEFAULTS"
