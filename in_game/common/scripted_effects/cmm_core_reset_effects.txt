@@ -1,25 +1,35 @@
 ﻿# Reset all registered settings to their default values.
-# Iterates all keys in the cmm_default map. For each key, reads the default value
-# and writes it to the cmm value map (global or local) using remove-before-add.
+# Iterates cmm_registered_setting_keys. For each key that has a default,
+# reads the default value and writes it to the cmm value map (global or local)
+# using remove-before-add.
 # Scope: country
 # Args: none
 cmm_reset_to_defaults = {
-	every_key_in_variable_map = {
-		variable = cmm_default
+	every_in_list = {
+		variable = cmm_registered_setting_keys
 
 		save_scope_as = cmm_reset_key
 
 		root = {
-			set_local_variable = { name = cmm_reset_default value = "variable_map(cmm_default|scope:cmm_reset_key)" }
-
 			if = {
-				limit = { "variable_map(cmm_is_global|scope:cmm_reset_key)" >= 1 }
-				remove_from_global_variable_map = { name = cmm key = scope:cmm_reset_key }
-				add_to_global_variable_map = { name = cmm key = scope:cmm_reset_key value = local_var:cmm_reset_default }
-			}
-			else = {
-				remove_from_variable_map = { name = cmm key = scope:cmm_reset_key }
-				add_to_variable_map = { name = cmm key = scope:cmm_reset_key value = local_var:cmm_reset_default }
+				limit = {
+					is_key_in_variable_map = {
+						name = cmm_default
+						target = scope:cmm_reset_key
+					}
+				}
+
+				set_local_variable = { name = cmm_reset_default value = "variable_map(cmm_default|scope:cmm_reset_key)" }
+
+				if = {
+					limit = { "variable_map(cmm_is_global|scope:cmm_reset_key)" >= 1 }
+					remove_from_global_variable_map = { name = cmm key = scope:cmm_reset_key }
+					add_to_global_variable_map = { name = cmm key = scope:cmm_reset_key value = local_var:cmm_reset_default }
+				}
+				else = {
+					remove_from_variable_map = { name = cmm key = scope:cmm_reset_key }
+					add_to_variable_map = { name = cmm key = scope:cmm_reset_key value = local_var:cmm_reset_default }
+				}
 			}
 		}
 	}
