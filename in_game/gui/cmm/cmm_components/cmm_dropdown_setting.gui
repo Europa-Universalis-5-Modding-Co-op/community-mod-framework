@@ -60,6 +60,7 @@
 				size = { 100% 30 }
 
 				button_dropdown = {
+					focuspolicy = all
 					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 					onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 					tooltip = "[CMMOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"
