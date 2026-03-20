@@ -13,7 +13,7 @@
 
 	vbox = {
 		using = window_margin_alt
-		spacing = 10
+		spacing = 2
 
 		window_header_alt = {
 			blockoverride "header_text_object" {
