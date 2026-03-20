@@ -43,7 +43,7 @@ def parse_mod_directory(directory: Path) -> Tuple[ModModel, list]:
     for f in directory.rglob("*_l_english.yml"):
         try:
             raw = f.read_bytes()
-            loc_content = decode_bom(raw)
+            loc_content += "\n" + decode_bom(raw)
         except Exception as e:
             warnings.append(f"Could not read {f}: {e}")
 
