@@ -38,7 +38,7 @@
  cmm_core__general_name: "General"
  cmm_core__session_name: "Session"
  cmm_core__enable_host_only_tools_name: "[SelectLocalization(GameIsMultiplayer, 'cmm_core__enable_host_only_tools_name_multiplayer', 'cmm_core__enable_host_only_tools_name_singleplayer')]"
- cmm_core__enable_host_only_tools_name_singleplayer: "Enable Balance-Altering Tools"
+ cmm_core__enable_host_only_tools_name_singleplayer: "Enable Global Settings & Tools"
  cmm_core__enable_host_only_tools_name_multiplayer: "[SelectLocalization(GetGlobalVariable('cmm_core_host_country').IsSet, 'cmm_core__enable_host_only_tools_name_multiplayer_set', 'cmm_core__enable_host_only_tools_name_multiplayer_unset')]"
  cmm_core__enable_host_only_tools_name_multiplayer_set: "Enable Host-Only Tools - Host Country: [GetGlobalVariable('cmm_core_host_country').GetCountry.GetName]"
  cmm_core__enable_host_only_tools_name_multiplayer_unset: "Enable Host-Only Tools - Host Country: Not Set"
