@@ -181,24 +181,25 @@ const SettingEditorComponent = {
         canBeGlobal() {
             return this.setting.setting_type !== 'text';
         },
-        accessorPrefix() {
-            return this.setting.is_global ? 'global_var' : 'var';
-        },
         defaultAccessorKey() {
             if (!this.modId || !this.setting.setting_id) return '';
             return `${this.modId}__${this.setting.setting_id}`;
         },
+        hasAlias() {
+            return !!(this.setting.alias && this.setting.alias !== this.defaultAccessorKey);
+        },
         accessor() {
             if (!this.modId || !this.setting.setting_id) return '';
             if (['button', 'list'].includes(this.setting.setting_type)) return '';
-            const key = (this.setting.alias && this.setting.alias !== this.defaultAccessorKey)
-                ? this.setting.alias
-                : this.defaultAccessorKey;
-            return `${this.accessorPrefix}:${key}`;
+            if (this.hasAlias) {
+                const prefix = this.setting.is_global ? 'global_var' : 'var';
+                return `${prefix}:${this.setting.alias}`;
+            }
+            const mapFunc = this.setting.is_global ? 'global_variable_map' : 'variable_map';
+            return `"${mapFunc}(cmm|flag:${this.defaultAccessorKey})"`;
         },
         accessorLabel() {
-            const hasAlias = this.setting.alias && this.setting.alias !== this.defaultAccessorKey;
-            if (hasAlias) return "Alias (synced):";
+            if (this.hasAlias) return "Alias (synced):";
             if (!this.setting.is_global) return "To Access the Setting's Value (Country Scope):";
             return "To Access the Setting's Value:";
         },
@@ -272,7 +273,7 @@ const SettingEditorComponent = {
             if (!this.setting.options) this.setting.options = [];
             while (this.setting.options.length < count) {
                 const i = this.setting.options.length + 1;
-                this.setting.options.push({ index: i, name: `Option ${i}`, desc: '' });
+                this.setting.options.push({ index: i, name: `Option ${i}`, desc: '', alias: '' });
             }
             while (this.setting.options.length > count) {
                 this.setting.options.pop();

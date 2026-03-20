@@ -164,9 +164,11 @@ const ListEditorComponent = {
             const field = (this.setting.fields || [])[fi];
             const defaultKey = this.defaultFieldAccessorKey(fi);
             if (field && field.alias && field.alias !== defaultKey) {
-                return `var:${field.alias}`;
+                const prefix = this.setting.is_global ? 'global_var' : 'var';
+                return `${prefix}:${field.alias}`;
             }
-            return `var:${defaultKey}`;
+            const mapFunc = this.setting.is_global ? 'global_variable_map' : 'variable_map';
+            return `"${mapFunc}(cmm|flag:${defaultKey})"`;
         },
         fieldAccessorLabel(fi) {
             const field = (this.setting.fields || [])[fi];
@@ -283,7 +285,7 @@ const ListEditorComponent = {
             if (!field.options) field.options = [];
             while (field.options.length < count) {
                 const i = field.options.length + 1;
-                field.options.push({ index: i, name: `Option ${i}`, desc: '' });
+                field.options.push({ index: i, name: `Option ${i}`, desc: '', alias: '' });
             }
             while (field.options.length > count) {
                 field.options.pop();

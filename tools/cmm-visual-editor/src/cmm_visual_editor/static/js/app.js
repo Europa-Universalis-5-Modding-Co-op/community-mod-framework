@@ -216,9 +216,9 @@ const app = createApp({
                 default_index: 1,
                 option_count: 3,
                 options: [
-                    { index: 1, name: 'Option 1' },
-                    { index: 2, name: 'Option 2' },
-                    { index: 3, name: 'Option 3' },
+                    { index: 1, name: 'Option 1', desc: '', alias: '' },
+                    { index: 2, name: 'Option 2', desc: '', alias: '' },
+                    { index: 3, name: 'Option 3', desc: '', alias: '' },
                 ],
                 character_limit: 42,
                 quote_text: 0,
