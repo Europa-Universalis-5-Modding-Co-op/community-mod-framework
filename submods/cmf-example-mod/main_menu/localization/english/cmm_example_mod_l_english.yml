@@ -8,10 +8,10 @@
  cmm_example__global_name: "Global"
 
  # Groups
- cmm_example__general_toggles_name: "Toggles"
- cmm_example__general_values_name: "Values"
- cmm_example__global_toggles_name: "Toggles"
- cmm_example__global_values_name: "Values"
+ cmm_example__general__general_toggles_name: "Toggles"
+ cmm_example__general__general_values_name: "Values"
+ cmm_example__global__global_toggles_name: "Toggles"
+ cmm_example__global__global_values_name: "Values"
 
  # General Tab - Toggles
  cmm_example__example_toggle_name: "Toggle"
@@ -34,7 +34,9 @@
  cmm_example__example_dropdown_option_3_name: "Option 3"
 
  # General Tab - Ordered List
+ cmm_example__general__example_list_name: "Ordered Settings List"
  cmm_example__example_list_name: "Ordered Settings List"
+ cmm_example__general__example_list_desc: "Example ordered list setting with a bool field, a dropdown field, and a numeric field."
  cmm_example__example_list_desc: "Example ordered list setting with a bool field, a dropdown field, and a numeric field."
  cmm_example__example_list_item_column_name: "Item"
  cmm_example__example_list_i1_name: "Item A"
@@ -50,7 +52,9 @@
  cmm_example__example_list__mode_option_3_name: "High"
 
  # General Tab - Unordered List
+ cmm_example__general__example_unordered_list_name: "Settings List"
  cmm_example__example_unordered_list_name: "Settings List"
+ cmm_example__general__example_unordered_list_desc: "Example unordered list setting with the same field types but no row move controls."
  cmm_example__example_unordered_list_desc: "Example unordered list setting with the same field types but no row move controls."
  cmm_example__example_unordered_list_item_column_name: "Item"
  cmm_example__example_unordered_list_i1_name: "Static A"

@@ -168,6 +168,12 @@ cmf_feature_test_register_cmf_mod = {
 		step_value = 1
 	}
 
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 1 value = root }
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 2 value = root }
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 3 value = root }
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 4 value = root }
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 5 value = root }
+
 	## Unordered List (unordered_list) Group
 	cmm_register_settings_list = {
 		mod_id = cmf_feature_test
@@ -202,7 +208,70 @@ cmf_feature_test_register_cmf_mod = {
 		step_value = 1
 	}
 
+	## Dynamic List (dynamic_list) Group
+	cmm_begin_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		tab_id = lists
+		is_ordered = 1
+	}
+
+	cmm_add_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		value = root
+		name = cmf_feature_test__dynamic_list_i1_name
+	}
+
+	cmm_add_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		value = root
+		name = cmf_feature_test__dynamic_list_i2_name
+	}
+
+	cmm_add_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		value = root
+		name = cmf_feature_test__dynamic_list_i3_name
+	}
+
+	cmm_add_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		value = root
+		name = cmf_feature_test__dynamic_list_i4_name
+	}
+
+	cmm_finish_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		field_id = active
+		default_value = 1
+	}
+
+	cmm_register_list_numeric_field = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		field_id = priority
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
 	## From-List (from_list) Group
+	clear_variable_list = cft_test_list
+	add_to_variable_list = { name = cft_test_list target = flag:cft_item_alpha }
+	add_to_variable_list = { name = cft_test_list target = flag:cft_item_beta }
+	add_to_variable_list = { name = cft_test_list target = flag:cft_item_gamma }
+
 	cmm_register_settings_list_from_list = {
 		mod_id = cmf_feature_test
 		setting_id = from_list
@@ -255,7 +324,63 @@ cmf_feature_test_register_cmf_mod = {
 		step_value = 1
 	}
 
+	## Global Dynamic List (global_dynamic_list) Group
+	cmm_begin_global_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		tab_id = global_lists
+		is_ordered = 1
+	}
+
+	cmm_add_global_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		value = root
+		name = cmf_feature_test__global_dynamic_list_i1_name
+	}
+
+	cmm_add_global_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		value = root
+		name = cmf_feature_test__global_dynamic_list_i2_name
+	}
+
+	cmm_add_global_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		value = root
+		name = cmf_feature_test__global_dynamic_list_i3_name
+	}
+
+	cmm_finish_global_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		field_id = active
+		default_value = 1
+	}
+
+	cmm_register_list_numeric_field = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		field_id = priority
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
 	## Global From-List (global_from_list) Group
+	clear_global_variable_list = cft_global_test_list
+	add_to_global_variable_list = { name = cft_global_test_list target = flag:cft_global_item_alpha }
+	add_to_global_variable_list = { name = cft_global_test_list target = flag:cft_global_item_beta }
+	add_to_global_variable_list = { name = cft_global_test_list target = flag:cft_global_item_gamma }
+
 	cmm_register_global_settings_list_from_list = {
 		mod_id = cmf_feature_test
 		setting_id = global_from_list
@@ -280,102 +405,17 @@ cmf_feature_test_register_cmf_mod = {
 		max_value = 10
 		step_value = 1
 	}
+
+	# Aliases
+	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 1 alias = cft_dd_opt_1 }
+	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 2 alias = cft_dd_opt_2 }
+	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 3 alias = cft_dd_opt_3 }
+	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 4 alias = cft_dd_opt_4 }
+	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 5 alias = cft_dd_opt_5 }
+
+	# Suppress from-list target flags
+	cmf_feature_test_suppress_from_list_flags = yes
 }
-
-# Lists (lists) Tab
-## Ordered List (ordered_list) Group
-
-# ─── How to iterate: cmf_feature_test__ordered_list ───
-# Call cmm_for_each_list_item to loop through items. It calls your effect
-# with $i$ set to the item number, so you can use it in variable names.
-# Scope: country
-#
-# cmm_for_each_list_item = {
-#     setting = cmf_feature_test__ordered_list
-#     effect = cmf_feature_test__ordered_list_each_item
-# }
-#
-# cmf_feature_test__ordered_list_each_item = {
-#     # $i$ is the resolved item number (1-5)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f1)"  (enabled, bool)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f2)"  (mode, dropdown)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f3)"  (weight, numeric)
-# }
-## Unordered List (unordered_list) Group
-
-# ─── How to iterate: cmf_feature_test__unordered_list ───
-# Call cmm_for_each_list_item to loop through items. It calls your effect
-# with $i$ set to the item number, so you can use it in variable names.
-# Scope: country
-#
-# cmm_for_each_list_item = {
-#     setting = cmf_feature_test__unordered_list
-#     effect = cmf_feature_test__unordered_list_each_item
-# }
-#
-# cmf_feature_test__unordered_list_each_item = {
-#     # $i$ is the resolved item number (1-3)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f1)"  (enabled, bool)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f2)"  (mode, dropdown)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f3)"  (weight, numeric)
-# }
-## From-List (from_list) Group
-
-# ─── How to iterate: cmf_feature_test__from_list ───
-# Call cmm_for_each_list_item to loop through items. It calls your effect
-# with $i$ set to the item number, so you can use it in variable names.
-# scope:cmm_list_current_item_value holds the attached game object scope.
-# Scope: country
-#
-# cmm_for_each_list_item = {
-#     setting = cmf_feature_test__from_list
-#     effect = cmf_feature_test__from_list_each_item
-# }
-#
-# cmf_feature_test__from_list_each_item = {
-#     # $i$ is the resolved item number (1-N)
-#     # scope:cmm_list_current_item_value  (attached game object)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f1)"  (active, bool)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f2)"  (priority, numeric)
-# }
-
-# Global Lists (global_lists) Tab
-## Global Ordered List (global_ordered_list) Group
-
-# ─── How to iterate: cmf_feature_test__global_ordered_list ───
-# Call cmm_for_each_list_item to loop through items. It calls your effect
-# with $i$ set to the item number, so you can use it in variable names.
-# Scope: country
-#
-# cmm_for_each_list_item = {
-#     setting = cmf_feature_test__global_ordered_list
-#     effect = cmf_feature_test__global_ordered_list_each_item
-# }
-#
-# cmf_feature_test__global_ordered_list_each_item = {
-#     # $i$ is the resolved item number (1-4)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f1)"  (active, bool)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f2)"  (priority, numeric)
-# }
-## Global From-List (global_from_list) Group
-
-# ─── How to iterate: cmf_feature_test__global_from_list ───
-# Call cmm_for_each_list_item to loop through items. It calls your effect
-# with $i$ set to the item number, so you can use it in variable names.
-# scope:cmm_list_current_item_value holds the attached game object scope.
-# Scope: country
-#
-# cmm_for_each_list_item = {
-#     setting = cmf_feature_test__global_from_list
-#     effect = cmf_feature_test__global_from_list_each_item
-# }
-#
-# cmf_feature_test__global_from_list_each_item = {
-#     # $i$ is the resolved item number (1-N)
-#     # scope:cmm_list_current_item_value  (attached game object)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f1)"  (active, bool)
-#     # "variable_map(cmm|flag:$setting$_i$i$_f2)"  (priority, numeric)
-# }
 
 # Callback handler for cmf_on_callback.
 # var:cmf_callback is the flag of the setting, alert, or action bar element that was interacted with.
@@ -403,4 +443,40 @@ cmf_feature_test__text_plain_on_changed = {
 
 cmf_feature_test__text_quoted_on_changed = {
 	change_country_name = $text$
+}
+
+# Helper effect called by cmm_for_each_list_item for the ordered list.
+# Receives $i$ (item number) and $setting$ (composite key) as macro arguments.
+# scope:cmm_list_current_item_value = attached game scope (root country).
+# Scope: country
+cmf_feature_test_process_list_item = {
+	if = {
+		limit = { exists = scope:cmm_list_current_item_value }
+		save_scope_as = cft_test_item_value
+	}
+
+	# Benign warning suppression — references $i$ and $setting$ so the engine
+	# recognizes this as a parameterized effect (required by cmm_for_each_list_item).
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cft_item_index }
+		cmf_suppress = { v = cft_setting_key }
+		set_local_variable = { name = cft_item_index value = $i$ }
+		set_local_variable = { name = cft_setting_key value = flag:$setting$ }
+		save_scope_as = cft_test_item_value
+	}
+}
+
+# Suppress "set but never used" for from-list variable list target flags.
+# These user-chosen flags can't be suppressed by the core.
+cmf_feature_test_suppress_from_list_flags = {
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cft_item_alpha }
+		cmf_suppress = { v = cft_item_beta }
+		cmf_suppress = { v = cft_item_gamma }
+		cmf_suppress = { v = cft_global_item_alpha }
+		cmf_suppress = { v = cft_global_item_beta }
+		cmf_suppress = { v = cft_global_item_gamma }
+	}
 }
