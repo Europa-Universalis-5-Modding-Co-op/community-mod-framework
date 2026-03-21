@@ -219,6 +219,22 @@ macro = {
 # Args: SettingKey (string)
 # Returns: boolean
 macro = {
+    description = "True when a setting has an associated console command to fire on toggle"
+    definition = "CMMSettingHasConsoleCommand(SettingKey)"
+    replace_with = "EqualTo_string(SettingKey, 'cmm_core__enable_debug_mode')"
+}
+
+# Args: SettingKey (string)
+# Returns: string
+macro = {
+    description = "Console command string for a setting with an associated console command"
+    definition = "CMMSettingConsoleCommand(SettingKey)"
+    replace_with = "Select_CString(EqualTo_string(SettingKey, 'cmm_core__enable_debug_mode'), 'debug_mode', '')"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
     description = "True when a _format localization key exists for a setting"
     definition = "CMMHasFormat(SettingKey)"
     replace_with = "Not(EqualTo_string(Localize(Concatenate(SettingKey, '_format')), Concatenate(SettingKey, '_format')))"

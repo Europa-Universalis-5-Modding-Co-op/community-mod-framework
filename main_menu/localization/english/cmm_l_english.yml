@@ -43,3 +43,5 @@
  cmm_core__enable_host_only_tools_name_multiplayer_set: "Enable Host-Only Tools - Host Country: [GetGlobalVariable('cmm_core_host_country').GetCountry.GetName]"
  cmm_core__enable_host_only_tools_name_multiplayer_unset: "Enable Host-Only Tools - Host Country: Not Set"
  cmm_core__enable_host_only_tools_desc: "Controls whether host-only settings and host-only mod tools are enabled."
+ cmm_core__enable_debug_mode_name: "Enable Debug Mode"
+ cmm_core__enable_debug_mode_desc: "Toggles debug mode for the current session. Debug mode state resets on game reload."

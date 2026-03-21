@@ -48,9 +48,18 @@
 				ignoreinvisible = yes
 
 				checkbox_square_alt = {
-					visible = "[CMMSettingIsBool(Scope.GetFlagName)]"
+					visible = "[And(CMMSettingIsBool(Scope.GetFlagName), Not(CMMSettingHasConsoleCommand(Scope.GetFlagName)))]"
 					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 					onclick = "[CMMExecuteAutoApply('cmm_auto_toggle_bool', Scope.GetFlagName)]"
+					checked = "[CMMIsSettingEnabled(Scope.GetFlagName)]"
+					tooltip_enabled = no
+				}
+
+				checkbox_square_alt = {
+					visible = "[And(CMMSettingIsBool(Scope.GetFlagName), CMMSettingHasConsoleCommand(Scope.GetFlagName))]"
+					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+					onclick = "[CMMExecuteAutoApply('cmm_auto_toggle_bool', Scope.GetFlagName)]"
+					onclick = "[ExecuteConsoleCommand(CMMSettingConsoleCommand(Scope.GetFlagName))]"
 					checked = "[CMMIsSettingEnabled(Scope.GetFlagName)]"
 					tooltip_enabled = no
 				}
