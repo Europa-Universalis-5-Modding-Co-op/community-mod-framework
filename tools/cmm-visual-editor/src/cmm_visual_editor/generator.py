@@ -299,6 +299,13 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
                         lines.append(f"\t\tsetting = {resolved_field}")
                         lines.append(f"\t\talias = {resolved_alias}")
                         lines.append(f"\t}}")
+
+    if st == "list":
+        if setting.no_reset:
+            lines.append(f"\tcmm_set_no_reset = {{")
+            lines.append(f"\t\tmod_id = {mod_id}")
+            lines.append(f"\t\tsetting_id = {setting.setting_id}")
+            lines.append(f"\t}}")
         return
 
     # Determine registration function name
@@ -352,6 +359,13 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
     # Dropdown option alias sync (runs each registration = menu open)
     if st == "dropdown":
         _emit_option_alias_sync(lines, setting, qid, indent="\t")
+
+    # No reset
+    if setting.no_reset:
+        lines.append(f"\tcmm_set_no_reset = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting.setting_id}")
+        lines.append(f"\t}}")
 
 
 def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField):

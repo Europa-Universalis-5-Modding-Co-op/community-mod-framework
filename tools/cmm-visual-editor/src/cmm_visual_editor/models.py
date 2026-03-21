@@ -66,6 +66,8 @@ class Setting:
     on_changed_effect: Optional[str] = None
     pass_value_param: Optional[str] = None
     no_pass_value: Optional[bool] = None
+    # reset
+    no_reset: Optional[bool] = None
     # alias
     alias: str = ""
 
@@ -146,6 +148,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["pass_value_param"] = s.pass_value_param
         if s.no_pass_value:
             d["no_pass_value"] = s.no_pass_value
+        if s.no_reset:
+            d["no_reset"] = s.no_reset
         if s.alias:
             d["alias"] = s.alias
         return d
@@ -253,6 +257,7 @@ def dict_to_model(data: dict) -> ModModel:
             on_changed_effect=s.get("on_changed_effect"),
             pass_value_param=s.get("pass_value_param"),
             no_pass_value=s.get("no_pass_value"),
+            no_reset=s.get("no_reset"),
             alias=s.get("alias", ""),
         )
 

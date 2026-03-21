@@ -298,6 +298,16 @@ cmm_register_settings_list_from_list = {
 # Register fields after this
 </syntaxhighlight>
 
+== Non-Resettable Settings ==
+Exclude a setting from the Reset to Defaults button:
+<syntaxhighlight lang="text">
+cmm_set_no_reset = {
+	mod_id = your_mod
+	setting_id = your_setting
+}
+</syntaxhighlight>
+Call after the setting registration effect.
+
 == Setting Aliases ==
 Assign an '''alias''' variable that mirrors a setting value. Add the sync call in your registration effect and <code>cmf_on_callback</code> callback.
 

@@ -101,6 +101,7 @@ def _build_model(
     setting_aliases = _parse_setting_aliases(effects)
     field_aliases = _parse_field_aliases(effects)
     option_aliases = _parse_option_aliases(effects)
+    no_reset_settings = _parse_no_reset_settings(effects)
 
     # Build tabs/groups/settings from registrations
     tabs_map = {}  # tab_id -> Tab
@@ -176,6 +177,8 @@ def _build_model(
                 setting.pass_value_param = info.get("param")
                 if info.get("no_pass"):
                     setting.no_pass_value = True
+            if setting.setting_id in no_reset_settings:
+                setting.no_reset = True
 
     model = ModModel(
         mod_id=mod_id,
@@ -238,6 +241,22 @@ def _parse_option_aliases(content: str) -> dict:
                 result[setting] = {}
             if index not in result[setting]:
                 result[setting][index] = alias
+    return result
+
+
+def _parse_no_reset_settings(content: str) -> set:
+    """Extract cmm_set_no_reset blocks -> set of setting_ids."""
+    result = set()
+    pattern = re.compile(r"cmm_set_no_reset\s*=\s*\{", re.IGNORECASE)
+    for m in pattern.finditer(content):
+        block_end = _find_closing_brace(content, m.end())
+        if block_end < 0:
+            continue
+        block = content[m.end():block_end]
+        params = _parse_params(block)
+        sid = params.get("setting_id", "")
+        if sid:
+            result.add(sid)
     return result
 
 

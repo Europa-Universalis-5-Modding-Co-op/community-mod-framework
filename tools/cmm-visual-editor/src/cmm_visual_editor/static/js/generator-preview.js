@@ -247,6 +247,12 @@ ${prefix}_on_cmf_callback = {
                     }
                 }
             }
+            if (setting.no_reset) {
+                lines.push(`\tcmm_set_no_reset = {`);
+                lines.push(`\t\tmod_id = ${modId}`);
+                lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+                lines.push(`\t}`);
+            }
             return;
         }
 
@@ -291,6 +297,14 @@ ${prefix}_on_cmf_callback = {
         // Dropdown option alias sync
         if (st === 'dropdown') {
             this._emitOptionAliasSync(lines, setting, qid, '\t');
+        }
+
+        // No reset
+        if (setting.no_reset) {
+            lines.push(`\tcmm_set_no_reset = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+            lines.push(`\t}`);
         }
     },
 

@@ -1,7 +1,7 @@
 ﻿# Reset all registered settings to their default values.
-# Iterates cmm_registered_setting_keys. For each key that has a default,
-# reads the default value and writes it to the cmm value map (global or local)
-# using remove-before-add.
+# Iterates cmm_registered_setting_keys. For each key that has a default
+# and is not marked no_reset, reads the default value and writes it to
+# the cmm value map (global or local) using remove-before-add.
 # Scope: country
 # Args: none
 cmm_reset_to_defaults = {
@@ -16,6 +16,12 @@ cmm_reset_to_defaults = {
 					is_key_in_variable_map = {
 						name = cmm_default
 						target = scope:cmm_reset_key
+					}
+					NOT = {
+						is_key_in_variable_map = {
+							name = cmm_no_reset
+							target = scope:cmm_reset_key
+						}
 					}
 				}
 

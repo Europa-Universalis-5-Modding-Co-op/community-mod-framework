@@ -13,6 +13,10 @@ cmf_feature_test_register_cmf_mod = {
 		setting = cmf_feature_test__toggle
 		alias = cft_toggle_alias
 	}
+	cmm_set_no_reset = {
+		mod_id = cmf_feature_test
+		setting_id = toggle
+	}
 
 	cmm_register_button_setting = {
 		mod_id = cmf_feature_test

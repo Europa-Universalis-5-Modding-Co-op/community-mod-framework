@@ -20,6 +20,7 @@ cmm_init_variable_maps = {
 	add_to_variable_map = { name = cmm_list_last_index key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_list_is_ordered key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_has_sgui key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_no_reset key = flag:cmm_init value = 0 }
 	add_to_global_variable_map = { name = cmm key = flag:cmm_init value = 0 }
 
 	# Benign warning suppression
@@ -43,6 +44,7 @@ cmm_init_variable_maps = {
 			has_variable_map = cmm_list_last_index
 			has_variable_map = cmm_list_is_ordered
 			has_variable_map = cmm_has_sgui
+			has_variable_map = cmm_no_reset
 			has_global_variable_map = cmm
 		}
 		cmf_suppress = { v = cmm_init }
@@ -236,5 +238,15 @@ cmm_register_setting_metadata = {
 # - setting_id (key): Setting id.
 cmm_add_scripted_gui = {
 	add_to_variable_map = { name = cmm_has_sgui key = flag:$mod_id$__$setting_id$ value = 1 }
+}
+
+# Mark a setting as non-resettable (excluded from Reset to Defaults).
+# Call after the setting registration effect.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id.
+cmm_set_no_reset = {
+	add_to_variable_map = { name = cmm_no_reset key = flag:$mod_id$__$setting_id$ value = 1 }
 }
 

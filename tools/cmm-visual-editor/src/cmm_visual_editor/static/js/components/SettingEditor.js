@@ -72,6 +72,14 @@ const SettingEditorComponent = {
                 </label>
             </div>
 
+            <div class="field-row" v-if="setting.setting_type !== 'button'">
+                <label class="checkbox-label">
+                    <input type="checkbox" v-model="setting.no_reset">
+                    No Reset
+                    <span class="field-hint">(Excluded from the Reset to Defaults button)</span>
+                </label>
+            </div>
+
             <!-- Bool -->
             <div v-if="setting.setting_type === 'bool'" class="type-fields">
                 <div class="field-row">
