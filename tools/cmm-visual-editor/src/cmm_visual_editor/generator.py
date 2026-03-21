@@ -65,22 +65,45 @@ def _gen_effects(model: ModModel) -> str:
     lines.append(f"# Root scope: country.")
     lines.append(f"{prefix}_register_cmf_mod = {{")
 
-    first = True
+    first_tab = True
     for tab in model.tabs:
+        if not any(s for g in tab.groups for s in g.settings):
+            continue
+        if not first_tab:
+            lines.append("")
+        first_tab = False
+        lines.append(f"\t# {tab.tab_id} Tab")
+        first_group = True
         for group in tab.groups:
+            if not group.settings:
+                continue
+            if not first_group:
+                lines.append("")
+            first_group = False
+            lines.append(f"\t## {group.group_id} Group")
+            first_setting = True
             for setting in group.settings:
-                if not first:
+                if not first_setting:
                     lines.append("")
-                first = False
+                first_setting = False
                 _emit_registration(lines, mod_id, tab.tab_id, group.group_id, setting)
 
     lines.append("}")
 
     # List iteration boilerplate (commented-out reference for mod authors)
     for tab in model.tabs:
+        tab_header_emitted = False
         for group in tab.groups:
+            group_header_emitted = False
             for setting in group.settings:
                 if setting.setting_type == "list" and setting.fields:
+                    if not tab_header_emitted:
+                        lines.append("")
+                        lines.append(f"# {tab.tab_id} Tab")
+                        tab_header_emitted = True
+                    if not group_header_emitted:
+                        lines.append(f"## {group.group_id} Group")
+                        group_header_emitted = True
                     _emit_list_iteration_boilerplate(lines, mod_id, setting)
 
     # Callback handler effect
@@ -88,9 +111,18 @@ def _gen_effects(model: ModModel) -> str:
 
     # Text setting effects (text callbacks are scripted effects, not scripted GUIs)
     for tab in model.tabs:
+        tab_header_emitted = False
         for group in tab.groups:
+            group_header_emitted = False
             for setting in group.settings:
                 if setting.setting_type == "text":
+                    if not tab_header_emitted:
+                        lines.append("")
+                        lines.append(f"# {tab.tab_id} Tab")
+                        tab_header_emitted = True
+                    if not group_header_emitted:
+                        lines.append(f"## {group.group_id} Group")
+                        group_header_emitted = True
                     qid = f"{mod_id}__{setting.setting_id}"
                     lines.append("")
                     lines.append(f"{qid}_on_changed = {{")
@@ -116,7 +148,7 @@ def _emit_callback_handler(lines: list, model: ModModel):
     prefix = model.file_prefix or model.mod_id
     mod_id = model.mod_id
 
-    # Collect cases: settings with aliases or custom effects (non-text, non-list)
+    # Collect cases with tab/group context
     cases = []
     for tab in model.tabs:
         for group in tab.groups:
@@ -129,7 +161,7 @@ def _emit_callback_handler(lines: list, model: ModModel):
                 option_aliases = _get_option_aliases(setting) if st == "dropdown" else []
                 custom_effect = setting.on_changed_effect or ""
                 if alias or option_aliases or custom_effect:
-                    cases.append((qid, st, alias, option_aliases, custom_effect))
+                    cases.append((tab.tab_id, group.group_id, qid, st, alias, option_aliases, custom_effect))
 
     lines.append("")
     lines.append(f"# Callback handler for cmf_on_callback.")
@@ -140,7 +172,16 @@ def _emit_callback_handler(lines: list, model: ModModel):
     lines.append(f"\t\ttrigger = var:cmf_callback")
 
     if cases:
-        for qid, st, alias, option_aliases, custom_effect in cases:
+        current_tab = None
+        current_group = None
+        for tab_id, group_id, qid, st, alias, option_aliases, custom_effect in cases:
+            if tab_id != current_tab:
+                lines.append(f"\t\t# {tab_id} Tab")
+                current_tab = tab_id
+                current_group = None
+            if group_id != current_group:
+                lines.append(f"\t\t## {group_id} Group")
+                current_group = group_id
             lines.append(f"\t\tflag:{qid} = {{")
             if alias:
                 sync_func = "cmm_sync_bool_alias" if st == "bool" else "cmm_sync_setting_alias"
@@ -376,17 +417,29 @@ def _emit_list_iteration_boilerplate(lines: list, mod_id: str, setting: Setting)
 
 def _gen_scripted_guis(model: ModModel) -> str:
     mod_id = model.mod_id
-    blocks = []
+    lines = []
+    first_block = True
 
     for tab in model.tabs:
+        tab_header_emitted = False
         for group in tab.groups:
+            group_header_emitted = False
             for setting in group.settings:
                 if setting.setting_type != "list":
-                    continue  # only list settings need _on_changed scripted GUIs
+                    continue
+                if not first_block:
+                    lines.append("")
+                first_block = False
+                if not tab_header_emitted:
+                    lines.append(f"# {tab.tab_id} Tab")
+                    tab_header_emitted = True
+                if not group_header_emitted:
+                    lines.append(f"## {group.group_id} Group")
+                    group_header_emitted = True
                 qid = f"{mod_id}__{setting.setting_id}"
-                blocks.append(_gen_list_callback_block(qid))
+                lines.append(_gen_list_callback_block(qid))
 
-    return "\n\n".join(blocks) + "\n"
+    return "\n".join(lines) + "\n"
 
 
 def _gen_list_callback_block(qid: str) -> str:
@@ -413,35 +466,24 @@ def _gen_localization(model: ModModel) -> str:
     lines.append(f' {mod_id}_name: "{_esc(model.mod_name)}"')
     lines.append(f' {mod_id}_desc: "{_esc(model.mod_desc)}"')
 
-    # Tabs
-    if model.tabs:
-        lines.append("")
-        lines.append(" # Tabs")
-        for tab in model.tabs:
-            lines.append(f' {mod_id}__{tab.tab_id}_name: "{_esc(tab.name or tab.tab_id)}"')
-
-    # Groups (deduplicated by group_id)
-    seen_groups = {}
+    # Tabs, groups, and settings
+    seen_groups = set()
     for tab in model.tabs:
+        if not any(g.settings for g in tab.groups):
+            continue
+        lines.append("")
+        lines.append(f" # {tab.tab_id} Tab")
+        lines.append(f' {mod_id}__{tab.tab_id}_name: "{_esc(tab.name or tab.tab_id)}"')
+
         for group in tab.groups:
+            if not group.settings:
+                continue
+            lines.append(f" ## {group.group_id} Group")
             if group.group_id not in seen_groups:
-                seen_groups[group.group_id] = group
-
-    if seen_groups:
-        lines.append("")
-        lines.append(" # Groups")
-        for gid, group in seen_groups.items():
-            lines.append(f' {mod_id}__{gid}_name: "{_esc(group.name or gid)}"')
-            if group.desc:
-                lines.append(f' {mod_id}__{gid}_desc: "{_esc(group.desc)}"')
-
-    # Settings by tab and group
-    for tab in model.tabs:
-        for group in tab.groups:
-            has_settings = len(group.settings) > 0
-            if has_settings:
-                lines.append("")
-                lines.append(f" # {_esc(tab.name)} Tab - {_esc(group.name)}")
+                seen_groups.add(group.group_id)
+                lines.append(f' {mod_id}__{group.group_id}_name: "{_esc(group.name or group.group_id)}"')
+                if group.desc:
+                    lines.append(f' {mod_id}__{group.group_id}_desc: "{_esc(group.desc)}"')
 
             for setting in group.settings:
                 _emit_setting_loc(lines, mod_id, setting)
@@ -450,8 +492,12 @@ def _gen_localization(model: ModModel) -> str:
     flag_keys = [mod_id]
     for tab in model.tabs:
         flag_keys.append(f"{mod_id}__{tab.tab_id}")
-    for gid in seen_groups:
-        flag_keys.append(f"{mod_id}__{gid}")
+    seen_flag_groups = set()
+    for tab in model.tabs:
+        for group in tab.groups:
+            if group.group_id not in seen_flag_groups:
+                seen_flag_groups.add(group.group_id)
+                flag_keys.append(f"{mod_id}__{group.group_id}")
     for tab in model.tabs:
         for group in tab.groups:
             for setting in group.settings:

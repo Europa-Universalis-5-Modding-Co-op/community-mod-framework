@@ -60,12 +60,23 @@ ${prefix}_on_cmf_callback = {
         lines.push('# Root scope: country.');
         lines.push(`${prefix}_register_cmf_mod = {`);
 
-        let first = true;
+        let firstTab = true;
         for (const tab of (state.tabs || [])) {
+            const hasSettings = (tab.groups || []).some(g => (g.settings || []).length > 0);
+            if (!hasSettings) continue;
+            if (!firstTab) lines.push('');
+            firstTab = false;
+            lines.push(`\t# ${tab.tab_id} Tab`);
+            let firstGroup = true;
             for (const group of (tab.groups || [])) {
+                if (!(group.settings || []).length) continue;
+                if (!firstGroup) lines.push('');
+                firstGroup = false;
+                lines.push(`\t## ${group.group_id} Group`);
+                let firstSetting = true;
                 for (const setting of (group.settings || [])) {
-                    if (!first) lines.push('');
-                    first = false;
+                    if (!firstSetting) lines.push('');
+                    firstSetting = false;
                     this._emitRegistration(lines, modId, tab.tab_id, group.group_id, setting);
                 }
             }
@@ -74,9 +85,20 @@ ${prefix}_on_cmf_callback = {
 
         // List iteration boilerplate
         for (const tab of (state.tabs || [])) {
+            let tabHeaderEmitted = false;
             for (const group of (tab.groups || [])) {
+                let groupHeaderEmitted = false;
                 for (const setting of (group.settings || [])) {
                     if (setting.setting_type === 'list' && (setting.fields || []).length > 0) {
+                        if (!tabHeaderEmitted) {
+                            lines.push('');
+                            lines.push(`# ${tab.tab_id} Tab`);
+                            tabHeaderEmitted = true;
+                        }
+                        if (!groupHeaderEmitted) {
+                            lines.push(`## ${group.group_id} Group`);
+                            groupHeaderEmitted = true;
+                        }
                         this._emitListIterationBoilerplate(lines, modId, setting);
                     }
                 }
@@ -88,9 +110,20 @@ ${prefix}_on_cmf_callback = {
 
         // Text effects
         for (const tab of (state.tabs || [])) {
+            let tabHeaderEmitted = false;
             for (const group of (tab.groups || [])) {
+                let groupHeaderEmitted = false;
                 for (const setting of (group.settings || [])) {
                     if (setting.setting_type === 'text') {
+                        if (!tabHeaderEmitted) {
+                            lines.push('');
+                            lines.push(`# ${tab.tab_id} Tab`);
+                            tabHeaderEmitted = true;
+                        }
+                        if (!groupHeaderEmitted) {
+                            lines.push(`## ${group.group_id} Group`);
+                            groupHeaderEmitted = true;
+                        }
                         const qid = `${modId}__${setting.setting_id}`;
                         lines.push('');
                         lines.push(`${qid}_on_changed = {`);
@@ -327,17 +360,30 @@ ${prefix}_on_cmf_callback = {
 
     genScriptedGuis(state) {
         const modId = state.mod_id;
-        const blocks = [];
+        const lines = [];
+        let firstBlock = true;
         for (const tab of (state.tabs || [])) {
+            let tabHeaderEmitted = false;
             for (const group of (tab.groups || [])) {
+                let groupHeaderEmitted = false;
                 for (const setting of (group.settings || [])) {
                     if (setting.setting_type !== 'list') continue;
+                    if (!firstBlock) lines.push('');
+                    firstBlock = false;
+                    if (!tabHeaderEmitted) {
+                        lines.push(`# ${tab.tab_id} Tab`);
+                        tabHeaderEmitted = true;
+                    }
+                    if (!groupHeaderEmitted) {
+                        lines.push(`## ${group.group_id} Group`);
+                        groupHeaderEmitted = true;
+                    }
                     const qid = `${modId}__${setting.setting_id}`;
-                    blocks.push(this._genListCallback(qid));
+                    lines.push(this._genListCallback(qid));
                 }
             }
         }
-        return blocks.join('\n\n') + '\n';
+        return lines.join('\n') + '\n';
     },
 
     _genListCallback(qid) {
@@ -358,7 +404,7 @@ ${prefix}_on_cmf_callback = {
         const prefix = state.file_prefix || state.mod_id;
         const modId = state.mod_id;
 
-        // Collect cases: settings with aliases or custom effects (non-text, non-list)
+        // Collect cases with tab/group context
         const cases = [];
         for (const tab of (state.tabs || [])) {
             for (const group of (tab.groups || [])) {
@@ -370,7 +416,7 @@ ${prefix}_on_cmf_callback = {
                     const optionAliases = st === 'dropdown' ? this._getOptionAliases(setting) : [];
                     const customEffect = setting.on_changed_effect || '';
                     if (alias || optionAliases.length || customEffect) {
-                        cases.push({ qid, st, alias, optionAliases, customEffect });
+                        cases.push({ tabId: tab.tab_id, groupId: group.group_id, qid, st, alias, optionAliases, customEffect });
                     }
                 }
             }
@@ -385,7 +431,18 @@ ${prefix}_on_cmf_callback = {
         lines.push(`\t\ttrigger = var:cmf_callback`);
 
         if (cases.length) {
+            let currentTab = null;
+            let currentGroup = null;
             for (const c of cases) {
+                if (c.tabId !== currentTab) {
+                    lines.push(`\t\t# ${c.tabId} Tab`);
+                    currentTab = c.tabId;
+                    currentGroup = null;
+                }
+                if (c.groupId !== currentGroup) {
+                    lines.push(`\t\t## ${c.groupId} Group`);
+                    currentGroup = c.groupId;
+                }
                 lines.push(`\t\tflag:${c.qid} = {`);
                 if (c.alias) {
                     const syncFunc = c.st === 'bool' ? 'cmm_sync_bool_alias' : 'cmm_sync_setting_alias';
@@ -424,55 +481,47 @@ ${prefix}_on_cmf_callback = {
         lines.push(` ${modId}_name: "${this._esc(state.mod_name)}"`);
         lines.push(` ${modId}_desc: "${this._esc(state.mod_desc)}"`);
 
-        if (state.tabs && state.tabs.length) {
+        // Tabs, groups, and settings
+        const seenGroups = new Set();
+        for (const tab of (state.tabs || [])) {
+            const hasContent = (tab.groups || []).some(g => (g.settings || []).length > 0);
+            if (!hasContent) continue;
             lines.push('');
-            lines.push(' # Tabs');
-            for (const tab of state.tabs) {
-                lines.push(` ${modId}__${tab.tab_id}_name: "${this._esc(tab.name || tab.tab_id)}"`);
-            }
+            lines.push(` # ${tab.tab_id} Tab`);
+            lines.push(` ${modId}__${tab.tab_id}_name: "${this._esc(tab.name || tab.tab_id)}"`);
 
-            const seenGroups = {};
-            for (const tab of state.tabs) {
-                for (const group of (tab.groups || [])) {
-                    if (!seenGroups[group.group_id]) {
-                        seenGroups[group.group_id] = group;
-                    }
-                }
-            }
-            if (Object.keys(seenGroups).length) {
-                lines.push('');
-                lines.push(' # Groups');
-                for (const [gid, group] of Object.entries(seenGroups)) {
-                    lines.push(` ${modId}__${gid}_name: "${this._esc(group.name || gid)}"`);
+            for (const group of (tab.groups || [])) {
+                if (!(group.settings || []).length) continue;
+                lines.push(` ## ${group.group_id} Group`);
+                if (!seenGroups.has(group.group_id)) {
+                    seenGroups.add(group.group_id);
+                    lines.push(` ${modId}__${group.group_id}_name: "${this._esc(group.name || group.group_id)}"`);
                     if (group.desc) {
-                        lines.push(` ${modId}__${gid}_desc: "${this._esc(group.desc)}"`);
+                        lines.push(` ${modId}__${group.group_id}_desc: "${this._esc(group.desc)}"`);
                     }
                 }
-            }
-
-            for (const tab of state.tabs) {
-                for (const group of (tab.groups || [])) {
-                    if (group.settings && group.settings.length) {
-                        lines.push('');
-                        lines.push(` # ${tab.name || tab.tab_id} Tab - ${group.name || group.group_id}`);
-                        for (const s of group.settings) {
-                            this._emitSettingLoc(lines, modId, s);
-                        }
-                    }
+                for (const s of group.settings) {
+                    this._emitSettingLoc(lines, modId, s);
                 }
             }
         }
 
         // Self-referencing flag keys (suppress engine localization warnings)
         const flagKeys = [modId];
-        const seenFlagGroupIds = new Set();
         for (const tab of (state.tabs || [])) {
             flagKeys.push(`${modId}__${tab.tab_id}`);
+        }
+        const seenFlagGroupIds = new Set();
+        for (const tab of (state.tabs || [])) {
             for (const group of (tab.groups || [])) {
                 if (!seenFlagGroupIds.has(group.group_id)) {
                     seenFlagGroupIds.add(group.group_id);
                     flagKeys.push(`${modId}__${group.group_id}`);
                 }
+            }
+        }
+        for (const tab of (state.tabs || [])) {
+            for (const group of (tab.groups || [])) {
                 for (const s of (group.settings || [])) {
                     flagKeys.push(`${modId}__${s.setting_id}`);
                     if (s.setting_type === 'list') {
