@@ -256,6 +256,242 @@ const app = createApp({
             Object.assign(state, data);
         }
 
+        // ── Drag and drop ──────────────────────────────────────────
+        // Drag state is NOT part of `state` so it doesn't trigger history/dirty.
+        const drag = reactive({
+            type: null,         // 'tab' | 'group' | 'setting' | null
+            sourceTabIdx: -1,
+            sourceGroupIdx: -1,
+            sourceItemIdx: -1,
+            overTabIdx: -1,
+            overGroupIdx: -1,
+            overItemIdx: -1,
+            position: null,     // 'before' | 'after'
+        });
+
+        function resetDrag() {
+            if (_scrollRAF) { cancelAnimationFrame(_scrollRAF); _scrollRAF = null; }
+            drag.type = null;
+            drag.sourceTabIdx = -1;
+            drag.sourceGroupIdx = -1;
+            drag.sourceItemIdx = -1;
+            drag.overTabIdx = -1;
+            drag.overGroupIdx = -1;
+            drag.overItemIdx = -1;
+            drag.position = null;
+        }
+
+        function moveItem(type, fromTabIdx, fromGroupIdx, fromIdx, toTabIdx, toGroupIdx, toIdx) {
+            let srcArr, dstArr;
+            if (type === 'tab') {
+                srcArr = dstArr = state.tabs;
+            } else if (type === 'group') {
+                srcArr = state.tabs[fromTabIdx].groups;
+                dstArr = state.tabs[toTabIdx].groups;
+            } else {
+                srcArr = state.tabs[fromTabIdx].groups[fromGroupIdx].settings;
+                dstArr = state.tabs[toTabIdx].groups[toGroupIdx].settings;
+            }
+
+            if (srcArr === dstArr && fromIdx === toIdx) return;
+
+            const [item] = srcArr.splice(fromIdx, 1);
+            // Adjust target index if same array and source was before target
+            if (srcArr === dstArr && fromIdx < toIdx) toIdx--;
+            dstArr.splice(toIdx, 0, item);
+
+            // Fix selection indices
+            if (type === 'tab') {
+                const sel = selectedTabIdx.value;
+                if (fromIdx === sel) {
+                    selectedTabIdx.value = toIdx;
+                } else {
+                    if (fromIdx < sel && toIdx >= sel) selectedTabIdx.value--;
+                    else if (fromIdx > sel && toIdx <= sel) selectedTabIdx.value++;
+                }
+            } else if (type === 'group') {
+                if (fromTabIdx === toTabIdx && fromTabIdx === selectedTabIdx.value) {
+                    const sel = selectedGroupIdx.value;
+                    if (fromIdx === sel) {
+                        selectedGroupIdx.value = toIdx;
+                    } else {
+                        if (fromIdx < sel && toIdx >= sel) selectedGroupIdx.value--;
+                        else if (fromIdx > sel && toIdx <= sel) selectedGroupIdx.value++;
+                    }
+                } else {
+                    // Group left or entered the selected tab
+                    if (fromTabIdx === selectedTabIdx.value) clampSelection();
+                }
+            }
+        }
+
+        // Horizontal position: left half = 'before', right half = 'after'
+        function hPos(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            return event.clientX < rect.left + rect.width / 2 ? 'before' : 'after';
+        }
+        // Vertical position: top half = 'before', bottom half = 'after'
+        function vPos(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            return event.clientY < rect.top + rect.height / 2 ? 'before' : 'after';
+        }
+
+        function insertIdx(overIdx, pos) {
+            return pos === 'before' ? overIdx : overIdx + 1;
+        }
+
+        // Cancel drag if it started from an input/select/textarea
+        function isInputEl(el) {
+            const tag = el.tagName;
+            return tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA';
+        }
+
+        // ── Drag start ─────────────────────────────────────────────
+        function onDragStartTab(event, i) {
+            drag.type = 'tab';
+            drag.sourceTabIdx = i;
+            drag.sourceItemIdx = i;
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', '');
+        }
+
+        function onDragStartGroup(event, gi) {
+            drag.type = 'group';
+            drag.sourceTabIdx = selectedTabIdx.value;
+            drag.sourceGroupIdx = gi;
+            drag.sourceItemIdx = gi;
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', '');
+        }
+
+        function onDragStartSetting(event, si) {
+            if (isInputEl(event.target)) { event.preventDefault(); return; }
+            drag.type = 'setting';
+            drag.sourceTabIdx = selectedTabIdx.value;
+            drag.sourceGroupIdx = selectedGroupIdx.value;
+            drag.sourceItemIdx = si;
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', '');
+        }
+
+        // ── Auto-scroll while dragging near edges ──────────────────
+        let _scrollRAF = null;
+        function dragAutoScroll(event) {
+            const panel = event.target.closest('.editor-panel');
+            if (!panel) return;
+            const rect = panel.getBoundingClientRect();
+            const edgeZone = 60;
+            const maxSpeed = 18;
+            let speed = 0;
+
+            if (event.clientY < rect.top + edgeZone) {
+                speed = -maxSpeed * (1 - (event.clientY - rect.top) / edgeZone);
+            } else if (event.clientY > rect.bottom - edgeZone) {
+                speed = maxSpeed * (1 - (rect.bottom - event.clientY) / edgeZone);
+            }
+
+            if (_scrollRAF) { cancelAnimationFrame(_scrollRAF); _scrollRAF = null; }
+            if (speed !== 0) {
+                (function scroll() {
+                    panel.scrollTop += speed;
+                    _scrollRAF = requestAnimationFrame(scroll);
+                })();
+            }
+        }
+
+        // ── Drag over (visual feedback) ────────────────────────────
+        function onDragOverTab(event, i) {
+            if (drag.type === 'tab' || drag.type === 'group' || drag.type === 'setting') {
+                event.preventDefault();
+                drag.overTabIdx = i;
+                if (drag.type === 'tab') drag.position = hPos(event);
+            }
+        }
+
+        function onDragOverGroup(event, gi) {
+            if (drag.type === 'group' || drag.type === 'setting') {
+                event.preventDefault();
+                drag.overGroupIdx = gi;
+                if (drag.type === 'group') drag.position = hPos(event);
+            }
+        }
+
+        function onDragOverSetting(event, si) {
+            if (drag.type === 'setting') {
+                event.preventDefault();
+                drag.overItemIdx = si;
+                drag.position = vPos(event);
+                dragAutoScroll(event);
+            }
+        }
+
+        // ── Drag leave ─────────────────────────────────────────────
+        function onDragLeaveTab(i) {
+            if (drag.overTabIdx === i) drag.overTabIdx = -1;
+        }
+        function onDragLeaveGroup(gi) {
+            if (drag.overGroupIdx === gi) drag.overGroupIdx = -1;
+        }
+        function onDragLeaveSetting(si) {
+            if (drag.overItemIdx === si) { drag.overItemIdx = -1; drag.position = null; }
+        }
+
+        // ── Drop handlers ──────────────────────────────────────────
+        function onDropTab(event, i) {
+            event.preventDefault();
+            if (drag.type === 'tab') {
+                const to = insertIdx(i, drag.position);
+                moveItem('tab', 0, 0, drag.sourceItemIdx, 0, 0, to);
+            } else if (drag.type === 'group') {
+                // Move group to end of target tab
+                const targetGroups = state.tabs[i].groups;
+                moveItem('group', drag.sourceTabIdx, 0, drag.sourceItemIdx, i, 0, targetGroups.length);
+            } else if (drag.type === 'setting') {
+                // Move setting to end of first group of target tab
+                const targetTab = state.tabs[i];
+                if (targetTab && targetTab.groups.length) {
+                    const targetSettings = targetTab.groups[0].settings;
+                    moveItem('setting', drag.sourceTabIdx, drag.sourceGroupIdx, drag.sourceItemIdx, i, 0, targetSettings.length);
+                }
+            }
+            resetDrag();
+        }
+
+        function onDropGroup(event, gi) {
+            event.preventDefault();
+            event.stopPropagation();
+            const currentTabIdx = selectedTabIdx.value;
+            if (drag.type === 'group') {
+                const to = insertIdx(gi, drag.position);
+                moveItem('group', drag.sourceTabIdx, 0, drag.sourceItemIdx, currentTabIdx, 0, to);
+            } else if (drag.type === 'setting') {
+                // Move setting to end of target group
+                const targetSettings = state.tabs[currentTabIdx].groups[gi].settings;
+                moveItem('setting', drag.sourceTabIdx, drag.sourceGroupIdx, drag.sourceItemIdx, currentTabIdx, gi, targetSettings.length);
+            }
+            resetDrag();
+        }
+
+        function onDropSetting(event, si) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (drag.type !== 'setting') { resetDrag(); return; }
+            const curTab = selectedTabIdx.value;
+            const curGroup = selectedGroupIdx.value;
+            const to = insertIdx(si, drag.position);
+            moveItem('setting', drag.sourceTabIdx, drag.sourceGroupIdx, drag.sourceItemIdx, curTab, curGroup, to);
+            resetDrag();
+        }
+
+        function onDropEmptyGroup(event) {
+            event.preventDefault();
+            if (drag.type !== 'setting') { resetDrag(); return; }
+            const curTab = selectedTabIdx.value;
+            const curGroup = selectedGroupIdx.value;
+            moveItem('setting', drag.sourceTabIdx, drag.sourceGroupIdx, drag.sourceItemIdx, curTab, curGroup, 0);
+            resetDrag();
+        }
+
         // ── Import ───────────────────────────────────────────────
         async function importFromDir() {
             importWarnings.value = [];
@@ -444,8 +680,13 @@ const app = createApp({
             selectedTab, selectedGroup,
             modDir, dirty, saveStatus, saveError,
             undoCount, redoCount,
+            drag, resetDrag,
             sanitizeId, addTab, removeTab, addGroup, removeGroup,
             addSetting, removeSetting, moveSetting, onUpdate,
+            onDragStartTab, onDragStartGroup, onDragStartSetting,
+            onDragOverTab, onDragOverGroup, onDragOverSetting,
+            onDragLeaveTab, onDragLeaveGroup, onDragLeaveSetting,
+            onDropTab, onDropGroup, onDropSetting, onDropEmptyGroup,
             generateAndDownload, importFromDir, saveToDir, closeModDir,
             openNewDir, browseDir, undo, redo, closeApp,
         };

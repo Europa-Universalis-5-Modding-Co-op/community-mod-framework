@@ -392,7 +392,13 @@ body {
     padding: 6px 8px;
     background: var(--bg-card);
     border-bottom: 1px solid var(--border);
+    cursor: grab;
 }
+
+.setting-card-header:active { cursor: grabbing; }
+.setting-card-header button,
+.setting-card-header input,
+.setting-card-header .setting-accessor { cursor: pointer; }
 
 .setting-title {
     flex: 1;
@@ -783,6 +789,50 @@ body {
     outline: none;
     width: 160px;
     padding: 1px 2px;
+}
+
+/* Drag and drop */
+.setting-drag-wrapper { position: relative; }
+
+/* Dragging state */
+.tab-btn.dragging, .group-btn.dragging, .setting-drag-wrapper.dragging {
+    opacity: 0.4;
+}
+
+/* Drop indicators — horizontal (tabs, groups) */
+.tab-btn.drag-over-before, .group-btn.drag-over-before {
+    box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.tab-btn.drag-over-after, .group-btn.drag-over-after {
+    box-shadow: inset -3px 0 0 var(--accent);
+}
+
+/* Drop target — when child type is dragged over parent container */
+.tab-btn.drag-target, .group-btn.drag-target {
+    box-shadow: inset 0 0 0 2px var(--accent);
+    background: rgba(90, 138, 191, 0.15);
+}
+
+/* Drop indicators — vertical (settings) */
+.setting-drag-wrapper.drag-over-before {
+    box-shadow: 0 -2px 0 var(--accent);
+}
+
+.setting-drag-wrapper.drag-over-after {
+    box-shadow: 0 2px 0 var(--accent);
+}
+
+/* Empty group drop zone when dragging a setting */
+.drop-zone-active {
+    border: 2px dashed var(--accent);
+    background: rgba(90, 138, 191, 0.08);
+    color: var(--accent);
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
 }
 
 /* List editor */

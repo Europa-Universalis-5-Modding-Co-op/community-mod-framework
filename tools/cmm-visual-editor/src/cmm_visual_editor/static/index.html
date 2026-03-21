@@ -57,7 +57,20 @@
                     </div>
                     <div class="tab-bar" v-if="state.tabs.length">
                         <button v-for="(tab, i) in state.tabs" :key="i"
-                            class="tab-btn" :class="{active: selectedTabIdx === i}"
+                            class="tab-btn"
+                            :class="{
+                                active: selectedTabIdx === i,
+                                dragging: drag.type === 'tab' && drag.sourceItemIdx === i,
+                                'drag-over-before': drag.overTabIdx === i && ((drag.type === 'tab' && drag.position === 'before') || false),
+                                'drag-over-after': drag.overTabIdx === i && ((drag.type === 'tab' && drag.position === 'after') || false),
+                                'drag-target': drag.overTabIdx === i && (drag.type === 'group' || drag.type === 'setting'),
+                            }"
+                            draggable="true"
+                            @dragstart="onDragStartTab($event, i)"
+                            @dragover.prevent="onDragOverTab($event, i)"
+                            @dragleave="onDragLeaveTab(i)"
+                            @drop="onDropTab($event, i)"
+                            @dragend="resetDrag"
                             @click="selectedTabIdx = i">
                             {{ tab.name || tab.tab_id || 'Tab ' + (i+1) }}
                             <span class="tab-remove" @click.stop="removeTab(i)">&times;</span>
@@ -81,7 +94,20 @@
 
                         <div class="group-bar" v-if="selectedTab.groups.length">
                             <button v-for="(group, gi) in selectedTab.groups" :key="gi"
-                                class="group-btn" :class="{active: selectedGroupIdx === gi}"
+                                class="group-btn"
+                                :class="{
+                                    active: selectedGroupIdx === gi,
+                                    dragging: drag.type === 'group' && drag.sourceTabIdx === selectedTabIdx && drag.sourceItemIdx === gi,
+                                    'drag-over-before': drag.overGroupIdx === gi && drag.type === 'group' && drag.position === 'before',
+                                    'drag-over-after': drag.overGroupIdx === gi && drag.type === 'group' && drag.position === 'after',
+                                    'drag-target': drag.overGroupIdx === gi && drag.type === 'setting',
+                                }"
+                                draggable="true"
+                                @dragstart="onDragStartGroup($event, gi)"
+                                @dragover.prevent="onDragOverGroup($event, gi)"
+                                @dragleave="onDragLeaveGroup(gi)"
+                                @drop="onDropGroup($event, gi)"
+                                @dragend="resetDrag"
                                 @click="selectedGroupIdx = gi">
                                 {{ group.name || group.group_id || 'Group ' + (gi+1) }}
                                 <span class="tab-remove" @click.stop="removeGroup(gi)">&times;</span>
@@ -108,15 +134,34 @@
                             </div>
 
                             <div class="settings-list">
-                                <setting-editor v-for="(setting, si) in selectedGroup.settings" :key="si"
-                                    :setting="setting" :index="si" :total="selectedGroup.settings.length"
-                                    :mod-id="state.mod_id"
-                                    @remove="removeSetting(si)"
-                                    @move-up="moveSetting(si, -1)"
-                                    @move-down="moveSetting(si, 1)">
-                                </setting-editor>
-                                <div v-if="!selectedGroup.settings.length" class="empty-state">
-                                    No settings yet. Click "+ Add Setting" to create one.
+                                <div v-for="(setting, si) in selectedGroup.settings" :key="si"
+                                    class="setting-drag-wrapper"
+                                    :class="{
+                                        dragging: drag.type === 'setting' && drag.sourceTabIdx === selectedTabIdx && drag.sourceGroupIdx === selectedGroupIdx && drag.sourceItemIdx === si,
+                                        'drag-over-before': drag.type === 'setting' && drag.overItemIdx === si && drag.position === 'before',
+                                        'drag-over-after': drag.type === 'setting' && drag.overItemIdx === si && drag.position === 'after',
+                                    }"
+                                    draggable="true"
+                                    @dragstart="onDragStartSetting($event, si)"
+                                    @dragover.prevent="onDragOverSetting($event, si)"
+                                    @dragleave="onDragLeaveSetting(si)"
+                                    @drop="onDropSetting($event, si)"
+                                    @dragend="resetDrag">
+                                    <setting-editor
+                                        :setting="setting" :index="si"
+                                        :total="selectedGroup.settings.length"
+                                        :mod-id="state.mod_id"
+                                        @move-up="moveSetting(si, -1)"
+                                        @move-down="moveSetting(si, 1)"
+                                        @remove="removeSetting(si)">
+                                    </setting-editor>
+                                </div>
+                                <div v-if="!selectedGroup.settings.length" class="empty-state"
+                                    :class="{ 'drop-zone-active': drag.type === 'setting' }"
+                                    @dragover.prevent
+                                    @drop="onDropEmptyGroup($event)">
+                                    <template v-if="drag.type === 'setting'">Drop setting here</template>
+                                    <template v-else>No settings yet. Click "+ Add Setting" to create one.</template>
                                 </div>
                             </div>
                         </div>
