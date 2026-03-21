@@ -164,6 +164,19 @@ def _build_model(
         if setting:
             groups_map[gkey].settings.append(setting)
 
+    # Parse custom on_changed effects from effects content
+    custom_effects = _parse_custom_effects(effects)
+    for gkey in group_order:
+        group = groups_map[gkey]
+        for setting in group.settings:
+            qid = f"{mod_id}__{setting.setting_id}"
+            if qid in custom_effects:
+                info = custom_effects[qid]
+                setting.on_changed_effect = info["effect"]
+                setting.pass_value_param = info.get("param")
+                if info.get("no_pass"):
+                    setting.no_pass_value = True
+
     model = ModModel(
         mod_id=mod_id,
         file_prefix=prefix or mod_id,
@@ -278,6 +291,86 @@ def _parse_field_aliases(content: str) -> dict:
             template_alias = alias_val.replace("1", "$i$", 1)
             aliases[template_key] = template_alias
     return aliases
+
+
+def _parse_custom_effects(effects: str) -> dict:
+    """Parse custom on_changed effect info from effects content.
+
+    Returns {qid: {"effect": str, "param": str|None, "no_pass": bool|None}}
+    """
+    result = {}
+
+    # 1. Text setting _on_changed blocks (scripted effects, not GUIs)
+    on_changed_pat = re.compile(r"^(\w+)_on_changed\s*=\s*\{", re.MULTILINE)
+    for m in on_changed_pat.finditer(effects):
+        qid = m.group(1)
+        block_end = _find_closing_brace(effects, m.end())
+        if block_end < 0:
+            continue
+        block = effects[m.end():block_end]
+
+        # Skip placeholder blocks (only comments and log lines)
+        code_lines = [
+            l.strip() for l in block.split("\n")
+            if l.strip() and not l.strip().startswith("#")
+        ]
+        if not code_lines or all(
+            l.startswith("log ") or l.startswith("log=") for l in code_lines
+        ):
+            continue
+
+        for line in code_lines:
+            if line.startswith("log ") or line.startswith("log="):
+                continue
+
+            # effect_name = yes  (no_pass_value)
+            m2 = re.match(r"(\w+)\s*=\s*yes\s*$", line)
+            if m2:
+                result[qid] = {"effect": m2.group(1), "param": None, "no_pass": True}
+                break
+
+            # effect_name = {  (passing $text$ parameter)
+            m2 = re.match(r"(\w+)\s*=\s*\{", line)
+            if m2:
+                effect_name = m2.group(1)
+                param_match = re.search(r"(\w+)\s*=\s*\$text\$", block)
+                param = None
+                if param_match and param_match.group(1) != "value":
+                    param = param_match.group(1)
+                result[qid] = {"effect": effect_name, "param": param, "no_pass": None}
+                break
+
+    # 2. _handle_callback switch cases for non-text settings
+    cb_pattern = re.compile(r"^\w+_handle_callback\s*=\s*\{", re.MULTILINE)
+    cb_m = cb_pattern.search(effects)
+    if cb_m:
+        cb_end = _find_closing_brace(effects, cb_m.end())
+        if cb_end >= 0:
+            cb_block = effects[cb_m.end():cb_end]
+
+            flag_pat = re.compile(r"flag:(\w+)\s*=\s*\{")
+            for fm in flag_pat.finditer(cb_block):
+                qid = fm.group(1)
+                if qid in result:
+                    continue  # already parsed from _on_changed
+                flag_end = _find_closing_brace(cb_block, fm.end())
+                if flag_end < 0:
+                    continue
+                flag_block = cb_block[fm.end():flag_end]
+
+                for fline in flag_block.split("\n"):
+                    fline = fline.strip()
+                    if not fline or fline.startswith("#") or fline.startswith("}"):
+                        continue
+                    if fline.startswith("cmm_sync_"):
+                        continue
+
+                    em = re.match(r"(\w+)\s*=\s*yes\s*$", fline)
+                    if em:
+                        result[qid] = {"effect": em.group(1)}
+                        break
+
+    return result
 
 
 def _parse_registrations(content: str, warnings: list) -> list:
