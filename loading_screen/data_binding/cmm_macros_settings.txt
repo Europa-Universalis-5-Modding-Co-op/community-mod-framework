@@ -161,6 +161,22 @@ macro = {
 }
 
 # Args: SettingKey (string)
+# Returns: value
+macro = {
+    description = "Scrollbar-normalized max (max - min, always >= 0)"
+    definition = "CMMSliderNormalizedMax(SettingKey)"
+    replace_with = "Subtract_CFixedPoint(CMMMapValue('cmm_max', SettingKey), CMMMapValue('cmm_min', SettingKey))"
+}
+
+# Args: SettingKey (string)
+# Returns: value
+macro = {
+    description = "Scrollbar-normalized value (value - min, always >= 0)"
+    definition = "CMMSliderNormalizedValue(SettingKey)"
+    replace_with = "Subtract_CFixedPoint(CMMSettingValue(SettingKey), CMMMapValue('cmm_min', SettingKey))"
+}
+
+# Args: SettingKey (string)
 # Returns: string
 macro = {
     description = "Variable-system cache key for one text setting input field"

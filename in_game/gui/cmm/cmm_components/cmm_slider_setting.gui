@@ -85,11 +85,11 @@
 							direction = horizontal
 							size = { 100% 20 }
 							minimumsize = { -1 14 }
-							min = "[CMMMapValue('cmm_min', Scope.GetFlagName)]"
-							max = "[CMMMapValue('cmm_max', Scope.GetFlagName)]"
+							min = 0
+							max = "[CMMSliderNormalizedMax(Scope.GetFlagName)]"
 							step = "[CMMMapValue('cmm_step', Scope.GetFlagName)]"
 							wheelstep = 0
-							value = "[CMMSettingValue(Scope.GetFlagName)]"
+							value = "[CMMSliderNormalizedValue(Scope.GetFlagName)]"
 							enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 
 							track = {
