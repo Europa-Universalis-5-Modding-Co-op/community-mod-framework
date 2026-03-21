@@ -150,7 +150,7 @@ your_mod_on_callback = {
 
 == Text ==
 [[File:CMM_Text.png|thumb|right|A CMM text input.]]
-{{box|Text settings are '''singleplayer only'''.}}
+{{ambox|text=Text settings are '''singleplayer only'''.|small=left}}
 <syntaxhighlight lang="text">
 cmm_register_text_setting = {
 	mod_id = your_mod
