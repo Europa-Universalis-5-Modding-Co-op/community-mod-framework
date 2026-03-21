@@ -28,26 +28,26 @@ const CMMGenerator = {
         return `# Hook this mod into CMF shared registration on_action.
 cmf_on_mod_registration = {
 \ton_actions = {
-\t\t${prefix}_on_register_mod
+\t\t${prefix}_on_register_cmf_mod
 \t}
 }
 
-${prefix}_on_register_mod = {
+${prefix}_on_register_cmf_mod = {
 \teffect = {
-\t\t${prefix}_register_mod = yes
+\t\t${prefix}_register_cmf_mod = yes
 \t}
 }
 
 # Unified callback hook for setting changes, alert clicks, action bar clicks.
 cmf_on_callback = {
 \ton_actions = {
-\t\t${prefix}_on_callback
+\t\t${prefix}_on_cmf_callback
 \t}
 }
 
-${prefix}_on_callback = {
+${prefix}_on_cmf_callback = {
 \teffect = {
-\t\t${prefix}_handle_callback = yes
+\t\t${prefix}_handle_cmf_callback = yes
 \t}
 }
 `;
@@ -58,7 +58,7 @@ ${prefix}_on_callback = {
         const modId = state.mod_id;
         const lines = [];
         lines.push('# Root scope: country.');
-        lines.push(`${prefix}_register_mod = {`);
+        lines.push(`${prefix}_register_cmf_mod = {`);
 
         let first = true;
         for (const tab of (state.tabs || [])) {
@@ -380,7 +380,7 @@ ${prefix}_on_callback = {
         lines.push(`# Callback handler for cmf_on_callback.`);
         lines.push(`# var:cmf_callback is the flag of the setting, alert, or action bar element that was interacted with.`);
         lines.push(`# Scope: country`);
-        lines.push(`${prefix}_handle_callback = {`);
+        lines.push(`${prefix}_handle_cmf_callback = {`);
         lines.push(`\tswitch = {`);
         lines.push(`\t\ttrigger = var:cmf_callback`);
 

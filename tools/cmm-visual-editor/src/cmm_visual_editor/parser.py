@@ -196,10 +196,10 @@ def _build_model(
 
 def _parse_prefix(on_action: str) -> str:
     """Extract file prefix from on_action content."""
-    m = re.search(r"(\w+)_on_register_mod", on_action)
+    m = re.search(r"(\w+)_on_register_(?:cmf_)?mod", on_action)
     if m:
         return m.group(1)
-    m = re.search(r"(\w+)_register_mod\s*=\s*yes", on_action)
+    m = re.search(r"(\w+)_register_(?:cmf_)?mod\s*=\s*yes", on_action)
     if m:
         return m.group(1)
     return ""
@@ -344,7 +344,7 @@ def _parse_custom_effects(effects: str) -> dict:
                 break
 
     # 2. _handle_callback switch cases for non-text settings
-    cb_pattern = re.compile(r"^\w+_handle_callback\s*=\s*\{", re.MULTILINE)
+    cb_pattern = re.compile(r"^\w+_handle_(?:cmf_)?callback\s*=\s*\{", re.MULTILINE)
     cb_m = cb_pattern.search(effects)
     if cb_m:
         cb_end = _find_closing_brace(effects, cb_m.end())

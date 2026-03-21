@@ -33,26 +33,26 @@ def _gen_on_action(prefix: str) -> str:
         f"# Hook this mod into CMF shared registration on_action.\n"
         f"cmf_on_mod_registration = {{\n"
         f"\ton_actions = {{\n"
-        f"\t\t{prefix}_on_register_mod\n"
+        f"\t\t{prefix}_on_register_cmf_mod\n"
         f"\t}}\n"
         f"}}\n"
         f"\n"
-        f"{prefix}_on_register_mod = {{\n"
+        f"{prefix}_on_register_cmf_mod = {{\n"
         f"\teffect = {{\n"
-        f"\t\t{prefix}_register_mod = yes\n"
+        f"\t\t{prefix}_register_cmf_mod = yes\n"
         f"\t}}\n"
         f"}}\n"
         f"\n"
         f"# Unified callback hook for setting changes, alert clicks, action bar clicks.\n"
         f"cmf_on_callback = {{\n"
         f"\ton_actions = {{\n"
-        f"\t\t{prefix}_on_callback\n"
+        f"\t\t{prefix}_on_cmf_callback\n"
         f"\t}}\n"
         f"}}\n"
         f"\n"
-        f"{prefix}_on_callback = {{\n"
+        f"{prefix}_on_cmf_callback = {{\n"
         f"\teffect = {{\n"
-        f"\t\t{prefix}_handle_callback = yes\n"
+        f"\t\t{prefix}_handle_cmf_callback = yes\n"
         f"\t}}\n"
         f"}}\n"
     )
@@ -63,7 +63,7 @@ def _gen_effects(model: ModModel) -> str:
     mod_id = model.mod_id
     lines = []
     lines.append(f"# Root scope: country.")
-    lines.append(f"{prefix}_register_mod = {{")
+    lines.append(f"{prefix}_register_cmf_mod = {{")
 
     first = True
     for tab in model.tabs:
@@ -112,7 +112,7 @@ def _gen_effects(model: ModModel) -> str:
 
 
 def _emit_callback_handler(lines: list, model: ModModel):
-    """Generate {prefix}_handle_callback effect with alias sync and custom effect cases."""
+    """Generate {prefix}_handle_cmf_callback effect with alias sync and custom effect cases."""
     prefix = model.file_prefix or model.mod_id
     mod_id = model.mod_id
 
@@ -135,7 +135,7 @@ def _emit_callback_handler(lines: list, model: ModModel):
     lines.append(f"# Callback handler for cmf_on_callback.")
     lines.append(f"# var:cmf_callback is the flag of the setting, alert, or action bar element that was interacted with.")
     lines.append(f"# Scope: country")
-    lines.append(f"{prefix}_handle_callback = {{")
+    lines.append(f"{prefix}_handle_cmf_callback = {{")
     lines.append(f"\tswitch = {{")
     lines.append(f"\t\ttrigger = var:cmf_callback")
 
