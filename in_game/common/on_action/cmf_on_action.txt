@@ -1,31 +1,41 @@
-﻿# Register all human countries at game start.
-# Scope: on_action
-# Args: none
-on_game_start = {
+﻿on_game_start = {
 	on_actions = {
 		delay = { days = 1 }
-		cmf_register_all_human_countries
+		cmf_on_yearly
 	}
 }
 
-# Register core + integrations for all human countries.
-# Scope: on_action
-# Args: none
-cmf_register_all_human_countries = {
+yearly_country_pulse = {
+	on_actions = {
+		cmf_on_yearly
+	}
+}
+
+# Yearly event dispatcher
+# Scope: global
+cmf_on_yearly = {
 	effect = {
 		every_country = {
 			limit = { is_ai = no }
 			cmm_register_menu_settings = yes
 			trigger_event_silently = {
-				on_action = cmf_on_mod_registration
+				on_action = cmf_yearly_human_country_pulse
 			}
 		}
 	}
 }
 
+# Unified human country pulse
+# Slightly more efficient then each mod checking for players individually
+# Scope: country
+cmf_yearly_human_country_pulse = {
+	on_actions = {
+		cmf_on_mod_registration
+	}
+}
+
 # Integration extension point.
 # Scope: country
-# Args: none
 cmf_on_mod_registration = {
 	on_actions = { }
 }
@@ -34,7 +44,6 @@ cmf_on_mod_registration = {
 # an alert is clicked, or an action bar button is clicked.
 # var:cmf_callback contains the flag key of the target (setting, alert, or element).
 # Scope: country
-# Args: none
 cmf_on_callback = {
 	on_actions = { }
 }

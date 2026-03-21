@@ -122,6 +122,23 @@ All effects require '''country scope'''.
 
 Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
 
+== Yearly Human Country Pulse ==
+<code>cmf_yearly_human_country_pulse</code> fires once per year for each human player's country. Slightly more efficient than each mod checking <code>is_ai = no</code> individually. Hook into it the same way as <code>cmf_on_mod_registration</code>:
+
+<syntaxhighlight lang="text">
+cmf_yearly_human_country_pulse = {
+	on_actions = {
+		your_mod_on_yearly
+	}
+}
+
+your_mod_on_yearly = {
+	effect = {
+		# Runs once per year for each human player's country
+	}
+}
+</syntaxhighlight>
+
 == is_host Trigger ==
 CMF provides a trigger to check if the current country is controlled by the host player. Always evaluates to yes in singleplayer.
 
