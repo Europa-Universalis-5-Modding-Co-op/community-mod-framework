@@ -4,3 +4,4 @@
 .env
 __pycache__/
 local/
+launch.json
