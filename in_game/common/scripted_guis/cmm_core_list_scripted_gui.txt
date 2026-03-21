@@ -4,6 +4,14 @@
 CMM_MarkListPosition_0 = {
 	effect = {
 		set_variable = { name = cmm_list_position_to_apply value = 0 }
+
+		# Benign warning suppression
+		if = {
+			limit = { always = no }
+			cmf_suppress = { v = cmm_list_position_to_apply }
+			cmf_suppress = { v = cmm_list_action_to_apply }
+			cmf_suppress = { v = cmm_list_field_slot_to_apply }
+		}
 	}
 }
 

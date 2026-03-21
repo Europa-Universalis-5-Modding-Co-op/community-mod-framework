@@ -35,6 +35,7 @@ cmf_auto_alert_clicked = {
         if = {
             limit = { always = no }
             cmf_suppress = { v = cmf_callback }
+            cmf_suppress = { v = cmf_active_alerts }
         }
     }
 }
