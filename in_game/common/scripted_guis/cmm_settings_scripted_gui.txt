@@ -1,6 +1,5 @@
 ﻿# Run built-in CMM registration and the shared registration hook.
 # Scope: country
-# Args: none
 CMM_RegisterCoreMod = {
 	effect = {
 		cmm_register_menu_settings = yes
@@ -12,7 +11,6 @@ CMM_RegisterCoreMod = {
 
 # Store the current country as the CMM host country, then run built-in registration and the shared registration hook.
 # Scope: country
-# Args: none
 CMM_SetHostAndRegisterCoreMod = {
 	effect = {
 		cmm_mark_host_country = yes
@@ -25,7 +23,6 @@ CMM_SetHostAndRegisterCoreMod = {
 
 # Reset all settings for all mods to their registered default values.
 # Scope: country
-# Args: none
 CMM_ResetToDefaults = {
 	scope = country
 	effect = {
