@@ -83,6 +83,10 @@ cmf_feature_test_register_cmf_mod = {
 		max_value = 100
 		step_value = 1
 	}
+	cmm_add_scripted_gui = {
+		mod_id = cmf_feature_test
+		setting_id = conditional_numeric
+	}
 
 	# Global (global) Tab
 	## Toggles (global_toggles) Group

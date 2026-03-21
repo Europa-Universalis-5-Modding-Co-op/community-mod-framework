@@ -200,6 +200,14 @@ macro = {
     replace_with = "GetScriptedGui(Name).IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)"
 }
 
+# Args: Name (string)
+# Returns: boolean
+macro = {
+    description = "True when one scripted GUI callback is valid"
+    definition = "CMMGuiIsValid(Name)"
+    replace_with = "GetScriptedGui(Name).IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)"
+}
+
 # Args: ModId (string), TabKey (string)
 # Returns: boolean
 macro = {

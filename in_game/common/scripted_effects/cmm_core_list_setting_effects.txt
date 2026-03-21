@@ -81,6 +81,7 @@ cmm_register_list_setting_internal = {
 	add_to_variable_map = { name = cmm_list_count key = flag:$mod_id$__$setting_id$ value = var:cmm_setting_list_count_$mod_id$__$setting_id$ }
 	add_to_variable_map = { name = cmm_list_is_ordered key = flag:$mod_id$__$setting_id$ value = var:cmm_setting_list_is_ordered_$mod_id$__$setting_id$ }
 	add_to_variable_map = { name = cmm_list_last_index key = flag:$mod_id$__$setting_id$ value = var:cmm_setting_list_last_index_$mod_id$__$setting_id$ }
+	add_to_variable_map = { name = cmm_has_sgui key = flag:$mod_id$__$setting_id$ value = 1 }
 
 	if = {
 		limit = { NOT = { has_variable = cmm_list_field_count_$mod_id$__$setting_id$ } }
