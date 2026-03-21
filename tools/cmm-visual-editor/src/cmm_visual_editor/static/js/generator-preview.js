@@ -66,13 +66,13 @@ ${prefix}_on_cmf_callback = {
             if (!hasSettings) continue;
             if (!firstTab) lines.push('');
             firstTab = false;
-            lines.push(`\t# ${tab.tab_id} Tab`);
+            lines.push(`\t# ${tab.name || tab.tab_id} (${tab.tab_id}) Tab`);
             let firstGroup = true;
             for (const group of (tab.groups || [])) {
                 if (!(group.settings || []).length) continue;
                 if (!firstGroup) lines.push('');
                 firstGroup = false;
-                lines.push(`\t## ${group.group_id} Group`);
+                lines.push(`\t## ${group.name || group.group_id} (${group.group_id}) Group`);
                 let firstSetting = true;
                 for (const setting of (group.settings || [])) {
                     if (!firstSetting) lines.push('');
@@ -92,11 +92,11 @@ ${prefix}_on_cmf_callback = {
                     if (setting.setting_type === 'list' && (setting.fields || []).length > 0) {
                         if (!tabHeaderEmitted) {
                             lines.push('');
-                            lines.push(`# ${tab.tab_id} Tab`);
+                            lines.push(`# ${tab.name || tab.tab_id} (${tab.tab_id}) Tab`);
                             tabHeaderEmitted = true;
                         }
                         if (!groupHeaderEmitted) {
-                            lines.push(`## ${group.group_id} Group`);
+                            lines.push(`## ${group.name || group.group_id} (${group.group_id}) Group`);
                             groupHeaderEmitted = true;
                         }
                         this._emitListIterationBoilerplate(lines, modId, setting);
@@ -117,11 +117,11 @@ ${prefix}_on_cmf_callback = {
                     if (setting.setting_type === 'text') {
                         if (!tabHeaderEmitted) {
                             lines.push('');
-                            lines.push(`# ${tab.tab_id} Tab`);
+                            lines.push(`# ${tab.name || tab.tab_id} (${tab.tab_id}) Tab`);
                             tabHeaderEmitted = true;
                         }
                         if (!groupHeaderEmitted) {
-                            lines.push(`## ${group.group_id} Group`);
+                            lines.push(`## ${group.name || group.group_id} (${group.group_id}) Group`);
                             groupHeaderEmitted = true;
                         }
                         const qid = `${modId}__${setting.setting_id}`;
@@ -371,11 +371,11 @@ ${prefix}_on_cmf_callback = {
                     if (!firstBlock) lines.push('');
                     firstBlock = false;
                     if (!tabHeaderEmitted) {
-                        lines.push(`# ${tab.tab_id} Tab`);
+                        lines.push(`# ${tab.name || tab.tab_id} (${tab.tab_id}) Tab`);
                         tabHeaderEmitted = true;
                     }
                     if (!groupHeaderEmitted) {
-                        lines.push(`## ${group.group_id} Group`);
+                        lines.push(`## ${group.name || group.group_id} (${group.group_id}) Group`);
                         groupHeaderEmitted = true;
                     }
                     const qid = `${modId}__${setting.setting_id}`;
@@ -416,7 +416,7 @@ ${prefix}_on_cmf_callback = {
                     const optionAliases = st === 'dropdown' ? this._getOptionAliases(setting) : [];
                     const customEffect = setting.on_changed_effect || '';
                     if (alias || optionAliases.length || customEffect) {
-                        cases.push({ tabId: tab.tab_id, groupId: group.group_id, qid, st, alias, optionAliases, customEffect });
+                        cases.push({ tabId: tab.tab_id, tabName: tab.name || tab.tab_id, groupId: group.group_id, groupName: group.name || group.group_id, qid, st, alias, optionAliases, customEffect });
                     }
                 }
             }
@@ -435,12 +435,12 @@ ${prefix}_on_cmf_callback = {
             let currentGroup = null;
             for (const c of cases) {
                 if (c.tabId !== currentTab) {
-                    lines.push(`\t\t# ${c.tabId} Tab`);
+                    lines.push(`\t\t# ${c.tabName} (${c.tabId}) Tab`);
                     currentTab = c.tabId;
                     currentGroup = null;
                 }
                 if (c.groupId !== currentGroup) {
-                    lines.push(`\t\t## ${c.groupId} Group`);
+                    lines.push(`\t\t## ${c.groupName} (${c.groupId}) Group`);
                     currentGroup = c.groupId;
                 }
                 lines.push(`\t\tflag:${c.qid} = {`);
@@ -487,12 +487,12 @@ ${prefix}_on_cmf_callback = {
             const hasContent = (tab.groups || []).some(g => (g.settings || []).length > 0);
             if (!hasContent) continue;
             lines.push('');
-            lines.push(` # ${tab.tab_id} Tab`);
+            lines.push(` # ${tab.name || tab.tab_id} (${tab.tab_id}) Tab`);
             lines.push(` ${modId}__${tab.tab_id}_name: "${this._esc(tab.name || tab.tab_id)}"`);
 
             for (const group of (tab.groups || [])) {
                 if (!(group.settings || []).length) continue;
-                lines.push(` ## ${group.group_id} Group`);
+                lines.push(` ## ${group.name || group.group_id} (${group.group_id}) Group`);
                 if (!seenGroups.has(group.group_id)) {
                     seenGroups.add(group.group_id);
                     lines.push(` ${modId}__${group.group_id}_name: "${this._esc(group.name || group.group_id)}"`);
