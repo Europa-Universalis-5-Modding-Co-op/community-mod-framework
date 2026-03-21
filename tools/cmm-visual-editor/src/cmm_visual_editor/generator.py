@@ -593,14 +593,13 @@ def _merge_scripted_guis(generated: str, existing: str) -> str:
 
 
 def _merge_effects(generated: str, existing: str) -> str:
-    """Overwrite registration block, preserve existing text callbacks and callback handler."""
+    """Overwrite registration and callback handler blocks, preserve existing text callbacks."""
     result = generated
-    for suffix in ("_on_changed", "_handle_callback"):
-        existing_blocks = _extract_named_blocks(existing, suffix)
-        for name, existing_block in existing_blocks.items():
-            gen_blocks = _extract_named_blocks(result, suffix)
-            if name in gen_blocks:
-                result = result.replace(gen_blocks[name], existing_block)
+    existing_blocks = _extract_named_blocks(existing, "_on_changed")
+    for name, existing_block in existing_blocks.items():
+        gen_blocks = _extract_named_blocks(result, "_on_changed")
+        if name in gen_blocks:
+            result = result.replace(gen_blocks[name], existing_block)
     return result
 
 
