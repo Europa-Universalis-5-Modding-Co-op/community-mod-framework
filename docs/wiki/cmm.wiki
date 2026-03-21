@@ -340,7 +340,7 @@ Check with: <code>has_variable = using_feature_b</code>
 |-
 | <code>[mod_id]__[tab_id]_name</code> / <code>_desc</code> || Tab name / description
 |-
-| <code>[mod_id]__[group_id]_name</code> / <code>_desc</code> || Group name / description
+| <code>[mod_id]__[tab_id]__[group_id]_name</code> / <code>_desc</code> || Group name / description
 |-
 | <code>[mod_id]__[setting_id]_name</code> / <code>_desc</code> || Setting name / description
 |-
