@@ -236,7 +236,8 @@ def _parse_option_aliases(content: str) -> dict:
         if setting and index > 0 and alias:
             if setting not in result:
                 result[setting] = {}
-            result[setting][index] = alias
+            if index not in result[setting]:
+                result[setting][index] = alias
     return result
 
 
@@ -255,7 +256,8 @@ def _parse_setting_aliases(content: str) -> dict:
         setting = params.get("setting", "")
         alias = params.get("alias", "")
         if setting and alias:
-            aliases[setting] = alias
+            if setting not in aliases:
+                aliases[setting] = alias
     return aliases
 
 
@@ -280,7 +282,8 @@ def _parse_field_aliases(content: str) -> dict:
         alias = params.get("alias", "")
         if setting and alias:
             if re.search(r'_i\d+_f\d+$', setting):
-                raw[setting] = alias
+                if setting not in raw:
+                    raw[setting] = alias
 
     # Reconstruct template aliases from first concrete instance (i1)
     aliases = {}

@@ -233,6 +233,7 @@ const app = createApp({
                 on_changed_effect: '',
                 pass_value_param: '',
                 no_pass_value: false,
+                alias: '',
             });
         }
 
