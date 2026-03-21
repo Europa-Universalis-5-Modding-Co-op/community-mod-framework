@@ -26,7 +26,7 @@ your_mod_register = {
 	# Register settings, action bar elements, alerts, etc.
 }
 
-# in_game/common/on_action/your_on_action.txt
+# in_game/common/on_action/your_on_actions.txt
 cmf_on_mod_registration = {
 	on_actions = {
 		your_mod_on_register

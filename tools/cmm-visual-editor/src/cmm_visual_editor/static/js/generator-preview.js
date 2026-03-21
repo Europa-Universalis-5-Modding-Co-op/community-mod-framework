@@ -13,7 +13,7 @@ const CMMGenerator = {
             )
         );
         const files = {
-            [`in_game/common/on_action/${prefix}_cmm_on_action.txt`]: this.genOnAction(prefix),
+            [`in_game/common/on_action/${prefix}_cmm_on_actions.txt`]: this.genOnAction(prefix),
             [`in_game/common/scripted_effects/${prefix}_cmm_effects.txt`]: this.genEffects(state),
             [`main_menu/localization/english/${prefix}_cmm_l_english.yml`]: this.genLocalization(state),
             ['.metadata/metadata.json']: this.genMetadata(state),

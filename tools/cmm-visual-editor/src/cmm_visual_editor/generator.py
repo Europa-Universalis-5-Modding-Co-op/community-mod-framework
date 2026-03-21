@@ -14,7 +14,7 @@ def generate_all(model: ModModel) -> dict:
 
     files = {}
     if mod_id:
-        files[f"in_game/common/on_action/{prefix}_cmm_on_action.txt"] = _gen_on_action(prefix)
+        files[f"in_game/common/on_action/{prefix}_cmm_on_actions.txt"] = _gen_on_action(prefix)
         files[f"in_game/common/scripted_effects/{prefix}_cmm_effects.txt"] = _gen_effects(model)
         has_lists = any(
             s.setting_type == "list"

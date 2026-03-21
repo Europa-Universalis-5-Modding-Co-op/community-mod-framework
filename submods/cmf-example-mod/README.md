@@ -21,7 +21,7 @@ This is a reference integration mod for `community.mod.framework`.
 ## Files
 
 ### CMM
-- `in_game/common/on_action/cmm_example_on_action.txt`
+- `in_game/common/on_action/cmf_example_on_actions.txt`
 - `in_game/common/scripted_effects/cmm_example_effects.txt`
 - `in_game/common/scripted_guis/cmm_example_scripted_gui.txt`
 - `main_menu/localization/english/cmm_example_mod_l_english.yml`

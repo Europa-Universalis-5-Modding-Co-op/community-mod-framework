@@ -26,7 +26,7 @@ The tool generates 5 files into a mod directory, where `<prefix>` is the file pr
 
 | File | Path | Content |
 |------|------|---------|
-| On Action | `in_game/common/on_action/<prefix>_cmm_on_action.txt` | CMM registration hook |
+| On Action | `in_game/common/on_action/<prefix>_cmm_on_actions.txt` | CMM registration hook |
 | Effects | `in_game/common/scripted_effects/<prefix>_cmm_effects.txt` | Setting registrations + text callbacks |
 | Scripted GUIs | `in_game/common/scripted_guis/<prefix>_cmm_scripted_gui.txt` | Setting change callbacks |
 | Localization | `main_menu/localization/english/<prefix>_cmm_l_english.yml` | All display strings |
