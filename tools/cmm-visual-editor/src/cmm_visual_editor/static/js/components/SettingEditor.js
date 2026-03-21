@@ -80,6 +80,27 @@ const SettingEditorComponent = {
                 </label>
             </div>
 
+            <div class="field-row" v-if="setting.setting_type !== 'list'">
+                <label class="checkbox-label">
+                    <input type="checkbox" v-model="setting.scripted_gui">
+                    Scripted GUI
+                    <span class="field-hint">(Enable is_shown / is_valid conditions for this setting)</span>
+                </label>
+            </div>
+
+            <div v-if="showSguiConditions" class="type-fields sgui-fields">
+                <div class="field-row">
+                    <label>Visible Condition <span class="field-hint">(is_shown)</span></label>
+                    <textarea v-model="setting.visible" rows="2" placeholder='e.g. "variable_map(cmm|flag:my_mod__my_toggle)" >= 1' class="code-textarea"></textarea>
+                    <span class="field-hint">Paradox trigger. Setting is hidden when this evaluates to false.</span>
+                </div>
+                <div class="field-row">
+                    <label>Enabled Condition <span class="field-hint">(is_valid)</span></label>
+                    <textarea v-model="setting.enabled" rows="2" placeholder='e.g. has_variable = my_flag' class="code-textarea"></textarea>
+                    <span class="field-hint">Paradox trigger. Setting is greyed out when this evaluates to false.</span>
+                </div>
+            </div>
+
             <!-- Bool -->
             <div v-if="setting.setting_type === 'bool'" class="type-fields">
                 <div class="field-row">
@@ -193,6 +214,9 @@ const SettingEditorComponent = {
     computed: {
         canBeGlobal() {
             return this.setting.setting_type !== 'text';
+        },
+        showSguiConditions() {
+            return this.setting.scripted_gui || this.setting.setting_type === 'list';
         },
         defaultAccessorKey() {
             if (!this.modId || !this.setting.setting_id) return '';

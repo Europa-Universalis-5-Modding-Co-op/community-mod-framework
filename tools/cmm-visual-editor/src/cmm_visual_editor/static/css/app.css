@@ -218,7 +218,7 @@ body {
     letter-spacing: 0.5px;
 }
 
-.field-row input, .field-row select {
+.field-row input, .field-row select, .field-row textarea {
     width: 100%;
     padding: 6px 8px;
     background: var(--bg-input);
@@ -230,8 +230,13 @@ body {
     transition: border-color 0.15s;
 }
 
-.field-row input:focus, .field-row select:focus {
+.field-row input:focus, .field-row select:focus, .field-row textarea:focus {
     border-color: var(--border-focus);
+}
+
+.code-textarea {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    resize: vertical;
 }
 
 .field-row select {

@@ -16,11 +16,11 @@ def generate_all(model: ModModel) -> dict:
     if mod_id:
         files[f"in_game/common/on_action/{prefix}_cmm_on_actions.txt"] = _gen_on_action(prefix)
         files[f"in_game/common/scripted_effects/{prefix}_cmm_effects.txt"] = _gen_effects(model)
-        has_lists = any(
-            s.setting_type == "list"
+        has_sgui = any(
+            s.setting_type == "list" or s.scripted_gui
             for t in model.tabs for g in t.groups for s in g.settings
         )
-        if has_lists:
+        if has_sgui:
             files[f"in_game/common/scripted_guis/{prefix}_cmm_scripted_gui.txt"] = _gen_scripted_guis(model)
         files[f"main_menu/localization/english/{prefix}_cmm_l_english.yml"] = _gen_localization(model)
         files[".metadata/metadata.json"] = _gen_metadata(model)
@@ -360,6 +360,13 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
     if st == "dropdown":
         _emit_option_alias_sync(lines, setting, qid, indent="\t")
 
+    # Scripted GUI (is_shown / is_valid)
+    if setting.scripted_gui:
+        lines.append(f"\tcmm_add_scripted_gui = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting.setting_id}")
+        lines.append(f"\t}}")
+
     # No reset
     if setting.no_reset:
         lines.append(f"\tcmm_set_no_reset = {{")
@@ -439,7 +446,8 @@ def _gen_scripted_guis(model: ModModel) -> str:
         for group in tab.groups:
             group_header_emitted = False
             for setting in group.settings:
-                if setting.setting_type != "list":
+                is_list = setting.setting_type == "list"
+                if not is_list and not setting.scripted_gui:
                     continue
                 if not first_block:
                     lines.append("")
@@ -451,21 +459,57 @@ def _gen_scripted_guis(model: ModModel) -> str:
                     lines.append(f"## {group.name or group.group_id} ({group.group_id}) Group")
                     group_header_emitted = True
                 qid = f"{mod_id}__{setting.setting_id}"
-                lines.append(_gen_list_callback_block(qid))
+                if is_list:
+                    lines.append(_gen_list_callback_block(qid, setting.visible, setting.enabled))
+                else:
+                    lines.append(_gen_setting_sgui_block(qid, setting.visible, setting.enabled))
 
     return "\n".join(lines) + "\n"
 
 
-def _gen_list_callback_block(qid: str) -> str:
+def _gen_list_callback_block(qid: str, visible: str = None, enabled: str = None) -> str:
     lines = []
     lines.append(f"{qid}_on_changed = {{")
     lines.append(f"\tscope = country")
+    if visible:
+        lines.append(f"")
+        lines.append(f"\tis_shown = {{")
+        for vline in visible.strip().splitlines():
+            lines.append(f"\t\t{vline.strip()}")
+        lines.append(f"\t}}")
+    if enabled:
+        lines.append(f"")
+        lines.append(f"\tis_valid = {{")
+        for eline in enabled.strip().splitlines():
+            lines.append(f"\t\t{eline.strip()}")
+        lines.append(f"\t}}")
     lines.append(f"")
     lines.append(f"\teffect = {{")
     lines.append(f"\t\tcmm_apply_list_change = {{")
     lines.append(f"\t\t\tsetting = {qid}")
     lines.append(f"\t\t}}")
     lines.append(f"\t}}")
+    lines.append(f"}}")
+    return "\n".join(lines)
+
+
+def _gen_setting_sgui_block(qid: str, visible: str = None, enabled: str = None) -> str:
+    lines = []
+    lines.append(f"{qid}_on_changed = {{")
+    lines.append(f"\tscope = country")
+    if visible:
+        lines.append(f"")
+        lines.append(f"\tis_shown = {{")
+        for vline in visible.strip().splitlines():
+            lines.append(f"\t\t{vline.strip()}")
+        lines.append(f"\t}}")
+    if enabled:
+        lines.append(f"")
+        lines.append(f"\tis_valid = {{")
+        for eline in enabled.strip().splitlines():
+            lines.append(f"\t\t{eline.strip()}")
+        lines.append(f"\t}}")
+    lines.append(f"\teffect = {{ }}")
     lines.append(f"}}")
     return "\n".join(lines)
 

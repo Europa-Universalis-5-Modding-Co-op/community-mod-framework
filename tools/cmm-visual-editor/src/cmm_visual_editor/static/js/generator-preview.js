@@ -7,9 +7,9 @@ const CMMGenerator = {
         const prefix = state.file_prefix || state.mod_id;
         const modId = state.mod_id;
         if (!modId) return {};
-        const hasLists = (state.tabs || []).some(t =>
+        const hasSgui = (state.tabs || []).some(t =>
             (t.groups || []).some(g =>
-                (g.settings || []).some(s => s.setting_type === 'list')
+                (g.settings || []).some(s => s.setting_type === 'list' || s.scripted_gui)
             )
         );
         const files = {
@@ -18,7 +18,7 @@ const CMMGenerator = {
             [`main_menu/localization/english/${prefix}_cmm_l_english.yml`]: this.genLocalization(state),
             ['.metadata/metadata.json']: this.genMetadata(state),
         };
-        if (hasLists) {
+        if (hasSgui) {
             files[`in_game/common/scripted_guis/${prefix}_cmm_scripted_gui.txt`] = this.genScriptedGuis(state);
         }
         return files;
@@ -299,6 +299,14 @@ ${prefix}_on_cmf_callback = {
             this._emitOptionAliasSync(lines, setting, qid, '\t');
         }
 
+        // Scripted GUI (is_shown / is_valid)
+        if (setting.scripted_gui) {
+            lines.push(`\tcmm_add_scripted_gui = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+            lines.push(`\t}`);
+        }
+
         // No reset
         if (setting.no_reset) {
             lines.push(`\tcmm_set_no_reset = {`);
@@ -381,7 +389,8 @@ ${prefix}_on_cmf_callback = {
             for (const group of (tab.groups || [])) {
                 let groupHeaderEmitted = false;
                 for (const setting of (group.settings || [])) {
-                    if (setting.setting_type !== 'list') continue;
+                    const isList = setting.setting_type === 'list';
+                    if (!isList && !setting.scripted_gui) continue;
                     if (!firstBlock) lines.push('');
                     firstBlock = false;
                     if (!tabHeaderEmitted) {
@@ -393,23 +402,68 @@ ${prefix}_on_cmf_callback = {
                         groupHeaderEmitted = true;
                     }
                     const qid = `${modId}__${setting.setting_id}`;
-                    lines.push(this._genListCallback(qid));
+                    if (isList) {
+                        lines.push(this._genListCallback(qid, setting.visible, setting.enabled));
+                    } else {
+                        lines.push(this._genSettingSguiBlock(qid, setting.visible, setting.enabled));
+                    }
                 }
             }
         }
         return lines.join('\n') + '\n';
     },
 
-    _genListCallback(qid) {
+    _genListCallback(qid, visible, enabled) {
         const lines = [];
         lines.push(`${qid}_on_changed = {`);
         lines.push(`\tscope = country`);
+        if (visible) {
+            lines.push('');
+            lines.push(`\tis_shown = {`);
+            for (const vline of visible.trim().split('\n')) {
+                lines.push(`\t\t${vline.trim()}`);
+            }
+            lines.push(`\t}`);
+        }
+        if (enabled) {
+            lines.push('');
+            lines.push(`\tis_valid = {`);
+            for (const eline of enabled.trim().split('\n')) {
+                lines.push(`\t\t${eline.trim()}`);
+            }
+            lines.push(`\t}`);
+        }
         lines.push('');
         lines.push(`\teffect = {`);
         lines.push(`\t\tcmm_apply_list_change = {`);
         lines.push(`\t\t\tsetting = ${qid}`);
         lines.push(`\t\t}`);
         lines.push(`\t}`);
+        lines.push(`}`);
+        return lines.join('\n');
+    },
+
+    _genSettingSguiBlock(qid, visible, enabled) {
+        const lines = [];
+        lines.push(`${qid}_on_changed = {`);
+        lines.push(`\tscope = country`);
+        if (visible) {
+            lines.push('');
+            lines.push(`\tis_shown = {`);
+            for (const vline of visible.trim().split('\n')) {
+                lines.push(`\t\t${vline.trim()}`);
+            }
+            lines.push(`\t}`);
+        }
+        if (enabled) {
+            lines.push('');
+            lines.push(`\tis_valid = {`);
+            for (const eline of enabled.trim().split('\n')) {
+                lines.push(`\t\t${eline.trim()}`);
+            }
+            lines.push(`\t}`);
+        }
+        lines.push(`\teffect = { }`);
         lines.push(`}`);
         return lines.join('\n');
     },

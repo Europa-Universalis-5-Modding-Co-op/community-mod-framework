@@ -102,6 +102,8 @@ def _build_model(
     field_aliases = _parse_field_aliases(effects)
     option_aliases = _parse_option_aliases(effects)
     no_reset_settings = _parse_no_reset_settings(effects)
+    sgui_settings = _parse_sgui_settings(effects)
+    sgui_conditions = _parse_sgui_conditions(gui)
 
     # Build tabs/groups/settings from registrations
     tabs_map = {}  # tab_id -> Tab
@@ -179,6 +181,18 @@ def _build_model(
                     setting.no_pass_value = True
             if setting.setting_id in no_reset_settings:
                 setting.no_reset = True
+            if setting.setting_id in sgui_settings:
+                setting.scripted_gui = True
+            if qid in sgui_conditions:
+                conds = sgui_conditions[qid]
+                if conds.get("visible"):
+                    setting.visible = conds["visible"]
+                if conds.get("enabled"):
+                    setting.enabled = conds["enabled"]
+                # If conditions exist but scripted_gui not explicitly set (e.g. list settings),
+                # still mark it for round-trip if there are conditions
+                if not setting.scripted_gui and setting.setting_type != "list":
+                    setting.scripted_gui = True
 
     model = ModModel(
         mod_id=mod_id,
@@ -242,6 +256,58 @@ def _parse_option_aliases(content: str) -> dict:
             if index not in result[setting]:
                 result[setting][index] = alias
     return result
+
+
+def _parse_sgui_settings(content: str) -> set:
+    """Extract cmm_add_scripted_gui blocks -> set of setting_ids."""
+    result = set()
+    pattern = re.compile(r"cmm_add_scripted_gui\s*=\s*\{", re.IGNORECASE)
+    for m in pattern.finditer(content):
+        block_end = _find_closing_brace(content, m.end())
+        if block_end < 0:
+            continue
+        block = content[m.end():block_end]
+        params = _parse_params(block)
+        sid = params.get("setting_id", "")
+        if sid:
+            result.add(sid)
+    return result
+
+
+def _parse_sgui_conditions(gui_content: str) -> dict:
+    """Extract is_shown/is_valid blocks from _on_changed scripted GUIs.
+
+    Returns {qid: {"visible": str|None, "enabled": str|None}}.
+    """
+    result = {}
+    pattern = re.compile(r"^(\w+)_on_changed\s*=\s*\{", re.MULTILINE)
+    for m in pattern.finditer(gui_content):
+        qid = m.group(1)
+        block_end = _find_closing_brace(gui_content, m.end())
+        if block_end < 0:
+            continue
+        block = gui_content[m.end():block_end]
+
+        visible = _extract_sub_block(block, "is_shown")
+        enabled = _extract_sub_block(block, "is_valid")
+        if visible or enabled:
+            result[qid] = {"visible": visible, "enabled": enabled}
+    return result
+
+
+def _extract_sub_block(block: str, name: str) -> str:
+    """Extract the content of a named sub-block (e.g. is_shown = { ... })."""
+    pattern = re.compile(rf"\b{re.escape(name)}\s*=\s*\{{")
+    m = pattern.search(block)
+    if not m:
+        return None
+    end = _find_closing_brace(block, m.end())
+    if end < 0:
+        return None
+    inner = block[m.end():end]
+    # Clean up: strip, remove empty lines, dedent
+    lines = [l.strip() for l in inner.strip().splitlines() if l.strip()]
+    return "\n".join(lines) if lines else None
 
 
 def _parse_no_reset_settings(content: str) -> set:
