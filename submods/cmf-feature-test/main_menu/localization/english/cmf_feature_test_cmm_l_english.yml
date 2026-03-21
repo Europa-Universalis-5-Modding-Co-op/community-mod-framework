@@ -37,8 +37,10 @@
  # ── Settings Tab: Values ──
  cmf_feature_test__numeric_name: "Numeric"
  cmf_feature_test__numeric_desc: "Numeric setting. Range 0-100, step 5."
+ cmf_feature_test__numeric_format: "[CMMV('cmf_feature_test__numeric')]%"
  cmf_feature_test__slider_name: "Slider"
  cmf_feature_test__slider_desc: "Slider setting. Range 0-100, step 10."
+ cmf_feature_test__slider_format: "[CMMV('cmf_feature_test__slider')]x"
  cmf_feature_test__dropdown_name: "Dropdown"
  cmf_feature_test__dropdown_desc: "Dropdown setting with 5 options and option aliases."
  cmf_feature_test__dropdown_option_1_name: "Option Alpha"
@@ -72,6 +74,7 @@
  # ── Global Tab: Values ──
  cmf_feature_test__global_numeric_name: "Global Numeric"
  cmf_feature_test__global_numeric_desc: "Global numeric setting. Range 0-100, step 5."
+ cmf_feature_test__global_numeric_format: "$[CMMV('cmf_feature_test__global_numeric')]"
  cmf_feature_test__global_slider_name: "Global Slider"
  cmf_feature_test__global_slider_desc: "Global slider setting. Range 0-100, step 10."
  cmf_feature_test__global_dropdown_name: "Global Dropdown"

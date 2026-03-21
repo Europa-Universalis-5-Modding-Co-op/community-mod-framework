@@ -111,6 +111,11 @@ const SettingEditorComponent = {
                         <input type="number" v-model.number="setting.step_value" min="1">
                     </div>
                 </div>
+                <div class="field-row">
+                    <label>Display Format</label>
+                    <input v-model="setting.display_format" placeholder="e.g. $VALUE$%">
+                    <span class="field-hint">Use $VALUE$ as placeholder (e.g. "$VALUE$%", "$$VALUE$", "+ $VALUE$ gold")</span>
+                </div>
             </div>
 
             <!-- Dropdown -->

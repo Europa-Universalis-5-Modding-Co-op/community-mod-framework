@@ -504,6 +504,10 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
     lines.append(f' {qid}_name: "{_esc(setting.name or setting.setting_id)}"')
     lines.append(f' {qid}_desc: "{_esc(setting.desc)}"')
 
+    if st in ("numeric", "slider") and setting.display_format:
+        fmt = _esc(setting.display_format).replace("$VALUE$", f"[CMMV('{qid}')]")
+        lines.append(f' {qid}_format: "{fmt}"')
+
     if st == "button":
         lines.append(f' {qid}_text: "{_esc(setting.button_text or "Run")}"')
 

@@ -522,6 +522,11 @@ ${prefix}_on_callback = {
         lines.push(` ${qid}_name: "${this._esc(setting.name || setting.setting_id)}"`);
         lines.push(` ${qid}_desc: "${this._esc(setting.desc)}"`);
 
+        if ((setting.setting_type === 'numeric' || setting.setting_type === 'slider') && setting.display_format) {
+            const fmt = this._esc(setting.display_format).replace(/\$VALUE\$/g, `[CMMV('${qid}')]`);
+            lines.push(` ${qid}_format: "${fmt}"`);
+        }
+
         if (setting.setting_type === 'button') {
             lines.push(` ${qid}_text: "${this._esc(setting.button_text || 'Run')}"`);
         } else if (setting.setting_type === 'dropdown') {

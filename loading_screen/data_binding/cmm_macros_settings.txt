@@ -175,3 +175,27 @@ macro = {
     definition = "CMMTextSettingCallbackKey(SettingKey)"
     replace_with = "Concatenate(SettingKey, '_on_changed')"
 }
+
+# Args: SettingKey (string)
+# Returns: value
+macro = {
+    description = "Setting value by key (works in localization [expr] context where Scope is unavailable)"
+    definition = "CMMV(SettingKey)"
+    replace_with = "Select_CFixedPoint(EqualTo_CFixedPoint(Player.MakeScope.GetVariableFromVariableMap('cmm_is_global', MakeScopeFlag(SettingKey)).GetValue, '(CFixedPoint)1'), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(SettingKey)).GetValue, Player.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag(SettingKey)).GetValue)"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a _format localization key exists for a setting"
+    definition = "CMMHasFormat(SettingKey)"
+    replace_with = "Not(EqualTo_string(Localize(Concatenate(SettingKey, '_format')), Concatenate(SettingKey, '_format')))"
+}
+
+# Args: SettingKey (string)
+# Returns: string
+macro = {
+    description = "Formatted setting value if _format localization exists, raw value otherwise"
+    definition = "CMMDisplayValue(SettingKey)"
+    replace_with = "Localize(Concatenate(SettingKey, '_format'))"
+}

@@ -421,6 +421,9 @@ def _reg_to_setting(
         setting.min_value = _to_float(reg.get("min_value", "0"))
         setting.max_value = _to_float(reg.get("max_value", "100"))
         setting.step_value = _to_float(reg.get("step_value", "1"))
+        raw_fmt = loc_map.get(f"{qid}_format", "")
+        if raw_fmt:
+            setting.display_format = re.sub(r"\[CMMV\('[^']*'\)\]", "$VALUE$", raw_fmt)
     elif effective_type == "dropdown":
         setting.default_index = _to_int(reg.get("default_index", "1"))
         setting.option_count = _to_int(reg.get("option_count", "1"))

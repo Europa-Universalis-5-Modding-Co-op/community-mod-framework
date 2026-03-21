@@ -228,9 +228,17 @@
 			}
 
 			text_single = {
+				minimumsize = { 50 30 }
+				autoresize = yes
+				align = left|nobaseline
+				visible = "[CMMHasFormat(Scope.GetFlagName)]"
+				text = "[CMMDisplayValue(Scope.GetFlagName)]"
+			}
+			text_single = {
 				size = { 50 30 }
 				minimumsize = { 50 30 }
 				align = left|nobaseline
+				visible = "[Not(CMMHasFormat(Scope.GetFlagName))]"
 				text = "[CMMSettingValue(Scope.GetFlagName)]"
 			}
 		}

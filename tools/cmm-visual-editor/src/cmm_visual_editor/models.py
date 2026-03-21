@@ -46,6 +46,7 @@ class Setting:
     min_value: Optional[float] = None
     max_value: Optional[float] = None
     step_value: Optional[float] = None
+    display_format: Optional[str] = None
     # dropdown
     default_index: Optional[int] = None
     option_count: Optional[int] = None
@@ -119,6 +120,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["min_value"] = s.min_value
             d["max_value"] = s.max_value
             d["step_value"] = s.step_value
+            if s.display_format:
+                d["display_format"] = s.display_format
         elif s.setting_type == "dropdown":
             d["default_index"] = s.default_index
             d["option_count"] = s.option_count
@@ -234,6 +237,7 @@ def dict_to_model(data: dict) -> ModModel:
             min_value=s.get("min_value"),
             max_value=s.get("max_value"),
             step_value=s.get("step_value"),
+            display_format=s.get("display_format"),
             default_index=s.get("default_index"),
             option_count=s.get("option_count"),
             options=[_parse_option(o) for o in s.get("options", [])],

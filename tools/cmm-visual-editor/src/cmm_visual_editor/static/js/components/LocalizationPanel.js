@@ -22,6 +22,9 @@ const LocalizationPanelComponent = {
                             keys.push({ key: `${qid}_name`, value: s.name, category: 'Settings' });
                             keys.push({ key: `${qid}_desc`, value: s.desc, category: 'Settings' });
                         }
+                        if ((s.setting_type === 'numeric' || s.setting_type === 'slider') && s.display_format) {
+                            keys.push({ key: `${qid}_format`, value: s.display_format.replace(/\$VALUE\$/g, `[CMMV('${qid}')]`), category: 'Formatting' });
+                        }
                         if (s.setting_type === 'button') {
                             keys.push({ key: `${qid}_text`, value: s.button_text || '', category: 'Settings' });
                         }

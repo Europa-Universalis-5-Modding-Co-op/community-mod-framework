@@ -113,6 +113,14 @@
 						size = { 100% 100% }
 						align = center|nobaseline
 						autoresize = no
+						visible = "[CMMHasFormat(Scope.GetFlagName)]"
+						text = "[CMMDisplayValue(Scope.GetFlagName)]"
+					}
+					text_single = {
+						size = { 100% 100% }
+						align = center|nobaseline
+						autoresize = no
+						visible = "[Not(CMMHasFormat(Scope.GetFlagName))]"
 						text = "[CMMSettingValue(Scope.GetFlagName)]"
 					}
 				}
