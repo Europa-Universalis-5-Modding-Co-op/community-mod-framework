@@ -365,6 +365,7 @@ const app = createApp({
         }
 
         function onDragStartSetting(event, si) {
+            if (!event.target.closest('.setting-card-header')) { event.preventDefault(); return; }
             if (isInputEl(event.target)) { event.preventDefault(); return; }
             drag.type = 'setting';
             drag.sourceTabIdx = selectedTabIdx.value;
