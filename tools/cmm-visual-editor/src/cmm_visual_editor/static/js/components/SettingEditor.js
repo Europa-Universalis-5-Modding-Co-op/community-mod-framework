@@ -191,7 +191,7 @@ const SettingEditorComponent = {
             return `${this.modId}__${this.setting.setting_id}`;
         },
         hasAlias() {
-            return !!(this.setting.alias && this.setting.alias !== this.defaultAccessorKey);
+            return !!this.setting.alias;
         },
         accessor() {
             if (!this.modId || !this.setting.setting_id) return '';
@@ -262,11 +262,7 @@ const SettingEditorComponent = {
         },
         confirmAlias() {
             const val = this.aliasInput.replace(/[^a-z0-9_$]/gi, '').toLowerCase();
-            if (val && val !== this.defaultAccessorKey) {
-                this.setting.alias = val;
-            } else {
-                this.setting.alias = '';
-            }
+            this.setting.alias = val || '';
             this.editingAlias = false;
         },
         cancelAlias() {

@@ -163,7 +163,7 @@ const ListEditorComponent = {
             if (!this.modId || !this.setting.setting_id) return '';
             const field = (this.setting.fields || [])[fi];
             const defaultKey = this.defaultFieldAccessorKey(fi);
-            if (field && field.alias && field.alias !== defaultKey) {
+            if (field && field.alias) {
                 const prefix = this.setting.is_global ? 'global_var' : 'var';
                 return `${prefix}:${field.alias}`;
             }
@@ -172,8 +172,7 @@ const ListEditorComponent = {
         },
         fieldAccessorLabel(fi) {
             const field = (this.setting.fields || [])[fi];
-            const defaultKey = this.defaultFieldAccessorKey(fi);
-            if (field && field.alias && field.alias !== defaultKey) {
+            if (field && field.alias) {
                 return `Alias (synced, per item):`;
             }
             return `Field Slot ${fi + 1} Value (per item):`;
@@ -194,12 +193,7 @@ const ListEditorComponent = {
             const field = (this.setting.fields || [])[fi];
             if (!field) return;
             const val = this.fieldAliasInput.replace(/[^a-z0-9_$]/gi, '').toLowerCase();
-            const defaultKey = this.defaultFieldAccessorKey(fi);
-            if (val && val !== defaultKey) {
-                field.alias = val;
-            } else {
-                field.alias = '';
-            }
+            field.alias = val || '';
             this.editingFieldAlias = -1;
         },
         cancelFieldAlias() {

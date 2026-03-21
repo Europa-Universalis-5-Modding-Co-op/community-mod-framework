@@ -190,25 +190,13 @@ def _emit_option_alias_sync(lines: list, setting: Setting, qid: str, indent: str
 
 
 def _setting_has_alias(setting: Setting, mod_id: str) -> str:
-    """Return the alias if the setting has one different from its default key, else empty."""
-    alias = (setting.alias or "").strip()
-    if not alias:
-        return ""
-    default_key = f"{mod_id}__{setting.setting_id}"
-    if alias == default_key:
-        return ""
-    return alias
+    """Return the alias if the setting has one, else empty."""
+    return (setting.alias or "").strip()
 
 
 def _field_has_alias(field: ListField, mod_id: str, setting_id: str, slot: int) -> str:
-    """Return the alias if the field has one different from its default key, else empty."""
-    alias = (field.alias or "").strip()
-    if not alias:
-        return ""
-    default_key = f"{mod_id}__{setting_id}_i$i$_f{slot}"
-    if alias == default_key:
-        return ""
-    return alias
+    """Return the alias if the field has one, else empty."""
+    return (field.alias or "").strip()
 
 
 def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, setting: Setting):
