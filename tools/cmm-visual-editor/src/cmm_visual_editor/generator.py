@@ -479,11 +479,11 @@ def _gen_localization(model: ModModel) -> str:
             if not group.settings:
                 continue
             lines.append(f" ## {group.name or group.group_id} ({group.group_id}) Group")
-            if group.group_id not in seen_groups:
-                seen_groups.add(group.group_id)
-                lines.append(f' {mod_id}__{group.group_id}_name: "{_esc(group.name or group.group_id)}"')
+            if (tab.tab_id, group.group_id) not in seen_groups:
+                seen_groups.add((tab.tab_id, group.group_id))
+                lines.append(f' {mod_id}__{tab.tab_id}__{group.group_id}_name: "{_esc(group.name or group.group_id)}"')
                 if group.desc:
-                    lines.append(f' {mod_id}__{group.group_id}_desc: "{_esc(group.desc)}"')
+                    lines.append(f' {mod_id}__{tab.tab_id}__{group.group_id}_desc: "{_esc(group.desc)}"')
 
             for setting in group.settings:
                 _emit_setting_loc(lines, mod_id, setting)
@@ -495,9 +495,9 @@ def _gen_localization(model: ModModel) -> str:
     seen_flag_groups = set()
     for tab in model.tabs:
         for group in tab.groups:
-            if group.group_id not in seen_flag_groups:
-                seen_flag_groups.add(group.group_id)
-                flag_keys.append(f"{mod_id}__{group.group_id}")
+            if (tab.tab_id, group.group_id) not in seen_flag_groups:
+                seen_flag_groups.add((tab.tab_id, group.group_id))
+                flag_keys.append(f"{mod_id}__{tab.tab_id}__{group.group_id}")
     for tab in model.tabs:
         for group in tab.groups:
             for setting in group.settings:

@@ -120,12 +120,12 @@ cmm_register_tab = {
 	}
 }
 
-# Register a group for a mod tab and implicitly register the owner tab/mod (idempotent by mod_id + group_id).
+# Register a group for a mod tab and implicitly register the owner tab/mod (idempotent by mod_id + tab_id + group_id).
 # Scope: country
 # Args:
 # - mod_id (key): Owner mod id.
 # - tab_id (key): Owner tab id within mod.
-# - group_id (key): Group id unique within mod.
+# - group_id (key): Group id unique within tab.
 cmm_register_group = {
 	cmm_register_tab = {
 		mod_id = $mod_id$
@@ -134,31 +134,31 @@ cmm_register_group = {
 
 	# First-time registration path for this group key.
 	if = {
-		limit = { NOT = { has_variable = cmm_registered_group_$mod_id$__$group_id$ } }
-		set_variable = { name = cmm_registered_group_$mod_id$__$group_id$ value = yes }
-		set_variable = { name = cmm_group_owner_mod_id_$mod_id$__$group_id$ value = flag:$mod_id$ }
-		set_variable = { name = cmm_group_owner_tab_key_$mod_id$__$group_id$ value = flag:$mod_id$__$tab_id$ }
-		set_variable = { name = $mod_id$__$group_id$_name value = flag:$mod_id$__$group_id$_name }
-		set_variable = { name = $mod_id$__$group_id$_desc value = flag:$mod_id$__$group_id$_desc }
+		limit = { NOT = { has_variable = cmm_registered_group_$mod_id$__$tab_id$__$group_id$ } }
+		set_variable = { name = cmm_registered_group_$mod_id$__$tab_id$__$group_id$ value = yes }
+		set_variable = { name = cmm_group_owner_mod_id_$mod_id$__$tab_id$__$group_id$ value = flag:$mod_id$ }
+		set_variable = { name = cmm_group_owner_tab_key_$mod_id$__$tab_id$__$group_id$ value = flag:$mod_id$__$tab_id$ }
+		set_variable = { name = $mod_id$__$tab_id$__$group_id$_name value = flag:$mod_id$__$tab_id$__$group_id$_name }
+		set_variable = { name = $mod_id$__$tab_id$__$group_id$_desc value = flag:$mod_id$__$tab_id$__$group_id$_desc }
 
 		# Global group key list; used by settings-panel group datamodel iteration.
 		add_to_variable_list = {
 			name = cmm_registered_group_keys
-			target = flag:$mod_id$__$group_id$
+			target = flag:$mod_id$__$tab_id$__$group_id$
 		}
 	}
 
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { v = $mod_id$__$group_id$ }
-		cmf_suppress = { v = $mod_id$__$group_id$_name }
-		cmf_suppress = { v = $mod_id$__$group_id$_desc }
+		cmf_suppress = { v = $mod_id$__$tab_id$__$group_id$ }
+		cmf_suppress = { v = $mod_id$__$tab_id$__$group_id$_name }
+		cmf_suppress = { v = $mod_id$__$tab_id$__$group_id$_desc }
 		cmf_suppress = { v = $mod_id$__$tab_id$ }
 		cmf_suppress = { v = cmm_registered_group_keys }
-		cmf_suppress = { v = cmm_registered_group_$mod_id$__$group_id$ }
-		cmf_suppress = { v = cmm_group_owner_mod_id_$mod_id$__$group_id$ }
-		cmf_suppress = { v = cmm_group_owner_tab_key_$mod_id$__$group_id$ }
+		cmf_suppress = { v = cmm_registered_group_$mod_id$__$tab_id$__$group_id$ }
+		cmf_suppress = { v = cmm_group_owner_mod_id_$mod_id$__$tab_id$__$group_id$ }
+		cmf_suppress = { v = cmm_group_owner_tab_key_$mod_id$__$tab_id$__$group_id$ }
 	}
 }
 
@@ -168,7 +168,7 @@ cmm_register_group = {
 # - mod_id (key): Owner mod id.
 # - setting_id (key): Setting id unique within mod.
 # - tab_id (key): Owner tab id within mod.
-# - group_id (key): Owner group id within mod.
+# - group_id (key): Owner group id within tab.
 cmm_register_setting_metadata = {
 	cmm_register_group = {
 		mod_id = $mod_id$
@@ -182,7 +182,7 @@ cmm_register_setting_metadata = {
 		set_variable = { name = cmm_registered_setting_$mod_id$__$setting_id$ value = yes }
 		set_variable = { name = cmm_setting_owner_mod_id_$mod_id$__$setting_id$ value = flag:$mod_id$ }
 		set_variable = { name = cmm_setting_owner_tab_key_$mod_id$__$setting_id$ value = flag:$mod_id$__$tab_id$ }
-		set_variable = { name = cmm_setting_owner_group_key_$mod_id$__$setting_id$ value = flag:$mod_id$__$group_id$ }
+		set_variable = { name = cmm_setting_owner_group_key_$mod_id$__$setting_id$ value = flag:$mod_id$__$tab_id$__$group_id$ }
 		set_variable = { name = $mod_id$__$setting_id$_name value = flag:$mod_id$__$setting_id$_name }
 		set_variable = { name = $mod_id$__$setting_id$_desc value = flag:$mod_id$__$setting_id$_desc }
 
@@ -194,7 +194,7 @@ cmm_register_setting_metadata = {
 
 		# Per-group setting key list; used by group-scoped setting rendering.
 		add_to_variable_list = {
-			name = cmm_group_setting_keys_$mod_id$__$group_id$
+			name = cmm_group_setting_keys_$mod_id$__$tab_id$__$group_id$
 			target = flag:$mod_id$__$setting_id$
 		}
 
@@ -211,16 +211,16 @@ cmm_register_setting_metadata = {
 		limit = { always = no }
 		cmf_suppress = { v = $mod_id$__$setting_id$ }
 		cmf_suppress = { v = $mod_id$__$tab_id$ }
-		cmf_suppress = { v = $mod_id$__$group_id$ }
+		cmf_suppress = { v = $mod_id$__$tab_id$__$group_id$ }
 		cmf_suppress = { v = $mod_id$__$setting_id$_name }
 		cmf_suppress = { v = $mod_id$__$setting_id$_desc }
-		cmf_suppress = { v = $mod_id$__$group_id$_name }
+		cmf_suppress = { v = $mod_id$__$tab_id$__$group_id$_name }
 		cmf_suppress = { v = cmm_registered_setting_keys }
 		cmf_suppress = { v = cmm_registered_setting_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_setting_owner_mod_id_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_setting_owner_tab_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_setting_owner_group_key_$mod_id$__$setting_id$ }
-		cmf_suppress = { v = cmm_group_setting_keys_$mod_id$__$group_id$ }
+		cmf_suppress = { v = cmm_group_setting_keys_$mod_id$__$tab_id$__$group_id$ }
 		cmf_suppress = { v = cmm_tab_setting_count_$mod_id$__$tab_id$ }
 	}
 }

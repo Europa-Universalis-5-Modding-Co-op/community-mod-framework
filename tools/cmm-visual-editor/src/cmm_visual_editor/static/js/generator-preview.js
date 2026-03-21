@@ -493,11 +493,12 @@ ${prefix}_on_cmf_callback = {
             for (const group of (tab.groups || [])) {
                 if (!(group.settings || []).length) continue;
                 lines.push(` ## ${group.name || group.group_id} (${group.group_id}) Group`);
-                if (!seenGroups.has(group.group_id)) {
-                    seenGroups.add(group.group_id);
-                    lines.push(` ${modId}__${group.group_id}_name: "${this._esc(group.name || group.group_id)}"`);
+                const groupDedup = `${tab.tab_id}__${group.group_id}`;
+                if (!seenGroups.has(groupDedup)) {
+                    seenGroups.add(groupDedup);
+                    lines.push(` ${modId}__${tab.tab_id}__${group.group_id}_name: "${this._esc(group.name || group.group_id)}"`);
                     if (group.desc) {
-                        lines.push(` ${modId}__${group.group_id}_desc: "${this._esc(group.desc)}"`);
+                        lines.push(` ${modId}__${tab.tab_id}__${group.group_id}_desc: "${this._esc(group.desc)}"`);
                     }
                 }
                 for (const s of group.settings) {
@@ -514,9 +515,10 @@ ${prefix}_on_cmf_callback = {
         const seenFlagGroupIds = new Set();
         for (const tab of (state.tabs || [])) {
             for (const group of (tab.groups || [])) {
-                if (!seenFlagGroupIds.has(group.group_id)) {
-                    seenFlagGroupIds.add(group.group_id);
-                    flagKeys.push(`${modId}__${group.group_id}`);
+                const flagGroupDedup = `${tab.tab_id}__${group.group_id}`;
+                if (!seenFlagGroupIds.has(flagGroupDedup)) {
+                    seenFlagGroupIds.add(flagGroupDedup);
+                    flagKeys.push(`${modId}__${tab.tab_id}__${group.group_id}`);
                 }
             }
         }

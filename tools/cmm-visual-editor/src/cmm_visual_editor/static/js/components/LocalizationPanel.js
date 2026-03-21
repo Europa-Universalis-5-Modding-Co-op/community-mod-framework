@@ -12,9 +12,9 @@ const LocalizationPanelComponent = {
             for (const tab of (this.state.tabs || [])) {
                 keys.push({ key: `${modId}__${tab.tab_id}_name`, value: tab.name, category: 'Tabs' });
                 for (const group of (tab.groups || [])) {
-                    keys.push({ key: `${modId}__${group.group_id}_name`, value: group.name, category: 'Groups' });
+                    keys.push({ key: `${modId}__${tab.tab_id}__${group.group_id}_name`, value: group.name, category: 'Groups' });
                     if (group.desc) {
-                        keys.push({ key: `${modId}__${group.group_id}_desc`, value: group.desc, category: 'Groups' });
+                        keys.push({ key: `${modId}__${tab.tab_id}__${group.group_id}_desc`, value: group.desc, category: 'Groups' });
                     }
                     for (const s of (group.settings || [])) {
                         const qid = `${modId}__${s.setting_id}`;
