@@ -7,19 +7,20 @@ const CMMGenerator = {
         const prefix = state.file_prefix || state.mod_id;
         const modId = state.mod_id;
         if (!modId) return {};
+        const noinspect = state.noinspection ? '#noinspection ALL\n' : '';
         const hasSgui = (state.tabs || []).some(t =>
             (t.groups || []).some(g =>
                 (g.settings || []).some(s => s.setting_type === 'list' || s.scripted_gui)
             )
         );
         const files = {
-            [`in_game/common/on_action/${prefix}_cmm_on_actions.txt`]: this.genOnAction(prefix),
-            [`in_game/common/scripted_effects/${prefix}_cmm_effects.txt`]: this.genEffects(state),
-            [`main_menu/localization/english/${prefix}_cmm_l_english.yml`]: this.genLocalization(state),
+            [`in_game/common/on_action/${prefix}_cmm_on_actions.txt`]: noinspect + this.genOnAction(prefix),
+            [`in_game/common/scripted_effects/${prefix}_cmm_effects.txt`]: noinspect + this.genEffects(state),
+            [`main_menu/localization/english/${prefix}_cmm_l_english.yml`]: noinspect + this.genLocalization(state),
             ['.metadata/metadata.json']: this.genMetadata(state),
         };
         if (hasSgui) {
-            files[`in_game/common/scripted_guis/${prefix}_cmm_scripted_gui.txt`] = this.genScriptedGuis(state);
+            files[`in_game/common/scripted_guis/${prefix}_cmm_scripted_gui.txt`] = noinspect + this.genScriptedGuis(state);
         }
         return files;
     },

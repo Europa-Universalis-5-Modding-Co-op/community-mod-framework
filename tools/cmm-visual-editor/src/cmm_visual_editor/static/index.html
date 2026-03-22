@@ -22,6 +22,9 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button class="btn-icon" @click="showSettings = true" title="Settings">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5.75v1.27A5.48 5.48 0 0 0 4.6 3.1L3.56 2.35l-1.5 1.5.75 1.04A5.48 5.48 0 0 0 1.73 6.8H.5v2h1.23c.15.7.42 1.36.78 1.95l-.75 1.04 1.5 1.5 1.04-.75c.6.36 1.25.63 1.95.78v1.18h2v-1.18a5.48 5.48 0 0 0 1.95-.78l1.04.75 1.5-1.5-.75-1.04c.36-.6.63-1.25.78-1.95h1.23v-2h-1.23a5.48 5.48 0 0 0-.78-1.95l.75-1.04-1.5-1.5-1.04.75A5.48 5.48 0 0 0 8.5 2.02V.75h-2zM7.5 5a2.75 2.75 0 1 1 0 5.5 2.75 2.75 0 0 1 0-5.5z"/></svg>
+                </button>
                 <button class="btn btn-secondary" @click="showImport = true">Open</button>
                 <button class="btn btn-secondary" @click="generateAndDownload" :disabled="!state.mod_id">Download ZIP</button>
                 <button class="btn btn-close-app" @click="closeApp" title="Close the editor">Close</button>
@@ -213,6 +216,23 @@
                 </div>
                 <div v-if="importWarnings.length" class="warnings">
                     <p v-for="w in importWarnings" class="warning">{{ w }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div v-if="showSettings" class="modal-overlay" @click.self="showSettings = false">
+            <div class="modal">
+                <h3>Settings</h3>
+                <div class="field-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" v-model="state.noinspection">
+                        Add <code>#noinspection ALL</code> to generated files
+                    </label>
+                    <span class="field-hint">Suppresses IDE inspections for mods that don't add CMF as a dependency.</span>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" @click="showSettings = false">Done</button>
                 </div>
             </div>
         </div>

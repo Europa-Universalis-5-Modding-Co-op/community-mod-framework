@@ -11,18 +11,19 @@ def generate_all(model: ModModel) -> dict:
     """Generate all output files from a ModModel. Returns {filepath: content}."""
     prefix = model.file_prefix or model.mod_id
     mod_id = model.mod_id
+    noinspect = "#noinspection ALL\n" if model.noinspection else ""
 
     files = {}
     if mod_id:
-        files[f"in_game/common/on_action/{prefix}_cmm_on_actions.txt"] = _gen_on_action(prefix)
-        files[f"in_game/common/scripted_effects/{prefix}_cmm_effects.txt"] = _gen_effects(model)
+        files[f"in_game/common/on_action/{prefix}_cmm_on_actions.txt"] = noinspect + _gen_on_action(prefix)
+        files[f"in_game/common/scripted_effects/{prefix}_cmm_effects.txt"] = noinspect + _gen_effects(model)
         has_sgui = any(
             s.setting_type == "list" or s.scripted_gui
             for t in model.tabs for g in t.groups for s in g.settings
         )
         if has_sgui:
-            files[f"in_game/common/scripted_guis/{prefix}_cmm_scripted_gui.txt"] = _gen_scripted_guis(model)
-        files[f"main_menu/localization/english/{prefix}_cmm_l_english.yml"] = _gen_localization(model)
+            files[f"in_game/common/scripted_guis/{prefix}_cmm_scripted_gui.txt"] = noinspect + _gen_scripted_guis(model)
+        files[f"main_menu/localization/english/{prefix}_cmm_l_english.yml"] = noinspect + _gen_localization(model)
         files[".metadata/metadata.json"] = _gen_metadata(model)
 
     return files

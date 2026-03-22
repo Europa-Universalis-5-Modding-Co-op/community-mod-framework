@@ -75,6 +75,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 "metadata_short_description": "",
                 "metadata_tags": ["Utilities"],
                 "metadata_game_version": "1.1.*",
+                "noinspection": False,
                 "tabs": [],
             })
             return

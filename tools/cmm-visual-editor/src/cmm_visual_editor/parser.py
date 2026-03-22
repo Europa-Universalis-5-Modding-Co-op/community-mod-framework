@@ -20,6 +20,7 @@ def parse_mod_directory(directory: Path) -> Tuple[ModModel, list]:
     loc_content = ""
     on_action_content = ""
     metadata_content = ""
+    noinspection = False
 
     # Find files by pattern
     for f in directory.rglob("*.txt"):
@@ -38,6 +39,8 @@ def parse_mod_directory(directory: Path) -> Tuple[ModModel, list]:
                 gui_content += "\n" + text
         elif "effect" in name or "effect" in str(f.parent).lower():
             if "cmm_register_" in text:
+                if text.lstrip().startswith("#noinspection ALL"):
+                    noinspection = True
                 effects_content += "\n" + text
 
     for f in directory.rglob("*_l_english.yml"):
@@ -56,7 +59,8 @@ def parse_mod_directory(directory: Path) -> Tuple[ModModel, list]:
 
     return _build_model(
         on_action_content, effects_content, gui_content,
-        loc_content, metadata_content, warnings
+        loc_content, metadata_content, warnings,
+        noinspection=noinspection,
     )
 
 
@@ -75,7 +79,8 @@ def parse_uploaded_files(files: dict) -> Tuple[ModModel, list]:
 
 def _build_model(
     on_action: str, effects: str, gui: str,
-    loc: str, metadata: str, warnings: list
+    loc: str, metadata: str, warnings: list,
+    noinspection: bool = False,
 ) -> Tuple[ModModel, list]:
     # Parse prefix from on_action
     prefix = _parse_prefix(on_action)
@@ -206,6 +211,7 @@ def _build_model(
         metadata_short_description=meta.get("short_description", ""),
         metadata_tags=meta.get("tags", ["Utilities"]),
         metadata_game_version=meta.get("supported_game_version", "1.1.*"),
+        noinspection=noinspection,
         tabs=[tabs_map[tid] for tid in tab_order],
     )
 

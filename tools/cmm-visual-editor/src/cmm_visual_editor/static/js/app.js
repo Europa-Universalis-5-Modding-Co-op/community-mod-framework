@@ -78,6 +78,7 @@ const app = createApp({
             metadata_short_description: '',
             metadata_tags: ['Utilities'],
             metadata_game_version: '1.1.*',
+            noinspection: false,
             tabs: [],
         });
 
@@ -93,6 +94,7 @@ const app = createApp({
         const dirty = ref(false);         // unsaved changes exist
         const saveStatus = ref('');       // '', 'saving', 'saved', 'error'
         const saveError = ref('');
+        const showSettings = ref(false);
 
         // Undo/redo reactivity helpers (Vue can't observe getters on a plain object)
         const undoCount = ref(0);
@@ -597,7 +599,7 @@ const app = createApp({
                 mod_id: '', file_prefix: '', mod_name: '', mod_desc: '',
                 metadata_name: '', metadata_id: '', metadata_version: '0.1',
                 metadata_short_description: '', metadata_tags: ['Utilities'],
-                metadata_game_version: '1.1.*', tabs: [],
+                metadata_game_version: '1.1.*', noinspection: false, tabs: [],
             };
             Object.assign(state, defaults);
             selectedTabIdx.value = 0;
@@ -679,7 +681,7 @@ const app = createApp({
             state, selectedTabIdx, selectedGroupIdx, rightTab,
             showImport, importPath, importWarnings,
             selectedTab, selectedGroup,
-            modDir, dirty, saveStatus, saveError,
+            modDir, dirty, saveStatus, saveError, showSettings,
             undoCount, redoCount,
             drag, resetDrag,
             sanitizeId, addTab, removeTab, addGroup, removeGroup,
