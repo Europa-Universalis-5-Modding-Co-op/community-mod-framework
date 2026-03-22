@@ -50,4 +50,4 @@ In addition to maintainer reviews, pull requests will receive an automated revie
 
 ## Community Engagement
 
-The absolute best place to connect with the project is via the Discord server: [Europa Universalis V](https://discord.gg/aUV49QbqYm)
+The absolute best place to connect with the project is via the Discord server: [Europa Universalis V](https://discord.gg/aqAAcCZsY7)

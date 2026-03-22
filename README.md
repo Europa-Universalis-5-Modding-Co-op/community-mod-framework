@@ -52,7 +52,7 @@ The goal is to provide mods that make use of it, new ways to show content or hoo
 - [Example Mod](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/tree/main/submods/cmf-example-mod)
 - [Community Mod Toolkit](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit)
 - [Contributing](docs/CONTRIBUTING.md)
-- [Discord](https://discord.gg/aUV49QbqYm)
+- [Discord](https://discord.gg/aqAAcCZsY7)
 
 ## Contributors
 - [Bahmut](https://steamcommunity.com/id/Bahmut/)
