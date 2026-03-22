@@ -293,7 +293,7 @@ const SettingEditorComponent = {
             this.$nextTick(() => { if (this.$refs.aliasInput) this.$refs.aliasInput.focus(); });
         },
         confirmAlias() {
-            const val = this.aliasInput.replace(/[^a-z0-9_$]/gi, '').toLowerCase();
+            const val = this.aliasInput.replace(/[^a-zA-Z0-9_$]/g, '');
             this.setting.alias = val || '';
             this.editingAlias = false;
         },

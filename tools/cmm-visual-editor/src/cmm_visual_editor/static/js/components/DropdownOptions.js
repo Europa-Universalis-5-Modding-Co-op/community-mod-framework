@@ -75,7 +75,7 @@ const DropdownOptionsComponent = {
         confirmEdit(i) {
             const opt = (this.setting.options || [])[i];
             if (!opt) return;
-            const val = this.aliasInput.replace(/[^a-z0-9_]/gi, '').toLowerCase();
+            const val = this.aliasInput.replace(/[^a-zA-Z0-9_]/g, '');
             opt.alias = val || '';
             this.editingOption = -1;
         },

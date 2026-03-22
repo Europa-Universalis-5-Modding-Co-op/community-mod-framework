@@ -192,7 +192,7 @@ const ListEditorComponent = {
         confirmFieldAlias(fi) {
             const field = (this.setting.fields || [])[fi];
             if (!field) return;
-            const val = this.fieldAliasInput.replace(/[^a-z0-9_$]/gi, '').toLowerCase();
+            const val = this.fieldAliasInput.replace(/[^a-zA-Z0-9_$]/g, '');
             field.alias = val || '';
             this.editingFieldAlias = -1;
         },
