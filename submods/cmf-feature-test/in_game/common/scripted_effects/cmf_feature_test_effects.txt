@@ -9,14 +9,14 @@ cmf_feature_test_register_cmf = {
 	cmf_register_scripted_gui = { element = cmf_action_bar_ft_primary }
 
 	# Alerts — all 8 colors
-	cmf_add_alert = { alert = cmf_alert_ft_orange }
-	cmf_add_alert = { alert = cmf_alert_ft_blue }
-	cmf_add_alert = { alert = cmf_alert_ft_black }
-	cmf_add_alert = { alert = cmf_alert_ft_red_war }
-	cmf_add_alert = { alert = cmf_alert_ft_red }
-	cmf_add_alert = { alert = cmf_alert_ft_yellow }
-	cmf_add_alert = { alert = cmf_alert_ft_green }
-	cmf_add_alert = { alert = cmf_alert_ft_purple }
+	cmf_show_alert = { alert = cmf_alert_ft_orange }
+	cmf_show_alert = { alert = cmf_alert_ft_blue }
+	cmf_show_alert = { alert = cmf_alert_ft_black }
+	cmf_show_alert = { alert = cmf_alert_ft_red_war }
+	cmf_show_alert = { alert = cmf_alert_ft_red }
+	cmf_show_alert = { alert = cmf_alert_ft_yellow }
+	cmf_show_alert = { alert = cmf_alert_ft_green }
+	cmf_show_alert = { alert = cmf_alert_ft_purple }
 }
 
 # Unified callback handler for cmf_on_callback.
@@ -45,7 +45,7 @@ cmf_feature_test_handle_callback = {
 			# Toggle the orange alert based on toggle value
 			if = {
 				limit = { "variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1 }
-				cmf_add_alert = { alert = cmf_alert_ft_orange }
+				cmf_show_alert = { alert = cmf_alert_ft_orange }
 			}
 			else = {
 				cmf_remove_alert = { alert = cmf_alert_ft_orange }
@@ -73,28 +73,28 @@ cmf_feature_test_handle_callback = {
 		# Re-add alerts after they are clicked so they reappear for repeated testing.
 
 		flag:cmf_alert_ft_orange = {
-			cmf_add_alert = { alert = cmf_alert_ft_orange }
+			cmf_show_alert = { alert = cmf_alert_ft_orange }
 		}
 		flag:cmf_alert_ft_blue = {
-			cmf_add_alert = { alert = cmf_alert_ft_blue }
+			cmf_show_alert = { alert = cmf_alert_ft_blue }
 		}
 		flag:cmf_alert_ft_black = {
-			cmf_add_alert = { alert = cmf_alert_ft_black }
+			cmf_show_alert = { alert = cmf_alert_ft_black }
 		}
 		flag:cmf_alert_ft_red_war = {
-			cmf_add_alert = { alert = cmf_alert_ft_red_war }
+			cmf_show_alert = { alert = cmf_alert_ft_red_war }
 		}
 		flag:cmf_alert_ft_red = {
-			cmf_add_alert = { alert = cmf_alert_ft_red }
+			cmf_show_alert = { alert = cmf_alert_ft_red }
 		}
 		flag:cmf_alert_ft_yellow = {
-			cmf_add_alert = { alert = cmf_alert_ft_yellow }
+			cmf_show_alert = { alert = cmf_alert_ft_yellow }
 		}
 		flag:cmf_alert_ft_green = {
-			cmf_add_alert = { alert = cmf_alert_ft_green }
+			cmf_show_alert = { alert = cmf_alert_ft_green }
 		}
 		flag:cmf_alert_ft_purple = {
-			cmf_add_alert = { alert = cmf_alert_ft_purple }
+			cmf_show_alert = { alert = cmf_alert_ft_purple }
 		}
 
 		# ── Action bar callbacks ──────────────────────────────────────────
@@ -106,7 +106,7 @@ cmf_feature_test_handle_callback = {
 				cmf_remove_alert = { alert = cmf_alert_ft_blue }
 			}
 			else = {
-				cmf_add_alert = { alert = cmf_alert_ft_blue }
+				cmf_show_alert = { alert = cmf_alert_ft_blue }
 			}
 		}
 
@@ -117,7 +117,7 @@ cmf_feature_test_handle_callback = {
 				cmf_remove_alert = { alert = cmf_alert_ft_green }
 			}
 			else = {
-				cmf_add_alert = { alert = cmf_alert_ft_green }
+				cmf_show_alert = { alert = cmf_alert_ft_green }
 			}
 		}
 	}

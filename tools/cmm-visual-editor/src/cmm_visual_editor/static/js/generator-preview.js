@@ -672,7 +672,7 @@ ${prefix}_on_cmf_callback = {
                 id: "community.mod.framework",
                 display_name: "Community Mod Framework",
                 resource_type: "mod",
-                version: "*",
+                version: "2.*",
             }],
             game_custom_data: {},
         }, null, 4);

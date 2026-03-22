@@ -625,7 +625,7 @@ def _gen_metadata(model: ModModel) -> str:
                 "id": "community.mod.framework",
                 "display_name": "Community Mod Framework",
                 "resource_type": "mod",
-                "version": "*",
+                "version": "2.*",
             }
         ],
         "game_custom_data": {},

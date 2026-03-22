@@ -1,5 +1,5 @@
 ﻿l_english:
- # This is what is called the root loc key it needs to be the same as the key
+ # Optional: self-referential root key suppresses Paradox Language Tools IDE warnings, but is not required by the engine
  cmf_alert_example: "cmf_alert_example"
  # <root_loc_key>_color = This is the alert color (blue/orange/red/red_war/black/yellow/green/purple)
  cmf_alert_example_color: "orange"

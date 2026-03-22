@@ -15,7 +15,7 @@ cmf_example_on_register_mod = {
 
 		# You can also register inline:
 		# cmf_add_action_bar_element = { element = cmf_action_bar_element_example }
-		# cmf_add_alert = { alert = cmf_alert_example }
+		# cmf_show_alert = { alert = cmf_alert_example }
 	}
 }
 

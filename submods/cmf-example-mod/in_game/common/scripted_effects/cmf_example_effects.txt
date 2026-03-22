@@ -6,15 +6,15 @@ cmf_example_register_mod = {
 	cmf_add_action_bar_element = { element = cmf_action_bar_element_example_second }
 
 	# Alerts
-	cmf_add_alert = { alert = cmf_alert_example }
-	cmf_add_alert = { alert = cmf_alert_example_blue }
-	cmf_add_alert = { alert = cmf_alert_example_black }
-	cmf_add_alert = { alert = cmf_alert_example_red_war }
-	cmf_add_alert = { alert = cmf_alert_example_red }
-	cmf_add_alert = { alert = cmf_alert_example_orange }
-	cmf_add_alert = { alert = cmf_alert_example_yellow }
-	cmf_add_alert = { alert = cmf_alert_example_green }
-	cmf_add_alert = { alert = cmf_alert_example_purple }
+	cmf_show_alert = { alert = cmf_alert_example }
+	cmf_show_alert = { alert = cmf_alert_example_blue }
+	cmf_show_alert = { alert = cmf_alert_example_black }
+	cmf_show_alert = { alert = cmf_alert_example_red_war }
+	cmf_show_alert = { alert = cmf_alert_example_red }
+	cmf_show_alert = { alert = cmf_alert_example_orange }
+	cmf_show_alert = { alert = cmf_alert_example_yellow }
+	cmf_show_alert = { alert = cmf_alert_example_green }
+	cmf_show_alert = { alert = cmf_alert_example_purple }
 }
 
 # Callback handler for cmf_on_callback.
@@ -27,7 +27,7 @@ cmf_example_handle_callback = {
 			# Toggle the example alert when the example toggle is changed.
 			if = {
 				limit = { "variable_map(cmm|flag:cmm_example__example_toggle)" >= 1 }
-				cmf_add_alert = { alert = cmf_alert_example }
+				cmf_show_alert = { alert = cmf_alert_example }
 			}
 			else = {
 				cmf_remove_alert = { alert = cmf_alert_example }

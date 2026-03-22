@@ -1,4 +1,4 @@
-﻿cmf_add_alert = {
+﻿cmf_show_alert = {
     hidden_effect = {
         add_to_variable_list = {
             name = cmf_active_alerts

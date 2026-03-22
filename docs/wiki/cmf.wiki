@@ -87,7 +87,6 @@ The Custom Alerts system allows mods to display dynamic, dismissable notificatio
 Each alert requires localization keys. No Scripted GUI is needed:
 <syntaxhighlight lang="yaml">
 l_english:
- cmf_alert_example: "cmf_alert_example"
  cmf_alert_example_color: "orange"
  cmf_alert_example_icon: "@advance!"
  cmf_alert_example_name: "Some Alert"
@@ -96,8 +95,6 @@ l_english:
 
 {| class="wikitable"
 ! Key !! Description
-|-
-| <code><root_key></code> || Must be self-referential (key and value are the same)
 |-
 | <code><root_key>_color</code> || <code>blue</code>, <code>orange</code>, <code>red</code>, <code>red_war</code>, <code>black</code>, <code>yellow</code>, <code>green</code>, or <code>purple</code>
 |-
@@ -113,7 +110,7 @@ All effects require '''country scope'''.
 {| class="wikitable"
 ! Effect !! Description
 |-
-| <code>cmf_add_alert = { alert = <root_key> }</code> || Add an alert
+| <code>cmf_show_alert = { alert = <root_key> }</code> || Show an alert
 |-
 | <code>cmf_remove_alert = { alert = <root_key> }</code> || Remove an alert
 |-
