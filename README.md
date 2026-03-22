@@ -28,7 +28,7 @@ To set this mod as a dependency to your own mod, you will need to add this to yo
   "relationships" : [
     {
       "rel_type" : "dependency",
-      "id" : "community.mod.framework",
+      "id" : "community_mod_framework",
       "display_name" : "Community Mod Framework",
       "resource_type" : "mod",
       "version" : "2.*"

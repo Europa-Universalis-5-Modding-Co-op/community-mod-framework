@@ -1,6 +1,6 @@
 # Community Mod Framework Example Mod
 
-This is a reference integration mod for `community.mod.framework`.
+This is a reference integration mod for `community_mod_framework`.
 
 ## What it demonstrates
 
@@ -34,7 +34,7 @@ This is a reference integration mod for `community.mod.framework`.
 
 ## Test flow
 
-1. Enable both `community.mod.framework` and `community.mod.framework.example`.
+1. Enable both `community_mod_framework` and `community_mod_framework_example`.
 2. Start a new game as any country.
 3. **CMM:** Open pause menu and click `Mod Menu`.
 4. Confirm the `Registered mods:` counter is at least `2` (core + example).

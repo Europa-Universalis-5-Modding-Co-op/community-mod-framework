@@ -1,6 +1,6 @@
 {
 	"name": "Community Mod Framework & Menu",
-	"id": "community.mod.framework",
+	"id": "community_mod_framework",
 	"version": "2.0.0",
 	"game_id": "eu5",
 	"supported_game_version": "1.1.*",

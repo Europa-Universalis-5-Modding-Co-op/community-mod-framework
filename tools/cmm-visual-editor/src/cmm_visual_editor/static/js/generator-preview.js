@@ -669,7 +669,7 @@ ${prefix}_on_cmf_callback = {
             tags: state.metadata_tags,
             relationships: [{
                 rel_type: "dependency",
-                id: "community.mod.framework",
+                id: "community_mod_framework",
                 display_name: "Community Mod Framework",
                 resource_type: "mod",
                 version: "2.*",

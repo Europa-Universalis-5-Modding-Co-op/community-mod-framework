@@ -1,6 +1,6 @@
 {
     "name": "Community Mod Framework Example Mod",
-    "id": "community.mod.framework.example",
+    "id": "community_mod_framework_example",
     "version": "0.1",
     "game_id": "eu5",
     "supported_game_version": "1.1.*",
@@ -12,7 +12,7 @@
     "relationships": [
         {
             "rel_type": "dependency",
-            "id": "community.mod.framework",
+            "id": "community_mod_framework",
             "display_name": "Community Mod Framework",
             "resource_type": "mod",
             "version": "2.*"

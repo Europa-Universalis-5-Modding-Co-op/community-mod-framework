@@ -622,7 +622,7 @@ def _gen_metadata(model: ModModel) -> str:
         "relationships": [
             {
                 "rel_type": "dependency",
-                "id": "community.mod.framework",
+                "id": "community_mod_framework",
                 "display_name": "Community Mod Framework",
                 "resource_type": "mod",
                 "version": "2.*",
