@@ -2,14 +2,16 @@
 source_language = "english" # Options: english, french, german, spanish, polish, russian, simp_chinese, turkish, braz_por, japanese, korean
 translate_workshop = true # Auto-translate workshop title/description into other languages
 translate_submods_by_default = false # Should running translate.py include all submods from submods/? You can also use --submods instead.
-localization_translator = "gemini-3-flash" # Options: deepl, gemini-3-flash
-workshop_description_translator = "gemini-3-flash" # Options: deepl, gemini-3-flash - better, but only 20 free requests per day (Each run takes 10 requests per description, and 10 per title)
+translate_change_notes_by_default = false # Should running translate.py translate change notes? You can also use --change-notes instead.
+localization_translator = "deepl" # Options: deepl, gemini-3-flash
 workshop_title_translator = "gemini-3-flash" # Options: deepl, gemini-3-flash - highly recommended at least for title. But I would also recommend just using Gemini-3-Pro using the website (api has no free requests)
+workshop_description_translator = "gemini-3-flash" # Options: deepl, gemini-3-flash - better, but only 20 free requests per day (Each run takes 10 requests per description, and 10 per title)
 
 # Prompts for use with Gemini-3-Flash #
 gemini_localization_system_prompt = "You are a professional localization translator. Translate the user's Europa Universalis localization text into {target_language}. Preserve any bracketed tokens, variables, and EU5 markup exactly. Do not add commentary; output only the translated text."
 gemini_description_system_prompt = "You are a professional Steam mod page translator. Translate the user's Europa Unversalis mod description into {target_language}. Preserve all BBCode tags, list markers, URLs, and bracketed tokens exactly. Do not add commentary; output only the translated text."
 gemini_title_system_prompt = "You are a professional Steam mod title translator. Translate the user's Europa Unversalis mod title into {target_language}. Do not add commentary; output only the translated title for use on the Steam Workshop mod page."
+gemini_additional_context = "" # Optional: additional context appended to all Gemini translation prompts (localization, title, and description). e.g. "This mod is set in the fantasy world of X and uses terms like Y to mean Z"
 
 ### Uploading ####
 workshop_upload_item_id = 0 # Replace with your mod's Workshop item ID (0 creates a new item)
@@ -18,6 +20,7 @@ upload_mod_by_default = true # Should running upload.py upload the mod? You can 
 upload_workshop_pages_by_default = true # Should running upload.py upload the mod's Workshop pages? You can also use --workshop-pages instead.
 upload_only_on_version_change = true # If true, mod/submod uploads only run when the metadata.json version changed since the last successful upload.
 upload_submods_by_default = false # Should running upload.py upload all submods from submods/? You can also use --submods instead.
+upload_change_notes_by_default = false # Should running upload.py include change notes in uploads? You can also use --change-notes instead.
 workshop_dev_name = "" # Optional: override dev mod name for upload.py --dev
 
 ### Optional submod upload mapping (used with upload.py --submods) ###
