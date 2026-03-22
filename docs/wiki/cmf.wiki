@@ -119,7 +119,7 @@ All effects require '''country scope'''.
 
 Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
 
-== Yearly Human Country Pulse ==
+== cmf_yearly_human_country_pulse Hook ==
 <code>cmf_yearly_human_country_pulse</code> fires once per year for each human player's country. Slightly more efficient than each mod checking <code>is_ai = no</code> individually. Hook into it the same way as <code>cmf_on_mod_registration</code>:
 
 <syntaxhighlight lang="text">
