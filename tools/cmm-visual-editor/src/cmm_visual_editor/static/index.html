@@ -164,6 +164,7 @@
                                     <template v-else>No settings yet. Click "+ Add Setting" to create one.</template>
                                 </div>
                             </div>
+                            <button v-if="selectedGroup.settings.length >= 5" class="btn btn-sm" style="margin-top:8px" @click="addSetting">+ Add Setting</button>
                         </div>
                     </div>
                     <div v-else class="empty-state">
