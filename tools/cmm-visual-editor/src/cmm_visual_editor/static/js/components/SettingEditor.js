@@ -64,28 +64,14 @@ const SettingEditorComponent = {
                 </div>
             </div>
 
-            <div class="field-row" v-if="canBeGlobal">
-                <label class="checkbox-label">
-                    <input type="checkbox" v-model="setting.is_global">
-                    Global Setting
-                    <span class="field-hint">(Host-only in multiplayer, shared across all players)</span>
-                </label>
-            </div>
-
-            <div class="field-row" v-if="setting.setting_type !== 'button'">
-                <label class="checkbox-label">
-                    <input type="checkbox" v-model="setting.no_reset">
-                    No Reset
-                    <span class="field-hint">(Excluded from the Reset to Defaults button)</span>
-                </label>
-            </div>
-
-            <div class="field-row" v-if="setting.setting_type !== 'list'">
-                <label class="checkbox-label">
-                    <input type="checkbox" v-model="setting.scripted_gui">
-                    Scripted GUI
-                    <span class="field-hint">(Enable is_shown / is_valid conditions for this setting)</span>
-                </label>
+            <div class="checkbox-grid" v-if="settingFlags.length">
+                <div class="field-row" v-for="flag in settingFlags" :key="flag.key">
+                    <label class="checkbox-label">
+                        <input type="checkbox" v-model="setting[flag.key]">
+                        {{ flag.label }}
+                        <span class="field-hint">{{ flag.hint }}</span>
+                    </label>
+                </div>
             </div>
 
             <div v-if="showSguiConditions" class="type-fields sgui-fields">
@@ -239,8 +225,24 @@ const SettingEditorComponent = {
             const mapFunc = this.setting.is_global ? 'global_variable_map' : 'variable_map';
             return `"${mapFunc}(cmm|flag:${this.defaultAccessorKey})"`;
         },
+        settingFlags() {
+            const flags = [];
+            if (this.canBeGlobal) {
+                flags.push({ key: 'is_global', label: 'Global Setting', hint: '(Host-only in multiplayer, shared across all players)' });
+            }
+            if (this.setting.setting_type !== 'button') {
+                flags.push({ key: 'no_reset', label: 'No Reset', hint: '(Excluded from the Reset to Defaults button)' });
+            }
+            if (this.setting.setting_type === 'bool' && this.hasAlias) {
+                flags.push({ key: 'alias_inverted', label: 'Inverted Alias', hint: '(Variable absent when enabled, present when disabled)' });
+            }
+            if (this.setting.setting_type !== 'list') {
+                flags.push({ key: 'scripted_gui', label: 'Scripted GUI', hint: '(Enable is_shown / is_valid conditions)' });
+            }
+            return flags;
+        },
         accessorLabel() {
-            if (this.hasAlias) return "Alias (synced):";
+            if (this.hasAlias) return this.setting.alias_inverted ? "Alias (synced, inverted):" : "Alias (synced):";
             if (!this.setting.is_global) return "To Access the Setting's Value (Country Scope):";
             return "To Access the Setting's Value:";
         },

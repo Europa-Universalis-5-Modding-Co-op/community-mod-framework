@@ -535,6 +535,13 @@ body {
     width: auto;
 }
 
+.checkbox-grid {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-auto-flow: column;
+    gap: 6px 24px;
+}
+
 /* Metadata section */
 .metadata-section {
     margin-top: 8px;

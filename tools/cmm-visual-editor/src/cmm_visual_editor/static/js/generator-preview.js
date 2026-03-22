@@ -287,7 +287,12 @@ ${prefix}_on_cmf_callback = {
         // Setting alias sync
         const alias = this._settingHasAlias(setting, modId);
         if (alias && st !== 'button') {
-            const syncFunc = st === 'bool' ? 'cmm_sync_bool_alias' : 'cmm_sync_setting_alias';
+            let syncFunc;
+            if (st === 'bool') {
+                syncFunc = setting.alias_inverted ? 'cmm_sync_bool_alias_inverted' : 'cmm_sync_bool_alias';
+            } else {
+                syncFunc = 'cmm_sync_setting_alias';
+            }
             lines.push(`\t${syncFunc} = {`);
             lines.push(`\t\tsetting = ${qid}`);
             lines.push(`\t\talias = ${alias}`);
@@ -481,10 +486,11 @@ ${prefix}_on_cmf_callback = {
                     if (st === 'text' || st === 'list') continue;
                     const qid = `${modId}__${setting.setting_id}`;
                     const alias = st !== 'button' ? this._settingHasAlias(setting, modId) : '';
+                    const aliasInverted = st === 'bool' ? !!setting.alias_inverted : false;
                     const optionAliases = st === 'dropdown' ? this._getOptionAliases(setting) : [];
                     const customEffect = setting.on_changed_effect || '';
                     if (alias || optionAliases.length || customEffect) {
-                        cases.push({ tabId: tab.tab_id, tabName: tab.name || tab.tab_id, groupId: group.group_id, groupName: group.name || group.group_id, qid, st, alias, optionAliases, customEffect });
+                        cases.push({ tabId: tab.tab_id, tabName: tab.name || tab.tab_id, groupId: group.group_id, groupName: group.name || group.group_id, qid, st, alias, aliasInverted, optionAliases, customEffect });
                     }
                 }
             }
@@ -513,7 +519,12 @@ ${prefix}_on_cmf_callback = {
                 }
                 lines.push(`\t\tflag:${c.qid} = {`);
                 if (c.alias) {
-                    const syncFunc = c.st === 'bool' ? 'cmm_sync_bool_alias' : 'cmm_sync_setting_alias';
+                    let syncFunc;
+                    if (c.st === 'bool') {
+                        syncFunc = c.aliasInverted ? 'cmm_sync_bool_alias_inverted' : 'cmm_sync_bool_alias';
+                    } else {
+                        syncFunc = 'cmm_sync_setting_alias';
+                    }
                     lines.push(`\t\t\t${syncFunc} = {`);
                     lines.push(`\t\t\t\tsetting = ${c.qid}`);
                     lines.push(`\t\t\t\talias = ${c.alias}`);

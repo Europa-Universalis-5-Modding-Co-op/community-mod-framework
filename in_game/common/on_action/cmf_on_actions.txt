@@ -1,7 +1,16 @@
 ﻿on_game_start = {
 	on_actions = {
+		cmf_on_init
 		delay = { days = 1 }
 		cmf_on_yearly
+	}
+}
+
+# Set global presence flag for cross-mod detection.
+# Scope: global
+cmf_on_init = {
+	effect = {
+		set_global_variable = { name = cmf_active value = yes }
 	}
 }
 

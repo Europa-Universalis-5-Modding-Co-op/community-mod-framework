@@ -70,6 +70,7 @@ class Setting:
     no_reset: Optional[bool] = None
     # alias
     alias: str = ""
+    alias_inverted: bool = False
     # scripted gui (is_shown / is_valid conditions)
     scripted_gui: Optional[bool] = None
     visible: Optional[str] = None
@@ -156,6 +157,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["no_reset"] = s.no_reset
         if s.alias:
             d["alias"] = s.alias
+        if s.alias_inverted:
+            d["alias_inverted"] = s.alias_inverted
         if s.scripted_gui:
             d["scripted_gui"] = s.scripted_gui
         if s.visible:
@@ -269,6 +272,7 @@ def dict_to_model(data: dict) -> ModModel:
             no_pass_value=s.get("no_pass_value"),
             no_reset=s.get("no_reset"),
             alias=s.get("alias", ""),
+            alias_inverted=s.get("alias_inverted", False),
             scripted_gui=s.get("scripted_gui"),
             visible=s.get("visible"),
             enabled=s.get("enabled"),

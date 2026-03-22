@@ -1,0 +1,22 @@
+﻿# Check whether CMF has been initialized for this save.
+# Scope: country
+cmf_is_active = {
+	scope = player
+	is_shown = {
+		has_global_variable = cmf_active
+	}
+}
+
+# Set the cmf_active global variable and run full CMM initialization.
+# Used by the init popup for existing saves.
+# Scope: country
+cmf_set_active = {
+	scope = player
+	effect = {
+		set_global_variable = { name = cmf_active value = yes }
+		cmm_register_menu_settings = yes
+		trigger_event_silently = {
+			on_action = cmf_on_mod_registration
+		}
+	}
+}

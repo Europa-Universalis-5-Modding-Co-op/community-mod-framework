@@ -10,3 +10,6 @@
  cmf_settings_action_bar_group_active_buttons: "Active Buttons"
  cmf_settings_action_bar_group_active_button_activate: "Activate Button"
  cmf_settings_action_bar_group_active_button_deactivate: "Deactivate Button"
+ cmf_init_popup_title: "Community Mod Framework"
+ cmf_init_popup_desc: "CMF needs to be initialized for this save. Click the button below to continue."
+ cmf_init_popup_button: "Initialize"

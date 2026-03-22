@@ -99,6 +99,7 @@ def _build_model(
 
     # Parse setting and field aliases from effects
     setting_aliases = _parse_setting_aliases(effects)
+    inverted_aliases = _parse_inverted_aliases(effects)
     field_aliases = _parse_field_aliases(effects)
     option_aliases = _parse_option_aliases(effects)
     no_reset_settings = _parse_no_reset_settings(effects)
@@ -162,7 +163,7 @@ def _build_model(
 
         setting = _reg_to_setting(
             reg, mod_id, loc_map, list_fields, list_item_values,
-            setting_aliases, field_aliases, option_aliases,
+            setting_aliases, inverted_aliases, field_aliases, option_aliases,
         )
         if setting:
             groups_map[gkey].settings.append(setting)
@@ -330,7 +331,7 @@ def _parse_setting_aliases(content: str) -> dict:
     """Extract cmm_sync_setting_alias and cmm_sync_bool_alias blocks -> {setting_key: alias}."""
     aliases = {}
     pattern = re.compile(
-        r"cmm_sync_(?:setting|bool)_alias\s*=\s*\{", re.IGNORECASE
+        r"cmm_sync_(?:setting|bool)_alias(?:_inverted)?\s*=\s*\{", re.IGNORECASE
     )
     for m in pattern.finditer(content):
         block_end = _find_closing_brace(content, m.end())
@@ -344,6 +345,24 @@ def _parse_setting_aliases(content: str) -> dict:
             if setting not in aliases:
                 aliases[setting] = alias
     return aliases
+
+
+def _parse_inverted_aliases(content: str) -> set:
+    """Extract cmm_sync_bool_alias_inverted blocks -> set of setting keys."""
+    result = set()
+    pattern = re.compile(
+        r"cmm_sync_bool_alias_inverted\s*=\s*\{", re.IGNORECASE
+    )
+    for m in pattern.finditer(content):
+        block_end = _find_closing_brace(content, m.end())
+        if block_end < 0:
+            continue
+        block = content[m.end():block_end]
+        params = _parse_params(block)
+        setting = params.get("setting", "")
+        if setting:
+            result.add(setting)
+    return result
 
 
 def _parse_field_aliases(content: str) -> dict:
@@ -564,6 +583,7 @@ def _reg_to_setting(
     reg: dict, mod_id: str, loc_map: dict, list_fields: dict,
     list_item_values: dict = None,
     setting_aliases: dict = None,
+    inverted_aliases: set = None,
     field_aliases: dict = None,
     option_aliases: dict = None,
 ) -> Setting:
@@ -583,6 +603,7 @@ def _reg_to_setting(
 
     # Look up setting alias
     alias = (setting_aliases or {}).get(qid, "")
+    alias_inverted = qid in (inverted_aliases or set())
 
     setting = Setting(
         setting_id=sid,
@@ -591,6 +612,7 @@ def _reg_to_setting(
         name=loc_map.get(f"{qid}_name", sid),
         desc=loc_map.get(f"{qid}_desc", ""),
         alias=alias,
+        alias_inverted=alias_inverted,
     )
 
     if effective_type == "bool":

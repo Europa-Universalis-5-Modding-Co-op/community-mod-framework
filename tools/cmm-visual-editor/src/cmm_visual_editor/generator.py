@@ -158,10 +158,11 @@ def _emit_callback_handler(lines: list, model: ModModel):
                     continue
                 qid = f"{mod_id}__{setting.setting_id}"
                 alias = _setting_has_alias(setting, mod_id) if st != "button" else ""
+                alias_inverted = setting.alias_inverted if st == "bool" else False
                 option_aliases = _get_option_aliases(setting) if st == "dropdown" else []
                 custom_effect = setting.on_changed_effect or ""
                 if alias or option_aliases or custom_effect:
-                    cases.append((tab.tab_id, tab.name or tab.tab_id, group.group_id, group.name or group.group_id, qid, st, alias, option_aliases, custom_effect))
+                    cases.append((tab.tab_id, tab.name or tab.tab_id, group.group_id, group.name or group.group_id, qid, st, alias, alias_inverted, option_aliases, custom_effect))
 
     lines.append("")
     lines.append(f"# Callback handler for cmf_on_callback.")
@@ -174,7 +175,7 @@ def _emit_callback_handler(lines: list, model: ModModel):
     if cases:
         current_tab = None
         current_group = None
-        for tab_id, tab_name, group_id, group_name, qid, st, alias, option_aliases, custom_effect in cases:
+        for tab_id, tab_name, group_id, group_name, qid, st, alias, alias_inverted, option_aliases, custom_effect in cases:
             if tab_id != current_tab:
                 lines.append(f"\t\t# {tab_name} ({tab_id}) Tab")
                 current_tab = tab_id
@@ -184,7 +185,10 @@ def _emit_callback_handler(lines: list, model: ModModel):
                 current_group = group_id
             lines.append(f"\t\tflag:{qid} = {{")
             if alias:
-                sync_func = "cmm_sync_bool_alias" if st == "bool" else "cmm_sync_setting_alias"
+                if st == "bool":
+                    sync_func = "cmm_sync_bool_alias_inverted" if alias_inverted else "cmm_sync_bool_alias"
+                else:
+                    sync_func = "cmm_sync_setting_alias"
                 lines.append(f"\t\t\t{sync_func} = {{")
                 lines.append(f"\t\t\t\tsetting = {qid}")
                 lines.append(f"\t\t\t\talias = {alias}")
@@ -350,7 +354,10 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
     # Setting alias sync (runs each registration = menu open)
     alias = _setting_has_alias(setting, mod_id)
     if alias and st not in ("button",):
-        sync_func = "cmm_sync_bool_alias" if st == "bool" else "cmm_sync_setting_alias"
+        if st == "bool":
+            sync_func = "cmm_sync_bool_alias_inverted" if setting.alias_inverted else "cmm_sync_bool_alias"
+        else:
+            sync_func = "cmm_sync_setting_alias"
         lines.append(f"\t{sync_func} = {{")
         lines.append(f"\t\tsetting = {qid}")
         lines.append(f"\t\talias = {alias}")
