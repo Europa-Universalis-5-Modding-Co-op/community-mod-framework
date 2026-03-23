@@ -1022,6 +1022,8 @@
 					size = { 120 20 }
 					minimumsize = { 120 20 }
 					allow_outside = yes
+					onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover', 'yes')]"
+					onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover')]"
 
 					scrollbar = {
 						name = "cmm_list_slider_visual"
@@ -1033,6 +1035,21 @@
 						step = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_step_')]"
 						wheelstep = 0
 						value = "[CMMListFieldSliderNormalizedValue(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+						alpha = 0.7
+
+						state = {
+							name = slider_hover_on
+							trigger_when = "[GetVariableSystem.HasValue('cmm_slider_hover', 'yes')]"
+							alpha = 1.0
+							duration = 0.1
+						}
+
+						state = {
+							name = slider_hover_off
+							trigger_when = "[Not(GetVariableSystem.HasValue('cmm_slider_hover', 'yes'))]"
+							alpha = 0.7
+							duration = 0.1
+						}
 
 						track = {
 							EconomySlider_TrackRange = {}
