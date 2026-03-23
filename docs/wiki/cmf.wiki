@@ -119,8 +119,16 @@ All effects require '''country scope'''.
 
 Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
 
-== cmf_yearly_human_country_pulse Hook ==
-<code>cmf_yearly_human_country_pulse</code> fires once per year for each human player's country. Slightly more efficient than each mod checking <code>is_ai = no</code> individually. Hook into it the same way as <code>cmf_on_mod_registration</code>:
+== Player Country Hooks ==
+CMF provides shared on_actions that fire for each human player's country. Slightly more efficient than each mod checking <code>is_ai = no</code> individually. Hook into them the same way as <code>cmf_on_mod_registration</code>:
+
+{| class="wikitable"
+! Hook !! Frequency
+|-
+| <code>cmf_yearly_human_country_pulse</code> || Once per year
+|-
+| <code>cmf_monthly_human_country_pulse</code> || Once per month
+|}
 
 <syntaxhighlight lang="text">
 cmf_yearly_human_country_pulse = {
@@ -129,9 +137,9 @@ cmf_yearly_human_country_pulse = {
 	}
 }
 
-your_mod_on_yearly = {
-	effect = {
-		# Runs once per year for each human player's country
+cmf_monthly_human_country_pulse = {
+	on_actions = {
+		your_mod_on_monthly
 	}
 }
 </syntaxhighlight>
