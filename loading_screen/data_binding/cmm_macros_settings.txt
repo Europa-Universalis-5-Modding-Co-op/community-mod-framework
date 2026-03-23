@@ -193,6 +193,30 @@ macro = {
 }
 
 # Args: SettingKey (string)
+# Returns: int32
+macro = {
+    description = "Slider thumb visual index on 0-100 scale for one setting"
+    definition = "CMMSliderThumbIndex(SettingKey)"
+    replace_with = "FixedPointToInt(Add_CFixedPoint(Multiply_CFixedPoint(Divide_CFixedPoint(CMMSliderNormalizedValue(SettingKey), CMMSliderNormalizedMax(SettingKey)), '(CFixedPoint)100'), '(CFixedPoint)0.500'))"
+}
+
+# Args: ThumbIndex (int32), Offset (int32 literal)
+# Returns: boolean
+macro = {
+    description = "True when hovered slider index equals thumb index plus offset"
+    definition = "CMMSliderHoverMatch(ThumbIndex,Offset)"
+    replace_with = "GetVariableSystem.HasValue('cmm_slider_hover_idx', ToString_int32(Add_int32(ThumbIndex, Offset)))"
+}
+
+# Args: ThumbIndex (int32), ScopeKey (string)
+# Returns: boolean
+macro = {
+    description = "True when the hovered overlay index is within 5 of the thumb and the scope key matches"
+    definition = "CMMSliderThumbHover(ThumbIndex,ScopeKey)"
+    replace_with = "And(GetVariableSystem.HasValue('cmm_slider_hover_key', ScopeKey), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)-5'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)-4'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)-3'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)-2'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)-1'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)0'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)1'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)2'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)3'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)4'), CMMSliderHoverMatch(ThumbIndex, '(int32)5'))))))))))))"
+}
+
+# Args: SettingKey (string)
 # Returns: string
 macro = {
     description = "Variable-system cache key for one text setting input field"

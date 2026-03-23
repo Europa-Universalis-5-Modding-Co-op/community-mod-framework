@@ -159,3 +159,11 @@ macro = {
     definition = "CMMListFieldSliderNormalizedValue(ItemKey,SlotKey)"
     replace_with = "Subtract_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotKey), CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(ItemKey), SlotKey, '_min_'))"
 }
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: int32
+macro = {
+    description = "Slider thumb visual index on 0-100 scale for one list item field"
+    definition = "CMMListSliderThumbIndex(ItemKey,SlotKey)"
+    replace_with = "FixedPointToInt(Add_CFixedPoint(Multiply_CFixedPoint(Divide_CFixedPoint(CMMListFieldSliderNormalizedValue(ItemKey, SlotKey), CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(ItemKey), SlotKey)), '(CFixedPoint)100'), '(CFixedPoint)0.500'))"
+}

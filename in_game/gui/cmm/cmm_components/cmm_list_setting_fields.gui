@@ -1022,8 +1022,8 @@
 					size = { 120 20 }
 					minimumsize = { 120 20 }
 					allow_outside = yes
-					onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover', Scope.GetFlagName)]"
-					onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover')]"
+					onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover_idx')]"
+					onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover_key')]"
 
 					scrollbar = {
 						name = "cmm_list_slider_visual"
@@ -1047,14 +1047,14 @@
 
 								state = {
 									name = slider_hover_on
-									trigger_when = "[GetVariableSystem.HasValue('cmm_slider_hover', Scope.GetFlagName)]"
+									trigger_when = "[CMMSliderThumbHover(CMMListSliderThumbIndex(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot')), Scope.GetFlagName)]"
 									alpha = 1.0
 									duration = 0.1
 								}
 
 								state = {
 									name = slider_hover_off
-									trigger_when = "[Not(GetVariableSystem.HasValue('cmm_slider_hover', Scope.GetFlagName))]"
+									trigger_when = "[Not(CMMSliderThumbHover(CMMListSliderThumbIndex(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot')), Scope.GetFlagName))]"
 									alpha = 0.7
 									duration = 0.1
 								}
@@ -1073,6 +1073,8 @@
 							size = { 7 20 }
 							minimumsize = { 7 20 }
 							allow_outside = yes
+							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
+							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '0')]"
 							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
 							onmousehierarchyenter = "[CMMExecuteGui('CMM_SliderDragHover_0')]"
@@ -1108,6 +1110,8 @@
 										layoutpolicy_horizontal = expanding
 										size = { 0 20 }
 										allow_outside = yes
+										onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
+										onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
 										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
 										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_SliderDragHover_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
@@ -1145,6 +1149,8 @@
 							size = { 7 20 }
 							minimumsize = { 7 20 }
 							allow_outside = yes
+							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
+							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '100')]"
 							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
 							onmousehierarchyenter = "[CMMExecuteGui('CMM_SliderDragHover_100')]"
@@ -1165,6 +1171,7 @@
 							}
 						}
 					}
+
 				}
 
 				widget = {

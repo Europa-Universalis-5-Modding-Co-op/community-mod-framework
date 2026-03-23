@@ -78,9 +78,9 @@
 						size = { 220 20 }
 						minimumsize = { 220 20 }
 						allow_outside = yes
-						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover', Scope.GetFlagName)]"
 						onmousehierarchyleave = "[CMMExecuteGui('CMM_StopSliderDrag')]"
-						onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover')]"
+						onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover_idx')]"
+						onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover_key')]"
 
 						scrollbar = {
 							name = "cmm_slider_visual"
@@ -105,14 +105,14 @@
 
 									state = {
 										name = slider_hover_on
-										trigger_when = "[GetVariableSystem.HasValue('cmm_slider_hover', Scope.GetFlagName)]"
+										trigger_when = "[CMMSliderThumbHover(CMMSliderThumbIndex(Scope.GetFlagName), Scope.GetFlagName)]"
 										alpha = 1.0
 										duration = 0.1
 									}
 
 									state = {
 										name = slider_hover_off
-										trigger_when = "[Not(GetVariableSystem.HasValue('cmm_slider_hover', Scope.GetFlagName))]"
+										trigger_when = "[Not(CMMSliderThumbHover(CMMSliderThumbIndex(Scope.GetFlagName), Scope.GetFlagName))]"
 										alpha = 0.7
 										duration = 0.1
 									}
@@ -129,6 +129,8 @@
 								size = { 9 20 }
 								minimumsize = { 9 20 }
 								allow_outside = yes
+								onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
+								onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '0')]"
 								onmousehierarchyenter = "[CMMExecuteGui('CMM_SliderDragHover_0')]"
 								onmousehierarchyenter = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 
@@ -159,6 +161,8 @@
 											size = { 2 20 }
 											minimumsize = { 2 20 }
 											allow_outside = yes
+											onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
+											onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 											onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_SliderDragHover_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 											onmousehierarchyenter = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 
@@ -182,6 +186,8 @@
 								size = { 9 20 }
 								minimumsize = { 9 20 }
 								allow_outside = yes
+								onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
+								onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '100')]"
 								onmousehierarchyenter = "[CMMExecuteGui('CMM_SliderDragHover_100')]"
 								onmousehierarchyenter = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 
@@ -198,6 +204,7 @@
 								}
 							}
 						}
+
 					}
 
 					widget = {
