@@ -14,14 +14,19 @@
 		datamodel_reuse_widgets = yes
 
 		item = {
-			text_single = {
-				size = { 132 0 }
-				minimumsize = { 132 0 }
-				fontsize = 14
-				autoresize = no
-				default_format = "#medium"
-				align = center|nobaseline
-				text = "[CMMListFieldMetadataFlag(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)), '_name_')]"
+			widget = {
+				min_width = "[Select_int32(CMMListFieldIsSlider(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(int32)198', '(int32)132')]"
+				minimumsize = { 0 0 }
+
+				text_single = {
+					size = { 100% 0 }
+					max_width = "[Select_int32(CMMListFieldIsSlider(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(int32)160', '(int32)132')]"
+					fontsize = 14
+					autoresize = no
+					default_format = "#medium"
+					align = center|nobaseline
+					text = "[CMMListFieldMetadataFlag(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)), '_name_')]"
+				}
 			}
 		}
 	}
@@ -54,6 +59,7 @@
 	type cmm_list_setting_field_cell = widget {
 		size = { 132 28 }
 		minimumsize = { 132 28 }
+		min_width = "[Select_int32(CMMListFieldIsSlider(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(int32)198', '(int32)132')]"
 		onmousehierarchyenter = "[GetVariableSystem.Set('cmm_list_hover_field_slot', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 
 		cmm_list_setting_bool_field = {
@@ -145,8 +151,6 @@
 	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
 	type cmm_list_setting_numeric_field = hbox {
 		minimumsize = { 120 28 }
-		parentanchor = center
-		widgetanchor = center
 		spacing = 0
 
 		button_regular = {
@@ -951,20 +955,18 @@
 	# - GetScriptedGui('CMM_MarkListFieldSliderAll').Execute(...) [effect]: marks bulk slider apply.
 	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
 	type cmm_list_setting_slider_field = hbox {
-		minimumsize = { 132 28 }
-		parentanchor = center
-		widgetanchor = center
+		minimumsize = { 198 28 }
 		spacing = 0
 
 		widget = {
-			size = { 98 20 }
-			minimumsize = { 98 20 }
-			parentanchor = vcenter
+			size = { 160 28 }
+			minimumsize = { 160 28 }
 			allow_outside = yes
 			onmousehierarchyleave = "[CMMExecuteGui('CMM_StopSliderDrag')]"
 
 			hbox = {
 				size = { 100% 20 }
+				parentanchor = vcenter
 
 				widget = {
 					size = { 20 20 }
@@ -1017,8 +1019,8 @@
 				}
 
 				widget = {
-					size = { 58 20 }
-					minimumsize = { 58 20 }
+					size = { 120 20 }
+					minimumsize = { 120 20 }
 					allow_outside = yes
 
 					scrollbar = {
@@ -1074,8 +1076,8 @@
 
 						# Middle track zone — 21 overlay points mapping 0-20 to slider indices 0,5,10,...,100.
 						widget = {
-							size = { 44 20 }
-							minimumsize = { 44 20 }
+							size = { 106 20 }
+							minimumsize = { 106 20 }
 
 							hbox = {
 								size = { 100% 20 }
@@ -1199,8 +1201,8 @@
 		}
 
 		widget = {
-			size = { 30 28 }
-			minimumsize = { 30 28 }
+			size = { 38 28 }
+			minimumsize = { 38 28 }
 
 			button = {
 				size = { 100% 100% }

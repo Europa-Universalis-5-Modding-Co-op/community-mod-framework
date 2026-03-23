@@ -309,6 +309,11 @@ cmm_list_apply_slider_field_at_item = {
 		1 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 1 vt = $vt$ } }
 		2 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 2 vt = $vt$ } }
 		3 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 3 vt = $vt$ } }
+		4 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 4 vt = $vt$ } }
+		5 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 5 vt = $vt$ } }
+	}
+}
+
 # Apply one ordered list field action to one item field slot.
 # Scope: country
 # Args:
@@ -397,11 +402,11 @@ cmm_list_apply_field_slot_at_item = {
 			set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
 		}
 		if = {
-			limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_tmp_field_new < var:cmm_list_field_$slot$_min_$setting$ } }
+			limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } var:cmm_tmp_field_new < var:cmm_list_field_$slot$_min_$setting$ } }
 			set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_min_$setting$ }
 		}
 		if = {
-			limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_tmp_field_new > var:cmm_list_field_$slot$_max_$setting$ } }
+			limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } var:cmm_tmp_field_new > var:cmm_list_field_$slot$_max_$setting$ } }
 			set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_max_$setting$ }
 		}
 		remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
@@ -447,6 +452,7 @@ cmm_list_dispatch_item_action = {
 		2 = { cmm_list_prepare_numeric_field_value_from_item = { setting = $setting$ item = $item$ } }
 		3 = { cmm_list_apply_numeric_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
 		4 = { cmm_list_apply_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
+		5 = { cmm_list_apply_slider_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
 	}
 }
 
@@ -607,6 +613,7 @@ cmm_apply_list_change_internal = {
 					has_variable = cmm_list_action_to_apply
 					has_variable = cmm_numeric_step_delta_to_apply
 					has_variable = cmm_numeric_change_to_apply
+					has_variable = cmm_slider_index_to_apply
 				}
 			}
 		}
@@ -655,6 +662,20 @@ cmm_apply_list_change_internal = {
 				cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
 			}
 		}
+		else_if = {
+			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_list_action_to_apply = 12 has_variable = cmm_list_field_slot_to_apply } }
+			set_variable = { name = cmm_list_dispatch_action value = 2 }
+			cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+
+			if = {
+				limit = { has_variable = cmm_list_field_value_to_apply }
+				cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
+			}
+		}
+		else_if = {
+			limit = {
+				AND = {
+					has_variable = cmm_list_field_slot_to_apply
 					has_variable = cmm_slider_index_to_apply
 				}
 			}

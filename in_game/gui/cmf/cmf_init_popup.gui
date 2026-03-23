@@ -49,6 +49,7 @@
 				size = { 220 45 }
 				text = "cmf_init_popup_button"
 				onclick = "[GetScriptedGui('cmf_set_active').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				tooltip_enabled = no
 			}
 		}
 	}

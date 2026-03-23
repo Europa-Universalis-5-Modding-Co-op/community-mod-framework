@@ -176,16 +176,6 @@ cmf_feature_test_register_cmf_mod = {
 		step_value = 1
 	}
 
-	cmm_register_list_slider_field = {
-		mod_id = cmf_feature_test
-		setting_id = ordered_list
-		field_id = intensity
-		default_value = 50
-		min_value = 0
-		max_value = 100
-		step_value = 5
-	}
-
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 1 value = root }
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 2 value = root }
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 3 value = root }
@@ -282,6 +272,16 @@ cmf_feature_test_register_cmf_mod = {
 		min_value = 0
 		max_value = 10
 		step_value = 1
+	}
+
+	cmm_register_list_slider_field = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		field_id = intensity
+		default_value = 50
+		min_value = 0
+		max_value = 100
+		step_value = 5
 	}
 
 	## From-List (from_list) Group

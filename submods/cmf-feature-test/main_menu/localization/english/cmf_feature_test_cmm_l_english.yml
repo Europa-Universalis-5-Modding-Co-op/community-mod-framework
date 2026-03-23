@@ -90,7 +90,6 @@
  cmf_feature_test__ordered_list__mode_option_2_name: "Standard"
  cmf_feature_test__ordered_list__mode_option_3_name: "High"
  cmf_feature_test__ordered_list__weight_name: "Weight"
- cmf_feature_test__ordered_list__intensity_name: "Intensity"
  ## Unordered List (unordered_list) Group
  cmf_feature_test__lists__unordered_list_name: "Unordered List"
  cmf_feature_test__lists__unordered_list_desc: "Static unordered list with 3 items and 3 fields."
@@ -116,6 +115,7 @@
  cmf_feature_test__dynamic_list_i4_name: "Dynamic D"
  cmf_feature_test__dynamic_list__active_name: "Active"
  cmf_feature_test__dynamic_list__priority_name: "Priority"
+ cmf_feature_test__dynamic_list__intensity_name: "Intensity"
  ## From-List (from_list) Group
  cmf_feature_test__lists__from_list_name: "From-List"
  cmf_feature_test__lists__from_list_desc: "Unordered list built from a country variable list."
