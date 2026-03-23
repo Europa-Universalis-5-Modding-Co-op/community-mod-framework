@@ -312,6 +312,15 @@ CMM_MarkListFieldSelectNumericAll = {
 	}
 }
 
+# Mark the next ordered list interaction as applying one slider-field value to all rows.
+# Scope: country
+# Args: none
+CMM_MarkListFieldSliderAll = {
+	effect = {
+		set_variable = { name = cmm_list_action_to_apply value = 12 }
+	}
+}
+
 # Mark the next ordered list interaction as a dropdown-field next cycle.
 # Scope: country
 # Args: none

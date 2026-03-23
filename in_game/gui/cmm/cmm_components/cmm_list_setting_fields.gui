@@ -67,6 +67,10 @@
 		cmm_list_setting_dropdown_field = {
 			visible = "[CMMListFieldIsDropdown(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 		}
+
+		cmm_list_setting_slider_field = {
+			visible = "[CMMListFieldIsSlider(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+		}
 	}
 
 	# Ordered list bool field control with optional shift-apply-to-all behavior.
@@ -925,6 +929,324 @@
 			}
 
 			tooltipwidget = { BasicFunctionalTooltip = {} }
+		}
+	}
+
+	# Ordered list slider field control with compact draggable scrollbar, value display, and dec/inc buttons.
+	# Reads:
+	# - Scope.GetFlagName [string]: current ordered list item key.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the parent repeated field datamodel, or overlay slider point index in the track hbox.
+	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_field_<slot>')) [value]: current slider field value for this row item.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_min_', <setting_key>)) [value]: slider minimum bound.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_max_', <setting_key>)) [value]: slider maximum bound.
+	# - GetVariableSystem.Get('cmm_list_hover_field_slot') [string]: cached hovered field slot for nested button actions.
+	# Writes:
+	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: marks the hovered row position.
+	# - GetScriptedGui('CMM_MarkListFieldSlot_<slot>').Execute(...) [effect]: marks the clicked field slot.
+	# - GetScriptedGui('CMM_MarkSliderSelection_<index>').Execute(...) [effect]: marks the slider visual index.
+	# - GetScriptedGui('CMM_StartSliderDrag').Execute(...) [effect]: begins slider drag tracking.
+	# - GetScriptedGui('CMM_StopSliderDrag').Execute(...) [effect]: ends slider drag tracking.
+	# - GetScriptedGui('CMM_SliderDragHover_<index>').Execute(...) [effect]: marks slider index during drag.
+	# - GetScriptedGui('CMM_MarkNumeric*').Execute(...) [effect]: marks numeric step or min/max mode for dec/inc buttons.
+	# - GetScriptedGui('CMM_MarkListFieldSliderAll').Execute(...) [effect]: marks bulk slider apply.
+	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
+	type cmm_list_setting_slider_field = hbox {
+		minimumsize = { 132 28 }
+		parentanchor = center
+		widgetanchor = center
+		spacing = 0
+
+		widget = {
+			size = { 98 20 }
+			minimumsize = { 98 20 }
+			parentanchor = vcenter
+			allow_outside = yes
+			onmousehierarchyleave = "[CMMExecuteGui('CMM_StopSliderDrag')]"
+
+			hbox = {
+				size = { 100% 20 }
+
+				widget = {
+					size = { 20 20 }
+					minimumsize = { 20 20 }
+
+					EconomySlider_DecButton = {
+						size = { 20 20 }
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = default
+							title = "CMM_NUMERIC_DECREASE"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = ctrl
+							title = "CMM_NUMERIC_DECREASE_5X"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = shift
+							title = "CMM_NUMERIC_DECREASE_MIN"
+						}
+
+						click_modifiers = {
+							ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							ondefault = "[CMMExecuteGui('CMM_MarkNumericDecrease')]"
+							ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onctrl = "[CMMExecuteGui('CMM_MarkNumericDecrease5x')]"
+							onctrl = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onshift = "[CMMExecuteGui('CMM_MarkNumericDecreaseToMin')]"
+							onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+						}
+
+						tooltipwidget = {
+							BasicFunctionalTooltip = {}
+						}
+					}
+				}
+
+				widget = {
+					size = { 58 20 }
+					minimumsize = { 58 20 }
+					allow_outside = yes
+
+					scrollbar = {
+						name = "cmm_list_slider_visual"
+						direction = horizontal
+						size = { 100% 20 }
+						minimumsize = { -1 14 }
+						min = 0
+						max = "[CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+						step = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_step_')]"
+						wheelstep = 0
+						value = "[CMMListFieldSliderNormalizedValue(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+
+						track = {
+							EconomySlider_TrackRange = {}
+						}
+
+						slider = {
+							EconomySlider_Slider = { size = { 14 14 } }
+						}
+
+						dec_button = { button = {} }
+						inc_button = { button = {} }
+					}
+
+					hbox = {
+						size = { 100% 20 }
+
+						# Left edge zone (half thumb width) — clamps to slider index 0.
+						widget = {
+							size = { 7 20 }
+							minimumsize = { 7 20 }
+							allow_outside = yes
+							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onmousehierarchyenter = "[CMMExecuteGui('CMM_SliderDragHover_0')]"
+							onmousehierarchyenter = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+
+							button = {
+								size = { 100% 20 }
+								alpha = 0
+								effectname = "NoHighlight"
+								enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+								onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
+								onpressed = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+								onpressed = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+								onpressed = "[CMMExecuteGui('CMM_MarkSliderSelection_0')]"
+								onpressed = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+								onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
+								tooltip_enabled = no
+							}
+						}
+
+						# Middle track zone — 21 overlay points mapping 0-20 to slider indices 0,5,10,...,100.
+						widget = {
+							size = { 44 20 }
+							minimumsize = { 44 20 }
+
+							hbox = {
+								size = { 100% 20 }
+								datamodel = "[DataModelRepeatedItem('(int32)21')]"
+								datamodel_reuse_widgets = yes
+
+								item = {
+									widget = {
+										layoutpolicy_horizontal = expanding
+										size = { 0 20 }
+										allow_outside = yes
+										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_SliderDragHover_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+										onmousehierarchyenter = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+
+										button = {
+											size = { 100% 20 }
+											alpha = 0
+											effectname = "NoHighlight"
+											enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+											onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
+											onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
+
+											click_modifiers = {
+												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+												ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+												onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+												onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+												onshift = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+												onshift = "[CMMExecuteGui('CMM_MarkListFieldSliderAll')]"
+												onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+											}
+
+											tooltip_enabled = no
+										}
+									}
+								}
+							}
+						}
+
+						# Right edge zone (half thumb width) — clamps to slider index 100.
+						widget = {
+							size = { 7 20 }
+							minimumsize = { 7 20 }
+							allow_outside = yes
+							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onmousehierarchyenter = "[CMMExecuteGui('CMM_SliderDragHover_100')]"
+							onmousehierarchyenter = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+
+							button = {
+								size = { 100% 20 }
+								alpha = 0
+								effectname = "NoHighlight"
+								enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+								onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
+								onpressed = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+								onpressed = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+								onpressed = "[CMMExecuteGui('CMM_MarkSliderSelection_100')]"
+								onpressed = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+								onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
+								tooltip_enabled = no
+							}
+						}
+					}
+				}
+
+				widget = {
+					size = { 20 20 }
+					minimumsize = { 20 20 }
+
+					EconomySlider_IncButton = {
+						size = { 20 20 }
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = default
+							title = "CMM_NUMERIC_INCREASE"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = ctrl
+							title = "CMM_NUMERIC_INCREASE_5X"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = shift
+							title = "CMM_NUMERIC_INCREASE_MAX"
+						}
+
+						click_modifiers = {
+							ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							ondefault = "[CMMExecuteGui('CMM_MarkNumericIncrease')]"
+							ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onctrl = "[CMMExecuteGui('CMM_MarkNumericIncrease5x')]"
+							onctrl = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onshift = "[CMMExecuteGui('CMM_MarkNumericIncreaseToMax')]"
+							onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+						}
+
+						tooltipwidget = {
+							BasicFunctionalTooltip = {}
+						}
+					}
+				}
+			}
+		}
+
+		widget = {
+			size = { 30 28 }
+			minimumsize = { 30 28 }
+
+			button = {
+				size = { 100% 100% }
+				alpha = 0
+				effectname = "NoHighlight"
+				tooltip_enabled = yes
+
+				action_tooltip = {
+					click_mode = single
+					click_type = left
+					click_modifier = shift
+					title = "CMM_LIST_APPLY_NUMBER_TO_ALL"
+				}
+
+				click_modifiers = {
+					onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+					onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+					onshift = "[CMMExecuteGui('CMM_MarkListFieldSliderAll')]"
+					onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+				}
+
+				tooltipwidget = {
+					ContextualTooltipType = {
+						blockoverride "tooltip_title" {}
+						blockoverride "tooltip_content_margin" { margin = { 10 6 } }
+						blockoverride "tooltip_content" {
+							hbox = {
+								set_parent_size_to_minimum = yes
+
+								textbox = {
+									using = text_single_template
+									align = left|nobaseline
+									raw_text = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_min_')] - [CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_max_')]"
+								}
+							}
+						}
+					}
+				}
+			}
+
+			text_single = {
+				size = { 100% 100% }
+				align = center|nobaseline
+				autoresize = no
+				text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			}
 		}
 	}
 }

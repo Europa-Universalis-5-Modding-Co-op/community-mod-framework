@@ -135,3 +135,27 @@ macro = {
     definition = "CMMListFieldIsNumeric(SettingKey,SlotKey)"
     replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)3')"
 }
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list field slot is slider"
+    definition = "CMMListFieldIsSlider(SettingKey,SlotKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)4')"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: CFixedPoint
+macro = {
+    description = "Normalized slider maximum for one list field slot (max minus min)"
+    definition = "CMMListFieldSliderNormalizedMax(SettingKey,SlotKey)"
+    replace_with = "Subtract_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_max_'), CMMListFieldMetadataValue(SettingKey, SlotKey, '_min_'))"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: CFixedPoint
+macro = {
+    description = "Normalized slider value for one list item field (value minus min)"
+    definition = "CMMListFieldSliderNormalizedValue(ItemKey,SlotKey)"
+    replace_with = "Subtract_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotKey), CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(ItemKey), SlotKey, '_min_'))"
+}

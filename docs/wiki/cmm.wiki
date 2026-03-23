@@ -211,6 +211,16 @@ cmm_register_list_numeric_field = {
 	max_value = 10
 	step_value = 1
 }
+
+cmm_register_list_slider_field = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = intensity
+	default_value = 50
+	min_value = 0
+	max_value = 100
+	step_value = 5
+}
 </syntaxhighlight>
 
 === List Callback ===

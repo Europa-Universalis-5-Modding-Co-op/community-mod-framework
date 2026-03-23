@@ -132,7 +132,7 @@ cmm_list_prepare_bool_field_value_from_item = {
 # Args: setting (key), item (number), slot (number)
 cmm_list_prepare_numeric_field_value_from_slot_item = {
 	if = {
-		limit = { var:cmm_list_field_$slot$_type_$setting$ = 3 }
+		limit = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } }
 		set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$item$_f$slot$ }
 		if = {
 			limit = { var:cmm_tmp_is_global_list >= 1 }
@@ -175,7 +175,7 @@ cmm_list_prepare_numeric_field_value_from_item = {
 # - vt (variable/global_variable): Variable type token.
 cmm_list_apply_numeric_field_slot = {
 	if = {
-		limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 3 has_variable = cmm_numeric_step_delta_to_apply } }
+		limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } has_variable = cmm_numeric_step_delta_to_apply } }
 		set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$item$_f$slot$ }
 		if = {
 			limit = { var:cmm_tmp_is_global_list >= 1 }
@@ -204,7 +204,7 @@ cmm_list_apply_numeric_field_slot = {
 		remove_variable = cmm_tmp_numeric_delta
 	}
 	else_if = {
-		limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 3 has_variable = cmm_numeric_change_to_apply } }
+		limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } has_variable = cmm_numeric_change_to_apply } }
 		if = {
 			limit = { var:cmm_numeric_change_to_apply > 0 }
 			remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
@@ -241,6 +241,74 @@ cmm_list_apply_numeric_field_at_item = {
 	}
 }
 
+# Apply a queued slider visual index to one ordered list slider field slot for one item identity.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - item (number): Stable item identity ordinal (`1..20`).
+# - slot (number): Field slot index (`1..5`).
+# - vt (variable/global_variable): Variable type token.
+cmm_list_apply_slider_field_slot = {
+	if = {
+		limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 4 has_variable = cmm_slider_index_to_apply } }
+
+		set_local_variable = { name = cmm_tmp_actual_last value = var:cmm_list_field_$slot$_slider_actual_last_index_$setting$ }
+		set_local_variable = { name = cmm_tmp_step value = var:cmm_list_field_$slot$_step_$setting$ }
+		set_local_variable = { name = cmm_tmp_min value = var:cmm_list_field_$slot$_min_$setting$ }
+		set_local_variable = { name = cmm_tmp_max value = var:cmm_list_field_$slot$_max_$setting$ }
+
+		set_variable = { name = cmm_tmp_slider_actual_index value = var:cmm_slider_index_to_apply }
+		change_variable = { name = cmm_tmp_slider_actual_index multiply = local_var:cmm_tmp_actual_last }
+		change_variable = { name = cmm_tmp_slider_actual_index divide = 100 }
+		round_variable = {
+			name = cmm_tmp_slider_actual_index
+			nearest = 1
+		}
+
+		set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_step }
+		change_variable = { name = cmm_tmp_slider_value multiply = var:cmm_tmp_slider_actual_index }
+		change_variable = { name = cmm_tmp_slider_value add = local_var:cmm_tmp_min }
+
+		if = {
+			limit = { var:cmm_tmp_slider_value < local_var:cmm_tmp_min }
+			set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_min }
+		}
+
+		if = {
+			limit = { var:cmm_tmp_slider_value > local_var:cmm_tmp_max }
+			set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_max }
+		}
+
+		remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
+		add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_slider_value }
+
+		remove_variable = cmm_tmp_slider_actual_index
+		remove_variable = cmm_tmp_slider_value
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_actual_last }
+		cmf_suppress = { v = cmm_tmp_step }
+		cmf_suppress = { v = cmm_tmp_min }
+		cmf_suppress = { v = cmm_tmp_max }
+		cmf_suppress = { v = cmm_slider_index_to_apply }
+	}
+}
+
+# Apply the queued slider index to one ordered list slider field on one item identity.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - item (number): Stable item identity ordinal (`1..20`).
+# - vt (variable/global_variable): Variable type token.
+cmm_list_apply_slider_field_at_item = {
+	switch = {
+		trigger = var:cmm_list_field_slot_to_apply
+		1 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 1 vt = $vt$ } }
+		2 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 2 vt = $vt$ } }
+		3 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 3 vt = $vt$ } }
 # Apply one ordered list field action to one item field slot.
 # Scope: country
 # Args:
@@ -587,6 +655,12 @@ cmm_apply_list_change_internal = {
 				cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
 			}
 		}
+					has_variable = cmm_slider_index_to_apply
+				}
+			}
+			set_variable = { name = cmm_list_dispatch_action value = 5 }
+			cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+		}
 		else_if = {
 			limit = {
 				AND = {
@@ -663,6 +737,11 @@ cmm_apply_list_change = {
 	if = {
 		limit = { has_variable = cmm_numeric_change_to_apply }
 		remove_variable = cmm_numeric_change_to_apply
+	}
+
+	if = {
+		limit = { has_variable = cmm_slider_index_to_apply }
+		remove_variable = cmm_slider_index_to_apply
 	}
 
 	if = {
