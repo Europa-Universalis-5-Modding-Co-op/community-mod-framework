@@ -1022,7 +1022,7 @@
 					size = { 120 20 }
 					minimumsize = { 120 20 }
 					allow_outside = yes
-					onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover', 'yes')]"
+					onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover', Scope.GetFlagName)]"
 					onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover')]"
 
 					scrollbar = {
@@ -1035,28 +1035,30 @@
 						step = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_step_')]"
 						wheelstep = 0
 						value = "[CMMListFieldSliderNormalizedValue(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-						alpha = 0.7
-
-						state = {
-							name = slider_hover_on
-							trigger_when = "[GetVariableSystem.HasValue('cmm_slider_hover', 'yes')]"
-							alpha = 1.0
-							duration = 0.1
-						}
-
-						state = {
-							name = slider_hover_off
-							trigger_when = "[Not(GetVariableSystem.HasValue('cmm_slider_hover', 'yes'))]"
-							alpha = 0.7
-							duration = 0.1
-						}
 
 						track = {
 							EconomySlider_TrackRange = {}
 						}
 
 						slider = {
-							EconomySlider_Slider = { size = { 14 14 } }
+							EconomySlider_Slider = {
+								size = { 14 14 }
+								alpha = 0.7
+
+								state = {
+									name = slider_hover_on
+									trigger_when = "[GetVariableSystem.HasValue('cmm_slider_hover', Scope.GetFlagName)]"
+									alpha = 1.0
+									duration = 0.1
+								}
+
+								state = {
+									name = slider_hover_off
+									trigger_when = "[Not(GetVariableSystem.HasValue('cmm_slider_hover', Scope.GetFlagName))]"
+									alpha = 0.7
+									duration = 0.1
+								}
+							}
 						}
 
 						dec_button = { button = {} }

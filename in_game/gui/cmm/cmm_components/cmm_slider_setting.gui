@@ -78,7 +78,7 @@
 						size = { 220 20 }
 						minimumsize = { 220 20 }
 						allow_outside = yes
-						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover', 'yes')]"
+						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover', Scope.GetFlagName)]"
 						onmousehierarchyleave = "[CMMExecuteGui('CMM_StopSliderDrag')]"
 						onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover')]"
 
@@ -93,28 +93,30 @@
 							wheelstep = 0
 							value = "[CMMSliderNormalizedValue(Scope.GetFlagName)]"
 							enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
-							alpha = 0.7
-
-							state = {
-								name = slider_hover_on
-								trigger_when = "[GetVariableSystem.HasValue('cmm_slider_hover', 'yes')]"
-								alpha = 1.0
-								duration = 0.1
-							}
-
-							state = {
-								name = slider_hover_off
-								trigger_when = "[Not(GetVariableSystem.HasValue('cmm_slider_hover', 'yes'))]"
-								alpha = 0.7
-								duration = 0.1
-							}
 
 							track = {
 								EconomySlider_TrackRange = {}
 							}
 
 							slider = {
-								EconomySlider_Slider = { size = { 20 20 } }
+								EconomySlider_Slider = {
+									size = { 20 20 }
+									alpha = 0.7
+
+									state = {
+										name = slider_hover_on
+										trigger_when = "[GetVariableSystem.HasValue('cmm_slider_hover', Scope.GetFlagName)]"
+										alpha = 1.0
+										duration = 0.1
+									}
+
+									state = {
+										name = slider_hover_off
+										trigger_when = "[Not(GetVariableSystem.HasValue('cmm_slider_hover', Scope.GetFlagName))]"
+										alpha = 0.7
+										duration = 0.1
+									}
+								}
 							}
 
 							dec_button = { button = {} }
