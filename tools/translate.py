@@ -45,7 +45,7 @@ WORKSHOP_TITLE_MARKER = "===WORKSHOP_TITLE==="
 WORKSHOP_DESCRIPTION_MARKER = "===WORKSHOP_DESCRIPTION==="
 WORKSHOP_NO_TRANSLATE_BELOW = "--NO-TRANSLATE-BELOW--"
 WORKSHOP_ITEM_ID_TOKEN = "$item-id$"
-CHANGE_NOTES_VERSION_RE = re.compile(r"^#\s*(v(.+?):?\s*)$")
+CHANGE_NOTES_VERSION_RE = re.compile(r"^#\s*(v(.+?)(:\s*|\s*))$")
 
 ALLOWED_WORKSHOP_DESCRIPTION_TRANSLATORS = {"deepl", "gemini-3-flash"}
 ALLOWED_WORKSHOP_TITLE_TRANSLATORS = {"deepl", "gemini-3-flash"}
@@ -1079,9 +1079,9 @@ def apply_workshop_item_id(text, item_id):
 def parse_change_notes_entry(text, version=None):
 	"""Extract a single versioned entry from change notes text.
 
-	If version is None, returns the latest (topmost) entry.
-	If no version headers are found, returns the full text (backward compat).
-	Returns None if version headers exist but no entry matches the requested version.
+	If version is None, returns the latest (topmost) entry body.
+	Returns None if no version headers are found or no entry matches the requested version.
+	The translate tool always returns only the body (no version header).
 	"""
 	entries = []
 	current_version = None
@@ -1101,14 +1101,14 @@ def parse_change_notes_entry(text, version=None):
 		entries.append((current_version, "".join(current_lines).strip()))
 
 	if not entries:
-		return text
+		return None
 
 	if version is None:
-		return entries[0][1]
+		return entries[0][1] or None
 
 	for entry_version, content in entries:
 		if entry_version == version:
-			return content
+			return content or None
 
 	return None
 

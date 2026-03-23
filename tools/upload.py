@@ -55,7 +55,7 @@ UPLOAD_ON_VERSION_CHANGE_KEY = "upload_only_on_version_change"
 UPLOAD_CHANGE_NOTES_DEFAULT_KEY = "upload_change_notes_by_default"
 UPLOAD_VERSIONS_PATH = os.path.join(DEPENDENCIES_DIR, ".upload_versions.json")
 UPLOAD_VERSIONS_FILE_VERSION = 1
-CHANGE_NOTES_VERSION_RE = re.compile(r"^#\s*(v(.+?):?\s*)$")
+CHANGE_NOTES_VERSION_RE = re.compile(r"^#\s*(v(.+?)(:\s*|\s*))$")
 
 LANGUAGE_TO_STEAM = {
     "english": "english",
@@ -790,40 +790,44 @@ def parse_change_notes_entry(text, version=None):
     """Extract a single versioned entry from change notes text.
 
     If version is None, returns the latest (topmost) entry.
-    If no version headers are found, returns the full text (backward compat).
-    Returns None if version headers exist but no entry matches the requested version.
+    Returns None if no version headers are found or no entry matches the requested version.
+
+    Headers with a colon (``# v1.0:``) prepend the version line to the output.
+    Headers without a colon (``# v1.0``) return only the body.
     """
     entries = []
     current_version = None
-    current_header = None
+    current_has_colon = False
     current_lines = []
 
     for line in text.splitlines(keepends=True):
         m = CHANGE_NOTES_VERSION_RE.match(line.strip())
         if m:
             if current_version is not None:
-                entries.append((current_version, current_header, "".join(current_lines).strip()))
+                entries.append((current_version, current_has_colon, "".join(current_lines).strip()))
             current_version = m.group(2).strip()
-            current_header = m.group(1).strip()
+            current_has_colon = ":" in m.group(3)
             current_lines = []
         elif current_version is not None:
             current_lines.append(line)
 
     if current_version is not None:
-        entries.append((current_version, current_header, "".join(current_lines).strip()))
+        entries.append((current_version, current_has_colon, "".join(current_lines).strip()))
 
     if not entries:
-        return text
+        return None
 
-    if version is None:
-        _, header, content = entries[0]
+    target = entries[0] if version is None else next(
+        (e for e in entries if e[0] == version), None
+    )
+    if target is None:
+        return None
+
+    entry_version, has_colon, content = target
+    if has_colon:
+        header = f"v{entry_version}:"
         return f"{header}\n{content}" if content else header
-
-    for entry_version, header, content in entries:
-        if entry_version == version:
-            return f"{header}\n{content}" if content else header
-
-    return None
+    return content or None
 
 def get_latest_change_notes_version(text):
     """Return the version string from the first # v header, or None if unversioned."""
