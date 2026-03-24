@@ -18,7 +18,7 @@ The Community Mod Menu (CMM) is part of the [[Community Mod Framework]] and allo
 
 = CMM Visual Editor =
 [[File:CMM_Visual_Editor.png|thumb|600px|The CMM Visual Editor.]]
-CMM provides a [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor visual editor tool] that generates all required files from a browser-based interface, with no manual coding required.
+The easiest way to create CMM settings is the '''[https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor CMM Visual Editor]''' — a browser-based tool that generates all required files (effects, scripted GUIs, localization, on_action) with no manual scripting. It supports every setting type, provides a live preview, and can import existing mods for editing.
 
 Run in a terminal to launch:
 <syntaxhighlight lang="powershell">
@@ -26,7 +26,7 @@ curl.exe -sL https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-o
 </syntaxhighlight>
 
 = Basic Setup =
-Follow the [[Community Mod Framework#Basic Setup|CMF Basic Setup]] to create your registration effect and <code>cmf_on_mod_registration</code> on_action hook. Then create a localization file for your settings.
+If you prefer to set up settings manually (instead of using the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor Visual Editor] above), follow the [[Community Mod Framework#Basic Setup|CMF Basic Setup]] to create your registration effect and <code>cmf_on_mod_registration</code> on_action hook. Then create a localization file for your settings.
 
 = Settings =
 Most settings work automatically — just register them and CMM handles the UI and value storage. Only text and settings list require callbacks. All other types use auto-apply and work out of the box.

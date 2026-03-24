@@ -172,7 +172,7 @@ Group multiple calls in one <code>if</code> block so the engine evaluates <code>
 == Community Mod Toolkit (CMT) ==
 The [[Community Mod Toolkit]] is a companion set of development tools for EU5 mod authors. It provides a structured mod template and automation tools that work together through shared configuration:
 
-* '''CMM Visual Editor''' — Browser-based interface for designing CMM settings without manual coding.
+* '''[https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor CMM Visual Editor]''' — Browser-based interface for designing CMM settings without manual coding. The easiest way to get started with CMM.
 * '''Upload Tool''' — Automated Steam Workshop deployment with submod support.
 * '''Translation Tool''' — Automated localization via DeepL or Gemini AI for all EU5-supported languages.
 
