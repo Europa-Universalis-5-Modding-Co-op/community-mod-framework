@@ -1342,6 +1342,11 @@ def main():
             cn_updates = build_change_notes_updates(config, item_id, version=main_version)
             if cn_updates is None:
                 return 1
+            if cn_updates:
+                for cn in cn_updates:
+                    cn_text = cn.get("change_notes", "")
+                    if cn_text:
+                        change_notes_by_lang[cn["steam_lang"]] = cn_text
 
         # Mod content upload with a stub change note.  The real per-language
         # change notes are submitted separately afterward.
