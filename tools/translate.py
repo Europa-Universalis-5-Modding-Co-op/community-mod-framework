@@ -1418,9 +1418,10 @@ def translate_workshop_assets(
 
 	change_notes_changed = False
 	change_notes_hash = None
+	change_notes_translator_changed = workshop_cache.get("change_notes_translator") != workshop_description_translator
 	if change_notes is not None:
 		change_notes_hash = hash_text(change_notes)
-		change_notes_changed = workshop_cache.get("change_notes_hash") != change_notes_hash or translator_changed
+		change_notes_changed = workshop_cache.get("change_notes_hash") != change_notes_hash or change_notes_translator_changed
 
 	title_translator_changed = workshop_cache.get("title_translator") != workshop_title_translator
 	template_hash = hash_text(translation_template) if translation_template is not None else None
@@ -1565,6 +1566,7 @@ def translate_workshop_assets(
 
 	if change_notes is not None and change_notes_changed and change_notes_success:
 		workshop_cache["change_notes_hash"] = change_notes_hash
+		workshop_cache["change_notes_translator"] = workshop_description_translator
 		cache_changed = True
 
 	if title_success and workshop_cache.get("title_translator") != workshop_title_translator:
