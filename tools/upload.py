@@ -1335,8 +1335,15 @@ def main():
             )
             if updates is None:
                 return 1
+            # Exclude source language change note from workshop pages when the
+            # content upload will carry it, to avoid duplicate entries.
+            wp_change_notes = change_notes_by_lang
+            if upload_mod_effective and change_notes_by_lang and cn_updates:
+                source_steam_lang = cn_updates[0]["steam_lang"]
+                wp_change_notes = {k: v for k, v in change_notes_by_lang.items()
+                                   if k != source_steam_lang}
             if not upload_workshop_pages_for_item(steam, updates, item_id,
-                                                  change_notes_by_lang or None):
+                                                  wp_change_notes or None):
                 return 1
 
         if upload_submods_selected:
