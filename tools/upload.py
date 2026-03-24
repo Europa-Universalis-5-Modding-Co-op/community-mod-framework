@@ -1191,8 +1191,9 @@ def upload_workshop_pages_for_item(steam, updates, item_id, change_notes_by_lang
 
         # Pump callbacks between updates so Steam processes each one
         # before the next starts — otherwise only the first completes.
-        steam.run_callbacks()
-        time.sleep(1)
+        for _ in range(30):
+            steam.run_callbacks()
+            time.sleep(0.1)
 
     print("Workshop page updates submitted.")
     return True
