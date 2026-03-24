@@ -1189,6 +1189,11 @@ def upload_workshop_pages_for_item(steam, updates, item_id, change_notes_by_lang
         # create visible changelog entries for page-only updates.
         workshop.SubmitItemUpdate(handle, change_note)
 
+        # Pump callbacks between updates so Steam processes each one
+        # before the next starts — otherwise only the first completes.
+        steam.run_callbacks()
+        time.sleep(1)
+
     print("Workshop page updates submitted.")
     return True
 
