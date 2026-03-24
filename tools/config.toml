@@ -2,7 +2,7 @@
 source_language = "english" # Options: english, french, german, spanish, polish, russian, simp_chinese, turkish, braz_por, japanese, korean
 translate_workshop = true # Auto-translate workshop title/description into other languages. You can also use -wp/--workshop-pages instead.
 translate_change_notes_by_default = true # Should running translate.py translate change notes? You can also use -cn/--change-notes instead.
-translate_submods_by_default = true # Should running translate.py include all submods from submods/? You can also use -s/--submods instead.
+translate_submods_by_default = false # Should running translate.py include all submods from submods/? You can also use -s/--submods instead.
 localization_translator = "gemini-3-flash" # Options: deepl, gemini-3-flash
 workshop_title_translator = "gemini-3-flash" # Options: deepl, gemini-3-flash - highly recommended at least for title. But I would also recommend just using Gemini-3-Pro using the website (api has no free requests)
 workshop_description_translator = "gemini-3-flash" # Options: deepl, gemini-3-flash - better, but only 20 free requests per day (Each run takes 10 requests per description, and 10 per title)
@@ -14,7 +14,7 @@ gemini_title_system_prompt = "You are a professional Steam mod title translator.
 gemini_additional_context = "This is the Community Mod Framework (CMF), a community-driven modding framework with a included shared Community Mod Menu (CMM)" # Optional: additional context appended to all Gemini translation prompts (localization, title, and description). e.g. "This mod is set in the fantasy world of X and uses terms like Y to mean Z"
 
 ### Uploading ####
-workshop_upload_item_id = 0 # Replace with your mod's Workshop item ID (0 creates a new item)
+workshop_upload_item_id = 3691102251 # Replace with your mod's Workshop item ID (0 creates a new item)
 workshop_upload_item_id_dev = 0 # Optional: dev Workshop item ID for upload.py -d/--dev (0 creates a new item)
 upload_mod_by_default = true # Should running upload.py upload the mod? You can also use -m/--mod instead.
 upload_workshop_pages_by_default = true # Should running upload.py upload the mod's Workshop pages? You can also use -wp/--workshop-pages instead.
