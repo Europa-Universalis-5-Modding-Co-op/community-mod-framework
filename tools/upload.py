@@ -1308,14 +1308,12 @@ def main():
 
     uploaded_main = False
 
-    # Build change notes early so they can be distributed across uploads.
+    # Build change notes so they can be attached to workshop page updates.
     # Steam discards standalone change-note-only updates (no content/metadata
-    # changes), so change notes must be attached to updates that carry real
-    # changes: the source language note goes on the mod content upload and
-    # translated notes go on the corresponding workshop page updates.
-    cn_updates = None
+    # changes), so real per-language change notes are piggybacked on workshop
+    # page updates.  The mod content upload gets a stub change note ("Initial
+    # upload") since it always creates a changelog entry.
     change_notes_by_lang = {}
-    source_change_note = ""
     if upload_change_notes:
         cn_updates = build_change_notes_updates(config, item_id, version=main_version)
         if cn_updates is None:
@@ -1325,13 +1323,25 @@ def main():
                 cn_text = cn.get("change_notes", "")
                 if cn_text:
                     change_notes_by_lang[cn["steam_lang"]] = cn_text
-            source_change_note = cn_updates[0].get("change_notes", "")
 
     with steamworks_session() as steam:
         if upload_mod_effective or upload_workshop_pages or upload_change_notes:
             item_id = ensure_item_id(steam, item_id, CONFIG_PATH, item_id_key)
             if item_id is None:
                 return 1
+
+        # Mod content upload first — uses a stub change note so the real
+        # per-language notes submitted on the workshop page updates become
+        # the visible changelog entry.
+        if upload_mod_effective:
+            stub = "Initial upload" if change_notes_by_lang else ""
+            if not upload_release(steam, release_dir, preview_path, item_id,
+                                  workshop_title, change_note=stub):
+                return 1
+            uploaded_main = True
+            if upload_only_on_version_change:
+                set_uploaded_version(version_cache, main_cache_key, main_version)
+                save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
 
         if upload_workshop_pages:
             updates = build_workshop_page_updates(
@@ -1342,16 +1352,8 @@ def main():
             )
             if updates is None:
                 return 1
-            # Exclude source language change note from workshop pages when the
-            # mod content upload will carry it, to avoid a duplicate entry.
-            wp_change_notes = change_notes_by_lang
-            if upload_mod_effective and change_notes_by_lang:
-                source_steam_lang = LANGUAGE_TO_STEAM.get(
-                    load_source_language(config), "english")
-                wp_change_notes = {k: v for k, v in change_notes_by_lang.items()
-                                   if k != source_steam_lang}
             if not upload_workshop_pages_for_item(steam, updates, item_id,
-                                                  wp_change_notes or None):
+                                                  change_notes_by_lang or None):
                 return 1
 
         if upload_submods_selected:
@@ -1366,22 +1368,6 @@ def main():
                 return 1
             if upload_only_on_version_change and submod_cache_changed:
                 save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
-
-        if upload_mod_effective:
-            if not upload_release(steam, release_dir, preview_path, item_id,
-                                  workshop_title, change_note=source_change_note):
-                return 1
-            uploaded_main = True
-            if upload_only_on_version_change:
-                set_uploaded_version(version_cache, main_cache_key, main_version)
-                save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
-
-        # Standalone change notes fallback: only when neither mod content nor
-        # workshop pages are being uploaded (e.g. -cn alone).
-        if upload_change_notes and cn_updates:
-            if not upload_mod_effective and not upload_workshop_pages:
-                if not upload_change_notes_for_item(steam, cn_updates, item_id):
-                    return 1
 
     if uploaded_main:
         cleanup_release_dir(release_dir)
