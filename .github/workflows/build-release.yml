@@ -6,15 +6,6 @@ permissions:
 on:
   workflow_dispatch:
     inputs:
-      release-type:
-        description: 'Release Type'
-        default: 'feature'
-        required: false
-        type: choice
-        options:
-          - 'major'
-          - 'feature'
-          - 'patch'
       publish:
         description: 'Publish on Workshop'
         required: false
@@ -44,24 +35,19 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch --prune --unshallow --tags
 
-        # Read current version from metadata.json
+        # Read version from metadata.json
         # Find latest tag for changelog range (falls back to first commit)
       - name: Get Version
         id: project
         run: |
-          echo "current-version=$(jq -r .version .metadata/metadata.json)" >> $GITHUB_OUTPUT
+          VERSION=$(jq -r .version .metadata/metadata.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
           LAST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || git rev-list --max-parents=0 HEAD)
           echo "last-tag=$LAST_TAG" >> $GITHUB_OUTPUT
-
-      - name: Increment Version
-        id: increment-version
-        uses: christian-draeger/increment-semantic-version@1.2.1
-        with:
-          current-version: ${{ steps.project.outputs.current-version }}
-          version-fragment: ${{ inputs.release-type }}
+          echo "# Version" >> $GITHUB_STEP_SUMMARY
+          echo "**$VERSION**" >> $GITHUB_STEP_SUMMARY
 
         # Collect commits since the last tag
-        # Format them as a Markdown list and put them into the summary
       - name: Collect Changes
         id: commits
         run: |
@@ -73,22 +59,14 @@ jobs:
           echo "# Commits" >> $GITHUB_STEP_SUMMARY
           echo "$(git log ${{ steps.project.outputs.last-tag }}..HEAD --no-merges --pretty=format:' - %s')" >> $GITHUB_STEP_SUMMARY
 
-        # Update version in metadata.json, commit, and tag
-      - name: Update Version
+        # Tag the current commit with the version from metadata.json
+      - name: Create Tag
         run: |
-          jq --tab --arg v "${{ steps.increment-version.outputs.next-version }}" '.version = $v' .metadata/metadata.json > tmp.json && mv tmp.json .metadata/metadata.json
-          git commit -am "Updated version to ${{ steps.increment-version.outputs.next-version }}"
-          git tag ${{ steps.increment-version.outputs.next-version }}
-          echo "# Versions" >> $GITHUB_STEP_SUMMARY
-          echo "Last Version: **${{ steps.project.outputs.current-version }}**" >> $GITHUB_STEP_SUMMARY
-          echo "Next Version: **${{ steps.increment-version.outputs.next-version }}**" >> $GITHUB_STEP_SUMMARY
+          git tag ${{ steps.project.outputs.version }}
+          git push origin ${{ steps.project.outputs.version }}
 
-      - name: Push Version
-        run: |
-          git push origin
-          git push origin ${{ steps.increment-version.outputs.next-version }}
-
-        # Stage release files: copy only mod content into a clean folder
+        # Stage release files: copy mod content into a clean folder
+        # Strip Dev suffixes from metadata and swap in release thumbnail
       - name: Build Release
         run: |
           mkdir ../steam-release
@@ -98,19 +76,23 @@ jobs:
           cp -r in_game ../mod-release/
           cp -r loading_screen ../mod-release/
           cp -r main_menu ../mod-release/
+          jq --tab '.name |= rtrimstr(" Dev") | .id |= rtrimstr(".dev")' ../mod-release/.metadata/metadata.json > tmp.json && mv tmp.json ../mod-release/.metadata/metadata.json
+          if [ -f .metadata/thumbnail-release.png ]; then
+            cp .metadata/thumbnail-release.png ../mod-release/.metadata/thumbnail.png
+          fi
 
         # Package clean mod folder into a zip file
       - name: Create Release Artifact
         run: |
           cd ../mod-release
-          zip -r ${{ github.workspace }}/release-${{ steps.increment-version.outputs.next-version }}.zip .
+          zip -r ${{ github.workspace }}/release-${{ steps.project.outputs.version }}.zip .
 
         # Attach mod package to the workflow run
       - name: Upload Release Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Release
-          path: release-${{ steps.increment-version.outputs.next-version }}.zip
+          path: release-${{ steps.project.outputs.version }}.zip
 
         # Create a GitHub release
         # Includes the mod package and visual editor tool
@@ -122,10 +104,10 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            release-${{ steps.increment-version.outputs.next-version }}.zip
+            release-${{ steps.project.outputs.version }}.zip
             tools/cmm-visual-editor.bat
-          tag_name: ${{ steps.increment-version.outputs.next-version }}
-          name: ${{ steps.increment-version.outputs.next-version }}
+          tag_name: ${{ steps.project.outputs.version }}
+          name: ${{ steps.project.outputs.version }}
           body: |
             Released a new version of the **Community Mod Framework**.
 
