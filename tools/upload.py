@@ -1133,25 +1133,17 @@ def build_change_notes_updates(config, item_id, version=None):
 
     return updates
 
-def upload_workshop_pages_for_item(steam, updates, item_id, change_notes_by_lang=None):
-    """Upload workshop title/description updates for each language entry.
-
-    change_notes_by_lang is an optional dict mapping Steam language codes to
-    translated change note text.  When provided, each per-language page update
-    carries the matching translated change note so Steam can show it to users
-    in that language.
-    """
+def upload_workshop_pages_for_item(steam, updates, item_id):
+    """Upload workshop title/description updates for each language entry."""
     if updates is None:
         return False
 
     print("Workshop language updates:")
     for update in updates:
-        has_cn = bool(change_notes_by_lang and change_notes_by_lang.get(update["steam_lang"]))
         print(
             f"  - {update['lang']} ({update['steam_lang']}): "
             f"{'title' if update['title'] is not None else 'no-title'}, "
             f"{'description' if update['description'] is not None else 'no-description'}"
-            f"{', change-notes' if has_cn else ''}"
         )
 
     workshop = steam.Workshop
@@ -1179,29 +1171,37 @@ def upload_workshop_pages_for_item(steam, updates, item_id, change_notes_by_lang
                 print(f"Error: SetItemDescription failed for {lang_label}.")
                 return False
 
-        change_note = ""
-        if change_notes_by_lang:
-            change_note = change_notes_by_lang.get(update["steam_lang"], "")
-
-        if not _submit_and_wait(steam, handle, change_note):
+        if not _submit_and_wait(steam, handle, ""):
             print(f"Error: Workshop page update failed for {lang_label}.")
             return False
 
     print("Workshop page updates submitted.")
     return True
 
-def upload_change_notes_for_item(steam, updates, item_id):
-    """Submit per-language change notes as standalone updates."""
-    if not updates:
+def upload_change_notes_for_item(steam, cn_updates, item_id, page_updates=None):
+    """Submit per-language change notes.
+
+    Steam discards SubmitItemUpdate calls that carry no real content changes,
+    so each change note update also re-sets the title/description from the
+    matching workshop page update (if available) to ensure the change note
+    persists.
+    """
+    if not cn_updates:
         print("No change notes to submit.")
         return True
 
+    # Index page updates by steam_lang for quick lookup.
+    pages_by_lang = {}
+    if page_updates:
+        for pu in page_updates:
+            pages_by_lang[pu["steam_lang"]] = pu
+
     print("Change note updates:")
-    for update in updates:
+    for update in cn_updates:
         print(f"  - {update['lang']} ({update['steam_lang']})")
 
     workshop = steam.Workshop
-    for update in updates:
+    for update in cn_updates:
         change_notes = update.get("change_notes", "")
         if not change_notes:
             continue
@@ -1214,6 +1214,15 @@ def upload_change_notes_for_item(steam, updates, item_id):
         if lang_result is False:
             print(f"Error: SetItemUpdateLanguage failed for {lang_label}.")
             return False
+
+        # Re-set title/description so Steam treats this as a real update.
+        page = pages_by_lang.get(update["steam_lang"])
+        if page:
+            if page.get("title") is not None:
+                workshop.SetItemTitle(handle, page["title"])
+            if page.get("description") is not None:
+                workshop.SetItemDescription(handle, page["description"])
+
         if not _submit_and_wait(steam, handle, change_notes):
             print(f"Error: Change note update failed for {lang_label}.")
             return False
@@ -1315,22 +1324,16 @@ def main():
                 return 1
 
         # Build change notes after ensure_item_id so $item-id$ resolves correctly.
-        change_notes_by_lang = {}
+        cn_updates = None
         if upload_change_notes:
             cn_updates = build_change_notes_updates(config, item_id, version=main_version)
             if cn_updates is None:
                 return 1
-            if cn_updates:
-                for cn in cn_updates:
-                    cn_text = cn.get("change_notes", "")
-                    if cn_text:
-                        change_notes_by_lang[cn["steam_lang"]] = cn_text
 
-        # Mod content upload first with a stub change note.  The real
-        # per-language change notes are submitted afterward on the workshop
-        # page updates, which become the visible changelog entry.
+        # Mod content upload with a stub change note.  The real per-language
+        # change notes are submitted separately afterward.
         if upload_mod_effective:
-            stub = "Initial upload" if change_notes_by_lang else ""
+            stub = "Initial upload" if cn_updates else ""
             if not upload_release(steam, release_dir, preview_path, item_id,
                                   workshop_title, change_note=stub):
                 return 1
@@ -1339,17 +1342,19 @@ def main():
                 set_uploaded_version(version_cache, main_cache_key, main_version)
                 save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
 
+        # Workshop page updates — no change notes here; they go in a
+        # dedicated pass below so they appear as a single changelog entry.
+        page_updates = None
         if upload_workshop_pages:
-            updates = build_workshop_page_updates(
+            page_updates = build_workshop_page_updates(
                 config,
                 item_id,
                 dev_mode=args.dev,
                 dev_name=dev_name,
             )
-            if updates is None:
+            if page_updates is None:
                 return 1
-            if not upload_workshop_pages_for_item(steam, updates, item_id,
-                                                  change_notes_by_lang or None):
+            if not upload_workshop_pages_for_item(steam, page_updates, item_id):
                 return 1
 
         if upload_submods_selected:
@@ -1364,6 +1369,14 @@ def main():
                 return 1
             if upload_only_on_version_change and submod_cache_changed:
                 save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
+
+        # Change notes submitted last.  Each per-language update re-sets the
+        # matching title/description so Steam treats it as a real update and
+        # doesn't discard the change note.
+        if cn_updates:
+            if not upload_change_notes_for_item(steam, cn_updates, item_id,
+                                                page_updates=page_updates):
+                return 1
 
     if uploaded_main:
         cleanup_release_dir(release_dir)
