@@ -238,12 +238,10 @@ def load_config(config_path):
 	gemini_additional_context = gemini_additional_context.strip()
 
 	# Defer validation — only required when workshop pages are actually translated.
-	raw_item_id = data.get("workshop_upload_item_id")
 	workshop_item_id = None
-	if raw_item_id is not None:
-		workshop_item_id = _parse_positive_int(raw_item_id, "workshop_upload_item_id")
-		if workshop_item_id is None:
-			return invalid
+	raw_item_id = data.get("workshop_upload_item_id")
+	if isinstance(raw_item_id, int) and raw_item_id > 0:
+		workshop_item_id = raw_item_id
 
 	return (
 		source_language,
