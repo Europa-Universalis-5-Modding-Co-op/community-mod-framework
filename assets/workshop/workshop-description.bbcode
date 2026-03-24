@@ -1,4 +1,4 @@
-[h1]Community Mod Framework[/h1]
+﻿[h1]Community Mod Framework[/h1]
 
 The [b]Community Mod Framework (CMF)[/b] is a shared utility mod that provides a mod menu and modding tools for Europa Universalis V.
 
@@ -27,7 +27,7 @@ Any questions, feel free to reach out via the Modding Co-op: https://discord.gg/
 [*][b]Action Bar:[/b] Add custom action bar buttons with localization keys.
 [*][b]is_host Trigger:[/b] Check if the current country is controlled by the host player.
 [*][b]cmf_suppress Effect:[/b] Suppress "used but never set" and "set but never used" engine warnings with a single effect call.
-[*][b]cmf_yearly_human_country_pulse Hook:[/b] Shared on_action that fires once per year for each human player's country.
+[*][b]Player Country Hook:[/b] Shared on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) that fire for each human player's country on yearly and monthly pulses (slightly more efficient than each mod checking for players individually).
 [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] A companion set of development tools, such as a mod template, workshop uploader, and mod translator.
 [/list]
 
