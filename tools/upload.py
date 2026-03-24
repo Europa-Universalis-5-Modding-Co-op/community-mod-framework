@@ -1177,7 +1177,11 @@ def main():
             )
             if updates is None:
                 return 1
-            if not upload_workshop_pages_for_item(steam, updates, item_id, upload_change_notes=upload_change_notes):
+            # Only attach change notes to workshop page updates if mod uploading is entirely disabled.
+            # When mod uploading is enabled, change notes are the mod upload's responsibility — either
+            # it submits them this run, or already did on a previous run (version-gated skip).
+            pages_change_notes = upload_change_notes and not upload_mod
+            if not upload_workshop_pages_for_item(steam, updates, item_id, upload_change_notes=pages_change_notes):
                 return 1
 
         if upload_submods_selected:
