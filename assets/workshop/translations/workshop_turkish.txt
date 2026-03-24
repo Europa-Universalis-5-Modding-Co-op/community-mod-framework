@@ -5,35 +5,35 @@ Topluluk Mod Altyapısı ve Menüsü / Community Mod Framework & Menu
 
 [h1]Community Mod Framework[/h1]
 
-[b]Community Mod Framework (CMF)[/b], Europa Universalis V için bir mod menüsü ve modlama araçları sağlayan ortak bir yardımcı moddur.
+[b]Community Mod Framework (CMF)[/b], Europa Universalis V için bir mod menüsü ve modlama araçları sağlayan paylaşılan bir yardımcı moddur.
 
-[b]CMF, mod yükleme sıranızda en başta yer almalıdır.[/b]
+[b]CMF, mod yükleme sıranızda en başta yüklenmelidir.[/b]
 
 [h1]Dokümantasyon[/h1]
 [list]
 [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — Tam dokümantasyon
-[*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — Hızlı başvuru
+[*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — Hızlı referans
 [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub Deposu[/url]
 [/list]
 
-Sorularınız için Modlama İş Birliği (Modding Co-op) üzerinden ulaşmaktan çekinmeyin: https://discord.gg/aqAAcCZsY7
+Herhangi bir sorunuz olursa Modlama İşbirliği (Modding Co-op) üzerinden ulaşmaktan çekinmeyin: https://discord.gg/aqAAcCZsY7
 
 [h1]Özellikler[/h1]
 [list]
-[*][b]Community Mod Menu (CMM):[/b] Paylaşılan bir oyun içi mod ayarları penceresi. Mod yapımcıları, ayarları basit bir API aracılığıyla dinamik olarak kaydeder; özel bir ayar arayüzü (UI) oluşturmaya gerek kalmaz.
+[*][b]Topluluk Mod Menüsü (CMM):[/b] Paylaşılan bir oyun içi mod ayarları penceresi. Mod yapımcıları, basit bir API aracılığıyla ayarları dinamik olarak kaydeder; özel bir ayar arayüzü oluşturmaya gerek kalmaz.
   [list]
-   [*]Açma/kapatma (toggle), buton, sayısal, kaydırıcı (sürüklemek için çift tıklayın), açılır menü, metin (yalnızca tek oyunculu) ve liste ayarları
+   [*]Aç/kapat, düğme, sayısal, kaydırıcı (sürüklemek için çift tıklayın), açılır menü, metin (yalnızca tek oyunculu) ve liste ayarları
    [*]Mod başına sekmeler, gruplar ve arama
-   [*]Çok oyunculu modda yalnızca kurucunun (host) düzenleyebildiği küresel ayarlar
+   [*]Çok oyunculu modda yalnızca ana makinenin (host) düzenleyebildiği küresel ayarlar
    [*]Varsayılana Sıfırla
-   [*]Kod gerektirmeyen kurulum için CMM Görsel Düzenleyici aracı
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Görsel Düzenleyici[/url] — kodlama gerektirmeden ayarlar oluşturmak için tarayıcı tabanlı araç
   [/list]
-[*][b]Özel Uyarılar:[/b] Yerelleştirme anahtarları (localization keys) aracılığıyla uyarı çubuğunda özel uyarılar oluşturun ve gösterin.
-[*][b]Eylem Çubuğu:[/b] Yerelleştirme anahtarlarıyla özel eylem çubuğu butonları ekleyin.
-[*][b]is_host Tetikleyicisi:[/b] Mevcut ülkenin kurucu oyuncu (host) tarafından kontrol edilip edilmediğini kontrol edin.
-[*][b]cmf_suppress Efekti:[/b] Tek bir efekt çağrısıyla oyun motorunun "used but never set" ve "set but never used" uyarılarını engelleyin.
-[*][b]Oyuncu Ülkesi Kancası:[/b] Yıllık ve aylık döngülerde her bir gerçek oyuncunun ülkesi için tetiklenen paylaşımlı on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse). (Her modun oyuncuları tek tek kontrol etmesinden biraz daha verimlidir).
-[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Mod şablonu, atölye yükleyicisi ve mod çevirmeni gibi eşlik eden bir geliştirme araçları seti.
+[*][b]Özel Uyarılar:[/b] Yerelleştirme anahtarları aracılığıyla uyarı çubuğunda özel uyarılar oluşturun ve gösterin.
+[*][b]Eylem Çubuğu:[/b] Yerelleştirme anahtarlarıyla özel eylem çubuğu düğmeleri ekleyin.
+[*][b]is_host Tetikleyicisi:[/b] Mevcut ülkenin ana makine oyuncusu (host) tarafından kontrol edilip edilmediğini kontrol edin.
+[*][b]cmf_suppress Efekti:[/b] Tek bir efekt çağrısıyla "kullanıldı ama hiç ayarlanmadı" ve "ayarlandı ama hiç kullanılmadı" motor uyarılarını engelleyin.
+[*][b]Oyuncu Ülkesi Kancası:[/b] Her bir insan oyuncunun ülkesi için yıllık ve aylık vuruşlarda (pulse) tetiklenen paylaşımlı on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) (her modun oyuncuları tek tek kontrol etmesinden biraz daha verimlidir).
+[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Topluluk Mod Araç Seti (CMT):[/url][/b] Mod şablonu, atölye yükleyicisi ve mod çevirmeni gibi eşlik eden bir geliştirme araçları seti.
 [/list]
 
 [h1]Katkıda Bulunanlar[/h1]
@@ -49,9 +49,9 @@ Sorularınız için Modlama İş Birliği (Modding Co-op) üzerinden ulaşmaktan
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
-[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url] (Çalışması için GlorpUI gerekli değildir ancak etkinleştirildiğinde GlorpUI, CMF ile entegre olur)
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url]
 [/list]
 
 [h1]Değişiklik Günlüğü:[/h1]
-Atölye sayfasındaki [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691154596]Değişiklik Notlarına göz atın[/url].
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691154596]Atölye sayfasındaki Değişiklik Notlarına[/url] bakın.
 

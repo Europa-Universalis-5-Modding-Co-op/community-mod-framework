@@ -18,22 +18,22 @@ O [b]Community Mod Framework (CMF)[/b] é um mod utilitário compartilhado que f
 
 Qualquer dúvida, sinta-se à vontade para entrar em contato através do Modding Co-op: https://discord.gg/aqAAcCZsY7
 
-[h1]Recursos[/h1]
+[h1]Funcionalidades[/h1]
 [list]
 [*][b]Community Mod Menu (CMM):[/b] Uma janela compartilhada de configurações de mod dentro do jogo. Autores de mods registram configurações dinamicamente através de uma API simples — sem a necessidade de construir uma interface de usuário de configurações personalizada.
   [list]
-   [*]Configurações de alternância (toggle), botão, numérico, controle deslizante (clique duplo para arrastar), menu suspenso (dropdown), texto (apenas para um jogador) e listas
+   [*]Configurações de alternar (toggle), botão, numérico, controle deslizante (clique duplo para arrastar), menu suspenso (dropdown), texto (apenas singleplayer) e lista
    [*]Abas por mod, grupos e busca
-   [*]Configurações globais com edição restrita ao anfitrião (host) no multijogador
-   [*]Restaurar Padrões
-   [*]Ferramenta CMM Visual Editor para configuração sem necessidade de código
+   [*]Configurações globais com edição apenas pelo anfitrião (host) no multiplayer
+   [*]Redefinir para os Padrões
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url] — ferramenta baseada em navegador para criar configurações sem a necessidade de codificação
   [/list]
 [*][b]Alertas Personalizados:[/b] Crie e exiba alertas personalizados na barra de alertas através de chaves de localização.
-[*][b]Barra de Ações:[/b] Adicione botões personalizados à barra de ações com chaves de localização.
-[*][b]Gatilho is_host:[/b] Verifica se o país atual é controlado pelo jogador anfitrião (host).
-[*][b]Efeito cmf_suppress:[/b] Suprime avisos da engine de "usado mas nunca definido" e "definido mas nunca usado" com uma única chamada de efeito.
-[*][b]Hook de País de Jogador:[/b] on_actions compartilhados (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) que são acionados para o país de cada jogador humano em pulsos anuais e mensais (ligeiramente mais eficiente do que cada mod verificar os jogadores individualmente).
-[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Um conjunto de ferramentas de desenvolvimento complementares, como um modelo (template) de mod, uploader para a workshop e tradutor de mods.
+[*][b]Barra de Ação:[/b] Adicione botões personalizados na barra de ação com chaves de localização.
+[*][b]Trigger is_host:[/b] Verifica se o país atual é controlado pelo jogador anfitrião (host).
+[*][b]Efeito cmf_suppress:[/b] Suprima avisos da engine de "used but never set" e "set but never used" com uma única chamada de efeito.
+[*][b]Hook de País de Jogador:[/b] on_actions compartilhados (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) que são acionados para o país de cada jogador humano em pulsos anuais e mensais (um pouco mais eficiente do que cada mod verificar os jogadores individualmente).
+[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Um conjunto complementar de ferramentas de desenvolvimento, como modelo (template) de mod, uploader da workshop e tradutor de mods.
 [/list]
 
 [h1]Colaboradores[/h1]
@@ -49,7 +49,7 @@ Qualquer dúvida, sinta-se à vontade para entrar em contato através do Modding
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
-[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url] (Não é obrigatório para o funcionamento do GlorpUI, mas o GlorpUI se integrará ao CMF quando ativado)
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url]
 [/list]
 
 [h1]Registro de Alterações:[/h1]

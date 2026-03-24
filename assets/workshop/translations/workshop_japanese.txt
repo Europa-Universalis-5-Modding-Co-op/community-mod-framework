@@ -5,53 +5,53 @@
 
 [h1]Community Mod Framework[/h1]
 
-[b]Community Mod Framework (CMF)[/b] は、Europa Universalis V 用の Mod メニューと Mod 制作ツールを提供する、共有のユーティリティ Mod です。
+[b]Community Mod Framework (CMF)[/b] は、Europa Universalis V のためのモッドメニューとモッディングツールを提供する、共有のユーティリティモッドです。
 
-[b]CMF は Mod のロード順の最優先（先頭）に読み込む必要があります。[/b]
+[b]CMF はモッドのロード順の最初に読み込む必要があります。[/b]
 
 [h1]ドキュメント[/h1]
 [list]
-[*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — 全ドキュメント（英語）
+[*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — 全ドキュメント
 [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — クイックリファレンス
 [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub リポジトリ[/url]
 [/list]
 
-ご質問等ございましたら、Modding Co-op よりお気軽にお問い合わせください: https://discord.gg/aqAAcCZsY7
+質問がある場合は、Modding Co-op（Discord）経由でお気軽にお問い合わせください: https://discord.gg/aqAAcCZsY7
 
 [h1]機能[/h1]
 [list]
-[*][b]Community Mod Menu (CMM):[/b] ゲーム内共通の Mod 設定ウィンドウ。Mod 開発者はシンプルな API を介して動的に設定を登録でき、独自の設定 UI を構築する必要はありません。
+[*][b]Community Mod Menu (CMM):[/b] ゲーム内の共有モッド設定ウィンドウ。モッド制作者はシンプルな API を通じて動的に設定を登録でき、カスタムの設定 UI を構築する必要はありません。
   [list]
-   [*]トグル、ボタン、数値、スライダー（ダブルクリックでドラッグ）、ドロップダウン、テキスト（シングルプレイヤー限定）、リスト設定
-   [*]Mod ごとのタブ、グループ、および検索機能
-   [*]マルチプレイヤーにおいてホストのみが編集可能なグローバル設定
-   [*]デフォルトにリセット機能
-   [*]コード不要でセットアップできる CMM ビジュアルエディターツール
+   [*]トグル、ボタン、数値、スライダー（ダブルクリックでドラッグ可能）、ドロップダウン、テキスト（シングルプレイヤー限定）、およびリスト設定
+   [*]モッドごとのタブ、グループ、および検索機能
+   [*]マルチプレイヤーでのホスト限定編集が可能なグローバル設定
+   [*]デフォルトにリセット
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url] — コーディング不要で設定を作成できるブラウザベースのツール
   [/list]
-[*][b]カスタムアラート:[/b] ローカライズキーを使用して、アラートバーにカスタムアラートを作成・表示します。
+[*][b]カスタムアラート:[/b] ローカライズキーを使用して、アラートバーにカスタムアラートを作成し表示します。
 [*][b]アクションバー:[/b] ローカライズキーを使用して、カスタムのアクションバーボタンを追加します。
-[*][b]is_host トリガー:[/b] 現在の国家がホストプレイヤーによって操作されているかを確認します。
-[*][b]cmf_suppress エフェクト:[/b] 1 回のエフェクト呼び出しで、エンジンの警告「used but never set」および「set but never used」を抑制します。
-[*][b]プレイヤー国家フック:[/b] 各人間プレイヤーの国家に対して、年次および月次パルスごとに実行される共有の on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) です（各 Mod が個別にプレイヤーをチェックするよりも効率的です）。
-[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Mod テンプレート、ワークショップアップローダー、Mod 翻訳ツールなどの開発支援ツールセットです。
+[*][b]is_host トリガー:[/b] 現在の国家がホストプレイヤーによって操作されているかどうかを確認します。
+[*][b]cmf_suppress エフェクト:[/b] 単一のエフェクト呼び出しで、エンジンの「使用されているが設定されていない（used but never set）」および「設定されているが使用されていない（set but never used）」警告を抑制します。
+[*][b]プレイヤー国家フック:[/b] 各人間プレイヤーの国家に対して、年次および月次のパルスで実行される共有の on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse)（各モッドが個別にプレイヤーをチェックするよりもわずかに効率的です）。
+[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] モッドテンプレート、ワークショップアップローダー、モッド翻訳ツールなどの開発ツールセット。
 [/list]
 
-[h1]貢献者[/h1]
+[h1]コントリビューター[/h1]
 [list]
 [*]Bahmut
 [*]Conner
 [*]Pickle
 [/list]
 
-[h1]CMF を使用している Mod[/h1]
+[h1]CMF を使用しているモッド[/h1]
 [list]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
-[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url] (動作に CMF は必須ではありませんが、有効化されている場合は CMF と統合されます)
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url]
 [/list]
 
 [h1]更新履歴:[/h1]
-[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691154596]ワークショップページの Change Notes[/url] を参照してください。
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691154596]ワークショップページの更新履歴[/url]をご覧ください。
 
