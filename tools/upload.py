@@ -820,7 +820,7 @@ def _submit_and_wait(steam, handle, change_note="", show_progress=False):
 
     return True
 
-def upload_release(steam, content_dir, preview_path, item_id, workshop_title=None, change_note=""):
+def upload_release(steam, content_dir, preview_path, item_id, workshop_title=None):
     if not os.path.isdir(content_dir):
         print(f"Error: Release directory not found: {content_dir}")
         return False
@@ -849,7 +849,7 @@ def upload_release(steam, content_dir, preview_path, item_id, workshop_title=Non
             return False
 
     print("Workshop update submitted. Waiting for upload to complete...")
-    if not _submit_and_wait(steam, handle, change_note, show_progress=True):
+    if not _submit_and_wait(steam, handle, "", show_progress=True):
         return False
 
     print("Workshop update completed successfully.")
@@ -1133,19 +1133,17 @@ def build_change_notes_updates(config, item_id, version=None):
 
     return updates
 
-def upload_workshop_pages_for_item(steam, updates, item_id, change_notes_by_lang=None):
+def upload_workshop_pages_for_item(steam, updates, item_id):
     """Upload workshop title/description updates for each language entry."""
     if updates is None:
         return False
 
     print("Workshop language updates:")
     for update in updates:
-        has_cn = bool(change_notes_by_lang and change_notes_by_lang.get(update["steam_lang"]))
         print(
             f"  - {update['lang']} ({update['steam_lang']}): "
             f"{'title' if update['title'] is not None else 'no-title'}, "
             f"{'description' if update['description'] is not None else 'no-description'}"
-            f"{', change-notes' if has_cn else ''}"
         )
 
     workshop = steam.Workshop
@@ -1173,11 +1171,7 @@ def upload_workshop_pages_for_item(steam, updates, item_id, change_notes_by_lang
                 print(f"Error: SetItemDescription failed for {lang_label}.")
                 return False
 
-        change_note = ""
-        if change_notes_by_lang:
-            change_note = change_notes_by_lang.get(update["steam_lang"], "")
-
-        if not _submit_and_wait(steam, handle, change_note):
+        if not _submit_and_wait(steam, handle, ""):
             print(f"Error: Workshop page update failed for {lang_label}.")
             return False
 
@@ -1308,24 +1302,6 @@ def main():
             if item_id is None:
                 return 1
 
-        # Build change notes early so they can be merged into workshop page
-        # and content uploads (standalone change-note-only updates don't
-        # reliably persist because Steam may discard updates with no actual
-        # content/metadata changes).
-        change_notes_by_lang = {}
-        source_change_note = ""
-        cn_updates = None
-        if upload_change_notes:
-            cn_updates = build_change_notes_updates(config, item_id, version=main_version)
-            if cn_updates is None:
-                return 1
-            if cn_updates:
-                for cn in cn_updates:
-                    cn_text = cn.get("change_notes", "")
-                    if cn_text:
-                        change_notes_by_lang[cn["steam_lang"]] = cn_text
-                source_change_note = cn_updates[0].get("change_notes", "")
-
         if upload_workshop_pages:
             updates = build_workshop_page_updates(
                 config,
@@ -1335,15 +1311,7 @@ def main():
             )
             if updates is None:
                 return 1
-            # Exclude source language change note from workshop pages when the
-            # content upload will carry it, to avoid duplicate entries.
-            wp_change_notes = change_notes_by_lang
-            if upload_mod_effective and change_notes_by_lang and cn_updates:
-                source_steam_lang = cn_updates[0]["steam_lang"]
-                wp_change_notes = {k: v for k, v in change_notes_by_lang.items()
-                                   if k != source_steam_lang}
-            if not upload_workshop_pages_for_item(steam, updates, item_id,
-                                                  wp_change_notes or None):
+            if not upload_workshop_pages_for_item(steam, updates, item_id):
                 return 1
 
         if upload_submods_selected:
@@ -1361,17 +1329,18 @@ def main():
 
         if upload_mod_effective:
             if not upload_release(steam, release_dir, preview_path, item_id,
-                                  workshop_title, change_note=source_change_note):
+                                  workshop_title):
                 return 1
             uploaded_main = True
             if upload_only_on_version_change:
                 set_uploaded_version(version_cache, main_cache_key, main_version)
                 save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
 
-        # Standalone change notes only when not already merged into workshop
-        # page or content uploads (e.g. when using --change-notes alone).
-        if upload_change_notes and cn_updates:
-            if not upload_workshop_pages and not upload_mod_effective:
+        if upload_change_notes:
+            cn_updates = build_change_notes_updates(config, item_id, version=main_version)
+            if cn_updates is None:
+                return 1
+            if cn_updates:
                 if not upload_change_notes_for_item(steam, cn_updates, item_id):
                     return 1
 
