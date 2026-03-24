@@ -1,0 +1,57 @@
+===WORKSHOP_TITLE===
+Marco y Menú de Mods de la Comunidad / Community Mod Framework & Menu
+===WORKSHOP_DESCRIPTION===
+[i]You are on the DeepL-Generated Spanish Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
+
+[h1]Community Mod Framework[/h1]
+
+El [b]Community Mod Framework (CMF)[/b] es un mod de utilidad compartido que proporciona un menú de mods y herramientas de creación de mods para Europa Universalis V.
+
+[b]CMF debe cargarse primero en tu orden de carga de mods.[/b]
+
+[h1]Documentación[/h1]
+[list]
+[*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — Documentación completa
+[*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — Referencia rápida
+[*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]Repositorio de GitHub[/url]
+[/list]
+
+Si tienes alguna pregunta, no dudes en contactarnos a través del Modding Co-op: https://discord.gg/aqAAcCZsY7
+
+[h1]Características[/h1]
+[list]
+[*][b]Community Mod Menu (CMM):[/b] Una ventana de ajustes de mods integrada en el juego. Los autores de mods registran los ajustes de forma dinámica a través de una API sencilla, sin necesidad de crear una interfaz de ajustes personalizada.
+  [list]
+   [*]Ajustes de interruptor (toggle), botón, numérico, deslizador (doble clic para arrastrar), desplegable, texto (solo para un jugador) y lista.
+   [*]Pestañas por mod, grupos y búsqueda.
+   [*]Ajustes globales con edición exclusiva para el anfitrión en multijugador.
+   [*]Restablecer a valores predeterminados.
+   [*]Herramienta de Editor Visual CMM para configuración sin código.
+  [/list]
+[*][b]Alertas personalizadas:[/b] Crea y muestra alertas personalizadas en la barra de alertas mediante claves de localización.
+[*][b]Barra de acciones:[/b] Añade botones personalizados a la barra de acciones con claves de localización.
+[*][b]Activador is_host:[/b] Comprueba si el país actual está controlado por el jugador anfitrión.
+[*][b]Efecto cmf_suppress:[/b] Suprime las advertencias del motor "usado pero nunca definido" (used but never set) y "definido pero nunca usado" (set but never used) con una sola llamada de efecto.
+[*][b]Hook de país del jugador:[/b] on_actions compartidos (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) que se activan para el país de cada jugador humano en pulsos anuales y mensuales (ligeramente más eficiente que si cada mod comprobara los jugadores de forma individual).
+[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Un conjunto complementario de herramientas de desarrollo, como una plantilla de mod, un cargador para el workshop y un traductor de mods.
+[/list]
+
+[h1]Colaboradores[/h1]
+[list]
+[*]Bahmut
+[*]Conner
+[*]Pickle
+[/list]
+
+[h1]Mods que usan CMF[/h1]
+[list]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url] (No es necesario para que GlorpUI funcione, pero GlorpUI se integrará con CMF cuando esté activado)
+[/list]
+
+[h1]Registro de cambios:[/h1]
+Consulta las [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691102251]Notas de cambios en la página del workshop[/url].
+

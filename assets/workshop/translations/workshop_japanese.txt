@@ -1,0 +1,57 @@
+===WORKSHOP_TITLE===
+コミュニティ MOD フレームワーク & メニュー / Community Mod Framework & Menu
+===WORKSHOP_DESCRIPTION===
+[i]You are on the DeepL-Generated Japanese Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
+
+[h1]Community Mod Framework[/h1]
+
+[b]Community Mod Framework (CMF)[/b] は、Europa Universalis Vのためのモッドメニューとモッディングツールを提供する共有ユーティリティModです。
+
+[b]CMFはModの読み込み順序（ロードオーダー）の最初に配置する必要があります。[/b]
+
+[h1]ドキュメント[/h1]
+[list]
+[*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — 完全なドキュメント
+[*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — クイックリファレンス
+[*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHubリポジトリ[/url]
+[/list]
+
+ご質問がある場合は、Modding Co-op経由でお気軽にお問い合わせください: https://discord.gg/aqAAcCZsY7
+
+[h1]主な機能[/h1]
+[list]
+[*][b]Community Mod Menu (CMM):[/b] ゲーム内共有Mod設定ウィンドウです。Mod制作者はシンプルなAPIを通じて動的に設定を登録できるため、独自の設定UIを構築する必要はありません。
+  [list]
+   [*]トグル、ボタン、数値、スライダー（ダブルクリックでドラッグ）、ドロップダウン、テキスト（シングルプレイヤー限定）、リスト設定
+   [*]Modごとのタブ、グループ、および検索機能
+   [*]マルチプレイヤーにおけるホスト限定編集可能なグローバル設定
+   [*]デフォルト設定へのリセット
+   [*]コード不要でセットアップ可能なCMM Visual Editorツール
+  [/list]
+[*][b]カスタムアラート:[/b] ローカライゼーションキーを使用して、アラートバーにカスタムアラートを作成・表示します。
+[*][b]アクションバー:[/b] ローカライゼーションキーを使用してカスタムアクションバーボタンを追加します。
+[*][b]is_host トリガー:[/b] 現在の国がホストプレイヤーによって操作されているかどうかを確認します。
+[*][b]cmf_suppress エフェクト:[/b] 1回のエフェクト呼び出しで、エンジンの「used but never set（使用されているが設定されていない）」および「set but never used（設定されているが使用されていない）」警告を抑制します。
+[*][b]プレイヤーカントリーフック:[/b] 各プレイヤーの国に対して毎年および毎月のパルスで実行される共有のon_actions（cmf_yearly_human_country_pulse、cmf_monthly_human_country_pulse）です（各Modが個別にプレイヤーをチェックするよりも効率的です）。
+[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Modテンプレート、ワークショップアップローダー、Mod翻訳ツールなどの開発ツールセットです。
+[/list]
+
+[h1]貢献者[/h1]
+[list]
+[*]Bahmut
+[*]Conner
+[*]Pickle
+[/list]
+
+[h1]CMFを使用しているMod[/h1]
+[list]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url]（GlorpUIの動作に必須ではありませんが、有効化するとCMFと統合されます）
+[/list]
+
+[h1]変更履歴:[/h1]
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691102251]ワークショップページの更新履歴[/url]を確認してください。
+
