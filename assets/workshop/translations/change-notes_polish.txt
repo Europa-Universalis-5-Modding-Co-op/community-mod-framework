@@ -1,9 +1,9 @@
-- [b]Community Mod Menu (CMM):[/b] Współdzielone okno ustawień modów w grze z opcjami przełącznika, przycisku, wartości numerycznych, suwaka (podwójne kliknięcie, aby przeciągnąć), listy rozwijanej, tekstu (tylko dla trybu jednoosobowego) oraz list. Zawiera karty dla poszczególnych modów, grupy, wyszukiwarkę, ustawienia globalne z edycją tylko dla hosta w trybie wieloosobowym oraz funkcję Przywróć domyślne.
-- [b]CMM Visual Editor:[/b] Narzędzie przeglądarkowe do tworzenia ustawień CMM bez ręcznego kodowania. Zawiera podgląd na żywo oraz sortowanie metodą przeciągnij i upuść.
-- [b]Wyzwalacz is_host:[/b] Sprawdza, czy aktualny kraj jest kontrolowany przez hosta.
-- [b]Efekt cmf_suppress:[/b] Wycisza ostrzeżenia silnika "used but never set" oraz "set but never used" za pomocą jednego wywołania efektu.
-- [b]Player Country Hooks:[/b] Współdzielone on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse), które aktywują się dla kraju każdego gracza w cyklu rocznym i miesięcznym.
-- [b]Community Mod Toolkit (CMT):[/b] Towarzyszące narzędzia programistyczne — szablon moda, uploader do warsztatu i automatyczne tłumaczenie.
-- [b]Unified Callback System:[/b] Własne powiadomienia (Alerts) i pasek akcji (Action Bar) korzystają teraz z pojedynczego on_action cmf_on_callback.
-- [b]Scripted GUIs nie są już wymagane:[/b] Elementy powiadomień i paska akcji potrzebują Scripted GUI tylko do warunkowej widoczności lub stanu aktywności.
+- [b]Community Mod Menu (CMM):[/b] Współdzielone okno ustawień modów w grze z opcjami przełączników, przycisków, wartości numerycznych, suwaków (dwukrotne kliknięcie, aby przeciągnąć), list rozwijanych, tekstu (tylko dla trybu jednoosobowego) oraz list. Zawiera karty dla poszczególnych modów, grupy, wyszukiwarkę, ustawienia globalne z edycją dostępną tylko dla hosta w trybie wieloosobowym oraz funkcję Reset do ustawień domyślnych.
+- [b]CMM Visual Editor:[/b] Oparte na przeglądarce narzędzie do tworzenia ustawień CMM bez konieczności ręcznego kodowania. Zawiera podgląd na żywo oraz funkcję układania elementów metodą „przeciągnij i upuść”.
+- [b]is_host Trigger:[/b] Sprawdza, czy obecny kraj jest kontrolowany przez hosta.
+- [b]cmf_suppress Effect:[/b] Tłumi ostrzeżenia silnika „used but never set” oraz „set but never used” za pomocą jednego wywołania efektu.
+- [b]Player Country Hooks:[/b] Współdzielone on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse), które aktywują się dla kraju każdego ludzkiego gracza podczas pulsów rocznych i miesięcznych.
+- [b]Community Mod Toolkit (CMT):[/b] Towarzyszące narzędzia programistyczne — szablon moda, narzędzie do przesyłania do warsztatu oraz automatyczne tłumaczenie.
+- [b]Unified Callback System:[/b] Własne alerty (Custom Alerts) i pasek akcji (Action Bar) korzystają teraz z jednego on_action cmf_on_callback.
+- [b]Scripted GUIs nie są już wymagane:[/b] Alerty i elementy paska akcji wymagają Scripted GUI tylko do warunkowej widoczności lub stanu aktywacji.
 - [b]Dokumentacja:[/b] Pełna dokumentacja na [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] oraz skrócona instrukcja na [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url].

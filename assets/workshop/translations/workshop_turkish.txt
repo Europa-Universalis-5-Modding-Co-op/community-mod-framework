@@ -16,24 +16,24 @@ Topluluk Mod Altyapısı ve Menüsü / Community Mod Framework & Menu
 [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub Deposu[/url]
 [/list]
 
-Herhangi bir sorunuz olursa Modding Co-op üzerinden iletişime geçmekten çekinmeyin: https://discord.gg/aqAAcCZsY7
+Herhangi bir sorunuz olursa Modding Co-op üzerinden bize ulaşmaktan çekinmeyin: https://discord.gg/aqAAcCZsY7
 
 [h1]Özellikler[/h1]
 [list]
-[*][b]Community Mod Menu (CMM):[/b] Ortak bir oyun içi mod ayarları penceresi. Mod yazarları, basit bir API aracılığıyla ayarları dinamik olarak kaydeder — özel bir ayar arayüzü (UI) oluşturmaya gerek kalmaz.
+[*][b]Community Mod Menu (CMM):[/b] Ortak bir oyun içi mod ayarları penceresidir. Mod geliştiricileri, ayarları basit bir API aracılığıyla dinamik olarak kaydeder; özel bir ayar arayüzü (UI) oluşturmaya gerek kalmaz.
   [list]
-   [*]Aç-kapat (toggle), buton, sayısal, kaydırıcı (sürüklemek için çift tıklayın), açılır menü, metin (yalnızca tek oyunculu) ve liste ayarları
+   [*]Aç/kapat, buton, sayısal, kaydırıcı (sürüklemek için çift tıklayın), açılır menü, metin (yalnızca tek oyunculu) ve liste ayarları
    [*]Mod başına sekmeler, gruplar ve arama
-   [*]Sadece host tarafından düzenlenebilen çok oyunculu küresel ayarlar
+   [*]Çok oyunculu modda yalnızca sunucu sahibinin (host) düzenleyebileceği küresel ayarlar
    [*]Varsayılana Sıfırla
-   [*]Kod yazmadan kurulum için CMM Görsel Editör aracı
+   [*]Kod yazmadan kurulum için CMM Görsel Düzenleyici aracı
   [/list]
-[*][b]Özel Uyarılar:[/b] Yerelleştirme anahtarları (localization keys) aracılığıyla uyarı çubuğunda özel uyarılar oluşturun ve gösterin.
-[*][b]Eylem Çubuğu:[/b] Yerelleştirme anahtarları ile özel eylem çubuğu butonları ekleyin.
-[*][b]is_host Tetikleyicisi:[/b] Mevcut ülkenin host oyuncu tarafından kontrol edilip edilmediğini kontrol edin.
-[*][b]cmf_suppress Efekti:[/b] "Kullanıldı ama hiç ayarlanmadı" ve "ayarlandı ama hiç kullanılmadı" motor uyarılarını tek bir efekt çağrısıyla gizleyin.
-[*][b]Oyuncu Ülkesi Kancası (Hook):[/b] Her bir insan oyuncunun ülkesi için yıllık ve aylık döngülerde (pulses) tetiklenen ortak on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) (her modun oyuncuları tek tek kontrol etmesinden biraz daha verimlidir).
-[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Mod şablonu, workshop yükleyicisi ve mod çevirmeni gibi bir dizi yardımcı geliştirme aracı.
+[*][b]Özel Uyarılar:[/b] Yerelleştirme anahtarları aracılığıyla uyarı çubuğunda özel uyarılar oluşturun ve gösterin.
+[*][b]Eylem Çubuğu:[/b] Yerelleştirme anahtarlarıyla özel eylem çubuğu butonları ekleyin.
+[*][b]is_host Tetikleyicisi:[/b] Mevcut ülkenin sunucu sahibi tarafından kontrol edilip edilmediğini kontrol edin.
+[*][b]cmf_suppress Efekti:[/b] Tek bir efekt çağrısı ile "kullanılmış ama tanımlanmamış" ve "tanımlanmış ama hiç kullanılmamış" motor uyarılarını engelleyin.
+[*][b]Oyuncu Ülke Kancası:[/b] Her insan oyuncunun ülkesi için yıllık ve aylık vuruşlarda (pulse) tetiklenen paylaşılan on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) (her modun oyuncuları tek tek kontrol etmesinden biraz daha verimlidir).
+[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Mod şablonu, workshop yükleyici ve mod çevirici gibi yardımcı geliştirme araçları seti.
 [/list]
 
 [h1]Katkıda Bulunanlar[/h1]
@@ -49,9 +49,9 @@ Herhangi bir sorunuz olursa Modding Co-op üzerinden iletişime geçmekten çeki
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
-[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url] (GlorpUI'ın çalışması için gerekli değildir ancak GlorpUI etkinleştirildiğinde CMF ile entegre olacaktır)
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url] (Çalışması için GlorpUI gerekli değildir ancak GlorpUI etkinleştirildiğinde CMF ile entegre olur)
 [/list]
 
-[h1]Değişim Günlüğü:[/h1]
-[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691102251]Workshop sayfasındaki Değişiklik Notlarına[/url] göz atın.
+[h1]Değişiklik Günlüğü:[/h1]
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691116062]Workshop sayfasındaki Değişiklik Notlarına[/url] göz atın.
 

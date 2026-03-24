@@ -1,9 +1,9 @@
-- [b]커뮤니티 모드 메뉴 (CMM):[/b] 토글, 버튼, 숫자, 슬라이더(더블 클릭으로 드래그), 드롭다운, 텍스트(싱글 플레이어 전용), 리스트 설정을 지원하는 공용 게임 내 모드 설정 창입니다. 모드별 탭, 그룹, 검색, 호스트 전용 멀티플레이어 편집이 가능한 전역 설정, 기본값으로 재설정 기능을 포함합니다.
-- [b]CMM 비주얼 에디터:[/b] 수동 코딩 없이 CMM 설정을 생성할 수 있는 브라우저 기반 도구입니다. 라이브 미리보기와 드래그 앤 드롭 방식의 정렬 기능을 포함합니다.
-- [b]is_host 트리거:[/b] 현재 국가가 호스트 플레이어에 의해 제어되는지 확인합니다.
-- [b]cmf_suppress 효과:[/b] 단일 효과 호출로 "사용되었지만 설정되지 않음(used but never set)" 및 "설정되었지만 사용되지 않음(set but never used)" 엔진 경고를 억제합니다.
-- [b]플레이어 국가 훅(Hooks):[/b] 매년 및 매월 펄스 시 각 인간 플레이어의 국가에 대해 실행되는 공유 on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse)입니다.
-- [b]커뮤니티 모드 툴킷 (CMT):[/b] 모드 템플릿, 워크숍 업로더, 자동 번역을 포함한 보조 개발 도구입니다.
-- [b]통합 콜백 시스템:[/b] 커스텀 알림(Alerts)과 액션 바(Action Bar)가 이제 단일 cmf_on_callback on_action을 사용합니다.
-- [b]더 이상 Scripted GUI가 필수적이지 않음:[/b] 알림 및 액션 바 요소는 조건부 가시성 또는 활성화 상태를 위해서만 Scripted GUI가 필요합니다.
-- [b]문서:[/b] [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url]의 전체 문서와 [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url]의 퀵 레퍼런스를 확인하세요.
+- [b]Community Mod Menu (CMM):[/b] 게임 내 공유 모드 설정 창으로 토글, 버튼, 숫자, 슬라이더(더블 클릭하여 드래그), 드롭다운, 텍스트(싱글 플레이어 전용), 리스트 설정을 지원합니다. 모드별 탭, 그룹, 검색, 호스트 전용 멀티플레이어 편집 기능이 포함된 글로벌 설정 및 기본값으로 초기화 기능을 포함합니다.
+- [b]CMM Visual Editor:[/b] 수동 코딩 없이 CMM 설정을 제작할 수 있는 브라우저 기반 도구입니다. 실시간 미리보기와 드래그 앤 드롭 방식의 순서 정렬 기능을 포함합니다.
+- [b]is_host Trigger:[/b] 현재 국가가 호스트 플레이어에 의해 제어되는지 확인합니다.
+- [b]cmf_suppress Effect:[/b] 단 한 번의 이펙트 호출로 "used but never set" 및 "set but never used" 엔진 경고를 억제합니다.
+- [b]Player Country Hooks:[/b] 각 인간 플레이어의 국가에 대해 매년 및 매월 펄스(pulse) 시점에 실행되는 공유 on_actions(cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse)입니다.
+- [b]Community Mod Toolkit (CMT):[/b] 보조 개발 도구 — 모드 템플릿, 창작마당 업로더, 자동 번역 기능을 제공합니다.
+- [b]Unified Callback System:[/b] 커스텀 알림(Alerts) 및 액션 바(Action Bar)가 이제 단일 cmf_on_callback on_action을 사용합니다.
+- [b]Scripted GUIs are no longer required:[/b] 알림 및 액션 바 요소는 조건부 가시성이나 활성화 상태를 설정할 때만 스크립트 GUI가 필요합니다.
+- [b]Documentation:[/b] 전체 문서는 [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url]에서 확인할 수 있으며, [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url]에서 빠른 참조가 가능합니다.

@@ -3,37 +3,37 @@
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Korean Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-[h1]커뮤니티 모드 프레임워크 (Community Mod Framework)[/h1]
+[h1]Community Mod Framework[/h1]
 
-[b]커뮤니티 모드 프레임워크 (CMF)[/b]는 유로파 유니버셜리스 V를 위한 모드 메뉴와 모딩 도구를 제공하는 공용 유틸리티 모드입니다.
+[b]Community Mod Framework (CMF)[/b]는 Europa Universalis V를 위한 모드 메뉴와 모딩 도구를 제공하는 공용 유틸리티 모드입니다.
 
 [b]CMF는 모드 불러오기 순서에서 가장 먼저 로드되어야 합니다.[/b]
 
 [h1]문서[/h1]
 [list]
 [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — 전체 문서
-[*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 패러독스 위키[/url] — 빠른 참조
+[*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — 빠른 참조
 [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub 저장소[/url]
 [/list]
 
-질문이 있으시면 Modding Co-op 디스코드를 통해 언제든지 문의해 주세요: https://discord.gg/aqAAcCZsY7
+질문이 있으시면 Modding Co-op을 통해 언제든지 문의해 주세요: https://discord.gg/aqAAcCZsY7
 
 [h1]주요 기능[/h1]
 [list]
-[*][b]커뮤니티 모드 메뉴 (CMM):[/b] 공용 인게임 모드 설정 창입니다. 모더는 간단한 API를 통해 동적으로 설정을 등록할 수 있으며, 별도의 커스텀 설정 UI를 제작할 필요가 없습니다.
+[*][b]Community Mod Menu (CMM):[/b] 게임 내 공용 모드 설정 창입니다. 모드 제작자는 간단한 API를 통해 설정을 동적으로 등록할 수 있으며, 별도의 설정 UI를 구축할 필요가 없습니다.
   [list]
-   [*]토글, 버튼, 숫자, 슬라이더(더블 클릭으로 드래그), 드롭다운, 텍스트(싱글 플레이 전용) 및 리스트 설정
+   [*]토글, 버튼, 숫자, 슬라이더(더블 클릭하여 드래그), 드롭다운, 텍스트(싱글 플레이어 전용), 리스트 설정 지원
    [*]모드별 탭, 그룹 및 검색 기능
-   [*]멀티플레이어 시 호스트만 편집 가능한 글로벌 설정
+   [*]호스트만 편집 가능한 멀티플레이어 글로벌 설정
    [*]기본값으로 초기화
    [*]코드 없이 설정 가능한 CMM 비주얼 에디터 도구
   [/list]
-[*][b]커스텀 알림:[/b] 로컬라이제이션 키를 통해 알림 표시줄에 커스텀 알림을 생성하고 표시합니다.
-[*][b]액션 바 (Action Bar):[/b] 로컬라이제이션 키를 사용하여 커스텀 액션 바 버튼을 추가합니다.
+[*][b]사용자 지정 알림(Custom Alerts):[/b] 로컬라이제이션 키를 통해 알림 표시줄에 사용자 지정 알림을 생성하고 표시합니다.
+[*][b]액션 바(Action Bar):[/b] 로컬라이제이션 키로 사용자 지정 액션 바 버튼을 추가합니다.
 [*][b]is_host 트리거:[/b] 현재 국가가 호스트 플레이어에 의해 제어되는지 확인합니다.
-[*][b]cmf_suppress 이펙트:[/b] 단 한 번의 이펙트 호출로 "used but never set" 및 "set but never used" 엔진 경고를 억제합니다.
-[*][b]플레이어 국가 훅 (Hook):[/b] 매년 및 매월 펄스마다 각 인간 플레이어의 국가에 대해 실행되는 공유 on_actions(cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse)입니다. (각 모드에서 개별적으로 플레이어를 확인하는 것보다 약간 더 효율적입니다.)
-[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]커뮤니티 모드 툴킷 (CMT):[/url][/b] 모드 템플릿, 창작마당 업로더, 모드 번역기 등과 같은 개발 도구 모음입니다.
+[*][b]cmf_suppress 이펙트:[/b] 단 한 번의 이펙트 호출로 "사용되었으나 설정되지 않음" 및 "설정되었으나 사용되지 않음" 엔진 경고를 억제합니다.
+[*][b]플레이어 국가 훅(Player Country Hook):[/b] 매년 및 매월 펄스 시 각 인간 플레이어의 국가에 대해 실행되는 공용 on_actions(cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse)입니다. (각 모드가 개별적으로 플레이어를 확인하는 것보다 약간 더 효율적입니다.)
+[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] 모드 템플릿, 워크숍 업로더, 모드 번역기 등 개발 도구 모음입니다.
 [/list]
 
 [h1]기여자[/h1]
@@ -49,9 +49,9 @@
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
-[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url] (GlorpUI 작동에 필수 사항은 아니지만, 활성화 시 GlorpUI가 CMF와 통합됨)
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url] (GlorpUI 작동에 필수 사항은 아니지만, 활성화 시 GlorpUI가 CMF와 통합됩니다)
 [/list]
 
-[h1]변경 로그:[/h1]
-[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691102251]창작마당 페이지의 변경 사항[/url]을 확인하세요.
+[h1]변경 이력:[/h1]
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691116062]창작마당 페이지의 변경 참고 사항[/url]을 확인하세요.
 

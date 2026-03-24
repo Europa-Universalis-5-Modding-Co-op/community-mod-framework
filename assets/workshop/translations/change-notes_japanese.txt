@@ -1,9 +1,9 @@
-- [b]Community Mod Menu (CMM):[/b] トグル、ボタン、数値、スライダー（ダブルクリックでドラッグ）、ドロップダウン、テキスト（シングルプレイヤー限定）、リスト設定を備えた、ゲーム内共有設定ウィンドウです。各モッドごとのタブ、グループ、検索機能、ホストのみ編集可能なマルチプレイヤー向けグローバル設定、および「デフォルトにリセット」機能が含まれています。
-- [b]CMM Visual Editor:[/b] 手動コーディングなしでCMM設定を作成できるブラウザベースのツールです。ライブプレビューとドラッグ＆ドロップによる並べ替え機能が含まれています。
-- [b]is_host Trigger:[/b] 現在の国家がホストプレイヤーによって操作されているかを確認します。
-- [b]cmf_suppress Effect:[/b] 1回のエフェクト呼び出しで、エンジンによる「used but never set」および「set but never used」の警告を抑制します。
-- [b]Player Country Hooks:[/b] 毎年および毎月のパルスで、各人間プレイヤーの国家に対して実行される共有on_action（cmf_yearly_human_country_pulse、cmf_monthly_human_country_pulse）です。
-- [b]Community Mod Toolkit (CMT):[/b] 開発支援ツール一式 — モッドテンプレート、ワークショップアップローダー、自動翻訳機能。
-- [b]Unified Callback System:[/b] カスタムアラートとアクションバーが、単一の cmf_on_callback on_action を使用するようになりました。
-- [b]Scripted GUIs are no longer required:[/b] アラートとアクションバー要素において、Scripted GUIが必要なのは条件付きの表示/非表示や有効化状態の制御を行う場合のみです。
-- [b]Documentation:[/b] [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] の完全なドキュメント、および [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url] のクイックリファレンスを参照してください。
+- [b]Community Mod Menu (CMM):[/b] トグル、ボタン、数値、スライダー（ダブルクリックでドラッグ）、ドロップダウン、テキスト（シングルプレイヤー専用）、リスト設定を備えた、共有のゲーム内MOD設定ウィンドウです。MODごとのタブ、グループ分け、検索、ホストのみが編集可能なマルチプレイヤー設定を含むグローバル設定、および「デフォルトにリセット」機能を搭載しています。
+- [b]CMM Visual Editor:[/b] 手動でのコーディングなしにCMM設定を作成できるブラウザベースのツールです。ライブプレビューやドラッグ＆ドロップによる並べ替え機能を備えています。
+- [b]is_host Trigger:[/b] 現在の国がホストプレイヤーによって操作されているかを確認します。
+- [b]cmf_suppress Effect:[/b] 1回のエフェクト呼び出しで、エンジンの「used but never set（使用されているが設定されていない）」および「set but never used（設定されているが使用されていない）」警告を抑制します。
+- [b]Player Country Hooks:[/b] 毎年および毎月のパルスごとに各人間プレイヤーの国で実行される共有のon_actions（cmf_yearly_human_country_pulse、cmf_monthly_human_country_pulse）です。
+- [b]Community Mod Toolkit (CMT):[/b] 開発用コンパニオンツール。MODテンプレート、ワークショップアップローダー、自動翻訳機能が含まれます。
+- [b]Unified Callback System:[/b] カスタムアラートとアクションバーが単一の cmf_on_callback on_action を使用するようになりました。
+- [b]Scripted GUIが不要に:[/b] アラートやアクションバーの要素において、条件付きの表示や有効化状態が必要な場合を除き、Scripted GUIは不要になりました。
+- [b]ドキュメント:[/b] 詳細は [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] を、クイックリファレンスは [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url] を参照してください。

@@ -1,9 +1,9 @@
-- [b]社区模组菜单 (CMM)：[/b] 一个共享的游戏内模组设置窗口，支持开关、按钮、数值、滑块（双击拖动）、下拉列表、文本（仅限单人模式）以及列表设置。包含独立模组标签页、分组、搜索、带有多人模式仅主机编辑功能的全局设置，以及重置为默认值功能。
-- [b]CMM 可视化编辑器：[/b] 基于浏览器的工具，无需手动编码即可创建 CMM 设置。包含实时预览和拖拽排序功能。
-- [b]is_host 触发器：[/b] 检查当前国家是否由主机玩家控制。
-- [b]cmf_suppress 效果：[/b] 通过单次效果调用抑制“已使用但未设置（used but never set）”和“已设置但未使用（set but never used）”的引擎警告。
-- [b]玩家国家钩子 (Hooks)：[/b] 共享的 on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse)，在年度和月度脉冲时针对每个玩家控制的国家触发。
-- [b]社区模组工具箱 (CMT)：[/b] 配套开发工具——包含模组模板、创意工坊上传器及自动化翻译。
-- [b]统一回调系统：[/b] 自定义警报和动作条 (Action Bar) 现在统一使用 cmf_on_callback on_action。
-- [b]不再强制要求脚本化 GUI (Scripted GUIs)：[/b] 警报和动作条元素仅在需要条件可见性或启用状态时才需要脚本化 GUI。
+- [b]社区模组菜单 (CMM)：[/b] 一个共享的游戏内模组设置窗口，支持开关、按钮、数值、滑块（双击拖动）、下拉菜单、文本（仅限单人模式）以及列表设置。包含各模组专属选项卡、分组、搜索功能、仅限房主编辑的多人游戏全局设置，以及恢复默认设置功能。
+- [b]CMM 可视化编辑器：[/b] 基于浏览器的工具，无需手动编写代码即可创建 CMM 设置。包含实时预览和拖拽排序功能。
+- [b]is_host 触发器：[/b] 检查当前国家是否由房主控制。
+- [b]cmf_suppress 效果：[/b] 通过单次效果调用，消除引擎关于“已使用但从未设置”和“已设置但从未使用”的警告。
+- [b]玩家国家钩子：[/b] 共享的 on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse)，在年度和月度周期内为每个玩家控制的国家触发。
+- [b]社区模组工具包 (CMT)：[/b] 配套开发工具——包含模组模板、创意工坊上传器以及自动翻译功能。
+- [b]统一回调系统：[/b] 自定义警报 (Alerts) 和动作栏 (Action Bar) 现在统一使用 cmf_on_callback on_action。
+- [b]不再强制要求脚本化 GUI (Scripted GUIs)：[/b] 警报和动作栏元素仅在需要条件显示或启用状态时才需要脚本化 GUI。
 - [b]文档：[/b] 完整文档请参阅 [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url]，快速参考请参阅 [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url]。
