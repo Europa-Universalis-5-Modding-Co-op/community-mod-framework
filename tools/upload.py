@@ -1348,22 +1348,12 @@ def main():
                     if cn_text:
                         change_notes_by_lang[cn["steam_lang"]] = cn_text
 
-        # Mod content upload with a stub change note.  The real per-language
-        # change notes are submitted separately afterward.
-        if upload_mod_effective:
-            stub = "Initial upload" if cn_updates else ""
-            if not upload_release(steam, release_dir, preview_path, item_id,
-                                  workshop_title, change_note=stub):
-                return 1
-            uploaded_main = True
-            if upload_only_on_version_change:
-                set_uploaded_version(version_cache, main_cache_key, main_version)
-                save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
-
-        # Workshop page updates with change notes bundled in.  Change notes
-        # must be on the same SubmitItemUpdate that sets title/description
-        # for the first time — Steam discards them on subsequent updates
-        # where the content hasn't changed.
+        # Workshop pages first (fire-and-forget).  Change notes are bundled
+        # into the same SubmitItemUpdate that sets title/description for the
+        # first time — Steam discards change notes on updates where nothing
+        # else changed.  These fire-and-forget calls need time to process, so
+        # they're submitted before the mod content upload whose _submit_and_wait
+        # provides that time.
         if upload_workshop_pages:
             page_updates = build_workshop_page_updates(
                 config,
@@ -1376,6 +1366,18 @@ def main():
             if not upload_workshop_pages_for_item(steam, page_updates, item_id,
                                                   change_notes_by_lang or None):
                 return 1
+
+        # Mod content upload with a stub change note.  The real change notes
+        # were already submitted on the workshop page updates above.
+        if upload_mod_effective:
+            stub = "Initial upload" if change_notes_by_lang else ""
+            if not upload_release(steam, release_dir, preview_path, item_id,
+                                  workshop_title, change_note=stub):
+                return 1
+            uploaded_main = True
+            if upload_only_on_version_change:
+                set_uploaded_version(version_cache, main_cache_key, main_version)
+                save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
 
         if upload_submods_selected:
             submods_ok, submod_cache_changed = upload_submods(
