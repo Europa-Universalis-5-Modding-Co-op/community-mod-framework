@@ -1179,12 +1179,12 @@ def upload_workshop_pages_for_item(steam, updates, item_id):
     return True
 
 def upload_change_notes_for_item(steam, cn_updates, item_id, page_updates=None):
-    """Submit per-language change notes.
+    """Submit per-language change notes via fire-and-forget SubmitItemUpdate.
 
-    Steam discards SubmitItemUpdate calls that carry no real content changes,
-    so each change note update also re-sets the title/description from the
-    matching workshop page update (if available) to ensure the change note
-    persists.
+    Uses direct SubmitItemUpdate (no callback) because the callback-based
+    _submit_and_wait approach does not create visible changelog entries.
+    Each update also re-sets the matching title/description so Steam treats
+    it as a real update.
     """
     if not cn_updates:
         print("No change notes to submit.")
@@ -1223,9 +1223,7 @@ def upload_change_notes_for_item(steam, cn_updates, item_id, page_updates=None):
             if page.get("description") is not None:
                 workshop.SetItemDescription(handle, page["description"])
 
-        if not _submit_and_wait(steam, handle, change_notes):
-            print(f"Error: Change note update failed for {lang_label}.")
-            return False
+        workshop.SubmitItemUpdate(handle, change_notes)
 
     print("Change notes submitted.")
     return True
