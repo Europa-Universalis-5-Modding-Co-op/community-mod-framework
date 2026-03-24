@@ -16,7 +16,7 @@ DEPENDENCIES_DIR = os.path.join(SCRIPT_DIR, "dependencies")
 sys.path.insert(0, DEPENDENCIES_DIR)
 
 from steamworks import STEAMWORKS
-from steamworks.enums import EResult, EWorkshopFileType
+from steamworks.enums import EItemUpdateStatus, EResult, EWorkshopFileType
 
 # --- User Configuration ---
 SOURCES = [
@@ -36,7 +36,8 @@ TRANSLATIONS_DIR = os.path.join(ROOT_DIR, "assets", "workshop", "translations")
 APP_ID = 3450310
 CREATE_ITEM_TIMEOUT_SECONDS = 30
 CREATE_ITEM_POLL_INTERVAL_SECONDS = 0.1
-POST_UPLOAD_DELAY_SECONDS = 3
+UPLOAD_TIMEOUT_SECONDS = 300
+UPLOAD_POLL_INTERVAL_SECONDS = 0.5
 CLEANUP_RETRY_DELAY_SECONDS = 3
 CLEANUP_MAX_ATTEMPTS = 20
 WORKSHOP_FILE_TYPE = EWorkshopFileType.COMMUNITY
@@ -636,7 +637,7 @@ def upload_submods(steam, config, version_gate_enabled=False, version_cache=None
         if not os.path.exists(preview_path):
             preview_path = None
 
-        if not upload_release(steam.Workshop, meta["root"], preview_path, workshop_id, title):
+        if not upload_release(steam, meta["root"], preview_path, workshop_id, title):
             success = False
             continue
 
@@ -753,11 +754,12 @@ def build_release(dev_mode=False, dev_name=None):
         workshop_title
     )
 
-def upload_release(workshop, content_dir, preview_path, item_id, workshop_title=None):
+def upload_release(steam, content_dir, preview_path, item_id, workshop_title=None):
     if not os.path.isdir(content_dir):
         print(f"Error: Release directory not found: {content_dir}")
         return False
 
+    workshop = steam.Workshop
     handle = workshop.StartItemUpdate(APP_ID, item_id)
     if not handle:
         print("Error: StartItemUpdate failed. Check app ID and item ID.")
@@ -780,8 +782,65 @@ def upload_release(workshop, content_dir, preview_path, item_id, workshop_title=
             print("Error: SetItemPreview failed.")
             return False
 
-    workshop.SubmitItemUpdate(handle, "")
-    print("Workshop update submitted. Check Steam client for upload progress.")
+    result_holder = {"done": False, "result": None}
+
+    def on_updated(result):
+        result_holder["done"] = True
+        result_holder["result"] = result
+
+    workshop.SubmitItemUpdate(handle, "", callback=on_updated)
+    print("Workshop update submitted. Waiting for upload to complete...")
+
+    last_status = None
+    last_progress_line = False
+    start = time.time()
+    while not result_holder["done"]:
+        steam.run_callbacks()
+        progress = workshop.GetItemUpdateProgress(handle)
+        status = progress["status"]
+        if status != EItemUpdateStatus.INVALID:
+            if status == EItemUpdateStatus.UPLOADING_CONTENT and progress["total"] > 0:
+                pct = progress["progress"] * 100
+                mb_done = progress["processed"] / (1024 * 1024)
+                mb_total = progress["total"] / (1024 * 1024)
+                print(f"\r  Uploading Content... {pct:.0f}% ({mb_done:.1f} / {mb_total:.1f} MB)   ", end="", flush=True)
+                last_progress_line = True
+            elif status != last_status:
+                if last_progress_line:
+                    print()
+                    last_progress_line = False
+                status_label = status.name.replace("_", " ").title()
+                print(f"  {status_label}...")
+            last_status = status
+        time.sleep(UPLOAD_POLL_INTERVAL_SECONDS)
+        if time.time() - start > UPLOAD_TIMEOUT_SECONDS:
+            if last_progress_line:
+                print()
+            print(f"Error: Upload timed out after {UPLOAD_TIMEOUT_SECONDS} seconds.")
+            return False
+
+    if last_progress_line:
+        print()
+
+    result = result_holder["result"]
+    if result is None:
+        print("Error: Workshop update did not return a result.")
+        return False
+
+    try:
+        result_code = EResult(result.result)
+    except ValueError:
+        print(f"Error: Workshop update failed with unknown result code {result.result}.")
+        return False
+
+    if result_code != EResult.OK:
+        print(f"Error: Workshop update failed with result {result_code.name}.")
+        return False
+
+    if result.userNeedsToAcceptWorkshopLegalAgreement:
+        print("Warning: You must accept the Workshop legal agreement in Steam.")
+
+    print("Workshop update completed successfully.")
     return True
 
 def read_text(path):
@@ -1253,7 +1312,7 @@ def main():
                 save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
 
         if upload_mod_effective:
-            if not upload_release(steam.Workshop, release_dir, preview_path, item_id, workshop_title):
+            if not upload_release(steam, release_dir, preview_path, item_id, workshop_title):
                 return 1
             uploaded_main = True
             if upload_only_on_version_change:
@@ -1269,8 +1328,6 @@ def main():
                     return 1
 
     if uploaded_main:
-        if POST_UPLOAD_DELAY_SECONDS > 0:
-            time.sleep(POST_UPLOAD_DELAY_SECONDS)
         cleanup_release_dir(release_dir)
     return 0
 
