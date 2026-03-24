@@ -1133,17 +1133,27 @@ def build_change_notes_updates(config, item_id, version=None):
 
     return updates
 
-def upload_workshop_pages_for_item(steam, updates, item_id):
-    """Upload workshop title/description updates for each language entry."""
+def upload_workshop_pages_for_item(steam, updates, item_id, change_notes_by_lang=None):
+    """Upload workshop title/description updates for each language entry.
+
+    change_notes_by_lang is an optional dict mapping Steam language codes to
+    change note text.  When provided, the change note is included in the same
+    SubmitItemUpdate that sets the title/description — this is required because
+    Steam discards change notes on updates where the content hasn't changed.
+    Uses fire-and-forget SubmitItemUpdate (no callback) because the
+    callback-based approach does not create visible changelog entries.
+    """
     if updates is None:
         return False
 
     print("Workshop language updates:")
     for update in updates:
+        has_cn = bool(change_notes_by_lang and change_notes_by_lang.get(update["steam_lang"]))
         print(
             f"  - {update['lang']} ({update['steam_lang']}): "
             f"{'title' if update['title'] is not None else 'no-title'}, "
             f"{'description' if update['description'] is not None else 'no-description'}"
+            f"{', change-notes' if has_cn else ''}"
         )
 
     workshop = steam.Workshop
@@ -1171,9 +1181,13 @@ def upload_workshop_pages_for_item(steam, updates, item_id):
                 print(f"Error: SetItemDescription failed for {lang_label}.")
                 return False
 
-        if not _submit_and_wait(steam, handle, ""):
-            print(f"Error: Workshop page update failed for {lang_label}.")
-            return False
+        change_note = ""
+        if change_notes_by_lang:
+            change_note = change_notes_by_lang.get(update["steam_lang"], "")
+
+        # Fire-and-forget: the callback-based _submit_and_wait does not
+        # create visible changelog entries for page-only updates.
+        workshop.SubmitItemUpdate(handle, change_note)
 
     print("Workshop page updates submitted.")
     return True
@@ -1340,9 +1354,10 @@ def main():
                 set_uploaded_version(version_cache, main_cache_key, main_version)
                 save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
 
-        # Workshop page updates — no change notes here; they go in a
-        # dedicated pass below so they appear as a single changelog entry.
-        page_updates = None
+        # Workshop page updates with change notes bundled in.  Change notes
+        # must be on the same SubmitItemUpdate that sets title/description
+        # for the first time — Steam discards them on subsequent updates
+        # where the content hasn't changed.
         if upload_workshop_pages:
             page_updates = build_workshop_page_updates(
                 config,
@@ -1352,7 +1367,8 @@ def main():
             )
             if page_updates is None:
                 return 1
-            if not upload_workshop_pages_for_item(steam, page_updates, item_id):
+            if not upload_workshop_pages_for_item(steam, page_updates, item_id,
+                                                  change_notes_by_lang or None):
                 return 1
 
         if upload_submods_selected:
@@ -1367,14 +1383,6 @@ def main():
                 return 1
             if upload_only_on_version_change and submod_cache_changed:
                 save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
-
-        # Change notes submitted last.  Each per-language update re-sets the
-        # matching title/description so Steam treats it as a real update and
-        # doesn't discard the change note.
-        if cn_updates:
-            if not upload_change_notes_for_item(steam, cn_updates, item_id,
-                                                page_updates=page_updates):
-                return 1
 
     if uploaded_main:
         cleanup_release_dir(release_dir)
