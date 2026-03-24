@@ -5,9 +5,9 @@
 
 [h1]Community Mod Framework[/h1]
 
-[b]Community Mod Framework (CMF)[/b] — это общий вспомогательный мод, который предоставляет меню модов и инструменты для моддинга Europa Universalis V.
+[b]Community Mod Framework (CMF)[/b] — это общий вспомогательный мод, предоставляющий меню модов и инструменты для моддинга для Europa Universalis V.
 
-[b]CMF должен быть первым в вашем списке загрузки модов.[/b]
+[b]CMF должен стоять первым в вашем порядке загрузки модов.[/b]
 
 [h1]Документация[/h1]
 [list]
@@ -16,24 +16,24 @@
 [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]Репозиторий GitHub[/url]
 [/list]
 
-Если у вас есть вопросы, обращайтесь в Modding Co-op: https://discord.gg/aqAAcCZsY7
+Если у вас возникли вопросы, обращайтесь через Modding Co-op: https://discord.gg/aqAAcCZsY7
 
 [h1]Особенности[/h1]
 [list]
-[*][b]Community Mod Menu (CMM):[/b] Общее внутриигровое окно настроек модов. Авторы модов регистрируют настройки динамически через простой API — нет необходимости создавать собственный интерфейс настроек.
+[*][b]Community Mod Menu (CMM):[/b] Общее внутриигровое окно настроек модов. Авторы модов динамически регистрируют настройки через простой API — нет необходимости создавать собственный интерфейс настроек.
   [list]
-   [*]Переключатели, кнопки, числовые значения, ползунки (двойной клик для перетаскивания), выпадающие списки, текст (только для одиночной игры) и настройки списков
+   [*]Переключатели, кнопки, числовые значения, ползунки (двойной клик для перемещения), выпадающие списки, текстовые поля (только для одиночной игры) и списки настроек
    [*]Вкладки, группы и поиск для каждого мода
-   [*]Глобальные настройки с возможностью редактирования только хостом в мультиплеере
+   [*]Глобальные настройки с возможностью редактирования в мультиплеере только хостом
    [*]Сброс к настройкам по умолчанию
    [*]Инструмент CMM Visual Editor для настройки без написания кода
   [/list]
-[*][b]Пользовательские оповещения:[/b] Создавайте и отображайте собственные оповещения на панели уведомлений с помощью ключей локализации.
+[*][b]Пользовательские оповещения:[/b] Создавайте и отображайте собственные оповещения в панели алертов с помощью ключей локализации.
 [*][b]Панель действий:[/b] Добавляйте собственные кнопки на панель действий с помощью ключей локализации.
-[*][b]Триггер is_host:[/b] Проверяет, контролируется ли текущая страна хостом.
-[*][b]Эффект cmf_suppress:[/b] Позволяет подавить предупреждения движка «used but never set» и «set but never used» одним вызовом эффекта.
-[*][b]Хук страны игрока:[/b] Общие on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse), которые срабатывают для страны каждого игрока-человека в ежегодных и ежемесячных циклах (чуть более эффективно, чем если бы каждый мод проверял наличие игроков по отдельности).
-[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Набор сопутствующих инструментов разработки, таких как шаблон мода, загрузчик в Workshop и переводчик модов.
+[*][b]Триггер is_host:[/b] Проверяет, управляется ли текущая страна игроком-хостом.
+[*][b]Эффект cmf_suppress:[/b] Подавляет предупреждения движка "used but never set" и "set but never used" одним вызовом эффекта.
+[*][b]Хук страны игрока:[/b] Общие on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse), которые срабатывают для страны каждого игрока-человека на ежегодных и ежемесячных пульсах (несколько эффективнее, чем если бы каждый мод проверял наличие игроков по отдельности).
+[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Сопутствующий набор инструментов разработки, таких как шаблон мода, загрузчик в Workshop и переводчик модов.
 [/list]
 
 [h1]Участники[/h1]
@@ -49,9 +49,9 @@
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
-[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url] (Не требуется для работы GlorpUI, но GlorpUI будет интегрироваться с CMF при его включении)
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url] (Не требуется для работы GlorpUI, но GlorpUI интегрируется с CMF при его активации)
 [/list]
 
 [h1]Список изменений:[/h1]
-См. [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691116062]Список изменений на странице в Workshop[/url].
+См. [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691154596]Change Notes на странице в Workshop[/url].
 

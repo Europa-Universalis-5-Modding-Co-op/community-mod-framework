@@ -5,9 +5,9 @@ Marco y Menú de Mods de la Comunidad / Community Mod Framework & Menu
 
 [h1]Community Mod Framework[/h1]
 
-El [b]Community Mod Framework (CMF)[/b] es un mod de utilidad compartido que proporciona un menú de mods y herramientas de creación de mods para Europa Universalis V.
+El [b]Community Mod Framework (CMF)[/b] es un mod de utilidad compartida que proporciona un menú de mods y herramientas de modding para Europa Universalis V.
 
-[b]CMF debe cargarse primero en el orden de carga de tus mods.[/b]
+[b]CMF debe cargarse primero en tu orden de carga de mods.[/b]
 
 [h1]Documentación[/h1]
 [list]
@@ -20,19 +20,19 @@ Si tienes alguna pregunta, no dudes en contactarnos a través del Modding Co-op:
 
 [h1]Características[/h1]
 [list]
-[*][b]Community Mod Menu (CMM):[/b] Una ventana de ajustes de mods compartida dentro del juego. Los autores de mods registran los ajustes de forma dinámica a través de una API sencilla, sin necesidad de construir una interfaz de usuario personalizada.
+[*][b]Community Mod Menu (CMM):[/b] Una ventana compartida de ajustes de mods dentro del juego. Los autores de mods registran sus ajustes dinámicamente a través de una API sencilla, sin necesidad de construir una interfaz de usuario personalizada.
   [list]
-   [*]Ajustes de interruptor, botón, numéricos, deslizador (doble clic para arrastrar), desplegable, texto (solo para un jugador) y de lista.
+   [*]Ajustes de interruptor, botón, numéricos, deslizador (doble clic para arrastrar), desplegable, texto (solo para un jugador) y lista.
    [*]Pestañas por mod, grupos y búsqueda.
    [*]Ajustes globales con edición exclusiva para el anfitrión en multijugador.
    [*]Restablecer a valores predeterminados.
-   [*]Herramienta CMM Visual Editor para una configuración sin código.
+   [*]Herramienta CMM Visual Editor para una configuración sin necesidad de código.
   [/list]
 [*][b]Alertas personalizadas:[/b] Crea y muestra alertas personalizadas en la barra de alertas mediante claves de localización.
 [*][b]Barra de acciones:[/b] Añade botones personalizados a la barra de acciones con claves de localización.
-[*][b]Trigger is_host:[/b] Comprueba si el país actual está controlado por el jugador anfitrión.
-[*][b]Efecto cmf_suppress:[/b] Suprime las advertencias del motor "used but never set" y "set but never used" con una sola llamada de efecto.
-[*][b]Hook de país de jugador:[/b] on_actions compartidos (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) que se activan para el país de cada jugador humano en pulsos anuales y mensuales (un poco más eficiente que si cada mod comprueba a los jugadores individualmente).
+[*][b]Activador (Trigger) is_host:[/b] Comprueba si el país actual está controlado por el jugador anfitrión.
+[*][b]Efecto cmf_suppress:[/b] Suprime las advertencias del motor "used but never set" y "set but never used" con una sola llamada al efecto.
+[*][b]Gancho (Hook) de país de jugador:[/b] on_actions compartidos (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) que se activan para el país de cada jugador humano en pulsos anuales y mensuales (ligeramente más eficiente que si cada mod comprobara los jugadores individualmente).
 [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Un conjunto complementario de herramientas de desarrollo, como una plantilla de mod, cargador de workshop y traductor de mods.
 [/list]
 
@@ -43,7 +43,7 @@ Si tienes alguna pregunta, no dudes en contactarnos a través del Modding Co-op:
 [*]Pickle
 [/list]
 
-[h1]Mods que utilizan CMF[/h1]
+[h1]Mods que usan CMF[/h1]
 [list]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
@@ -53,5 +53,5 @@ Si tienes alguna pregunta, no dudes en contactarnos a través del Modding Co-op:
 [/list]
 
 [h1]Registro de cambios:[/h1]
-Consulta las [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691116062]Notas de cambios en la página de la workshop[/url].
+Consulta las [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691154596]Notas de cambios en la página de la workshop[/url].
 
