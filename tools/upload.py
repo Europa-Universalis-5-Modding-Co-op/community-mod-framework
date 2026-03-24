@@ -55,7 +55,9 @@ UPLOAD_ON_VERSION_CHANGE_KEY = "upload_only_on_version_change"
 UPLOAD_CHANGE_NOTES_DEFAULT_KEY = "upload_change_notes_by_default"
 UPLOAD_VERSIONS_PATH = os.path.join(DEPENDENCIES_DIR, ".upload_versions.json")
 UPLOAD_VERSIONS_FILE_VERSION = 1
-CHANGE_NOTES_VERSION_RE = re.compile(r"^#\s*(v(.+?)(:\s*|\s*))$")
+CHANGE_NOTES_VERSION_RE = re.compile(
+    r"^(?:(?P<hash>#)\s*|(?P<bb>\[b\]))v(?P<ver>.+?)(?P<tail>:\s*|\s*)(?:\[/b\])?$"
+)
 
 LANGUAGE_TO_STEAM = {
     "english": "english",
@@ -634,16 +636,23 @@ def upload_submods(steam, config, version_gate_enabled=False, version_cache=None
         if not os.path.exists(preview_path):
             preview_path = None
 
-        submod_change_note = ""
+        if not upload_release(steam.Workshop, meta["root"], preview_path, workshop_id, title):
+            success = False
+            continue
+
         if upload_change_notes:
             submod_change_notes_path = os.path.join(mod_dir, "workshop", "change-notes.bbcode")
             submod_change_note = load_change_notes(submod_change_notes_path, workshop_id, version=version)
             if submod_change_note is None:
                 print(f"Warning: No change notes found for submod '{mod_id}' version '{version}'. Skipping change notes.")
-                submod_change_note = ""
-        if not upload_release(steam.Workshop, meta["root"], preview_path, workshop_id, title, change_note=submod_change_note):
-            success = False
-            continue
+            else:
+                handle = steam.Workshop.StartItemUpdate(APP_ID, workshop_id)
+                if not handle:
+                    print(f"Error: StartItemUpdate failed for submod '{mod_id}' change note.")
+                    success = False
+                    continue
+                steam.Workshop.SubmitItemUpdate(handle, submod_change_note)
+                print(f"Change note submitted for submod '{mod_id}'.")
 
         if version_gate_enabled:
             set_uploaded_version(version_cache, cache_key, version)
@@ -744,7 +753,7 @@ def build_release(dev_mode=False, dev_name=None):
         workshop_title
     )
 
-def upload_release(workshop, content_dir, preview_path, item_id, workshop_title=None, change_note=""):
+def upload_release(workshop, content_dir, preview_path, item_id, workshop_title=None):
     if not os.path.isdir(content_dir):
         print(f"Error: Release directory not found: {content_dir}")
         return False
@@ -771,7 +780,7 @@ def upload_release(workshop, content_dir, preview_path, item_id, workshop_title=
             print("Error: SetItemPreview failed.")
             return False
 
-    workshop.SubmitItemUpdate(handle, change_note)
+    workshop.SubmitItemUpdate(handle, "")
     print("Workshop update submitted. Check Steam client for upload progress.")
     return True
 
@@ -792,27 +801,30 @@ def parse_change_notes_entry(text, version=None):
     If version is None, returns the latest (topmost) entry.
     Returns None if no version headers are found or no entry matches the requested version.
 
-    Headers with a colon (``# v1.0:``) prepend the version line to the output.
-    Headers without a colon (``# v1.0``) return only the body.
+    Supports two header formats:
+    - Markdown: ``# v1.0:`` (colon prepends ``[b]v1.0:[/b]``; no colon returns body only)
+    - BBCode: ``[b]v1.0:[/b]`` or ``[b]v1.0[/b]`` (always prepends the header as-is)
     """
     entries = []
     current_version = None
     current_has_colon = False
+    current_is_bb = False
     current_lines = []
 
     for line in text.splitlines(keepends=True):
         m = CHANGE_NOTES_VERSION_RE.match(line.strip())
         if m:
             if current_version is not None:
-                entries.append((current_version, current_has_colon, "".join(current_lines).strip()))
-            current_version = m.group(2).strip()
-            current_has_colon = ":" in m.group(3)
+                entries.append((current_version, current_has_colon, current_is_bb, "".join(current_lines).strip()))
+            current_version = m.group('ver').strip()
+            current_has_colon = ":" in m.group('tail')
+            current_is_bb = m.group('bb') is not None
             current_lines = []
         elif current_version is not None:
             current_lines.append(line)
 
     if current_version is not None:
-        entries.append((current_version, current_has_colon, "".join(current_lines).strip()))
+        entries.append((current_version, current_has_colon, current_is_bb, "".join(current_lines).strip()))
 
     if not entries:
         return None
@@ -823,9 +835,10 @@ def parse_change_notes_entry(text, version=None):
     if target is None:
         return None
 
-    entry_version, has_colon, content = target
-    if has_colon:
-        header = f"v{entry_version}:"
+    entry_version, has_colon, is_bb, content = target
+    if is_bb or has_colon:
+        colon = ":" if has_colon else ""
+        header = f"[b]v{entry_version}{colon}[/b]"
         return f"{header}\n{content}" if content else header
     return content or None
 
@@ -836,7 +849,7 @@ def get_latest_change_notes_version(text):
     for line in text.splitlines():
         m = CHANGE_NOTES_VERSION_RE.match(line.strip())
         if m:
-            return m.group(2).strip()
+            return m.group('ver').strip()
     return None
 
 def load_change_notes(path, item_id, version=None):
@@ -945,7 +958,7 @@ def trim_description(text, lang_label):
         return encoded[:MAX_DESCRIPTION_LENGTH].decode("utf-8", errors="ignore")
     return text
 
-def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None, version=None):
+def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None):
     """Collect source and translated workshop title/description payloads."""
     source_language = load_source_language(config)
     if source_language is None:
@@ -960,23 +973,12 @@ def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None, 
     base_description = apply_workshop_item_id(base_description, item_id)
     base_description = trim_description(base_description, source_language)
     base_title = load_workshop_source_title(dev_mode=dev_mode, dev_name=dev_name)
-    base_change_notes = load_change_notes(CHANGE_NOTES_PATH, item_id, version=version)
-    if base_change_notes is None:
-        print(f"Warning: No change notes found for version '{version}'. Workshop page uploads will not include change notes.")
-        base_change_notes = ""
-
-    # Translated change notes files correspond to the latest entry (whatever translate.py last ran on).
-    # Only use them when the requested version matches the latest, otherwise they'd be stale.
-    raw_cn_text = read_text(CHANGE_NOTES_PATH)
-    latest_cn_version = get_latest_change_notes_version(raw_cn_text) if raw_cn_text else None
-    use_translated_change_notes = version is None or latest_cn_version is None or version == latest_cn_version
 
     updates = [{
         "lang": source_language,
         "steam_lang": LANGUAGE_TO_STEAM[source_language],
         "title": base_title,
         "description": base_description,
-        "change_notes": base_change_notes,
     }]
 
     if not os.path.exists(TRANSLATIONS_DIR):
@@ -984,34 +986,24 @@ def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None, 
         return updates
 
     translations = {}
-    change_notes_translations = {}
     for filename in os.listdir(TRANSLATIONS_DIR):
         match = WORKSHOP_TRANSLATION_FILENAME_RE.match(filename)
-        if match:
-            lang = match.group(1)
-            path = os.path.join(TRANSLATIONS_DIR, filename)
-            text = read_text(path)
-            if text is None:
-                continue
-
-            title_text, desc_text = parse_workshop_translation(text)
-            title_text = apply_workshop_item_id(title_text, item_id)
-            desc_text = apply_workshop_item_id(desc_text, item_id)
-            if title_text is None and desc_text is None:
-                continue
-
-            desc_text = trim_description(desc_text, lang)
-            translations[lang] = {"title": title_text, "description": desc_text}
+        if not match:
+            continue
+        lang = match.group(1)
+        path = os.path.join(TRANSLATIONS_DIR, filename)
+        text = read_text(path)
+        if text is None:
             continue
 
-        if use_translated_change_notes:
-            cn_match = CHANGE_NOTES_TRANSLATION_FILENAME_RE.match(filename)
-            if cn_match:
-                lang = cn_match.group(1)
-                path = os.path.join(TRANSLATIONS_DIR, filename)
-                text = read_text(path)
-                if text is not None and text.strip():
-                    change_notes_translations[lang] = apply_workshop_item_id(text, item_id)
+        title_text, desc_text = parse_workshop_translation(text)
+        title_text = apply_workshop_item_id(title_text, item_id)
+        desc_text = apply_workshop_item_id(desc_text, item_id)
+        if title_text is None and desc_text is None:
+            continue
+
+        desc_text = trim_description(desc_text, lang)
+        translations[lang] = {"title": title_text, "description": desc_text}
 
     for lang, entry in translations.items():
         if lang == source_language:
@@ -1024,24 +1016,63 @@ def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None, 
             "steam_lang": LANGUAGE_TO_STEAM[lang],
             "title": entry["title"],
             "description": entry["description"],
-            "change_notes": change_notes_translations.get(lang, ""),
         })
 
     return updates
 
-def upload_workshop_pages_for_item(steam, updates, item_id, upload_change_notes=False):
+def build_change_notes_updates(config, item_id, version=None):
+    """Collect source and translated change note payloads for per-language submission."""
+    source_language = load_source_language(config)
+    if source_language is None:
+        return None
+
+    base_change_notes = load_change_notes(CHANGE_NOTES_PATH, item_id, version=version)
+    if base_change_notes is None:
+        print(f"Warning: No change notes found for version '{version}'.")
+        return []
+
+    updates = [{
+        "lang": source_language,
+        "steam_lang": LANGUAGE_TO_STEAM[source_language],
+        "change_notes": base_change_notes,
+    }]
+
+    # Translated change notes files correspond to the latest entry (whatever translate.py last ran on).
+    # Only use them when the requested version matches the latest, otherwise they'd be stale.
+    raw_cn_text = read_text(CHANGE_NOTES_PATH)
+    latest_cn_version = get_latest_change_notes_version(raw_cn_text) if raw_cn_text else None
+    use_translated = version is None or latest_cn_version is None or version == latest_cn_version
+
+    if use_translated and os.path.exists(TRANSLATIONS_DIR):
+        for filename in os.listdir(TRANSLATIONS_DIR):
+            cn_match = CHANGE_NOTES_TRANSLATION_FILENAME_RE.match(filename)
+            if not cn_match:
+                continue
+            lang = cn_match.group(1)
+            if lang == source_language or lang not in LANGUAGE_TO_STEAM:
+                continue
+            path = os.path.join(TRANSLATIONS_DIR, filename)
+            text = read_text(path)
+            if text and text.strip():
+                updates.append({
+                    "lang": lang,
+                    "steam_lang": LANGUAGE_TO_STEAM[lang],
+                    "change_notes": apply_workshop_item_id(text, item_id),
+                })
+
+    return updates
+
+def upload_workshop_pages_for_item(steam, updates, item_id):
     """Upload workshop title/description updates for each language entry."""
     if updates is None:
         return False
 
     print("Workshop language updates:")
     for update in updates:
-        cn_label = "change-notes" if upload_change_notes and update.get("change_notes") else "no-change-notes"
         print(
             f"  - {update['lang']} ({update['steam_lang']}): "
             f"{'title' if update['title'] is not None else 'no-title'}, "
-            f"{'description' if update['description'] is not None else 'no-description'}, "
-            f"{cn_label}"
+            f"{'description' if update['description'] is not None else 'no-description'}"
         )
 
     workshop = steam.Workshop
@@ -1069,38 +1100,66 @@ def upload_workshop_pages_for_item(steam, updates, item_id, upload_change_notes=
                 print(f"Error: SetItemDescription failed for {lang_label}.")
                 return False
 
-        change_note = update.get("change_notes", "") if upload_change_notes else ""
-        workshop.SubmitItemUpdate(handle, change_note)
+        workshop.SubmitItemUpdate(handle, "")
 
     print("Workshop page updates submitted. Check Steam client for upload progress.")
+    return True
+
+def upload_change_notes_for_item(steam, updates, item_id):
+    """Submit per-language change notes as standalone updates."""
+    if not updates:
+        print("No change notes to submit.")
+        return True
+
+    print("Change note updates:")
+    for update in updates:
+        print(f"  - {update['lang']} ({update['steam_lang']})")
+
+    workshop = steam.Workshop
+    for update in updates:
+        change_notes = update.get("change_notes", "")
+        if not change_notes:
+            continue
+        handle = workshop.StartItemUpdate(APP_ID, item_id)
+        if not handle:
+            print("Error: StartItemUpdate failed for change note submission.")
+            return False
+        lang_label = f"{update['lang']} ({update['steam_lang']})"
+        lang_result = steam.Workshop_SetItemUpdateLanguage(handle, update["steam_lang"].encode())
+        if lang_result is False:
+            print(f"Error: SetItemUpdateLanguage failed for {lang_label}.")
+            return False
+        workshop.SubmitItemUpdate(handle, change_notes)
+
+    print("Change notes submitted. Check Steam client for upload progress.")
     return True
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Build and upload an EU5 mod to Steam Workshop.")
     parser.add_argument(
-        "--mod",
+        "-m", "--mod",
         action="store_true",
         help="Upload mod content only. When set, config default target settings are ignored."
     )
     parser.add_argument(
-        "--workshop-pages",
+        "-wp", "--workshop-pages",
         action="store_true",
         help="Upload Workshop title/description pages only. When set, config default target settings are ignored."
     )
     parser.add_argument(
-        "--dev",
+        "-d", "--dev",
         action="store_true",
         help="Upload the dev Workshop item using dev metadata and thumbnail."
     )
     parser.add_argument(
-        "--submods",
+        "-s", "--submods",
         action="store_true",
         help="Upload all submods found in the submods folder."
     )
     parser.add_argument(
-        "--change-notes",
+        "-cn", "--change-notes",
         action="store_true",
-        help="Include change notes in uploads (overrides upload_change_notes_by_default for this run)."
+        help="Upload change notes. When set, config default target settings are ignored."
     )
     return parser.parse_args()
 
@@ -1120,26 +1179,27 @@ def main():
 
     version_cache = load_upload_versions(UPLOAD_VERSIONS_PATH) if upload_only_on_version_change else None
 
-    if not upload_mod and not upload_workshop_pages and not upload_submods_selected:
+    if not upload_mod and not upload_workshop_pages and not upload_submods_selected and not upload_change_notes:
         print(
             "No upload actions selected. "
-            "Enable defaults in config.toml or pass --mod/--workshop-pages/--submods/--change-notes."
+            "Enable defaults in config.toml or pass -m/-wp/-s/-cn."
         )
         return 0
 
     upload_mod_effective = upload_mod
     main_version = None
     main_cache_key = "main:dev" if args.dev else "main:release"
-    if upload_mod and (upload_only_on_version_change or upload_change_notes):
-        main_version = load_metadata_version(METADATA_PATH, "main mod")
-        if main_version is None and upload_only_on_version_change:
-            return 1
     if upload_mod and upload_only_on_version_change:
+        main_version = load_metadata_version(METADATA_PATH, "main mod")
+        if main_version is None:
+            return 1
         if not should_upload_for_version(version_cache, main_cache_key, main_version):
             print(f"Skipping main mod upload: version '{main_version}' already uploaded.")
             upload_mod_effective = False
+    if upload_change_notes and main_version is None:
+        main_version = load_metadata_version(METADATA_PATH, "main mod")
 
-    if not upload_mod_effective and not upload_workshop_pages and not upload_submods_selected:
+    if not upload_mod_effective and not upload_workshop_pages and not upload_submods_selected and not upload_change_notes:
         print("No uploads required after version check.")
         return 0
 
@@ -1148,7 +1208,7 @@ def main():
     item_id = None
     dev_name = load_dev_name(config) if args.dev else None
 
-    if upload_mod_effective or upload_workshop_pages:
+    if upload_mod_effective or upload_workshop_pages or upload_change_notes:
         item_id = load_workshop_item_id(config, item_id_key, item_label)
         if item_id is None:
             return 1
@@ -1162,7 +1222,7 @@ def main():
     uploaded_main = False
 
     with steamworks_session() as steam:
-        if upload_mod_effective or upload_workshop_pages:
+        if upload_mod_effective or upload_workshop_pages or upload_change_notes:
             item_id = ensure_item_id(steam, item_id, CONFIG_PATH, item_id_key)
             if item_id is None:
                 return 1
@@ -1173,15 +1233,10 @@ def main():
                 item_id,
                 dev_mode=args.dev,
                 dev_name=dev_name,
-                version=main_version if upload_change_notes else None
             )
             if updates is None:
                 return 1
-            # Only attach change notes to workshop page updates if mod uploading is entirely disabled.
-            # When mod uploading is enabled, change notes are the mod upload's responsibility — either
-            # it submits them this run, or already did on a previous run (version-gated skip).
-            pages_change_notes = upload_change_notes and not upload_mod
-            if not upload_workshop_pages_for_item(steam, updates, item_id, upload_change_notes=pages_change_notes):
+            if not upload_workshop_pages_for_item(steam, updates, item_id):
                 return 1
 
         if upload_submods_selected:
@@ -1198,18 +1253,20 @@ def main():
                 save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
 
         if upload_mod_effective:
-            change_note = ""
-            if upload_change_notes:
-                change_note = load_change_notes(CHANGE_NOTES_PATH, item_id, version=main_version)
-                if change_note is None:
-                    print(f"Warning: No change notes found for version '{main_version}'. Skipping change notes for mod upload.")
-                    change_note = ""
-            if not upload_release(steam.Workshop, release_dir, preview_path, item_id, workshop_title, change_note=change_note):
+            if not upload_release(steam.Workshop, release_dir, preview_path, item_id, workshop_title):
                 return 1
             uploaded_main = True
             if upload_only_on_version_change:
                 set_uploaded_version(version_cache, main_cache_key, main_version)
                 save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
+
+        if upload_change_notes:
+            cn_updates = build_change_notes_updates(config, item_id, version=main_version)
+            if cn_updates is None:
+                return 1
+            if cn_updates:
+                if not upload_change_notes_for_item(steam, cn_updates, item_id):
+                    return 1
 
     if uploaded_main:
         if POST_UPLOAD_DELAY_SECONDS > 0:
