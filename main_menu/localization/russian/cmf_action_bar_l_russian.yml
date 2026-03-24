@@ -1,6 +1,6 @@
 ﻿l_russian:
- cmf_action_bar_open_action: "Run Action"
- cmf_action_bar_settings_tooltip_title: "Settings"
- cmf_action_bar_settings_tooltip_text: "Open the #v Community Mod Framework#! settings."
- cmf_action_bar_log_viewer_tooltip_title: "Log Viewer"
- cmf_action_bar_log_viewer_tooltip_text: "Open the #v Log Viewer#!."
+ cmf_action_bar_open_action: "Выполнить действие"
+ cmf_action_bar_settings_tooltip_title: "Настройки"
+ cmf_action_bar_settings_tooltip_text: "Открыть настройки #vCommunity Mod Framework#!."
+ cmf_action_bar_log_viewer_tooltip_title: "Просмотр логов"
+ cmf_action_bar_log_viewer_tooltip_text: "Открыть просмотрщик логов #v#!."

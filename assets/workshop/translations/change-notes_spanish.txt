@@ -1,0 +1,9 @@
+- [b]Community Mod Menu (CMM):[/b] Una ventana de configuración de mods compartida dentro del juego con ajustes de alternancia, botones, numéricos, deslizadores (doble clic para arrastrar), desplegables, texto (solo para un jugador) y listas. Incluye pestañas por mod, grupos, búsqueda, ajustes globales con edición multijugador solo para el anfitrión y Restablecer valores predeterminados.
+- [b]CMM Visual Editor:[/b] Herramienta basada en navegador para crear configuraciones de CMM sin necesidad de codificación manual. Incluye vista previa en vivo y ordenación mediante arrastrar y soltar.
+- [b]is_host Trigger:[/b] Comprueba si el país actual está controlado por el jugador anfitrión.
+- [b]cmf_suppress Effect:[/b] Suprime las advertencias del motor "used but never set" y "set but never used" con una sola llamada de efecto.
+- [b]Player Country Hooks:[/b] on_actions compartidos (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) que se activan para el país de cada jugador humano en los pulsos anuales y mensuales.
+- [b]Community Mod Toolkit (CMT):[/b] Herramientas de desarrollo complementarias: plantilla de mod, cargador de workshop y traducción automatizada.
+- [b]Unified Callback System:[/b] Las alertas personalizadas y la barra de acción ahora utilizan un único on_action cmf_on_callback.
+- [b]Scripted GUIs are no longer required:[/b] Las alertas y los elementos de la barra de acción solo necesitan una Scripted GUI para la visibilidad condicional o el estado habilitado.
+- [b]Documentación:[/b] Documentación completa en la [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]Wiki de GitHub[/url] y referencia rápida en la [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Wiki de Paradox[/url].

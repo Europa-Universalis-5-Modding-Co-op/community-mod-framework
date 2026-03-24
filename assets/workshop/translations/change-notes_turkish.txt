@@ -1,0 +1,9 @@
+- [b]Topluluk Mod Menüsü (CMM):[/b] Açma/kapama, buton, sayısal, kaydırıcı (sürüklemek için çift tıklayın), açılır menü, metin (yalnızca tek oyunculu) ve liste ayarlarını içeren ortak bir oyun içi mod ayarları penceresi. Mod başına sekmeler, gruplar, arama, yalnızca sunucu tarafından çok oyunculu düzenleme yapılabilen küresel ayarlar ve Varsayılanlara Sıfırla özelliğini içerir.
+- [b]CMM Görsel Editör:[/b] Manuel kodlama gerektirmeden CMM ayarları oluşturmak için tarayıcı tabanlı araç. Canlı önizleme ve sürükle-bırak sıralama içerir.
+- [b]is_host Tetikleyicisi:[/b] Mevcut ülkenin sunucu oyuncusu tarafından kontrol edilip edilmediğini kontrol eder.
+- [b]cmf_suppress Efekti:[/b] "Kullanıldı ama hiç ayarlanmadı" ve "ayarlandı ama hiç kullanılmadı" motor uyarılarını tek bir efekt çağrısıyla susturur.
+- [b]Oyuncu Ülkesi Kancaları:[/b] Her gerçek oyuncunun ülkesi için yıllık ve aylık döngülerde tetiklenen paylaşımlı on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse).
+- [b]Topluluk Mod Araç Seti (CMT):[/b] Yardımcı geliştirme araçları — mod şablonu, atölye yükleyicisi ve otomatik çeviri.
+- [b]Birleşik Geri Çağırma Sistemi:[/b] Özel Uyarılar ve Eylem Çubuğu artık tek bir cmf_on_callback on_action kullanıyor.
+- [b]Scripted GUI'lar artık zorunlu değil:[/b] Uyarılar ve eylem çubuğu öğeleri, yalnızca koşullu görünürlük veya etkinleştirme durumu için bir Scripted GUI gerektirir.
+- [b]Dokümantasyon:[/b] [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] üzerinde tam dokümantasyon ve [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url] üzerinde hızlı referans.
