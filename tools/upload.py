@@ -652,7 +652,10 @@ def upload_submods(steam, config, version_gate_enabled=False, version_cache=None
                     print(f"Error: StartItemUpdate failed for submod '{mod_id}' change note.")
                     success = False
                     continue
-                steam.Workshop.SubmitItemUpdate(handle, submod_change_note)
+                if not _submit_and_wait(steam, handle, submod_change_note):
+                    print(f"Error: Change note update failed for submod '{mod_id}'.")
+                    success = False
+                    continue
                 print(f"Change note submitted for submod '{mod_id}'.")
 
         if version_gate_enabled:
@@ -754,6 +757,69 @@ def build_release(dev_mode=False, dev_name=None):
         workshop_title
     )
 
+def _submit_and_wait(steam, handle, change_note="", show_progress=False):
+    """Submit an item update and block until Steam finishes processing it."""
+    workshop = steam.Workshop
+    result_holder = {"done": False, "result": None}
+
+    def on_updated(result):
+        result_holder["done"] = True
+        result_holder["result"] = result
+
+    workshop.SubmitItemUpdate(handle, change_note, callback=on_updated, override_callback=True)
+
+    last_status = None
+    last_progress_line = False
+    start = time.time()
+    while not result_holder["done"]:
+        steam.run_callbacks()
+        if show_progress:
+            progress = workshop.GetItemUpdateProgress(handle)
+            status = progress["status"]
+            if status != EItemUpdateStatus.INVALID:
+                if status == EItemUpdateStatus.UPLOADING_CONTENT and progress["total"] > 0:
+                    pct = progress["progress"] * 100
+                    mb_done = progress["processed"] / (1024 * 1024)
+                    mb_total = progress["total"] / (1024 * 1024)
+                    print(f"\r  Uploading Content... {pct:.0f}% ({mb_done:.1f} / {mb_total:.1f} MB)   ", end="", flush=True)
+                    last_progress_line = True
+                elif status != last_status:
+                    if last_progress_line:
+                        print()
+                        last_progress_line = False
+                    status_label = status.name.replace("_", " ").title()
+                    print(f"  {status_label}...")
+                last_status = status
+        time.sleep(UPLOAD_POLL_INTERVAL_SECONDS)
+        if time.time() - start > UPLOAD_TIMEOUT_SECONDS:
+            if last_progress_line:
+                print()
+            print(f"Error: Upload timed out after {UPLOAD_TIMEOUT_SECONDS} seconds.")
+            return False
+
+    if last_progress_line:
+        print()
+
+    result = result_holder["result"]
+    if result is None:
+        print("Error: Workshop update did not return a result.")
+        return False
+
+    try:
+        result_code = EResult(result.result)
+    except ValueError:
+        print(f"Error: Workshop update failed with unknown result code {result.result}.")
+        return False
+
+    if result_code != EResult.OK:
+        print(f"Error: Workshop update failed with result {result_code.name}.")
+        return False
+
+    if result.userNeedsToAcceptWorkshopLegalAgreement:
+        print("Warning: You must accept the Workshop legal agreement in Steam.")
+
+    return True
+
 def upload_release(steam, content_dir, preview_path, item_id, workshop_title=None):
     if not os.path.isdir(content_dir):
         print(f"Error: Release directory not found: {content_dir}")
@@ -782,63 +848,9 @@ def upload_release(steam, content_dir, preview_path, item_id, workshop_title=Non
             print("Error: SetItemPreview failed.")
             return False
 
-    result_holder = {"done": False, "result": None}
-
-    def on_updated(result):
-        result_holder["done"] = True
-        result_holder["result"] = result
-
-    workshop.SubmitItemUpdate(handle, "", callback=on_updated)
     print("Workshop update submitted. Waiting for upload to complete...")
-
-    last_status = None
-    last_progress_line = False
-    start = time.time()
-    while not result_holder["done"]:
-        steam.run_callbacks()
-        progress = workshop.GetItemUpdateProgress(handle)
-        status = progress["status"]
-        if status != EItemUpdateStatus.INVALID:
-            if status == EItemUpdateStatus.UPLOADING_CONTENT and progress["total"] > 0:
-                pct = progress["progress"] * 100
-                mb_done = progress["processed"] / (1024 * 1024)
-                mb_total = progress["total"] / (1024 * 1024)
-                print(f"\r  Uploading Content... {pct:.0f}% ({mb_done:.1f} / {mb_total:.1f} MB)   ", end="", flush=True)
-                last_progress_line = True
-            elif status != last_status:
-                if last_progress_line:
-                    print()
-                    last_progress_line = False
-                status_label = status.name.replace("_", " ").title()
-                print(f"  {status_label}...")
-            last_status = status
-        time.sleep(UPLOAD_POLL_INTERVAL_SECONDS)
-        if time.time() - start > UPLOAD_TIMEOUT_SECONDS:
-            if last_progress_line:
-                print()
-            print(f"Error: Upload timed out after {UPLOAD_TIMEOUT_SECONDS} seconds.")
-            return False
-
-    if last_progress_line:
-        print()
-
-    result = result_holder["result"]
-    if result is None:
-        print("Error: Workshop update did not return a result.")
+    if not _submit_and_wait(steam, handle, show_progress=True):
         return False
-
-    try:
-        result_code = EResult(result.result)
-    except ValueError:
-        print(f"Error: Workshop update failed with unknown result code {result.result}.")
-        return False
-
-    if result_code != EResult.OK:
-        print(f"Error: Workshop update failed with result {result_code.name}.")
-        return False
-
-    if result.userNeedsToAcceptWorkshopLegalAgreement:
-        print("Warning: You must accept the Workshop legal agreement in Steam.")
 
     print("Workshop update completed successfully.")
     return True
@@ -1159,9 +1171,11 @@ def upload_workshop_pages_for_item(steam, updates, item_id):
                 print(f"Error: SetItemDescription failed for {lang_label}.")
                 return False
 
-        workshop.SubmitItemUpdate(handle, "")
+        if not _submit_and_wait(steam, handle):
+            print(f"Error: Workshop page update failed for {lang_label}.")
+            return False
 
-    print("Workshop page updates submitted. Check Steam client for upload progress.")
+    print("Workshop page updates submitted.")
     return True
 
 def upload_change_notes_for_item(steam, updates, item_id):
@@ -1188,9 +1202,11 @@ def upload_change_notes_for_item(steam, updates, item_id):
         if lang_result is False:
             print(f"Error: SetItemUpdateLanguage failed for {lang_label}.")
             return False
-        workshop.SubmitItemUpdate(handle, change_notes)
+        if not _submit_and_wait(steam, handle, change_notes):
+            print(f"Error: Change note update failed for {lang_label}.")
+            return False
 
-    print("Change notes submitted. Check Steam client for upload progress.")
+    print("Change notes submitted.")
     return True
 
 def parse_args():
