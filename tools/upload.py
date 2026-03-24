@@ -1308,31 +1308,27 @@ def main():
 
     uploaded_main = False
 
-    # Build change notes so they can be attached to workshop page updates.
-    # Steam discards standalone change-note-only updates (no content/metadata
-    # changes), so real per-language change notes are piggybacked on workshop
-    # page updates.  The mod content upload gets a stub change note ("Initial
-    # upload") since it always creates a changelog entry.
-    change_notes_by_lang = {}
-    if upload_change_notes:
-        cn_updates = build_change_notes_updates(config, item_id, version=main_version)
-        if cn_updates is None:
-            return 1
-        if cn_updates:
-            for cn in cn_updates:
-                cn_text = cn.get("change_notes", "")
-                if cn_text:
-                    change_notes_by_lang[cn["steam_lang"]] = cn_text
-
     with steamworks_session() as steam:
         if upload_mod_effective or upload_workshop_pages or upload_change_notes:
             item_id = ensure_item_id(steam, item_id, CONFIG_PATH, item_id_key)
             if item_id is None:
                 return 1
 
-        # Mod content upload first — uses a stub change note so the real
-        # per-language notes submitted on the workshop page updates become
-        # the visible changelog entry.
+        # Build change notes after ensure_item_id so $item-id$ resolves correctly.
+        change_notes_by_lang = {}
+        if upload_change_notes:
+            cn_updates = build_change_notes_updates(config, item_id, version=main_version)
+            if cn_updates is None:
+                return 1
+            if cn_updates:
+                for cn in cn_updates:
+                    cn_text = cn.get("change_notes", "")
+                    if cn_text:
+                        change_notes_by_lang[cn["steam_lang"]] = cn_text
+
+        # Mod content upload first with a stub change note.  The real
+        # per-language change notes are submitted afterward on the workshop
+        # page updates, which become the visible changelog entry.
         if upload_mod_effective:
             stub = "Initial upload" if change_notes_by_lang else ""
             if not upload_release(steam, release_dir, preview_path, item_id,
