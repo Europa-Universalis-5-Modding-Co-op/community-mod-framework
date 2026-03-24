@@ -1328,6 +1328,7 @@ def main():
         release_dir, preview_path, workshop_title = build_release(dev_mode=args.dev, dev_name=dev_name)
 
     uploaded_main = False
+    change_notes_by_lang = {}
 
     with steamworks_session() as steam:
         if upload_mod_effective or upload_workshop_pages or upload_change_notes:
