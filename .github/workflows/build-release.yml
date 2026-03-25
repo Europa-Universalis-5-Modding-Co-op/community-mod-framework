@@ -17,7 +17,7 @@ on:
       workshop-id:
         description: 'Workshop Identifier'
         required: false
-        default: '3691154596'
+        default: '3692202776'
         type: string
 
 jobs:

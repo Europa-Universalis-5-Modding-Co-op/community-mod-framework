@@ -15,7 +15,7 @@ The Community Mod Framework (CMF) is a shared mod framework for Europa Universal
 
 The framework is designed to be invisible when no dependent mods are active.
 
-CMF is available on the [https://steamcommunity.com/sharedfiles/filedetails/?id=3691154596 Steam Workshop]. For full documentation, see the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki GitHub wiki].
+CMF is available on the [https://steamcommunity.com/sharedfiles/filedetails/?id=3692202776 Steam Workshop]. For full documentation, see the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki GitHub wiki].
 
 = Basic Setup =
 Hook your mod into CMF's shared registration on_action. This runs for each human player on game start and when the mod menu opens. Not all features require it, but it is the standard entry point for registering CMM settings, action bar buttons, and alerts.
@@ -206,7 +206,7 @@ your_mod__your_toggle_on_changed = {
 </syntaxhighlight>
 
 = Links =
-* [https://steamcommunity.com/sharedfiles/filedetails/?id=3691154596 Steam Workshop]
+* [https://steamcommunity.com/sharedfiles/filedetails/?id=3692202776 Steam Workshop]
 * [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework GitHub Repository]
 * [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki Full Documentation (GitHub Wiki)]
 * [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/tree/main/submods/cmf-example-mod Example Mod (GitHub)]
