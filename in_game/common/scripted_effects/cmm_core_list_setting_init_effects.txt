@@ -112,6 +112,7 @@ cmm_initialize_list_setting_item_list = {
 # - vt (variable/global_variable): Variable type for map commands.
 # - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 cmm_initialize_list_bool_field_item = {
+	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $is_global$ }
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_value$ }
@@ -199,6 +200,7 @@ cmm_initialize_list_bool_field_slot = {
 # - vt (variable/global_variable): Variable type for map commands.
 # - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 cmm_initialize_list_dropdown_field_item = {
+	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $is_global$ }
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_index$ }
@@ -308,6 +310,7 @@ cmm_initialize_list_dropdown_field_slot = {
 # - vt (variable/global_variable): Variable type for map commands.
 # - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 cmm_initialize_list_numeric_field_item = {
+	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $is_global$ }
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_value$ }
@@ -410,6 +413,7 @@ cmm_initialize_list_numeric_field_slot = {
 # - vt (variable/global_variable): Variable type for map commands.
 # - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 cmm_initialize_list_slider_field_item = {
+	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $is_global$ }
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_value$ }
