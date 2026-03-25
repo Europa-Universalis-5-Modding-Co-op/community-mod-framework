@@ -15,7 +15,7 @@ class DropdownOption:
 @dataclass
 class ListField:
     field_id: str
-    field_type: str  # "bool" | "dropdown" | "numeric"
+    field_type: str  # "bool" | "dropdown" | "numeric" | "slider"
     name: str
     # bool
     default_value: Optional[int] = None
@@ -188,7 +188,7 @@ def model_to_dict(model: ModModel) -> dict:
                 {"index": o.index, "name": o.name, **({"desc": o.desc} if o.desc else {}), **({"alias": o.alias} if o.alias else {})}
                 for o in (f.options or [])
             ]
-        elif f.field_type == "numeric":
+        elif f.field_type in ("numeric", "slider"):
             d["default_value"] = f.default_value
             d["min_value"] = f.min_value
             d["max_value"] = f.max_value

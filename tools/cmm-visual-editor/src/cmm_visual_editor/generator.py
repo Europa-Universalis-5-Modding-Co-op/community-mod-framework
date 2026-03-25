@@ -418,6 +418,16 @@ def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField
         lines.append(f"\t\tmax_value = {_num(field.max_value, 10)}")
         lines.append(f"\t\tstep_value = {_num(field.step_value, 1)}")
         lines.append(f"\t}}")
+    elif ft == "slider":
+        lines.append(f"\tcmm_register_list_slider_field = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting_id}")
+        lines.append(f"\t\tfield_id = {field.field_id}")
+        lines.append(f"\t\tdefault_value = {_num(field.default_value, 0)}")
+        lines.append(f"\t\tmin_value = {_num(field.min_value, 0)}")
+        lines.append(f"\t\tmax_value = {_num(field.max_value, 10)}")
+        lines.append(f"\t\tstep_value = {_num(field.step_value, 1)}")
+        lines.append(f"\t}}")
 
 
 def _emit_list_iteration_boilerplate(lines: list, mod_id: str, setting: Setting):

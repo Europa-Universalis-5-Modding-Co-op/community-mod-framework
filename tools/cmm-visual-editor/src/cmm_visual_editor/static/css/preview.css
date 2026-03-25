@@ -385,6 +385,45 @@
     color: #d0c8b0;
 }
 
+.cmm-mini-slider {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.cmm-mini-slider-track {
+    flex: 1;
+    height: 4px;
+    background: #1a2a3a;
+    border: 1px solid #3a4a5a;
+    border-radius: 2px;
+    position: relative;
+    min-width: 50px;
+}
+
+.cmm-mini-slider-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3a5a7a 0%, #4a7a9a 100%);
+    border-radius: 1px;
+}
+
+.cmm-mini-slider-thumb {
+    position: absolute;
+    top: -4px;
+    width: 8px;
+    height: 8px;
+    background: #c4a55a;
+    border: 1px solid #dab86a;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.cmm-mini-slider-value {
+    font-size: 10px;
+    color: #d0c8b0;
+    min-width: 20px;
+    text-align: right;
+}
+
 /* Empty states */
 .cmm-empty, .cmm-empty-tab {
     padding: 20px;

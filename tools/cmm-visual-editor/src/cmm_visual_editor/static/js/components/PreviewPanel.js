@@ -137,6 +137,13 @@ const PreviewPanelComponent = {
                                                     <span v-if="f.field_type==='bool'" class="cmm-checkbox" :class="{checked: f.default_value}"></span>
                                                     <span v-if="f.field_type==='dropdown'" class="cmm-mini-dropdown">{{ fieldOptionName(f) }}</span>
                                                     <span v-if="f.field_type==='numeric'" class="cmm-mini-numeric">{{ f.default_value }}</span>
+                                                    <span v-if="f.field_type==='slider'" class="cmm-mini-slider">
+                                                        <span class="cmm-mini-slider-track">
+                                                            <span class="cmm-mini-slider-fill" :style="{width: fieldSliderPercent(f) + '%'}"></span>
+                                                            <span class="cmm-mini-slider-thumb" :style="{left: fieldSliderPercent(f) + '%'}"></span>
+                                                        </span>
+                                                        <span class="cmm-mini-slider-value">{{ f.default_value }}</span>
+                                                    </span>
                                                 </span>
                                             </div>
                                         </div>
@@ -171,6 +178,13 @@ const PreviewPanelComponent = {
                 return setting.options[idx - 1].name;
             }
             return `Option ${idx}`;
+        },
+        fieldSliderPercent(field) {
+            const min = field.min_value || 0;
+            const max = field.max_value || 100;
+            const val = field.default_value || 0;
+            if (max === min) return 50;
+            return Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100));
         },
         fieldOptionName(field) {
             const idx = field.default_index || 1;

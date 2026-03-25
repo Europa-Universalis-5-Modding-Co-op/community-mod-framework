@@ -90,6 +90,7 @@ const ListEditorComponent = {
                             <option value="bool">Bool</option>
                             <option value="dropdown">Dropdown</option>
                             <option value="numeric">Numeric</option>
+                            <option value="slider">Slider</option>
                         </select>
                     </div>
                     <div class="field-row">
@@ -126,8 +127,8 @@ const ListEditorComponent = {
                     </div>
                 </div>
 
-                <!-- Numeric field -->
-                <div v-if="field.field_type === 'numeric'" class="field-grid">
+                <!-- Numeric / Slider field -->
+                <div v-if="field.field_type === 'numeric' || field.field_type === 'slider'" class="field-grid">
                     <div class="field-row">
                         <label>Default</label>
                         <input type="number" v-model.number="field.default_value">

@@ -359,6 +359,16 @@ ${prefix}_on_cmf_callback = {
             lines.push(`\t\tmax_value = ${this._num(field.max_value, 10)}`);
             lines.push(`\t\tstep_value = ${this._num(field.step_value, 1)}`);
             lines.push(`\t}`);
+        } else if (ft === 'slider') {
+            lines.push(`\tcmm_register_list_slider_field = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${settingId}`);
+            lines.push(`\t\tfield_id = ${field.field_id}`);
+            lines.push(`\t\tdefault_value = ${this._num(field.default_value, 0)}`);
+            lines.push(`\t\tmin_value = ${this._num(field.min_value, 0)}`);
+            lines.push(`\t\tmax_value = ${this._num(field.max_value, 10)}`);
+            lines.push(`\t\tstep_value = ${this._num(field.step_value, 1)}`);
+            lines.push(`\t}`);
         }
     },
 
