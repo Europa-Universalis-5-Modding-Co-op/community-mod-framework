@@ -1134,11 +1134,7 @@ def build_change_notes_updates(config, item_id, version=None):
     return updates
 
 def upload_workshop_pages_for_item(steam, updates, item_id):
-    """Upload workshop title/description updates for each language entry.
-
-    Uses fire-and-forget SubmitItemUpdate (no callback) because the
-    callback-based approach does not create visible changelog entries.
-    """
+    """Upload workshop title/description updates for each language entry."""
     if updates is None:
         return False
 
@@ -1175,7 +1171,9 @@ def upload_workshop_pages_for_item(steam, updates, item_id):
                 print(f"Error: SetItemDescription failed for {lang_label}.")
                 return False
 
-        workshop.SubmitItemUpdate(handle, "")
+        if not _submit_and_wait(steam, handle):
+            print(f"Error: Workshop page update failed for {lang_label}.")
+            return False
 
     print("Workshop page updates submitted.")
     return True
@@ -1278,6 +1276,12 @@ def main():
         if upload_change_notes:
             change_note = load_change_notes(CHANGE_NOTES_PATH, item_id, version=main_version) or ""
 
+        if upload_mod_effective:
+            if not upload_release(steam, release_dir, preview_path, item_id,
+                                  workshop_title, change_note=change_note):
+                return 1
+            uploaded_main = True
+
         if upload_workshop_pages:
             page_updates = build_workshop_page_updates(
                 config,
@@ -1289,12 +1293,6 @@ def main():
                 return 1
             if not upload_workshop_pages_for_item(steam, page_updates, item_id):
                 return 1
-
-        if upload_mod_effective:
-            if not upload_release(steam, release_dir, preview_path, item_id,
-                                  workshop_title, change_note=change_note):
-                return 1
-            uploaded_main = True
             if upload_only_on_version_change:
                 set_uploaded_version(version_cache, main_cache_key, main_version)
                 save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
