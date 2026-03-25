@@ -375,8 +375,11 @@ def _parse_field_aliases(content: str) -> dict:
     """Extract list field aliases from cmm_sync_setting_alias blocks.
 
     Distinguishes field aliases (keys ending in ``_iN_fN``) from regular
-    setting aliases. Returns the alias with item number replaced back to
-    ``$i$`` so it can be stored as a template.
+    setting aliases.  Returns a dict keyed by template field key
+    (``prefix_i$i$_fN``).  Each value is either:
+
+    * ``{"alias": "<template>"}`` — all items follow a ``$i$`` pattern
+    * ``{"item_aliases": {1: "a1", 2: "a2", ...}}`` — per-item aliases
     """
     raw = {}  # field_key -> alias (concrete item number)
     pattern = re.compile(
@@ -395,14 +398,30 @@ def _parse_field_aliases(content: str) -> dict:
                 if setting not in raw:
                     raw[setting] = alias
 
-    # Reconstruct template aliases from first concrete instance (i1)
-    aliases = {}
+    # Group by (prefix, slot) so we can inspect all items for a field
+    groups = {}  # (prefix, slot_str) -> {item_num: alias}
     for field_key, alias_val in raw.items():
         m2 = re.match(r"(.+)_i(\d+)_f(\d+)$", field_key)
-        if m2 and m2.group(2) == "1":
-            template_key = f"{m2.group(1)}_i$i$_f{m2.group(3)}"
-            template_alias = alias_val.replace("1", "$i$", 1)
-            aliases[template_key] = template_alias
+        if m2:
+            key = (m2.group(1), m2.group(3))
+            item_num = int(m2.group(2))
+            if key not in groups:
+                groups[key] = {}
+            groups[key][item_num] = alias_val
+
+    aliases = {}
+    for (prefix, slot_str), items in groups.items():
+        template_key = f"{prefix}_i$i$_f{slot_str}"
+        # Check if all aliases follow the same $i$ template
+        templates = set()
+        for item_num, alias_val in items.items():
+            templates.add(re.sub(r'(?<!\d)' + str(item_num) + r'(?!\d)', "$i$", alias_val, count=1))
+        if len(templates) == 1:
+            # All items produce the same template — store as template alias
+            aliases[template_key] = {"alias": templates.pop()}
+        else:
+            # Per-item aliases — each item has a unique alias
+            aliases[template_key] = {"item_aliases": items}
     return aliases
 
 
@@ -700,16 +719,29 @@ def _parse_list_field(
 
     fqid = f"{mod_id}__{setting_id}__{fid}"
 
-    # Look up field alias
+    # Look up field alias (template or per-item)
     slot = field_index + 1
     alias_key = f"{mod_id}__{setting_id}_i$i$_f{slot}"
-    alias = (field_aliases or {}).get(alias_key, "")
+    alias_entry = (field_aliases or {}).get(alias_key)
+    alias = ""
+    item_aliases = None
+    if isinstance(alias_entry, dict):
+        alias = alias_entry.get("alias", "")
+        ia = alias_entry.get("item_aliases")
+        if ia:
+            # Convert {1: "a1", 2: "a2"} to list ordered by item number
+            max_item = max(ia.keys())
+            item_aliases = [ia.get(i, "") for i in range(1, max_item + 1)]
+    elif isinstance(alias_entry, str):
+        # Backwards compat (shouldn't happen with new parser)
+        alias = alias_entry
 
     field = ListField(
         field_id=fid,
         field_type=ftype,
         name=loc_map.get(f"{fqid}_name", fid),
         alias=alias,
+        item_aliases=item_aliases,
     )
 
     if ftype == "bool":

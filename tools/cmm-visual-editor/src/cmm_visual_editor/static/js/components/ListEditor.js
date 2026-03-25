@@ -57,11 +57,15 @@ const ListEditorComponent = {
                     <span v-if="fieldAccessor(fi)" class="accessor-group">
                         <span class="accessor-label">{{ fieldAccessorLabel(fi) }}</span>
                         <template v-if="editingFieldAlias !== fi">
-                            <span class="setting-accessor" @click="copyFieldAccessor(fi)" :title="'Click to copy: ' + fieldAccessor(fi)">
+                            <span v-if="hasItemAliases(fi)" class="setting-accessor" @click="copyFieldAccessor(fi)" title="Click to copy all per-item aliases">
+                                <code>per-item</code>
+                                <span v-if="copiedField === fi" class="copied-flash">Copied!</span>
+                            </span>
+                            <span v-else class="setting-accessor" @click="copyFieldAccessor(fi)" :title="'Click to copy: ' + fieldAccessor(fi)">
                                 <code>{{ fieldAccessor(fi) }}</code>
                                 <span v-if="copiedField === fi" class="copied-flash">Copied!</span>
                             </span>
-                            <button class="btn-icon btn-alias-edit" @click="startEditFieldAlias(fi)" title="Edit accessor alias">&#9998;</button>
+                            <button v-if="!hasItemAliases(fi)" class="btn-icon btn-alias-edit" @click="startEditFieldAlias(fi)" title="Edit accessor alias">&#9998;</button>
                         </template>
                         <template v-else>
                             <span class="alias-edit-group">
@@ -141,6 +145,16 @@ const ListEditorComponent = {
                         <input type="number" v-model.number="field.step_value" min="1">
                     </div>
                 </div>
+
+                <!-- Per-item aliases (static lists only) -->
+                <div v-if="listMode === 'static' && field.field_id" class="per-item-aliases">
+                    <h6>Per-Item Aliases</h6>
+                    <div v-for="(name, ii) in (setting.item_names || [])" :key="ii" class="field-row compact list-item-row">
+                        <label class="compact-label">{{ ii + 1 }}</label>
+                        <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
+                        <input :value="getItemAlias(fi, ii)" @input="setItemAlias(fi, ii, $event.target.value)" placeholder="alias (optional)" class="item-alias-input">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -159,9 +173,16 @@ const ListEditorComponent = {
             const slot = fi + 1;
             return `${this.modId}__${this.setting.setting_id}_i$i$_f${slot}`;
         },
+        hasItemAliases(fi) {
+            const field = (this.setting.fields || [])[fi];
+            return field && field.item_aliases && field.item_aliases.some(a => a);
+        },
         fieldAccessor(fi) {
             if (!this.modId || !this.setting.setting_id) return '';
             const field = (this.setting.fields || [])[fi];
+            if (this.hasItemAliases(fi)) {
+                return 'per-item';
+            }
             const defaultKey = this.defaultFieldAccessorKey(fi);
             if (field && field.alias) {
                 const prefix = this.setting.is_global ? 'global_var' : 'var';
@@ -172,6 +193,10 @@ const ListEditorComponent = {
         },
         fieldAccessorLabel(fi) {
             const field = (this.setting.fields || [])[fi];
+            if (this.hasItemAliases(fi)) {
+                const count = field.item_aliases.filter(a => a).length;
+                return `Per-item aliases (${count} set):`;
+            }
             if (field && field.alias) {
                 return `Alias (synced, per item):`;
             }
@@ -194,6 +219,8 @@ const ListEditorComponent = {
             if (!field) return;
             const val = this.fieldAliasInput.replace(/[^a-zA-Z0-9_$]/g, '');
             field.alias = val || '';
+            // Clear per-item aliases when setting a template alias
+            if (val) field.item_aliases = null;
             this.editingFieldAlias = -1;
         },
         cancelFieldAlias() {
@@ -205,9 +232,19 @@ const ListEditorComponent = {
             this.editingFieldAlias = -1;
         },
         copyFieldAccessor(fi) {
-            const text = this.fieldAccessor(fi);
-            if (!text) return;
-            navigator.clipboard.writeText(text);
+            const field = (this.setting.fields || [])[fi];
+            if (this.hasItemAliases(fi)) {
+                // Copy all per-item aliases as a list
+                const prefix = this.setting.is_global ? 'global_var' : 'var';
+                const lines = field.item_aliases
+                    .map((a, i) => a ? `${prefix}:${a}` : `# item ${i + 1}: no alias`)
+                    .join('\n');
+                navigator.clipboard.writeText(lines);
+            } else {
+                const text = this.fieldAccessor(fi);
+                if (!text) return;
+                navigator.clipboard.writeText(text);
+            }
             this.copiedField = fi;
             setTimeout(() => { this.copiedField = -1; }, 1200);
         },
@@ -229,6 +266,39 @@ const ListEditorComponent = {
             while (this.setting.item_values.length > count) {
                 this.setting.item_values.pop();
             }
+            // Sync per-item alias arrays on all fields
+            for (const field of (this.setting.fields || [])) {
+                if (field.item_aliases) {
+                    while (field.item_aliases.length < count) {
+                        field.item_aliases.push('');
+                    }
+                    while (field.item_aliases.length > count) {
+                        field.item_aliases.pop();
+                    }
+                }
+            }
+        },
+        getItemAlias(fi, itemIndex) {
+            const field = (this.setting.fields || [])[fi];
+            if (!field || !field.item_aliases) return '';
+            return field.item_aliases[itemIndex] || '';
+        },
+        setItemAlias(fi, itemIndex, value) {
+            const field = (this.setting.fields || [])[fi];
+            if (!field) return;
+            if (!field.item_aliases) {
+                field.item_aliases = [];
+            }
+            const count = this.setting.item_count || 1;
+            while (field.item_aliases.length < count) {
+                field.item_aliases.push('');
+            }
+            const sanitized = value.replace(/[^a-zA-Z0-9_]/g, '');
+            field.item_aliases[itemIndex] = sanitized;
+            // Trigger reactivity by replacing the array
+            field.item_aliases = [...field.item_aliases];
+            // Clear template alias when setting per-item aliases
+            if (sanitized) field.alias = '';
         },
         setItemValue(index, value) {
             if (!this.setting.item_values) this.setting.item_values = [];

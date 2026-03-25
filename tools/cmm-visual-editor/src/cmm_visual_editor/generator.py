@@ -293,13 +293,21 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
             item_count = _int(setting.item_count, 1)
             for fi, field in enumerate(setting.fields or []):
                 slot = fi + 1
+                item_aliases = field.item_aliases or []
                 alias = _field_has_alias(field, mod_id, setting.setting_id, slot)
-                if alias:
+                if item_aliases or alias:
                     lines.append("")
                     lines.append(f"\t# Sync list field alias: {field.field_id}")
                     for i in range(1, item_count + 1):
                         resolved_field = f"{qid}_i{i}_f{slot}"
-                        resolved_alias = alias.replace("$i$", str(i))
+                        # Per-item alias takes precedence over template
+                        per_item = (item_aliases[i - 1] if i - 1 < len(item_aliases) else "").strip()
+                        if per_item:
+                            resolved_alias = per_item
+                        elif alias:
+                            resolved_alias = alias.replace("$i$", str(i))
+                        else:
+                            continue
                         lines.append(f"\tcmm_sync_setting_alias = {{")
                         lines.append(f"\t\tsetting = {resolved_field}")
                         lines.append(f"\t\talias = {resolved_alias}")
@@ -440,7 +448,21 @@ def _emit_list_iteration_boilerplate(lines: list, mod_id: str, setting: Setting)
         slot = fi + 1
         ftype = field.field_type
         fid = field.field_id or f"field_{slot}"
-        lines.append(f'#     # "variable_map(cmm|flag:$setting$_i$i$_f{slot})"  ({fid}, {ftype})')
+        item_aliases = field.item_aliases or []
+        has_per_item = any(a for a in item_aliases)
+        if field.alias:
+            prefix = "global_var" if setting.is_global else "var"
+            lines.append(f'#     # {prefix}:{field.alias}  ({fid}, {ftype})')
+        else:
+            lines.append(f'#     # "variable_map(cmm|flag:$setting$_i$i$_f{slot})"  ({fid}, {ftype})')
+        if has_per_item:
+            prefix = "global_var" if setting.is_global else "var"
+            lines.append(f'#     # Per-item aliases for {fid}:')
+            for ii, ia in enumerate(item_aliases):
+                if ia:
+                    item_names = setting.item_names or []
+                    name = item_names[ii] if ii < len(item_names) else f"Item {ii + 1}"
+                    lines.append(f'#     #   {name}: {prefix}:{ia}')
     lines.append(f"# }}")
 
 

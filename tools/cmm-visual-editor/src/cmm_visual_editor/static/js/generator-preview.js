@@ -233,13 +233,23 @@ ${prefix}_on_cmf_callback = {
                 for (let fi = 0; fi < (setting.fields || []).length; fi++) {
                     const field = setting.fields[fi];
                     const slot = fi + 1;
+                    const itemAliases = field.item_aliases || [];
                     const alias = this._fieldHasAlias(field, modId, setting.setting_id, slot);
-                    if (alias) {
+                    if (itemAliases.some(a => a) || alias) {
                         lines.push('');
                         lines.push(`\t# Sync list field alias: ${field.field_id}`);
                         for (let i = 1; i <= itemCount; i++) {
                             const resolvedField = `${qid}_i${i}_f${slot}`;
-                            const resolvedAlias = alias.replace(/\$i\$/g, String(i));
+                            // Per-item alias takes precedence over template
+                            const perItem = (itemAliases[i - 1] || '').trim();
+                            let resolvedAlias;
+                            if (perItem) {
+                                resolvedAlias = perItem;
+                            } else if (alias) {
+                                resolvedAlias = alias.replace(/\$i\$/g, String(i));
+                            } else {
+                                continue;
+                            }
                             lines.push(`\tcmm_sync_setting_alias = {`);
                             lines.push(`\t\tsetting = ${resolvedField}`);
                             lines.push(`\t\talias = ${resolvedAlias}`);
@@ -381,7 +391,24 @@ ${prefix}_on_cmf_callback = {
             const slot = fi + 1;
             const ftype = fields[fi].field_type;
             const fid = fields[fi].field_id || `field_${slot}`;
-            lines.push(`#     # "variable_map(cmm|flag:$setting$_i$i$_f${slot})"  (${fid}, ${ftype})`);
+            const itemAliases = fields[fi].item_aliases;
+            const hasPerItem = itemAliases && itemAliases.some(a => a);
+            if (fields[fi].alias) {
+                const prefix = setting.is_global ? 'global_var' : 'var';
+                lines.push(`#     # ${prefix}:${fields[fi].alias}  (${fid}, ${ftype})`);
+            } else {
+                lines.push(`#     # "variable_map(cmm|flag:$setting$_i$i$_f${slot})"  (${fid}, ${ftype})`);
+            }
+            if (hasPerItem) {
+                const prefix = setting.is_global ? 'global_var' : 'var';
+                lines.push(`#     # Per-item aliases for ${fid}:`);
+                for (let ii = 0; ii < itemAliases.length; ii++) {
+                    if (itemAliases[ii]) {
+                        const name = (setting.item_names || [])[ii] || `Item ${ii + 1}`;
+                        lines.push(`#     #   ${name}: ${prefix}:${itemAliases[ii]}`);
+                    }
+                }
+            }
         }
         lines.push(`# }`);
     },

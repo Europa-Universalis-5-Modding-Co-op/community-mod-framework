@@ -268,7 +268,24 @@ const SettingEditorComponent = {
                 const slot = fi + 1;
                 const ftype = fields[fi].field_type;
                 const fid = fields[fi].field_id || `field_${slot}`;
-                lines.push(`\t# "variable_map(cmm|flag:$setting$_i$i$_f${slot})"  (${fid}, ${ftype})`);
+                const itemAliases = fields[fi].item_aliases;
+                const hasPerItem = itemAliases && itemAliases.some(a => a);
+                if (fields[fi].alias) {
+                    const prefix = this.setting.is_global ? 'global_var' : 'var';
+                    lines.push(`\t# ${prefix}:${fields[fi].alias}  (${fid}, ${ftype})`);
+                } else {
+                    lines.push(`\t# "variable_map(cmm|flag:$setting$_i$i$_f${slot})"  (${fid}, ${ftype})`);
+                }
+                if (hasPerItem) {
+                    const prefix = this.setting.is_global ? 'global_var' : 'var';
+                    lines.push(`\t# Per-item aliases for ${fid}:`);
+                    for (let ii = 0; ii < itemAliases.length; ii++) {
+                        if (itemAliases[ii]) {
+                            const name = (this.setting.item_names || [])[ii] || `Item ${ii + 1}`;
+                            lines.push(`\t#   ${name}: ${prefix}:${itemAliases[ii]}`);
+                        }
+                    }
+                }
             }
             lines.push(`}`);
             navigator.clipboard.writeText(lines.join('\n'));

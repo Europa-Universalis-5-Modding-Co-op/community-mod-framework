@@ -29,6 +29,7 @@ class ListField:
     step_value: Optional[float] = None
     # alias
     alias: str = ""
+    item_aliases: Optional[list] = None  # per-item aliases (list of str, one per item)
 
 
 @dataclass
@@ -176,6 +177,8 @@ def model_to_dict(model: ModModel) -> dict:
         }
         if f.alias:
             d["alias"] = f.alias
+        if f.item_aliases and any(a for a in f.item_aliases):
+            d["item_aliases"] = f.item_aliases
         if f.field_type == "bool":
             d["default_value"] = f.default_value
         elif f.field_type == "dropdown":
@@ -242,6 +245,7 @@ def dict_to_model(data: dict) -> ModModel:
             max_value=f.get("max_value"),
             step_value=f.get("step_value"),
             alias=f.get("alias", ""),
+            item_aliases=f.get("item_aliases"),
         )
 
     def _parse_setting(s: dict) -> Setting:
