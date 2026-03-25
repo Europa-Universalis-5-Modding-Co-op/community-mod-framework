@@ -14,6 +14,7 @@
  CMM_NUMERIC_INCREASE: "Increase"
  CMM_NUMERIC_INCREASE_5X: "Increase (x5)"
  CMM_NUMERIC_INCREASE_MAX: "Set to Maximum"
+ CMM_SLIDER_DOUBLE_CLICK_DRAG: "Double click and hold to drag"
  CMM_LIST_MOVE_UP: "Move Up"
  CMM_LIST_MOVE_TO_TOP: "Move to Top"
  CMM_LIST_MOVE_DOWN: "Move Down"

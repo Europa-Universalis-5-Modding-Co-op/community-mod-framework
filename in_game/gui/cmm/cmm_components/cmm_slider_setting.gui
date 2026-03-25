@@ -143,7 +143,8 @@
 									onpressed = "[CMMExecuteGui('CMM_MarkSliderSelection_0')]"
 									onpressed = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 									onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
-									tooltip_enabled = no
+									tooltip = "CMM_SLIDER_DOUBLE_CLICK_DRAG"
+									tooltip_enabled = "[CMMSliderThumbHover(CMMSliderThumbIndex(Scope.GetFlagName), Scope.GetFlagName)]"
 								}
 							}
 
@@ -175,7 +176,8 @@
 												onpressed = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 												onpressed = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 												onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
-												tooltip_enabled = no
+												tooltip = "CMM_SLIDER_DOUBLE_CLICK_DRAG"
+												tooltip_enabled = "[CMMSliderThumbHover(CMMSliderThumbIndex(Scope.GetFlagName), Scope.GetFlagName)]"
 											}
 										}
 									}
@@ -200,7 +202,8 @@
 									onpressed = "[CMMExecuteGui('CMM_MarkSliderSelection_100')]"
 									onpressed = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 									onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
-									tooltip_enabled = no
+									tooltip = "CMM_SLIDER_DOUBLE_CLICK_DRAG"
+									tooltip_enabled = "[CMMSliderThumbHover(CMMSliderThumbIndex(Scope.GetFlagName), Scope.GetFlagName)]"
 								}
 							}
 						}
