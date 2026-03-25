@@ -724,18 +724,28 @@ def merge_with_existing(generated_files: dict, output_dir: Path) -> dict:
 
 
 def _merge_scripted_guis(generated: str, existing: str) -> str:
-    """Preserve existing _on_changed blocks, append only new ones."""
+    """Preserve existing _on_changed blocks, append only new ones.
+
+    Exception: list _on_changed blocks (containing cmm_apply_list_change) are
+    always overwritten by the generated version since their structure is
+    deterministic.
+    """
     existing_names = set(re.findall(r"(\w+_on_changed)\s*=\s*\{", existing))
     generated_blocks = _extract_named_blocks(generated, "_on_changed")
+    existing_blocks = _extract_named_blocks(existing, "_on_changed")
 
+    result = existing
     new_blocks = []
     for name, block_text in generated_blocks.items():
         if name not in existing_names:
             new_blocks.append(block_text)
+        elif name in existing_blocks and "cmm_apply_list_change" in existing_blocks[name]:
+            # List callback block — overwrite with generated version
+            result = result.replace(existing_blocks[name], block_text)
 
     if new_blocks:
-        return existing.rstrip() + "\n\n" + "\n\n".join(new_blocks) + "\n"
-    return existing
+        return result.rstrip() + "\n\n" + "\n\n".join(new_blocks) + "\n"
+    return result
 
 
 def _merge_effects(generated: str, existing: str) -> str:

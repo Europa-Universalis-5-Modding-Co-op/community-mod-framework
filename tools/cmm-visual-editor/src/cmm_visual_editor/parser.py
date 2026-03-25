@@ -173,8 +173,8 @@ def _build_model(
         if setting:
             groups_map[gkey].settings.append(setting)
 
-    # Parse custom on_changed effects from effects content
-    custom_effects = _parse_custom_effects(effects)
+    # Parse custom on_changed effects from effects and GUI content
+    custom_effects = _parse_custom_effects(effects, gui)
     for gkey in group_order:
         group = groups_map[gkey]
         for setting in group.settings:
@@ -425,8 +425,8 @@ def _parse_field_aliases(content: str) -> dict:
     return aliases
 
 
-def _parse_custom_effects(effects: str) -> dict:
-    """Parse custom on_changed effect info from effects content.
+def _parse_custom_effects(effects: str, gui: str = "") -> dict:
+    """Parse custom on_changed effect info from effects and GUI content.
 
     Returns {qid: {"effect": str, "param": str|None, "no_pass": bool|None}}
     """
@@ -501,6 +501,29 @@ def _parse_custom_effects(effects: str) -> dict:
                     if em:
                         result[qid] = {"effect": em.group(1)}
                         break
+
+    # 3. List _on_changed blocks from scripted GUI content
+    if gui:
+        on_changed_gui_pat = re.compile(r"^(\w+)_on_changed\s*=\s*\{", re.MULTILINE)
+        for m in on_changed_gui_pat.finditer(gui):
+            qid = m.group(1)
+            if qid in result:
+                continue
+            block_end = _find_closing_brace(gui, m.end())
+            if block_end < 0:
+                continue
+            block = gui[m.end():block_end]
+            if "cmm_apply_list_change" not in block:
+                continue
+            # Find custom effect calls (effect_name = yes) after cmm_apply_list_change
+            for line in block.split("\n"):
+                line = line.strip()
+                if not line or line.startswith("#") or line.startswith("}"):
+                    continue
+                em = re.match(r"(\w+)\s*=\s*yes\s*$", line)
+                if em and em.group(1) not in ("cmm_apply_list_change",):
+                    result[qid] = {"effect": em.group(1), "no_pass": True}
+                    break
 
     return result
 

@@ -1,0 +1,133 @@
+﻿# Settings (settings) Tab
+## Conditional (conditional) Group
+cmf_feature_test__conditional_numeric_on_changed = {
+	scope = country
+
+	is_shown = {
+		"variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1
+	}
+	effect = { }
+}
+
+# Lists (lists) Tab
+## Ordered List (ordered_list) Group
+cmf_feature_test__ordered_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__ordered_list
+		}
+	}
+}
+
+## Unordered List (unordered_list) Group
+cmf_feature_test__unordered_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__unordered_list
+		}
+	}
+}
+
+## From-List (from_list) Group
+cmf_feature_test__from_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__from_list
+		}
+	}
+}
+
+# Global Lists (global_lists) Tab
+## Global Ordered List (global_ordered_list) Group
+cmf_feature_test__global_ordered_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__global_ordered_list
+		}
+	}
+}
+
+## Global From-List (global_from_list) Group
+cmf_feature_test__global_from_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__global_from_list
+		}
+	}
+}
+
+# general (general) Tab
+## example_list (example_list) Group
+cmf_feature_test__example_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__example_list
+		}
+	}
+}
+
+## example_unordered_list (example_unordered_list) Group
+cmf_feature_test__example_unordered_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__example_unordered_list
+		}
+	}
+}
+
+## default (default) Group
+cmf_feature_test___on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__
+		}
+	}
+}
+
+cmf_feature_test___on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__
+		}
+	}
+}
+
+# $tab_id$ ($tab_id$) Tab
+## $setting_id$ ($setting_id$) Group
+cmf_feature_test__$setting_id$_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__$setting_id$
+		}
+	}
+}
+
+cmf_feature_test__$setting_id$_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__$setting_id$
+		}
+	}
+}
