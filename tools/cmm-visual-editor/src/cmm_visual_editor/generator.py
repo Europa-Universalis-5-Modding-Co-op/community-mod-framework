@@ -1,9 +1,6 @@
 """Code generator: ModModel -> Paradox script files."""
 
 import json
-import re
-from pathlib import Path
-from .encoding import decode_bom
 from .models import ModModel, Setting, ListField
 
 
@@ -725,81 +722,3 @@ def _esc(s: str) -> str:
     if not s:
         return ""
     return s.replace("\\", "\\\\").replace('"', '\\"')
-
-
-def merge_with_existing(generated_files: dict, output_dir: Path) -> dict:
-    """Merge generated files with existing ones, preserving custom callbacks."""
-    merged = dict(generated_files)
-
-    for filepath, content in generated_files.items():
-        existing_path = output_dir / filepath
-        if not existing_path.is_file():
-            continue
-
-        try:
-            existing = decode_bom(existing_path.read_bytes())
-        except Exception:
-            continue
-
-        if "scripted_gui" in filepath:
-            merged[filepath] = _merge_scripted_guis(content, existing)
-        elif "effects" in filepath:
-            merged[filepath] = _merge_effects(content, existing)
-
-    return merged
-
-
-def _merge_scripted_guis(generated: str, existing: str) -> str:
-    """Preserve existing _on_changed blocks, append only new ones.
-
-    Exception: list _on_changed blocks (containing cmm_apply_list_change) are
-    always overwritten by the generated version since their structure is
-    deterministic.
-    """
-    existing_names = set(re.findall(r"(\w+_on_changed)\s*=\s*\{", existing))
-    generated_blocks = _extract_named_blocks(generated, "_on_changed")
-    existing_blocks = _extract_named_blocks(existing, "_on_changed")
-
-    result = existing
-    new_blocks = []
-    for name, block_text in generated_blocks.items():
-        if name not in existing_names:
-            new_blocks.append(block_text)
-        elif name in existing_blocks and "cmm_apply_list_change" in existing_blocks[name]:
-            # List callback block — overwrite with generated version
-            result = result.replace(existing_blocks[name], block_text)
-
-    if new_blocks:
-        return result.rstrip() + "\n\n" + "\n\n".join(new_blocks) + "\n"
-    return result
-
-
-def _merge_effects(generated: str, existing: str) -> str:
-    """Overwrite registration and callback handler blocks, preserve existing text callbacks."""
-    result = generated
-    existing_blocks = _extract_named_blocks(existing, "_on_changed")
-    for name, existing_block in existing_blocks.items():
-        gen_blocks = _extract_named_blocks(result, "_on_changed")
-        if name in gen_blocks:
-            result = result.replace(gen_blocks[name], existing_block)
-    return result
-
-
-def _extract_named_blocks(content: str, suffix: str) -> dict:
-    """Extract top-level named blocks ending with suffix."""
-    blocks = {}
-    pattern = re.compile(rf"^(\w+{re.escape(suffix)})\s*=\s*\{{", re.MULTILINE)
-    for m in pattern.finditer(content):
-        name = m.group(1)
-        brace_start = m.end()
-        depth = 1
-        i = brace_start
-        while i < len(content) and depth > 0:
-            if content[i] == "{":
-                depth += 1
-            elif content[i] == "}":
-                depth -= 1
-            i += 1
-        if depth == 0:
-            blocks[name] = content[m.start():i]
-    return blocks
