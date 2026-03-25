@@ -535,7 +535,7 @@ def _parse_registrations(content: str, warnings: list) -> list:
         r"(cmm_register_(?:global_)?(?:bool_setting|button_setting|numeric_setting|"
         r"slider_setting|dropdown_setting|text_setting|settings_list|"
         r"settings_list_from_list|"
-        r"list_bool_field|list_dropdown_field|list_numeric_field)|"
+        r"list_bool_field|list_dropdown_field|list_numeric_field|list_slider_field)|"
         r"cmm_set_list_item_value)\s*=\s*\{",
         re.IGNORECASE,
     )
@@ -577,6 +577,8 @@ def _func_to_type(func_name: str) -> str:
         return "list_dropdown_field"
     if "list_numeric_field" in fn:
         return "list_numeric_field"
+    if "list_slider_field" in fn:
+        return "list_slider_field"
     if "settings_list_from_list" in fn:
         return "list_from_list"
     if "settings_list" in fn:
@@ -735,6 +737,8 @@ def _parse_list_field(
         ftype = "bool"
     elif "dropdown" in ftype_raw:
         ftype = "dropdown"
+    elif "slider" in ftype_raw:
+        ftype = "slider"
     elif "numeric" in ftype_raw:
         ftype = "numeric"
     else:
@@ -778,7 +782,7 @@ def _parse_list_field(
             odesc = loc_map.get(f"{fqid}_option_{i}_desc", "")
             options.append(DropdownOption(index=i, name=oname, desc=odesc))
         field.options = options
-    elif ftype == "numeric":
+    elif ftype in ("numeric", "slider"):
         field.default_value = _to_float(reg.get("default_value", "0"))
         field.min_value = _to_float(reg.get("min_value", "0"))
         field.max_value = _to_float(reg.get("max_value", "10"))
