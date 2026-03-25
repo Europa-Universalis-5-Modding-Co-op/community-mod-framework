@@ -2,27 +2,14 @@ const ListEditorComponent = {
     props: ['setting', 'modId'],
     template: `
     <div class="list-editor">
-        <div class="field-row">
-            <label>List Source</label>
-            <select v-model="listMode" @change="onListModeChange">
-                <option value="static">Static (fixed item count)</option>
-                <option value="from_list">From Variable List</option>
-            </select>
-        </div>
-
-        <div v-if="listMode === 'from_list'" class="field-row">
-            <label>Variable List Name</label>
-            <input v-model="setting.list_source" placeholder="my_buildings_list">
-        </div>
-
-        <div v-if="listMode === 'static'" class="field-grid">
-            <div class="field-row">
-                <label>Item Count (1-20)</label>
-                <input type="number" v-model.number="setting.item_count" min="1" max="20" @input="syncItemNames">
-            </div>
-        </div>
-
         <div class="field-grid">
+            <div class="field-row">
+                <label>List Source</label>
+                <select v-model="listMode" @change="onListModeChange">
+                    <option value="static">Static (fixed item count)</option>
+                    <option value="from_list">From Variable List</option>
+                </select>
+            </div>
             <div class="field-row">
                 <label>Ordered</label>
                 <select v-model.number="setting.is_ordered">
@@ -30,10 +17,18 @@ const ListEditorComponent = {
                     <option :value="0">No (static order)</option>
                 </select>
             </div>
-        </div>
-        <div class="field-row">
-            <label>Item Column Name</label>
-            <input v-model="setting.item_column_name" placeholder="Item">
+            <div class="field-row">
+                <label>Item Column Name</label>
+                <input v-model="setting.item_column_name" placeholder="Item">
+            </div>
+            <div v-if="listMode === 'static'" class="field-row">
+                <label>Item Count (1-20)</label>
+                <input type="number" v-model.number="setting.item_count" min="1" max="20" @input="syncItemNames">
+            </div>
+            <div v-if="listMode === 'from_list'" class="field-row">
+                <label>Variable List Name</label>
+                <input v-model="setting.list_source" placeholder="my_buildings_list">
+            </div>
         </div>
 
         <div v-if="listMode === 'static'" class="subsection">
