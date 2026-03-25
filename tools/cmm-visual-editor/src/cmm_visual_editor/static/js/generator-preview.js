@@ -446,7 +446,7 @@ ${prefix}_on_cmf_callback = {
                     }
                     const qid = `${modId}__${setting.setting_id}`;
                     if (isList) {
-                        lines.push(this._genListCallback(qid, setting.visible, setting.enabled, setting.on_changed_effect));
+                        lines.push(this._genListCallback(qid, setting, modId));
                     } else {
                         lines.push(this._genSettingSguiBlock(qid, setting.visible, setting.enabled));
                     }
@@ -456,7 +456,10 @@ ${prefix}_on_cmf_callback = {
         return lines.join('\n') + '\n';
     },
 
-    _genListCallback(qid, visible, enabled, onChangedEffect) {
+    _genListCallback(qid, setting, modId) {
+        const visible = setting.visible;
+        const enabled = setting.enabled;
+        const onChangedEffect = setting.on_changed_effect;
         const lines = [];
         lines.push(`${qid}_on_changed = {`);
         lines.push(`\tscope = country`);
@@ -481,6 +484,36 @@ ${prefix}_on_cmf_callback = {
         lines.push(`\t\tcmm_apply_list_change = {`);
         lines.push(`\t\t\tsetting = ${qid}`);
         lines.push(`\t\t}`);
+
+        // Re-sync field aliases after change (static lists only)
+        if (!setting.list_source) {
+            const itemCount = setting.item_count || 1;
+            for (let fi = 0; fi < (setting.fields || []).length; fi++) {
+                const field = setting.fields[fi];
+                const slot = fi + 1;
+                const itemAliases = field.item_aliases || [];
+                const alias = this._fieldHasAlias(field, modId, setting.setting_id, slot);
+                if (itemAliases.some(a => a) || alias) {
+                    for (let i = 1; i <= itemCount; i++) {
+                        const resolvedField = `${qid}_i${i}_f${slot}`;
+                        const perItem = (itemAliases[i - 1] || '').trim();
+                        let resolvedAlias;
+                        if (perItem) {
+                            resolvedAlias = perItem;
+                        } else if (alias) {
+                            resolvedAlias = alias.replace(/\$i\$/g, String(i));
+                        } else {
+                            continue;
+                        }
+                        lines.push(`\t\tcmm_sync_setting_alias = {`);
+                        lines.push(`\t\t\tsetting = ${resolvedField}`);
+                        lines.push(`\t\t\talias = ${resolvedAlias}`);
+                        lines.push(`\t\t}`);
+                    }
+                }
+            }
+        }
+
         if (onChangedEffect) {
             lines.push(`\t\t${onChangedEffect} = yes`);
         }

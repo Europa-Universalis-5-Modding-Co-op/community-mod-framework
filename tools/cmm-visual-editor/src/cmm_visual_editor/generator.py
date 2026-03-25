@@ -500,14 +500,17 @@ def _gen_scripted_guis(model: ModModel) -> str:
                     group_header_emitted = True
                 qid = f"{mod_id}__{setting.setting_id}"
                 if is_list:
-                    lines.append(_gen_list_callback_block(qid, setting.visible, setting.enabled, setting.on_changed_effect))
+                    lines.append(_gen_list_callback_block(qid, setting, mod_id))
                 else:
                     lines.append(_gen_setting_sgui_block(qid, setting.visible, setting.enabled))
 
     return "\n".join(lines) + "\n"
 
 
-def _gen_list_callback_block(qid: str, visible: str = None, enabled: str = None, on_changed_effect: str = None) -> str:
+def _gen_list_callback_block(qid: str, setting: Setting, mod_id: str) -> str:
+    visible = setting.visible
+    enabled = setting.enabled
+    on_changed_effect = setting.on_changed_effect
     lines = []
     lines.append(f"{qid}_on_changed = {{")
     lines.append(f"\tscope = country")
@@ -528,6 +531,29 @@ def _gen_list_callback_block(qid: str, visible: str = None, enabled: str = None,
     lines.append(f"\t\tcmm_apply_list_change = {{")
     lines.append(f"\t\t\tsetting = {qid}")
     lines.append(f"\t\t}}")
+
+    # Re-sync field aliases after change (static lists only)
+    if not setting.list_source:
+        item_count = _int(setting.item_count, 1)
+        for fi, field in enumerate(setting.fields or []):
+            slot = fi + 1
+            item_aliases = field.item_aliases or []
+            alias = _field_has_alias(field, mod_id, setting.setting_id, slot)
+            if item_aliases or alias:
+                for i in range(1, item_count + 1):
+                    resolved_field = f"{qid}_i{i}_f{slot}"
+                    per_item = (item_aliases[i - 1] if i - 1 < len(item_aliases) else "").strip()
+                    if per_item:
+                        resolved_alias = per_item
+                    elif alias:
+                        resolved_alias = alias.replace("$i$", str(i))
+                    else:
+                        continue
+                    lines.append(f"\t\tcmm_sync_setting_alias = {{")
+                    lines.append(f"\t\t\tsetting = {resolved_field}")
+                    lines.append(f"\t\t\talias = {resolved_alias}")
+                    lines.append(f"\t\t}}")
+
     if on_changed_effect:
         lines.append(f"\t\t{on_changed_effect} = yes")
     lines.append(f"\t}}")
