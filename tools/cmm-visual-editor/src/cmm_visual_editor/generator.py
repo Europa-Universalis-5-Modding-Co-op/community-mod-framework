@@ -500,14 +500,14 @@ def _gen_scripted_guis(model: ModModel) -> str:
                     group_header_emitted = True
                 qid = f"{mod_id}__{setting.setting_id}"
                 if is_list:
-                    lines.append(_gen_list_callback_block(qid, setting.visible, setting.enabled))
+                    lines.append(_gen_list_callback_block(qid, setting.visible, setting.enabled, setting.on_changed_effect))
                 else:
                     lines.append(_gen_setting_sgui_block(qid, setting.visible, setting.enabled))
 
     return "\n".join(lines) + "\n"
 
 
-def _gen_list_callback_block(qid: str, visible: str = None, enabled: str = None) -> str:
+def _gen_list_callback_block(qid: str, visible: str = None, enabled: str = None, on_changed_effect: str = None) -> str:
     lines = []
     lines.append(f"{qid}_on_changed = {{")
     lines.append(f"\tscope = country")
@@ -528,6 +528,8 @@ def _gen_list_callback_block(qid: str, visible: str = None, enabled: str = None)
     lines.append(f"\t\tcmm_apply_list_change = {{")
     lines.append(f"\t\t\tsetting = {qid}")
     lines.append(f"\t\t}}")
+    if on_changed_effect:
+        lines.append(f"\t\t{on_changed_effect} = yes")
     lines.append(f"\t}}")
     lines.append(f"}}")
     return "\n".join(lines)

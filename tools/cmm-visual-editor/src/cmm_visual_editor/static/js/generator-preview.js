@@ -446,7 +446,7 @@ ${prefix}_on_cmf_callback = {
                     }
                     const qid = `${modId}__${setting.setting_id}`;
                     if (isList) {
-                        lines.push(this._genListCallback(qid, setting.visible, setting.enabled));
+                        lines.push(this._genListCallback(qid, setting.visible, setting.enabled, setting.on_changed_effect));
                     } else {
                         lines.push(this._genSettingSguiBlock(qid, setting.visible, setting.enabled));
                     }
@@ -456,7 +456,7 @@ ${prefix}_on_cmf_callback = {
         return lines.join('\n') + '\n';
     },
 
-    _genListCallback(qid, visible, enabled) {
+    _genListCallback(qid, visible, enabled, onChangedEffect) {
         const lines = [];
         lines.push(`${qid}_on_changed = {`);
         lines.push(`\tscope = country`);
@@ -481,6 +481,9 @@ ${prefix}_on_cmf_callback = {
         lines.push(`\t\tcmm_apply_list_change = {`);
         lines.push(`\t\t\tsetting = ${qid}`);
         lines.push(`\t\t}`);
+        if (onChangedEffect) {
+            lines.push(`\t\t${onChangedEffect} = yes`);
+        }
         lines.push(`\t}`);
         lines.push(`}`);
         return lines.join('\n');

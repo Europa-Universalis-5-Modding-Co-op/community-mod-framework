@@ -76,7 +76,7 @@ const ListEditorComponent = {
                 </div>
                 <div class="field-grid">
                     <div class="field-row">
-                        <label>Field ID</label>
+                        <label>Field ID <span class="required">*</span></label>
                         <input v-model="field.field_id" placeholder="enabled" @input="sanitizeFieldId(field)">
                     </div>
                     <div class="field-row">
