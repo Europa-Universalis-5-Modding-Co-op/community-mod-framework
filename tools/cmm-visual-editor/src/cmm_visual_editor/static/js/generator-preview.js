@@ -389,10 +389,10 @@ ${prefix}_on_cmf_callback = {
         lines.push(`#`);
         lines.push(`# cmm_for_each_list_item = {`);
         lines.push(`#     setting = ${qid}`);
-        lines.push(`#     effect = ${qid}_each_item`);
+        lines.push(`#     effect = ${qid.replace('__', '_')}_each_item`);
         lines.push(`# }`);
         lines.push(`#`);
-        lines.push(`# ${qid}_each_item = {`);
+        lines.push(`# ${qid.replace('__', '_')}_each_item = {`);
         lines.push(`#     # $i$ is the resolved item number (1-${itemCount})`);
         if (hasValues) {
             lines.push(`#     # scope:cmm_list_current_item_value  (attached game object)`);
