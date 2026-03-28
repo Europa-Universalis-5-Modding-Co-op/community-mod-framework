@@ -226,6 +226,7 @@ cmm_list_apply_numeric_field_slot = {
 		limit = { always = no }
 		cmf_suppress = { v = cmm_tmp_fk }
 		cmf_suppress = { v = cmm_tmp_disabled_fk }
+		cmf_suppress = { v = cmm_list_field_disabled }
 	}
 }
 
