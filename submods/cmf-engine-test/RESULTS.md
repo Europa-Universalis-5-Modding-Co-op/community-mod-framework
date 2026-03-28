@@ -46,12 +46,13 @@ Date: 2026-03-28
 | 31 | ordered_key_in_variable_map full iteration | FAIL |
 | 32 | ordered_key_in_variable_map with max | PASS |
 | 33 | every_key_in_global_variable_map (variable only) | PASS |
+| 34 | ordered_key without max defaults to 1? | PASS |
 
-**20/30 passed**
+**21/31 passed**
 
 ## Summary
 
-**Total: 23/33 passed (10 failed)**
+**Total: 24/34 passed (10 failed)**
 
 ### Key Findings
 
@@ -67,7 +68,9 @@ Date: 2026-03-28
 - `"variable_map(local_var:X|...)"` and `"variable_map(var:X|...)"` do not resolve — the map name must be a literal.
 - Variable references DO work in the key position (tests 24-25 pass).
 
-**ordered_key_in_variable_map requires max (tests 31-32):**
-- Without `max`, the iterator does not execute. With `max = 3`, it works correctly.
-- `every_key_in_variable_map` works without max (test 28).
+**ordered_key_in_variable_map defaults to 1 without max (tests 31-32, 34):**
+- Without `max`, the iterator picks exactly one element (test 34 passes with count = 1).
+- Test 31 fails because it expects all 3 entries, but only 1 is visited.
+- With `max = 3`, all entries are visited (test 32).
+- `every_key_in_variable_map` iterates all entries without needing max (test 28).
 

@@ -1072,6 +1072,35 @@ window = {
 					text = "ENGINE_TEST_FAIL"
 				}
 			}
+
+			# ── Test 34 ─────────────────────────────────────
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ENGINE_TEST_34_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet)]"
+					text = "ENGINE_TEST_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_34_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ENGINE_TEST_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_34_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ENGINE_TEST_FAIL"
+				}
+			}
 		}
 			} # end blockoverride "scrollbox_content"
 		} # end scrollbox

@@ -3,11 +3,6 @@
 # or inside quoted scope link strings. This unused effect references
 # all flagged names so the checker considers them used/set.
 engine_test_suppress_warnings = {
-	# Suppress "used but never set" by setting them
-	# (they are properly set in tests 26 and 27)
-	set_variable = { name = engine_test_map_name_v value = 0 }
-	set_variable = { name = engine_test_map_name value = 0 }
-	set_local_variable = { name = engine_test_map_name value = 0 }
 	if = {
 		limit = {
 			always = no
@@ -45,11 +40,11 @@ engine_test_suppress_warnings = {
 			exists = var:engine_test_31_passed
 			exists = var:engine_test_32_passed
 			exists = var:engine_test_33_passed
+			exists = var:engine_test_34_passed
 			exists = var:engine_test_has_run
 			exists = var:engine_test_global_has_run
 			# Suppress "set but never used" for local variables
 			exists = local_var:engine_test_lv
-			exists = local_var:engine_test_map_name
 			# Suppress "set but never used" for flags
 			exists = flag:engine_test_cross
 			exists = flag:engine_test_hardcoded
@@ -57,11 +52,6 @@ engine_test_suppress_warnings = {
 			exists = flag:engine_test_iter_b
 			exists = flag:engine_test_iter_c
 			exists = flag:engine_test_preseeded
-			# Suppress "used but never set" for prefixed variable
-			# references (checker can't match quoted scope link
-			# usage to set_variable/set_local_variable)
-			exists = var:engine_test_map_name_v
-			exists = local_var:engine_test_map_name
 		}
 	}
 }

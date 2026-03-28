@@ -120,6 +120,7 @@ engine_test_run_global = {
 		set_variable = { name = engine_test_31_passed value = 0 }
 		set_variable = { name = engine_test_32_passed value = 0 }
 		set_variable = { name = engine_test_33_passed value = 0 }
+		set_variable = { name = engine_test_34_passed value = 0 }
 
 		# Result: PASS
 		# ── Test 4 ──────────────────────────────────────────────
@@ -382,6 +383,14 @@ engine_test_run_global = {
 			key = flag:engine_test_key_a
 			value = 50
 		}
+		# Dummy second entry keeps the map alive after removing the
+		# tested key (an empty map is deleted by the engine, which
+		# makes is_key_in_global_variable_map error on a missing map).
+		add_to_global_variable_map = {
+			name = engine_test_gmap_remove
+			key = flag:engine_test_iter_a
+			value = 1
+		}
 		remove_from_global_variable_map = {
 			name = engine_test_gmap_remove
 			key = scope:setting
@@ -523,6 +532,15 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_25_passed value = 1 }
 		}
 
+		# Suppress "used but never set" for variables that the checker
+		# can't see inside quoted scope link strings. Must be in a
+		# used effect (the unused suppress effect no longer counts).
+		if = {
+			limit = { always = no }
+			set_variable = { name = engine_test_map_name_v value = 0 }
+			set_local_variable = { name = engine_test_map_name value = 0 }
+		}
+
 		# Result: FAIL
 		# ── Test 26 ─────────────────────────────────────────────
 		# Can local_var: be used in the map name position of a
@@ -603,11 +621,14 @@ engine_test_run_global = {
 		# ordered_key_in_variable_map: iterate keys in order.
 		# Uses position = 0 and max = 1 to select exactly one
 		# entry from the map.
-		# Pass if the effect block executes
+		# Pass if the effect block executes.
+		# Note: order_by cannot use "variable_map(X|this)" because
+		# the iterator scope is the key (a flag), which has no
+		# variable maps. Use a constant instead.
 		set_global_variable = { name = engine_test_30_picked value = 0 }
 		ordered_key_in_variable_map = {
 			variable = engine_test_iter
-			order_by = "variable_map(engine_test_iter|this)"
+			order_by = 0
 			position = 0
 			# max = 1 # Causes errors if used with a position field.
 			check_range_bounds = no
@@ -618,7 +639,7 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_30_passed value = 1 }
 		}
 
-		# Result: FAIL
+		# Result: FAIL (default max is 1, not all entries)
 		# ── Test 31 ─────────────────────────────────────────────
 		# ordered_key_in_variable_map: iterate all keys without
 		# position/max constraints. Only order_by is specified.
@@ -626,7 +647,7 @@ engine_test_run_global = {
 		set_global_variable = { name = engine_test_31_count value = 0 }
 		ordered_key_in_variable_map = {
 			variable = engine_test_iter
-			order_by = "variable_map(engine_test_iter|this)"
+			order_by = 0
 			# max = 3 # Without this line, the test fails
 			# check_range_bounds = no # Even having this on fails without the max
 			change_global_variable = { name = engine_test_31_count add = 1 }
@@ -644,7 +665,7 @@ engine_test_run_global = {
 		set_global_variable = { name = engine_test_32_count value = 0 }
 		ordered_key_in_variable_map = {
 			variable = engine_test_iter
-			order_by = "variable_map(engine_test_iter|this)"
+			order_by = 0
 			max = 3
 			change_global_variable = { name = engine_test_32_count add = 1 }
 		}
@@ -668,6 +689,22 @@ engine_test_run_global = {
 		if = {
 			limit = { global_var:engine_test_33_count >= 1 }
 			set_variable = { name = engine_test_33_passed value = 1 }
+		}
+
+		# ── Test 34 ─────────────────────────────────────────────
+		# ordered_key_in_variable_map: does omitting max default
+		# to picking exactly one element? Uses the same
+		# engine_test_iter map (3 entries). Counts iterations.
+		# Pass if the counter reaches exactly 1.
+		set_global_variable = { name = engine_test_34_count value = 0 }
+		ordered_key_in_variable_map = {
+			variable = engine_test_iter
+			order_by = 0
+			change_global_variable = { name = engine_test_34_count add = 1 }
+		}
+		if = {
+			limit = { global_var:engine_test_34_count = 1 }
+			set_variable = { name = engine_test_34_passed value = 1 }
 		}
 
 		# Mark that the global test suite has been executed
