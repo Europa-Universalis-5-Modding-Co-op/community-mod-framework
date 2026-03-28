@@ -102,9 +102,98 @@
 
 					button_regular = {
 						size = { 180 40 }
-						text = "OK"
+						raw_text = "Enable"
+						onclick = "[GetVariableSystem.Set( 'cmf_dep_auto_enable', 'yes' )]"
+						onclick = "[FrontEndMainView.ToggleOpenMods]"
 						onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
 						tooltip_enabled = no
+					}
+				}
+			}
+		}
+	}
+}
+
+### Auto-enable CMF when the user clicks "Enable" on the dependency popup.
+### Overrides downloaded_list to iterate LocalMods and call AddMod for CMF.
+types cmf_dependency_auto_enable
+{
+	type downloaded_list = scrollarea {
+		scissor = yes
+		layoutpolicy_horizontal = Preferred
+		layoutpolicy_vertical = Preferred
+		scrollbarpolicy_vertical = as_needed
+		scrollbarpolicy_horizontal = as_needed
+		scrollbaralign_vertical = right
+		scrollbaralign_horizontal = bottom
+		autoresizeviewport = yes
+		alwaystransparent = no
+
+		block "scrollbars" {
+			scrollbar_vertical = {
+				using = Scrollbar_Vertical
+			}
+
+			scrollbar_horizontal = {
+				using = editor_horizontal_scrollbar
+			}
+		}
+
+		scrollwidget = {
+			block "content" {
+				vbox = {
+					fixedgridbox = {
+						datamodel = "[ModsGui.GetPlayset( ModsGui.SelectedPlaysetId ).ModifiableMods]"
+						addcolumn = 100%
+						addrow = 45
+						datamodel_wrap = 1
+						flipdirection = yes
+						setitemsizefromcell = yes
+
+						item = {
+							selected_mod_item = {
+							}
+						}
+					}
+					vbox = {
+						margin_right = 15
+						using = layoutpolicy_expanding
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							datamodel = "[ModsGui.LocalMods]"
+
+							item = {
+								mod_card = {
+									layoutpolicy_horizontal = expanding
+									size = { -1 45 }
+									blockoverride "mod_card_left_buttons" {}
+									visible = "[Not(ModsGui.ActivePlayset.ContainsMod(LocalMod.Id))]"
+								}
+							}
+						}
+						expand = {}
+					}
+				}
+			}
+		}
+
+		### Hidden auto-enable widget — fires AddMod for CMF when the flag is set.
+		### Always iterates LocalMods; individual items become visible only when
+		### the flag is set AND the mod matches, triggering _show → AddMod.
+		fixedgridbox = {
+			datamodel = "[ModsGui.LocalMods]"
+			addcolumn = 0
+			addrow = 0
+
+			item = {
+				widget = {
+					size = { 0 0 }
+					visible = "[And3( GetVariableSystem.Exists( 'cmf_dep_auto_enable' ), EqualTo_string( LocalMod.Name, 'community_mod_framework' ), Not( ModsGui.ActivePlayset.ContainsMod( LocalMod.Id ) ) )]"
+
+					state = {
+						name = _show
+						on_start = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
+						on_start = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
 					}
 				}
 			}
