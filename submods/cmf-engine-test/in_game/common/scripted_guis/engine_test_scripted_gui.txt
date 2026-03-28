@@ -518,6 +518,75 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_27_passed value = 1 }
 		}
 
+		# ── Test 28 ─────────────────────────────────────────────
+		# every_key_in_variable_map: iterate all entries in a
+		# country-scoped variable map. Seed 3 entries, iterate
+		# and count using a global counter variable.
+		# PASS if the counter reaches 3 (all entries visited).
+		set_variable = { name = engine_test_28_passed value = 0 }
+		add_to_variable_map = {
+			name = engine_test_iter
+			key = flag:engine_test_iter_a
+			value = 10
+		}
+		add_to_variable_map = {
+			name = engine_test_iter
+			key = flag:engine_test_iter_b
+			value = 20
+		}
+		add_to_variable_map = {
+			name = engine_test_iter
+			key = flag:engine_test_iter_c
+			value = 30
+		}
+		set_global_variable = { name = engine_test_28_count value = 0 }
+		every_key_in_variable_map = {
+			limit = { always = yes }
+			variable = engine_test_iter
+			change_global_variable = { name = engine_test_28_count add = 1 }
+		}
+		if = {
+			limit = { global_var:engine_test_28_count >= 3 }
+			set_variable = { name = engine_test_28_passed value = 1 }
+		}
+
+		# ── Test 29 ─────────────────────────────────────────────
+		# random_key_in_variable_map: pick a random entry from
+		# a country-scoped variable map.
+		# PASS if the effect block executes (an entry was picked).
+		set_variable = { name = engine_test_29_passed value = 0 }
+		set_global_variable = { name = engine_test_29_picked value = 0 }
+		random_key_in_variable_map = {
+			variable = engine_test_iter
+			limit = { always = yes }
+			set_global_variable = { name = engine_test_29_picked value = 1 }
+		}
+		if = {
+			limit = { global_var:engine_test_29_picked >= 1 }
+			set_variable = { name = engine_test_29_passed value = 1 }
+		}
+
+		# ── Test 30 ─────────────────────────────────────────────
+		# ordered_key_in_variable_map: iterate keys in order.
+		# Uses position = 0 and max = 1 to select exactly one
+		# entry from the map.
+		# PASS if the effect block executes.
+		set_variable = { name = engine_test_30_passed value = 0 }
+		set_global_variable = { name = engine_test_30_picked value = 0 }
+		ordered_key_in_variable_map = {
+			variable = engine_test_iter
+			limit = { always = yes }
+			order_by = 1
+			position = 0
+			max = 1
+			check_range_bounds = no
+			set_global_variable = { name = engine_test_30_picked value = 1 }
+		}
+		if = {
+			limit = { global_var:engine_test_30_picked >= 1 }
+			set_variable = { name = engine_test_30_passed value = 1 }
+		}
+
 		# Mark that the global test suite has been executed
 		set_variable = { name = engine_test_global_has_run value = 1 }
 	}
