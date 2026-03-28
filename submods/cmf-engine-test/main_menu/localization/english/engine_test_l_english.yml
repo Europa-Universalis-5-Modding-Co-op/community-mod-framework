@@ -18,7 +18,7 @@
  ENGINE_TEST_9_LABEL: "9: Read on_action global map (hardcoded)"
  ENGINE_TEST_10_LABEL: "10: Read on_action global map (scope:setting)"
  ENGINE_TEST_11_LABEL: "11: Cross-context country map read (flag to scope:setting)"
- ENGINE_TEST_12_LABEL: "12: Global write landed in country map?"
+ ENGINE_TEST_12_LABEL: "12: Global write stays in global scope"
  ENGINE_TEST_13_LABEL: "13: flag:->flag: same-key update (country map)"
  ENGINE_TEST_14_LABEL: "14: flag:->flag: same-key update (global map)"
  ENGINE_TEST_15_LABEL: "15: scope:setting->scope:setting direct overwrite (global)"
