@@ -7,8 +7,8 @@
 engine_test_on_game_start = {
 	effect = {
 		# Pre-seed global variable maps for read-only tests (8, 9).
-		# These verify that scripted GUIs can READ global maps even if
-		# they can't WRITE to them.
+		# These verify that scripted GUIs can read global maps even if
+		# they can't write to them.
 		# Note: on_game_start fires with empty scope, so set_variable
 		# (country-scoped) cannot be used here. The scripted GUIs
 		# reset their own result variables before running.

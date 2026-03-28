@@ -953,7 +953,7 @@ window = {
 				}
 			}
 
-			# ── Test 35 ─────────────────────────────────────
+			# ── Test 31 ─────────────────────────────────────
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -962,7 +962,7 @@ window = {
 				text_single = {
 					layoutpolicy_horizontal = expanding
 					fontsize = 14
-					text = "ENGINE_TEST_35_LABEL"
+					text = "ENGINE_TEST_31_LABEL"
 				}
 
 				text_single = {
@@ -971,18 +971,18 @@ window = {
 					text = "ENGINE_TEST_NOT_RUN"
 				}
 				text_single = {
-					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_35_passed').GetValue, '(CFixedPoint)1'))]"
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_31_passed').GetValue, '(CFixedPoint)1'))]"
 					fontsize = 14
 					text = "ENGINE_TEST_PASS"
 				}
 				text_single = {
-					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_35_passed').GetValue, '(CFixedPoint)1')))]"
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_31_passed').GetValue, '(CFixedPoint)1')))]"
 					fontsize = 14
 					text = "ENGINE_TEST_FAIL"
 				}
 			}
 
-			# ── Test 36 ─────────────────────────────────────
+			# ── Test 32 ─────────────────────────────────────
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -991,7 +991,7 @@ window = {
 				text_single = {
 					layoutpolicy_horizontal = expanding
 					fontsize = 14
-					text = "ENGINE_TEST_36_LABEL"
+					text = "ENGINE_TEST_32_LABEL"
 				}
 
 				text_single = {
@@ -1000,12 +1000,12 @@ window = {
 					text = "ENGINE_TEST_NOT_RUN"
 				}
 				text_single = {
-					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_36_passed').GetValue, '(CFixedPoint)1'))]"
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_32_passed').GetValue, '(CFixedPoint)1'))]"
 					fontsize = 14
 					text = "ENGINE_TEST_PASS"
 				}
 				text_single = {
-					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_36_passed').GetValue, '(CFixedPoint)1')))]"
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_32_passed').GetValue, '(CFixedPoint)1')))]"
 					fontsize = 14
 					text = "ENGINE_TEST_FAIL"
 				}
