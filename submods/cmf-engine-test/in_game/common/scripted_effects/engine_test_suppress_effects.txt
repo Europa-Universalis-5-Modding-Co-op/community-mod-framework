@@ -7,54 +7,55 @@ engine_test_suppress_warnings = {
 		limit = {
 			always = no
 			# Suppress "set but never used" for country variables
-			var:engine_test_1_passed >= 0
-			var:engine_test_2_passed >= 0
-			var:engine_test_3_passed >= 0
-			var:engine_test_4_passed >= 0
-			var:engine_test_5_passed >= 0
-			var:engine_test_6_passed >= 0
-			var:engine_test_7_passed >= 0
-			var:engine_test_8_passed >= 0
-			var:engine_test_9_passed >= 0
-			var:engine_test_10_passed >= 0
-			var:engine_test_11_passed >= 0
-			var:engine_test_12_passed >= 0
-			var:engine_test_13_passed >= 0
-			var:engine_test_14_passed >= 0
-			var:engine_test_15_passed >= 0
-			var:engine_test_16_passed >= 0
-			var:engine_test_17_passed >= 0
-			var:engine_test_18_passed >= 0
-			var:engine_test_19_passed >= 0
-			var:engine_test_20_passed >= 0
-			var:engine_test_21_passed >= 0
-			var:engine_test_22_passed >= 0
-			var:engine_test_23_passed >= 0
-			var:engine_test_24_passed >= 0
-			var:engine_test_25_passed >= 0
-			var:engine_test_26_passed >= 0
-			var:engine_test_27_passed >= 0
-			var:engine_test_28_passed >= 0
-			var:engine_test_29_passed >= 0
-			var:engine_test_30_passed >= 0
-			var:engine_test_35_passed >= 0
-			var:engine_test_36_passed >= 0
-			var:engine_test_has_run >= 0
-			var:engine_test_global_has_run >= 0
+			exists = var:engine_test_1_passed
+			exists = var:engine_test_2_passed
+			exists = var:engine_test_3_passed
+			exists = var:engine_test_4_passed
+			exists = var:engine_test_5_passed
+			exists = var:engine_test_6_passed
+			exists = var:engine_test_7_passed
+			exists = var:engine_test_8_passed
+			exists = var:engine_test_9_passed
+			exists = var:engine_test_10_passed
+			exists = var:engine_test_11_passed
+			exists = var:engine_test_12_passed
+			exists = var:engine_test_13_passed
+			exists = var:engine_test_14_passed
+			exists = var:engine_test_15_passed
+			exists = var:engine_test_16_passed
+			exists = var:engine_test_17_passed
+			exists = var:engine_test_18_passed
+			exists = var:engine_test_19_passed
+			exists = var:engine_test_20_passed
+			exists = var:engine_test_21_passed
+			exists = var:engine_test_22_passed
+			exists = var:engine_test_23_passed
+			exists = var:engine_test_24_passed
+			exists = var:engine_test_25_passed
+			exists = var:engine_test_26_passed
+			exists = var:engine_test_27_passed
+			exists = var:engine_test_28_passed
+			exists = var:engine_test_29_passed
+			exists = var:engine_test_30_passed
+			exists = var:engine_test_35_passed
+			exists = var:engine_test_36_passed
+			exists = var:engine_test_has_run
+			exists = var:engine_test_global_has_run
 			# Suppress "set but never used" for local variables
-			local_var:engine_test_lv >= 0
-			local_var:engine_test_map_name >= 0
+			exists = local_var:engine_test_lv
+			exists = local_var:engine_test_map_name
+			# Suppress "set but never used" for flags
+			exists = flag:engine_test_cross
+			exists = flag:engine_test_hardcoded
+			exists = flag:engine_test_iter_a
+			exists = flag:engine_test_iter_b
+			exists = flag:engine_test_iter_c
+			exists = flag:engine_test_preseeded
+			# Suppress "used but never set" for prefixed variable
+			# references (checker can't match quoted scope link
+			# usage to set_variable/set_local_variable)
+			exists = var:engine_test_map_name_v
+			exists = local_var:engine_test_map_name
 		}
-		# Suppress "used but never set" for prefixed variable references
-		# (checker can't match quoted scope link usage to set_variable)
-		set_variable = { name = engine_test_map_name_v value = 0 }
-		set_local_variable = { name = engine_test_map_name value = 0 }
-		# Suppress "set but never used" for flags (used as variable map keys)
-		set_local_variable = { name = _s value = flag:engine_test_cross }
-		set_local_variable = { name = _s value = flag:engine_test_hardcoded }
-		set_local_variable = { name = _s value = flag:engine_test_iter_a }
-		set_local_variable = { name = _s value = flag:engine_test_iter_b }
-		set_local_variable = { name = _s value = flag:engine_test_iter_c }
-		set_local_variable = { name = _s value = flag:engine_test_preseeded }
 	}
 }
