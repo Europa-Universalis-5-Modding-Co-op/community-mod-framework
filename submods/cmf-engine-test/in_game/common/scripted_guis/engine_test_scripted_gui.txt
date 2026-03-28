@@ -116,6 +116,7 @@ engine_test_run_global = {
 		set_variable = { name = engine_test_30_passed value = 0 }
 		set_variable = { name = engine_test_31_passed value = 0 }
 		set_variable = { name = engine_test_32_passed value = 0 }
+		set_variable = { name = engine_test_33_passed value = 0 }
 
 		# ── Test 4 ──────────────────────────────────────────────
 		# set_global_variable from scripted GUI context.
@@ -579,7 +580,7 @@ engine_test_run_global = {
 			variable = engine_test_iter
 			order_by = "variable_map(engine_test_iter|this)"
 			position = 0
-			max = 1
+			# max = 1 # Causes errors if used with a position field.
 			check_range_bounds = no
 			set_global_variable = { name = engine_test_30_picked value = 1 }
 		}
@@ -606,19 +607,35 @@ engine_test_run_global = {
 		}
 
 		# ── Test 32 ─────────────────────────────────────────────
+		# ordered_key_in_variable_map: same as test 31 but with
+		# max specified. This succeeds while test 31 (without max)
+		# fails, suggesting max is required for iteration.
+		set_global_variable = { name = engine_test_32_count value = 0 }
+		ordered_key_in_variable_map = {
+			variable = engine_test_iter
+			order_by = "variable_map(engine_test_iter|this)"
+			max = 3
+			change_global_variable = { name = engine_test_32_count add = 1 }
+		}
+		if = {
+			limit = { global_var:engine_test_32_count >= 3 }
+			set_variable = { name = engine_test_32_passed value = 1 }
+		}
+
+		# ── Test 33 ─────────────────────────────────────────────
 		# every_key_in_global_variable_map: iterate all entries
 		# in a global variable map using only the variable field.
 		# Uses engine_test_gmap8 (seeded by on_game_start with
 		# one entry: flag:engine_test_preseeded = 10).
 		# Pass if the counter reaches 1 (the entry was visited).
-		set_global_variable = { name = engine_test_32_count value = 0 }
+		set_global_variable = { name = engine_test_33_count value = 0 }
 		every_key_in_global_variable_map = {
 			variable = engine_test_gmap8
-			change_global_variable = { name = engine_test_32_count add = 1 }
+			change_global_variable = { name = engine_test_33_count add = 1 }
 		}
 		if = {
-			limit = { global_var:engine_test_32_count >= 1 }
-			set_variable = { name = engine_test_32_passed value = 1 }
+			limit = { global_var:engine_test_33_count >= 1 }
+			set_variable = { name = engine_test_33_passed value = 1 }
 		}
 
 		# Mark that the global test suite has been executed
