@@ -575,7 +575,6 @@ engine_test_run_global = {
 		set_global_variable = { name = engine_test_30_picked value = 0 }
 		ordered_key_in_variable_map = {
 			variable = engine_test_iter
-			limit = { always = yes }
 			order_by = "variable_map(engine_test_iter|this)"
 			position = 0
 			max = 1

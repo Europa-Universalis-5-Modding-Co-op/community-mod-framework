@@ -1,0 +1,60 @@
+﻿# Dead branch suppression for engine test warnings.
+# The script checker cannot see variable/flag usage in GUI expressions
+# or inside quoted scope link strings. This unused effect references
+# all flagged names so the checker considers them used/set.
+engine_test_suppress_warnings = {
+	if = {
+		limit = {
+			always = no
+			# Suppress "set but never used" for country variables
+			var:engine_test_1_passed >= 0
+			var:engine_test_2_passed >= 0
+			var:engine_test_3_passed >= 0
+			var:engine_test_4_passed >= 0
+			var:engine_test_5_passed >= 0
+			var:engine_test_6_passed >= 0
+			var:engine_test_7_passed >= 0
+			var:engine_test_8_passed >= 0
+			var:engine_test_9_passed >= 0
+			var:engine_test_10_passed >= 0
+			var:engine_test_11_passed >= 0
+			var:engine_test_12_passed >= 0
+			var:engine_test_13_passed >= 0
+			var:engine_test_14_passed >= 0
+			var:engine_test_15_passed >= 0
+			var:engine_test_16_passed >= 0
+			var:engine_test_17_passed >= 0
+			var:engine_test_18_passed >= 0
+			var:engine_test_19_passed >= 0
+			var:engine_test_20_passed >= 0
+			var:engine_test_21_passed >= 0
+			var:engine_test_22_passed >= 0
+			var:engine_test_23_passed >= 0
+			var:engine_test_24_passed >= 0
+			var:engine_test_25_passed >= 0
+			var:engine_test_26_passed >= 0
+			var:engine_test_27_passed >= 0
+			var:engine_test_28_passed >= 0
+			var:engine_test_29_passed >= 0
+			var:engine_test_30_passed >= 0
+			var:engine_test_35_passed >= 0
+			var:engine_test_36_passed >= 0
+			var:engine_test_has_run >= 0
+			var:engine_test_global_has_run >= 0
+			# Suppress "set but never used" for local variables
+			local_var:engine_test_lv >= 0
+			local_var:engine_test_map_name >= 0
+		}
+		# Suppress "used but never set" for prefixed variable references
+		# (checker can't match quoted scope link usage to set_variable)
+		set_variable = { name = engine_test_map_name_v value = 0 }
+		set_local_variable = { name = engine_test_map_name value = 0 }
+		# Suppress "set but never used" for flags (used as variable map keys)
+		set_local_variable = { name = _s value = flag:engine_test_cross }
+		set_local_variable = { name = _s value = flag:engine_test_hardcoded }
+		set_local_variable = { name = _s value = flag:engine_test_iter_a }
+		set_local_variable = { name = _s value = flag:engine_test_iter_b }
+		set_local_variable = { name = _s value = flag:engine_test_iter_c }
+		set_local_variable = { name = _s value = flag:engine_test_preseeded }
+	}
+}
