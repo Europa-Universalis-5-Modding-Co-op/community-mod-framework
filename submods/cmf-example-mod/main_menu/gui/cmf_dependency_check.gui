@@ -70,7 +70,7 @@
 			parentanchor = center
 			alwaystransparent = no
 
-			visible = "[And( Not( HasActiveMod('community_mod_framework') ), Not( GetVariableSystem.Exists( 'cmf_dep_dismiss' ) ) )]"
+			visible = "[And( Not( GetVariableSystem.Exists( 'cmf_active' ) ), Not( GetVariableSystem.Exists( 'cmf_dep_dismiss' ) ) )]"
 
 			window = {
 				parentanchor = center
