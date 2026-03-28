@@ -1,0 +1,113 @@
+﻿types cmf_dependency_check
+{
+	type FrontEndNews = widget {
+		size = { 100% 100% }
+
+		### Original FrontEndNews content
+		flowcontainer = {
+			parentanchor = bottom|right
+			widgetanchor = bottom|right
+			position = { -110 -20 }
+			spacing = 10
+
+			alwaystransparent = yes
+			ignoreinvisible = yes
+			visible = yes
+			scissor = yes
+
+			newsfeed_carousel = {
+				name = "newsfeed_slot_main"
+				size = { 451 230 }
+				align = left
+				datacontext = "[FrontEndMainView.AccessMarketingContainer.AccessSlotByName('main')]"
+				tooltip_enabled = no
+			}
+
+			newsfeed_carousel = {
+				name = "newsfeed_slot_secondary_1"
+				size = { 245 230 }
+				align = left
+				datacontext = "[FrontEndMainView.AccessMarketingContainer.AccessSlotByName('secondary-1')]"
+				tooltip_enabled = no
+
+				blockoverride "offset_x" {
+					position_x = -245
+				}
+				blockoverride "current_button_pos" {
+					size = { 245 230 }
+				}
+				blockoverride "next_button_pos" {
+					size = { 245 230 }
+					position = { 245 0 }
+				}
+			}
+
+			newsfeed_carousel = {
+				name = "newsfeed_slot_secondary_2"
+				size = { 245 230 }
+				align = left
+				datacontext = "[FrontEndMainView.AccessMarketingContainer.AccessSlotByName('secondary-2')]"
+				tooltip_enabled = no
+
+				blockoverride "offset_x" {
+					position_x = -245
+				}
+				blockoverride "current_button_pos" {
+					size = { 245 230 }
+				}
+				blockoverride "next_button_pos" {
+					size = { 245 230 }
+					position = { 245 0 }
+				}
+			}
+		}
+
+		### CMF dependency check popup
+		### To use: copy this file into your mod's main_menu/gui/ directory.
+		### No localization file needed — all text is inlined below.
+		widget = {
+			size = { 100% 100% }
+			parentanchor = center
+			alwaystransparent = no
+
+			visible = "[And( Not( HasActiveMod('community_mod_framework') ), Not( GetVariableSystem.Exists( 'cmf_dep_dismiss' ) ) )]"
+
+			window = {
+				parentanchor = center
+				widgetanchor = center
+				size = { 460 200 }
+				using = bg_window_default_alt
+				movable = no
+				resizable = no
+				alwaystransparent = no
+
+				vbox = {
+					using = window_margin_alt
+					spacing = 10
+
+					text_single = {
+						raw_text = "#T Missing Dependency#!"
+						align = center
+					}
+
+					text_multi = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "A mod you have enabled requires the #bold Community Mod Framework#! to be enabled. Please enable it in the mod manager."
+						align = center
+						autoresize = yes
+						max_width = 400
+					}
+
+					expand = {}
+
+					button_regular = {
+						size = { 180 40 }
+						text = "OK"
+						onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
+						tooltip_enabled = no
+					}
+				}
+			}
+		}
+	}
+}
