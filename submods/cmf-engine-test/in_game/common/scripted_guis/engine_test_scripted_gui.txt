@@ -466,6 +466,58 @@ engine_test_run_global = {
 		}
 		remove_variable = engine_test_map_name_v
 
+		# ── Test 26 ─────────────────────────────────────────────
+		# scope:setting -> scope:setting direct overwrite attempt.
+		# Write with scope:setting (value 10), then write again
+		# with scope:setting (value 99). Read back with
+		# scope:setting. If PASS, add_to updates in-place when
+		# the key reference type matches.
+		set_variable = { name = engine_test_26_passed value = 0 }
+		add_to_global_variable_map = {
+			name = engine_test_gmap26
+			key = scope:setting
+			value = 10
+		}
+		add_to_global_variable_map = {
+			name = engine_test_gmap26
+			key = scope:setting
+			value = 99
+		}
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap26|scope:setting)" >= 99
+			}
+			set_variable = { name = engine_test_26_passed value = 1 }
+		}
+
+		# ── Test 27 ─────────────────────────────────────────────
+		# scope:setting -> remove + re-add. Write with
+		# scope:setting (value 10), remove with scope:setting,
+		# then re-add with scope:setting (value 99). Read back
+		# with scope:setting. Verifies the remove+re-add pattern
+		# works when both operations use scope:setting.
+		set_variable = { name = engine_test_27_passed value = 0 }
+		add_to_global_variable_map = {
+			name = engine_test_gmap27
+			key = scope:setting
+			value = 10
+		}
+		remove_from_global_variable_map = {
+			name = engine_test_gmap27
+			key = scope:setting
+		}
+		add_to_global_variable_map = {
+			name = engine_test_gmap27
+			key = scope:setting
+			value = 99
+		}
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gmap27|scope:setting)" >= 99
+			}
+			set_variable = { name = engine_test_27_passed value = 1 }
+		}
+
 		# Mark that the global test suite has been executed
 		set_variable = { name = engine_test_global_has_run value = 1 }
 	}

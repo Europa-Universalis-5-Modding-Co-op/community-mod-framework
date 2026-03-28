@@ -32,6 +32,8 @@
  ENGINE_TEST_23_LABEL: "23: flag:->flag: same-key update (global map)"
  ENGINE_TEST_24_LABEL: "24: local_var: in MAP NAME position of quoted string"
  ENGINE_TEST_25_LABEL: "25: var: in MAP NAME position of quoted string"
+ ENGINE_TEST_26_LABEL: "26: scope:setting->scope:setting direct overwrite (global)"
+ ENGINE_TEST_27_LABEL: "27: scope:setting remove + re-add (global)"
  ENGINE_TEST_PASS: "#G PASS#!"
  ENGINE_TEST_FAIL: "#R FAIL#!"
  ENGINE_TEST_NOT_RUN: "---"
