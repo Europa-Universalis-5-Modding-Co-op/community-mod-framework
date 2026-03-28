@@ -26,6 +26,7 @@ window = {
 
 			blockoverride "scrollbox_content" {
 				spacing = 4
+				margin_right = 20
 
 		# ═══════════════════════════════════════════════════════
 		# Section 1: Country-Scope Variable Map Tests
@@ -947,6 +948,218 @@ window = {
 				}
 				text_single = {
 					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_30_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ENGINE_TEST_FAIL"
+				}
+			}
+
+			# ── Test 35 ─────────────────────────────────────
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ENGINE_TEST_35_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet)]"
+					text = "ENGINE_TEST_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_35_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ENGINE_TEST_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_35_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ENGINE_TEST_FAIL"
+				}
+			}
+
+			# ── Test 36 ─────────────────────────────────────
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ENGINE_TEST_36_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet)]"
+					text = "ENGINE_TEST_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_36_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ENGINE_TEST_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_36_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ENGINE_TEST_FAIL"
+				}
+			}
+		}
+
+		# ── Separator ───────────────────────────────────────
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 2 }
+		}
+
+		# ═══════════════════════════════════════════════════════
+		# Section 4: GUI Function Tests
+		# These test GUI script functions directly in visible
+		# expressions. If the function is bugged, FAIL shows.
+		# If it causes a GUI expression error, neither shows.
+		# ═══════════════════════════════════════════════════════
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 14
+			text = "ENGINE_TEST_SECTION_GUI"
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# ── Test 31 ─────────────────────────────────────
+			# HasVariableMap: does it correctly report a
+			# country-scoped map exists?
+			# Uses engine_test_iter (seeded by test 28).
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ENGINE_TEST_31_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet)]"
+					text = "ENGINE_TEST_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Player.MakeScope.HasVariableMap('engine_test_iter'))]"
+					fontsize = 14
+					text = "ENGINE_TEST_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(Player.MakeScope.HasVariableMap('engine_test_iter')))]"
+					fontsize = 14
+					text = "ENGINE_TEST_FAIL"
+				}
+			}
+
+			# ── Test 32 ─────────────────────────────────────
+			# HasGlobalVariableMap: does it correctly report a
+			# global-scoped map exists?
+			# Uses engine_test_gmap8 (seeded by on_game_start).
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ENGINE_TEST_32_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet)]"
+					text = "ENGINE_TEST_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, HasGlobalVariableMap('engine_test_gmap8'))]"
+					fontsize = 14
+					text = "ENGINE_TEST_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(HasGlobalVariableMap('engine_test_gmap8')))]"
+					fontsize = 14
+					text = "ENGINE_TEST_FAIL"
+				}
+			}
+
+			# ── Test 33 ─────────────────────────────────────
+			# IsKeyInVariableMap: does it correctly report a
+			# key exists in a country-scoped map?
+			# Uses engine_test_iter[flag:engine_test_iter_a]
+			# (seeded by test 28).
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ENGINE_TEST_33_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet)]"
+					text = "ENGINE_TEST_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Player.MakeScope.IsKeyInVariableMap('engine_test_iter', MakeScopeFlag('engine_test_iter_a')))]"
+					fontsize = 14
+					text = "ENGINE_TEST_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(Player.MakeScope.IsKeyInVariableMap('engine_test_iter', MakeScopeFlag('engine_test_iter_a'))))]"
+					fontsize = 14
+					text = "ENGINE_TEST_FAIL"
+				}
+			}
+
+			# ── Test 34 ─────────────────────────────────────
+			# IsKeyInGlobalVariableMap: does it correctly report
+			# a key exists in a global-scoped map?
+			# Uses engine_test_gmap8[flag:engine_test_preseeded]
+			# (seeded by on_game_start).
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ENGINE_TEST_34_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet)]"
+					text = "ENGINE_TEST_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, IsKeyInGlobalVariableMap('engine_test_gmap8', MakeScopeFlag('engine_test_preseeded')))]"
+					fontsize = 14
+					text = "ENGINE_TEST_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(IsKeyInGlobalVariableMap('engine_test_gmap8', MakeScopeFlag('engine_test_preseeded'))))]"
 					fontsize = 14
 					text = "ENGINE_TEST_FAIL"
 				}

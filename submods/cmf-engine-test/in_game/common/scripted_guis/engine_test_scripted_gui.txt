@@ -570,13 +570,13 @@ engine_test_run_global = {
 		# ordered_key_in_variable_map: iterate keys in order.
 		# Uses position = 0 and max = 1 to select exactly one
 		# entry from the map.
-		# PASS if the effect block executes.
+		# PASS if the effect block executes
 		set_variable = { name = engine_test_30_passed value = 0 }
 		set_global_variable = { name = engine_test_30_picked value = 0 }
 		ordered_key_in_variable_map = {
 			variable = engine_test_iter
 			limit = { always = yes }
-			order_by = 1
+			order_by = "variable_map(engine_test_iter|this)"
 			position = 0
 			max = 1
 			check_range_bounds = no
@@ -585,6 +585,39 @@ engine_test_run_global = {
 		if = {
 			limit = { global_var:engine_test_30_picked >= 1 }
 			set_variable = { name = engine_test_30_passed value = 1 }
+		}
+
+		# ── Test 35 ─────────────────────────────────────────────
+		# ordered_key_in_variable_map: iterate all keys without
+		# position/max constraints. Only order_by is specified.
+		# PASS if the counter reaches 3 (all entries visited).
+		set_variable = { name = engine_test_35_passed value = 0 }
+		set_global_variable = { name = engine_test_35_count value = 0 }
+		ordered_key_in_variable_map = {
+			variable = engine_test_iter
+			order_by = "variable_map(engine_test_iter|this)"
+			change_global_variable = { name = engine_test_35_count add = 1 }
+		}
+		if = {
+			limit = { global_var:engine_test_35_count >= 3 }
+			set_variable = { name = engine_test_35_passed value = 1 }
+		}
+
+		# ── Test 36 ─────────────────────────────────────────────
+		# every_key_in_global_variable_map: iterate all entries
+		# in a global variable map using only the variable field.
+		# Uses engine_test_gmap8 (seeded by on_game_start with
+		# one entry: flag:engine_test_preseeded = 10).
+		# PASS if the counter reaches 1 (the entry was visited).
+		set_variable = { name = engine_test_36_passed value = 0 }
+		set_global_variable = { name = engine_test_36_count value = 0 }
+		every_key_in_global_variable_map = {
+			variable = engine_test_gmap8
+			change_global_variable = { name = engine_test_36_count add = 1 }
+		}
+		if = {
+			limit = { global_var:engine_test_36_count >= 1 }
+			set_variable = { name = engine_test_36_passed value = 1 }
 		}
 
 		# Mark that the global test suite has been executed

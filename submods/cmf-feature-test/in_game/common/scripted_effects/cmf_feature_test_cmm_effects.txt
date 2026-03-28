@@ -182,6 +182,14 @@ cmf_feature_test_register_cmf_mod = {
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 4 value = root }
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 5 value = root }
 
+	# Per-item field visibility: disable specific fields for specific items.
+	# Item 2: no bool (enabled) field
+	cmm_disable_list_field_for_item = { mod_id = cmf_feature_test setting_id = ordered_list field_id = enabled item = 2 }
+	# Item 4: no dropdown (mode) field
+	cmm_disable_list_field_for_item = { mod_id = cmf_feature_test setting_id = ordered_list field_id = mode item = 4 }
+	# Item 5: no numeric (weight) field
+	cmm_disable_list_field_for_item = { mod_id = cmf_feature_test setting_id = ordered_list field_id = weight item = 5 }
+
 	## Unordered List (unordered_list) Group
 	cmm_register_settings_list = {
 		mod_id = cmf_feature_test
