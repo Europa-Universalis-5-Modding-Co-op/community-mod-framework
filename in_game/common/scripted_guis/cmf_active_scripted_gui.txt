@@ -20,3 +20,16 @@ cmf_set_active = {
 		}
 	}
 }
+
+# Fires cmf_on_game_start from a GUI trigger_on_create state.
+# Scope: country
+cmf_on_game_start_gui = {
+	scope = player
+	effect = {
+		set_global_variable = { name = cmf_active value = yes }
+		cmm_register_menu_settings = yes
+		trigger_event_silently = {
+			on_action = cmf_on_game_start
+		}
+	}
+}

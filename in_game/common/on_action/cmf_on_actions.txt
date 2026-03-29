@@ -75,6 +75,14 @@ cmf_on_mod_registration = {
 	on_actions = { }
 }
 
+# Post-map-load game start hook. Fires once when the in-game UI is created.
+# Use this instead of on_game_start for effects that need the map loaded
+# (cultures, religions, nations, etc.).
+# Scope: country
+cmf_on_game_start = {
+	on_actions = { }
+}
+
 # Unified callback extension point. Fires after auto-apply updates a setting,
 # an alert is clicked, or an action bar button is clicked.
 # var:cmf_callback contains the flag key of the target (setting, alert, or element).

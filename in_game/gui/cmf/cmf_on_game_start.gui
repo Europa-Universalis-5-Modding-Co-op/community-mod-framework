@@ -1,0 +1,11 @@
+﻿widget = {
+	name = "cmf_on_game_start"
+	size = { 0 0 }
+	datacontext = "[GetPlayer]"
+	visible = "[And(Country.IsValid, Not(GetScriptedGui('cmf_is_active').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
+
+	state = {
+		trigger_on_create = yes
+		on_start = "[GetScriptedGui('cmf_on_game_start_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+	}
+}
