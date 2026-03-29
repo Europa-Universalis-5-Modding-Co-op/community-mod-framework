@@ -12,6 +12,21 @@ cmf_suppress = {
 	}
 }
 
+# Change variable map value (adding does not overwrite a existing value)
+# Scope: any
+# Args: map (key), key (scope), value (scope)
+cmf_change_variable_map = {
+	remove_from_variable_map = {
+		name = $map$
+		key = $key$
+	}
+	add_to_variable_map = {
+		name = $map$
+		key = $key$
+		value = $value$
+	}
+}
+
 # Change local variable map value
 # Scope: any
 # Args: map (key), key (scope), value (scope)
@@ -21,21 +36,6 @@ cmf_change_local_variable_map = {
 		key = $key$
 	}
 	add_to_local_variable_map = {
-		name = $map$
-		key = $key$
-		value = $value$
-	}
-}
-
-# Change variable map value
-# Scope: any
-# Args: map (key), key (scope), value (scope)
-cmf_change_variable_map = {
-	remove_from_variable_map = {
-		name = $map$
-		key = $key$
-	}
-	add_to_variable_map = {
 		name = $map$
 		key = $key$
 		value = $value$
