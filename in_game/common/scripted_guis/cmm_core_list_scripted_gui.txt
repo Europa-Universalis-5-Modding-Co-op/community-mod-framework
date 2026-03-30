@@ -1,4 +1,10 @@
-﻿# Mark the next ordered list interaction as row position `0`.
+﻿# No-op fallback when cmm_list_hover_index is unset (empty string suffix).
+CMM_MarkListPosition_ = { }
+
+# No-op fallback when cmm_list_hover_field_slot is unset (empty string suffix).
+CMM_MarkListFieldSlot_ = { }
+
+# Mark the next ordered list interaction as row position `0`.
 # Scope: country
 # Args: none
 CMM_MarkListPosition_0 = {
