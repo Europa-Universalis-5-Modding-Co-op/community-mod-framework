@@ -13,7 +13,7 @@ cmf_feature_test_on_game_start_after_lobby = {
 		c:FRA = {
 			every_owned_location = {
 				every_pop = {
-					change_pop_culture = culture:albanian_culture
+					change_pop_culture = culture:albanian
 				}
 				force_refresh_culture_and_religion = this
 			}
@@ -73,7 +73,7 @@ cmf_feature_test_on_game_start_after_lobby_player_country = {
 	effect = {
 		every_owned_location = {
 			every_pop = {
-				change_pop_culture = culture:danish_culture
+				change_pop_culture = culture:danish
 			}
 			force_refresh_culture_and_religion = this
 		}
@@ -90,7 +90,7 @@ cmf_feature_test_on_game_load_player_country = {
 	effect = {
 		every_owned_location = {
 			every_pop = {
-				change_pop_culture = culture:english_culture
+				change_pop_culture = culture:english
 			}
 			force_refresh_culture_and_religion = this
 		}
@@ -107,7 +107,7 @@ cmf_feature_test_on_game_load_after_lobby_player_country = {
 	effect = {
 		every_owned_location = {
 			every_pop = {
-				change_pop_culture = culture:french_culture
+				change_pop_culture = culture:french
 			}
 			force_refresh_culture_and_religion = this
 		}
