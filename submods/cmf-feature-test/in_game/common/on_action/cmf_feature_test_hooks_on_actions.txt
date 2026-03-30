@@ -1,0 +1,69 @@
+﻿# Post-lobby hook tests.
+# on_game_start_after_lobby: changes player pops to Albanian (new game only).
+# on_game_load: changes player pops to Bacan (every save load).
+# on_game_load_after_lobby: changes player pops to Cabecar (save load, past lobby only).
+on_game_start_after_lobby = {
+	on_actions = {
+		cmf_feature_test_on_game_start_after_lobby
+	}
+}
+
+cmf_feature_test_on_game_start_after_lobby = {
+	effect = {
+		every_country = {
+			limit = {
+				is_ai = no
+			}
+			every_owned_location = {
+				every_pop = {
+					change_pop_culture = culture:albanian_culture
+				}
+				force_refresh_culture_and_religion = this
+			}
+		}
+	}
+}
+
+on_game_load = {
+	on_actions = {
+		cmf_feature_test_on_game_load
+	}
+}
+
+cmf_feature_test_on_game_load = {
+	effect = {
+		every_country = {
+			limit = {
+				is_ai = no
+			}
+			every_owned_location = {
+				every_pop = {
+					change_pop_culture = culture:bacan_culture
+				}
+				force_refresh_culture_and_religion = this
+			}
+		}
+	}
+}
+
+on_game_load_after_lobby = {
+	on_actions = {
+		cmf_feature_test_on_game_load_after_lobby
+	}
+}
+
+cmf_feature_test_on_game_load_after_lobby = {
+	effect = {
+		every_country = {
+			limit = {
+				is_ai = no
+			}
+			every_owned_location = {
+				every_pop = {
+					change_pop_culture = culture:cabecar_culture
+				}
+				force_refresh_culture_and_religion = this
+			}
+		}
+	}
+}
