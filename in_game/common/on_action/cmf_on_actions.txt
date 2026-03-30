@@ -2,7 +2,7 @@
 	on_actions = {
 		cmf_on_init
 		delay = { days = 1 }
-		cmf_on_yearly
+		cmf_on_init_delayed
 	}
 }
 
@@ -11,6 +11,17 @@
 cmf_on_init = {
 	effect = {
 		set_global_variable = { name = cmf_active value = yes }
+	}
+}
+
+# Register menu settings after player has selected a country.
+# Scope: global
+cmf_on_init_delayed = {
+	effect = {
+		every_country = {
+			limit = { is_ai = no }
+			cmm_register_menu_settings = yes
+		}
 	}
 }
 
