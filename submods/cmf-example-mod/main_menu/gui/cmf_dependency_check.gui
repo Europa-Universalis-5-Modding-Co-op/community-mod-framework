@@ -118,6 +118,7 @@
 							raw_text = "[SelectLocalization(HasLanguage('french'), 'Activer', SelectLocalization(HasLanguage('german'), 'Aktivieren', SelectLocalization(HasLanguage('spanish'), 'Activar', SelectLocalization(HasLanguage('braz_por'), 'Ativar', SelectLocalization(HasLanguage('russian'), 'Включить', SelectLocalization(HasLanguage('polish'), 'Włącz', SelectLocalization(HasLanguage('korean'), '활성화', SelectLocalization(HasLanguage('japanese'), '有効にする', SelectLocalization(HasLanguage('simp_chinese'), '启用', SelectLocalization(HasLanguage('turkish'), 'Etkinleştir', 'Enable'))))))))))]"
 							visible = "[GetVariableSystem.Exists( 'cmf_installed' )]"
 							onclick = "[GetVariableSystem.Set( 'cmf_dep_auto_enable', 'yes' )]"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_open_mods', 'yes' )]"
 							onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
 							tooltip_enabled = no
 						}
@@ -147,14 +148,16 @@
 		}
 
 		### Opens the mods panel when a button flag is set and panel isn't already open.
+		### Uses one-shot flags that get cleared on fire to prevent reopen loops.
 		widget = {
 			size = { 0 0 }
 			visible_at_creation = no
-			visible = "[And( Or( GetVariableSystem.Exists( 'cmf_dep_auto_enable' ), GetVariableSystem.Exists( 'cmf_dep_open_workshop' ) ), Not( FrontEndMainView.IsModsOpen ) )]"
+			visible = "[And( Or( GetVariableSystem.Exists( 'cmf_dep_open_mods' ), GetVariableSystem.Exists( 'cmf_dep_open_workshop' ) ), Not( FrontEndMainView.IsModsOpen ) )]"
 
 			state = {
 				name = _show
 				on_start = "[FrontEndMainView.ToggleOpenMods]"
+				on_start = "[GetVariableSystem.Clear( 'cmf_dep_open_mods' )]"
 			}
 		}
 	}
