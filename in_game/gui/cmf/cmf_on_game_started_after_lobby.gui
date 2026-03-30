@@ -1,12 +1,13 @@
 ﻿widget = {
-	name = "cmf_on_game_started_after_lobby"
+	name = "cmf_after_lobby"
 	size = { 0 0 }
 	datacontext = "[GetPlayer]"
-	visible = "[And(Country.IsValid, Not(GetScriptedGui('cmf_has_game_started_after_lobby').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
+	visible = "[And(Country.IsValid, Not(GetVariableSystem.Exists('cmf_after_lobby_fired')))]"
 
 	state = {
-		name = cmf_on_game_started_after_lobby
+		name = cmf_after_lobby
 		trigger_on_create = yes
-		on_start = "[GetScriptedGui('cmf_on_game_started_after_lobby_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		on_start = "[GetScriptedGui('cmf_after_lobby_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		on_start = "[GetVariableSystem.Set('cmf_after_lobby_fired', 'yes')]"
 	}
 }

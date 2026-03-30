@@ -75,15 +75,22 @@ cmf_on_mod_registration = {
 	on_actions = { }
 }
 
-# Post-lobby game start hook. Fires once when the in-game UI is created,
-# after the player has selected their country. Vanilla on_game_start fires
-# before the country selection screen, so player-scoped effects (is_ai = no)
-# don't work there since no country has been selected yet.
+# Post-lobby game start hook. Fires once on a new game when the in-game UI
+# is created, after the player has selected their country. Vanilla on_game_start
+# fires before the country selection screen, so player-scoped effects
+# (is_ai = no) don't work there since no country has been selected yet.
 # Scope: country
 on_game_started_after_lobby = {
 	trigger = {
 		NOT = { has_global_variable = cmf_game_started_after_lobby }
 	}
+	on_actions = { }
+}
+
+# Post-lobby save load hook. Fires every time a save game is loaded,
+# after the player has selected their country. Does NOT fire on new games.
+# Scope: country
+on_game_loaded_after_lobby = {
 	on_actions = { }
 }
 
