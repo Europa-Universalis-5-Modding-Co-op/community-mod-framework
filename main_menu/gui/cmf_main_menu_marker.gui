@@ -20,6 +20,7 @@
 		}
 
 		state = {
+			name = cmf_marker_init
 			trigger_on_create = yes
 			on_start = "[GetVariableSystem.Set( 'cmf_active', 'yes' )]"
 		}

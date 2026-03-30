@@ -119,8 +119,44 @@ All effects require '''country scope'''.
 
 Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
 
-== Player Country Hooks ==
-CMF provides shared on_actions that fire for each human player's country. Slightly more efficient than each mod checking <code>is_ai = no</code> individually. Hook into them the same way as <code>cmf_on_mod_registration</code>:
+== On-Action Hooks ==
+CMF provides shared on_action hooks. Hook into them the same way as <code>cmf_on_mod_registration</code>.
+
+=== Game Start & Load Hooks ===
+Vanilla <code>on_game_start</code> fires before country selection, so player-scoped effects don't work there.
+
+{| class="wikitable"
+! Hook !! When
+|-
+| <code>on_game_start_after_lobby</code> || Once on new game, after country selection
+|-
+| <code>on_game_load</code> || Every save load (including from country selection)
+|-
+| <code>on_game_load_after_lobby</code> || Every save load, only after passing country selection
+|}
+
+<syntaxhighlight lang="text">
+on_game_start_after_lobby = {
+	on_actions = {
+		your_mod_on_new_game
+	}
+}
+
+on_game_load = {
+	on_actions = {
+		your_mod_on_save_loaded
+	}
+}
+
+on_game_load_after_lobby = {
+	on_actions = {
+		your_mod_on_save_loaded_after_lobby
+	}
+}
+</syntaxhighlight>
+
+=== Recurring Hooks ===
+Slightly more efficient than each mod checking <code>is_ai = no</code> individually:
 
 {| class="wikitable"
 ! Hook !! Frequency
