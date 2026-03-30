@@ -10,3 +10,15 @@
 		on_start = "[GetScriptedGui('cmf_after_lobby_caller').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 	}
 }
+
+widget = {
+	name = "cmf_load_after_lobby_caller"
+	size = { 0 0 }
+	datacontext = "[GetPlayer]"
+	visible = "[And(Country.IsValid, Not(IsLobbyOpen))]"
+
+	state = {
+		name = _show
+		on_start = "[GetScriptedGui('cmf_load_after_lobby_caller').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+	}
+}
