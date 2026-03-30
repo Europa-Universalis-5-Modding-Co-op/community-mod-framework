@@ -117,12 +117,22 @@ def _build_model(
     tab_order = []
     group_order = []
 
-    # First pass: collect all list fields and item values
+    # First pass: collect all list fields, item values, and field disables
     list_fields = {}  # setting_id -> [field_regs]
     list_item_values = {}  # setting_id -> {item_number: value}
+    list_field_disables = {}  # (setting_id, field_id) -> [item_number]
     for reg in registrations:
         reg_type = reg.get("_type", "")
-        if reg_type.startswith("list_") and "_field" in reg_type:
+        if reg_type == "list_field_disable":
+            sid = reg.get("setting_id", "")
+            fid = reg.get("field_id", "")
+            item = _to_int(reg.get("item", "0"))
+            if sid and fid and item > 0:
+                key = (sid, fid)
+                if key not in list_field_disables:
+                    list_field_disables[key] = []
+                list_field_disables[key].append(item)
+        elif reg_type.startswith("list_") and "_field" in reg_type:
             sid = reg.get("setting_id", "")
             if sid not in list_fields:
                 list_fields[sid] = []
@@ -143,6 +153,8 @@ def _build_model(
         if reg_type.startswith("list_") and "_field" in reg_type:
             continue  # already collected above
         if reg_type == "list_item_value":
+            continue  # already collected above
+        if reg_type == "list_field_disable":
             continue  # already collected above
 
         tab_id = reg.get("tab_id", "general")
@@ -169,6 +181,7 @@ def _build_model(
         setting = _reg_to_setting(
             reg, mod_id, loc_map, list_fields, list_item_values,
             setting_aliases, inverted_aliases, field_aliases, option_aliases,
+            list_field_disables,
         )
         if setting:
             groups_map[gkey].settings.append(setting)
@@ -536,7 +549,7 @@ def _parse_registrations(content: str, warnings: list) -> list:
         r"slider_setting|dropdown_setting|text_setting|settings_list|"
         r"settings_list_from_list|"
         r"list_bool_field|list_dropdown_field|list_numeric_field|list_slider_field)|"
-        r"cmm_set_list_item_value)\s*=\s*\{",
+        r"cmm_set_list_item_value|cmm_disable_list_field_for_item)\s*=\s*\{",
         re.IGNORECASE,
     )
 
@@ -585,6 +598,8 @@ def _func_to_type(func_name: str) -> str:
         return "list"
     if "set_list_item_value" in fn:
         return "list_item_value"
+    if "disable_list_field_for_item" in fn:
+        return "list_field_disable"
     if "bool_setting" in fn:
         return "bool"
     if "button_setting" in fn:
@@ -636,6 +651,7 @@ def _reg_to_setting(
     inverted_aliases: set = None,
     field_aliases: dict = None,
     option_aliases: dict = None,
+    list_field_disables: dict = None,
 ) -> Setting:
     """Convert a registration dict to a Setting."""
     reg_type = reg.get("_type", "")
@@ -643,6 +659,8 @@ def _reg_to_setting(
         return None  # fields handled separately
     if reg_type == "list_item_value":
         return None  # item values handled separately
+    if reg_type == "list_field_disable":
+        return None  # field disables handled separately
 
     sid = reg.get("setting_id", "")
     is_global = reg.get("_is_global", False)
@@ -719,6 +737,7 @@ def _reg_to_setting(
         for fi, freg in enumerate(list_fields.get(sid, [])):
             fld = _parse_list_field(
                 freg, mod_id, sid, loc_map, fi, field_aliases,
+                list_field_disables,
             )
             if fld:
                 fields.append(fld)
@@ -730,6 +749,7 @@ def _reg_to_setting(
 def _parse_list_field(
     reg: dict, mod_id: str, setting_id: str, loc_map: dict,
     field_index: int = 0, field_aliases: dict = None,
+    list_field_disables: dict = None,
 ) -> ListField:
     fid = reg.get("field_id", "")
     ftype_raw = reg.get("_type", "")
@@ -763,12 +783,18 @@ def _parse_list_field(
         # Backwards compat (shouldn't happen with new parser)
         alias = alias_entry
 
+    # Look up disabled items for this field
+    disabled_items = (list_field_disables or {}).get((setting_id, fid))
+    if disabled_items:
+        disabled_items = sorted(disabled_items)
+
     field = ListField(
         field_id=fid,
         field_type=ftype,
         name=loc_map.get(f"{fqid}_name", fid),
         alias=alias,
         item_aliases=item_aliases,
+        disabled_items=disabled_items,
     )
 
     if ftype == "bool":
