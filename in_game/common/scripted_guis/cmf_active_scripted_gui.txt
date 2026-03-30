@@ -25,7 +25,7 @@ cmf_set_active = {
 # New game: fires on_game_started_after_lobby.
 # Save load: fires on_game_loaded_after_lobby.
 # Scope: country
-cmf_after_lobby_gui = {
+cmf_after_lobby_caller = {
 	scope = player
 	effect = {
 		cmm_register_menu_settings = yes

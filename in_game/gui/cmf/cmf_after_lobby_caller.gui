@@ -1,0 +1,12 @@
+﻿widget = {
+	name = "cmf_after_lobby_caller"
+	size = { 0 0 }
+	datacontext = "[GetPlayer]"
+	visible = "[Country.IsValid]"
+
+	state = {
+		name = cmf_after_lobby_caller
+		trigger_on_create = yes
+		on_start = "[GetScriptedGui('cmf_after_lobby_caller').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+	}
+}
