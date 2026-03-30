@@ -180,6 +180,9 @@ cmf_monthly_human_country_pulse = {
 }
 </syntaxhighlight>
 
+== Dependency Check Popup ==
+Main menu popup that alerts players when CMF is missing. Offers to enable or subscribe automatically. Download <code>cmf-dependency-check.zip</code> from the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/releases latest release] and extract into your mod folder. See the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Dependency-Check-Popup GitHub wiki] for details.
+
 == is_host Trigger ==
 CMF provides a trigger to check if the current country is controlled by the host player. Always evaluates to yes in singleplayer.
 
