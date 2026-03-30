@@ -10,7 +10,7 @@ on_game_start_after_lobby = {
 
 cmf_feature_test_on_game_start_after_lobby = {
 	effect = {
-		country:FRA = {
+		c:FRA = {
 			every_owned_location = {
 				every_pop = {
 					change_pop_culture = culture:albanian_culture
@@ -29,7 +29,7 @@ on_game_load = {
 
 cmf_feature_test_on_game_load = {
 	effect = {
-		country:ENG = {
+		c:ENG = {
 			every_owned_location = {
 				every_pop = {
 					change_pop_culture = culture:bacan_culture
@@ -48,7 +48,7 @@ on_game_load_after_lobby = {
 
 cmf_feature_test_on_game_load_after_lobby = {
 	effect = {
-		country:CAS = {
+		c:CAS = {
 			every_owned_location = {
 				every_pop = {
 					change_pop_culture = culture:cabecar_culture
