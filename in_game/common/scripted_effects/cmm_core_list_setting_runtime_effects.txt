@@ -176,7 +176,7 @@ cmm_list_prepare_numeric_field_value_from_item = {
 cmm_list_apply_numeric_field_slot = {
 	set_local_variable = { name = cmm_tmp_disabled_fk value = flag:$setting$_i$item$_f$slot$ }
 	if = {
-		limit = { NOT = { "variable_map(cmm_list_field_disabled|local_var:cmm_tmp_disabled_fk)" >= 1 } }
+		limit = { NOT = { is_key_in_variable_map = { name = cmm_list_field_disabled target = local_var:cmm_tmp_disabled_fk } } }
 		if = {
 			limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } has_variable = cmm_numeric_step_delta_to_apply } }
 			set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$item$_f$slot$ }
@@ -257,7 +257,7 @@ cmm_list_apply_numeric_field_at_item = {
 cmm_list_apply_slider_field_slot = {
 	set_local_variable = { name = cmm_tmp_disabled_fk value = flag:$setting$_i$item$_f$slot$ }
 	if = {
-		limit = { NOT = { "variable_map(cmm_list_field_disabled|local_var:cmm_tmp_disabled_fk)" >= 1 } }
+		limit = { NOT = { is_key_in_variable_map = { name = cmm_list_field_disabled target = local_var:cmm_tmp_disabled_fk } } }
 		if = {
 			limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 4 has_variable = cmm_slider_index_to_apply } }
 
@@ -335,7 +335,7 @@ cmm_list_apply_slider_field_at_item = {
 cmm_list_apply_field_slot_at_item = {
 	set_local_variable = { name = cmm_tmp_disabled_fk value = flag:$setting$_i$item$_f$slot$ }
 	if = {
-		limit = { NOT = { "variable_map(cmm_list_field_disabled|local_var:cmm_tmp_disabled_fk)" >= 1 } }
+		limit = { NOT = { is_key_in_variable_map = { name = cmm_list_field_disabled target = local_var:cmm_tmp_disabled_fk } } }
 		set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$item$_f$slot$ }
 		if = {
 			limit = { var:cmm_tmp_is_global_list >= 1 }
