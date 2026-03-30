@@ -130,7 +130,7 @@ Vanilla <code>on_game_start</code> fires before country selection, so player-sco
 |-
 | <code>on_game_started_after_lobby</code> || Once on new game
 |-
-| <code>on_game_loaded_after_lobby</code> || Every save load (not new games)
+| <code>on_game_load_after_lobby</code> || Every save load (not new games)
 |}
 
 <syntaxhighlight lang="text">
@@ -140,7 +140,7 @@ on_game_started_after_lobby = {
 	}
 }
 
-on_game_loaded_after_lobby = {
+on_game_load_after_lobby = {
 	on_actions = {
 		your_mod_on_save_loaded
 	}
