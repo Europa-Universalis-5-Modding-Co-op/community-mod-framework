@@ -80,7 +80,7 @@ cmf_on_mod_registration = {
 # fires before the country selection screen, so player-scoped effects
 # (is_ai = no) don't work there since no country has been selected yet.
 # Scope: country
-on_game_started_after_lobby = {
+on_game_start_after_lobby = {
 	on_actions = { }
 }
 

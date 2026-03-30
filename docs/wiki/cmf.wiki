@@ -128,7 +128,7 @@ Vanilla <code>on_game_start</code> fires before country selection, so player-sco
 {| class="wikitable"
 ! Hook !! When
 |-
-| <code>on_game_started_after_lobby</code> || Once on new game, after country selection
+| <code>on_game_start_after_lobby</code> || Once on new game, after country selection
 |-
 | <code>on_game_load</code> || Every save load (including from country selection)
 |-
@@ -136,7 +136,7 @@ Vanilla <code>on_game_start</code> fires before country selection, so player-sco
 |}
 
 <syntaxhighlight lang="text">
-on_game_started_after_lobby = {
+on_game_start_after_lobby = {
 	on_actions = {
 		your_mod_on_new_game
 	}
