@@ -105,14 +105,18 @@
 
 						button_regular = {
 							size = { 150 40 }
-							raw_text = "Workshop"
+							raw_text = "Open Workshop"
+							visible = "[Not( GetVariableSystem.Exists( 'cmf_installed' ) )]"
 							onclick = "[GetVariableSystem.Set( 'cmf_dep_open_workshop', 'yes' )]"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_auto_enable', 'yes' )]"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
 							tooltip_enabled = no
 						}
 
 						button_regular = {
 							size = { 150 40 }
 							raw_text = "Enable"
+							visible = "[GetVariableSystem.Exists( 'cmf_installed' )]"
 							onclick = "[GetVariableSystem.Set( 'cmf_dep_auto_enable', 'yes' )]"
 							onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
 							tooltip_enabled = no
@@ -129,7 +133,20 @@
 			}
 		}
 
-		### Opens the mods panel when a flag is set and panel isn't already open.
+		### Auto-opens the mods panel when CMF isn't active so ModsGui initializes
+		### and the detection widget can set cmf_installed for button visibility.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[And( Not( GetVariableSystem.Exists( 'cmf_active' ) ), Not( FrontEndMainView.IsModsOpen ) )]"
+
+			state = {
+				name = _show
+				on_start = "[FrontEndMainView.ToggleOpenMods]"
+			}
+		}
+
+		### Opens the mods panel when a button flag is set and panel isn't already open.
 		widget = {
 			size = { 0 0 }
 			visible_at_creation = no
@@ -191,24 +208,78 @@ types cmf_dependency_auto_enable
 			}
 		}
 
-		### Auto-enable widget — adds CMF to the playset when the flag is set.
-		### _show fires only when visibility transitions from false to true,
-		### so only the CMF item (where the condition matches) triggers AddMod.
+		### Detection widget — sets cmf_installed if CMF is in LocalMods.
+		### Fires at main menu load via visible_at_creation = no + _show.
 		vbox = {
-			layoutpolicy_horizontal = expanding
 			datamodel = "[ModsGui.LocalMods]"
 
 			item = {
 				widget = {
 					size = { 0 0 }
 					visible_at_creation = no
-					visible = "[And3( GetVariableSystem.Exists( 'cmf_dep_auto_enable' ), EqualTo_string( LocalMod.Name, 'Community Mod Framework & Menu' ), Not( ModsGui.ActivePlayset.ContainsMod( LocalMod.Id ) ) )]"
+					visible = "[Or( StringContains( LocalMod.Path, '3692202776' ), StringContains( LocalMod.Path, 'community-mod-framework' ) )]"
+
+					state = {
+						name = _show
+						on_start = "[GetVariableSystem.Set( 'cmf_installed', 'yes' )]"
+					}
+				}
+			}
+		}
+
+		### Auto-enable: dev/local copy (priority, fires immediately)
+		vbox = {
+			datamodel = "[ModsGui.LocalMods]"
+
+			item = {
+				widget = {
+					size = { 0 0 }
+					visible_at_creation = no
+					visible = "[And3( GetVariableSystem.Exists( 'cmf_dep_auto_enable' ), StringContains( LocalMod.Path, 'community-mod-framework' ), Not( ModsGui.ActivePlayset.ContainsMod( LocalMod.Id ) ) )]"
 
 					state = {
 						name = _show
 						on_start = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
 						on_start = "[ModsGui.DownloadAndApplyChanges]"
 						on_start = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
+					}
+				}
+			}
+		}
+
+		### Workshop delay timer — waits 0.5s before enabling the workshop fallback.
+		### If the dev copy fired and cleared cmf_dep_auto_enable, the workshop
+		### condition below checks for it and won't fire.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[GetVariableSystem.Exists( 'cmf_dep_auto_enable' )]"
+
+			state = {
+				name = _show
+				duration = 0.5
+				on_finish = "[GetVariableSystem.Set( 'cmf_dep_workshop_go', 'yes' )]"
+			}
+		}
+
+		### Auto-enable: workshop copy (fallback, fires after 0.5s delay)
+		### Also checks cmf_dep_auto_enable still exists — if the dev copy fired
+		### and cleared it, this won't match.
+		vbox = {
+			datamodel = "[ModsGui.LocalMods]"
+
+			item = {
+				widget = {
+					size = { 0 0 }
+					visible_at_creation = no
+					visible = "[And4( GetVariableSystem.Exists( 'cmf_dep_workshop_go' ), GetVariableSystem.Exists( 'cmf_dep_auto_enable' ), StringContains( LocalMod.Path, '3692202776' ), Not( ModsGui.ActivePlayset.ContainsMod( LocalMod.Id ) ) )]"
+
+					state = {
+						name = _show
+						on_start = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
+						on_start = "[ModsGui.DownloadAndApplyChanges]"
+						on_start = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
+						on_start = "[GetVariableSystem.Clear( 'cmf_dep_workshop_go' )]"
 					}
 				}
 			}
@@ -231,7 +302,7 @@ types cmf_dependency_auto_enable
 		widget = {
 			visible = no
 			ignore_layout = yes
-			size = { 500 600 }
+			size = { 600 600 }
 
 			using = bg_window_default_alt
 
@@ -240,7 +311,7 @@ types cmf_dependency_auto_enable
 				spacing = 2
 
 				text_single = {
-					raw_text = "#T DEBUG: LocalMod.Name + EqualTo_string#!"
+					raw_text = "#T DEBUG: LocalMod properties#!"
 					align = left
 				}
 
@@ -254,22 +325,105 @@ types cmf_dependency_auto_enable
 					}
 					scrollwidget = {
 						vbox = {
+							spacing = 5
 							datamodel = "[ModsGui.LocalMods]"
 							item = {
-								hbox = {
+								vbox = {
 									layoutpolicy_horizontal = expanding
-									spacing = 10
+									spacing = 1
 
-									text_single = {
-										raw_text = "[SelectLocalization( EqualTo_string( LocalMod.Name, 'Community Mod Framework & Menu' ), '#G TRUE#!', '#R FALSE#!' )]"
-										fontsize = 14
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 5
+
+										text_single = {
+											raw_text = "#bold Name:#!"
+											fontsize = 13
+											autoresize = yes
+										}
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											raw_text = "[LocalMod.Name]"
+											fontsize = 13
+											align = left
+										}
 									}
 
-									text_single = {
+									hbox = {
 										layoutpolicy_horizontal = expanding
-										raw_text = "[LocalMod.Name]"
-										fontsize = 14
-										align = left
+										spacing = 5
+
+										text_single = {
+											raw_text = "#bold DisplayName:#!"
+											fontsize = 13
+											autoresize = yes
+										}
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											raw_text = "[LocalMod.DisplayName]"
+											fontsize = 13
+											align = left
+										}
+									}
+
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 5
+
+										text_single = {
+											raw_text = "#bold Path:#!"
+											fontsize = 13
+											autoresize = yes
+										}
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											raw_text = "[LocalMod.Path]"
+											fontsize = 13
+											align = left
+										}
+									}
+
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 5
+
+										text_single = {
+											raw_text = "#bold Version:#!"
+											fontsize = 13
+											autoresize = yes
+										}
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											raw_text = "[LocalMod.Version]"
+											fontsize = 13
+											align = left
+										}
+									}
+
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 5
+
+										text_single = {
+											raw_text = "#bold Id:#!"
+											fontsize = 13
+											autoresize = yes
+										}
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											raw_text = "[LocalMod.Id]"
+											fontsize = 13
+											align = left
+										}
+									}
+
+									widget = {
+										layoutpolicy_horizontal = expanding
+										size = { -1 1 }
+										background = {
+											using = color_gold
+											alpha = 0.3
+										}
 									}
 								}
 							}
