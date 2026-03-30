@@ -75,7 +75,7 @@
 			window = {
 				parentanchor = center
 				widgetanchor = center
-				size = { 460 200 }
+				size = { 530 200 }
 				using = bg_window_default_alt
 				movable = no
 				resizable = no
@@ -100,15 +100,44 @@
 
 					expand = {}
 
-					button_regular = {
-						size = { 180 40 }
-						raw_text = "Enable"
-						onclick = "[GetVariableSystem.Set( 'cmf_dep_auto_enable', 'yes' )]"
-						onclick = "[FrontEndMainView.ToggleOpenMods]"
-						onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
-						tooltip_enabled = no
+					hbox = {
+						spacing = 10
+
+						button_regular = {
+							size = { 150 40 }
+							raw_text = "Workshop"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_open_workshop', 'yes' )]"
+							tooltip_enabled = no
+						}
+
+						button_regular = {
+							size = { 150 40 }
+							raw_text = "Enable"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_auto_enable', 'yes' )]"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
+							tooltip_enabled = no
+						}
+
+						button_regular = {
+							size = { 150 40 }
+							raw_text = "Ignore"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
+							tooltip_enabled = no
+						}
 					}
 				}
+			}
+		}
+
+		### Opens the mods panel when a flag is set and panel isn't already open.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[And( Or( GetVariableSystem.Exists( 'cmf_dep_auto_enable' ), GetVariableSystem.Exists( 'cmf_dep_open_workshop' ) ), Not( FrontEndMainView.IsModsOpen ) )]"
+
+			state = {
+				name = _show
+				on_start = "[FrontEndMainView.ToggleOpenMods]"
 			}
 		}
 	}
@@ -185,11 +214,24 @@ types cmf_dependency_auto_enable
 			}
 		}
 
+		### Open Workshop when flag is set — fires via _show when mods panel opens.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[GetVariableSystem.Exists( 'cmf_dep_open_workshop' )]"
+
+			state = {
+				name = _show
+				on_start = "[ModsGui.OpenExternalInterface()]"
+				on_start = "[GetVariableSystem.Clear( 'cmf_dep_open_workshop' )]"
+			}
+		}
+
 		### DEBUG: remove after testing
 		widget = {
 			visible = no
+			ignore_layout = yes
 			size = { 500 600 }
-			position = { 10 10 }
 
 			using = bg_window_default_alt
 
