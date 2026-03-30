@@ -115,85 +115,118 @@
 }
 
 ### Auto-enable CMF when the user clicks "Enable" on the dependency popup.
-### Overrides downloaded_list to iterate LocalMods and call AddMod for CMF.
+### Overrides playset_create_button — always visible when the mods panel opens.
 types cmf_dependency_auto_enable
 {
-	type downloaded_list = scrollarea {
-		scissor = yes
-		layoutpolicy_horizontal = Preferred
-		layoutpolicy_vertical = Preferred
-		scrollbarpolicy_vertical = as_needed
-		scrollbarpolicy_horizontal = as_needed
-		scrollbaralign_vertical = right
-		scrollbaralign_horizontal = bottom
-		autoresizeviewport = yes
-		alwaystransparent = no
+	type playset_create_button = vbox {
+		layoutpolicy_horizontal = expanding
 
-		block "scrollbars" {
-			scrollbar_vertical = {
-				using = Scrollbar_Vertical
+		### Original playset_create_button content
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+			margin = {10 0}
+
+			editbox_single = {
+				name = "create_playset_editbox"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = fixed
+				tooltipwidget = {
+					LeftClickButtonTooltip = {
+						blockoverride "onclick_text" {
+							text = "MODS_GUI_PLAYSET_LABEL_TOOLTIP"
+						}
+					}
+				}
+
+				blockoverride "editbox_label" {
+					text = "MODS_GUI_PLAYSET_LABEL"
+				}
 			}
 
-			scrollbar_horizontal = {
-				using = editor_horizontal_scrollbar
+			button_regular = {
+				text = "MODS_GUI_CREATE_PLAYSET"
+				tooltipwidget = {BasicFunctionalTooltip = {}}
+
+				action_tooltip = {
+					click_type = left
+					click_mode = single
+					title = "[ModsGui.CreatePlaysetTooltip(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
+					on_action = "[ModsGui.CreatePlayset(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
+					on_action = "[PdxClearEditBoxText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox'))]"
+					enabled = "[ModsGui.CanCreatePlayset(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
+				}
+				enabled = "[ModsGui.CanCreatePlayset(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
+				align = center|nobaseline
+				using = button_resize_to_fit_text
 			}
 		}
 
-		scrollwidget = {
-			block "content" {
-				vbox = {
-					fixedgridbox = {
-						datamodel = "[ModsGui.GetPlayset( ModsGui.SelectedPlaysetId ).ModifiableMods]"
-						addcolumn = 100%
-						addrow = 45
-						datamodel_wrap = 1
-						flipdirection = yes
-						setitemsizefromcell = yes
+		### Auto-enable widget — shows a button to add CMF when the flag is set.
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			datamodel = "[ModsGui.LocalMods]"
 
-						item = {
-							selected_mod_item = {
-							}
-						}
-					}
-					vbox = {
-						margin_right = 15
-						using = layoutpolicy_expanding
-						vbox = {
-							layoutpolicy_horizontal = expanding
-							datamodel = "[ModsGui.LocalMods]"
-
-							item = {
-								mod_card = {
-									layoutpolicy_horizontal = expanding
-									size = { -1 45 }
-									blockoverride "mod_card_left_buttons" {}
-									visible = "[Not(ModsGui.ActivePlayset.ContainsMod(LocalMod.Id))]"
-								}
-							}
-						}
-						expand = {}
-					}
+			item = {
+				button_regular = {
+					layoutpolicy_horizontal = expanding
+					size = { -1 35 }
+					raw_text = "Enable Community Mod Framework"
+					visible = "[And3( GetVariableSystem.Exists( 'cmf_dep_auto_enable' ), EqualTo_string( LocalMod.Name, 'Community Mod Framework & Menu' ), Not( ModsGui.ActivePlayset.ContainsMod( LocalMod.Id ) ) )]"
+					onclick = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
+					onclick = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
+					tooltip_enabled = no
 				}
 			}
 		}
 
-		### Hidden auto-enable widget — fires AddMod for CMF when the flag is set.
-		### Always iterates LocalMods; individual items become visible only when
-		### the flag is set AND the mod matches, triggering _show → AddMod.
-		fixedgridbox = {
-			datamodel = "[ModsGui.LocalMods]"
-			addcolumn = 0
-			addrow = 0
+		### DEBUG: remove after testing
+		widget = {
+			visible = no
+			size = { 500 600 }
+			position = { 10 10 }
 
-			item = {
-				widget = {
-					size = { 0 0 }
-					visible = "[And3( GetVariableSystem.Exists( 'cmf_dep_auto_enable' ), EqualTo_string( LocalMod.Name, 'community_mod_framework' ), Not( ModsGui.ActivePlayset.ContainsMod( LocalMod.Id ) ) )]"
+			using = bg_window_default_alt
 
-					state = {
-						name = _show
-						on_start = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
-						on_start = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
+			vbox = {
+				margin = { 10 10 }
+				spacing = 2
+
+				text_single = {
+					raw_text = "#T DEBUG: LocalMod.Name + EqualTo_string#!"
+					align = left
+				}
+
+				scrollarea = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					scrollbarpolicy_horizontal = always_off
+					autoresizescrollarea = yes
+					scrollbar_vertical = {
+						using = Scrollbar_Vertical
+					}
+					scrollwidget = {
+						vbox = {
+							datamodel = "[ModsGui.LocalMods]"
+							item = {
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									spacing = 10
+
+									text_single = {
+										raw_text = "[SelectLocalization( EqualTo_string( LocalMod.Name, 'Community Mod Framework & Menu' ), '#G TRUE#!', '#R FALSE#!' )]"
+										fontsize = 14
+									}
+
+									text_single = {
+										layoutpolicy_horizontal = expanding
+										raw_text = "[LocalMod.Name]"
+										fontsize = 14
+										align = left
+									}
+								}
+							}
+						}
 					}
 				}
 			}
