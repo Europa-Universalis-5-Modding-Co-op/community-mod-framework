@@ -86,13 +86,13 @@
 					spacing = 10
 
 					text_single = {
-						raw_text = "#T Missing Dependency#!"
+						raw_text = "[SelectLocalization(HasLanguage('french'), '#T Dépendance manquante#!', SelectLocalization(HasLanguage('german'), '#T Fehlende Abhängigkeit#!', SelectLocalization(HasLanguage('spanish'), '#T Dependencia faltante#!', SelectLocalization(HasLanguage('braz_por'), '#T Dependência ausente#!', SelectLocalization(HasLanguage('russian'), '#T Отсутствует зависимость#!', SelectLocalization(HasLanguage('polish'), '#T Brakująca zależność#!', SelectLocalization(HasLanguage('korean'), '#T 누락된 종속성#!', SelectLocalization(HasLanguage('japanese'), '#T 依存関係が見つかりません#!', SelectLocalization(HasLanguage('simp_chinese'), '#T 缺少依赖项#!', SelectLocalization(HasLanguage('turkish'), '#T Eksik Bağımlılık#!', '#T Missing Dependency#!'))))))))))]"
 						align = center
 					}
 
 					text_multi = {
 						layoutpolicy_horizontal = expanding
-						raw_text = "A mod you have enabled requires the #bold Community Mod Framework#! to be enabled. Please enable it in the mod manager."
+						raw_text = "[SelectLocalization(HasLanguage('french'), 'Un mod activé nécessite le #bold Community Mod Framework#!. Activez-le dans le gestionnaire de mods.', SelectLocalization(HasLanguage('german'), 'Ein aktivierter Mod benötigt das #bold Community Mod Framework#!. Bitte aktivieren Sie es im Mod-Manager.', SelectLocalization(HasLanguage('spanish'), 'Un mod habilitado requiere el #bold Community Mod Framework#!. Por favor, actívalo en el gestor de mods.', SelectLocalization(HasLanguage('braz_por'), 'Um mod habilitado requer o #bold Community Mod Framework#!. Por favor, ative-o no gerenciador de mods.', SelectLocalization(HasLanguage('russian'), 'Активированный мод требует #bold Community Mod Framework#!. Включите его в менеджере модов.', SelectLocalization(HasLanguage('polish'), 'Włączony mod wymaga #bold Community Mod Framework#!. Proszę włączyć go w menedżerze modów.', SelectLocalization(HasLanguage('korean'), '활성화된 모드에 #bold Community Mod Framework#!가 필요합니다. 모드 관리자에서 활성화해 주세요.', SelectLocalization(HasLanguage('japanese'), '有効にしたMODには#bold Community Mod Framework#!が必要です。MODマネージャーで有効にしてください。', SelectLocalization(HasLanguage('simp_chinese'), '您启用的模组需要#bold Community Mod Framework#!。请在模组管理器中启用它。', SelectLocalization(HasLanguage('turkish'), 'Etkinleştirdiğiniz bir mod #bold Community Mod Framework#! gerektirir. Lütfen mod yöneticisinden etkinleştirin.', 'A mod you have enabled requires the #bold Community Mod Framework#! to be enabled. Please enable it in the mod manager.'))))))))))]"
 						align = center
 						autoresize = yes
 						max_width = 400
@@ -105,7 +105,7 @@
 
 						button_regular = {
 							size = { 150 40 }
-							raw_text = "Open Workshop"
+							raw_text = "[SelectLocalization(HasLanguage('french'), 'Ouvrir le Workshop', SelectLocalization(HasLanguage('german'), 'Workshop öffnen', SelectLocalization(HasLanguage('spanish'), 'Abrir taller', SelectLocalization(HasLanguage('braz_por'), 'Abrir oficina', SelectLocalization(HasLanguage('russian'), 'Открыть мастерскую', SelectLocalization(HasLanguage('polish'), 'Otwórz warsztat', SelectLocalization(HasLanguage('korean'), '창작마당 열기', SelectLocalization(HasLanguage('japanese'), 'ワークショップを開く', SelectLocalization(HasLanguage('simp_chinese'), '打开创意工坊', SelectLocalization(HasLanguage('turkish'), 'Atölyeyi aç', 'Open Workshop'))))))))))]"
 							visible = "[Not( GetVariableSystem.Exists( 'cmf_installed' ) )]"
 							onclick = "[GetVariableSystem.Set( 'cmf_dep_open_workshop', 'yes' )]"
 							onclick = "[GetVariableSystem.Set( 'cmf_dep_auto_enable', 'yes' )]"
@@ -115,7 +115,7 @@
 
 						button_regular = {
 							size = { 150 40 }
-							raw_text = "Enable"
+							raw_text = "[SelectLocalization(HasLanguage('french'), 'Activer', SelectLocalization(HasLanguage('german'), 'Aktivieren', SelectLocalization(HasLanguage('spanish'), 'Activar', SelectLocalization(HasLanguage('braz_por'), 'Ativar', SelectLocalization(HasLanguage('russian'), 'Включить', SelectLocalization(HasLanguage('polish'), 'Włącz', SelectLocalization(HasLanguage('korean'), '활성화', SelectLocalization(HasLanguage('japanese'), '有効にする', SelectLocalization(HasLanguage('simp_chinese'), '启用', SelectLocalization(HasLanguage('turkish'), 'Etkinleştir', 'Enable'))))))))))]"
 							visible = "[GetVariableSystem.Exists( 'cmf_installed' )]"
 							onclick = "[GetVariableSystem.Set( 'cmf_dep_auto_enable', 'yes' )]"
 							onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
@@ -124,7 +124,7 @@
 
 						button_regular = {
 							size = { 150 40 }
-							raw_text = "Ignore"
+							raw_text = "[SelectLocalization(HasLanguage('french'), 'Ignorer', SelectLocalization(HasLanguage('german'), 'Ignorieren', SelectLocalization(HasLanguage('spanish'), 'Ignorar', SelectLocalization(HasLanguage('braz_por'), 'Ignorar', SelectLocalization(HasLanguage('russian'), 'Игнорировать', SelectLocalization(HasLanguage('polish'), 'Ignoruj', SelectLocalization(HasLanguage('korean'), '무시', SelectLocalization(HasLanguage('japanese'), '無視する', SelectLocalization(HasLanguage('simp_chinese'), '忽略', SelectLocalization(HasLanguage('turkish'), 'Yoksay', 'Ignore'))))))))))]"
 							onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
 							tooltip_enabled = no
 						}
