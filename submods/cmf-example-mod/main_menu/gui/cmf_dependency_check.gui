@@ -178,6 +178,7 @@ types cmf_dependency_auto_enable
 					state = {
 						name = _show
 						on_start = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
+						on_start = "[ModsGui.DownloadAndApplyChanges]"
 						on_start = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
 					}
 				}
