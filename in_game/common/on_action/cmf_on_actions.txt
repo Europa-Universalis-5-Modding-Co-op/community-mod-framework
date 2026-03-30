@@ -84,10 +84,10 @@ on_game_started_after_lobby = {
 	on_actions = { }
 }
 
-# Post-lobby save load hook. Fires every time a save game is loaded,
-# after the player has selected their country. Does NOT fire on new games.
+# Save load hook. Fires every time a save game is loaded (including from
+# the country selection screen). Does NOT fire on new games.
 # Scope: country
-on_game_load_after_lobby = {
+on_game_load = {
 	on_actions = { }
 }
 

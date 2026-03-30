@@ -122,15 +122,15 @@ Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback
 == On-Action Hooks ==
 CMF provides shared on_action hooks. Hook into them the same way as <code>cmf_on_mod_registration</code>.
 
-=== Post-Lobby Hooks ===
-Vanilla <code>on_game_start</code> fires before country selection, so player-scoped effects don't work there. These hooks fire after the player has selected their country:
+=== Game Start & Load Hooks ===
+Vanilla <code>on_game_start</code> fires before country selection, so player-scoped effects don't work there.
 
 {| class="wikitable"
 ! Hook !! When
 |-
-| <code>on_game_started_after_lobby</code> || Once on new game
+| <code>on_game_started_after_lobby</code> || Once on new game, after country selection
 |-
-| <code>on_game_load_after_lobby</code> || Every save load (not new games)
+| <code>on_game_load</code> || Every save load (including from country selection)
 |}
 
 <syntaxhighlight lang="text">
@@ -140,7 +140,7 @@ on_game_started_after_lobby = {
 	}
 }
 
-on_game_load_after_lobby = {
+on_game_load = {
 	on_actions = {
 		your_mod_on_save_loaded
 	}

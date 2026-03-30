@@ -23,7 +23,7 @@ cmf_set_active = {
 
 # Fired by GUI trigger_on_create after the player selects a country.
 # New game: fires on_game_started_after_lobby.
-# Save load: fires on_game_load_after_lobby.
+# Save load: fires on_game_load.
 # Scope: country
 cmf_after_lobby_caller = {
 	scope = player
@@ -38,7 +38,7 @@ cmf_after_lobby_caller = {
 		}
 		else = {
 			trigger_event_silently = {
-				on_action = on_game_load_after_lobby
+				on_action = on_game_load
 			}
 		}
 	}
