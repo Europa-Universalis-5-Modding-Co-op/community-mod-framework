@@ -1,4 +1,4 @@
 ﻿gui/cmf/cmf_structure.gui = cmf_interaction_layer
 gui/cmf/cmf_structure.gui = cmf_popup_layer
 gui/cmf/cmf_init_popup.gui = cmf_init_popup
-gui/cmf/cmf_on_game_started_after_lobby.gui = cmf_on_game_started_after_lobby
+gui/cmf/cmf_on_game_started_after_lobby.gui = cmf_after_lobby
