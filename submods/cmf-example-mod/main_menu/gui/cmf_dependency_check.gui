@@ -243,7 +243,7 @@ types cmf_dependency_auto_enable
 					state = {
 						name = _show
 						on_start = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
-						on_start = "[ModsGui.DownloadAndApplyChanges]"
+						on_start = "[GetVariableSystem.Set( 'cmf_dep_reorder', 'yes' )]"
 						on_start = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
 					}
 				}
@@ -280,11 +280,60 @@ types cmf_dependency_auto_enable
 					state = {
 						name = _show
 						on_start = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
-						on_start = "[ModsGui.DownloadAndApplyChanges]"
+						on_start = "[GetVariableSystem.Set( 'cmf_dep_reorder', 'yes' )]"
 						on_start = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
 						on_start = "[GetVariableSystem.Clear( 'cmf_dep_workshop_go' )]"
 					}
 				}
+			}
+		}
+
+		### Reorder delay timer — waits 0.5s after AddMod for ModifiableMods to update.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[GetVariableSystem.Exists( 'cmf_dep_reorder' )]"
+
+			state = {
+				name = _show
+				duration = 0.5
+				on_finish = "[GetVariableSystem.Set( 'cmf_dep_do_reorder', 'yes' )]"
+			}
+		}
+
+		### Move CMF to top of load order.
+		### Iterates ModifiableMods (ModsPlaysetEntry context) to call SetLoadOrder.
+		vbox = {
+			datamodel = "[ModsGui.GetPlayset( ModsGui.SelectedPlaysetId ).ModifiableMods]"
+
+			item = {
+				widget = {
+					size = { 0 0 }
+					visible_at_creation = no
+					visible = "[And( GetVariableSystem.Exists( 'cmf_dep_do_reorder' ), StringContains( ModsPlaysetEntry.Name, 'Community Mod Framework' ) )]"
+
+					state = {
+						name = _show
+						on_start = "[ModsPlaysetEntry.SetLoadOrder( '(uint32)0' )]"
+						on_start = "[GetVariableSystem.Set( 'cmf_dep_apply', 'yes' )]"
+						on_start = "[GetVariableSystem.Clear( 'cmf_dep_reorder' )]"
+						on_start = "[GetVariableSystem.Clear( 'cmf_dep_do_reorder' )]"
+					}
+				}
+			}
+		}
+
+		### Delayed apply — waits 0.5s after reorder for the change to commit.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[GetVariableSystem.Exists( 'cmf_dep_apply' )]"
+
+			state = {
+				name = _show
+				duration = 0.5
+				on_finish = "[ModsGui.DownloadAndApplyChanges]"
+				on_finish = "[GetVariableSystem.Clear( 'cmf_dep_apply' )]"
 			}
 		}
 
