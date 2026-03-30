@@ -162,20 +162,24 @@ types cmf_dependency_auto_enable
 			}
 		}
 
-		### Auto-enable widget — shows a button to add CMF when the flag is set.
+		### Auto-enable widget — adds CMF to the playset when the flag is set.
+		### _show fires only when visibility transitions from false to true,
+		### so only the CMF item (where the condition matches) triggers AddMod.
 		vbox = {
 			layoutpolicy_horizontal = expanding
 			datamodel = "[ModsGui.LocalMods]"
 
 			item = {
-				button_regular = {
-					layoutpolicy_horizontal = expanding
-					size = { -1 35 }
-					raw_text = "Enable Community Mod Framework"
+				widget = {
+					size = { 0 0 }
+					visible_at_creation = no
 					visible = "[And3( GetVariableSystem.Exists( 'cmf_dep_auto_enable' ), EqualTo_string( LocalMod.Name, 'Community Mod Framework & Menu' ), Not( ModsGui.ActivePlayset.ContainsMod( LocalMod.Id ) ) )]"
-					onclick = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
-					onclick = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
-					tooltip_enabled = no
+
+					state = {
+						name = _show
+						on_start = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
+						on_start = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
+					}
 				}
 			}
 		}
