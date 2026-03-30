@@ -82,7 +82,7 @@
 				alwaystransparent = no
 
 				vbox = {
-					using = window_margin_alt
+					margin = { 15 10 }
 					spacing = 10
 
 					text_single = {
@@ -92,7 +92,7 @@
 
 					text_multi = {
 						layoutpolicy_horizontal = expanding
-						raw_text = "[SelectLocalization(HasLanguage('french'), 'Un mod activé nécessite le #bold Community Mod Framework#!. Activez-le dans le gestionnaire de mods.', SelectLocalization(HasLanguage('german'), 'Ein aktivierter Mod benötigt das #bold Community Mod Framework#!. Bitte aktivieren Sie es im Mod-Manager.', SelectLocalization(HasLanguage('spanish'), 'Un mod habilitado requiere el #bold Community Mod Framework#!. Por favor, actívalo en el gestor de mods.', SelectLocalization(HasLanguage('braz_por'), 'Um mod habilitado requer o #bold Community Mod Framework#!. Por favor, ative-o no gerenciador de mods.', SelectLocalization(HasLanguage('russian'), 'Активированный мод требует #bold Community Mod Framework#!. Включите его в менеджере модов.', SelectLocalization(HasLanguage('polish'), 'Włączony mod wymaga #bold Community Mod Framework#!. Proszę włączyć go w menedżerze modów.', SelectLocalization(HasLanguage('korean'), '활성화된 모드에 #bold Community Mod Framework#!가 필요합니다. 모드 관리자에서 활성화해 주세요.', SelectLocalization(HasLanguage('japanese'), '有効にしたMODには#bold Community Mod Framework#!が必要です。MODマネージャーで有効にしてください。', SelectLocalization(HasLanguage('simp_chinese'), '您启用的模组需要#bold Community Mod Framework#!。请在模组管理器中启用它。', SelectLocalization(HasLanguage('turkish'), 'Etkinleştirdiğiniz bir mod #bold Community Mod Framework#! gerektirir. Lütfen mod yöneticisinden etkinleştirin.', 'A mod you have enabled requires the #bold Community Mod Framework#! to be enabled. Please enable it in the mod manager.'))))))))))]"
+						raw_text = "[SelectLocalization(HasLanguage('french'), 'Un mod activé nécessite le #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('german'), 'Ein aktivierter Mod erfordert das #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('spanish'), 'Un mod activado requiere el #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('braz_por'), 'Um mod ativado requer o #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('russian'), 'Включённый мод требует #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('polish'), 'Włączony mod wymaga #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('korean'), '활성화된 모드에 #bold Community Mod Framework#!가 필요합니다.', SelectLocalization(HasLanguage('japanese'), '有効なMODに#bold Community Mod Framework#!が必要です。', SelectLocalization(HasLanguage('simp_chinese'), '已启用的模组需要#bold Community Mod Framework#!。', SelectLocalization(HasLanguage('turkish'), 'Etkin bir mod #bold Community Mod Framework#! gerektiriyor.', 'An enabled mod requires the #bold Community Mod Framework#!.'))))))))))]"
 						align = center
 						autoresize = yes
 						max_width = 400
