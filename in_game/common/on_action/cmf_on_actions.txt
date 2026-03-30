@@ -75,11 +75,15 @@ cmf_on_mod_registration = {
 	on_actions = { }
 }
 
-# Post-map-load game start hook. Fires once when the in-game UI is created.
-# Use this instead of on_game_start for effects that need the map loaded
-# (cultures, religions, nations, etc.).
+# Post-lobby game start hook. Fires once when the in-game UI is created,
+# after the player has selected their country. Vanilla on_game_start fires
+# before the country selection screen, so player-scoped effects (is_ai = no)
+# don't work there since no country has been selected yet.
 # Scope: country
-cmf_on_game_start = {
+on_game_started_after_lobby = {
+	trigger = {
+		NOT = { has_global_variable = cmf_game_started_after_lobby }
+	}
 	on_actions = { }
 }
 

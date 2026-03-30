@@ -1,0 +1,12 @@
+﻿widget = {
+	name = "cmf_on_game_started_after_lobby"
+	size = { 0 0 }
+	datacontext = "[GetPlayer]"
+	visible = "[And(Country.IsValid, Not(GetScriptedGui('cmf_has_game_started_after_lobby').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
+
+	state = {
+		name = cmf_on_game_started_after_lobby
+		trigger_on_create = yes
+		on_start = "[GetScriptedGui('cmf_on_game_started_after_lobby_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+	}
+}

@@ -21,15 +21,28 @@ cmf_set_active = {
 	}
 }
 
-# Fires cmf_on_game_start from a GUI trigger_on_create state.
+# Check whether on_game_started_after_lobby has already fired.
 # Scope: country
-cmf_on_game_start_gui = {
+cmf_has_game_started_after_lobby = {
+	scope = player
+	is_shown = {
+		has_global_variable = cmf_game_started_after_lobby
+	}
+}
+
+# Fires on_game_started_after_lobby from a GUI trigger_on_create state.
+# Sets cmf_game_started_after_lobby to prevent re-firing.
+# Scope: country
+cmf_on_game_started_after_lobby_gui = {
 	scope = player
 	effect = {
-		set_global_variable = { name = cmf_active value = yes }
-		cmm_register_menu_settings = yes
-		trigger_event_silently = {
-			on_action = cmf_on_game_start
+		if = {
+			limit = { NOT = { has_global_variable = cmf_game_started_after_lobby } }
+			set_global_variable = { name = cmf_game_started_after_lobby value = yes }
+			cmm_register_menu_settings = yes
+			trigger_event_silently = {
+				on_action = on_game_started_after_lobby
+			}
 		}
 	}
 }
