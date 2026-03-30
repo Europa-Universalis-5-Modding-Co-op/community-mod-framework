@@ -75,6 +75,30 @@ cmf_on_mod_registration = {
 	on_actions = { }
 }
 
+# Post-lobby game start hook. Fires once on a new game when the in-game UI
+# is created, after the player has selected their country. Vanilla on_game_start
+# fires before the country selection screen, so player-scoped effects
+# (is_ai = no) don't work there since no country has been selected yet.
+# Scope: country
+on_game_start_after_lobby = {
+	on_actions = { }
+}
+
+# Save load hook. Fires every time a save game is loaded (including from
+# the country selection screen). Does NOT fire on new games.
+# Scope: country
+on_game_load = {
+	on_actions = { }
+}
+
+# Post-lobby save load hook. Fires every time a save game is loaded,
+# only after the player has passed the country selection screen.
+# Does NOT fire on new games or from the country selection screen.
+# Scope: country
+on_game_load_after_lobby = {
+	on_actions = { }
+}
+
 # Unified callback extension point. Fires after auto-apply updates a setting,
 # an alert is clicked, or an action bar button is clicked.
 # var:cmf_callback contains the flag key of the target (setting, alert, or element).
