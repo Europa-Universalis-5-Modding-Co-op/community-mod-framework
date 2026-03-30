@@ -27,28 +27,24 @@ monthly_country_pulse = {
 }
 
 # Yearly event dispatcher
-# Scope: global
+# Scope: country (from yearly_country_pulse)
 cmf_on_yearly = {
+	trigger = { is_ai = no }
 	effect = {
-		every_country = {
-			limit = { is_ai = no }
-			cmm_register_menu_settings = yes
-			trigger_event_silently = {
-				on_action = cmf_yearly_human_country_pulse
-			}
+		cmm_register_menu_settings = yes
+		trigger_event_silently = {
+			on_action = cmf_yearly_human_country_pulse
 		}
 	}
 }
 
 # Monthly event dispatcher
-# Scope: global
+# Scope: country (from monthly_country_pulse)
 cmf_on_monthly = {
+	trigger = { is_ai = no }
 	effect = {
-		every_country = {
-			limit = { is_ai = no }
-			trigger_event_silently = {
-				on_action = cmf_monthly_human_country_pulse
-			}
+		trigger_event_silently = {
+			on_action = cmf_monthly_human_country_pulse
 		}
 	}
 }
