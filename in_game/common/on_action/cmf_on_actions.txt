@@ -1,8 +1,6 @@
 ﻿on_game_start = {
 	on_actions = {
 		cmf_on_init
-		delay = { days = 1 }
-		cmf_on_init_delayed
 	}
 }
 
@@ -11,17 +9,6 @@
 cmf_on_init = {
 	effect = {
 		set_global_variable = { name = cmf_active value = yes }
-	}
-}
-
-# Register menu settings after player has selected a country.
-# Scope: global
-cmf_on_init_delayed = {
-	effect = {
-		every_country = {
-			limit = { is_ai = no }
-			cmm_register_menu_settings = yes
-		}
 	}
 }
 
@@ -86,23 +73,67 @@ cmf_on_mod_registration = {
 # is created, after the player has selected their country. Vanilla on_game_start
 # fires before the country selection screen, so player-scoped effects
 # (is_ai = no) don't work there since no country has been selected yet.
-# Scope: country
+# Scope: none
 on_game_start_after_lobby = {
+	effect = {
+		every_country = {
+			limit = { is_ai = no }
+			cmm_register_menu_settings = yes
+			trigger_event_silently = {
+				on_action = on_game_start_after_lobby_player_country
+			}
+		}
+	}
+	on_actions = { }
+}
+
+# Player country variant of on_game_start_after_lobby.
+# Scope: country
+on_game_start_after_lobby_player_country = {
 	on_actions = { }
 }
 
 # Save load hook. Fires every time a save game is loaded (including from
 # the country selection screen). Does NOT fire on new games.
-# Scope: country
+# Scope: none
 on_game_load = {
+	effect = {
+		every_country = {
+			limit = { is_ai = no }
+			cmm_register_menu_settings = yes
+			trigger_event_silently = {
+				on_action = on_game_load_player_country
+			}
+		}
+	}
+	on_actions = { }
+}
+
+# Player country variant of on_game_load.
+# Scope: country
+on_game_load_player_country = {
 	on_actions = { }
 }
 
 # Post-lobby save load hook. Fires every time a save game is loaded,
 # only after the player has passed the country selection screen.
 # Does NOT fire on new games or from the country selection screen.
-# Scope: country
+# Scope: none
 on_game_load_after_lobby = {
+	effect = {
+		every_country = {
+			limit = { is_ai = no }
+			trigger_event_silently = {
+				on_action = on_game_load_after_lobby_player_country
+			}
+		}
+	}
+	on_actions = { }
+}
+
+# Player country variant of on_game_load_after_lobby.
+# Scope: country
+on_game_load_after_lobby_player_country = {
 	on_actions = { }
 }
 

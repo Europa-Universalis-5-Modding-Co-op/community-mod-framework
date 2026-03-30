@@ -7,7 +7,7 @@
 	state = {
 		name = cmf_after_lobby_caller
 		trigger_on_create = yes
-		on_start = "[GetScriptedGui('cmf_after_lobby_caller').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		on_start = "[GetScriptedGui('cmf_after_lobby_caller').Execute(GuiScope.End)]"
 	}
 }
 
@@ -19,6 +19,6 @@ widget = {
 
 	state = {
 		name = _show
-		on_start = "[GetScriptedGui('cmf_load_after_lobby_caller').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		on_start = "[GetScriptedGui('cmf_load_after_lobby_caller').Execute(GuiScope.End)]"
 	}
 }
