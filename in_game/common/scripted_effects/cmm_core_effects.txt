@@ -21,6 +21,7 @@ cmm_init_variable_maps = {
 	add_to_variable_map = { name = cmm_list_is_ordered key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_has_sgui key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_no_reset key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_list_field_disabled key = flag:cmm_init value = 0 }
 	add_to_global_variable_map = { name = cmm key = flag:cmm_init value = 0 }
 
 	# Benign warning suppression
@@ -45,6 +46,7 @@ cmm_init_variable_maps = {
 			has_variable_map = cmm_list_is_ordered
 			has_variable_map = cmm_has_sgui
 			has_variable_map = cmm_no_reset
+			has_variable_map = cmm_list_field_disabled
 			has_global_variable_map = cmm
 		}
 		cmf_suppress = { v = cmm_init }
