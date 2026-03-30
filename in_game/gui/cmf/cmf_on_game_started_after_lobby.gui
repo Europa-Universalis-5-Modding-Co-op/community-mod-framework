@@ -1,13 +1,23 @@
 ﻿widget = {
 	name = "cmf_after_lobby"
-	size = { 0 0 }
+	size = { 300 50 }
+	parentanchor = center
+	widgetanchor = center
+	layer = top
 	datacontext = "[GetPlayer]"
 	visible = "[And(Country.IsValid, Not(GetVariableSystem.Exists('cmf_after_lobby_fired')))]"
+
+	text_single = {
+		raw_text = "#R CMF AFTER LOBBY#!"
+		parentanchor = center
+		widgetanchor = center
+	}
 
 	state = {
 		name = cmf_after_lobby
 		trigger_on_create = yes
-		on_start = "[GetScriptedGui('cmf_after_lobby_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
-		on_start = "[GetVariableSystem.Set('cmf_after_lobby_fired', 'yes')]"
+		duration = 10
+		on_finish = "[GetScriptedGui('cmf_after_lobby_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		on_finish = "[GetVariableSystem.Set('cmf_after_lobby_fired', 'yes')]"
 	}
 }
