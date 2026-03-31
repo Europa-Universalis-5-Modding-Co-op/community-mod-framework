@@ -20,7 +20,9 @@ Any questions, feel free to reach out on the EU5 Mod Coop Discord: https://disco
  [*][b]Action Bar:[/b] Add custom action bar buttons with localization keys.
  [*][b]is_host Trigger:[/b] Check if the current country is controlled by the host player.
  [*][b]cmf_suppress Effect:[/b] Suppress "used but never set" and "set but never used" engine warnings with a single effect call.
- [*][b]Player Country Hook:[/b] Shared on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) that fire for each human player's country on yearly and monthly pulses (slightly more efficient than each mod checking for players individually).
+ [*][b]On-Action Hooks:[/b] Post-lobby game start and save load hooks (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) with player country variants. Also includes shared yearly and monthly pulses for human players.
+ [*][b]Dependency Check Popup:[/b] Ready-made main menu popup that alerts players when CMF is missing, with auto-enable and Workshop subscribe options.
+ [*][b]Variable Map Utilities:[/b] Safe variable map mutation helpers (cmf_change_variable_map and local/global variants) that handle remove-then-add atomically.
  [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] A companion set of development tools, such as a mod template, workshop uploader, and mod translator.
 [/list]
 

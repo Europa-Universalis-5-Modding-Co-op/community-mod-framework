@@ -1,3 +1,11 @@
+# v2.1.0:
+- [b]Post-Lobby On-Action Hooks:[/b] New lifecycle hooks (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) that fire after country selection, with player country variants. Solves the vanilla limitation where on_game_start fires before the lobby.
+- [b]Mod Auto-Enabler:[/b] Dependency check popup on the main menu that automatically enables CMF or opens the Workshop when missing.
+- [b]Per-Item List Field Disabling:[/b] Hide specific field columns for specific items in list settings (cmm_disable_list_field_for_item / cmm_enable_list_field_for_item).
+- [b]Variable Map Utilities:[/b] New cmf_change_variable_map, cmf_change_local_variable_map, and cmf_change_global_variable_map effects for safe variable map mutation.
+- [b]Bug Fixes:[/b] Fixed monthly/yearly hook scoping and unset scope errors.
+- [b]CMM Visual Editor (v1.1.0):[/b] Added support for per-item field disabling and fixed list iteration boilerplate naming.
+
 # v2.0.0:
 - [b]Community Mod Menu (CMM):[/b] A shared in-game mod settings window with toggle, button, numeric, slider (double click to drag), dropdown, text (singleplayer-only), and list settings. Includes per-mod tabs, groups, search, global settings with host-only multiplayer editing, and Reset to Defaults.
 - [b]CMM Visual Editor:[/b] Browser-based tool for creating CMM settings without manual coding. Includes live preview and drag-and-drop ordering.
