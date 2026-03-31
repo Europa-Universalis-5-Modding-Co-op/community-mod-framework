@@ -19,6 +19,30 @@ on:
         required: false
         default: '3692202776'
         type: string
+      upload-workshop-pages:
+        description: 'Upload translated Workshop pages'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      upload-change-notes:
+        description: 'Upload change notes'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      upload-submods:
+        description: 'Upload submods'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 jobs:
   release:
@@ -135,17 +159,62 @@ jobs:
           MOD_RELEASE=$(realpath ../mod-release)
           TITLE=$(grep -Po '(?<=\s"name":\s").+(?=",)' ../mod-release/.metadata/metadata.json)
           DESCRIPTION=$(sed '/--NO-TRANSLATE-BELOW--/d' ../steam-release/workshop-description.bbcode | sed "s/\\\$item-id\\\$/${{ inputs.workshop-id }}/g")
-          cat > ../steam-release/workshop.vdf <<VDFEOF
-          "workshopitem"
+          CHANGE_NOTE=""
+          if [ "${{ inputs.upload-change-notes }}" = "true" ] && [ -f "assets/workshop/change-notes.bbcode" ]; then
+            VERSION="${{ steps.project.outputs.version }}"
+            CHANGE_NOTE=$(awk -v ver="$VERSION" '
+              BEGIN { found=0; body=""; has_colon=0; is_bb=0 }
+              {
+                stripped = $0
+                gsub(/^[[:space:]]+/, "", stripped)
+                gsub(/[[:space:]]+$/, "", stripped)
+              }
+              stripped ~ /^(#[[:space:]]+v|\[b\]v)/ {
+                if (found) exit
+                is_bb = (stripped ~ /^\[b\]/)
+                v = stripped
+                if (is_bb) {
+                  sub(/^\[b\]v/, "", v)
+                  sub(/\[\/b\]$/, "", v)
+                } else {
+                  sub(/^#[[:space:]]+v/, "", v)
+                }
+                sub(/:?[[:space:]]*$/, "", v)
+                if (v == ver) {
+                  found = 1
+                  has_colon = (stripped ~ /:/)
+                }
+                next
+              }
+              found { body = body $0 "\n" }
+              END {
+                if (!found) exit
+                sub(/[[:space:]]+$/, "", body)
+                if (is_bb || has_colon) {
+                  colon = ""
+                  if (has_colon) colon = ":"
+                  header = "[b]v" ver colon "[/b]"
+                  if (body != "") printf "%s\n%s", header, body
+                  else printf "%s", header
+                } else {
+                  if (body != "") printf "%s", body
+                }
+              }
+            ' assets/workshop/change-notes.bbcode)
+            CHANGE_NOTE=$(echo "$CHANGE_NOTE" | sed "s/\\\$item-id\\\$/${{ inputs.workshop-id }}/g")
+          fi
           {
-          	"appid" "3450310"
-          	"publishedfileid" "${{ inputs.workshop-id }}"
-          	"contentfolder" "${MOD_RELEASE}"
-          	"previewfile" "${MOD_RELEASE}/.metadata/thumbnail.png"
-          	"title" "${TITLE}"
-          	"description" "${DESCRIPTION}"
-          }
-          VDFEOF
+            echo '"workshopitem"'
+            echo '{'
+            printf '\t"appid" "3450310"\n'
+            printf '\t"publishedfileid" "%s"\n' "${{ inputs.workshop-id }}"
+            printf '\t"contentfolder" "%s"\n' "${MOD_RELEASE}"
+            printf '\t"previewfile" "%s/.metadata/thumbnail.png"\n' "${MOD_RELEASE}"
+            printf '\t"title" "%s"\n' "${TITLE}"
+            printf '\t"description" "%s"\n' "${DESCRIPTION}"
+            [ -n "$CHANGE_NOTE" ] && printf '\t"changenote" "%s"\n' "${CHANGE_NOTE}"
+            echo '}'
+          } > ../steam-release/workshop.vdf
           echo "vdf=$(realpath ../steam-release/workshop.vdf)" >> "$GITHUB_OUTPUT"
           echo "# Workflow Metadata" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
@@ -163,4 +232,173 @@ jobs:
         shell: bash
         run: |
           steamcmd +login ${{ secrets.WORKSHOP_USERNAME }} ${{ secrets.WORKSHOP_PASSWORD }} +workshop_build_item ${{ steps.metadata.outputs.vdf }} +quit
+
+        # Upload translated Workshop titles and descriptions per language
+        # Uses VDF 'language' field for per-language metadata updates
+      - name: Upload Workshop Pages
+        if: ${{ inputs.publish == 'true' && inputs.upload-workshop-pages == 'true' }}
+        shell: bash
+        run: |
+          WORKSHOP_ID="${{ inputs.workshop-id }}"
+          declare -A LANG_MAP=(
+            [english]=english [french]=french [german]=german [spanish]=spanish
+            [polish]=polish [russian]=russian [simp_chinese]=schinese
+            [turkish]=turkish [braz_por]=brazilian [japanese]=japanese [korean]=koreana
+          )
+          write_page_vdf() {
+            local vdf_path="$1" steam_lang="$2" title="$3" desc="$4"
+            {
+              echo '"workshopitem"'
+              echo '{'
+              printf '\t"appid" "3450310"\n'
+              printf '\t"publishedfileid" "%s"\n' "${WORKSHOP_ID}"
+              [ -n "$title" ] && printf '\t"title" "%s"\n' "$title"
+              [ -n "$desc" ] && printf '\t"description" "%s"\n' "$desc"
+              printf '\t"language" "%s"\n' "$steam_lang"
+              echo '}'
+            } > "$vdf_path"
+          }
+          upload_count=0
+          # Source language page
+          SOURCE_TITLE=$(jq -r '.name' ../mod-release/.metadata/metadata.json)
+          SOURCE_DESC=$(sed '/--NO-TRANSLATE-BELOW--/d' assets/workshop/workshop-description.bbcode | sed "s/\\\$item-id\\\$/${WORKSHOP_ID}/g")
+          write_page_vdf "../steam-release/page-english.vdf" "english" "$SOURCE_TITLE" "$SOURCE_DESC"
+          echo "Uploading Workshop page for english..."
+          steamcmd +login ${{ secrets.WORKSHOP_USERNAME }} ${{ secrets.WORKSHOP_PASSWORD }} +workshop_build_item "$(realpath ../steam-release/page-english.vdf)" +quit
+          upload_count=$((upload_count + 1))
+          # Translated pages
+          for file in assets/workshop/translations/workshop_*.txt; do
+            [ -f "$file" ] || continue
+            LANG=$(basename "$file" | sed 's/workshop_\(.*\)\.txt/\1/')
+            STEAM_LANG="${LANG_MAP[$LANG]:-}"
+            if [ -z "$STEAM_LANG" ]; then
+              echo "::warning::No Steam language mapping for '${LANG}', skipping."
+              continue
+            fi
+            TRANS_TITLE=$(awk '/^===WORKSHOP_TITLE===$/{f=1;next} /^===WORKSHOP_DESCRIPTION===$/{exit} f{print}' "$file" | sed '/^[[:space:]]*$/d' | head -1)
+            TRANS_TITLE=$(echo "$TRANS_TITLE" | sed "s/\\\$item-id\\\$/${WORKSHOP_ID}/g")
+            TRANS_DESC=$(awk '/^===WORKSHOP_DESCRIPTION===$/{f=1;next} f{print}' "$file")
+            TRANS_DESC=$(echo "$TRANS_DESC" | sed "s/\\\$item-id\\\$/${WORKSHOP_ID}/g")
+            [ -z "$TRANS_TITLE" ] && [ -z "$TRANS_DESC" ] && continue
+            write_page_vdf "../steam-release/page-${LANG}.vdf" "$STEAM_LANG" "$TRANS_TITLE" "$TRANS_DESC"
+            echo "Uploading Workshop page for ${LANG} (${STEAM_LANG})..."
+            steamcmd +login ${{ secrets.WORKSHOP_USERNAME }} ${{ secrets.WORKSHOP_PASSWORD }} +workshop_build_item "$(realpath "../steam-release/page-${LANG}.vdf")" +quit
+            upload_count=$((upload_count + 1))
+          done
+          echo "# Workshop Pages" >> $GITHUB_STEP_SUMMARY
+          echo "Uploaded **${upload_count}** Workshop page(s)." >> $GITHUB_STEP_SUMMARY
+
+        # Upload submods with Workshop IDs configured in tools/config.toml
+      - name: Upload Submods
+        if: ${{ inputs.publish == 'true' && inputs.upload-submods == 'true' }}
+        shell: bash
+        run: |
+          parse_change_note() {
+            local file="$1" version="$2" item_id="$3"
+            [ -f "$file" ] || return
+            local note
+            note=$(awk -v ver="$version" '
+              BEGIN { found=0; body=""; has_colon=0; is_bb=0 }
+              {
+                stripped = $0
+                gsub(/^[[:space:]]+/, "", stripped)
+                gsub(/[[:space:]]+$/, "", stripped)
+              }
+              stripped ~ /^(#[[:space:]]+v|\[b\]v)/ {
+                if (found) exit
+                is_bb = (stripped ~ /^\[b\]/)
+                v = stripped
+                if (is_bb) {
+                  sub(/^\[b\]v/, "", v)
+                  sub(/\[\/b\]$/, "", v)
+                } else {
+                  sub(/^#[[:space:]]+v/, "", v)
+                }
+                sub(/:?[[:space:]]*$/, "", v)
+                if (v == ver) {
+                  found = 1
+                  has_colon = (stripped ~ /:/)
+                }
+                next
+              }
+              found { body = body $0 "\n" }
+              END {
+                if (!found) exit
+                sub(/[[:space:]]+$/, "", body)
+                if (is_bb || has_colon) {
+                  colon = ""
+                  if (has_colon) colon = ":"
+                  header = "[b]v" ver colon "[/b]"
+                  if (body != "") printf "%s\n%s", header, body
+                  else printf "%s", header
+                } else {
+                  if (body != "") printf "%s", body
+                }
+              }
+            ' "$file")
+            [ -n "$note" ] && echo "$note" | sed "s/\\\$item-id\\\$/${item_id}/g"
+          }
+          SUBMODS=$(python3 -c "
+          import tomllib, json
+          with open('tools/config.toml', 'rb') as f:
+              config = tomllib.load(f)
+          for s in config.get('submods', []):
+              mod_id = s.get('mod_id', '')
+              wid = int(s.get('workshop_id', 0))
+              if mod_id and wid > 0:
+                  print(json.dumps({'mod_id': mod_id, 'workshop_id': wid}))
+          ")
+          if [ -z "$SUBMODS" ]; then
+            echo "No submods configured for upload."
+            echo "# Submods" >> $GITHUB_STEP_SUMMARY
+            echo "No submods configured." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+          upload_count=0
+          while IFS= read -r entry; do
+            MOD_ID=$(echo "$entry" | jq -r '.mod_id')
+            WID=$(echo "$entry" | jq -r '.workshop_id')
+            SUBMOD_DIR=""
+            for dir in submods/*/; do
+              [ -d "$dir" ] || continue
+              if [ -f "${dir}.metadata/metadata.json" ]; then
+                DIR_MOD_ID=$(jq -r '.id // empty' "${dir}.metadata/metadata.json")
+                if [ "$DIR_MOD_ID" = "$MOD_ID" ]; then
+                  SUBMOD_DIR="$dir"
+                  break
+                fi
+              fi
+            done
+            if [ -z "$SUBMOD_DIR" ]; then
+              echo "::warning::Submod '${MOD_ID}' not found in submods/. Skipping."
+              continue
+            fi
+            SUBMOD_NAME=$(jq -r '.name // empty' "${SUBMOD_DIR}.metadata/metadata.json")
+            SUBMOD_VERSION=$(jq -r '.version // empty' "${SUBMOD_DIR}.metadata/metadata.json")
+            SUBMOD_RELEASE=$(realpath "$SUBMOD_DIR")
+            PREVIEW_PATH=""
+            if [ -f "${SUBMOD_DIR}.metadata/thumbnail.png" ]; then
+              PREVIEW_PATH=$(realpath "${SUBMOD_DIR}.metadata/thumbnail.png")
+            fi
+            CHANGE_NOTE=""
+            if [ "${{ inputs.upload-change-notes }}" = "true" ] && [ -n "$SUBMOD_VERSION" ]; then
+              CHANGE_NOTE=$(parse_change_note "${SUBMOD_DIR}workshop/change-notes.bbcode" "$SUBMOD_VERSION" "$WID")
+            fi
+            {
+              echo '"workshopitem"'
+              echo '{'
+              printf '\t"appid" "3450310"\n'
+              printf '\t"publishedfileid" "%s"\n' "$WID"
+              printf '\t"contentfolder" "%s"\n' "${SUBMOD_RELEASE}"
+              [ -n "$PREVIEW_PATH" ] && printf '\t"previewfile" "%s"\n' "${PREVIEW_PATH}"
+              [ -n "$SUBMOD_NAME" ] && printf '\t"title" "%s"\n' "${SUBMOD_NAME}"
+              [ -n "$CHANGE_NOTE" ] && printf '\t"changenote" "%s"\n' "${CHANGE_NOTE}"
+              echo '}'
+            } > "../steam-release/submod-${MOD_ID}.vdf"
+            echo "Uploading submod '${MOD_ID}' (Workshop ID: ${WID})..."
+            steamcmd +login ${{ secrets.WORKSHOP_USERNAME }} ${{ secrets.WORKSHOP_PASSWORD }} +workshop_build_item "$(realpath "../steam-release/submod-${MOD_ID}.vdf")" +quit
+            upload_count=$((upload_count + 1))
+          done <<< "$SUBMODS"
+          echo "# Submods" >> $GITHUB_STEP_SUMMARY
+          echo "Uploaded **${upload_count}** submod(s)." >> $GITHUB_STEP_SUMMARY
 
