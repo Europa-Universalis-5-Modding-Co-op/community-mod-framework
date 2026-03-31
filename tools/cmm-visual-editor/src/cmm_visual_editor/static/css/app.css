@@ -644,7 +644,7 @@ body {
     margin-bottom: 6px;
 }
 
-.field-card-header span:nth-child(2) {
+.field-card-header .field-card-title {
     flex: 1;
     font-size: 12px;
     font-weight: 500;
