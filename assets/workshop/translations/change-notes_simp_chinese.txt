@@ -1,6 +1,1 @@
-- [b]大厅后 On-Action 钩子：[/b] 新的生命周期钩子（on_game_start_after_lobby、on_game_load、on_game_load_after_lobby）在选择国家后触发，并提供玩家国家变体。解决了原版中 on_game_start 在大厅前触发的限制。
-- [b]Mod 自动启用器：[/b] 主菜单上的依赖检查弹窗，在缺失 CMF 时会自动启用或打开创意工坊。
-- [b]单项列表字段禁用：[/b] 在列表设置中为特定项目隐藏特定的字段列（cmm_disable_list_field_for_item / cmm_enable_list_field_for_item）。
-- [b]变量映射实用工具：[/b] 新增 cmf_change_variable_map、cmf_change_local_variable_map 和 cmf_change_global_variable_map 效果，用于安全的变量映射修改。
-- [b]Bug 修复：[/b] 修复了每月/每年钩子的作用域问题以及未设置作用域的错误。
-- [b]CMM 可视化编辑器 (v1.1.0)：[/b] 增加了对单项字段禁用的支持，并修复了列表迭代样板代码的命名问题。
+- 在部分 on_action 钩子中将 _player_country 修正为 _human_country

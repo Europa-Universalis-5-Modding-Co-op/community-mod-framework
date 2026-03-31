@@ -1,6 +1,1 @@
-- [b]포스트 로비 On-Action 훅:[/b] 국가 선택 후에 실행되는 새로운 라이프사이클 훅(on_game_start_after_lobby, on_game_load, on_game_load_after_lobby)이 추가되었으며, 플레이어 국가 전용 버전도 포함됩니다. 이는 on_game_start가 로비 이전에 실행되는 바닐라의 제한 사항을 해결합니다.
-- [b]모드 자동 활성화 도구 (Auto-Enabler):[/b] 메인 메뉴에 종속성 확인 팝업이 추가되어, CMF가 없으면 자동으로 활성화하거나 창작마당 페이지를 엽니다.
-- [b]항목별 리스트 필드 비활성화:[/b] 리스트 설정에서 특정 항목의 특정 필드 열을 숨길 수 있습니다 (cmm_disable_list_field_for_item / cmm_enable_list_field_for_item).
-- [b]변수 맵 유틸리티:[/b] 안전한 변수 맵 수정을 위한 새로운 cmf_change_variable_map, cmf_change_local_variable_map, cmf_change_global_variable_map 효과(effect)가 추가되었습니다.
-- [b]버그 수정:[/b] 월간/연간 훅의 스코핑 문제와 설정되지 않은 스코프(unset scope) 오류를 수정했습니다.
-- [b]CMM 비주얼 에디터 (v1.1.0):[/b] 항목별 필드 비활성화 지원을 추가하고 리스트 반복문 상용구(boilerplate) 명칭 문제를 수정했습니다.
+- 일부 on_action 후크에서 _player_country를 _human_country로 수정

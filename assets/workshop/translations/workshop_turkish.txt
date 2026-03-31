@@ -3,38 +3,37 @@ Topluluk Mod Altyapısı ve Menüsü / Community Mod Framework & Menu
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Turkish Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-[b]Community Mod Framework (CMF)[/b], modculara yeni özellikler oluşturmaları için araçlar sunarken modlar arası uyumluluğu artırmayı amaçlayan bir yardımcı moddur.
+[b]Community Mod Framework (CMF)[/b], mod yapımcılarına yeni özellikler oluşturmaları için araçlar sunarken modlar arası birlikte çalışabilirliği artırmayı amaçlayan bir yardımcı moddur.
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/banner.png[/img]
 
-[b]CMF, mod yükleme sıranızda en başta yer almalıdır.[/b]
+[b]CMF, mod yükleme sıranızda ilk sırada yüklenmelidir.[/b]
 
-Herhangi bir sorunuz olursa EU5 Mod Coop Discord üzerinden bize ulaşmaktan çekinmeyin: https://discord.gg/aqAAcCZsY7
+Herhangi bir sorunuz olursa EU5 Mod Coop Discord adresi üzerinden bize ulaşabilirsiniz: https://discord.gg/aqAAcCZsY7
 
 [h1]Özellikler[/h1]
 [list]
- [*][b]Community Mod Menu (CMM):[/b] Paylaşılan bir oyun içi mod menüsü. Mod yazarları ayarları basit bir API aracılığıyla dinamik olarak kaydeder; özel bir ayar arayüzü (UI) oluşturmaya gerek kalmaz.
+ [*][b]Community Mod Menu (CMM):[/b] Ortak bir oyun içi mod menüsü. Mod yazarları, ayarları basit bir API aracılığıyla dinamik olarak kaydeder; özel bir ayar arayüzü (UI) oluşturmaya gerek kalmaz.
   [list]
-   [*]Seçenek (Toggle), düğme, sayısal, kaydırıcı (sürüklemek için çift tıklayın), açılır menü, metin (yalnızca tek oyunculu) ve liste ayarları
-   [*]Mod başına sekmeler, gruplar ve arama
-   [*]Sadece sunucu sahibinin (host) düzenleyebildiği genel çok oyunculu ayarları
-   [*]Varsayılana Sıfırla
+   [*]Aç/kapat, düğme, sayısal, kaydırıcı (sürüklemek için çift tıklayın), açılır menü, metin (yalnızca tek oyunculu) ve liste ayarları
+   [*]Mod başına sekmeler, gruplar ve arama özelliği
+   [*]Çok oyunculu modda yalnızca kurucu (host) tarafından düzenlenebilen küresel ayarlar
+   [*]Varsayılanlara Sıfırla seçeneği
    [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Görsel Düzenleyici[/url] — mod menünüzü oluşturmak için tarayıcı tabanlı araç
   [/list]
- [*][b]Özel Uyarılar:[/b] Yerelleştirme anahtarları aracılığıyla uyarı çubuğunda özel uyarılar oluşturun ve gösterin.
+ [*][b]Özel Uyarılar:[/b] Yerelleştirme anahtarları (localization keys) aracılığıyla uyarı çubuğunda özel uyarılar oluşturun ve gösterin.
  [*][b]Eylem Çubuğu:[/b] Yerelleştirme anahtarlarıyla özel eylem çubuğu düğmeleri ekleyin.
- [*][b]is_host Tetikleyicisi:[/b] Mevcut ülkenin sunucu sahibi (host) tarafından kontrol edilip edilmediğini kontrol edin.
- [*][b]cmf_suppress Efekti:[/b] Tek bir efekt çağrısıyla "kullanılan ancak hiç tanımlanmayan" ve "tanımlanan ancak hiç kullanılmayan" motor uyarılarını bastırın.
- [*][b]On-Action Kancaları:[/b] Oyuncu ülke varyantlarıyla birlikte lobi sonrası oyun başlangıcı ve kayıtlı oyun yükleme kancaları (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby). Ayrıca insan oyuncular için paylaşılan yıllık ve aylık vuruşlar (pulses) içerir.
- [*][b]Bağımlılık Kontrolü Penceresi:[/b] CMF eksik olduğunda oyuncuları uyaran, otomatik etkinleştirme ve Atölye aboneliği seçenekleri sunan hazır ana menü penceresi.
- [*][b]Değişken Haritası Araçları:[/b] Silme-ardından-ekleme işlemlerini atomik olarak gerçekleştiren güvenli değişken haritası mutasyon yardımcıları (cmf_change_variable_map ve yerel/küresel varyantları).
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Mod şablonu, atölye yükleyici ve mod çevirmeni gibi eşlikçi bir geliştirme araçları seti.
+ [*][b]is_host Tetikleyicisi:[/b] Mevcut ülkenin kurucu oyuncu (host) tarafından kontrol edilip edilmediğini kontrol edin.
+ [*][b]cmf_suppress Etkisi:[/b] "Kullanıldı ama hiç atanmadı" ve "atandı ama hiç kullanılmadı" motor uyarılarını (engine warnings) tek bir efekt çağrısıyla engelleyin.
+ [*][b]On-Action Kancaları:[/b] Oyuncu ülkesi varyasyonlarıyla birlikte lobi sonrası oyun başlangıcı ve kayıt yükleme kancaları (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby). Ayrıca insan oyuncular için paylaşılan yıllık ve aylık atımları (pulse) içerir.
+ [*][b]Değişken Haritası Yardımcıları:[/b] Kaldır-ve-ekle işlemini atomik olarak gerçekleştiren güvenli değişken haritası mutasyon yardımcıları (cmf_change_variable_map ve yerel/küresel varyantları).
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Mod şablonu, atölye yükleyicisi ve mod çevirmeni gibi geliştirme araçlarından oluşan yardımcı bir set.
 [/list]
 
-[h1]Dökümantasyon[/h1]
+[h1]Belgelendirme[/h1]
 [list]
- [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — Tam dökümantasyon
- [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — Hızlı başvuru
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — Tam belgelendirme
+ [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — Hızlı başvuru kılavuzu
  [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub Deposu[/url]
 [/list]
 
@@ -52,8 +51,9 @@ Herhangi bir sorunuz olursa EU5 Mod Coop Discord üzerinden bize ulaşmaktan çe
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3696243603]Autonomous Diplomats[/url]
 [/list]
 
 [h1]Değişiklik Günlüğü:[/h1]
-Atölye sayfasındaki [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]Değişiklik Notlarına[/url] göz atın.
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]Atölye sayfasındaki Değişiklik Notlarına[/url] göz atın.
 

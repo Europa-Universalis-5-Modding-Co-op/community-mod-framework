@@ -1,6 +1,1 @@
-- [b]Hooks d'on-action post-lobby :[/b] Nouveaux hooks de cycle de vie (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) qui se déclenchent après la sélection du pays, avec des variantes pour le pays du joueur. Résout la limitation du jeu de base où on_game_start se déclenche avant le lobby.
-- [b]Auto-activation de mod :[/b] Fenêtre de vérification des dépendances sur le menu principal qui active automatiquement le CMF ou ouvre le Workshop s'il est manquant.
-- [b]Désactivation de champ de liste par élément :[/b] Masquez des colonnes de champs spécifiques pour des éléments précis dans les paramètres de liste (cmm_disable_list_field_for_item / cmm_enable_list_field_for_item).
-- [b]Utilitaires de cartes de variables (Variable Map) :[/b] Nouveaux effets cmf_change_variable_map, cmf_change_local_variable_map, et cmf_change_global_variable_map pour une mutation sécurisée des cartes de variables.
-- [b]Corrections de bugs :[/b] Correction du scoping des hooks mensuels/annuels et des erreurs de scope non défini (unset scope).
-- [b]Éditeur visuel CMM (v1.1.0) :[/b] Ajout de la prise en charge de la désactivation des champs par élément et correction du nommage du code générique (boilerplate) d'itération de liste.
+- Correction de _player_country en _human_country sur certains hooks on_action

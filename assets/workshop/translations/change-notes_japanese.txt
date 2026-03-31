@@ -1,6 +1,1 @@
-- [b]ロビー後のオンアクション・フック:[/b] 国家選択後に実行される新しいライフサイクル・フック（on_game_start_after_lobby, on_game_load, on_game_load_after_lobby）を追加。プレイヤー国家向けのバリアントも含まれます。バニラのon_game_startがロビー前に実行されるという制限を解決します。
-- [b]Mod自動有効化:[/b] メインメニューに依存関係チェックのポップアップを表示し、CMFが不足している場合に自動的に有効化、またはワークショップを開きます。
-- [b]アイテムごとのリストフィールド無効化:[/b] リスト設定において、特定のアイテムの特定のフィールド列を非表示にします（cmm_disable_list_field_for_item / cmm_enable_list_field_for_item）。
-- [b]変数マップ・ユーティリティ:[/b] 変数マップを安全に変更するための新しいエフェクト、cmf_change_variable_map、cmf_change_local_variable_map、およびcmf_change_global_variable_mapを追加。
-- [b]バグ修正:[/b] 月次/年次フックのスコープ設定および未設定スコープのエラーを修正。
-- [b]CMMビジュアル・エディタ (v1.1.0):[/b] アイテムごとのフィールド無効化への対応を追加し、リスト反復のボイラープレート名の命名を修正。
+- 一部のon_actionフックにおいて _player_country を _human_country に修正

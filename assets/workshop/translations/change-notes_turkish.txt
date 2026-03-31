@@ -1,6 +1,1 @@
-- [b]Lobi Sonrası On-Action Kancaları (Hooks):[/b] Ülke seçiminden sonra tetiklenen, oyuncu ülkesi varyantlarına sahip yeni yaşam döngüsü kancaları (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby). on_game_start'ın lobiden önce tetiklendiği vanilla kısıtlamasını çözer.
-- [b]Mod Otomatik Etkinleştirici:[/b] Ana menüde CMF eksik olduğunda otomatik olarak etkinleştiren veya Atölye'yi açan bağımlılık kontrolü açılır penceresi.
-- [b]Öğe Başına Liste Alanı Devre Dışı Bırakma:[/b] Liste ayarlarında belirli öğeler için belirli alan sütunlarını gizleyin (cmm_disable_list_field_for_item / cmm_enable_list_field_for_item).
-- [b]Değişken Haritası (Variable Map) Araçları:[/b] Güvenli değişken haritası mutasyonu için yeni cmf_change_variable_map, cmf_change_local_variable_map ve cmf_change_global_variable_map efektleri.
-- [b]Hata Düzeltmeleri:[/b] Aylık/yıllık kanca kapsamı (scoping) ve atanmamış kapsam (unset scope) hataları düzeltildi.
-- [b]CMM Görsel Düzenleyici (v1.1.0):[/b] Öğe başına alan devre dışı bırakma desteği eklendi ve liste yineleme taslak (boilerplate) isimlendirmesi düzeltildi.
+- Bazı on_action hook'larında _player_country, _human_country olarak düzeltildi
