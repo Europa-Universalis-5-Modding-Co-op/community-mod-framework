@@ -7,7 +7,7 @@
 # - item_count (number): Number of list items (`1..20`).
 # - is_ordered (1/0): `1` shows row move controls, `0` hides them.
 cmm_register_settings_list = {
-	cmm_register_list_setting_internal = {
+	_cmm_register_list_setting_internal = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		tab_id = $tab_id$
@@ -27,7 +27,7 @@ cmm_register_settings_list = {
 # - item_count (number): Number of list items (`1..20`).
 # - is_ordered (1/0): `1` shows row move controls, `0` hides them.
 cmm_register_global_settings_list = {
-	cmm_register_list_setting_internal = {
+	_cmm_register_list_setting_internal = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		tab_id = $tab_id$
@@ -48,7 +48,7 @@ cmm_register_global_settings_list = {
 # - is_ordered (1/0): `1` shows row move controls, `0` hides them.
 # - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 # - vt (variable/global_variable): Variable type token for macro composition.
-cmm_register_list_setting_internal = {
+_cmm_register_list_setting_internal = {
 	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 7 }
 	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = $is_global$ }
 	set_variable = { name = cmm_setting_list_is_ordered_$mod_id$__$setting_id$ value = $is_ordered$ }
@@ -88,7 +88,7 @@ cmm_register_list_setting_internal = {
 		set_variable = { name = cmm_list_field_count_$mod_id$__$setting_id$ value = 0 }
 	}
 
-	cmm_register_setting_metadata = {
+	_cmm_register_setting_metadata = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		tab_id = $tab_id$
@@ -103,12 +103,12 @@ cmm_register_list_setting_internal = {
 			value = flag:$mod_id$__$setting_id$_item_column_name
 		}
 
-		cmm_initialize_list_setting_item_metadata = {
+		_cmm_initialize_list_setting_item_metadata = {
 			mod_id = $mod_id$
 			setting_id = $setting_id$
 		}
 
-		cmm_initialize_list_setting_item_list = {
+		_cmm_initialize_list_setting_item_list = {
 			mod_id = $mod_id$
 			setting_id = $setting_id$
 			vt = $vt$
@@ -117,7 +117,7 @@ cmm_register_list_setting_internal = {
 		set_variable = { name = cmm_list_initialized_$mod_id$__$setting_id$ value = 1 }
 	}
 
-	cmm_suppress_list_setting_warnings = {
+	_cmm_suppress_list_setting_warnings = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 	}
@@ -126,14 +126,14 @@ cmm_register_list_setting_internal = {
 # Internal: dispatch bool field init at a given slot with global/local branching.
 # Scope: country
 # Args: mod_id (key), setting_id (key), field_id (key), slot (number), default_value (1/0)
-cmm_init_list_bool_field_at_slot = {
+_cmm_init_list_bool_field_at_slot = {
 	set_local_variable = { name = cmm_tmp_flag value = flag:$mod_id$__$setting_id$ }
 	if = {
 		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
-		cmm_initialize_list_bool_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ vt = global_variable is_global = 1 }
+		_cmm_initialize_list_bool_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ vt = global_variable is_global = 1 }
 	}
 	else = {
-		cmm_initialize_list_bool_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ vt = variable is_global = 0 }
+		_cmm_initialize_list_bool_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ vt = variable is_global = 0 }
 	}
 	# Benign warning suppression
 	if = {
@@ -150,7 +150,7 @@ cmm_init_list_bool_field_at_slot = {
 # - field_id (key): Field id unique within the list setting.
 # - default_value (1/0): Default checkbox state for new saves.
 cmm_register_list_bool_field = {
-	cmm_register_list_field_slot = {
+	_cmm_register_list_field_slot = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		field_id = $field_id$
@@ -165,15 +165,15 @@ cmm_register_list_bool_field = {
 		}
 		switch = {
 			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
-			1 = { cmm_init_list_bool_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 default_value = $default_value$ } }
-			2 = { cmm_init_list_bool_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 default_value = $default_value$ } }
-			3 = { cmm_init_list_bool_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 default_value = $default_value$ } }
-			4 = { cmm_init_list_bool_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 default_value = $default_value$ } }
-			5 = { cmm_init_list_bool_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 default_value = $default_value$ } }
+			1 = { _cmm_init_list_bool_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 default_value = $default_value$ } }
+			2 = { _cmm_init_list_bool_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 default_value = $default_value$ } }
+			3 = { _cmm_init_list_bool_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 default_value = $default_value$ } }
+			4 = { _cmm_init_list_bool_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 default_value = $default_value$ } }
+			5 = { _cmm_init_list_bool_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 default_value = $default_value$ } }
 		}
 	}
 
-	cmm_suppress_list_bool_field_warnings = {
+	_cmm_suppress_list_bool_field_warnings = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		field_id = $field_id$
@@ -183,14 +183,14 @@ cmm_register_list_bool_field = {
 # Internal: dispatch dropdown field init at a given slot with global/local branching.
 # Scope: country
 # Args: mod_id (key), setting_id (key), field_id (key), slot (number), default_index (number), option_count (number)
-cmm_init_list_dropdown_field_at_slot = {
+_cmm_init_list_dropdown_field_at_slot = {
 	set_local_variable = { name = cmm_tmp_flag value = flag:$mod_id$__$setting_id$ }
 	if = {
 		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
-		cmm_initialize_list_dropdown_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_index = $default_index$ option_count = $option_count$ vt = global_variable is_global = 1 }
+		_cmm_initialize_list_dropdown_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_index = $default_index$ option_count = $option_count$ vt = global_variable is_global = 1 }
 	}
 	else = {
-		cmm_initialize_list_dropdown_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_index = $default_index$ option_count = $option_count$ vt = variable is_global = 0 }
+		_cmm_initialize_list_dropdown_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_index = $default_index$ option_count = $option_count$ vt = variable is_global = 0 }
 	}
 	# Benign warning suppression
 	if = {
@@ -208,7 +208,7 @@ cmm_init_list_dropdown_field_at_slot = {
 # - default_index (number): Default selected option ordinal for new saves.
 # - option_count (number): Number of options (`>= 1`; numbered `1..option_count`).
 cmm_register_list_dropdown_field = {
-	cmm_register_list_field_slot = {
+	_cmm_register_list_field_slot = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		field_id = $field_id$
@@ -223,15 +223,15 @@ cmm_register_list_dropdown_field = {
 		}
 		switch = {
 			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
-			1 = { cmm_init_list_dropdown_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 default_index = $default_index$ option_count = $option_count$ } }
-			2 = { cmm_init_list_dropdown_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 default_index = $default_index$ option_count = $option_count$ } }
-			3 = { cmm_init_list_dropdown_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 default_index = $default_index$ option_count = $option_count$ } }
-			4 = { cmm_init_list_dropdown_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 default_index = $default_index$ option_count = $option_count$ } }
-			5 = { cmm_init_list_dropdown_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 default_index = $default_index$ option_count = $option_count$ } }
+			1 = { _cmm_init_list_dropdown_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 default_index = $default_index$ option_count = $option_count$ } }
+			2 = { _cmm_init_list_dropdown_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 default_index = $default_index$ option_count = $option_count$ } }
+			3 = { _cmm_init_list_dropdown_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 default_index = $default_index$ option_count = $option_count$ } }
+			4 = { _cmm_init_list_dropdown_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 default_index = $default_index$ option_count = $option_count$ } }
+			5 = { _cmm_init_list_dropdown_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 default_index = $default_index$ option_count = $option_count$ } }
 		}
 	}
 
-	cmm_suppress_list_dropdown_field_warnings = {
+	_cmm_suppress_list_dropdown_field_warnings = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		field_id = $field_id$
@@ -241,14 +241,14 @@ cmm_register_list_dropdown_field = {
 # Internal: dispatch numeric field init at a given slot with global/local branching.
 # Scope: country
 # Args: mod_id (key), setting_id (key), field_id (key), slot (number), default_value (number), min_value (number), max_value (number), step_value (number)
-cmm_init_list_numeric_field_at_slot = {
+_cmm_init_list_numeric_field_at_slot = {
 	set_local_variable = { name = cmm_tmp_flag value = flag:$mod_id$__$setting_id$ }
 	if = {
 		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
-		cmm_initialize_list_numeric_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ vt = global_variable is_global = 1 }
+		_cmm_initialize_list_numeric_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ vt = global_variable is_global = 1 }
 	}
 	else = {
-		cmm_initialize_list_numeric_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ vt = variable is_global = 0 }
+		_cmm_initialize_list_numeric_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ vt = variable is_global = 0 }
 	}
 	# Benign warning suppression
 	if = {
@@ -268,7 +268,7 @@ cmm_init_list_numeric_field_at_slot = {
 # - max_value (number): Upper clamp bound.
 # - step_value (number): Increase/decrease step size.
 cmm_register_list_numeric_field = {
-	cmm_register_list_field_slot = {
+	_cmm_register_list_field_slot = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		field_id = $field_id$
@@ -283,15 +283,15 @@ cmm_register_list_numeric_field = {
 		}
 		switch = {
 			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
-			1 = { cmm_init_list_numeric_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
-			2 = { cmm_init_list_numeric_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
-			3 = { cmm_init_list_numeric_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
-			4 = { cmm_init_list_numeric_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
-			5 = { cmm_init_list_numeric_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			1 = { _cmm_init_list_numeric_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			2 = { _cmm_init_list_numeric_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			3 = { _cmm_init_list_numeric_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			4 = { _cmm_init_list_numeric_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			5 = { _cmm_init_list_numeric_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
 		}
 	}
 
-	cmm_suppress_list_numeric_field_warnings = {
+	_cmm_suppress_list_numeric_field_warnings = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		field_id = $field_id$
@@ -301,14 +301,14 @@ cmm_register_list_numeric_field = {
 # Internal: dispatch slider field init at a given slot with global/local branching.
 # Scope: country
 # Args: mod_id (key), setting_id (key), field_id (key), slot (number), default_value (number), min_value (number), max_value (number), step_value (number)
-cmm_init_list_slider_field_at_slot = {
+_cmm_init_list_slider_field_at_slot = {
 	set_local_variable = { name = cmm_tmp_flag value = flag:$mod_id$__$setting_id$ }
 	if = {
 		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
-		cmm_initialize_list_slider_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ vt = global_variable is_global = 1 }
+		_cmm_initialize_list_slider_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ vt = global_variable is_global = 1 }
 	}
 	else = {
-		cmm_initialize_list_slider_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ vt = variable is_global = 0 }
+		_cmm_initialize_list_slider_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ vt = variable is_global = 0 }
 	}
 	# Benign warning suppression
 	if = {
@@ -328,7 +328,7 @@ cmm_init_list_slider_field_at_slot = {
 # - max_value (number): Upper clamp bound.
 # - step_value (number): Increase/decrease step size.
 cmm_register_list_slider_field = {
-	cmm_register_list_field_slot = {
+	_cmm_register_list_field_slot = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		field_id = $field_id$
@@ -343,15 +343,15 @@ cmm_register_list_slider_field = {
 		}
 		switch = {
 			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
-			1 = { cmm_init_list_slider_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
-			2 = { cmm_init_list_slider_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
-			3 = { cmm_init_list_slider_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
-			4 = { cmm_init_list_slider_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
-			5 = { cmm_init_list_slider_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			1 = { _cmm_init_list_slider_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			2 = { _cmm_init_list_slider_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			3 = { _cmm_init_list_slider_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			4 = { _cmm_init_list_slider_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
+			5 = { _cmm_init_list_slider_field_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ } }
 		}
 	}
 
-	cmm_suppress_list_slider_field_warnings = {
+	_cmm_suppress_list_slider_field_warnings = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		field_id = $field_id$
@@ -421,7 +421,7 @@ cmm_set_list_item_value = {
 # Internal: shared implementation for cmm_begin_settings_list and cmm_begin_global_settings_list.
 # Scope: country
 # Args: mod_id (key), setting_id (key), tab_id (key), is_ordered (1/0), is_global (1/0), vt (variable/global_variable)
-cmm_begin_settings_list_internal = {
+_cmm_begin_settings_list_internal = {
 	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 7 }
 	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = $is_global$ }
 	set_variable = { name = cmm_setting_list_is_ordered_$mod_id$__$setting_id$ value = $is_ordered$ }
@@ -441,7 +441,7 @@ cmm_begin_settings_list_internal = {
 		set_variable = { name = cmm_list_field_count_$mod_id$__$setting_id$ value = 0 }
 	}
 
-	cmm_register_setting_metadata = {
+	_cmm_register_setting_metadata = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		tab_id = $tab_id$
@@ -473,7 +473,7 @@ cmm_begin_settings_list_internal = {
 # - tab_id (key): Owner tab id within mod.
 # - is_ordered (1/0): `1` shows row move controls, `0` hides them.
 cmm_begin_settings_list = {
-	cmm_begin_settings_list_internal = {
+	_cmm_begin_settings_list_internal = {
 		mod_id = $mod_id$ setting_id = $setting_id$ tab_id = $tab_id$
 		is_ordered = $is_ordered$ is_global = 0 vt = variable
 	}
@@ -488,7 +488,7 @@ cmm_begin_settings_list = {
 # - tab_id (key): Owner tab id within mod.
 # - is_ordered (1/0): `1` shows row move controls, `0` hides them.
 cmm_begin_global_settings_list = {
-	cmm_begin_settings_list_internal = {
+	_cmm_begin_settings_list_internal = {
 		mod_id = $mod_id$ setting_id = $setting_id$ tab_id = $tab_id$
 		is_ordered = $is_ordered$ is_global = 1 vt = global_variable
 	}
@@ -497,7 +497,7 @@ cmm_begin_global_settings_list = {
 # Internal: initialize one list item at a given index and append it to the item list.
 # Scope: country
 # Args: mod_id (key), setting_id (key), item (number), name_flag (key), value (scope), vt (variable/global_variable)
-cmm_add_list_item_at_index = {
+_cmm_add_list_item_at_index = {
 	set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i$item$ value = flag:$mod_id$__$setting_id$ }
 	set_variable = { name = $mod_id$__$setting_id$_i$item$_name value = flag:$name_flag$ }
 	set_variable = { name = $mod_id$__$setting_id$_i$item$_desc value = flag:$mod_id$__$setting_id$_i$item$_desc }
@@ -509,8 +509,8 @@ cmm_add_list_item_at_index = {
 # Internal: initialize one staged list item at a given index (derives name from item number).
 # Scope: country
 # Args: mod_id (key), setting_id (key), item (number), vt (variable/global_variable)
-cmm_add_staged_list_item_at_index = {
-	cmm_add_list_item_at_index = {
+_cmm_add_staged_list_item_at_index = {
+	_cmm_add_list_item_at_index = {
 		mod_id = $mod_id$ setting_id = $setting_id$ item = $item$
 		name_flag = $mod_id$__$setting_id$_i$item$_name
 		value = scope:cmm_list_staged_item_value vt = $vt$
@@ -520,7 +520,7 @@ cmm_add_staged_list_item_at_index = {
 # Internal: add one item to a dynamic settings list.
 # Scope: country
 # Args: mod_id (key), setting_id (key), value (scope), name (key), vt (variable/global_variable)
-cmm_add_settings_list_item_internal = {
+_cmm_add_settings_list_item_internal = {
 	if = {
 		limit = {
 			AND = {
@@ -531,26 +531,26 @@ cmm_add_settings_list_item_internal = {
 		change_variable = { name = cmm_list_add_counter_$mod_id$__$setting_id$ add = 1 }
 		switch = {
 			trigger = var:cmm_list_add_counter_$mod_id$__$setting_id$
-			1 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 1 name_flag = $name$ value = $value$ vt = $vt$ } }
-			2 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 2 name_flag = $name$ value = $value$ vt = $vt$ } }
-			3 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 3 name_flag = $name$ value = $value$ vt = $vt$ } }
-			4 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 4 name_flag = $name$ value = $value$ vt = $vt$ } }
-			5 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 5 name_flag = $name$ value = $value$ vt = $vt$ } }
-			6 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 6 name_flag = $name$ value = $value$ vt = $vt$ } }
-			7 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 7 name_flag = $name$ value = $value$ vt = $vt$ } }
-			8 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 8 name_flag = $name$ value = $value$ vt = $vt$ } }
-			9 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 9 name_flag = $name$ value = $value$ vt = $vt$ } }
-			10 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 10 name_flag = $name$ value = $value$ vt = $vt$ } }
-			11 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 11 name_flag = $name$ value = $value$ vt = $vt$ } }
-			12 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 12 name_flag = $name$ value = $value$ vt = $vt$ } }
-			13 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 13 name_flag = $name$ value = $value$ vt = $vt$ } }
-			14 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 14 name_flag = $name$ value = $value$ vt = $vt$ } }
-			15 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 15 name_flag = $name$ value = $value$ vt = $vt$ } }
-			16 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 16 name_flag = $name$ value = $value$ vt = $vt$ } }
-			17 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 17 name_flag = $name$ value = $value$ vt = $vt$ } }
-			18 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 18 name_flag = $name$ value = $value$ vt = $vt$ } }
-			19 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 19 name_flag = $name$ value = $value$ vt = $vt$ } }
-			20 = { cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 20 name_flag = $name$ value = $value$ vt = $vt$ } }
+			1 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 1 name_flag = $name$ value = $value$ vt = $vt$ } }
+			2 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 2 name_flag = $name$ value = $value$ vt = $vt$ } }
+			3 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 3 name_flag = $name$ value = $value$ vt = $vt$ } }
+			4 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 4 name_flag = $name$ value = $value$ vt = $vt$ } }
+			5 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 5 name_flag = $name$ value = $value$ vt = $vt$ } }
+			6 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 6 name_flag = $name$ value = $value$ vt = $vt$ } }
+			7 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 7 name_flag = $name$ value = $value$ vt = $vt$ } }
+			8 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 8 name_flag = $name$ value = $value$ vt = $vt$ } }
+			9 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 9 name_flag = $name$ value = $value$ vt = $vt$ } }
+			10 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 10 name_flag = $name$ value = $value$ vt = $vt$ } }
+			11 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 11 name_flag = $name$ value = $value$ vt = $vt$ } }
+			12 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 12 name_flag = $name$ value = $value$ vt = $vt$ } }
+			13 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 13 name_flag = $name$ value = $value$ vt = $vt$ } }
+			14 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 14 name_flag = $name$ value = $value$ vt = $vt$ } }
+			15 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 15 name_flag = $name$ value = $value$ vt = $vt$ } }
+			16 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 16 name_flag = $name$ value = $value$ vt = $vt$ } }
+			17 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 17 name_flag = $name$ value = $value$ vt = $vt$ } }
+			18 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 18 name_flag = $name$ value = $value$ vt = $vt$ } }
+			19 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 19 name_flag = $name$ value = $value$ vt = $vt$ } }
+			20 = { _cmm_add_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 20 name_flag = $name$ value = $value$ vt = $vt$ } }
 		}
 	}
 }
@@ -568,7 +568,7 @@ cmm_add_settings_list_item_internal = {
 # - value (scope): Game scope to attach (e.g. `building_type:fine_cloth_guild`).
 # - name (key): Localization key for the row label.
 cmm_add_settings_list_item = {
-	cmm_add_settings_list_item_internal = { mod_id = $mod_id$ setting_id = $setting_id$ value = $value$ name = $name$ vt = variable }
+	_cmm_add_settings_list_item_internal = { mod_id = $mod_id$ setting_id = $setting_id$ value = $value$ name = $name$ vt = variable }
 }
 
 # Add one item to a dynamic global settings list begun with cmm_begin_global_settings_list.
@@ -584,14 +584,14 @@ cmm_add_settings_list_item = {
 # - value (scope): Game scope to attach (e.g. `building_type:fine_cloth_guild`).
 # - name (key): Localization key for the row label.
 cmm_add_global_settings_list_item = {
-	cmm_add_settings_list_item_internal = { mod_id = $mod_id$ setting_id = $setting_id$ value = $value$ name = $name$ vt = global_variable }
+	_cmm_add_settings_list_item_internal = { mod_id = $mod_id$ setting_id = $setting_id$ value = $value$ name = $name$ vt = global_variable }
 }
 
 # Internal: add one item from `scope:cmm_list_staged_item_value` to a dynamic list.
 # Used by cmm_register_settings_list_from_list. Scope must be set before calling.
 # Scope: country
 # Args: mod_id (key), setting_id (key), vt (variable/global_variable)
-cmm_add_staged_settings_list_item_internal = {
+_cmm_add_staged_settings_list_item_internal = {
 	if = {
 		limit = {
 			AND = {
@@ -602,26 +602,26 @@ cmm_add_staged_settings_list_item_internal = {
 		change_variable = { name = cmm_list_add_counter_$mod_id$__$setting_id$ add = 1 }
 		switch = {
 			trigger = var:cmm_list_add_counter_$mod_id$__$setting_id$
-			1 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 1 vt = $vt$ } }
-			2 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 2 vt = $vt$ } }
-			3 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 3 vt = $vt$ } }
-			4 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 4 vt = $vt$ } }
-			5 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 5 vt = $vt$ } }
-			6 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 6 vt = $vt$ } }
-			7 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 7 vt = $vt$ } }
-			8 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 8 vt = $vt$ } }
-			9 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 9 vt = $vt$ } }
-			10 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 10 vt = $vt$ } }
-			11 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 11 vt = $vt$ } }
-			12 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 12 vt = $vt$ } }
-			13 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 13 vt = $vt$ } }
-			14 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 14 vt = $vt$ } }
-			15 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 15 vt = $vt$ } }
-			16 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 16 vt = $vt$ } }
-			17 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 17 vt = $vt$ } }
-			18 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 18 vt = $vt$ } }
-			19 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 19 vt = $vt$ } }
-			20 = { cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 20 vt = $vt$ } }
+			1 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 1 vt = $vt$ } }
+			2 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 2 vt = $vt$ } }
+			3 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 3 vt = $vt$ } }
+			4 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 4 vt = $vt$ } }
+			5 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 5 vt = $vt$ } }
+			6 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 6 vt = $vt$ } }
+			7 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 7 vt = $vt$ } }
+			8 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 8 vt = $vt$ } }
+			9 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 9 vt = $vt$ } }
+			10 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 10 vt = $vt$ } }
+			11 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 11 vt = $vt$ } }
+			12 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 12 vt = $vt$ } }
+			13 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 13 vt = $vt$ } }
+			14 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 14 vt = $vt$ } }
+			15 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 15 vt = $vt$ } }
+			16 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 16 vt = $vt$ } }
+			17 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 17 vt = $vt$ } }
+			18 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 18 vt = $vt$ } }
+			19 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 19 vt = $vt$ } }
+			20 = { _cmm_add_staged_list_item_at_index = { mod_id = $mod_id$ setting_id = $setting_id$ item = 20 vt = $vt$ } }
 		}
 	}
 }
@@ -630,16 +630,16 @@ cmm_add_staged_settings_list_item_internal = {
 # Used by cmm_register_settings_list_from_list. Scope must be set before calling.
 # Scope: country
 # Args: mod_id (key), setting_id (key)
-cmm_add_staged_settings_list_item = {
-	cmm_add_staged_settings_list_item_internal = { mod_id = $mod_id$ setting_id = $setting_id$ vt = variable }
+_cmm_add_staged_settings_list_item = {
+	_cmm_add_staged_settings_list_item_internal = { mod_id = $mod_id$ setting_id = $setting_id$ vt = variable }
 }
 
 # Add one item from `scope:cmm_list_staged_item_value` to a dynamic global settings list.
 # Used by cmm_register_global_settings_list_from_list. Scope must be set before calling.
 # Scope: country
 # Args: mod_id (key), setting_id (key)
-cmm_add_global_staged_settings_list_item = {
-	cmm_add_staged_settings_list_item_internal = { mod_id = $mod_id$ setting_id = $setting_id$ vt = global_variable }
+_cmm_add_global_staged_settings_list_item = {
+	_cmm_add_staged_settings_list_item_internal = { mod_id = $mod_id$ setting_id = $setting_id$ vt = global_variable }
 }
 
 # Finalize a dynamic settings list after all item-add calls.
@@ -676,7 +676,7 @@ cmm_finish_settings_list = {
 		set_variable = { name = cmm_list_initialized_$mod_id$__$setting_id$ value = 1 }
 	}
 
-	cmm_suppress_list_setting_warnings = { mod_id = $mod_id$ setting_id = $setting_id$ }
+	_cmm_suppress_list_setting_warnings = { mod_id = $mod_id$ setting_id = $setting_id$ }
 }
 
 # Finalize a dynamic global settings list after all item-add calls.
@@ -694,8 +694,8 @@ cmm_finish_global_settings_list = {
 # Internal: shared implementation for cmm_register_settings_list_from_list variants.
 # Scope: country
 # Args: mod_id (key), setting_id (key), tab_id (key), is_ordered (1/0), list (key), is_global (1/0), vt (variable/global_variable), lt (in/in_global)
-cmm_register_settings_list_from_list_internal = {
-	cmm_begin_settings_list_internal = {
+_cmm_register_settings_list_from_list_internal = {
+	_cmm_begin_settings_list_internal = {
 		mod_id = $mod_id$ setting_id = $setting_id$ tab_id = $tab_id$
 		is_ordered = $is_ordered$ is_global = $is_global$ vt = $vt$
 	}
@@ -706,7 +706,7 @@ cmm_register_settings_list_from_list_internal = {
 			variable = $list$
 			save_scope_as = cmm_list_staged_item_value
 			root = {
-				cmm_add_staged_settings_list_item_internal = {
+				_cmm_add_staged_settings_list_item_internal = {
 					mod_id = $mod_id$
 					setting_id = $setting_id$
 					vt = $vt$
@@ -732,7 +732,7 @@ cmm_register_settings_list_from_list_internal = {
 # - is_ordered (1/0): `1` shows row move controls, `0` hides them.
 # - list (key): Name of the country variable list to iterate (max 20 entries used).
 cmm_register_settings_list_from_list = {
-	cmm_register_settings_list_from_list_internal = {
+	_cmm_register_settings_list_from_list_internal = {
 		mod_id = $mod_id$ setting_id = $setting_id$ tab_id = $tab_id$
 		is_ordered = $is_ordered$ list = $list$
 		is_global = 0 vt = variable lt = in
@@ -753,7 +753,7 @@ cmm_register_settings_list_from_list = {
 # - is_ordered (1/0): `1` shows row move controls, `0` hides them.
 # - list (key): Name of the global variable list to iterate (max 20 entries used).
 cmm_register_global_settings_list_from_list = {
-	cmm_register_settings_list_from_list_internal = {
+	_cmm_register_settings_list_from_list_internal = {
 		mod_id = $mod_id$ setting_id = $setting_id$ tab_id = $tab_id$
 		is_ordered = $is_ordered$ list = $list$
 		is_global = 1 vt = global_variable lt = in_global
