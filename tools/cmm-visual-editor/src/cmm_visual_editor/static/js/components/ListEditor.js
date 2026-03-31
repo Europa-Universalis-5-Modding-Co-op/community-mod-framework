@@ -49,7 +49,7 @@ const ListEditorComponent = {
                 <div class="field-card-header" @click="toggleFieldCollapsed(fi)" style="cursor: pointer;">
                     <span class="collapse-indicator">{{ isFieldCollapsed(fi) ? '&#9654;' : '&#9660;' }}</span>
                     <span class="setting-type-badge" :class="field.field_type">{{ field.field_type }}</span>
-                    <span>{{ field.name || field.field_id || 'Field ' + (fi+1) }}</span>
+                    <span class="field-card-title">{{ field.name || field.field_id || 'Field ' + (fi+1) }}</span>
                     <span v-if="fieldAccessor(fi)" class="accessor-group">
                         <span class="accessor-label">{{ fieldAccessorLabel(fi) }}</span>
                         <template v-if="editingFieldAlias !== fi">
