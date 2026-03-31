@@ -29,7 +29,6 @@ monthly_country_pulse = {
 cmf_on_yearly = {
 	trigger = { is_ai = no }
 	effect = {
-		cmm_register_menu_settings = yes
 		trigger_event_silently = {
 			on_action = cmf_yearly_human_country_pulse
 		}
@@ -52,6 +51,7 @@ cmf_on_monthly = {
 # Scope: country
 cmf_yearly_human_country_pulse = {
 	on_actions = {
+		cmf_on_cmm_registration
 		cmf_on_mod_registration
 	}
 }
@@ -61,6 +61,15 @@ cmf_yearly_human_country_pulse = {
 # Scope: country
 cmf_monthly_human_country_pulse = {
 	on_actions = { }
+}
+
+# CMM menu settings registration. Runs before cmf_on_mod_registration
+# to ensure CMF's own settings appear first in the mod list.
+# Scope: country
+cmf_on_cmm_registration = {
+	effect = {
+		cmm_register_menu_settings = yes
+	}
 }
 
 # Integration extension point.
@@ -78,7 +87,6 @@ on_game_start_after_lobby = {
 	effect = {
 		every_country = {
 			limit = { is_ai = no }
-			cmm_register_menu_settings = yes
 			trigger_event_silently = {
 				on_action = on_game_start_after_lobby_player_country
 			}
@@ -91,6 +99,7 @@ on_game_start_after_lobby = {
 # Scope: country
 on_game_start_after_lobby_player_country = {
 	on_actions = {
+		cmf_on_cmm_registration
 		cmf_on_mod_registration
 	}
 }
@@ -102,7 +111,6 @@ on_game_load = {
 	effect = {
 		every_country = {
 			limit = { is_ai = no }
-			cmm_register_menu_settings = yes
 			trigger_event_silently = {
 				on_action = on_game_load_player_country
 			}
@@ -114,7 +122,9 @@ on_game_load = {
 # Player country variant of on_game_load.
 # Scope: country
 on_game_load_player_country = {
-	on_actions = { }
+	on_actions = {
+		cmf_on_cmm_registration
+	}
 }
 
 # Post-lobby save load hook. Fires every time a save game is loaded,
@@ -137,6 +147,7 @@ on_game_load_after_lobby = {
 # Scope: country
 on_game_load_after_lobby_player_country = {
 	on_actions = {
+		cmf_on_cmm_registration
 		cmf_on_mod_registration
 	}
 }
