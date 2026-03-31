@@ -90,7 +90,9 @@ on_game_start_after_lobby = {
 # Player country variant of on_game_start_after_lobby.
 # Scope: country
 on_game_start_after_lobby_player_country = {
-	on_actions = { }
+	on_actions = {
+		cmf_on_mod_registration
+	}
 }
 
 # Save load hook. Fires every time a save game is loaded (including from
@@ -134,7 +136,9 @@ on_game_load_after_lobby = {
 # Player country variant of on_game_load_after_lobby.
 # Scope: country
 on_game_load_after_lobby_player_country = {
-	on_actions = { }
+	on_actions = {
+		cmf_on_mod_registration
+	}
 }
 
 # Unified callback extension point. Fires after auto-apply updates a setting,
