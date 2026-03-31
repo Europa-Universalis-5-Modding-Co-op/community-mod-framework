@@ -1,0 +1,6 @@
+﻿l_english:
+ cmf_action_bar_open_action: "Run Action"
+ cmf_action_bar_settings_tooltip_title: "Settings"
+ cmf_action_bar_settings_tooltip_text: "Open the #v Community Mod Framework#! settings."
+ cmf_action_bar_log_viewer_tooltip_title: "Log Viewer"
+ cmf_action_bar_log_viewer_tooltip_text: "Open the #v Log Viewer#!."

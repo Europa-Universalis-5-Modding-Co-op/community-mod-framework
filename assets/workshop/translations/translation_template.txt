@@ -1,0 +1,6 @@
+===WORKSHOP_TITLE===
+$Translated-Title$ / $Original-Title$
+===WORKSHOP_DESCRIPTION===
+[i]You are on the DeepL-Generated $Translated-Language$ Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
+
+$Translated-Description$

@@ -1,0 +1,87 @@
+﻿l_english:
+ # Mod
+ cmm_example_name: "CMM Example Mod"
+ cmm_example_desc: "Reference integration mod for Community Mod Framework."
+
+ # Tabs
+ cmm_example__general_name: "General"
+ cmm_example__global_name: "Global"
+
+ # Groups
+ cmm_example__general__general_toggles_name: "Toggles"
+ cmm_example__general__general_values_name: "Values"
+ cmm_example__global__global_toggles_name: "Toggles"
+ cmm_example__global__global_values_name: "Values"
+
+ # General Tab - Toggles
+ cmm_example__example_toggle_name: "Toggle"
+ cmm_example__example_toggle_desc: "Example toggle setting."
+ cmm_example__example_button_name: "Action Button"
+ cmm_example__example_button_text: "Run"
+ cmm_example__example_button_desc: "Example action button."
+
+ # General Tab - Values
+ cmm_example__example_numeric_name: "Numeric"
+ cmm_example__example_numeric_desc: "Example numeric setting."
+ cmm_example__example_slider_name: "Slider"
+ cmm_example__example_slider_desc: "Example slider setting."
+ cmm_example__example_text_name: "Text"
+ cmm_example__example_text_desc: "Example text setting. (Singleplayer only)"
+ cmm_example__example_dropdown_name: "Dropdown"
+ cmm_example__example_dropdown_desc: "Example dropdown setting."
+ cmm_example__example_dropdown_option_1_name: "Option 1"
+ cmm_example__example_dropdown_option_2_name: "Option 2"
+ cmm_example__example_dropdown_option_3_name: "Option 3"
+
+ # General Tab - Ordered List
+ cmm_example__general__example_list_name: "Ordered Settings List"
+ cmm_example__example_list_name: "Ordered Settings List"
+ cmm_example__general__example_list_desc: "Example ordered list setting with a bool field, a dropdown field, and a numeric field."
+ cmm_example__example_list_desc: "Example ordered list setting with a bool field, a dropdown field, and a numeric field."
+ cmm_example__example_list_item_column_name: "Item"
+ cmm_example__example_list_i1_name: "Item A"
+ cmm_example__example_list_i2_name: "Item B"
+ cmm_example__example_list_i3_name: "Item C"
+ cmm_example__example_list_i4_name: "Item D"
+ cmm_example__example_list_i5_name: "Item E"
+ cmm_example__example_list__enabled_name: "Enabled"
+ cmm_example__example_list__mode_name: "Mode"
+ cmm_example__example_list__weight_name: "Weight"
+ cmm_example__example_list__mode_option_1_name: "Low"
+ cmm_example__example_list__mode_option_2_name: "Standard"
+ cmm_example__example_list__mode_option_3_name: "High"
+
+ # General Tab - Unordered List
+ cmm_example__general__example_unordered_list_name: "Settings List"
+ cmm_example__example_unordered_list_name: "Settings List"
+ cmm_example__general__example_unordered_list_desc: "Example unordered list setting with the same field types but no row move controls."
+ cmm_example__example_unordered_list_desc: "Example unordered list setting with the same field types but no row move controls."
+ cmm_example__example_unordered_list_item_column_name: "Item"
+ cmm_example__example_unordered_list_i1_name: "Static A"
+ cmm_example__example_unordered_list_i2_name: "Static B"
+ cmm_example__example_unordered_list_i3_name: "Static C"
+ cmm_example__example_unordered_list_i4_name: "Static D"
+ cmm_example__example_unordered_list__enabled_name: "Enabled"
+ cmm_example__example_unordered_list__mode_name: "Mode"
+ cmm_example__example_unordered_list__weight_name: "Weight"
+ cmm_example__example_unordered_list__mode_option_1_name: "Low"
+ cmm_example__example_unordered_list__mode_option_2_name: "Standard"
+ cmm_example__example_unordered_list__mode_option_3_name: "High"
+
+ # Global Tab - Toggles
+ cmm_example__global_example_toggle_name: "Global Toggle"
+ cmm_example__global_example_toggle_desc: "Example global toggle setting. In multiplayer, only the host can change this setting."
+ cmm_example__global_example_button_name: "Global Action Button"
+ cmm_example__global_example_button_text: "Run"
+ cmm_example__global_example_button_desc: "Example global action button. In multiplayer, only the host can change this setting."
+
+ # Global Tab - Values
+ cmm_example__global_example_numeric_name: "Global Numeric"
+ cmm_example__global_example_numeric_desc: "Example global numeric setting. In multiplayer, only the host can change this setting."
+ cmm_example__global_example_slider_name: "Global Slider"
+ cmm_example__global_example_slider_desc: "Example global slider setting. In multiplayer, only the host can change this setting."
+ cmm_example__global_example_dropdown_name: "Global Dropdown"
+ cmm_example__global_example_dropdown_desc: "Example global dropdown setting. In multiplayer, only the host can change this setting."
+ cmm_example__global_example_dropdown_option_1_name: "Option 1"
+ cmm_example__global_example_dropdown_option_2_name: "Option 2"
+ cmm_example__global_example_dropdown_option_3_name: "Option 3"

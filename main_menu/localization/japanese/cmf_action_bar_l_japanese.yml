@@ -1,0 +1,6 @@
+﻿l_japanese:
+ cmf_action_bar_open_action: "アクションを実行"
+ cmf_action_bar_settings_tooltip_title: "設定"
+ cmf_action_bar_settings_tooltip_text: "#vCommunity Mod Framework#!の設定を開く。"
+ cmf_action_bar_log_viewer_tooltip_title: "ログビューア"
+ cmf_action_bar_log_viewer_tooltip_text: "#vログビューア#!を開く。"

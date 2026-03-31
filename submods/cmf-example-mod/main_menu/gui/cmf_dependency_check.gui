@@ -1,0 +1,353 @@
+﻿types cmf_dependency_check
+{
+	type FrontEndNews = widget {
+		size = { 100% 100% }
+
+		### Original FrontEndNews content
+		flowcontainer = {
+			parentanchor = bottom|right
+			widgetanchor = bottom|right
+			position = { -110 -20 }
+			spacing = 10
+
+			alwaystransparent = yes
+			ignoreinvisible = yes
+			visible = yes
+			scissor = yes
+
+			newsfeed_carousel = {
+				name = "newsfeed_slot_main"
+				size = { 451 230 }
+				align = left
+				datacontext = "[FrontEndMainView.AccessMarketingContainer.AccessSlotByName('main')]"
+				tooltip_enabled = no
+			}
+
+			newsfeed_carousel = {
+				name = "newsfeed_slot_secondary_1"
+				size = { 245 230 }
+				align = left
+				datacontext = "[FrontEndMainView.AccessMarketingContainer.AccessSlotByName('secondary-1')]"
+				tooltip_enabled = no
+
+				blockoverride "offset_x" {
+					position_x = -245
+				}
+				blockoverride "current_button_pos" {
+					size = { 245 230 }
+				}
+				blockoverride "next_button_pos" {
+					size = { 245 230 }
+					position = { 245 0 }
+				}
+			}
+
+			newsfeed_carousel = {
+				name = "newsfeed_slot_secondary_2"
+				size = { 245 230 }
+				align = left
+				datacontext = "[FrontEndMainView.AccessMarketingContainer.AccessSlotByName('secondary-2')]"
+				tooltip_enabled = no
+
+				blockoverride "offset_x" {
+					position_x = -245
+				}
+				blockoverride "current_button_pos" {
+					size = { 245 230 }
+				}
+				blockoverride "next_button_pos" {
+					size = { 245 230 }
+					position = { 245 0 }
+				}
+			}
+		}
+
+		### CMF dependency check popup
+		### To use: copy this file into your mod's main_menu/gui/ directory.
+		### No localization file needed — all text is inlined below.
+		widget = {
+			size = { 100% 100% }
+			parentanchor = center
+			alwaystransparent = no
+
+			visible = "[And( Not( GetVariableSystem.Exists( 'cmf_active' ) ), Not( GetVariableSystem.Exists( 'cmf_dep_dismiss' ) ) )]"
+
+			window = {
+				parentanchor = center
+				widgetanchor = center
+				size = { 530 200 }
+				using = bg_window_default_alt
+				movable = no
+				resizable = no
+				alwaystransparent = no
+
+				vbox = {
+					margin = { 15 10 }
+					spacing = 10
+
+					text_single = {
+						raw_text = "[SelectLocalization(HasLanguage('french'), '#T Dépendance manquante#!', SelectLocalization(HasLanguage('german'), '#T Fehlende Abhängigkeit#!', SelectLocalization(HasLanguage('spanish'), '#T Dependencia faltante#!', SelectLocalization(HasLanguage('braz_por'), '#T Dependência ausente#!', SelectLocalization(HasLanguage('russian'), '#T Отсутствует зависимость#!', SelectLocalization(HasLanguage('polish'), '#T Brakująca zależność#!', SelectLocalization(HasLanguage('korean'), '#T 누락된 종속성#!', SelectLocalization(HasLanguage('japanese'), '#T 依存関係が見つかりません#!', SelectLocalization(HasLanguage('simp_chinese'), '#T 缺少依赖项#!', SelectLocalization(HasLanguage('turkish'), '#T Eksik Bağımlılık#!', '#T Missing Dependency#!'))))))))))]"
+						align = center
+					}
+
+					text_multi = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "[SelectLocalization(HasLanguage('french'), 'Un mod activé nécessite le #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('german'), 'Ein aktivierter Mod erfordert das #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('spanish'), 'Un mod activado requiere el #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('braz_por'), 'Um mod ativado requer o #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('russian'), 'Включённый мод требует #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('polish'), 'Włączony mod wymaga #bold Community Mod Framework#!.', SelectLocalization(HasLanguage('korean'), '활성화된 모드에 #bold Community Mod Framework#!가 필요합니다.', SelectLocalization(HasLanguage('japanese'), '有効なMODに#bold Community Mod Framework#!が必要です。', SelectLocalization(HasLanguage('simp_chinese'), '已启用的模组需要#bold Community Mod Framework#!。', SelectLocalization(HasLanguage('turkish'), 'Etkin bir mod #bold Community Mod Framework#! gerektiriyor.', 'An enabled mod requires the #bold Community Mod Framework#!.'))))))))))]"
+						align = center
+						autoresize = yes
+						max_width = 400
+					}
+
+					expand = {}
+
+					hbox = {
+						spacing = 10
+
+						button_regular = {
+							size = { 150 40 }
+							raw_text = "[SelectLocalization(HasLanguage('french'), 'Ouvrir le Workshop', SelectLocalization(HasLanguage('german'), 'Workshop öffnen', SelectLocalization(HasLanguage('spanish'), 'Abrir taller', SelectLocalization(HasLanguage('braz_por'), 'Abrir oficina', SelectLocalization(HasLanguage('russian'), 'Открыть мастерскую', SelectLocalization(HasLanguage('polish'), 'Otwórz warsztat', SelectLocalization(HasLanguage('korean'), '창작마당 열기', SelectLocalization(HasLanguage('japanese'), 'ワークショップを開く', SelectLocalization(HasLanguage('simp_chinese'), '打开创意工坊', SelectLocalization(HasLanguage('turkish'), 'Atölyeyi aç', 'Open Workshop'))))))))))]"
+							visible = "[Not( GetVariableSystem.Exists( 'cmf_installed' ) )]"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_open_workshop', 'yes' )]"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_auto_enable', 'yes' )]"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
+							tooltip_enabled = no
+						}
+
+						button_regular = {
+							size = { 150 40 }
+							raw_text = "[SelectLocalization(HasLanguage('french'), 'Activer', SelectLocalization(HasLanguage('german'), 'Aktivieren', SelectLocalization(HasLanguage('spanish'), 'Activar', SelectLocalization(HasLanguage('braz_por'), 'Ativar', SelectLocalization(HasLanguage('russian'), 'Включить', SelectLocalization(HasLanguage('polish'), 'Włącz', SelectLocalization(HasLanguage('korean'), '활성화', SelectLocalization(HasLanguage('japanese'), '有効にする', SelectLocalization(HasLanguage('simp_chinese'), '启用', SelectLocalization(HasLanguage('turkish'), 'Etkinleştir', 'Enable'))))))))))]"
+							visible = "[GetVariableSystem.Exists( 'cmf_installed' )]"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_auto_enable', 'yes' )]"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_open_mods', 'yes' )]"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
+							tooltip_enabled = no
+						}
+
+						button_regular = {
+							size = { 150 40 }
+							raw_text = "[SelectLocalization(HasLanguage('french'), 'Ignorer', SelectLocalization(HasLanguage('german'), 'Ignorieren', SelectLocalization(HasLanguage('spanish'), 'Ignorar', SelectLocalization(HasLanguage('braz_por'), 'Ignorar', SelectLocalization(HasLanguage('russian'), 'Игнорировать', SelectLocalization(HasLanguage('polish'), 'Ignoruj', SelectLocalization(HasLanguage('korean'), '무시', SelectLocalization(HasLanguage('japanese'), '無視する', SelectLocalization(HasLanguage('simp_chinese'), '忽略', SelectLocalization(HasLanguage('turkish'), 'Yoksay', 'Ignore'))))))))))]"
+							onclick = "[GetVariableSystem.Set( 'cmf_dep_dismiss', 'yes' )]"
+							tooltip_enabled = no
+						}
+					}
+				}
+			}
+		}
+
+		### Auto-opens the mods panel when CMF isn't active so ModsGui initializes
+		### and the detection widget can set cmf_installed for button visibility.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[And3( Not( GetVariableSystem.Exists( 'cmf_active' ) ), Not( GetVariableSystem.Exists( 'cmf_dep_dismiss' ) ), Not( FrontEndMainView.IsModsOpen ) )]"
+
+			state = {
+				name = _show
+				on_start = "[FrontEndMainView.ToggleOpenMods]"
+			}
+		}
+
+		### Opens the mods panel when a button flag is set and panel isn't already open.
+		### Uses one-shot flags that get cleared on fire to prevent reopen loops.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[And( Or( GetVariableSystem.Exists( 'cmf_dep_open_mods' ), GetVariableSystem.Exists( 'cmf_dep_open_workshop' ) ), Not( FrontEndMainView.IsModsOpen ) )]"
+
+			state = {
+				name = _show
+				on_start = "[FrontEndMainView.ToggleOpenMods]"
+				on_start = "[GetVariableSystem.Clear( 'cmf_dep_open_mods' )]"
+			}
+		}
+	}
+}
+
+### Auto-enable CMF when the user clicks "Enable" on the dependency popup.
+### Overrides playset_create_button — always visible when the mods panel opens.
+types cmf_dependency_auto_enable
+{
+	type playset_create_button = vbox {
+		layoutpolicy_horizontal = expanding
+
+		### Original playset_create_button content
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+			margin = {10 0}
+
+			editbox_single = {
+				name = "create_playset_editbox"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = fixed
+				tooltipwidget = {
+					LeftClickButtonTooltip = {
+						blockoverride "onclick_text" {
+							text = "MODS_GUI_PLAYSET_LABEL_TOOLTIP"
+						}
+					}
+				}
+
+				blockoverride "editbox_label" {
+					text = "MODS_GUI_PLAYSET_LABEL"
+				}
+			}
+
+			button_regular = {
+				text = "MODS_GUI_CREATE_PLAYSET"
+				tooltipwidget = {BasicFunctionalTooltip = {}}
+
+				action_tooltip = {
+					click_type = left
+					click_mode = single
+					title = "[ModsGui.CreatePlaysetTooltip(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
+					on_action = "[ModsGui.CreatePlayset(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
+					on_action = "[PdxClearEditBoxText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox'))]"
+					enabled = "[ModsGui.CanCreatePlayset(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
+				}
+				enabled = "[ModsGui.CanCreatePlayset(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
+				align = center|nobaseline
+				using = button_resize_to_fit_text
+			}
+		}
+
+		### Detection widget — sets cmf_installed if CMF is in LocalMods.
+		### Fires at main menu load via visible_at_creation = no + _show.
+		vbox = {
+			datamodel = "[ModsGui.LocalMods]"
+
+			item = {
+				widget = {
+					size = { 0 0 }
+					visible_at_creation = no
+					visible = "[Or( StringContains( LocalMod.Path, '3692202776' ), StringContains( LocalMod.Path, 'community-mod-framework' ) )]"
+
+					state = {
+						name = _show
+						on_start = "[GetVariableSystem.Set( 'cmf_installed', 'yes' )]"
+					}
+				}
+			}
+		}
+
+		### Auto-enable: dev/local copy (priority, fires immediately)
+		vbox = {
+			datamodel = "[ModsGui.LocalMods]"
+
+			item = {
+				widget = {
+					size = { 0 0 }
+					visible_at_creation = no
+					visible = "[And3( GetVariableSystem.Exists( 'cmf_dep_auto_enable' ), StringContains( LocalMod.Path, 'community-mod-framework' ), Not( ModsGui.ActivePlayset.ContainsMod( LocalMod.Id ) ) )]"
+
+					state = {
+						name = _show
+						on_start = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
+						on_start = "[GetVariableSystem.Set( 'cmf_dep_reorder', 'yes' )]"
+						on_start = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
+					}
+				}
+			}
+		}
+
+		### Workshop delay timer — waits 0.5s before enabling the workshop fallback.
+		### If the dev copy fired and cleared cmf_dep_auto_enable, the workshop
+		### condition below checks for it and won't fire.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[GetVariableSystem.Exists( 'cmf_dep_auto_enable' )]"
+
+			state = {
+				name = _show
+				duration = 0.5
+				on_finish = "[GetVariableSystem.Set( 'cmf_dep_workshop_go', 'yes' )]"
+			}
+		}
+
+		### Auto-enable: workshop copy (fallback, fires after 0.5s delay)
+		### Also checks cmf_dep_auto_enable still exists — if the dev copy fired
+		### and cleared it, this won't match.
+		vbox = {
+			datamodel = "[ModsGui.LocalMods]"
+
+			item = {
+				widget = {
+					size = { 0 0 }
+					visible_at_creation = no
+					visible = "[And4( GetVariableSystem.Exists( 'cmf_dep_workshop_go' ), GetVariableSystem.Exists( 'cmf_dep_auto_enable' ), StringContains( LocalMod.Path, '3692202776' ), Not( ModsGui.ActivePlayset.ContainsMod( LocalMod.Id ) ) )]"
+
+					state = {
+						name = _show
+						on_start = "[ModsGui.ActivePlayset.AddMod( LocalMod.Id )]"
+						on_start = "[GetVariableSystem.Set( 'cmf_dep_reorder', 'yes' )]"
+						on_start = "[GetVariableSystem.Clear( 'cmf_dep_auto_enable' )]"
+						on_start = "[GetVariableSystem.Clear( 'cmf_dep_workshop_go' )]"
+					}
+				}
+			}
+		}
+
+		### Reorder delay timer — waits 0.5s after AddMod for ModifiableMods to update.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[GetVariableSystem.Exists( 'cmf_dep_reorder' )]"
+
+			state = {
+				name = _show
+				duration = 0.5
+				on_finish = "[GetVariableSystem.Set( 'cmf_dep_do_reorder', 'yes' )]"
+			}
+		}
+
+		### Move CMF to top of load order.
+		### Iterates ModifiableMods (ModsPlaysetEntry context) to call SetLoadOrder.
+		vbox = {
+			datamodel = "[ModsGui.GetPlayset( ModsGui.SelectedPlaysetId ).ModifiableMods]"
+
+			item = {
+				widget = {
+					size = { 0 0 }
+					visible_at_creation = no
+					visible = "[And( GetVariableSystem.Exists( 'cmf_dep_do_reorder' ), StringContains( ModsPlaysetEntry.Name, 'Community Mod Framework' ) )]"
+
+					state = {
+						name = _show
+						on_start = "[ModsPlaysetEntry.SetLoadOrder( '(uint32)0' )]"
+						on_start = "[GetVariableSystem.Set( 'cmf_dep_apply', 'yes' )]"
+						on_start = "[GetVariableSystem.Clear( 'cmf_dep_reorder' )]"
+						on_start = "[GetVariableSystem.Clear( 'cmf_dep_do_reorder' )]"
+					}
+				}
+			}
+		}
+
+		### Delayed apply — waits 0.5s after reorder for the change to commit.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[GetVariableSystem.Exists( 'cmf_dep_apply' )]"
+
+			state = {
+				name = _show
+				duration = 0.5
+				on_finish = "[ModsGui.DownloadAndApplyChanges]"
+				on_finish = "[GetVariableSystem.Clear( 'cmf_dep_apply' )]"
+			}
+		}
+
+		### Open Workshop when flag is set — fires via _show when mods panel opens.
+		widget = {
+			size = { 0 0 }
+			visible_at_creation = no
+			visible = "[GetVariableSystem.Exists( 'cmf_dep_open_workshop' )]"
+
+			state = {
+				name = _show
+				on_start = "[ModsGui.OpenExternalInterface()]"
+				on_start = "[GetVariableSystem.Clear( 'cmf_dep_open_workshop' )]"
+			}
+		}
+	}
+}

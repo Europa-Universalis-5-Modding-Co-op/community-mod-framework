@@ -1,0 +1,523 @@
+﻿# Root scope: country.
+cmf_feature_test_register_cmf_mod = {
+	# Settings (settings) Tab
+	## Toggles (toggles) Group
+	cmm_register_bool_setting = {
+		mod_id = cmf_feature_test
+		setting_id = toggle
+		tab_id = settings
+		group_id = toggles
+		default_value = 1
+	}
+	cmm_sync_bool_alias = {
+		setting = cmf_feature_test__toggle
+		alias = cft_toggle_alias
+	}
+	cmm_set_no_reset = {
+		mod_id = cmf_feature_test
+		setting_id = toggle
+	}
+
+	cmm_register_button_setting = {
+		mod_id = cmf_feature_test
+		setting_id = button
+		tab_id = settings
+		group_id = toggles
+	}
+
+	## Values (values) Group
+	cmm_register_numeric_setting = {
+		mod_id = cmf_feature_test
+		setting_id = numeric
+		tab_id = settings
+		group_id = values
+		default_value = 50
+		min_value = 0
+		max_value = 100
+		step_value = 5
+	}
+
+	cmm_register_slider_setting = {
+		mod_id = cmf_feature_test
+		setting_id = slider
+		tab_id = settings
+		group_id = values
+		default_value = 50
+		min_value = 0
+		max_value = 100
+		step_value = 10
+	}
+
+	cmm_register_dropdown_setting = {
+		mod_id = cmf_feature_test
+		setting_id = dropdown
+		tab_id = settings
+		group_id = values
+		default_index = 1
+		option_count = 5
+	}
+
+	## Text (text_settings) Group
+	cmm_register_text_setting = {
+		mod_id = cmf_feature_test
+		setting_id = text_plain
+		tab_id = settings
+		group_id = text_settings
+		character_limit = 64
+		quote_text = 0
+	}
+
+	cmm_register_text_setting = {
+		mod_id = cmf_feature_test
+		setting_id = text_quoted
+		tab_id = settings
+		group_id = text_settings
+		character_limit = 32
+		quote_text = 1
+	}
+
+	## Conditional (conditional) Group
+	cmm_register_numeric_setting = {
+		mod_id = cmf_feature_test
+		setting_id = conditional_numeric
+		tab_id = settings
+		group_id = conditional
+		default_value = 25
+		min_value = 0
+		max_value = 100
+		step_value = 1
+	}
+	cmm_add_scripted_gui = {
+		mod_id = cmf_feature_test
+		setting_id = conditional_numeric
+	}
+
+	# Global (global) Tab
+	## Toggles (global_toggles) Group
+	cmm_register_global_bool_setting = {
+		mod_id = cmf_feature_test
+		setting_id = global_toggle
+		tab_id = global
+		group_id = global_toggles
+		default_value = 0
+	}
+
+	cmm_register_global_button_setting = {
+		mod_id = cmf_feature_test
+		setting_id = global_button
+		tab_id = global
+		group_id = global_toggles
+	}
+
+	## Values (global_values) Group
+	cmm_register_global_numeric_setting = {
+		mod_id = cmf_feature_test
+		setting_id = global_numeric
+		tab_id = global
+		group_id = global_values
+		default_value = 50
+		min_value = 0
+		max_value = 100
+		step_value = 5
+	}
+
+	cmm_register_global_slider_setting = {
+		mod_id = cmf_feature_test
+		setting_id = global_slider
+		tab_id = global
+		group_id = global_values
+		default_value = 50
+		min_value = 0
+		max_value = 100
+		step_value = 10
+	}
+
+	cmm_register_global_dropdown_setting = {
+		mod_id = cmf_feature_test
+		setting_id = global_dropdown
+		tab_id = global
+		group_id = global_values
+		default_index = 1
+		option_count = 5
+	}
+
+	# Lists (lists) Tab
+	## Ordered List (ordered_list) Group
+	cmm_register_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = ordered_list
+		tab_id = lists
+		item_count = 5
+		is_ordered = 1
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmf_feature_test
+		setting_id = ordered_list
+		field_id = enabled
+		default_value = 1
+	}
+
+	cmm_register_list_dropdown_field = {
+		mod_id = cmf_feature_test
+		setting_id = ordered_list
+		field_id = mode
+		default_index = 1
+		option_count = 3
+	}
+
+	cmm_register_list_numeric_field = {
+		mod_id = cmf_feature_test
+		setting_id = ordered_list
+		field_id = weight
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 1 value = root }
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 2 value = root }
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 3 value = root }
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 4 value = root }
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 5 value = root }
+
+	# Per-item field visibility: disable specific fields for specific items.
+	# Item 2: no bool (enabled) field
+	cmm_disable_list_field_for_item = {
+		mod_id = cmf_feature_test
+		setting_id = ordered_list
+		field_id = enabled
+		item = 2
+	}
+	# Item 4: no dropdown (mode) field
+	cmm_disable_list_field_for_item = {
+		mod_id = cmf_feature_test
+		setting_id = ordered_list
+		field_id = mode
+		item = 4
+	}
+	# Item 5: no numeric (weight) field
+	cmm_disable_list_field_for_item = {
+		mod_id = cmf_feature_test
+		setting_id = ordered_list
+		field_id = weight
+		item = 5
+	}
+
+	## Unordered List (unordered_list) Group
+	cmm_register_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = unordered_list
+		tab_id = lists
+		item_count = 3
+		is_ordered = 0
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmf_feature_test
+		setting_id = unordered_list
+		field_id = enabled
+		default_value = 1
+	}
+
+	cmm_register_list_dropdown_field = {
+		mod_id = cmf_feature_test
+		setting_id = unordered_list
+		field_id = mode
+		default_index = 1
+		option_count = 3
+	}
+
+	cmm_register_list_numeric_field = {
+		mod_id = cmf_feature_test
+		setting_id = unordered_list
+		field_id = weight
+		default_value = 3
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	## Dynamic List (dynamic_list) Group
+	cmm_begin_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		tab_id = lists
+		is_ordered = 1
+	}
+
+	cmm_add_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		value = root
+		name = cmf_feature_test__dynamic_list_i1_name
+	}
+
+	cmm_add_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		value = root
+		name = cmf_feature_test__dynamic_list_i2_name
+	}
+
+	cmm_add_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		value = root
+		name = cmf_feature_test__dynamic_list_i3_name
+	}
+
+	cmm_add_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		value = root
+		name = cmf_feature_test__dynamic_list_i4_name
+	}
+
+	cmm_finish_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		field_id = active
+		default_value = 1
+	}
+
+	cmm_register_list_numeric_field = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		field_id = priority
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	cmm_register_list_slider_field = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		field_id = intensity
+		default_value = 50
+		min_value = 0
+		max_value = 100
+		step_value = 5
+	}
+
+	## From-List (from_list) Group
+	clear_variable_list = cft_test_list
+	add_to_variable_list = { name = cft_test_list target = flag:cft_item_alpha }
+	add_to_variable_list = { name = cft_test_list target = flag:cft_item_beta }
+	add_to_variable_list = { name = cft_test_list target = flag:cft_item_gamma }
+
+	cmm_register_settings_list_from_list = {
+		mod_id = cmf_feature_test
+		setting_id = from_list
+		tab_id = lists
+		is_ordered = 0
+		list = cft_test_list
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmf_feature_test
+		setting_id = from_list
+		field_id = active
+		default_value = 1
+	}
+
+	cmm_register_list_numeric_field = {
+		mod_id = cmf_feature_test
+		setting_id = from_list
+		field_id = priority
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	# Global Lists (global_lists) Tab
+	## Global Ordered List (global_ordered_list) Group
+	cmm_register_global_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = global_ordered_list
+		tab_id = global_lists
+		item_count = 4
+		is_ordered = 1
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmf_feature_test
+		setting_id = global_ordered_list
+		field_id = active
+		default_value = 1
+	}
+
+	cmm_register_list_numeric_field = {
+		mod_id = cmf_feature_test
+		setting_id = global_ordered_list
+		field_id = priority
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	## Global Dynamic List (global_dynamic_list) Group
+	cmm_begin_global_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		tab_id = global_lists
+		is_ordered = 1
+	}
+
+	cmm_add_global_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		value = root
+		name = cmf_feature_test__global_dynamic_list_i1_name
+	}
+
+	cmm_add_global_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		value = root
+		name = cmf_feature_test__global_dynamic_list_i2_name
+	}
+
+	cmm_add_global_settings_list_item = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		value = root
+		name = cmf_feature_test__global_dynamic_list_i3_name
+	}
+
+	cmm_finish_global_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		field_id = active
+		default_value = 1
+	}
+
+	cmm_register_list_numeric_field = {
+		mod_id = cmf_feature_test
+		setting_id = global_dynamic_list
+		field_id = priority
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	## Global From-List (global_from_list) Group
+	clear_global_variable_list = cft_global_test_list
+	add_to_global_variable_list = { name = cft_global_test_list target = flag:cft_global_item_alpha }
+	add_to_global_variable_list = { name = cft_global_test_list target = flag:cft_global_item_beta }
+	add_to_global_variable_list = { name = cft_global_test_list target = flag:cft_global_item_gamma }
+
+	cmm_register_global_settings_list_from_list = {
+		mod_id = cmf_feature_test
+		setting_id = global_from_list
+		tab_id = global_lists
+		is_ordered = 0
+		list = cft_global_test_list
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmf_feature_test
+		setting_id = global_from_list
+		field_id = active
+		default_value = 1
+	}
+
+	cmm_register_list_numeric_field = {
+		mod_id = cmf_feature_test
+		setting_id = global_from_list
+		field_id = priority
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	# Aliases
+	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 1 alias = cft_dd_opt_1 }
+	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 2 alias = cft_dd_opt_2 }
+	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 3 alias = cft_dd_opt_3 }
+	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 4 alias = cft_dd_opt_4 }
+	cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 5 alias = cft_dd_opt_5 }
+
+	# Suppress from-list target flags
+	cmf_feature_test_suppress_from_list_flags = yes
+}
+
+# Callback handler for cmf_on_callback.
+# var:cmf_callback is the flag of the setting, alert, or action bar element that was interacted with.
+# Scope: country
+cmf_feature_test_handle_cmf_callback = {
+	switch = {
+		trigger = var:cmf_callback
+		# Settings (settings) Tab
+		## Toggles (toggles) Group
+		flag:cmf_feature_test__toggle = {
+			cmm_sync_bool_alias = {
+				setting = cmf_feature_test__toggle
+				alias = cft_toggle_alias
+			}
+		}
+	}
+}
+
+# Settings (settings) Tab
+## Text (text_settings) Group
+
+cmf_feature_test__text_plain_on_changed = {
+	change_country_name = $text$
+}
+
+cmf_feature_test__text_quoted_on_changed = {
+	change_country_name = $text$
+}
+
+# Helper effect called by cmm_for_each_list_item for the ordered list.
+# Receives $i$ (item number) and $setting$ (composite key) as macro arguments.
+# scope:cmm_list_current_item_value = attached game scope (root country).
+# Scope: country
+cmf_feature_test_process_list_item = {
+	if = {
+		limit = { exists = scope:cmm_list_current_item_value }
+		save_scope_as = cft_test_item_value
+	}
+
+	# Benign warning suppression — references $i$ and $setting$ so the engine
+	# recognizes this as a parameterized effect (required by cmm_for_each_list_item).
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cft_item_index }
+		cmf_suppress = { v = cft_setting_key }
+		set_local_variable = { name = cft_item_index value = $i$ }
+		set_local_variable = { name = cft_setting_key value = flag:$setting$ }
+		save_scope_as = cft_test_item_value
+	}
+}
+
+# Suppress "set but never used" for from-list variable list target flags.
+# These user-chosen flags can't be suppressed by the core.
+cmf_feature_test_suppress_from_list_flags = {
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cft_item_alpha }
+		cmf_suppress = { v = cft_item_beta }
+		cmf_suppress = { v = cft_item_gamma }
+		cmf_suppress = { v = cft_global_item_alpha }
+		cmf_suppress = { v = cft_global_item_beta }
+		cmf_suppress = { v = cft_global_item_gamma }
+	}
+}

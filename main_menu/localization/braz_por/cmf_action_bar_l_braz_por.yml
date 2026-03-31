@@ -1,0 +1,6 @@
+﻿l_braz_por:
+ cmf_action_bar_open_action: "Executar Ação"
+ cmf_action_bar_settings_tooltip_title: "Configurações"
+ cmf_action_bar_settings_tooltip_text: "Abrir as configurações do #v Community Mod Framework#!."
+ cmf_action_bar_log_viewer_tooltip_title: "Visualizador de Logs"
+ cmf_action_bar_log_viewer_tooltip_text: "Abrir o Visualizador de Logs #v#!."

@@ -1,0 +1,51 @@
+﻿The [b]Community Mod Framework (CMF)[/b] is a utility mod that aims to improve mod inter-operability while giving modders tools for creating new features.
+
+[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/banner.png[/img]
+
+[b]CMF should be loaded first in your mod load order.[/b]
+
+Any questions, feel free to reach out on the EU5 Mod Coop Discord: https://discord.gg/aqAAcCZsY7
+
+[h1]Features[/h1]
+[list]
+ [*][b]Community Mod Menu (CMM):[/b] A shared in-game mod menu. Mod authors register settings dynamically through a simple API — no need to build a custom settings UI.
+  [list]
+   [*]Toggle, button, numeric, slider (double click to drag), dropdown, text (singleplayer-only), and list settings
+   [*]Per-mod tabs, groups, and search
+   [*]Global settings with host-only multiplayer editing
+   [*]Reset to Defaults
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url] — browser-based tool for creating your mod menu
+  [/list]
+ [*][b]Custom Alerts:[/b] Create and show custom alerts in the alert bar through localization keys.
+ [*][b]Action Bar:[/b] Add custom action bar buttons with localization keys.
+ [*][b]is_host Trigger:[/b] Check if the current country is controlled by the host player.
+ [*][b]cmf_suppress Effect:[/b] Suppress "used but never set" and "set but never used" engine warnings with a single effect call.
+ [*][b]Player Country Hook:[/b] Shared on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) that fire for each human player's country on yearly and monthly pulses (slightly more efficient than each mod checking for players individually).
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] A companion set of development tools, such as a mod template, workshop uploader, and mod translator.
+[/list]
+
+[h1]Documentation[/h1]
+[list]
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — Full documentation
+ [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — Quick reference
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub Repository[/url]
+[/list]
+
+[h1]Contributors[/h1]
+[list]
+ [*]Bahmut
+ [*]Conner
+ [*]Pickle
+[/list]
+
+[h1]Mods using CMF[/h1]
+[list]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url]
+[/list]
+
+[h1]Change Log:[/h1]
+See the [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/$item-id$]Change Notes on the workshop page[/url].

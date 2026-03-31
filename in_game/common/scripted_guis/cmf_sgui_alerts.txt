@@ -1,0 +1,41 @@
+﻿sgui_cmf_dismiss_alert = {
+    scope = country
+
+    saved_scopes = {
+        flag
+    }
+
+    effect = {
+        remove_list_variable = {
+            name = cmf_active_alerts
+            target = scope:flag
+        }
+    }
+}
+
+# Auto-apply: handle alert left-click. Removes the alert and fires cmf_on_callback.
+# Scope: country
+# Args: scope:alert (flag) — the alert root key.
+cmf_auto_alert_clicked = {
+    scope = country
+    saved_scopes = { alert }
+
+    effect = {
+        remove_list_variable = {
+            name = cmf_active_alerts
+            target = scope:alert
+        }
+        set_variable = { name = cmf_callback value = scope:alert }
+        trigger_event_silently = {
+            on_action = cmf_on_callback
+        }
+        remove_variable = cmf_callback
+
+        # Benign warning suppression
+        if = {
+            limit = { always = no }
+            cmf_suppress = { v = cmf_callback }
+            cmf_suppress = { v = cmf_active_alerts }
+        }
+    }
+}

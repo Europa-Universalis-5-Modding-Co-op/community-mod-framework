@@ -1,0 +1,273 @@
+﻿# CMM GUI Macros: Settings
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a setting key has been registered (type > 0)"
+    definition = "CMMSettingIsRegistered(SettingKey)"
+    replace_with = "GreaterThan_CFixedPoint(CMMMapValue('cmm_type', SettingKey), '(CFixedPoint)0')"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a setting key is registered as global"
+    definition = "CMMSettingIsGlobal(SettingKey)"
+    replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_is_global', SettingKey))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a setting key is registered as bool type"
+    definition = "CMMSettingIsBool(SettingKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMMapValue('cmm_type', SettingKey), '(CFixedPoint)1')"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a setting key is registered as dropdown type"
+    definition = "CMMSettingIsDropdown(SettingKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMMapValue('cmm_type', SettingKey), '(CFixedPoint)2')"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a setting key is registered as numeric type"
+    definition = "CMMSettingIsNumeric(SettingKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMMapValue('cmm_type', SettingKey), '(CFixedPoint)3')"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a setting key is registered as slider type"
+    definition = "CMMSettingIsSlider(SettingKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMMapValue('cmm_type', SettingKey), '(CFixedPoint)4')"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a setting key is registered as text type"
+    definition = "CMMSettingIsText(SettingKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMMapValue('cmm_type', SettingKey), '(CFixedPoint)5')"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a setting key is registered as button type"
+    definition = "CMMSettingIsButton(SettingKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMMapValue('cmm_type', SettingKey), '(CFixedPoint)6')"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a setting key is registered as list type"
+    definition = "CMMSettingIsList(SettingKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMMapValue('cmm_type', SettingKey), '(CFixedPoint)7')"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when local player can edit this setting"
+    definition = "CMMCanEditSetting(SettingKey)"
+    replace_with = "Or(Not(CMMSettingIsGlobal(SettingKey)), And(Or(EqualTo_string(SettingKey, 'cmm_core__enable_host_only_tools'), And(CMMSettingIsRegistered('cmm_core__enable_host_only_tools'), CMMValueEqualsOne(CMMSettingValue('cmm_core__enable_host_only_tools')))), Or(Not(GameIsMultiplayer), IsHost)))"
+}
+
+# Args: SettingKey (string)
+# Returns: value
+macro = {
+    description = "Read current setting value from country or global scope"
+    definition = "CMMSettingValue(SettingKey)"
+    replace_with = "Select_CFixedPoint(CMMSettingIsGlobal(SettingKey), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(SettingKey)).GetValue, Player.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag(SettingKey)).GetValue)"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a setting has a registered scripted GUI"
+    definition = "CMMHasScriptedGui(SettingKey)"
+    replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_has_sgui', SettingKey))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Visibility rule for one setting row"
+    definition = "CMMSettingRowVisible(SettingKey)"
+    replace_with = "And(CMMMatchesSelectedModAndTab(CMMMetadataFlag('cmm_setting_owner_mod_id_', SettingKey), CMMMetadataFlag('cmm_setting_owner_tab_key_', SettingKey)), And(CMMSettingIsRegistered(SettingKey), Or(Not(CMMHasScriptedGui(SettingKey)), CMMGuiIsShown(Concatenate(SettingKey, '_on_changed')))))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Enabled rule for one setting row"
+    definition = "CMMSettingRowEnabled(SettingKey)"
+    replace_with = "Or(Not(CMMHasScriptedGui(SettingKey)), CMMGuiIsValid(Concatenate(SettingKey, '_on_changed')))"
+}
+
+# Args: SettingKey (string)
+# Returns: none
+macro = {
+    description = "Execute setting on-changed scripted GUI callback"
+    definition = "CMMExecuteSettingChanged(SettingKey)"
+    replace_with = "CMMExecuteGui(Concatenate(SettingKey, '_on_changed'))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Checkbox checked state for bool settings (1 = on)"
+    definition = "CMMIsSettingEnabled(SettingKey)"
+    replace_with = "CMMValueEqualsOne(CMMSettingValue(SettingKey))"
+}
+
+# Args: SettingKey (string)
+# Returns: int32
+macro = {
+    description = "Dropdown option count for one setting"
+    definition = "CMMDropdownOptionCount(SettingKey)"
+    replace_with = "CMMMapInt('cmm_dropdown_count', SettingKey)"
+}
+
+# Args: SettingKey (string)
+# Returns: int32
+macro = {
+    description = "Stored 1-based dropdown selected ordinal for one setting"
+    definition = "CMMDropdownStoredIndex(SettingKey)"
+    replace_with = "FixedPointToInt(CMMSettingValue(SettingKey))"
+}
+
+# Args: SettingKey (string)
+# Returns: int32
+macro = {
+    description = "0-based dropdown widget selected index for one setting"
+    definition = "CMMDropdownSelectedIndex(SettingKey)"
+    replace_with = "CMMOrdinalToWidgetIndex(CMMDropdownStoredIndex(SettingKey))"
+}
+
+# Args: none
+# Returns: boolean
+macro = {
+    description = "True when text settings may be edited in the current session"
+    definition = "CMMCanEditTextSetting"
+    replace_with = "Not(GameIsMultiplayer)"
+}
+
+# Args: SettingKey (string)
+# Returns: int32
+macro = {
+    description = "Text setting editbox character limit"
+    definition = "CMMTextSettingCharacterLimit(SettingKey)"
+    replace_with = "CMMMapInt('cmm_text_char_limit', SettingKey)"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when submitted text should be wrapped in double quotes"
+    definition = "CMMTextSettingQuoteText(SettingKey)"
+    replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_text_quote', SettingKey))"
+}
+
+# Args: SettingKey (string)
+# Returns: value
+macro = {
+    description = "Scrollbar-normalized max (max - min, always >= 0)"
+    definition = "CMMSliderNormalizedMax(SettingKey)"
+    replace_with = "Subtract_CFixedPoint(CMMMapValue('cmm_max', SettingKey), CMMMapValue('cmm_min', SettingKey))"
+}
+
+# Args: SettingKey (string)
+# Returns: value
+macro = {
+    description = "Scrollbar-normalized value (value - min, always >= 0)"
+    definition = "CMMSliderNormalizedValue(SettingKey)"
+    replace_with = "Subtract_CFixedPoint(CMMSettingValue(SettingKey), CMMMapValue('cmm_min', SettingKey))"
+}
+
+# Args: SettingKey (string)
+# Returns: int32
+macro = {
+    description = "Slider thumb visual index on 0-100 scale for one setting"
+    definition = "CMMSliderThumbIndex(SettingKey)"
+    replace_with = "FixedPointToInt(Add_CFixedPoint(Multiply_CFixedPoint(Divide_CFixedPoint(CMMSliderNormalizedValue(SettingKey), CMMSliderNormalizedMax(SettingKey)), '(CFixedPoint)100'), '(CFixedPoint)0.500'))"
+}
+
+# Args: ThumbIndex (int32), Offset (int32 literal)
+# Returns: boolean
+macro = {
+    description = "True when hovered slider index equals thumb index plus offset"
+    definition = "CMMSliderHoverMatch(ThumbIndex,Offset)"
+    replace_with = "GetVariableSystem.HasValue('cmm_slider_hover_idx', ToString_int32(Add_int32(ThumbIndex, Offset)))"
+}
+
+# Args: ThumbIndex (int32), ScopeKey (string)
+# Returns: boolean
+macro = {
+    description = "True when the hovered overlay index is within 5 of the thumb and the scope key matches"
+    definition = "CMMSliderThumbHover(ThumbIndex,ScopeKey)"
+    replace_with = "And(GetVariableSystem.HasValue('cmm_slider_hover_key', ScopeKey), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)-5'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)-4'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)-3'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)-2'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)-1'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)0'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)1'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)2'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)3'), Or(CMMSliderHoverMatch(ThumbIndex, '(int32)4'), CMMSliderHoverMatch(ThumbIndex, '(int32)5'))))))))))))"
+}
+
+# Args: SettingKey (string)
+# Returns: string
+macro = {
+    description = "Variable-system cache key for one text setting input field"
+    definition = "CMMTextSettingInputCacheKey(SettingKey)"
+    replace_with = "Concatenate('cmm_text_input_', SettingKey)"
+}
+
+# Args: SettingKey (string)
+# Returns: string
+macro = {
+    description = "Scripted effect callback key for one text setting"
+    definition = "CMMTextSettingCallbackKey(SettingKey)"
+    replace_with = "Concatenate(SettingKey, '_on_changed')"
+}
+
+# Args: SettingKey (string)
+# Returns: value
+macro = {
+    description = "Setting value by key (works in localization [expr] context where Scope is unavailable)"
+    definition = "CMMV(SettingKey)"
+    replace_with = "Select_CFixedPoint(EqualTo_CFixedPoint(Player.MakeScope.GetVariableFromVariableMap('cmm_is_global', MakeScopeFlag(SettingKey)).GetValue, '(CFixedPoint)1'), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(SettingKey)).GetValue, Player.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag(SettingKey)).GetValue)"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a setting has an associated console command to fire on toggle"
+    definition = "CMMSettingHasConsoleCommand(SettingKey)"
+    replace_with = "EqualTo_string(SettingKey, 'cmm_core__enable_debug_mode')"
+}
+
+# Args: SettingKey (string)
+# Returns: string
+macro = {
+    description = "Console command string for a setting with an associated console command"
+    definition = "CMMSettingConsoleCommand(SettingKey)"
+    replace_with = "Select_CString(EqualTo_string(SettingKey, 'cmm_core__enable_debug_mode'), 'debug_mode', '')"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a _format localization key exists for a setting"
+    definition = "CMMHasFormat(SettingKey)"
+    replace_with = "Not(EqualTo_string(Localize(Concatenate(SettingKey, '_format')), Concatenate(SettingKey, '_format')))"
+}
+
+# Args: SettingKey (string)
+# Returns: string
+macro = {
+    description = "Formatted setting value if _format localization exists, raw value otherwise"
+    definition = "CMMDisplayValue(SettingKey)"
+    replace_with = "Localize(Concatenate(SettingKey, '_format'))"
+}

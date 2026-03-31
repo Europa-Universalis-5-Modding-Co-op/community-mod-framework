@@ -1,0 +1,6 @@
+﻿l_french:
+ cmf_action_bar_open_action: "Exécuter l'action"
+ cmf_action_bar_settings_tooltip_title: "Paramètres"
+ cmf_action_bar_settings_tooltip_text: "Ouvrir les paramètres du #v Community Mod Framework#!."
+ cmf_action_bar_log_viewer_tooltip_title: "Visionneuse de log"
+ cmf_action_bar_log_viewer_tooltip_text: "Ouvrir la visionneuse de logs #v#!."

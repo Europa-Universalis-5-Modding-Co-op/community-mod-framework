@@ -1,0 +1,196 @@
+﻿template frontend_menu_middle_template {
+	button_wax = {
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_yellow.dds"
+		}
+		block "big_button_size" { size = { -1 60 } }
+		using = FrontEndMiddleSectionButton
+		name = "resume_button"
+		text = "RESUME"
+		use_global_input_instance = yes
+		onclick = "[PauseMenu.Resume]"
+		enabled = yes
+		tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "PAUSE_MENU_RESUME_TOOLTIP" } } }
+		input_action = "close_window"
+	}
+
+	widget = {
+		layoutpolicy_horizontal = expanding
+		block "big_button_spacing_size" { size = { -1 10 } }
+	}
+
+	button_wax = {
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_yellow.dds"
+		}
+		block "big_button_size" { size = { -1 60 } }
+		using = FrontEndMiddleSectionButton
+		name = "save_button"
+		text = "SAVE_GAME"
+		enabled = "[And3(Not(IsShowingDialog), Not(GameIsIronman), Not(TutorialIsRunning))]"
+
+		action_tooltip = {
+			title = "SAVE_GAME"
+			enabled = "[And3(Not(IsShowingDialog), Not(GameIsIronman), Not(TutorialIsRunning))]"
+			on_action = "[PauseMenu.Save]"
+			conditions = "[PauseMenu.SaveTooltip]"
+			conditions = "[AddTextIf(TutorialIsRunning, Localize('SAVE_BUTTON_DISABLED_BY_TUTORIAL'))]"
+		}
+
+		tooltipwidget = {
+			BasicFunctionalTooltip = {}
+		}
+	}
+
+	button_wax = {
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_yellow.dds"
+		}
+		block "big_button_size" { size = { -1 60 } }
+		using = FrontEndMiddleSectionButton
+		name = "load_ingame_button"
+		text = "LOAD_GAME"
+		enabled = "[And3(Not(IsShowingDialog), Not(GameIsMultiplayer), Not(GameIsIronman))]"
+		tooltipwidget = {
+			BasicFunctionalTooltip = {}
+		}
+		action_tooltip = {
+			click_type = left
+			click_mode = single
+			title = "LOAD_GAME"
+			conditions = "[PauseMenu.LoadIngameTooltip]"
+			on_action = "[PauseMenu.LoadIngame]"
+			enabled = "[And3(Not(IsShowingDialog), Not(GameIsMultiplayer), Not(GameIsIronman))]"
+		}
+	}
+
+	button_wax = {
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_yellow.dds"
+		}
+		block "small_button_size" { size = { -1 45 } }
+		using = FrontEndMiddleSectionButton
+		text = "GAME_RULES"
+		enabled = "[Not(IsShowingDialog)]"
+		onclick = "[PauseMenu.CloseAllViews]"
+		onclick = "[OpenGameRules]"
+		tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "PAUSE_MENU_GAME_RULES_TOOLTIP" } } }
+	}
+
+	button_wax = {
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_yellow.dds"
+		}
+		block "small_button_size" { size = { -1 45 } }
+		using = FrontEndMiddleSectionButton
+		text = "PAUSE_MENU_SWITCH_COUNTRY"
+		onclick = "[PauseMenu.OpenLobby]"
+		enabled = "[And(Not(IsShowingDialog), PauseMenu.CanOpenLobby)]"
+		tooltipwidget = { BasicFunctionalTooltip = {} }
+		action_tooltip = {
+			click_type = left
+			click_mode = single
+			title = "PAUSE_MENU_SWITCH_COUNTRY"
+			conditions = "[PauseMenu.GetOpenLobbyTooltip]"
+			on_action = "[PauseMenu.OpenLobby]"
+			enabled = "[And(Not(IsShowingDialog), PauseMenu.CanOpenLobby)]"
+		}
+	}
+
+	button_wax = {
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_yellow.dds"
+		}
+		block "small_button_size" { size = { -1 45 } }
+		using = FrontEndMiddleSectionButton
+		text = "ACHIEVEMENTS_LABEL"
+		enabled = "[Not(IsShowingDialog)]"
+		visible_at_creation = no
+		visible = "[PauseMenu.IsAchievementsAvailable]"
+		onclick = "[PauseMenu.OpenAchievements]"
+		tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "PAUSE_MENU_ACHIEVEMENTS_TOOLTIP" } } }
+	}
+
+	button_wax = {
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_blue.dds"
+		}
+		block "small_button_size" { size = { -1 45 } }
+		using = FrontEndMiddleSectionButton
+		text = "SETTINGS_HEADER"
+		# enabled = "[Not(IsShowingDialog)]"
+		onclick = "[PauseMenu.OpenSettings]"
+		tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "PAUSE_MENU_SETTINGS_TOOLTIP" } } }
+	}
+
+	# CMM: Open Menu Button
+	button_wax = {
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_blue.dds"
+		}
+		block "small_button_size" { size = { -1 45 } }
+		using = FrontEndMiddleSectionButton
+		text = "CMM_PAUSE_MENU_BUTTON"
+		visible = "[Or(Not(GameIsMultiplayer), IsHost)]"
+		onclick = "[GetScriptedGui('CMM_SetHostAndRegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		onclick = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
+		onclick = "[GetVariableSystem.Toggle('cmm_window_open')]"
+		onclick = "[PauseMenu.Resume]"
+		tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "CMM_PAUSE_MENU_BUTTON_TOOLTIP" } } }
+	}
+
+	button_wax = {
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_blue.dds"
+		}
+		block "small_button_size" { size = { -1 45 } }
+		using = FrontEndMiddleSectionButton
+		text = "CMM_PAUSE_MENU_BUTTON"
+		visible = "[And(GameIsMultiplayer, Not(IsHost))]"
+		onclick = "[GetScriptedGui('CMM_RegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		onclick = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
+		onclick = "[GetVariableSystem.Toggle('cmm_window_open')]"
+		onclick = "[PauseMenu.Resume]"
+		tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "CMM_PAUSE_MENU_BUTTON_TOOLTIP" } } }
+	}
+
+	button_wax = {
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_blue.dds"
+		}
+		block "small_button_size" { size = { -1 45 } }
+		using = FrontEndMiddleSectionButton
+		text = "MESSAGE_SETTINGS"
+		enabled = "[Not(IsShowingDialog)]"
+		onclick = "[PauseMenu.OpenMessageSettings('(bool)yes')]"
+		tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "PAUSE_MENU_MESSAGE_SETTINGS" } } }
+	}
+
+	button_wax = {
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_blue.dds"
+		}
+		block "small_button_size" { size = { -1 45 } }
+		using = FrontEndMiddleSectionButton
+		text = "REPORT_ISSUE"
+		visible = "[IsBuildDebug]"
+		enabled = "[Not(IsShowingDialog)]"
+		onclick = "[PauseMenu.OpenReportIssue]"
+		tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "REPORT_ISSUE_TOOLTIP" } } }
+	}
+
+	button_wax = {
+		visible= "[GameIsMultiplayer]"
+		blockoverride "button_texture" {
+			texture = "gfx/interface/buttons/button_wax_blue.dds"
+		}
+		block "small_button_size" { size = { -1 45 } }
+		using = FrontEndMiddleSectionButton
+		text = "AI_SETTINGS"
+		enabled = "[Not(IsShowingDialog)]"
+		onclick = "[PauseMenu.OpenAiSettings]"
+		tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "PAUSE_MENU_AI_SETTINGS_TOOLTIP" } } }
+	}
+
+	expand = {}
+}

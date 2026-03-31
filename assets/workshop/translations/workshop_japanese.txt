@@ -1,0 +1,57 @@
+===WORKSHOP_TITLE===
+コミュニティ MOD フレームワーク & メニュー / Community Mod Framework & Menu
+===WORKSHOP_DESCRIPTION===
+[i]You are on the DeepL-Generated Japanese Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
+
+[h1]Community Mod Framework[/h1]
+
+[b]Community Mod Framework (CMF)[/b] は、Europa Universalis V のためのモッドメニューとモッディングツールを提供する、共有のユーティリティモッドです。
+
+[b]CMF はモッドのロード順の最初に読み込む必要があります。[/b]
+
+[h1]ドキュメント[/h1]
+[list]
+[*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — 全ドキュメント
+[*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — クイックリファレンス
+[*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub リポジトリ[/url]
+[/list]
+
+質問がある場合は、Modding Co-op（Discord）経由でお気軽にお問い合わせください: https://discord.gg/aqAAcCZsY7
+
+[h1]機能[/h1]
+[list]
+[*][b]Community Mod Menu (CMM):[/b] ゲーム内の共有モッド設定ウィンドウ。モッド制作者はシンプルな API を通じて動的に設定を登録でき、カスタムの設定 UI を構築する必要はありません。
+  [list]
+   [*]トグル、ボタン、数値、スライダー（ダブルクリックでドラッグ可能）、ドロップダウン、テキスト（シングルプレイヤー限定）、およびリスト設定
+   [*]モッドごとのタブ、グループ、および検索機能
+   [*]マルチプレイヤーでのホスト限定編集が可能なグローバル設定
+   [*]デフォルトにリセット
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url] — コーディング不要で設定を作成できるブラウザベースのツール
+  [/list]
+[*][b]カスタムアラート:[/b] ローカライズキーを使用して、アラートバーにカスタムアラートを作成し表示します。
+[*][b]アクションバー:[/b] ローカライズキーを使用して、カスタムのアクションバーボタンを追加します。
+[*][b]is_host トリガー:[/b] 現在の国家がホストプレイヤーによって操作されているかどうかを確認します。
+[*][b]cmf_suppress エフェクト:[/b] 単一のエフェクト呼び出しで、エンジンの「使用されているが設定されていない（used but never set）」および「設定されているが使用されていない（set but never used）」警告を抑制します。
+[*][b]プレイヤー国家フック:[/b] 各人間プレイヤーの国家に対して、年次および月次のパルスで実行される共有の on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse)（各モッドが個別にプレイヤーをチェックするよりもわずかに効率的です）。
+[*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] モッドテンプレート、ワークショップアップローダー、モッド翻訳ツールなどの開発ツールセット。
+[/list]
+
+[h1]コントリビューター[/h1]
+[list]
+[*]Bahmut
+[*]Conner
+[*]Pickle
+[/list]
+
+[h1]CMF を使用しているモッド[/h1]
+[list]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url]
+[/list]
+
+[h1]更新履歴:[/h1]
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3691154596]ワークショップページの更新履歴[/url]をご覧ください。
+

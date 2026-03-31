@@ -1,0 +1,166 @@
+name: Publish Release
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish on Workshop'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      workshop-id:
+        description: 'Workshop Identifier'
+        required: false
+        default: '3692202776'
+        type: string
+
+jobs:
+  release:
+    name: "Publish Release"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --prune --unshallow --tags
+
+        # Read version from metadata.json
+        # Find latest tag for changelog range (falls back to first commit)
+      - name: Get Version
+        id: project
+        run: |
+          VERSION=$(jq -r .version .metadata/metadata.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          LAST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || git rev-list --max-parents=0 HEAD)
+          echo "last-tag=$LAST_TAG" >> $GITHUB_OUTPUT
+          echo "# Version" >> $GITHUB_STEP_SUMMARY
+          echo "**$VERSION**" >> $GITHUB_STEP_SUMMARY
+
+        # Collect commits since the last tag
+      - name: Collect Changes
+        id: commits
+        run: |
+          {
+            echo 'markdown<<EOF'
+            echo "$(git log ${{ steps.project.outputs.last-tag }}..HEAD --no-merges --pretty=format:' - %s')"
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+          echo "# Commits" >> $GITHUB_STEP_SUMMARY
+          echo "$(git log ${{ steps.project.outputs.last-tag }}..HEAD --no-merges --pretty=format:' - %s')" >> $GITHUB_STEP_SUMMARY
+
+        # Tag the current commit with the version from metadata.json
+      - name: Create Tag
+        run: |
+          git tag ${{ steps.project.outputs.version }}
+          git push origin ${{ steps.project.outputs.version }}
+
+        # Stage release files: copy mod content into a clean folder
+        # Strip Dev suffixes from metadata and swap in release thumbnail
+      - name: Build Release
+        run: |
+          mkdir ../steam-release
+          cp assets/workshop/workshop-description.bbcode ../steam-release/
+          mkdir ../mod-release
+          cp -r .metadata ../mod-release/
+          cp -r in_game ../mod-release/
+          cp -r loading_screen ../mod-release/
+          cp -r main_menu ../mod-release/
+          jq --tab '.name |= rtrimstr(" Dev") | .id |= rtrimstr(".dev")' ../mod-release/.metadata/metadata.json > tmp.json && mv tmp.json ../mod-release/.metadata/metadata.json
+          if [ -f .metadata/thumbnail-release.png ]; then
+            cp .metadata/thumbnail-release.png ../mod-release/.metadata/thumbnail.png
+          fi
+
+        # Package clean mod folder into a zip file
+      - name: Create Release Artifact
+        run: |
+          cd ../mod-release
+          zip -r ${{ github.workspace }}/community-mod-framework-${{ steps.project.outputs.version }}.zip .
+
+        # Package the dependency check template as a separate zip
+        # Mod authors unzip this into their mod folder to get the CMF dependency popup
+      - name: Create Dependency Check Artifact
+        run: |
+          mkdir -p ../dep-check/main_menu/gui
+          cp submods/cmf-example-mod/main_menu/gui/cmf_dependency_check.gui ../dep-check/main_menu/gui/
+          cd ../dep-check
+          zip -r ${{ github.workspace }}/cmf-dependency-check.zip .
+
+        # Attach mod package to the workflow run
+      - name: Upload Release Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Release
+          path: community-mod-framework-${{ steps.project.outputs.version }}.zip
+
+        # Create a GitHub release
+        # Includes the mod package and visual editor tool
+      - name: Publish GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2.2.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: false
+          files: |
+            community-mod-framework-${{ steps.project.outputs.version }}.zip
+            cmf-dependency-check.zip
+            tools/cmm-visual-editor.bat
+          tag_name: ${{ steps.project.outputs.version }}
+          name: ${{ steps.project.outputs.version }}
+          body: |
+            Released a new version of the **Community Mod Framework**.
+
+            ### Commits:
+            ${{ steps.commits.outputs.markdown }}
+
+        # Create mod metadata for the steam release
+        # Generate VDF inline for SteamCMD workshop upload
+        # Report: Generated metadata
+      - name: Create Workshop Metadata
+        if: ${{ inputs.publish == 'true' }}
+        id: metadata
+        shell: bash
+        run: |
+          MOD_RELEASE=$(realpath ../mod-release)
+          TITLE=$(grep -Po '(?<=\s"name":\s").+(?=",)' ../mod-release/.metadata/metadata.json)
+          DESCRIPTION=$(sed '/--NO-TRANSLATE-BELOW--/d' ../steam-release/workshop-description.bbcode | sed "s/\\\$item-id\\\$/${{ inputs.workshop-id }}/g")
+          cat > ../steam-release/workshop.vdf <<VDFEOF
+          "workshopitem"
+          {
+          	"appid" "3450310"
+          	"publishedfileid" "${{ inputs.workshop-id }}"
+          	"contentfolder" "${MOD_RELEASE}"
+          	"previewfile" "${MOD_RELEASE}/.metadata/thumbnail.png"
+          	"title" "${TITLE}"
+          	"description" "${DESCRIPTION}"
+          }
+          VDFEOF
+          echo "vdf=$(realpath ../steam-release/workshop.vdf)" >> "$GITHUB_OUTPUT"
+          echo "# Workflow Metadata" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          cat ../steam-release/workshop.vdf >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Setup SteamCMD
+        if: ${{ inputs.publish == 'true' }}
+        uses: CyberAndrii/setup-steamcmd@v1
+
+        # Publish to steam workshop
+        # Uses generated metadata and configured workshop user
+      - name: Publish to Workshop
+        if: ${{ inputs.publish == 'true' }}
+        shell: bash
+        run: |
+          steamcmd +login ${{ secrets.WORKSHOP_USERNAME }} ${{ secrets.WORKSHOP_PASSWORD }} +workshop_build_item ${{ steps.metadata.outputs.vdf }} +quit
+

@@ -1,0 +1,57 @@
+﻿# CMM GUI Macros: View State And Selection
+
+# Args: none
+# Returns: boolean
+macro = {
+    description = "True when selected mod variable-system key exists"
+    definition = "CMMSelectedModExists"
+    replace_with = "CMMSelectedValueExists('cmm_selected_mod')"
+}
+
+# Args: none
+# Returns: boolean
+macro = {
+    description = "True when selected tab variable-system key exists"
+    definition = "CMMSelectedTabExists"
+    replace_with = "CMMSelectedValueExists('cmm_selected_tab')"
+}
+
+# Args: GroupKey (string)
+# Returns: boolean
+macro = {
+    description = "Visibility rule for one group row"
+    definition = "CMMGroupRowVisible(GroupKey)"
+    replace_with = "CMMMatchesSelectedModAndTab(CMMMetadataFlag('cmm_group_owner_mod_id_', GroupKey), CMMMetadataFlag('cmm_group_owner_tab_key_', GroupKey))"
+}
+
+# Args: none
+# Returns: boolean
+macro = {
+    description = "True when no mods are registered yet"
+    definition = "CMMNoModsRegistered"
+    replace_with = "IsDataModelEmpty(Player.MakeScope.GetList('cmm_registered_mod_ids'))"
+}
+
+# Args: none
+# Returns: boolean
+macro = {
+    description = "True when at least one mod is registered"
+    definition = "CMMHasRegisteredMods"
+    replace_with = "Not(IsDataModelEmpty(Player.MakeScope.GetList('cmm_registered_mod_ids')))"
+}
+
+# Args: ModId (string)
+# Returns: boolean
+macro = {
+    description = "Filter match for one mod row against current search text"
+    definition = "CMMModMatchesSearch(ModId)"
+    replace_with = "Or4(Not(CMMSelectedValueExists('cmm_mod_search_text')), StringIsEmpty(GetVariableSystem.Get('cmm_mod_search_text')), StringContains(CMMLocalizedSuffix(ModId, '_name'), GetVariableSystem.Get('cmm_mod_search_text')), StringContains(ModId, GetVariableSystem.Get('cmm_mod_search_text')))"
+}
+
+# Args: none
+# Returns: boolean
+macro = {
+    description = "Show empty-state text when selected tab has zero visible settings"
+    definition = "CMMShowNoSettingsForSelectedTab"
+    replace_with = "And(CMMSelectedModExists, Or3(Not(CMMSelectedTabExists), Not(CMMMetadataIsSet('cmm_tab_setting_count_', GetVariableSystem.Get('cmm_selected_tab'))), EqualTo_CFixedPoint(CMMMetadataValue('cmm_tab_setting_count_', GetVariableSystem.Get('cmm_selected_tab')), '(CFixedPoint)0')))"
+}

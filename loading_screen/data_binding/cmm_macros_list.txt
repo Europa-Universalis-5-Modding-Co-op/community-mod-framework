@@ -1,0 +1,185 @@
+﻿# CMM GUI Macros: Ordered Lists
+
+# Args: ItemKey (string)
+# Returns: string
+macro = {
+    description = "Owner setting key for one list item key"
+    definition = "CMMListItemOwnerSettingKey(ItemKey)"
+    replace_with = "CMMMetadataFlag('cmm_list_item_owner_setting_', ItemKey)"
+}
+
+# Args: ItemKey (string)
+# Returns: boolean
+macro = {
+    description = "True when local player can edit the owner setting for one list item"
+    definition = "CMMCanEditListItemSetting(ItemKey)"
+    replace_with = "CMMCanEditSetting(CMMListItemOwnerSettingKey(ItemKey))"
+}
+
+# Args: ItemKey (string)
+# Returns: none
+macro = {
+    description = "Execute the owner setting callback for one list item"
+    definition = "CMMExecuteListItemSettingChanged(ItemKey)"
+    replace_with = "CMMExecuteSettingChanged(CMMListItemOwnerSettingKey(ItemKey))"
+}
+
+# Args: SettingKey (string)
+# Returns: int32
+macro = {
+    description = "List field count for one setting"
+    definition = "CMMListFieldCount(SettingKey)"
+    replace_with = "CMMMetadataInt('cmm_list_field_count_', SettingKey)"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list setting shows row move controls"
+    definition = "CMMListSettingIsOrdered(SettingKey)"
+    replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_list_is_ordered', SettingKey))"
+}
+
+# Args: ItemKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list item belongs to a reorderable list setting"
+    definition = "CMMListItemSettingIsOrdered(ItemKey)"
+    replace_with = "CMMListSettingIsOrdered(CMMListItemOwnerSettingKey(ItemKey))"
+}
+
+# Args: SettingKey (string), SlotKey (string), Suffix (string)
+# Returns: variable
+macro = {
+    description = "List field metadata variable accessor"
+    definition = "CMMListFieldMetadataVar(SettingKey,SlotKey,Suffix)"
+    replace_with = "CMMVar(Concatenate(Concatenate('cmm_list_field_', SlotKey), Concatenate(Suffix, SettingKey)))"
+}
+
+# Args: SettingKey (string), SlotKey (string), Suffix (string)
+# Returns: string
+macro = {
+    description = "List field metadata flag-name accessor"
+    definition = "CMMListFieldMetadataFlag(SettingKey,SlotKey,Suffix)"
+    replace_with = "CMMListFieldMetadataVar(SettingKey, SlotKey, Suffix).GetFlagName"
+}
+
+# Args: SettingKey (string), SlotKey (string), Suffix (string)
+# Returns: value
+macro = {
+    description = "List field metadata value accessor"
+    definition = "CMMListFieldMetadataValue(SettingKey,SlotKey,Suffix)"
+    replace_with = "CMMListFieldMetadataVar(SettingKey, SlotKey, Suffix).GetValue"
+}
+
+# Args: SettingKey (string), SlotKey (string), Suffix (string)
+# Returns: int32
+macro = {
+    description = "List field metadata int accessor"
+    definition = "CMMListFieldMetadataInt(SettingKey,SlotKey,Suffix)"
+    replace_with = "FixedPointToInt(CMMListFieldMetadataValue(SettingKey, SlotKey, Suffix))"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: variable
+macro = {
+    description = "List item field variable accessor"
+    definition = "CMMListItemFieldVar(ItemKey,SlotKey)"
+    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey))))"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: value
+macro = {
+    description = "List item field value accessor"
+    definition = "CMMListItemFieldValue(ItemKey,SlotKey)"
+    replace_with = "Select_CFixedPoint(CMMSettingIsGlobal(CMMListItemOwnerSettingKey(ItemKey)), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey)))).GetValue, CMMListItemFieldVar(ItemKey, SlotKey).GetValue)"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: int32
+macro = {
+    description = "List item field int accessor"
+    definition = "CMMListItemFieldInt(ItemKey,SlotKey)"
+    replace_with = "FixedPointToInt(CMMListItemFieldValue(ItemKey, SlotKey))"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: int32
+macro = {
+    description = "0-based widget index for one 1-based list dropdown field value"
+    definition = "CMMListItemFieldWidgetIndex(ItemKey,SlotKey)"
+    replace_with = "CMMOrdinalToWidgetIndex(CMMListItemFieldInt(ItemKey, SlotKey))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list field slot is bool"
+    definition = "CMMListFieldIsBool(SettingKey,SlotKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)1')"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list field slot is dropdown"
+    definition = "CMMListFieldIsDropdown(SettingKey,SlotKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)2')"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list field slot is numeric"
+    definition = "CMMListFieldIsNumeric(SettingKey,SlotKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)3')"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list field slot is slider"
+    definition = "CMMListFieldIsSlider(SettingKey,SlotKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)4')"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list item field is disabled for its slot"
+    definition = "CMMListItemFieldIsDisabled(ItemKey,SlotKey)"
+    replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_list_field_disabled', Concatenate(ItemKey, Concatenate('_f', SlotKey))))"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list item field is enabled for its slot"
+    definition = "CMMListItemFieldIsEnabled(ItemKey,SlotKey)"
+    replace_with = "Not(CMMListItemFieldIsDisabled(ItemKey, SlotKey))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: CFixedPoint
+macro = {
+    description = "Normalized slider maximum for one list field slot (max minus min)"
+    definition = "CMMListFieldSliderNormalizedMax(SettingKey,SlotKey)"
+    replace_with = "Subtract_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_max_'), CMMListFieldMetadataValue(SettingKey, SlotKey, '_min_'))"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: CFixedPoint
+macro = {
+    description = "Normalized slider value for one list item field (value minus min)"
+    definition = "CMMListFieldSliderNormalizedValue(ItemKey,SlotKey)"
+    replace_with = "Subtract_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotKey), CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(ItemKey), SlotKey, '_min_'))"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: int32
+macro = {
+    description = "Slider thumb visual index on 0-100 scale for one list item field"
+    definition = "CMMListSliderThumbIndex(ItemKey,SlotKey)"
+    replace_with = "FixedPointToInt(Add_CFixedPoint(Multiply_CFixedPoint(Divide_CFixedPoint(CMMListFieldSliderNormalizedValue(ItemKey, SlotKey), CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(ItemKey), SlotKey)), '(CFixedPoint)100'), '(CFixedPoint)0.500'))"
+}

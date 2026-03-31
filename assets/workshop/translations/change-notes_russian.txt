@@ -1,0 +1,9 @@
+- [b]Community Mod Menu (CMM):[/b] Общее внутриигровое окно настроек модов с переключателями, кнопками, числовыми значениями, ползунками (двойной клик для перетаскивания), выпадающими списками, текстовыми полями (только для одиночной игры) и списками. Включает вкладки для отдельных модов, группы, поиск, глобальные настройки с возможностью редактирования в мультиплеере только хостом и сброс до настроек по умолчанию.
+- [b]CMM Visual Editor:[/b] Браузерный инструмент для создания настроек CMM без ручного написания кода. Включает предварительный просмотр в реальном времени и упорядочивание перетаскиванием (drag-and-drop).
+- [b]is_host Trigger:[/b] Проверка, управляется ли текущая страна игроком-хостом.
+- [b]cmf_suppress Effect:[/b] Подавление предупреждений движка «used but never set» и «set but never used» одним вызовом эффекта.
+- [b]Player Country Hooks:[/b] Общие on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse), которые срабатывают для страны каждого игрока-человека в ежегодных и ежемесячных циклах.
+- [b]Community Mod Toolkit (CMT):[/b] Сопутствующие инструменты разработки — шаблон мода, загрузчик в Workshop и автоматизированный перевод.
+- [b]Unified Callback System:[/b] Кастомные оповещения (Alerts) и панель действий (Action Bar) теперь используют единый on_action cmf_on_callback.
+- [b]Scripted GUIs are no longer required:[/b] Scripted GUI больше не требуются: элементам оповещений и панели действий Scripted GUI нужен только для условий видимости или состояния доступности.
+- [b]Documentation:[/b] Полная документация на [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] и краткий справочник на [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url].

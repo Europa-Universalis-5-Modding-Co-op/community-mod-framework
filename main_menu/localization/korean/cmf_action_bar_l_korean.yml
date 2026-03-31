@@ -1,0 +1,6 @@
+﻿l_korean:
+ cmf_action_bar_open_action: "액션 실행"
+ cmf_action_bar_settings_tooltip_title: "설정"
+ cmf_action_bar_settings_tooltip_text: "#v 커뮤니티 모드 프레임워크#! 설정을 엽니다."
+ cmf_action_bar_log_viewer_tooltip_title: "로그 뷰어"
+ cmf_action_bar_log_viewer_tooltip_text: "#v 로그 뷰어#! 열기."

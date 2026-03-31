@@ -1,0 +1,56 @@
+﻿window = {
+	name = "cmm_window"
+	alwaystransparent = no
+	reorder_on_mouse = never
+	resizable = no
+	movable = no
+	parentanchor = center
+	widgetanchor = center
+	size = { 1140 760 }
+	using = bg_window_default_alt
+	allow_outside = yes
+	visible = "[GetVariableSystem.Exists('cmm_window_open')]"
+
+	vbox = {
+		using = window_margin_alt
+		spacing = 2
+
+		window_header_alt = {
+			blockoverride "header_text_object" {
+				hbox = {
+					visible = "[Not(CMMSelectedModExists)]"
+
+					header_title = {
+						text = "CMM_WINDOW_TITLE"
+					}
+				}
+
+				hbox = {
+					visible = "[CMMSelectedModExists]"
+
+					header_title = {
+						size = { -1 40 }
+						layoutpolicy_horizontal = expanding
+						autoresize = no
+						maximumsize = { 450 40 }
+						tagtooltip_enabled = yes
+						tooltip = "[CMMLocalizedSuffixText(GetVariableSystem.Get('cmm_selected_mod'), '_desc')]"
+						tooltip_enabled = "[CMMHasLocalizedSuffixText(GetVariableSystem.Get('cmm_selected_mod'), '_desc')]"
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+						text = "[CMMLocalizedSuffix(GetVariableSystem.Get('cmm_selected_mod'), '_name')]"
+					}
+				}
+			}
+		}
+
+		hbox = {
+			using = layoutpolicy_expanding
+			spacing = 12
+
+			cmm_mod_list_panel = {}
+			cmm_settings_panel = {}
+		}
+	}
+
+	cmm_window_close_widget = {}
+}

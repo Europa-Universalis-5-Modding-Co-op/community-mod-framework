@@ -1,0 +1,81 @@
+﻿# List _on_changed callbacks — required for all list settings.
+# Each must call cmm_apply_list_change with the correct composite setting key.
+
+cmf_feature_test__ordered_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__ordered_list
+		}
+	}
+}
+
+cmf_feature_test__unordered_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__unordered_list
+		}
+	}
+}
+
+cmf_feature_test__dynamic_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__dynamic_list
+		}
+	}
+}
+
+cmf_feature_test__from_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__from_list
+		}
+	}
+}
+
+cmf_feature_test__global_ordered_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__global_ordered_list
+		}
+	}
+}
+
+cmf_feature_test__global_dynamic_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__global_dynamic_list
+		}
+	}
+}
+
+cmf_feature_test__global_from_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__global_from_list
+		}
+	}
+}
+
+# Conditional visibility — only shown when the toggle is enabled.
+cmf_feature_test__conditional_numeric_on_changed = {
+	scope = country
+	is_shown = {
+		"variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1
+	}
+	effect = { }
+}

@@ -1,0 +1,150 @@
+﻿on_game_start = {
+	on_actions = {
+		cmf_on_init
+	}
+}
+
+# Set global presence flag for cross-mod detection.
+# Scope: global
+cmf_on_init = {
+	effect = {
+		set_global_variable = { name = cmf_active value = yes }
+	}
+}
+
+yearly_country_pulse = {
+	on_actions = {
+		cmf_on_yearly
+	}
+}
+
+monthly_country_pulse = {
+	on_actions = {
+		cmf_on_monthly
+	}
+}
+
+# Yearly event dispatcher
+# Scope: country (from yearly_country_pulse)
+cmf_on_yearly = {
+	trigger = { is_ai = no }
+	effect = {
+		cmm_register_menu_settings = yes
+		trigger_event_silently = {
+			on_action = cmf_yearly_human_country_pulse
+		}
+	}
+}
+
+# Monthly event dispatcher
+# Scope: country (from monthly_country_pulse)
+cmf_on_monthly = {
+	trigger = { is_ai = no }
+	effect = {
+		trigger_event_silently = {
+			on_action = cmf_monthly_human_country_pulse
+		}
+	}
+}
+
+# Unified yearly human country pulse
+# Slightly more efficient than each mod checking for players individually
+# Scope: country
+cmf_yearly_human_country_pulse = {
+	on_actions = {
+		cmf_on_mod_registration
+	}
+}
+
+# Unified monthly human country pulse
+# Slightly more efficient than each mod checking for players individually
+# Scope: country
+cmf_monthly_human_country_pulse = {
+	on_actions = { }
+}
+
+# Integration extension point.
+# Scope: country
+cmf_on_mod_registration = {
+	on_actions = { }
+}
+
+# Post-lobby game start hook. Fires once on a new game when the in-game UI
+# is created, after the player has selected their country. Vanilla on_game_start
+# fires before the country selection screen, so player-scoped effects
+# (is_ai = no) don't work there since no country has been selected yet.
+# Scope: none
+on_game_start_after_lobby = {
+	effect = {
+		every_country = {
+			limit = { is_ai = no }
+			cmm_register_menu_settings = yes
+			trigger_event_silently = {
+				on_action = on_game_start_after_lobby_player_country
+			}
+		}
+	}
+	on_actions = { }
+}
+
+# Player country variant of on_game_start_after_lobby.
+# Scope: country
+on_game_start_after_lobby_player_country = {
+	on_actions = {
+		cmf_on_mod_registration
+	}
+}
+
+# Save load hook. Fires every time a save game is loaded (including from
+# the country selection screen). Does NOT fire on new games.
+# Scope: none
+on_game_load = {
+	effect = {
+		every_country = {
+			limit = { is_ai = no }
+			cmm_register_menu_settings = yes
+			trigger_event_silently = {
+				on_action = on_game_load_player_country
+			}
+		}
+	}
+	on_actions = { }
+}
+
+# Player country variant of on_game_load.
+# Scope: country
+on_game_load_player_country = {
+	on_actions = { }
+}
+
+# Post-lobby save load hook. Fires every time a save game is loaded,
+# only after the player has passed the country selection screen.
+# Does NOT fire on new games or from the country selection screen.
+# Scope: none
+on_game_load_after_lobby = {
+	effect = {
+		every_country = {
+			limit = { is_ai = no }
+			trigger_event_silently = {
+				on_action = on_game_load_after_lobby_player_country
+			}
+		}
+	}
+	on_actions = { }
+}
+
+# Player country variant of on_game_load_after_lobby.
+# Scope: country
+on_game_load_after_lobby_player_country = {
+	on_actions = {
+		cmf_on_mod_registration
+	}
+}
+
+# Unified callback extension point. Fires after auto-apply updates a setting,
+# an alert is clicked, or an action bar button is clicked.
+# var:cmf_callback contains the flag key of the target (setting, alert, or element).
+# Scope: country
+cmf_on_callback = {
+	on_actions = { }
+}

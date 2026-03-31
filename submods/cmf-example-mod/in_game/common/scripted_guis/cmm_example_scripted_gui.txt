@@ -1,0 +1,29 @@
+﻿cmm_example__example_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmm_example__example_list
+		}
+		# optional custom logic
+	}
+}
+
+cmm_example__example_unordered_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmm_example__example_unordered_list
+		}
+		# optional custom logic
+	}
+}
+
+# Conditional visibility example: this _on_changed hides the setting.
+# With auto-apply, _on_changed is only needed for is_shown logic, not for callbacks.
+cmm_example__global_example_button_on_changed = {
+	scope = country
+	is_shown = { always = no }
+	effect = { }
+}

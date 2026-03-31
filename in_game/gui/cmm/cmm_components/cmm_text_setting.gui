@@ -1,0 +1,90 @@
+﻿types CMMTextSettingTypes
+{
+	# Text setting widget for one CMM setting row.
+	# Reads:
+	# - Scope.GetFlagName [string]: current setting key in root context (`<mod_id>__<setting_id>`).
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_text_character_limit_', Scope.GetFlagName)) [value]: maximum allowed character count.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_text_quote_', Scope.GetFlagName)) [value]: whether submitted text should be wrapped in double quotes.
+	# - GetVariableSystem.Get(Concatenate('cmm_text_input_', Scope.GetFlagName)) [string]: cached editbox contents for the Apply button.
+	# Writes:
+	# - GetVariableSystem.Set(Concatenate('cmm_text_input_', Scope.GetFlagName)) [string]: updates the cached row-local text as the player types.
+	# - ExecuteConsoleCommand(...) [effect]: submits the current text to `<mod_id>__<setting_id>_on_changed`.
+	type cmm_text_setting = vbox {
+		minimumsize = { 260 0 }
+		spacing = 2
+
+		hbox = {
+			minimumsize = { 260 0 }
+			ignoreinvisible = yes
+			spacing = 4
+
+			editbox_single = {
+				visible = "[CMMTextSettingQuoteText(Scope.GetFlagName)]"
+				using = layoutpolicy_expanding
+				minimumsize = { 0 32 }
+				focuspolicy = all
+				alwaystransparent = no
+				multiline = no
+				enabled = "[CMMCanEditTextSetting]"
+				text = ""
+
+				blockoverride "editbox_properties" {
+					ontextchanged = "[GetVariableSystem.Set(CMMTextSettingInputCacheKey(Scope.GetFlagName), GetTextFromSelfOrAnyChildEditbox(PdxGuiWidget.Self))]"
+					ontextedited = "[GetVariableSystem.Set(CMMTextSettingInputCacheKey(Scope.GetFlagName), GetTextFromSelfOrAnyChildEditbox(PdxGuiWidget.Self))]"
+					onreturnpressed = "[ExecuteConsoleCommand(Concatenate('effect c:', Concatenate(Player.GetTag, Concatenate(' = { ', Concatenate(CMMTextSettingCallbackKey(Scope.GetFlagName), Concatenate(' = { text = \"', Concatenate(Concatenate('\\\\', '\"'), Concatenate(GetTextFromSelfOrAnyChildEditbox(PdxGuiWidget.Self), Concatenate(Concatenate('\\\\', '\"'), '\" } }')))))))))]"
+					maxcharacters = "[CMMTextSettingCharacterLimit(Scope.GetFlagName)]"
+				}
+
+				blockoverride "editbox_label" {
+					text = "CMM_TEXT_SETTING_PLACEHOLDER"
+				}
+			}
+
+			button_regular = {
+				visible = "[CMMTextSettingQuoteText(Scope.GetFlagName)]"
+				minimumsize = { 72 32 }
+				enabled = "[CMMCanEditTextSetting]"
+				text = "CMM_TEXT_APPLY"
+				onclick = "[ExecuteConsoleCommand(Concatenate('effect c:', Concatenate(Player.GetTag, Concatenate(' = { ', Concatenate(CMMTextSettingCallbackKey(Scope.GetFlagName), Concatenate(' = { text = \"', Concatenate(Concatenate('\\\\', '\"'), Concatenate(GetVariableSystem.Get(CMMTextSettingInputCacheKey(Scope.GetFlagName)), Concatenate(Concatenate('\\\\', '\"'), '\" } }')))))))))]"
+				tooltip_enabled = no
+			}
+
+			editbox_single = {
+				visible = "[Not(CMMTextSettingQuoteText(Scope.GetFlagName))]"
+				using = layoutpolicy_expanding
+				minimumsize = { 0 32 }
+				focuspolicy = all
+				alwaystransparent = no
+				multiline = no
+				enabled = "[CMMCanEditTextSetting]"
+				text = ""
+
+				blockoverride "editbox_properties" {
+					ontextchanged = "[GetVariableSystem.Set(CMMTextSettingInputCacheKey(Scope.GetFlagName), GetTextFromSelfOrAnyChildEditbox(PdxGuiWidget.Self))]"
+					ontextedited = "[GetVariableSystem.Set(CMMTextSettingInputCacheKey(Scope.GetFlagName), GetTextFromSelfOrAnyChildEditbox(PdxGuiWidget.Self))]"
+					onreturnpressed = "[ExecuteConsoleCommand(Concatenate('effect c:', Concatenate(Player.GetTag, Concatenate(' = { ', Concatenate(CMMTextSettingCallbackKey(Scope.GetFlagName), Concatenate(' = { text = \"', Concatenate(GetTextFromSelfOrAnyChildEditbox(PdxGuiWidget.Self), '\" } }')))))))]"
+					maxcharacters = "[CMMTextSettingCharacterLimit(Scope.GetFlagName)]"
+				}
+
+				blockoverride "editbox_label" {
+					text = "CMM_TEXT_SETTING_PLACEHOLDER"
+				}
+			}
+
+			button_regular = {
+				visible = "[Not(CMMTextSettingQuoteText(Scope.GetFlagName))]"
+				minimumsize = { 72 32 }
+				enabled = "[CMMCanEditTextSetting]"
+				text = "CMM_TEXT_APPLY"
+				onclick = "[ExecuteConsoleCommand(Concatenate('effect c:', Concatenate(Player.GetTag, Concatenate(' = { ', Concatenate(CMMTextSettingCallbackKey(Scope.GetFlagName), Concatenate(' = { text = \"', Concatenate(GetVariableSystem.Get(CMMTextSettingInputCacheKey(Scope.GetFlagName)), '\" } }')))))))]"
+				tooltip_enabled = no
+			}
+		}
+
+		text_single = {
+			visible = "[GameIsMultiplayer]"
+			default_format = "#color_gray"
+			text = "CMM_TEXT_SETTING_MULTIPLAYER_DISABLED"
+		}
+	}
+}

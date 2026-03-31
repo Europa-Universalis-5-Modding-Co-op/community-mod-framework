@@ -1,0 +1,1280 @@
+﻿types CMMListSettingFieldTypes
+{
+	# Ordered list header field labels rendered from registered field count.
+	# Reads:
+	# - Scope.GetFlagName [string]: current list setting key (`<mod_id>__<setting_id>`).
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated header datamodel.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_name_', Scope.GetFlagName)) [flag]: localized field header key.
+	# Writes:
+	# - none [n/a]: no writes.
+	type cmm_list_setting_header_fields = hbox {
+		ignoreinvisible = yes
+		spacing = 8
+		datamodel = "[DataModelRepeatedItem(CMMListFieldCount(Scope.GetFlagName))]"
+		datamodel_reuse_widgets = yes
+
+		item = {
+			widget = {
+				min_width = "[Select_int32(CMMListFieldIsSlider(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(int32)198', '(int32)132')]"
+				minimumsize = { 0 0 }
+
+				text_single = {
+					size = { 100% 0 }
+					max_width = "[Select_int32(CMMListFieldIsSlider(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(int32)160', '(int32)132')]"
+					fontsize = 14
+					autoresize = no
+					default_format = "#medium"
+					align = center|nobaseline
+					text = "[CMMListFieldMetadataFlag(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)), '_name_')]"
+				}
+			}
+		}
+	}
+
+	# Ordered list row field cells rendered from the owner setting field count.
+	# Reads:
+	# - Scope.GetFlagName [string]: current ordered list item key (`<mod_id>__<setting_id>_item_<index>`).
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for the row item.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_count_', <setting_key>)) [value]: registered field count.
+	# Writes:
+	# - none [n/a]: no writes.
+	type cmm_list_setting_row_fields = hbox {
+		ignoreinvisible = yes
+		spacing = 8
+		datamodel = "[DataModelRepeatedItem(CMMListFieldCount(CMMListItemOwnerSettingKey(Scope.GetFlagName)))]"
+		datamodel_reuse_widgets = yes
+
+		item = {
+			cmm_list_setting_field_cell = {}
+		}
+	}
+
+	# One ordered list field cell that shows the correct control for the current field type.
+	# Reads:
+	# - Scope.GetFlagName [string]: current ordered list item key.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_type_', <setting_key>)) [value]: field type metadata.
+	# Writes:
+	# - GetVariableSystem.Set('cmm_list_hover_field_slot', ...) [effect]: caches the currently hovered field slot.
+	type cmm_list_setting_field_cell = widget {
+		size = { 132 28 }
+		minimumsize = { 132 28 }
+		min_width = "[Select_int32(CMMListFieldIsSlider(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(int32)198', '(int32)132')]"
+		onmousehierarchyenter = "[GetVariableSystem.Set('cmm_list_hover_field_slot', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+
+		cmm_list_setting_bool_field = {
+			visible = "[And(CMMListItemFieldIsEnabled(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldIsBool(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+		}
+
+		cmm_list_setting_numeric_field = {
+			visible = "[And(CMMListItemFieldIsEnabled(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldIsNumeric(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+		}
+
+		cmm_list_setting_dropdown_field = {
+			visible = "[And(CMMListItemFieldIsEnabled(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldIsDropdown(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+		}
+
+		cmm_list_setting_slider_field = {
+			visible = "[And(CMMListItemFieldIsEnabled(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldIsSlider(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+		}
+	}
+
+	# Ordered list bool field control with optional shift-apply-to-all behavior.
+	# Reads:
+	# - Scope.GetFlagName [string]: current ordered list item key.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel.
+	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_field_<slot>')) [value]: current bool field value for this row item.
+	# - GetVariableSystem.Get('cmm_list_hover_field_slot') [string]: cached hovered field slot for nested button actions.
+	# Writes:
+	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: marks the hovered row position.
+	# - GetScriptedGui('CMM_MarkListFieldSlot_<slot>').Execute(...) [effect]: marks the clicked field slot.
+	# - GetScriptedGui('CMM_MarkListFieldToggle').Execute(...) [effect]: marks a single-row bool toggle.
+	# - GetScriptedGui('CMM_MarkListFieldToggleAll').Execute(...) [effect]: marks a bulk bool toggle.
+	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
+	type cmm_list_setting_bool_field = widget {
+		size = { 132 28 }
+		minimumsize = { 132 28 }
+
+		checkbox_square_alt = {
+			parentanchor = center
+			widgetanchor = center
+			enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+			checked = "[CMMValueEqualsOne(CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+			tooltip_enabled = no
+		}
+
+		button = {
+			size = { 24 24 }
+			parentanchor = center
+			widgetanchor = center
+			enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+			alpha = 0
+			effectname = "NoHighlight"
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				click_modifier = shift
+				title = "CMM_LIST_TOGGLE_ALL"
+			}
+
+			click_modifiers = {
+				ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				ondefault = "[CMMExecuteGui('CMM_MarkListFieldToggle')]"
+				ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				onshift = "[CMMExecuteGui('CMM_MarkListFieldToggleAll')]"
+				onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+			}
+
+			tooltipwidget = {
+				BasicFunctionalTooltip = {}
+			}
+		}
+	}
+
+	# Ordered list numeric field control with shared numeric markers and shift-apply-to-all behavior.
+	# Reads:
+	# - Scope.GetFlagName [string]: current ordered list item key.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel.
+	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_field_<slot>')) [value]: current numeric field value for this row item.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_min_', <setting_key>)) [value]: numeric minimum bound.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_max_', <setting_key>)) [value]: numeric maximum bound.
+	# - GetVariableSystem.Get('cmm_list_hover_field_slot') [string]: cached hovered field slot for nested button actions and tooltip text.
+	# Writes:
+	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: marks the hovered row position.
+	# - GetScriptedGui('CMM_MarkListFieldSlot_<slot>').Execute(...) [effect]: marks the clicked field slot.
+	# - GetScriptedGui('CMM_MarkNumeric*').Execute(...) [effect]: marks numeric step or min/max mode.
+	# - GetScriptedGui('CMM_MarkListFieldSelectNumericAll').Execute(...) [effect]: marks bulk numeric apply.
+	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
+	type cmm_list_setting_numeric_field = hbox {
+		minimumsize = { 120 28 }
+		spacing = 0
+
+		button_regular = {
+			minimumsize = { 32 28 }
+			enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+			text = "-"
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				click_modifier = default
+				title = "CMM_NUMERIC_DECREASE"
+			}
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				click_modifier = ctrl
+				title = "CMM_NUMERIC_DECREASE_5X"
+			}
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				click_modifier = shift
+				title = "CMM_NUMERIC_DECREASE_MIN"
+			}
+
+			click_modifiers = {
+				ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				ondefault = "[CMMExecuteGui('CMM_MarkNumericDecrease')]"
+				ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+				onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				onctrl = "[CMMExecuteGui('CMM_MarkNumericDecrease5x')]"
+				onctrl = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				onshift = "[CMMExecuteGui('CMM_MarkNumericDecreaseToMin')]"
+				onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+			}
+
+			tooltipwidget = {
+				BasicFunctionalTooltip = {}
+			}
+		}
+
+		widget = {
+			size = { 56 28 }
+			minimumsize = { 56 28 }
+
+			widget = {
+				size = { 56 24 }
+				minimumsize = { 56 24 }
+				parentanchor = vcenter
+				widgetanchor = vcenter
+				using = bg_square_outline_tile
+
+				background = {
+					using = color_dark_brown_texture
+					margin = { 2 2 }
+					alpha = 0.55
+				}
+
+				background = {
+					using = overlay_window_texture
+					margin = { 2 2 }
+					blend_mode = overlay
+					alpha = 0.1
+				}
+
+				button = {
+					size = { 100% 100% }
+					alpha = 0
+					effectname = "NoHighlight"
+					tooltip_enabled = yes
+
+					action_tooltip = {
+						click_mode = single
+						click_type = left
+						click_modifier = shift
+						title = "CMM_LIST_APPLY_NUMBER_TO_ALL"
+					}
+
+					click_modifiers = {
+						onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+						onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+						onshift = "[CMMExecuteGui('CMM_MarkListFieldSelectNumericAll')]"
+						onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+					}
+
+					tooltipwidget = {
+						ContextualTooltipType = {
+							blockoverride "tooltip_title" {}
+							blockoverride "tooltip_content_margin" { margin = { 10 6 } }
+							blockoverride "tooltip_content" {
+								hbox = {
+									set_parent_size_to_minimum = yes
+
+									textbox = {
+										using = text_single_template
+										align = left|nobaseline
+										raw_text = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_min_')] - [CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_max_')]"
+									}
+								}
+							}
+						}
+					}
+				}
+
+				text_single = {
+					size = { 100% 100% }
+					align = center|nobaseline
+					autoresize = no
+					text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				}
+			}
+		}
+
+		button_regular = {
+			minimumsize = { 32 28 }
+			enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+			text = "+"
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				click_modifier = default
+				title = "CMM_NUMERIC_INCREASE"
+			}
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				click_modifier = ctrl
+				title = "CMM_NUMERIC_INCREASE_5X"
+			}
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				click_modifier = shift
+				title = "CMM_NUMERIC_INCREASE_MAX"
+			}
+
+			click_modifiers = {
+				ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				ondefault = "[CMMExecuteGui('CMM_MarkNumericIncrease')]"
+				ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+				onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				onctrl = "[CMMExecuteGui('CMM_MarkNumericIncrease5x')]"
+				onctrl = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				onshift = "[CMMExecuteGui('CMM_MarkNumericIncreaseToMax')]"
+				onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+			}
+
+			tooltipwidget = {
+				BasicFunctionalTooltip = {}
+			}
+		}
+	}
+
+	# Ordered list dropdown field control with per-slot dropdown variants and shift-apply-to-all behavior.
+	# Reads:
+	# - Scope.GetFlagName [string]: current ordered list item key.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel or current 0-based widget dropdown option index in option rows.
+	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_field_<slot>')) [value]: current 1-based dropdown field ordinal for this row item.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_dropdown_count_', <setting_key>)) [value]: dropdown option count.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_option_root_', <setting_key>)) [flag]: dropdown option localization root.
+	# - GetVariableSystem.Get('cmm_dropdown_hover_index') [string]: cached hovered 0-based widget dropdown option index.
+	# Writes:
+	# - GetVariableSystem.Set('cmm_dropdown_hover_index', ...) [effect]: caches the hovered 0-based widget dropdown option index.
+	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: marks the hovered row position.
+	# - GetScriptedGui('CMM_MarkListFieldSlot_<slot>').Execute(...) [effect]: marks the clicked field slot.
+	# - GetScriptedGui('CMM_MarkListFieldSelectDropdown').Execute(...) [effect]: marks a single-row dropdown selection.
+	# - GetScriptedGui('CMM_MarkListFieldSelectDropdownAll').Execute(...) [effect]: marks a bulk dropdown selection.
+	# - GetScriptedGui('CMM_MarkDropdownSelection_<index>').Execute(...) [effect]: marks the selected widget option index and stores a 1-based public ordinal.
+	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
+	type cmm_list_setting_dropdown_field = widget {
+		size = { 132 28 }
+		minimumsize = { 132 28 }
+
+		dropDown = {
+			size = { 132 28 }
+			minimumsize = { 132 28 }
+			parentanchor = center
+			widgetanchor = center
+			visible = "[EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)0')]"
+			alwaystransparent = no
+			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), '1', '_dropdown_count_'))]"
+			selectedindex = "[CMMListItemFieldWidgetIndex(Scope.GetFlagName, '1')]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '1')]"
+			onselectionchanged = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdown')]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', GetVariableSystem.Get('cmm_dropdown_hover_index'))]"
+			onselectionchanged = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+
+			active_item = {
+				widget = {
+					size = { 100% 28 }
+
+					button_drop = {
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+						onclick = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, '1')))]"
+						tooltip_enabled = no
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = shift
+							title = "CMM_LIST_APPLY_OPTION_TO_ALL"
+						}
+
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+					}
+
+					hbox = {
+						using = layoutpolicy_expanding
+						margin = { 5 0 }
+
+						text_single = {
+							using = layoutpolicy_expanding
+							margin = { 10 0 }
+							autoresize = no
+							align = left|nobaseline
+							fontsize_min = 13
+							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '1', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '1'))]"
+						}
+
+						icon = {
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+					}
+				}
+			}
+
+			item = {
+				widget = {
+					size = { 100% 28 }
+
+					button_dropdown = {
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+						tooltip_enabled = no
+					}
+
+					text_single = {
+						size = { 100% 100% }
+						margin = { 15 0 }
+						autoresize = no
+						align = left|nobaseline
+						fontsize_min = 13
+						default_format = "#medium"
+						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '1', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
+					}
+				}
+			}
+
+			list = {
+				scrollarea = {
+					size = { 100% 210 }
+					position = { 0 28 }
+					autoresizescrollarea = yes
+					autoresizeviewport = yes
+					alwaystransparent = yes
+					scrollbarpolicy_horizontal = always_off
+
+					background = {
+						using = dropdown_list_background_template
+					}
+
+					maximumsize = { -1 210 }
+
+					scrollwidget = {
+						fixedgridbox = {
+							setitemsizefromcell = yes
+							alwaystransparent = no
+							addcolumn = 100%
+							addrow = 28
+						}
+					}
+
+					scrollbar_vertical = {
+						using = Scrollbar_Vertical
+					}
+				}
+			}
+		}
+
+		dropDown = {
+			size = { 132 28 }
+			minimumsize = { 132 28 }
+			parentanchor = center
+			widgetanchor = center
+			visible = "[EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)1')]"
+			alwaystransparent = no
+			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), '2', '_dropdown_count_'))]"
+			selectedindex = "[CMMListItemFieldWidgetIndex(Scope.GetFlagName, '2')]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '2')]"
+			onselectionchanged = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdown')]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', GetVariableSystem.Get('cmm_dropdown_hover_index'))]"
+			onselectionchanged = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+
+			active_item = {
+				widget = {
+					size = { 100% 28 }
+
+					button_drop = {
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+						onclick = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, '2')))]"
+						tooltip_enabled = no
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = shift
+							title = "CMM_LIST_APPLY_OPTION_TO_ALL"
+						}
+
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+					}
+
+					hbox = {
+						using = layoutpolicy_expanding
+						margin = { 5 0 }
+
+						text_single = {
+							using = layoutpolicy_expanding
+							margin = { 10 0 }
+							autoresize = no
+							align = left|nobaseline
+							fontsize_min = 13
+							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '2', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '2'))]"
+						}
+
+						icon = {
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+					}
+				}
+			}
+
+			item = {
+				widget = {
+					size = { 100% 28 }
+
+					button_dropdown = {
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+						tooltip_enabled = no
+					}
+
+					text_single = {
+						size = { 100% 100% }
+						margin = { 15 0 }
+						autoresize = no
+						align = left|nobaseline
+						fontsize_min = 13
+						default_format = "#medium"
+						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '2', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
+					}
+				}
+			}
+
+			list = {
+				scrollarea = {
+					size = { 100% 210 }
+					position = { 0 28 }
+					autoresizescrollarea = yes
+					autoresizeviewport = yes
+					alwaystransparent = yes
+					scrollbarpolicy_horizontal = always_off
+
+					background = {
+						using = dropdown_list_background_template
+					}
+
+					maximumsize = { -1 210 }
+
+					scrollwidget = {
+						fixedgridbox = {
+							setitemsizefromcell = yes
+							alwaystransparent = no
+							addcolumn = 100%
+							addrow = 28
+						}
+					}
+
+					scrollbar_vertical = {
+						using = Scrollbar_Vertical
+					}
+				}
+			}
+		}
+
+		dropDown = {
+			size = { 132 28 }
+			minimumsize = { 132 28 }
+			parentanchor = center
+			widgetanchor = center
+			visible = "[EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)2')]"
+			alwaystransparent = no
+			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), '3', '_dropdown_count_'))]"
+			selectedindex = "[CMMListItemFieldWidgetIndex(Scope.GetFlagName, '3')]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '3')]"
+			onselectionchanged = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdown')]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', GetVariableSystem.Get('cmm_dropdown_hover_index'))]"
+			onselectionchanged = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+
+			active_item = {
+				widget = {
+					size = { 100% 28 }
+
+					button_drop = {
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+						onclick = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, '3')))]"
+						tooltip_enabled = no
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = shift
+							title = "CMM_LIST_APPLY_OPTION_TO_ALL"
+						}
+
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+					}
+
+					hbox = {
+						using = layoutpolicy_expanding
+						margin = { 5 0 }
+
+						text_single = {
+							using = layoutpolicy_expanding
+							margin = { 10 0 }
+							autoresize = no
+							align = left|nobaseline
+							fontsize_min = 13
+							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '3', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '3'))]"
+						}
+
+						icon = {
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+					}
+				}
+			}
+
+			item = {
+				widget = {
+					size = { 100% 28 }
+
+					button_dropdown = {
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+						tooltip_enabled = no
+					}
+
+					text_single = {
+						size = { 100% 100% }
+						margin = { 15 0 }
+						autoresize = no
+						align = left|nobaseline
+						fontsize_min = 13
+						default_format = "#medium"
+						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '3', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
+					}
+				}
+			}
+
+			list = {
+				scrollarea = {
+					size = { 100% 210 }
+					position = { 0 28 }
+					autoresizescrollarea = yes
+					autoresizeviewport = yes
+					alwaystransparent = yes
+					scrollbarpolicy_horizontal = always_off
+
+					background = {
+						using = dropdown_list_background_template
+					}
+
+					maximumsize = { -1 210 }
+
+					scrollwidget = {
+						fixedgridbox = {
+							setitemsizefromcell = yes
+							alwaystransparent = no
+							addcolumn = 100%
+							addrow = 28
+						}
+					}
+
+					scrollbar_vertical = {
+						using = Scrollbar_Vertical
+					}
+				}
+			}
+		}
+
+		dropDown = {
+			size = { 132 28 }
+			minimumsize = { 132 28 }
+			parentanchor = center
+			widgetanchor = center
+			visible = "[EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)3')]"
+			alwaystransparent = no
+			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), '4', '_dropdown_count_'))]"
+			selectedindex = "[CMMListItemFieldWidgetIndex(Scope.GetFlagName, '4')]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '4')]"
+			onselectionchanged = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdown')]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', GetVariableSystem.Get('cmm_dropdown_hover_index'))]"
+			onselectionchanged = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+
+			active_item = {
+				widget = {
+					size = { 100% 28 }
+
+					button_drop = {
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+						onclick = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, '4')))]"
+						tooltip_enabled = no
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = shift
+							title = "CMM_LIST_APPLY_OPTION_TO_ALL"
+						}
+
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+					}
+
+					hbox = {
+						using = layoutpolicy_expanding
+						margin = { 5 0 }
+
+						text_single = {
+							using = layoutpolicy_expanding
+							margin = { 10 0 }
+							autoresize = no
+							align = left|nobaseline
+							fontsize_min = 13
+							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '4', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '4'))]"
+						}
+
+						icon = {
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+					}
+				}
+			}
+
+			item = {
+				widget = {
+					size = { 100% 28 }
+
+					button_dropdown = {
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+						tooltip_enabled = no
+					}
+
+					text_single = {
+						size = { 100% 100% }
+						margin = { 15 0 }
+						autoresize = no
+						align = left|nobaseline
+						fontsize_min = 13
+						default_format = "#medium"
+						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '4', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
+					}
+				}
+			}
+
+			list = {
+				scrollarea = {
+					size = { 100% 210 }
+					position = { 0 28 }
+					autoresizescrollarea = yes
+					autoresizeviewport = yes
+					alwaystransparent = yes
+					scrollbarpolicy_horizontal = always_off
+
+					background = {
+						using = dropdown_list_background_template
+					}
+
+					maximumsize = { -1 210 }
+
+					scrollwidget = {
+						fixedgridbox = {
+							setitemsizefromcell = yes
+							alwaystransparent = no
+							addcolumn = 100%
+							addrow = 28
+						}
+					}
+
+					scrollbar_vertical = {
+						using = Scrollbar_Vertical
+					}
+				}
+			}
+		}
+
+		dropDown = {
+			size = { 132 28 }
+			minimumsize = { 132 28 }
+			parentanchor = center
+			widgetanchor = center
+			visible = "[EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)4')]"
+			alwaystransparent = no
+			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), '5', '_dropdown_count_'))]"
+			selectedindex = "[CMMListItemFieldWidgetIndex(Scope.GetFlagName, '5')]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '5')]"
+			onselectionchanged = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdown')]"
+			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', GetVariableSystem.Get('cmm_dropdown_hover_index'))]"
+			onselectionchanged = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+
+			active_item = {
+				widget = {
+					size = { 100% 28 }
+
+					button_drop = {
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+						onclick = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, '5')))]"
+						tooltip_enabled = no
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = shift
+							title = "CMM_LIST_APPLY_OPTION_TO_ALL"
+						}
+
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+					}
+
+					hbox = {
+						using = layoutpolicy_expanding
+						margin = { 5 0 }
+
+						text_single = {
+							using = layoutpolicy_expanding
+							margin = { 10 0 }
+							autoresize = no
+							align = left|nobaseline
+							fontsize_min = 13
+							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '5', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '5'))]"
+						}
+
+						icon = {
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+					}
+				}
+			}
+
+			item = {
+				widget = {
+					size = { 100% 28 }
+
+					button_dropdown = {
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+						tooltip_enabled = no
+					}
+
+					text_single = {
+						size = { 100% 100% }
+						margin = { 15 0 }
+						autoresize = no
+						align = left|nobaseline
+						fontsize_min = 13
+						default_format = "#medium"
+						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '5', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
+					}
+				}
+			}
+
+			list = {
+				scrollarea = {
+					size = { 100% 210 }
+					position = { 0 28 }
+					autoresizescrollarea = yes
+					autoresizeviewport = yes
+					alwaystransparent = yes
+					scrollbarpolicy_horizontal = always_off
+
+					background = {
+						using = dropdown_list_background_template
+					}
+
+					maximumsize = { -1 210 }
+
+					scrollwidget = {
+						fixedgridbox = {
+							setitemsizefromcell = yes
+							alwaystransparent = no
+							addcolumn = 100%
+							addrow = 28
+						}
+					}
+
+					scrollbar_vertical = {
+						using = Scrollbar_Vertical
+					}
+				}
+			}
+		}
+
+		button = {
+			size = { 132 28 }
+			parentanchor = center
+			widgetanchor = center
+			visible = "[UIAction.IsLeftClickModifierEnabled('shift')]"
+			enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+			alpha = 0
+			effectname = "NoHighlight"
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				click_modifier = shift
+				title = "CMM_LIST_APPLY_OPTION_TO_ALL"
+			}
+
+			click_modifiers = {
+				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				onshift = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdownAll')]"
+				onshift = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))))]"
+				onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+			}
+
+			tooltipwidget = { BasicFunctionalTooltip = {} }
+		}
+	}
+
+	# Ordered list slider field control with compact draggable scrollbar, value display, and dec/inc buttons.
+	# Reads:
+	# - Scope.GetFlagName [string]: current ordered list item key.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the parent repeated field datamodel, or overlay slider point index in the track hbox.
+	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_field_<slot>')) [value]: current slider field value for this row item.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_min_', <setting_key>)) [value]: slider minimum bound.
+	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_max_', <setting_key>)) [value]: slider maximum bound.
+	# - GetVariableSystem.Get('cmm_list_hover_field_slot') [string]: cached hovered field slot for nested button actions.
+	# Writes:
+	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: marks the hovered row position.
+	# - GetScriptedGui('CMM_MarkListFieldSlot_<slot>').Execute(...) [effect]: marks the clicked field slot.
+	# - GetScriptedGui('CMM_MarkSliderSelection_<index>').Execute(...) [effect]: marks the slider visual index.
+	# - GetScriptedGui('CMM_StartSliderDrag').Execute(...) [effect]: begins slider drag tracking.
+	# - GetScriptedGui('CMM_StopSliderDrag').Execute(...) [effect]: ends slider drag tracking.
+	# - GetScriptedGui('CMM_SliderDragHover_<index>').Execute(...) [effect]: marks slider index during drag.
+	# - GetScriptedGui('CMM_MarkNumeric*').Execute(...) [effect]: marks numeric step or min/max mode for dec/inc buttons.
+	# - GetScriptedGui('CMM_MarkListFieldSliderAll').Execute(...) [effect]: marks bulk slider apply.
+	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
+	type cmm_list_setting_slider_field = hbox {
+		minimumsize = { 198 28 }
+		spacing = 0
+
+		widget = {
+			size = { 160 28 }
+			minimumsize = { 160 28 }
+			allow_outside = yes
+			onmousehierarchyleave = "[CMMExecuteGui('CMM_StopSliderDrag')]"
+
+			hbox = {
+				size = { 100% 20 }
+				parentanchor = vcenter
+
+				widget = {
+					size = { 20 20 }
+					minimumsize = { 20 20 }
+
+					EconomySlider_DecButton = {
+						size = { 20 20 }
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = default
+							title = "CMM_NUMERIC_DECREASE"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = ctrl
+							title = "CMM_NUMERIC_DECREASE_5X"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = shift
+							title = "CMM_NUMERIC_DECREASE_MIN"
+						}
+
+						click_modifiers = {
+							ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							ondefault = "[CMMExecuteGui('CMM_MarkNumericDecrease')]"
+							ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onctrl = "[CMMExecuteGui('CMM_MarkNumericDecrease5x')]"
+							onctrl = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onshift = "[CMMExecuteGui('CMM_MarkNumericDecreaseToMin')]"
+							onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+						}
+
+						tooltipwidget = {
+							BasicFunctionalTooltip = {}
+						}
+					}
+				}
+
+				widget = {
+					size = { 120 20 }
+					minimumsize = { 120 20 }
+					allow_outside = yes
+					onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover_idx')]"
+					onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover_key')]"
+
+					scrollbar = {
+						name = "cmm_list_slider_visual"
+						direction = horizontal
+						size = { 100% 20 }
+						minimumsize = { -1 14 }
+						min = 0
+						max = "[CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+						step = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_step_')]"
+						wheelstep = 0
+						value = "[CMMListFieldSliderNormalizedValue(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+
+						track = {
+							EconomySlider_TrackRange = {}
+						}
+
+						slider = {
+							EconomySlider_Slider = {
+								size = { 14 14 }
+								alpha = 0.7
+
+								state = {
+									name = slider_hover_on
+									trigger_when = "[CMMSliderThumbHover(CMMListSliderThumbIndex(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot')), Scope.GetFlagName)]"
+									alpha = 1.0
+									duration = 0.1
+								}
+
+								state = {
+									name = slider_hover_off
+									trigger_when = "[Not(CMMSliderThumbHover(CMMListSliderThumbIndex(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot')), Scope.GetFlagName))]"
+									alpha = 0.7
+									duration = 0.1
+								}
+							}
+						}
+
+						dec_button = { button = {} }
+						inc_button = { button = {} }
+					}
+
+					hbox = {
+						size = { 100% 20 }
+
+						# Left edge zone (half thumb width) — clamps to slider index 0.
+						widget = {
+							size = { 7 20 }
+							minimumsize = { 7 20 }
+							allow_outside = yes
+							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
+							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '0')]"
+							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onmousehierarchyenter = "[CMMExecuteGui('CMM_SliderDragHover_0')]"
+							onmousehierarchyenter = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+
+							button = {
+								size = { 100% 20 }
+								alpha = 0
+								effectname = "NoHighlight"
+								enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+								onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
+								onpressed = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+								onpressed = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+								onpressed = "[CMMExecuteGui('CMM_MarkSliderSelection_0')]"
+								onpressed = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+								onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
+								tooltip_enabled = no
+							}
+						}
+
+						# Middle track zone — 21 overlay points mapping 0-20 to slider indices 0,5,10,...,100.
+						widget = {
+							size = { 106 20 }
+							minimumsize = { 106 20 }
+
+							hbox = {
+								size = { 100% 20 }
+								datamodel = "[DataModelRepeatedItem('(int32)21')]"
+								datamodel_reuse_widgets = yes
+
+								item = {
+									widget = {
+										layoutpolicy_horizontal = expanding
+										size = { 0 20 }
+										allow_outside = yes
+										onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
+										onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_SliderDragHover_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+										onmousehierarchyenter = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+
+										button = {
+											size = { 100% 20 }
+											alpha = 0
+											effectname = "NoHighlight"
+											enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+											onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
+											onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
+
+											click_modifiers = {
+												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+												ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+												onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+												onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+												onshift = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+												onshift = "[CMMExecuteGui('CMM_MarkListFieldSliderAll')]"
+												onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+											}
+
+											tooltip_enabled = no
+										}
+									}
+								}
+							}
+						}
+
+						# Right edge zone (half thumb width) — clamps to slider index 100.
+						widget = {
+							size = { 7 20 }
+							minimumsize = { 7 20 }
+							allow_outside = yes
+							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
+							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '100')]"
+							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onmousehierarchyenter = "[CMMExecuteGui('CMM_SliderDragHover_100')]"
+							onmousehierarchyenter = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+
+							button = {
+								size = { 100% 20 }
+								alpha = 0
+								effectname = "NoHighlight"
+								enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+								onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
+								onpressed = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+								onpressed = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+								onpressed = "[CMMExecuteGui('CMM_MarkSliderSelection_100')]"
+								onpressed = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+								onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
+								tooltip_enabled = no
+							}
+						}
+					}
+
+				}
+
+				widget = {
+					size = { 20 20 }
+					minimumsize = { 20 20 }
+
+					EconomySlider_IncButton = {
+						size = { 20 20 }
+						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = default
+							title = "CMM_NUMERIC_INCREASE"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = ctrl
+							title = "CMM_NUMERIC_INCREASE_5X"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = left
+							click_modifier = shift
+							title = "CMM_NUMERIC_INCREASE_MAX"
+						}
+
+						click_modifiers = {
+							ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							ondefault = "[CMMExecuteGui('CMM_MarkNumericIncrease')]"
+							ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onctrl = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onctrl = "[CMMExecuteGui('CMM_MarkNumericIncrease5x')]"
+							onctrl = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+							onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+							onshift = "[CMMExecuteGui('CMM_MarkNumericIncreaseToMax')]"
+							onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+						}
+
+						tooltipwidget = {
+							BasicFunctionalTooltip = {}
+						}
+					}
+				}
+			}
+		}
+
+		widget = {
+			size = { 38 28 }
+			minimumsize = { 38 28 }
+
+			button = {
+				size = { 100% 100% }
+				alpha = 0
+				effectname = "NoHighlight"
+				tooltip_enabled = yes
+
+				action_tooltip = {
+					click_mode = single
+					click_type = left
+					click_modifier = shift
+					title = "CMM_LIST_APPLY_NUMBER_TO_ALL"
+				}
+
+				click_modifiers = {
+					onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+					onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+					onshift = "[CMMExecuteGui('CMM_MarkListFieldSliderAll')]"
+					onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+				}
+
+				tooltipwidget = {
+					ContextualTooltipType = {
+						blockoverride "tooltip_title" {}
+						blockoverride "tooltip_content_margin" { margin = { 10 6 } }
+						blockoverride "tooltip_content" {
+							hbox = {
+								set_parent_size_to_minimum = yes
+
+								textbox = {
+									using = text_single_template
+									align = left|nobaseline
+									raw_text = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_min_')] - [CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_max_')]"
+								}
+							}
+						}
+					}
+				}
+			}
+
+			text_single = {
+				size = { 100% 100% }
+				align = center|nobaseline
+				autoresize = no
+				text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			}
+		}
+	}
+}

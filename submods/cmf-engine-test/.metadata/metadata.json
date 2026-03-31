@@ -1,0 +1,13 @@
+{
+    "name": "CMF Engine Test",
+    "id": "cmf.engine.test",
+    "version": "0.1",
+    "game_id": "eu5",
+    "supported_game_version": "1.1.*",
+    "short_description": "Validates variable map + AddScope engine behavior for CMF development.",
+    "tags": [
+        "Utilities"
+    ],
+    "relationships": [],
+    "game_custom_data": {}
+}

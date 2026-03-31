@@ -1,0 +1,117 @@
+types CMMDropdownSettingTypes
+{
+	# Dropdown setting widget for one CMM setting row.
+	# Reads:
+	# - Scope.GetFlagName [string]: current setting key in root context (`<mod_id>__<setting_id>`).
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: hovered 0-based widget option index in item context.
+	# - GetGlobalVariable(Scope.GetFlagName).GetValue [value]: current selected 1-based dropdown ordinal for global settings.
+	# - Player.MakeScope.GetVariable(Scope.GetFlagName) [value]: current selected 1-based dropdown ordinal for local settings.
+	# - GetVariableSystem.Get('cmm_dropdown_hover_index') [string]: hovered 0-based widget option index used by selection callback.
+	# Writes:
+	# - GetVariableSystem.Set('cmm_dropdown_hover_index') [string]: tracks hovered/active 0-based widget option index.
+	# - cmm_dropdown_index_to_apply [value]: pending selected 1-based dropdown ordinal for `cmm_apply_dropdown_change`.
+	# - GetScriptedGui('cmm_auto_apply_dropdown').Execute(...) [effect]: applies setting changes via auto-apply scripted GUI.
+	type cmm_dropdown_setting = dropDown {
+		size = { 168 30 }
+		alwaystransparent = no
+		datamodel = "[DataModelRepeatedItem(CMMDropdownOptionCount(Scope.GetFlagName))]"
+		selectedindex = "[CMMDropdownSelectedIndex(Scope.GetFlagName)]"
+		onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', GetVariableSystem.Get('cmm_dropdown_hover_index'))]"
+		onselectionchanged = "[CMMExecuteAutoApply('cmm_auto_apply_dropdown', Scope.GetFlagName)]"
+
+		active_item = {
+			widget = {
+				size = { 100% 30 }
+
+				button_drop = {
+					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+					onclick = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(CMMDropdownSelectedIndex(Scope.GetFlagName)))]"
+					tooltip_enabled = no
+				}
+				hbox = {
+					using = layoutpolicy_expanding
+					margin = { 5 0 }
+
+					text_single = {
+						using = layoutpolicy_expanding
+						margin = { 10 0 }
+						autoresize = no
+						align = left|nobaseline
+						fontsize_min = 13
+						text = "[CMMOptionLabel(Scope.GetFlagName, CMMDropdownStoredIndex(Scope.GetFlagName))]"
+					}
+
+					icon = {
+						size = { 22 22 }
+						texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+						using = color_gold
+						modify_texture = {
+							using = overlay_window_texture
+							blend_mode = overlay
+							alpha = 1
+						}
+					}
+				}
+			}
+		}
+
+		item = {
+			widget = {
+				size = { 100% 30 }
+
+				button_dropdown = {
+					focuspolicy = all
+					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+					onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						title = "[CMMOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"
+						visible = "[CMMHasOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"
+					}
+					tooltipwidget = { BasicFunctionalTooltip = {} }
+				}
+
+				text_single = {
+					size = { 100% 100% }
+					margin = { 15 0 }
+					autoresize = no
+					align = left|nobaseline
+					fontsize_min = 13
+					default_format = "#medium"
+					text = "[CMMOptionLabelFromWidgetIndex(Scope.GetFlagName, PdxGuiWidget.GetIndexInDataModel)]"
+				}
+			}
+		}
+
+		list = {
+			scrollarea = {
+				size = { 100% 250 }
+				position = { 0 30 }
+				autoresizescrollarea = yes
+				autoresizeviewport = yes
+				alwaystransparent = yes
+				scrollbarpolicy_horizontal = always_off
+
+				background = {
+					using = dropdown_list_background_template
+				}
+
+				maximumsize = { -1 250 }
+
+				scrollwidget = {
+					fixedgridbox = {
+						setitemsizefromcell = yes
+						alwaystransparent = no
+						addcolumn = 100%
+						addrow = 30
+					}
+				}
+
+				scrollbar_vertical = {
+					using = Scrollbar_Vertical
+				}
+			}
+		}
+	}
+}

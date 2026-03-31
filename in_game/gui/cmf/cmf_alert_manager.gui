@@ -1,0 +1,281 @@
+﻿# Copied from base game
+@alert_height = 90
+@alert_wide = 40
+
+types "cmf_types" {
+
+    type alert_manager = hbox {
+        visible = "[Not(IsLobbyOpen)]"
+        name = cmf_alert_manager
+        minimumsize = { -1 @alert_height }
+        maximumsize = { -1 @alert_height }
+
+        cmf_alert_manager = {}
+
+        cmf_alert_spacer = {}
+
+        hbox = {
+            visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_active_alerts'))]"
+            layoutpolicy_vertical = expanding
+            #spacing = -10
+
+            # Fallback = blue
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[And8(
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'black')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')),
+                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple'))
+                    )]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = blue_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = blue_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = green_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = yellow_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = orange_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = red_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = red_war_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = purple_alert
+                }
+            }
+
+            cmf_alerts = {
+                blockoverride "alert_button_visibility" {
+                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'black')]"
+                }
+                blockoverride "alert_button_attributes" {
+                    using = black_alert
+                }
+            }
+        }
+    }
+
+    type cmf_alert_spacer = widget {
+        visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_active_alerts'))]"
+        size = { 20 @alert_height }
+
+        # PDX please fix this
+        # icon = {
+        #     parentanchor = center
+        #     size = { 5 70 }
+        #     using = color_gold_texture
+        #     alpha = 1
+        #
+        #     # This modify_texture is ALSO applied to the button element in cmf_alert
+        #     modify_texture = {
+        #         texture = "gfx/interface/component_masks/mask_fade_circle.dds"
+        #         spriteType = stretched
+        #         blend_mode = alphamultiply
+        #     }
+        # }
+    }
+
+    type cmf_alerts = hbox {
+        layoutpolicy_vertical = expanding
+        datamodel = "[GetPlayer.MakeScope.GetList('cmf_active_alerts')]"
+        #spacing = -10
+
+        item = {
+            cmf_alert = {}
+        }
+    }
+
+    type cmf_alert = vbox {
+        layoutpolicy_vertical = expanding
+        minimumsize = { @alert_wide @alert_height }
+        maximumsize = { @alert_wide @alert_height }
+        block "alert_button_visibility" {
+            visible = no
+        }
+
+        cmf_alert_button = {
+            block "alert_button_attributes" {
+                using = blue_alert
+            }
+        }
+
+        expand = {}
+    }
+
+    type cmf_alert_button = button {
+        using = blue_alert
+
+        vbox = {
+            set_parent_size_to_minimum = yes
+
+            widget = {
+                size = { @alert_wide 70 }
+                vbox = {
+                    spacing = 5
+                    block "alert_more_icons_before" {}
+
+                    textbox = {
+                        layoutpolicy_vertical = expanding
+                        text = "[Localize(Concatenate(Scope.GetFlagName, '_icon'))]"
+                        fontsize = 25
+                        align = center
+                    }
+
+                    block "alert_more_icons_after" {}
+                }
+            }
+
+            block "alert_is_new_padding" {
+                widget = {
+                    layoutpolicy_horizontal = expanding
+                    block "alert_is_new_padding_visible" {
+                        visible = "[Not(GetVariableSystem.Exists(Concatenate(Scope.GetFlagName, '_seen')))]"
+                    }
+
+                    size = { -1 8 }
+
+                    state = {
+                        name = _show
+                        duration = 0.2
+                        bezier = { 0.0 1.0 0.0 1.0 }
+                        size = { -1 8 }
+                    }
+
+                    state = {
+                        name = _hide
+                        duration = 0.2
+                        bezier = { 0.0 1.0 0.0 1.0 }
+                        size = { -1 5 }
+                    }
+                }
+            }
+        }
+
+        onmousehierarchyenter = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_seen'), 'seen')]"
+
+        action_tooltip = {
+            click_type = left
+            title = "ALERT_CTA_LEFT_CLICK"
+            using = snd_UI_alert_openAndCycle
+            on_action = "[GetScriptedGui('cmf_auto_alert_clicked').Execute(GuiScope
+                    .SetRoot(GetPlayer.MakeScope)
+                    .AddScope('alert', MakeScopeFlag(Scope.GetFlagName))
+                    .End
+                )]"
+            on_action = "[GetVariableSystem.Set('cmf_active_alert', Scope.GetFlagName)]"
+        }
+
+        action_tooltip = {
+            click_type = right
+            title = "ALERT_CTA_RIGHT_CLICK"
+            clicksound = "UI_alert_discard"
+            on_action = "[GetScriptedGui('sgui_cmf_dismiss_alert').Execute(GuiScope
+                    .SetRoot(GetPlayer.MakeScope)
+                    .AddScope('flag', MakeScopeFlag(Scope.GetFlagName))
+                    .End
+                )]"
+            on_action = "[GetVariableSystem.Clear(Concatenate(Scope.GetFlagName, '_seen'))]"
+        }
+
+        using = snd_UI_alert_hide
+
+        tooltipwidget = {
+            ContextualTooltipType = {
+                lowpriotextcontext =  "[Scope.GetFlagName]"
+                ontextcontextchanged = "[SetCStringFromTextContext(PdxGuiWidget.AccessSelf)]"
+                blockoverride "title_text" {
+                    text = "[Localize(Concatenate(CString.GetString, '_name'))]"
+                }
+                blockoverride "tooltip_content" {
+                    TooltipTextBlock = {
+                        blockoverride "text" {
+                            text = "[Localize(Concatenate(CString.GetString, '_tooltip'))]"
+                        }
+                    }
+                }
+            }
+        }
+
+        modify_texture = {
+            visible = "[Not(GetVariableSystem.Exists(Scope.GetFlagName))]"
+            alpha = "[GetHighlightAnim('4.0, 0.1, 0.25')]"
+        }
+    }
+
+    # Displays vanilla alerts alongside CMF alerts.
+    type cmf_alert_manager = alerts_layout {
+        # CMF: Added layout policy
+        layoutpolicy_horizontal = expanding
+
+        name = "alert_manager"
+        visible = "[Not(IsLobbyOpen)]"
+        ignoreinvisible = yes
+        allow_outside = yes
+        spacing = -2
+        scissor = yes
+        distance = 10
+        speed = 150
+
+        righttoleft = no #left side
+        bottomtotop = no #right side
+
+        datacontext = "[InGameTopbar.AccessAlertManager]"
+    }
+}

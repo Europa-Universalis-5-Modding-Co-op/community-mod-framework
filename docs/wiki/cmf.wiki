@@ -1,0 +1,254 @@
+{| class="wikitable" style="width: 100%; text-align: center;"
+|-
+| '''Community Mod Framework''' || [[Community Mod Menu]] || [[Community Mod Toolkit]]
+|}
+{{Mod
+|type=Mod Framework & Toolkit
+|logo=CMF_Logo.png
+|author=Conner, Bahmut
+|status=Released
+|github=Europa-Universalis-5-Modding-Co-op/community-mod-framework
+}}
+
+= Overview =
+The Community Mod Framework (CMF) is a shared mod framework for Europa Universalis 5 that provides a set of features mods can use to integrate with the game without conflicting with each other. It includes a shared in-game mod menu, a custom action bar, dynamic alerts, utility triggers, and a companion development toolkit with a visual editor, workshop uploader, and mod translator.
+
+The framework is designed to be invisible when no dependent mods are active.
+
+CMF is available on the [https://steamcommunity.com/sharedfiles/filedetails/?id=3692202776 Steam Workshop]. For full documentation, see the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki GitHub wiki].
+
+= Basic Setup =
+Hook your mod into CMF's shared registration on_action. This runs for each human player on game start and when the mod menu opens. Not all features require it, but it is the standard entry point for registering CMM settings, action bar buttons, and alerts.
+
+<syntaxhighlight lang="text">
+# in_game/common/scripted_effects/your_effects.txt
+your_mod_register = {
+	# Register settings, action bar elements, alerts, etc.
+}
+
+# in_game/common/on_action/your_on_actions.txt
+cmf_on_mod_registration = {
+	on_actions = {
+		your_mod_on_register
+	}
+}
+
+your_mod_on_register = {
+	effect = {
+		your_mod_register = yes
+		# You can optionally split registration into as many effects as you like:
+		# your_mod_register_cmm_settings = yes
+		# your_mod_register_action_bar = yes
+	}
+}
+</syntaxhighlight>
+
+= Features =
+
+== Community Mod Menu (CMM) ==
+[[File:CMM_Example_Mod.png|thumb|300px|The Community Mod Menu.]]
+
+The [[Community Mod Menu]] is a shared in-game settings UI that allows multiple mods to hook into a single menu through a registration API. It supports toggles, sliders, dropdowns, buttons, text inputs, and settings lists.
+
+See the [[Community Mod Menu|CMM page]] for a quick reference.
+
+[[File:CMM_Visual_Editor.png|thumb|300px|The CMM Visual Editor.]]
+You can create your mod menu using the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor visual editor tool], which provides a graphical interface and a live preview to create your mod menu.
+
+== Action Bar ==
+[[File:CMF_Action_Bar.png|thumb|300px|Custom action bar buttons.]]
+The Action Bar allows mods to add custom buttons to the game. Buttons can show/hide and enable/disable based on conditions, and execute custom effects when clicked.
+
+Each button requires localization keys. A Scripted GUI is optional (only for dynamic visibility/enabled state):
+<syntaxhighlight lang="yaml">
+l_english:
+ cmf_action_bar_element_example: "cmf_action_bar_element_example"
+ cmf_action_bar_element_example_color: "gold"
+ cmf_action_bar_element_example_icon: "@advance!"
+ cmf_action_bar_element_example_name: "Some Button"
+ cmf_action_bar_element_example_tooltip: "This is a custom Action Bar Button."
+</syntaxhighlight>
+
+{| class="wikitable"
+! Effect !! Description
+|-
+| <code>cmf_add_action_bar_element = { element = <root_key> }</code> || Register a button
+|-
+| <code>cmf_remove_action_bar_element = { element = <root_key> }</code> || Remove a button
+|}
+
+Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the element flag).
+
+== Custom Alerts ==
+[[File:CMF_Custom_Alerts.png|thumb|300px|Custom alerts in the alert bar.]]
+
+The Custom Alerts system allows mods to display dynamic, dismissable notifications in the in-game alert bar. Alerts are color-coded and interactive — players can click them to trigger an effect, or right-click to dismiss.
+
+Each alert requires localization keys. No Scripted GUI is needed:
+<syntaxhighlight lang="yaml">
+l_english:
+ cmf_alert_example_color: "orange"
+ cmf_alert_example_icon: "@advance!"
+ cmf_alert_example_name: "Some Alert"
+ cmf_alert_example_tooltip: "This is a dynamic custom alert."
+</syntaxhighlight>
+
+{| class="wikitable"
+! Key !! Description
+|-
+| <code><root_key>_color</code> || <code>blue</code>, <code>orange</code>, <code>red</code>, <code>red_war</code>, <code>black</code>, <code>yellow</code>, <code>green</code>, or <code>purple</code>
+|-
+| <code><root_key>_icon</code> || Text icon (e.g. <code>@advance!</code>)
+|-
+| <code><root_key>_name</code> || Tooltip header text
+|-
+| <code><root_key>_tooltip</code> || Tooltip body text
+|}
+
+All effects require '''country scope'''.
+
+{| class="wikitable"
+! Effect !! Description
+|-
+| <code>cmf_show_alert = { alert = <root_key> }</code> || Show an alert
+|-
+| <code>cmf_remove_alert = { alert = <root_key> }</code> || Remove an alert
+|-
+| <code>cmf_is_alert_active = { alert = <root_key> }</code> || Check if an alert is active (trigger)
+|}
+
+Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
+
+== On-Action Hooks ==
+CMF provides shared on_action hooks. Hook into them the same way as <code>cmf_on_mod_registration</code>.
+
+=== Game Start & Load Hooks ===
+All fire once in no scope (like vanilla <code>on_game_start</code>). Each has a <code>_player_country</code> variant that fires in country scope for each human player.
+
+{| class="wikitable"
+! Hook !! Scope !! When
+|-
+| <code>on_game_start_after_lobby</code> || none || Once on new game, after country selection
+|-
+| <code>on_game_start_after_lobby_player_country</code> || country || Same, per player country
+|-
+| <code>on_game_load</code> || none || Every save load (including from country selection)
+|-
+| <code>on_game_load_player_country</code> || country || Same, per player country
+|-
+| <code>on_game_load_after_lobby</code> || none || Every save load, only after passing country selection
+|-
+| <code>on_game_load_after_lobby_player_country</code> || country || Same, per player country
+|}
+
+<syntaxhighlight lang="text">
+# No scope — for global effects
+on_game_start_after_lobby = {
+	on_actions = { your_mod_on_new_game }
+}
+
+# Country scope — for player country effects
+on_game_start_after_lobby_player_country = {
+	on_actions = { your_mod_on_new_game_country }
+}
+</syntaxhighlight>
+
+=== Recurring Hooks ===
+Slightly more efficient than each mod checking <code>is_ai = no</code> individually:
+
+{| class="wikitable"
+! Hook !! Frequency
+|-
+| <code>cmf_yearly_human_country_pulse</code> || Once per year
+|-
+| <code>cmf_monthly_human_country_pulse</code> || Once per month
+|}
+
+<syntaxhighlight lang="text">
+cmf_yearly_human_country_pulse = {
+	on_actions = {
+		your_mod_on_yearly
+	}
+}
+
+cmf_monthly_human_country_pulse = {
+	on_actions = {
+		your_mod_on_monthly
+	}
+}
+</syntaxhighlight>
+
+== Dependency Check Popup ==
+Main menu popup that alerts players when CMF is missing. Offers to enable or subscribe automatically. Download <code>cmf-dependency-check.zip</code> from the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/releases latest release] and extract into your mod folder. See the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Dependency-Check-Popup GitHub wiki] for details.
+
+== is_host Trigger ==
+CMF provides a trigger to check if the current country is controlled by the host player. Always evaluates to yes in singleplayer.
+
+<syntaxhighlight lang="text">
+if = {
+	limit = {
+		is_host = yes
+	}
+	# Runs if the country is controlled by the host
+}
+</syntaxhighlight>
+
+== cmf_suppress Effect ==
+CMF provides a <code>cmf_suppress</code> effect to silence "used but never set" and "set but never used" engine warnings. Call inside an <code>always = no</code> dead branch:
+
+<syntaxhighlight lang="text">
+if = {
+	limit = { always = no }
+	cmf_suppress = { v = my_variable }
+	cmf_suppress = { v = my_flag_name }
+}
+</syntaxhighlight>
+
+Group multiple calls in one <code>if</code> block so the engine evaluates <code>always = no</code> only once.
+
+== Community Mod Toolkit (CMT) ==
+The [[Community Mod Toolkit]] is a companion set of development tools for EU5 mod authors. It provides a structured mod template and automation tools that work together through shared configuration:
+
+* '''[https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor CMM Visual Editor]''' — Browser-based interface for designing CMM settings without manual coding. The easiest way to get started with CMM.
+* '''Upload Tool''' — Automated Steam Workshop deployment with submod support.
+* '''Translation Tool''' — Automated localization via DeepL or Gemini AI for all EU5-supported languages.
+
+See the [[Community Mod Toolkit|CMT page]] for details.
+
+= Additional Configuration =
+
+== Conditional Visibility ==
+Any CMM setting or CMF element (action bar buttons) can optionally use a Scripted GUI for dynamic visibility or enabled state. Create a Scripted GUI named after the element and register it with <code>cmf_register_scripted_gui</code>:
+
+<syntaxhighlight lang="text">
+# Register the GUI (call after adding the element):
+cmf_register_scripted_gui = { element = cmf_action_bar_element_example }
+</syntaxhighlight>
+
+<syntaxhighlight lang="text">
+# Action bar: is_shown controls visibility, is_valid controls enabled/greyed out
+cmf_action_bar_element_example = {
+	scope = country
+	is_shown = { ... }
+	is_valid = { ... }
+}
+
+# CMM setting: is_shown controls visibility (named [mod_id]__[setting_id]_on_changed)
+your_mod__your_toggle_on_changed = {
+	scope = country
+	is_shown = {
+		"variable_map(cmm|flag:your_mod__some_other_setting)" >= 1
+	}
+}
+</syntaxhighlight>
+
+= Links =
+* [https://steamcommunity.com/sharedfiles/filedetails/?id=3692202776 Steam Workshop]
+* [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework GitHub Repository]
+* [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki Full Documentation (GitHub Wiki)]
+* [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/tree/main/submods/cmf-example-mod Example Mod (GitHub)]
+
+[[Category:Community Mod Framework]]
+{{Modding navbox
+|category=Mods
+}}

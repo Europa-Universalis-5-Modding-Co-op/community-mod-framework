@@ -1,0 +1,134 @@
+﻿# Sync an alias by copying a value from the cmm variable map to an alias variable.
+# Works for settings (`<mod_id>__<setting_id>`) and list fields (`<mod_id>__<setting_id>_i1_f1`).
+# Scope: country
+# Args:
+# - setting (key): The map key to read from.
+# - alias (key): Alias variable name.
+cmm_sync_setting_alias = {
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		set_global_variable = { name = $alias$ value = "global_variable_map(cmm|local_var:cmm_tmp_flag)" }
+	}
+	else = {
+		set_variable = { name = $alias$ value = "variable_map(cmm|local_var:cmm_tmp_flag)" }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = $alias$ }
+	}
+}
+
+# Sync a dropdown option alias. Sets the alias variable if the dropdown
+# value matches the index, removes it otherwise.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - index (int): Option index to match against.
+# - alias (key): Variable name to set/remove.
+cmm_sync_dropdown_option_alias = {
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		if = {
+			limit = { "global_variable_map(cmm|local_var:cmm_tmp_flag)" = $index$ }
+			set_global_variable = { name = $alias$ value = yes }
+		}
+		else = {
+			remove_global_variable = $alias$
+		}
+	}
+	else = {
+		if = {
+			limit = { "variable_map(cmm|local_var:cmm_tmp_flag)" = $index$ }
+			set_variable = { name = $alias$ value = yes }
+		}
+		else = {
+			remove_variable = $alias$
+		}
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = $alias$ }
+	}
+}
+
+# Sync a bool/toggle alias (inverted). Removes the alias variable when the
+# toggle is on, sets it when off. Use for compatibility with existing mods
+# whose variable has opposite semantics.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - alias (key): Variable name to set/remove.
+cmm_sync_bool_alias_inverted = {
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		if = {
+			limit = { "global_variable_map(cmm|local_var:cmm_tmp_flag)" >= 1 }
+			remove_global_variable = $alias$
+		}
+		else = {
+			set_global_variable = { name = $alias$ value = yes }
+		}
+	}
+	else = {
+		if = {
+			limit = { "variable_map(cmm|local_var:cmm_tmp_flag)" >= 1 }
+			remove_variable = $alias$
+		}
+		else = {
+			set_variable = { name = $alias$ value = yes }
+		}
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = $alias$ }
+	}
+}
+
+# Sync a bool/toggle alias. Sets the alias variable if the toggle is on,
+# removes it otherwise, enabling `has_variable = alias` checks.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - alias (key): Variable name to set/remove.
+cmm_sync_bool_alias = {
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		if = {
+			limit = { "global_variable_map(cmm|local_var:cmm_tmp_flag)" >= 1 }
+			set_global_variable = { name = $alias$ value = yes }
+		}
+		else = {
+			remove_global_variable = $alias$
+		}
+	}
+	else = {
+		if = {
+			limit = { "variable_map(cmm|local_var:cmm_tmp_flag)" >= 1 }
+			set_variable = { name = $alias$ value = yes }
+		}
+		else = {
+			remove_variable = $alias$
+		}
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = $alias$ }
+	}
+}
+

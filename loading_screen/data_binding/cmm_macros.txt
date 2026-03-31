@@ -1,0 +1,217 @@
+﻿# CMM GUI Macros: Core Helpers
+
+# Args: Name (string)
+# Returns: variable
+macro = {
+    description = "Country variable accessor"
+    definition = "CMMVar(Name)"
+    replace_with = "Player.MakeScope.GetVariable(Name)"
+}
+
+# Args: Prefix (string), Key (string)
+# Returns: variable
+macro = {
+    description = "Metadata variable accessor"
+    definition = "CMMMetadataVar(Prefix,Key)"
+    replace_with = "CMMVar(Concatenate(Prefix, Key))"
+}
+
+# Args: Prefix (string), Key (string)
+# Returns: string
+macro = {
+    description = "Metadata flag-name accessor"
+    definition = "CMMMetadataFlag(Prefix,Key)"
+    replace_with = "CMMMetadataVar(Prefix, Key).GetFlagName"
+}
+
+# Args: Prefix (string), Key (string)
+# Returns: value
+macro = {
+    description = "Metadata value accessor"
+    definition = "CMMMetadataValue(Prefix,Key)"
+    replace_with = "CMMMetadataVar(Prefix, Key).GetValue"
+}
+
+# Args: Prefix (string), Key (string)
+# Returns: int32
+macro = {
+    description = "Metadata int accessor"
+    definition = "CMMMetadataInt(Prefix,Key)"
+    replace_with = "FixedPointToInt(CMMMetadataValue(Prefix, Key))"
+}
+
+# Args: Prefix (string), Key (string)
+# Returns: boolean
+macro = {
+    description = "True when one metadata key is set"
+    definition = "CMMMetadataIsSet(Prefix,Key)"
+    replace_with = "CMMMetadataVar(Prefix, Key).IsSet"
+}
+
+# Args: Value (value)
+# Returns: boolean
+macro = {
+    description = "True when one numeric value equals 1"
+    definition = "CMMValueEqualsOne(Value)"
+    replace_with = "EqualTo_CFixedPoint(Value, '(CFixedPoint)1')"
+}
+
+# Args: Prefix (string), Key (string)
+# Returns: boolean
+macro = {
+    description = "True when one metadata value equals 1"
+    definition = "CMMMetadataEqualsOne(Prefix,Key)"
+    replace_with = "CMMValueEqualsOne(CMMMetadataValue(Prefix, Key))"
+}
+
+# Args: MapName (string), SettingKey (string)
+# Returns: value
+macro = {
+    description = "Read a value from a country-scoped variable map by setting key"
+    definition = "CMMMapValue(MapName,SettingKey)"
+    replace_with = "Player.MakeScope.GetVariableFromVariableMap(MapName, MakeScopeFlag(SettingKey)).GetValue"
+}
+
+# Args: MapName (string), SettingKey (string)
+# Returns: int32
+macro = {
+    description = "Read an integer from a country-scoped variable map by setting key"
+    definition = "CMMMapInt(MapName,SettingKey)"
+    replace_with = "FixedPointToInt(CMMMapValue(MapName, SettingKey))"
+}
+
+# Args: Key (string), Suffix (string)
+# Returns: string
+macro = {
+    description = "Localization lookup for one runtime key plus suffix"
+    definition = "CMMLocalizedSuffix(Key,Suffix)"
+    replace_with = "CMMVar(Concatenate(Key, Suffix)).GetFlagName"
+}
+
+# Args: Key (string), Suffix (string)
+# Returns: string
+macro = {
+    description = "Localized text for one runtime key plus suffix"
+    definition = "CMMLocalizedSuffixText(Key,Suffix)"
+    replace_with = "AddTextIf(CMMHasLocalizedSuffixText(Key, Suffix), CMMLocalizedSuffix(Key, Suffix))"
+}
+
+# Args: Key (string), Suffix (string)
+# Returns: boolean
+macro = {
+    description = "True when localized text exists for one runtime key plus suffix"
+    definition = "CMMHasLocalizedSuffixText(Key,Suffix)"
+    replace_with = "And(CMMVar(Concatenate(Key, Suffix)).IsSet, Not(EqualTo_string(CMMLocalizedSuffix(Key, Suffix), Concatenate(Key, Suffix))))"
+}
+
+# Args: Index (int32)
+# Returns: int32
+macro = {
+    description = "Convert a 0-based widget index to a 1-based public ordinal"
+    definition = "CMMWidgetIndexToOrdinal(Index)"
+    replace_with = "Add_int32(Index, '(int32)1')"
+}
+
+# Args: Index (int32)
+# Returns: int32
+macro = {
+    description = "Convert a 1-based public ordinal to a 0-based widget index"
+    definition = "CMMOrdinalToWidgetIndex(Index)"
+    replace_with = "Subtract_int32(Index, '(int32)1')"
+}
+
+# Args: OptionRoot (string), Index (int32)
+# Returns: string
+macro = {
+    description = "Localized dropdown option label"
+    definition = "CMMOptionLabel(OptionRoot,Index)"
+    replace_with = "Localize(Concatenate(Concatenate(OptionRoot, '_option_'), Concatenate(ToString_int32(Index), '_name')))"
+}
+
+# Args: OptionRoot (string), Index (int32)
+# Returns: string
+macro = {
+    description = "Localized dropdown option label from a 0-based widget index"
+    definition = "CMMOptionLabelFromWidgetIndex(OptionRoot,Index)"
+    replace_with = "CMMOptionLabel(OptionRoot, CMMWidgetIndexToOrdinal(Index))"
+}
+
+# Args: OptionRoot (string), Index (int32)
+# Returns: string
+macro = {
+    description = "Localized dropdown option description"
+    definition = "CMMOptionDesc(OptionRoot,Index)"
+    replace_with = "Localize(Concatenate(Concatenate(OptionRoot, '_option_'), Concatenate(ToString_int32(Index), '_desc')))"
+}
+
+# Args: OptionRoot (string), Index (int32)
+# Returns: boolean
+macro = {
+    description = "True when a dropdown option description exists"
+    definition = "CMMHasOptionDesc(OptionRoot,Index)"
+    replace_with = "Not(EqualTo_string(CMMOptionDesc(OptionRoot, Index), Concatenate(Concatenate(OptionRoot, '_option_'), Concatenate(ToString_int32(Index), '_desc'))))"
+}
+
+# Args: Name (string)
+# Returns: boolean
+macro = {
+    description = "True when one variable-system key exists"
+    definition = "CMMSelectedValueExists(Name)"
+    replace_with = "GetVariableSystem.Exists(Name)"
+}
+
+# Args: Name (string), Value (string)
+# Returns: boolean
+macro = {
+    description = "True when one variable-system key exists and matches one value"
+    definition = "CMMSelectedHasValue(Name,Value)"
+    replace_with = "And(CMMSelectedValueExists(Name), GetVariableSystem.HasValue(Name, Value))"
+}
+
+# Args: Name (string)
+# Returns: none
+macro = {
+    description = "Execute one scripted GUI callback"
+    definition = "CMMExecuteGui(Name)"
+    replace_with = "GetScriptedGui(Name).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)"
+}
+
+# Args: Prefix (string), Suffix (string)
+# Returns: none
+macro = {
+    description = "Execute one scripted GUI callback resolved from prefix plus suffix"
+    definition = "CMMExecuteGuiSuffix(Prefix,Suffix)"
+    replace_with = "CMMExecuteGui(Concatenate(Prefix, Suffix))"
+}
+
+# Args: GuiName (string), SettingKey (string)
+# Returns: none
+macro = {
+    description = "Execute an auto-apply scripted GUI with setting scope"
+    definition = "CMMExecuteAutoApply(GuiName,SettingKey)"
+    replace_with = "GetScriptedGui(GuiName).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('setting', MakeScopeFlag(SettingKey)).End)"
+}
+
+# Args: Name (string)
+# Returns: boolean
+macro = {
+    description = "True when one scripted GUI callback is shown"
+    definition = "CMMGuiIsShown(Name)"
+    replace_with = "GetScriptedGui(Name).IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)"
+}
+
+# Args: Name (string)
+# Returns: boolean
+macro = {
+    description = "True when one scripted GUI callback is valid"
+    definition = "CMMGuiIsValid(Name)"
+    replace_with = "GetScriptedGui(Name).IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)"
+}
+
+# Args: ModId (string), TabKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one mod id and tab key match the current selection"
+    definition = "CMMMatchesSelectedModAndTab(ModId,TabKey)"
+    replace_with = "And(CMMSelectedHasValue('cmm_selected_mod', ModId), CMMSelectedHasValue('cmm_selected_tab', TabKey))"
+}

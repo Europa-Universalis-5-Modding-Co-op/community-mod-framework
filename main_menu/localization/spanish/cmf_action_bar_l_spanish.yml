@@ -1,0 +1,6 @@
+﻿l_spanish:
+ cmf_action_bar_open_action: "Ejecutar acción"
+ cmf_action_bar_settings_tooltip_title: "Ajustes"
+ cmf_action_bar_settings_tooltip_text: "Abrir los ajustes del #v Community Mod Framework#!."
+ cmf_action_bar_log_viewer_tooltip_title: "Visor de registros"
+ cmf_action_bar_log_viewer_tooltip_text: "Abrir el visor de registros de #v#!."

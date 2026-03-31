@@ -1,0 +1,101 @@
+﻿sgui_cmf_settings_setup = {
+    scope = country
+
+    effect = {
+        # Setup default action bar position
+        if = {
+            limit = {
+                NOT = {
+                    exists = var:cmf_action_bar_position
+                }
+            }
+            set_variable = {
+                name = cmf_action_bar_position
+                value = cmf_action_bar_bottom_right
+            }
+        }
+    }
+}
+
+sgui_cmf_setting_action_bar_position = {
+    scope = country
+
+    saved_scopes = {
+        position
+    }
+
+    is_shown = {
+        var:cmf_action_bar_position ?= scope:position
+    }
+
+    is_valid = {
+        NOT = {
+            var:cmf_action_bar_position ?= scope:position
+        }
+    }
+
+    effect = {
+        set_variable = {
+            name = cmf_action_bar_position
+            value = scope:position
+        }
+    }
+}
+
+# Auto-apply: handle action bar button left-click. Fires cmf_on_callback.
+# Scope: country
+# Args: scope:element (flag) — the action bar element root key.
+cmf_auto_action_bar_clicked = {
+    scope = country
+    saved_scopes = { element }
+
+    effect = {
+        set_variable = { name = cmf_callback value = scope:element }
+        trigger_event_silently = {
+            on_action = cmf_on_callback
+        }
+        remove_variable = cmf_callback
+
+        # Benign warning suppression
+        if = {
+            limit = { always = no }
+            cmf_suppress = { v = cmf_callback }
+        }
+    }
+}
+
+sgui_cmf_setting_action_bar_button_shown = {
+    scope = country
+
+    saved_scopes = {
+        button
+    }
+
+    is_shown = {
+        is_target_in_variable_list = {
+            name = cmf_action_bar_active_elements
+            target = scope:button
+        }
+    }
+
+    effect = {
+        if = {
+            limit = {
+                is_target_in_variable_list = {
+                    name = cmf_action_bar_active_elements
+                    target = scope:button
+                }
+            }
+            remove_list_variable = {
+                name = cmf_action_bar_active_elements
+                target = scope:button
+            }
+        }
+        else = {
+            add_to_variable_list = {
+                name = cmf_action_bar_active_elements
+                target = scope:button
+            }
+        }
+    }
+}

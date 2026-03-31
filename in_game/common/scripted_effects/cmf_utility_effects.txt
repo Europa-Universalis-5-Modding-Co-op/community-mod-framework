@@ -1,0 +1,58 @@
+﻿# Suppress "used but never set" and "set but never used" engine warnings for a name.
+# Scope: any
+# Args: v (key)
+cmf_suppress = {
+	if = {
+		limit = {
+			always = no
+			exists = var:$v$
+			exists = flag:$v$
+		}
+		set_variable = { name = $v$ value = flag:$v$ }
+	}
+}
+
+# Change variable map value (adding does not overwrite a existing value)
+# Scope: any
+# Args: name (key), key (scope), value (scope)
+cmf_change_variable_map = {
+	remove_from_variable_map = {
+		name = $name$
+		key = $key$
+	}
+	add_to_variable_map = {
+		name = $name$
+		key = $key$
+		value = $value$
+	}
+}
+
+# Change local variable map value
+# Scope: any
+# Args: name (key), key (scope), value (scope)
+cmf_change_local_variable_map = {
+	remove_from_local_variable_map = {
+		name = $name$
+		key = $key$
+	}
+	add_to_local_variable_map = {
+		name = $name$
+		key = $key$
+		value = $value$
+	}
+}
+
+# Change global variable map value
+# Scope: any
+# Args: name (key), key (scope), value (scope)
+cmf_change_global_variable_map = {
+	remove_from_global_variable_map = {
+		name = $name$
+		key = $key$
+	}
+	add_to_global_variable_map = {
+		name = $name$
+		key = $key$
+		value = $value$
+	}
+}

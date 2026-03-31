@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMM Visual Editor</title>
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/preview.css">
+</head>
+<body>
+    <div id="app">
+        <header class="app-header">
+            <div class="header-left">
+                <h1 class="app-title">CMM Visual Editor</h1>
+                <div class="undo-redo">
+                    <button class="btn-icon" @click="undo" :disabled="undoCount === 0" title="Undo (Ctrl+Z)">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 3L1 6.5l3.5 3.5V7.5H10a3 3 0 0 1 0 6H7v1.5h3a4.5 4.5 0 0 0 0-9H4.5V3z"/></svg>
+                    </button>
+                    <button class="btn-icon" @click="redo" :disabled="redoCount === 0" title="Redo (Ctrl+Shift+Z)">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M11.5 3L15 6.5 11.5 10V7.5H6a3 3 0 0 0 0 6h3v1.5H6a4.5 4.5 0 0 1 0-9h5.5V3z"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon" @click="showSettings = true" title="Settings">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5.75v1.27A5.48 5.48 0 0 0 4.6 3.1L3.56 2.35l-1.5 1.5.75 1.04A5.48 5.48 0 0 0 1.73 6.8H.5v2h1.23c.15.7.42 1.36.78 1.95l-.75 1.04 1.5 1.5 1.04-.75c.6.36 1.25.63 1.95.78v1.18h2v-1.18a5.48 5.48 0 0 0 1.95-.78l1.04.75 1.5-1.5-.75-1.04c.36-.6.63-1.25.78-1.95h1.23v-2h-1.23a5.48 5.48 0 0 0-.78-1.95l.75-1.04-1.5-1.5-1.04.75A5.48 5.48 0 0 0 8.5 2.02V.75h-2zM7.5 5a2.75 2.75 0 1 1 0 5.5 2.75 2.75 0 0 1 0-5.5z"/></svg>
+                </button>
+                <button class="btn btn-secondary" @click="showImport = true">Open</button>
+                <button class="btn btn-secondary" @click="generateAndDownload" :disabled="!state.mod_id">Download ZIP</button>
+                <button class="btn btn-close-app" @click="closeApp" title="Close the editor">Close</button>
+            </div>
+        </header>
+
+        <!-- Save bar: visible when editing a directory -->
+        <div v-if="modDir" class="save-bar">
+            <div class="save-bar-left">
+                <span class="save-dir" :title="modDir">{{ modDir }}</span>
+                <span v-if="dirty" class="unsaved-badge">Unsaved changes</span>
+                <span v-if="saveStatus === 'saved'" class="saved-badge">Saved</span>
+                <span v-if="saveStatus === 'error'" class="error-badge" :title="saveError">Save failed</span>
+            </div>
+            <div class="save-bar-right">
+                <button class="btn btn-save" @click="saveToDir" :disabled="!dirty || saveStatus === 'saving' || !state.mod_id">
+                    <template v-if="saveStatus === 'saving'">Saving...</template>
+                    <template v-else>Save (Ctrl+S)</template>
+                </button>
+                <button class="btn-icon" @click="closeModDir" title="Disconnect from directory">&times;</button>
+            </div>
+        </div>
+
+        <div class="app-body" :class="{'has-save-bar': !!modDir}">
+            <!-- EDITOR PANEL -->
+            <div class="editor-panel">
+                <mod-editor :state="state" @update="onUpdate"></mod-editor>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h3>Tabs</h3>
+                        <button class="btn btn-sm" @click="addTab">+ Add Tab</button>
+                    </div>
+                    <div class="tab-bar" v-if="state.tabs.length">
+                        <button v-for="(tab, i) in state.tabs" :key="i"
+                            class="tab-btn"
+                            :class="{
+                                active: selectedTabIdx === i,
+                                dragging: drag.type === 'tab' && drag.sourceItemIdx === i,
+                                'drag-over-before': drag.overTabIdx === i && ((drag.type === 'tab' && drag.position === 'before') || false),
+                                'drag-over-after': drag.overTabIdx === i && ((drag.type === 'tab' && drag.position === 'after') || false),
+                                'drag-target': drag.overTabIdx === i && (drag.type === 'group' || drag.type === 'setting'),
+                            }"
+                            draggable="true"
+                            @dragstart="onDragStartTab($event, i)"
+                            @dragover.prevent="onDragOverTab($event, i)"
+                            @dragleave="onDragLeaveTab(i)"
+                            @drop="onDropTab($event, i)"
+                            @dragend="resetDrag"
+                            @click="selectedTabIdx = i">
+                            {{ tab.name || tab.tab_id || 'Tab ' + (i+1) }}
+                            <span class="tab-remove" @click.stop="removeTab(i)">&times;</span>
+                        </button>
+                    </div>
+
+                    <div v-if="selectedTab" class="tab-content">
+                        <div class="field-row">
+                            <label>Tab ID <span class="required">*</span></label>
+                            <input v-model="selectedTab.tab_id" placeholder="general" @input="sanitizeId(selectedTab, 'tab_id')">
+                        </div>
+                        <div class="field-row">
+                            <label>Display Name</label>
+                            <input v-model="selectedTab.name" :placeholder="selectedTab.tab_id || 'General'">
+                        </div>
+
+                        <div class="section-header" style="margin-top:12px">
+                            <h4>Groups</h4>
+                            <button class="btn btn-sm" @click="addGroup">+ Add Group</button>
+                        </div>
+
+                        <div class="group-bar" v-if="selectedTab.groups.length">
+                            <button v-for="(group, gi) in selectedTab.groups" :key="gi"
+                                class="group-btn"
+                                :class="{
+                                    active: selectedGroupIdx === gi,
+                                    dragging: drag.type === 'group' && drag.sourceTabIdx === selectedTabIdx && drag.sourceItemIdx === gi,
+                                    'drag-over-before': drag.overGroupIdx === gi && drag.type === 'group' && drag.position === 'before',
+                                    'drag-over-after': drag.overGroupIdx === gi && drag.type === 'group' && drag.position === 'after',
+                                    'drag-target': drag.overGroupIdx === gi && drag.type === 'setting',
+                                }"
+                                draggable="true"
+                                @dragstart="onDragStartGroup($event, gi)"
+                                @dragover.prevent="onDragOverGroup($event, gi)"
+                                @dragleave="onDragLeaveGroup(gi)"
+                                @drop="onDropGroup($event, gi)"
+                                @dragend="resetDrag"
+                                @click="selectedGroupIdx = gi">
+                                {{ group.name || group.group_id || 'Group ' + (gi+1) }}
+                                <span class="tab-remove" @click.stop="removeGroup(gi)">&times;</span>
+                            </button>
+                        </div>
+
+                        <div v-if="selectedGroup" class="group-content">
+                            <div class="field-row">
+                                <label>Group ID <span class="required">*</span></label>
+                                <input v-model="selectedGroup.group_id" placeholder="general" @input="sanitizeId(selectedGroup, 'group_id')">
+                            </div>
+                            <div class="field-row">
+                                <label>Display Name</label>
+                                <input v-model="selectedGroup.name" :placeholder="selectedGroup.group_id || 'General'">
+                            </div>
+                            <div class="field-row">
+                                <label>Description</label>
+                                <input v-model="selectedGroup.desc" placeholder="Tooltip shown on hover over the group header.">
+                            </div>
+
+                            <div class="section-header" style="margin-top:12px">
+                                <h4>Settings</h4>
+                                <button class="btn btn-sm" @click="addSetting">+ Add Setting</button>
+                            </div>
+
+                            <div class="settings-list">
+                                <div v-for="(setting, si) in selectedGroup.settings" :key="si"
+                                    class="setting-drag-wrapper"
+                                    :class="{
+                                        dragging: drag.type === 'setting' && drag.sourceTabIdx === selectedTabIdx && drag.sourceGroupIdx === selectedGroupIdx && drag.sourceItemIdx === si,
+                                        'drag-over-before': drag.type === 'setting' && drag.overItemIdx === si && drag.position === 'before',
+                                        'drag-over-after': drag.type === 'setting' && drag.overItemIdx === si && drag.position === 'after',
+                                    }"
+                                    draggable="true"
+                                    @dragstart="onDragStartSetting($event, si)"
+                                    @dragover.prevent="onDragOverSetting($event, si)"
+                                    @dragleave="onDragLeaveSetting(si)"
+                                    @drop="onDropSetting($event, si)"
+                                    @dragend="resetDrag">
+                                    <setting-editor
+                                        :setting="setting" :index="si"
+                                        :total="selectedGroup.settings.length"
+                                        :mod-id="state.mod_id"
+                                        @move-up="moveSetting(si, -1)"
+                                        @move-down="moveSetting(si, 1)"
+                                        @remove="removeSetting(si)">
+                                    </setting-editor>
+                                </div>
+                                <div v-if="!selectedGroup.settings.length" class="empty-state"
+                                    :class="{ 'drop-zone-active': drag.type === 'setting' }"
+                                    @dragover.prevent
+                                    @drop="onDropEmptyGroup($event)">
+                                    <template v-if="drag.type === 'setting'">Drop setting here</template>
+                                    <template v-else>No settings yet. Click "+ Add Setting" to create one.</template>
+                                </div>
+                            </div>
+                            <button v-if="selectedGroup.settings.length >= 5" class="btn btn-sm" style="margin-top:8px" @click="addSetting">+ Add Setting</button>
+                        </div>
+                    </div>
+                    <div v-else class="empty-state">
+                        No tabs yet. Click "+ Add Tab" to create one.
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL: Preview / Code -->
+            <div class="right-panel">
+                <div class="right-tabs">
+                    <button class="right-tab-btn" :class="{active: rightTab === 'preview'}" @click="rightTab = 'preview'">Preview</button>
+                    <button class="right-tab-btn" :class="{active: rightTab === 'code'}" @click="rightTab = 'code'">Code</button>
+                    <button class="right-tab-btn" :class="{active: rightTab === 'localization'}" @click="rightTab = 'localization'">Localization</button>
+                </div>
+
+                <preview-panel v-if="rightTab === 'preview'" :state="state"></preview-panel>
+                <code-panel v-if="rightTab === 'code'" :state="state"></code-panel>
+                <localization-panel v-if="rightTab === 'localization'" :state="state"></localization-panel>
+            </div>
+        </div>
+
+        <!-- Open / Import Modal -->
+        <div v-if="showImport" class="modal-overlay" @click.self="showImport = false">
+            <div class="modal">
+                <h3>Open Mod Directory</h3>
+                <p class="modal-desc">
+                    Point to an existing mod folder to import its settings and edit in-place.
+                    Or enter a new directory to start fresh and save there later.
+                </p>
+                <div class="field-row">
+                    <label>Mod Directory Path</label>
+                    <div class="input-with-btn">
+                        <input v-model="importPath" placeholder="C:\path\to\your\mod" @keyup.enter="importFromDir">
+                        <button class="btn btn-secondary" @click="browseDir">Browse</button>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" @click="showImport = false">Cancel</button>
+                    <button class="btn btn-secondary" @click="openNewDir" :disabled="!importPath">
+                        New (empty mod)
+                    </button>
+                    <button class="btn btn-primary" @click="importFromDir" :disabled="!importPath">
+                        Open
+                    </button>
+                </div>
+                <div v-if="importWarnings.length" class="warnings">
+                    <p v-for="w in importWarnings" class="warning">{{ w }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div v-if="showSettings" class="modal-overlay" @click.self="showSettings = false">
+            <div class="modal">
+                <h3>Settings</h3>
+                <div class="field-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" v-model="state.noinspection">
+                        Add <code>#noinspection ALL</code> to generated files
+                    </label>
+                    <span class="field-hint">Suppresses IDE inspections for mods that don't add CMF as a dependency.</span>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" @click="showSettings = false">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/vendor/vue.global.prod.js"></script>
+    <script src="/js/generator-preview.js"></script>
+    <script src="/js/components/ModEditor.js"></script>
+    <script src="/js/components/SettingEditor.js"></script>
+    <script src="/js/components/ListEditor.js"></script>
+    <script src="/js/components/DropdownOptions.js"></script>
+    <script src="/js/components/PreviewPanel.js"></script>
+    <script src="/js/components/CodePanel.js"></script>
+    <script src="/js/components/LocalizationPanel.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

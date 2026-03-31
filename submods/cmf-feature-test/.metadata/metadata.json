@@ -1,0 +1,22 @@
+{
+    "name": "CMF Feature Test",
+    "id": "community_mod_framework_feature_test",
+    "version": "0.1",
+    "game_id": "eu5",
+    "supported_game_version": "1.1.*",
+    "short_description": "Comprehensive feature test for Community Mod Framework.",
+    "tags": [
+        "Utilities",
+        "User Interface"
+    ],
+    "relationships": [
+        {
+            "rel_type": "dependency",
+            "id": "community_mod_framework",
+            "display_name": "Community Mod Framework",
+            "resource_type": "mod",
+            "version": "2.*"
+        }
+    ],
+    "game_custom_data": {}
+}

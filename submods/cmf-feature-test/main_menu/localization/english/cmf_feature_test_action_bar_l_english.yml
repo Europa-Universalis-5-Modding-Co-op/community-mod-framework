@@ -1,0 +1,12 @@
+﻿l_english:
+ cmf_action_bar_ft_primary: "cmf_action_bar_ft_primary"
+ cmf_action_bar_ft_primary_color: "gold"
+ cmf_action_bar_ft_primary_icon: "@advance!"
+ cmf_action_bar_ft_primary_name: "Primary Button"
+ cmf_action_bar_ft_primary_tooltip: "Toggles the blue alert. Has scripted GUI with is_valid gated on Toggle."
+
+ cmf_action_bar_ft_secondary: "cmf_action_bar_ft_secondary"
+ cmf_action_bar_ft_secondary_color: "mid_green"
+ cmf_action_bar_ft_secondary_icon: "@legitimacy!"
+ cmf_action_bar_ft_secondary_name: "Secondary Button"
+ cmf_action_bar_ft_secondary_tooltip: "Toggles the green alert. No scripted GUI."

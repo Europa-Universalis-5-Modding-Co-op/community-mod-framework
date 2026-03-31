@@ -1,0 +1,26 @@
+﻿on_game_start = {
+	on_actions = {
+		engine_test_on_game_start
+	}
+}
+
+engine_test_on_game_start = {
+	effect = {
+		# Pre-seed global variable maps for read-only tests (8, 9).
+		# These verify that scripted GUIs can read global maps even if
+		# they can't write to them.
+		# Note: on_game_start fires with empty scope, so set_variable
+		# (country-scoped) cannot be used here. The scripted GUIs
+		# reset their own result variables before running.
+		add_to_global_variable_map = {
+			name = engine_test_gmap8
+			key = flag:engine_test_preseeded
+			value = 10
+		}
+		add_to_global_variable_map = {
+			name = engine_test_gmap9
+			key = flag:engine_test_key_a
+			value = 77
+		}
+	}
+}

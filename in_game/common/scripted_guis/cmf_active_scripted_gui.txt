@@ -1,0 +1,64 @@
+﻿# Check whether CMF has been initialized for this save.
+# Scope: country
+cmf_is_active = {
+	scope = player
+	is_shown = {
+		has_global_variable = cmf_active
+	}
+}
+
+# Set the cmf_active global variable and run full CMM initialization.
+# Used by the init popup for existing saves.
+# Scope: country
+cmf_set_active = {
+	scope = player
+	effect = {
+		set_global_variable = { name = cmf_active value = yes }
+		cmm_register_menu_settings = yes
+		trigger_event_silently = {
+			on_action = cmf_on_mod_registration
+		}
+	}
+}
+
+# Fired by GUI trigger_on_create after the player selects a country.
+# New game: fires on_game_start_after_lobby.
+# Save load: fires on_game_load.
+# Scope: none
+cmf_after_lobby_caller = {
+	effect = {
+		if = {
+			limit = { NOT = { has_global_variable = cmf_game_started_after_lobby } }
+			set_global_variable = { name = cmf_game_started_after_lobby value = yes }
+			set_global_variable = { name = cmf_is_new_game value = yes }
+			trigger_event_silently = {
+				on_action = on_game_start_after_lobby
+			}
+		}
+		else = {
+			trigger_event_silently = {
+				on_action = on_game_load
+			}
+		}
+	}
+}
+
+# Fires on_game_load_after_lobby from a GUI trigger_on_create state.
+# Only fires when past the lobby on a save load (not on new games).
+# Order-independent: on a new game, either cmf_is_new_game is set (Widget 1
+# fired first) or cmf_game_started_after_lobby is not set (Widget 2 fired first).
+# Scope: none
+cmf_load_after_lobby_caller = {
+	effect = {
+		if = {
+			limit = {
+				NOT = { has_global_variable = cmf_is_new_game }
+				has_global_variable = cmf_game_started_after_lobby
+			}
+			trigger_event_silently = {
+				on_action = on_game_load_after_lobby
+			}
+		}
+		remove_global_variable = cmf_is_new_game
+	}
+}

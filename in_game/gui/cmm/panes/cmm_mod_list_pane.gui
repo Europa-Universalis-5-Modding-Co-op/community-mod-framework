@@ -1,0 +1,149 @@
+﻿types CMMModListTypes
+{
+	# Left mod-list pane with search input and mod rows.
+	# Reads:
+	# - Player.MakeScope.GetList('cmm_registered_mod_ids') [list<flag>]: registered mod ids for row datamodel.
+	# - GetVariableSystem.Get('cmm_mod_search_text') [string]: current search text used by row filtering.
+	# - GetVariableSystem.Get('cmm_selected_mod') [string]: currently selected mod key for row state.
+	# Writes:
+	# - GetVariableSystem.Set('cmm_mod_search_text') [string]: updates search text from the editbox.
+	# - GetVariableSystem.Set('cmm_selected_mod') [string]: selects a mod when a row is clicked.
+	# - GetVariableSystem.Set('cmm_selected_tab') [string]: sets selected tab to the mod default on row click.
+	type cmm_mod_list_panel = vbox {
+		name = "cmm_mod_list_panel"
+		min_width = 340
+		max_width = 340
+		layoutpolicy_vertical = expanding
+		using = bg_main_inner_alt
+		spacing = 1
+		margin = { 12 12 }
+		margin_top = 6
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			using = bg_secondary_section
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 6 4 }
+
+				editbox_single = {
+					name = "cmm_mod_search_editbox"
+					layoutpolicy_horizontal = expanding
+					focuspolicy = all
+					alwaystransparent = no
+					multiline = no
+					text = ""
+					blockoverride "editbox_properties" {
+						ontextchanged = "[GetVariableSystem.Set('cmm_mod_search_text', GetTextFromSelfOrAnyChildEditbox(PdxGuiWidget.Self))]"
+						ontextedited = "[GetVariableSystem.Set('cmm_mod_search_text', GetTextFromSelfOrAnyChildEditbox(PdxGuiWidget.Self))]"
+					}
+					blockoverride "editbox_label" {
+						text = "CMM_MOD_SEARCH_PLACEHOLDER"
+					}
+				}
+			}
+		}
+
+		scrollbox = {
+			using = layoutpolicy_expanding
+			layoutpolicy_vertical = expanding
+			layoutpolicy_horizontal = expanding
+			minimumsize = { 0 420 }
+
+			blockoverride "scrollbox_content" {
+				cmm_mod_list_rows = {}
+			}
+		}
+
+		hbox = {
+			visible = "[CMMHasRegisteredMods]"
+			layoutpolicy_horizontal = expanding
+			margin = { 0 8 }
+
+			expand = {}
+
+			button_regular_diamond = {
+				minimumsize = { 168 32 }
+				onclick = "[CMMExecuteGui('CMM_ResetToDefaults')]"
+				text = "CMM_RESET_TO_DEFAULTS"
+				tooltip = "CMM_RESET_TO_DEFAULTS_TOOLTIP"
+			}
+
+			expand = {}
+		}
+	}
+
+	# Datamodel-backed mod row list container.
+	# Reads:
+	# - Player.MakeScope.GetList('cmm_registered_mod_ids') [list<flag>]: mod ids rendered as rows.
+	# - Scope.GetFlagName [string]: current row mod id.
+	# Writes:
+	# - none [n/a]: no writes.
+	type cmm_mod_list_rows = vbox {
+		using = bg_secondary_section
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		spacing = 4
+		margin = { 6 6 }
+		datamodel = "[Player.MakeScope.GetList('cmm_registered_mod_ids')]"
+
+		item = {
+			cmm_mod_list_row = {}
+		}
+	}
+
+	# Single mod row with select behavior.
+	# Reads:
+	# - Scope.GetFlagName [string]: current row mod id.
+	# - GetVariableSystem.Get('cmm_mod_search_text') [string]: free-text filter for row visibility.
+	# - GetVariableSystem.Get('cmm_selected_mod') [string]: selected mod id for button down-state.
+	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_desc')) [flag]: localized mod description used by hover tooltips.
+	# Writes:
+	# - GetVariableSystem.Set('cmm_selected_mod') [string]: selects this row's mod id.
+	# - GetVariableSystem.Set('cmm_selected_tab') [string]: sets selected tab to the mod default.
+	type cmm_mod_list_row = widget {
+		layoutpolicy_horizontal = expanding
+		minimumsize = { 0 44 }
+		visible = "[CMMModMatchesSearch(Scope.GetFlagName)]"
+
+		hbox = {
+			margin = { 2 2 }
+
+			card_header_button_01 = {
+				using = layoutpolicy_expanding
+				size = { -1 40 }
+				using = bg_paper_card
+				using = bg_card_header_01_production
+				onclick = "[GetVariableSystem.Set('cmm_selected_mod', Scope.GetFlagName)]"
+				onclick = "[GetVariableSystem.Set('cmm_selected_tab', CMMMetadataFlag('cmm_mod_default_tab_', Scope.GetFlagName))]"
+				down = "[GetVariableSystem.HasValue('cmm_selected_mod', Scope.GetFlagName)]"
+				tagtooltip_enabled = yes
+				tooltip = "[CMMLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltip_enabled = "[CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+
+				blockoverride "card_color" {
+					modify_texture = {
+						visible = "[GetVariableSystem.HasValue('cmm_selected_mod', Scope.GetFlagName)]"
+						using = color_gold_texture
+						alpha = 0.16
+					}
+				}
+
+				widget = {
+					size = { 100% 100% }
+
+					text_single = {
+						parentanchor = center
+						autoresize = yes
+						fontsize = 18
+						maximumsize = { 280 -1 }
+						align = center|nobaseline
+						text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
+					}
+				}
+			}
+		}
+	}
+}

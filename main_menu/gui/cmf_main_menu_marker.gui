@@ -1,0 +1,28 @@
+﻿types cmf_main_menu_marker
+{
+	type steam_logo_button = button {
+		gfxtype = framedbuttongfx
+		effectname = "NoHighlight"
+		upframe = 1
+		overframe = 2
+		downframe = 3
+		disableframe = 4
+		texture = "gfx/interface/buttons/button_small_round.dds"
+		framesize = { 42 42 }
+
+		sdk_load_indicator = {}
+		size = {30 30}
+
+		icon = {
+			size = {20 20}
+			parentanchor = center
+			texture =  "gfx/interface/logos/steam_logo.dds"
+		}
+
+		state = {
+			name = cmf_marker_init
+			trigger_on_create = yes
+			on_start = "[GetVariableSystem.Set( 'cmf_active', 'yes' )]"
+		}
+	}
+}

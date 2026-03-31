@@ -1,0 +1,124 @@
+﻿# Register action bar elements and alerts.
+# Scope: country
+cmf_feature_test_register_cmf = {
+	# Action bar elements (idempotent)
+	cmf_add_action_bar_element = { element = cmf_action_bar_ft_primary }
+	cmf_add_action_bar_element = { element = cmf_action_bar_ft_secondary }
+
+	# Register scripted GUI for primary button (enables is_shown/is_valid)
+	cmf_register_scripted_gui = { element = cmf_action_bar_ft_primary }
+
+	# Alerts — all 8 colors
+	cmf_show_alert = { alert = cmf_alert_ft_orange }
+	cmf_show_alert = { alert = cmf_alert_ft_blue }
+	cmf_show_alert = { alert = cmf_alert_ft_black }
+	cmf_show_alert = { alert = cmf_alert_ft_red_war }
+	cmf_show_alert = { alert = cmf_alert_ft_red }
+	cmf_show_alert = { alert = cmf_alert_ft_yellow }
+	cmf_show_alert = { alert = cmf_alert_ft_green }
+	cmf_show_alert = { alert = cmf_alert_ft_purple }
+}
+
+# Unified callback handler for cmf_on_callback.
+# var:cmf_callback is the flag of the setting, alert, or action bar element that was interacted with.
+# Scope: country
+cmf_feature_test_handle_callback = {
+	switch = {
+		trigger = var:cmf_callback
+
+		# ── Setting callbacks ─────────────────────────────────────────────
+
+		flag:cmf_feature_test__toggle = {
+			# Sync setting alias
+			cmm_sync_setting_alias = {
+				setting = cmf_feature_test__toggle
+				alias = cft_toggle_alias
+			}
+
+			# Also re-sync dropdown aliases (demonstrates multi-alias sync)
+			cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 1 alias = cft_dd_opt_1 }
+			cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 2 alias = cft_dd_opt_2 }
+			cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 3 alias = cft_dd_opt_3 }
+			cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 4 alias = cft_dd_opt_4 }
+			cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 5 alias = cft_dd_opt_5 }
+
+			# Toggle the orange alert based on toggle value
+			if = {
+				limit = { "variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1 }
+				cmf_show_alert = { alert = cmf_alert_ft_orange }
+			}
+			else = {
+				cmf_remove_alert = { alert = cmf_alert_ft_orange }
+			}
+		}
+
+		flag:cmf_feature_test__dropdown = {
+			# Sync dropdown option aliases
+			cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 1 alias = cft_dd_opt_1 }
+			cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 2 alias = cft_dd_opt_2 }
+			cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 3 alias = cft_dd_opt_3 }
+			cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 4 alias = cft_dd_opt_4 }
+			cmm_sync_dropdown_option_alias = { setting = cmf_feature_test__dropdown index = 5 alias = cft_dd_opt_5 }
+		}
+
+		flag:cmf_feature_test__ordered_list = {
+			# Iterate list items to verify cmm_for_each_list_item works
+			cmm_for_each_list_item = {
+				setting = cmf_feature_test__ordered_list
+				effect = cmf_feature_test_process_list_item
+			}
+		}
+
+		# ── Alert callbacks ───────────────────────────────────────────────
+		# Re-add alerts after they are clicked so they reappear for repeated testing.
+
+		flag:cmf_alert_ft_orange = {
+			cmf_show_alert = { alert = cmf_alert_ft_orange }
+		}
+		flag:cmf_alert_ft_blue = {
+			cmf_show_alert = { alert = cmf_alert_ft_blue }
+		}
+		flag:cmf_alert_ft_black = {
+			cmf_show_alert = { alert = cmf_alert_ft_black }
+		}
+		flag:cmf_alert_ft_red_war = {
+			cmf_show_alert = { alert = cmf_alert_ft_red_war }
+		}
+		flag:cmf_alert_ft_red = {
+			cmf_show_alert = { alert = cmf_alert_ft_red }
+		}
+		flag:cmf_alert_ft_yellow = {
+			cmf_show_alert = { alert = cmf_alert_ft_yellow }
+		}
+		flag:cmf_alert_ft_green = {
+			cmf_show_alert = { alert = cmf_alert_ft_green }
+		}
+		flag:cmf_alert_ft_purple = {
+			cmf_show_alert = { alert = cmf_alert_ft_purple }
+		}
+
+		# ── Action bar callbacks ──────────────────────────────────────────
+
+		flag:cmf_action_bar_ft_primary = {
+			# Toggle the blue alert to demonstrate action bar interaction
+			if = {
+				limit = { cmf_is_alert_active = { alert = cmf_alert_ft_blue } }
+				cmf_remove_alert = { alert = cmf_alert_ft_blue }
+			}
+			else = {
+				cmf_show_alert = { alert = cmf_alert_ft_blue }
+			}
+		}
+
+		flag:cmf_action_bar_ft_secondary = {
+			# Toggle the green alert to demonstrate action bar interaction
+			if = {
+				limit = { cmf_is_alert_active = { alert = cmf_alert_ft_green } }
+				cmf_remove_alert = { alert = cmf_alert_ft_green }
+			}
+			else = {
+				cmf_show_alert = { alert = cmf_alert_ft_green }
+			}
+		}
+	}
+}

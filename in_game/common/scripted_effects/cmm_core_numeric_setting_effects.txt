@@ -1,0 +1,456 @@
+﻿# Internal: shared registration logic for local/global numeric settings.
+# Scope: country
+# Args: mod_id (key), setting_id (key), tab_id (key), group_id (key), default_value (number), min_value (number), max_value (number), step_value (number), is_global (1/0), vt (variable/global_variable)
+cmm_register_numeric_setting_internal = {
+	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 3 }
+	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = $is_global$ }
+	add_to_variable_map = { name = cmm_default key = flag:$mod_id$__$setting_id$ value = $default_value$ }
+	add_to_variable_map = { name = cmm_min key = flag:$mod_id$__$setting_id$ value = $min_value$ }
+	add_to_variable_map = { name = cmm_max key = flag:$mod_id$__$setting_id$ value = $max_value$ }
+	add_to_variable_map = { name = cmm_step key = flag:$mod_id$__$setting_id$ value = $step_value$ }
+
+	cmm_register_setting_metadata = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		tab_id = $tab_id$
+		group_id = $group_id$
+	}
+
+	if = {
+		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$ } } }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $default_value$ }
+	}
+
+	set_local_variable = { name = cmm_tmp_flag value = flag:$mod_id$__$setting_id$ }
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		set_local_variable = { name = cmm_tmp_val value = "global_variable_map(cmm|local_var:cmm_tmp_flag)" }
+	}
+	else = {
+		set_local_variable = { name = cmm_tmp_val value = "variable_map(cmm|local_var:cmm_tmp_flag)" }
+	}
+
+	if = {
+		limit = { local_var:cmm_tmp_val < $min_value$ }
+		remove_from_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $min_value$ }
+	}
+
+	if = {
+		limit = { local_var:cmm_tmp_val > $max_value$ }
+		remove_from_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$ }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$ value = $max_value$ }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_val }
+	}
+}
+
+# Register a numeric setting for a mod (idempotent by mod_id + setting_id).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id unique within mod.
+# - tab_id (key): Owner tab id within mod.
+# - group_id (key): Owner group id within mod.
+# - default_value (number): Initial value; applied when the setting does not exist yet.
+# - min_value (number): Lower clamp bound.
+# - max_value (number): Upper clamp bound.
+# - step_value (number): Increase/decrease step size.
+cmm_register_numeric_setting = {
+	cmm_register_numeric_setting_internal = {
+		mod_id = $mod_id$ setting_id = $setting_id$ tab_id = $tab_id$ group_id = $group_id$
+		default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$
+		is_global = 0 vt = variable
+	}
+}
+
+# Register a global numeric setting for a mod.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id unique within mod.
+# - tab_id (key): Owner tab id within mod.
+# - group_id (key): Owner group id within mod.
+# - default_value (number): Initial global value when missing.
+# - min_value (number): Lower clamp bound.
+# - max_value (number): Upper clamp bound.
+# - step_value (number): Increase/decrease step size.
+cmm_register_global_numeric_setting = {
+	cmm_register_numeric_setting_internal = {
+		mod_id = $mod_id$ setting_id = $setting_id$ tab_id = $tab_id$ group_id = $group_id$
+		default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$
+		is_global = 1 vt = global_variable
+	}
+}
+
+# Internal: read current value, apply step op, clamp to both bounds, write back.
+# Scope: country (expects cmm_tmp_flag, cmm_tmp_step, cmm_tmp_min, cmm_tmp_max as local vars)
+# Args: setting (key), op (add/subtract), vt (variable/global_variable)
+cmm_step_numeric_value = {
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		set_variable = { name = cmm_tmp_numeric_value value = "global_variable_map(cmm|local_var:cmm_tmp_flag)" }
+	}
+	else = {
+		set_variable = { name = cmm_tmp_numeric_value value = "variable_map(cmm|local_var:cmm_tmp_flag)" }
+	}
+	change_variable = { name = cmm_tmp_numeric_value $op$ = local_var:cmm_tmp_step }
+
+	if = {
+		limit = { var:cmm_tmp_numeric_value > local_var:cmm_tmp_max }
+		set_variable = { name = cmm_tmp_numeric_value value = local_var:cmm_tmp_max }
+	}
+
+	if = {
+		limit = { var:cmm_tmp_numeric_value < local_var:cmm_tmp_min }
+		set_variable = { name = cmm_tmp_numeric_value value = local_var:cmm_tmp_min }
+	}
+
+	remove_from_$vt$_map = { name = cmm key = flag:$setting$ }
+	add_to_$vt$_map = { name = cmm key = flag:$setting$ value = var:cmm_tmp_numeric_value }
+	remove_variable = cmm_tmp_numeric_value
+}
+
+# Internal: step a numeric setting value by its configured step size in the given direction.
+# Scope: country
+# Args: setting (key), op (add/subtract)
+cmm_step_numeric_setting = {
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	set_local_variable = { name = cmm_tmp_step value = "variable_map(cmm_step|local_var:cmm_tmp_flag)" }
+	set_local_variable = { name = cmm_tmp_min value = "variable_map(cmm_min|local_var:cmm_tmp_flag)" }
+	set_local_variable = { name = cmm_tmp_max value = "variable_map(cmm_max|local_var:cmm_tmp_flag)" }
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		cmm_step_numeric_value = { setting = $setting$ op = $op$ vt = global_variable }
+	}
+	else = {
+		cmm_step_numeric_value = { setting = $setting$ op = $op$ vt = variable }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_step }
+		cmf_suppress = { v = cmm_tmp_min }
+		cmf_suppress = { v = cmm_tmp_max }
+	}
+}
+
+# Increase a numeric setting and clamp to its max value.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_step_numeric_setting_up = {
+	cmm_step_numeric_setting = { setting = $setting$ op = add }
+}
+
+# Increase a numeric setting by five intervals and clamp to max.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_step_numeric_setting_up_5x = {
+	cmm_step_numeric_setting_up = { setting = $setting$ }
+	cmm_step_numeric_setting_up = { setting = $setting$ }
+	cmm_step_numeric_setting_up = { setting = $setting$ }
+	cmm_step_numeric_setting_up = { setting = $setting$ }
+	cmm_step_numeric_setting_up = { setting = $setting$ }
+}
+
+# Decrease a numeric setting and clamp to its min value.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_step_numeric_setting_down = {
+	cmm_step_numeric_setting = { setting = $setting$ op = subtract }
+}
+
+# Decrease a numeric setting by five intervals and clamp to min.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_step_numeric_setting_down_5x = {
+	cmm_step_numeric_setting_down = { setting = $setting$ }
+	cmm_step_numeric_setting_down = { setting = $setting$ }
+	cmm_step_numeric_setting_down = { setting = $setting$ }
+	cmm_step_numeric_setting_down = { setting = $setting$ }
+	cmm_step_numeric_setting_down = { setting = $setting$ }
+}
+
+# Set a numeric setting directly to its configured max value.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_set_numeric_setting_max = {
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	set_local_variable = { name = cmm_tmp_max value = "variable_map(cmm_max|local_var:cmm_tmp_flag)" }
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		remove_from_global_variable_map = { name = cmm key = flag:$setting$ }
+		add_to_global_variable_map = { name = cmm key = flag:$setting$ value = local_var:cmm_tmp_max }
+	}
+	else = {
+		remove_from_variable_map = { name = cmm key = flag:$setting$ }
+		add_to_variable_map = { name = cmm key = flag:$setting$ value = local_var:cmm_tmp_max }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_max }
+	}
+}
+
+# Set a numeric setting directly to its configured min value.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_set_numeric_setting_min = {
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	set_local_variable = { name = cmm_tmp_min value = "variable_map(cmm_min|local_var:cmm_tmp_flag)" }
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		remove_from_global_variable_map = { name = cmm key = flag:$setting$ }
+		add_to_global_variable_map = { name = cmm key = flag:$setting$ value = local_var:cmm_tmp_min }
+	}
+	else = {
+		remove_from_variable_map = { name = cmm key = flag:$setting$ }
+		add_to_variable_map = { name = cmm key = flag:$setting$ value = local_var:cmm_tmp_min }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_min }
+	}
+}
+
+# Internal: apply step delta to a setting value and write back, clamped to bounds.
+# Scope: country (expects cmm_tmp_flag, cmm_tmp_step, cmm_tmp_min, cmm_tmp_max as local vars, cmm_numeric_step_delta_to_apply as var)
+# Args: setting (key), vt (variable/global_variable)
+cmm_apply_numeric_step_delta_branch = {
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		set_variable = { name = cmm_tmp_numeric_value value = "global_variable_map(cmm|local_var:cmm_tmp_flag)" }
+	}
+	else = {
+		set_variable = { name = cmm_tmp_numeric_value value = "variable_map(cmm|local_var:cmm_tmp_flag)" }
+	}
+	set_variable = { name = cmm_tmp_numeric_delta value = local_var:cmm_tmp_step }
+	change_variable = { name = cmm_tmp_numeric_delta multiply = var:cmm_numeric_step_delta_to_apply }
+	change_variable = { name = cmm_tmp_numeric_value add = var:cmm_tmp_numeric_delta }
+
+	if = {
+		limit = { var:cmm_tmp_numeric_value > local_var:cmm_tmp_max }
+		set_variable = { name = cmm_tmp_numeric_value value = local_var:cmm_tmp_max }
+	}
+
+	if = {
+		limit = { var:cmm_tmp_numeric_value < local_var:cmm_tmp_min }
+		set_variable = { name = cmm_tmp_numeric_value value = local_var:cmm_tmp_min }
+	}
+
+	remove_from_$vt$_map = { name = cmm key = flag:$setting$ }
+	add_to_$vt$_map = { name = cmm key = flag:$setting$ value = var:cmm_tmp_numeric_value }
+	remove_variable = cmm_tmp_numeric_value
+	remove_variable = cmm_tmp_numeric_delta
+}
+
+# Apply the queued numeric step delta to a setting and clear the queue.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_apply_numeric_step_delta = {
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	set_local_variable = { name = cmm_tmp_step value = "variable_map(cmm_step|local_var:cmm_tmp_flag)" }
+	set_local_variable = { name = cmm_tmp_min value = "variable_map(cmm_min|local_var:cmm_tmp_flag)" }
+	set_local_variable = { name = cmm_tmp_max value = "variable_map(cmm_max|local_var:cmm_tmp_flag)" }
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		cmm_apply_numeric_step_delta_branch = { setting = $setting$ vt = global_variable }
+	}
+	else = {
+		cmm_apply_numeric_step_delta_branch = { setting = $setting$ vt = variable }
+	}
+
+	remove_variable = cmm_numeric_step_delta_to_apply
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_flag }
+		cmf_suppress = { v = cmm_tmp_step }
+		cmf_suppress = { v = cmm_tmp_min }
+		cmf_suppress = { v = cmm_tmp_max }
+	}
+}
+
+# Apply the pending numeric step queue or jump marker to a setting and clear it.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_apply_numeric_change = {
+	if = {
+		limit = { has_variable = cmm_numeric_step_delta_to_apply }
+
+		cmm_apply_numeric_step_delta = {
+			setting = $setting$
+		}
+	}
+	else_if = {
+		limit = { has_variable = cmm_numeric_change_to_apply }
+
+		switch = {
+			trigger = var:cmm_numeric_change_to_apply
+			1 = { cmm_step_numeric_setting_up = { setting = $setting$ } }
+			2 = { cmm_step_numeric_setting_up_5x = { setting = $setting$ } }
+			3 = { cmm_set_numeric_setting_max = { setting = $setting$ } }
+			-1 = { cmm_step_numeric_setting_down = { setting = $setting$ } }
+			-2 = { cmm_step_numeric_setting_down_5x = { setting = $setting$ } }
+			-3 = { cmm_set_numeric_setting_min = { setting = $setting$ } }
+		}
+
+		remove_variable = cmm_numeric_change_to_apply
+	}
+}
+
+# Apply pending numeric step delta or jump to a setting via scope:setting.
+# Called by cmm_auto_apply_numeric and cmm_auto_apply_slider (fallthrough).
+# Scope: country (with scope:setting available)
+# Args: none (reads scope:setting)
+cmm_auto_apply_numeric_from_scope = {
+	if = {
+		limit = { has_variable = cmm_numeric_step_delta_to_apply }
+
+		set_local_variable = { name = cmm_tmp_step value = "variable_map(cmm_step|scope:setting)" }
+		set_local_variable = { name = cmm_tmp_min value = "variable_map(cmm_min|scope:setting)" }
+		set_local_variable = { name = cmm_tmp_max value = "variable_map(cmm_max|scope:setting)" }
+
+		if = {
+			limit = { "variable_map(cmm_is_global|scope:setting)" >= 1 }
+			set_variable = { name = cmm_tmp_numeric_value value = "global_variable_map(cmm|scope:setting)" }
+		}
+		else = {
+			set_variable = { name = cmm_tmp_numeric_value value = "variable_map(cmm|scope:setting)" }
+		}
+
+		set_variable = { name = cmm_tmp_numeric_delta value = local_var:cmm_tmp_step }
+		change_variable = { name = cmm_tmp_numeric_delta multiply = var:cmm_numeric_step_delta_to_apply }
+		change_variable = { name = cmm_tmp_numeric_value add = var:cmm_tmp_numeric_delta }
+
+		if = {
+			limit = { var:cmm_tmp_numeric_value > local_var:cmm_tmp_max }
+			set_variable = { name = cmm_tmp_numeric_value value = local_var:cmm_tmp_max }
+		}
+
+		if = {
+			limit = { var:cmm_tmp_numeric_value < local_var:cmm_tmp_min }
+			set_variable = { name = cmm_tmp_numeric_value value = local_var:cmm_tmp_min }
+		}
+
+		if = {
+			limit = { "variable_map(cmm_is_global|scope:setting)" >= 1 }
+			remove_from_global_variable_map = { name = cmm key = scope:setting }
+			add_to_global_variable_map = { name = cmm key = scope:setting value = var:cmm_tmp_numeric_value }
+		}
+		else = {
+			remove_from_variable_map = { name = cmm key = scope:setting }
+			add_to_variable_map = { name = cmm key = scope:setting value = var:cmm_tmp_numeric_value }
+		}
+
+		remove_variable = cmm_tmp_numeric_value
+		remove_variable = cmm_tmp_numeric_delta
+		remove_variable = cmm_numeric_step_delta_to_apply
+	}
+	else_if = {
+		limit = { has_variable = cmm_numeric_change_to_apply }
+
+		set_local_variable = { name = cmm_tmp_step value = "variable_map(cmm_step|scope:setting)" }
+		set_local_variable = { name = cmm_tmp_min value = "variable_map(cmm_min|scope:setting)" }
+		set_local_variable = { name = cmm_tmp_max value = "variable_map(cmm_max|scope:setting)" }
+
+		if = {
+			limit = { "variable_map(cmm_is_global|scope:setting)" >= 1 }
+			set_variable = { name = cmm_tmp_numeric_value value = "global_variable_map(cmm|scope:setting)" }
+		}
+		else = {
+			set_variable = { name = cmm_tmp_numeric_value value = "variable_map(cmm|scope:setting)" }
+		}
+
+		switch = {
+			trigger = var:cmm_numeric_change_to_apply
+			1 = {
+				change_variable = { name = cmm_tmp_numeric_value add = local_var:cmm_tmp_step }
+			}
+			2 = {
+				set_variable = { name = cmm_tmp_5x value = local_var:cmm_tmp_step }
+				change_variable = { name = cmm_tmp_5x multiply = 5 }
+				change_variable = { name = cmm_tmp_numeric_value add = var:cmm_tmp_5x }
+				remove_variable = cmm_tmp_5x
+			}
+			3 = {
+				set_variable = { name = cmm_tmp_numeric_value value = local_var:cmm_tmp_max }
+			}
+			-1 = {
+				change_variable = { name = cmm_tmp_numeric_value subtract = local_var:cmm_tmp_step }
+			}
+			-2 = {
+				set_variable = { name = cmm_tmp_5x value = local_var:cmm_tmp_step }
+				change_variable = { name = cmm_tmp_5x multiply = 5 }
+				change_variable = { name = cmm_tmp_numeric_value subtract = var:cmm_tmp_5x }
+				remove_variable = cmm_tmp_5x
+			}
+			-3 = {
+				set_variable = { name = cmm_tmp_numeric_value value = local_var:cmm_tmp_min }
+			}
+		}
+
+		if = {
+			limit = { var:cmm_tmp_numeric_value > local_var:cmm_tmp_max }
+			set_variable = { name = cmm_tmp_numeric_value value = local_var:cmm_tmp_max }
+		}
+
+		if = {
+			limit = { var:cmm_tmp_numeric_value < local_var:cmm_tmp_min }
+			set_variable = { name = cmm_tmp_numeric_value value = local_var:cmm_tmp_min }
+		}
+
+		if = {
+			limit = { "variable_map(cmm_is_global|scope:setting)" >= 1 }
+			remove_from_global_variable_map = { name = cmm key = scope:setting }
+			add_to_global_variable_map = { name = cmm key = scope:setting value = var:cmm_tmp_numeric_value }
+		}
+		else = {
+			remove_from_variable_map = { name = cmm key = scope:setting }
+			add_to_variable_map = { name = cmm key = scope:setting value = var:cmm_tmp_numeric_value }
+		}
+
+		remove_variable = cmm_tmp_numeric_value
+		remove_variable = cmm_numeric_change_to_apply
+	}
+
+	set_variable = { name = cmf_callback value = scope:setting }
+	trigger_event_silently = {
+		on_action = cmf_on_callback
+	}
+	remove_variable = cmf_callback
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_step }
+		cmf_suppress = { v = cmm_tmp_min }
+		cmf_suppress = { v = cmm_tmp_max }
+		cmf_suppress = { v = cmm_numeric_step_delta_to_apply }
+		cmf_suppress = { v = cmm_numeric_change_to_apply }
+		cmf_suppress = { v = cmm_tmp_5x }
+		cmf_suppress = { v = cmf_callback }
+	}
+}

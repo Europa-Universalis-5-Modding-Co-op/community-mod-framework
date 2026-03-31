@@ -1,0 +1,170 @@
+﻿types CMMNumericSettingTypes
+{
+	# Numeric setting widget for one CMM setting row.
+	# Reads:
+	# - Scope.GetFlagName [string]: current setting key in root context (`<mod_id>__<setting_id>`).
+	# - GetGlobalVariable(Scope.GetFlagName).GetValue [value]: current numeric value for global settings.
+	# - Player.MakeScope.GetVariable(Scope.GetFlagName) [value]: current numeric value for local settings.
+	# - cmm_min variable map [value]: numeric minimum bound (keyed by setting flag).
+	# - cmm_max variable map [value]: numeric maximum bound (keyed by setting flag).
+	# Writes:
+	# - cmm_numeric_step_delta_to_apply [value]: pending accumulated numeric +/- step delta for `cmm_apply_numeric_change`.
+	# - cmm_numeric_change_to_apply [value]: pending numeric min/max jump mode for `cmm_apply_numeric_change`.
+	# - GetScriptedGui('cmm_auto_apply_numeric').Execute(...) [effect]: applies setting changes via auto-apply scripted GUI.
+	type cmm_numeric_setting = hbox {
+		spacing = 6
+		minimumsize = { 120 0 }
+
+		hbox = {
+			minimumsize = { 120 32 }
+			spacing = 0
+
+			button_regular = {
+				minimumsize = { 32 32 }
+				enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+				text = "-"
+
+				action_tooltip = {
+					click_mode = single
+					click_type = left
+					click_modifier = default
+					title = "CMM_NUMERIC_DECREASE"
+				}
+
+				action_tooltip = {
+					click_mode = single
+					click_type = left
+					click_modifier = ctrl
+					title = "CMM_NUMERIC_DECREASE_5X"
+				}
+
+				action_tooltip = {
+					click_mode = single
+					click_type = left
+					click_modifier = shift
+					title = "CMM_NUMERIC_DECREASE_MIN"
+				}
+
+				click_modifiers = {
+					ondefault = "[CMMExecuteGui('CMM_MarkNumericDecrease')]"
+					ondefault = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
+					onctrl = "[CMMExecuteGui('CMM_MarkNumericDecrease5x')]"
+					onctrl = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
+					onshift = "[CMMExecuteGui('CMM_MarkNumericDecreaseToMin')]"
+					onshift = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
+				}
+
+				tooltipwidget = {
+					BasicFunctionalTooltip = {}
+				}
+			}
+
+			widget = {
+				size = { 56 32 }
+				minimumsize = { 56 32 }
+
+				widget = {
+					size = { 56 25 }
+					minimumsize = { 56 25 }
+					parentanchor = vcenter
+					widgetanchor = vcenter
+					position = { 0 0 }
+					using = bg_square_outline_tile
+
+					background = {
+						using = color_dark_brown_texture
+						margin = { 2 2 }
+						alpha = 0.55
+					}
+
+					background = {
+						using = overlay_window_texture
+						margin = { 2 2 }
+						blend_mode = overlay
+						alpha = 0.1
+					}
+
+					button = {
+						size = { 100% 100% }
+						alpha = 0
+						effectname = "NoHighlight"
+						tooltip_enabled = yes
+
+						tooltipwidget = {
+							ContextualTooltipType = {
+								blockoverride "tooltip_title" {}
+								blockoverride "tooltip_content_margin" { margin = { 10 6 } }
+								blockoverride "tooltip_content" {
+									hbox = {
+										set_parent_size_to_minimum = yes
+
+										textbox = {
+											using = text_single_template
+											align = left|nobaseline
+											raw_text = "[CMMMapValue('cmm_min', Scope.GetFlagName)] - [CMMMapValue('cmm_max', Scope.GetFlagName)]"
+										}
+									}
+								}
+							}
+						}
+					}
+
+					text_single = {
+						size = { 100% 100% }
+						align = center|nobaseline
+						autoresize = no
+						visible = "[CMMHasFormat(Scope.GetFlagName)]"
+						text = "[CMMDisplayValue(Scope.GetFlagName)]"
+					}
+					text_single = {
+						size = { 100% 100% }
+						align = center|nobaseline
+						autoresize = no
+						visible = "[Not(CMMHasFormat(Scope.GetFlagName))]"
+						text = "[CMMSettingValue(Scope.GetFlagName)]"
+					}
+				}
+			}
+
+			button_regular = {
+				minimumsize = { 32 32 }
+				enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+				text = "+"
+
+				action_tooltip = {
+					click_mode = single
+					click_type = left
+					click_modifier = default
+					title = "CMM_NUMERIC_INCREASE"
+				}
+
+				action_tooltip = {
+					click_mode = single
+					click_type = left
+					click_modifier = ctrl
+					title = "CMM_NUMERIC_INCREASE_5X"
+				}
+
+				action_tooltip = {
+					click_mode = single
+					click_type = left
+					click_modifier = shift
+					title = "CMM_NUMERIC_INCREASE_MAX"
+				}
+
+				click_modifiers = {
+					ondefault = "[CMMExecuteGui('CMM_MarkNumericIncrease')]"
+					ondefault = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
+					onctrl = "[CMMExecuteGui('CMM_MarkNumericIncrease5x')]"
+					onctrl = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
+					onshift = "[CMMExecuteGui('CMM_MarkNumericIncreaseToMax')]"
+					onshift = "[CMMExecuteAutoApply('cmm_auto_apply_numeric', Scope.GetFlagName)]"
+				}
+
+				tooltipwidget = {
+					BasicFunctionalTooltip = {}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,25 @@
+﻿# Hook this mod into CMF shared registration on_action.
+cmf_on_mod_registration = {
+	on_actions = {
+		cmf_feature_test_on_register_cmf_mod
+	}
+}
+
+cmf_feature_test_on_register_cmf_mod = {
+	effect = {
+		cmf_feature_test_register_cmf_mod = yes
+	}
+}
+
+# Unified callback hook for setting changes, alert clicks, action bar clicks.
+cmf_on_callback = {
+	on_actions = {
+		cmf_feature_test_on_cmf_callback
+	}
+}
+
+cmf_feature_test_on_cmf_callback = {
+	effect = {
+		cmf_feature_test_handle_cmf_callback = yes
+	}
+}

@@ -1,0 +1,6 @@
+﻿l_turkish:
+ cmf_action_bar_open_action: "Eylemi Çalıştır"
+ cmf_action_bar_settings_tooltip_title: "Ayarlar"
+ cmf_action_bar_settings_tooltip_text: "#v Community Mod Framework#! ayarlarını açın."
+ cmf_action_bar_log_viewer_tooltip_title: "Log Görüntüleyicisi"
+ cmf_action_bar_log_viewer_tooltip_text: "#v Günlük Görüntüleyicisini#! Aç."

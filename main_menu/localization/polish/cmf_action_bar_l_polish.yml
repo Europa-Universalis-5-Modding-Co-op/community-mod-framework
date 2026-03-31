@@ -1,0 +1,6 @@
+﻿l_polish:
+ cmf_action_bar_open_action: "Wykonaj akcję"
+ cmf_action_bar_settings_tooltip_title: "Ustawienia"
+ cmf_action_bar_settings_tooltip_text: "Otwórz ustawienia #v Community Mod Framework#!."
+ cmf_action_bar_log_viewer_tooltip_title: "Przeglądarka logów"
+ cmf_action_bar_log_viewer_tooltip_text: "Otwórz przeglądarkę logów #v#!."

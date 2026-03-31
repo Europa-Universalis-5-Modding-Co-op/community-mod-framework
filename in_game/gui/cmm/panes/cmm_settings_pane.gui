@@ -1,0 +1,173 @@
+﻿types CMMSettingsTypes
+{
+	# Right settings pane for the currently selected mod.
+	# Reads:
+	# - Player.MakeScope.GetList('cmm_registered_tab_keys') [list<flag>]: registered tab keys for tab rendering.
+	# - Player.MakeScope.GetList('cmm_registered_group_keys') [list<flag>]: registered group keys for group rendering.
+	# - GetVariableSystem.Get('cmm_selected_mod') [string]: active mod id for tab and row filtering.
+	# - GetVariableSystem.Get('cmm_selected_tab') [string]: active tab key for tab and row filtering.
+	# Writes:
+	# - GetVariableSystem.Set('cmm_selected_tab') [string]: changes selected tab from tab clicks.
+	# - <mod_id>__<setting_id> callbacks [effect]: update setting values when controls are used.
+	type cmm_settings_panel = vbox {
+		using = layoutpolicy_expanding
+
+		cmm_mod_tabs = {}
+
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_main_inner_alt
+			margin = { 12 12 }
+			spacing = 10
+
+			text_multi = {
+				visible = "[CMMNoModsRegistered]"
+				text = "CMM_NO_MODS_REGISTERED"
+				autoresize = yes
+				max_width = 680
+			}
+
+			vbox = {
+				visible = "[CMMHasRegisteredMods]"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				scrollbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					minimumsize = { 0 420 }
+
+					blockoverride "scrollbox_content" {
+						cmm_setting_groups = {}
+					}
+				}
+
+				text_multi = {
+					visible = "[CMMShowNoSettingsForSelectedTab]"
+					text = "CMM_NO_SETTINGS_FOR_TAB"
+					autoresize = yes
+					max_width = 680
+				}
+
+				expand = {}
+			}
+		}
+
+	}
+
+	# Tab bar for the selected mod.
+	# Reads:
+	# - Scope.GetFlagName [string]: current tab key (`<mod_id>__<tab_id>`) from tab datamodel.
+	# - Player.MakeScope.GetList('cmm_registered_tab_keys') [list<flag>]: tab key source list.
+	# - GetVariableSystem.Get('cmm_selected_mod') [string]: selected mod id used for owner filtering.
+	# - GetVariableSystem.Get('cmm_selected_tab') [string]: selected tab key used for down-state.
+	# Writes:
+	# - GetVariableSystem.Set('cmm_selected_tab') [string]: selects clicked tab.
+	type cmm_mod_tabs = header_main_tabs {
+		visible = "[CMMSelectedModExists]"
+
+		blockoverride "content" {
+			datamodel = "[Player.MakeScope.GetList('cmm_registered_tab_keys')]"
+			datamodel_reuse_widgets = yes
+
+			item = {
+				button_main_tab_alt = {
+					using = layoutpolicy_expanding
+					size = { -1 40 }
+					visible = "[CMMSelectedHasValue('cmm_selected_mod', CMMMetadataFlag('cmm_tab_owner_mod_id_', Scope.GetFlagName))]"
+					onclick = "[GetVariableSystem.Set('cmm_selected_tab', Scope.GetFlagName)]"
+					down = "[GetVariableSystem.HasValue('cmm_selected_tab', Scope.GetFlagName)]"
+					tooltip_enabled = no
+
+					hbox = {
+						margin = { 5 0 }
+						margin_top = 4
+						text_single = {
+							text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
+							using = Font_Type_Headers
+							using = layoutpolicy_expanding
+							align = center
+							autoresize = no
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# Datamodel-backed group container.
+	# Reads:
+	# - Player.MakeScope.GetList('cmm_registered_group_keys') [list<flag>]: group keys rendered as group sections.
+	# - Scope.GetFlagName [string]: current group key (`<mod_id>__<tab_id>__<group_id>`).
+	# Writes:
+	# - none [n/a]: no writes.
+	type cmm_setting_groups = vbox {
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		spacing = 8
+		margin_left = 6
+		margin_right = 14
+		datamodel = "[Player.MakeScope.GetList('cmm_registered_group_keys')]"
+
+		item = {
+			cmm_setting_group = {}
+		}
+	}
+
+	# Single setting group with header and per-group setting rows.
+	# Reads:
+	# - Scope.GetFlagName [string]: current group key (`<mod_id>__<tab_id>__<group_id>`).
+	# - Player.MakeScope.GetList(Concatenate('cmm_group_setting_keys_', Scope.GetFlagName)) [list<flag>]: settings in this group.
+	# Writes:
+	# - none [n/a]: no writes.
+	type cmm_setting_group = vbox {
+		layoutpolicy_horizontal = expanding
+		visible = "[CMMGroupRowVisible(Scope.GetFlagName)]"
+
+		icon = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 40 }
+			using = button_main_tab_texture
+			frame = 4
+
+			modify_texture = {
+				using = color_intense_bg_blue_texture
+				blend_mode = multiply
+			}
+
+			modify_texture = {
+				using = overlay_leather_texture
+				blend_mode = overlay
+				alpha = 0.2
+			}
+
+			text_single = {
+				size = { 100% 100% }
+				margin = { 20 0 }
+				using = button_common_textobj_font
+				fontsize = 18
+				margin_top = 10
+				autoresize = no
+				default_format = "#yellow_titles"
+				text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
+				tagtooltip_enabled = yes
+				tooltip = "[CMMLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltip_enabled = "[CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+			}
+		}
+
+		vbox = {
+			using = bg_secondary_section
+			layoutpolicy_horizontal = expanding
+			margin = { 12 12 }
+			spacing = 4
+
+			datamodel = "[Player.MakeScope.GetList(Concatenate('cmm_group_setting_keys_', Scope.GetFlagName))]"
+
+			item = {
+				cmm_setting_row = {}
+			}
+		}
+	}
+}
