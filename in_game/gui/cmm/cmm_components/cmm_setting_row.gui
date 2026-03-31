@@ -60,7 +60,7 @@
 					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 					onclick = "[CMMExecuteAutoApply('cmm_auto_toggle_bool', Scope.GetFlagName)]"
 					onclick = "[ExecuteConsoleCommand(CMMSettingConsoleCommand(Scope.GetFlagName))]"
-					checked = "[CMMIsSettingEnabled(Scope.GetFlagName)]"
+					checked = "[InDebugMode]"
 					tooltip_enabled = no
 				}
 
