@@ -142,6 +142,19 @@ const ListEditorComponent = {
                     </div>
                 </div>
 
+                <!-- Per-item field visibility (static lists only) -->
+                <div v-if="listMode === 'static' && field.field_id && (setting.item_count || 1) > 1" class="per-item-aliases">
+                    <h6>Per-Item Visibility</h6>
+                    <div v-for="(name, ii) in (setting.item_names || [])" :key="'vis-'+ii" class="field-row compact list-item-row">
+                        <label class="compact-label">{{ ii + 1 }}</label>
+                        <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
+                        <label class="item-visibility-toggle">
+                            <input type="checkbox" :checked="isItemFieldEnabled(fi, ii)" @change="toggleItemFieldEnabled(fi, ii)">
+                            <span class="item-visibility-label">{{ isItemFieldEnabled(fi, ii) ? 'Shown' : 'Hidden' }}</span>
+                        </label>
+                    </div>
+                </div>
+
                 <!-- Per-item aliases (static lists only) -->
                 <div v-if="listMode === 'static' && field.field_id" class="per-item-aliases">
                     <h6>Per-Item Aliases</h6>
@@ -262,6 +275,13 @@ const ListEditorComponent = {
             while (this.setting.item_values.length > count) {
                 this.setting.item_values.pop();
             }
+            // Sync per-item disabled_items arrays on all fields (remove out-of-range items)
+            for (const field of (this.setting.fields || [])) {
+                if (field.disabled_items) {
+                    field.disabled_items = field.disabled_items.filter(i => i >= 1 && i <= count);
+                    if (field.disabled_items.length === 0) field.disabled_items = null;
+                }
+            }
             // Sync per-item alias arrays on all fields
             for (const field of (this.setting.fields || [])) {
                 if (field.item_aliases) {
@@ -272,6 +292,32 @@ const ListEditorComponent = {
                         field.item_aliases.pop();
                     }
                 }
+            }
+        },
+        isItemFieldEnabled(fi, itemIndex) {
+            const field = (this.setting.fields || [])[fi];
+            if (!field || !field.disabled_items) return true;
+            return !field.disabled_items.includes(itemIndex + 1);
+        },
+        toggleItemFieldEnabled(fi, itemIndex) {
+            const field = (this.setting.fields || [])[fi];
+            if (!field) return;
+            const item = itemIndex + 1;  // 1-based
+            if (!field.disabled_items) {
+                field.disabled_items = [];
+            }
+            const idx = field.disabled_items.indexOf(item);
+            if (idx >= 0) {
+                field.disabled_items.splice(idx, 1);
+            } else {
+                field.disabled_items.push(item);
+                field.disabled_items.sort((a, b) => a - b);
+            }
+            // Trigger reactivity
+            field.disabled_items = [...field.disabled_items];
+            // Clean up empty array
+            if (field.disabled_items.length === 0) {
+                field.disabled_items = null;
             }
         },
         getItemAlias(fi, itemIndex) {

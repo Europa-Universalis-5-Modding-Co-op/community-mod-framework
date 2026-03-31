@@ -22,8 +22,17 @@ def parse_mod_directory(directory: Path) -> Tuple[ModModel, list]:
     metadata_content = ""
     noinspection = False
 
+    # Directories that contain separate mods or non-mod content
+    _skip_dirs = {"submods", "tools", "docs", "assets", "node_modules", ".git"}
+
+    def _in_skip_dir(path: Path) -> bool:
+        rel = path.relative_to(directory)
+        return any(part in _skip_dirs for part in rel.parts)
+
     # Find files by pattern
     for f in directory.rglob("*.txt"):
+        if _in_skip_dir(f):
+            continue
         name = f.name.lower()
         try:
             raw = f.read_bytes()
@@ -44,6 +53,8 @@ def parse_mod_directory(directory: Path) -> Tuple[ModModel, list]:
                 effects_content += "\n" + text
 
     for f in directory.rglob("*_l_english.yml"):
+        if _in_skip_dir(f):
+            continue
         try:
             raw = f.read_bytes()
             loc_content += "\n" + decode_bom(raw)
@@ -569,6 +580,11 @@ def _parse_registrations(content: str, warnings: list) -> list:
 
         block = content[block_start:block_end]
         params = _parse_params(block)
+
+        # Skip macro-parameterized blocks (dead branch suppression)
+        if any("$" in str(v) for k, v in params.items() if not k.startswith("_")):
+            pos = block_end + 1
+            continue
 
         # Determine type
         reg_type = _func_to_type(func_name)

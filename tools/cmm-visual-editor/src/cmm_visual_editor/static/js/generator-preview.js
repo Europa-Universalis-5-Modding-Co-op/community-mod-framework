@@ -370,6 +370,15 @@ ${prefix}_on_cmf_callback = {
             lines.push(`\t\tstep_value = ${this._num(field.step_value, 1)}`);
             lines.push(`\t}`);
         }
+        // Per-item field disables
+        for (const item of (field.disabled_items || [])) {
+            lines.push(`\tcmm_disable_list_field_for_item = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${settingId}`);
+            lines.push(`\t\tfield_id = ${field.field_id}`);
+            lines.push(`\t\titem = ${item}`);
+            lines.push(`\t}`);
+        }
     },
 
     _emitListIterationBoilerplate(lines, modId, setting) {
