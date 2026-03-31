@@ -1,9 +1,6 @@
-- [b]Community Mod Menu (CMM):[/b] トグル、ボタン、数値、スライダー（ダブルクリックでドラッグ）、ドロップダウン、テキスト（シングルプレイヤー専用）、リスト設定を備えた、共有のゲーム内MOD設定ウィンドウです。MODごとのタブ、グループ分け、検索、ホストのみが編集可能なマルチプレイヤー設定を含むグローバル設定、および「デフォルトにリセット」機能を搭載しています。
-- [b]CMM Visual Editor:[/b] 手動でのコーディングなしにCMM設定を作成できるブラウザベースのツールです。ライブプレビューやドラッグ＆ドロップによる並べ替え機能を備えています。
-- [b]is_host Trigger:[/b] 現在の国がホストプレイヤーによって操作されているかを確認します。
-- [b]cmf_suppress Effect:[/b] 1回のエフェクト呼び出しで、エンジンの「used but never set（使用されているが設定されていない）」および「set but never used（設定されているが使用されていない）」警告を抑制します。
-- [b]Player Country Hooks:[/b] 毎年および毎月のパルスごとに各人間プレイヤーの国で実行される共有のon_actions（cmf_yearly_human_country_pulse、cmf_monthly_human_country_pulse）です。
-- [b]Community Mod Toolkit (CMT):[/b] 開発用コンパニオンツール。MODテンプレート、ワークショップアップローダー、自動翻訳機能が含まれます。
-- [b]Unified Callback System:[/b] カスタムアラートとアクションバーが単一の cmf_on_callback on_action を使用するようになりました。
-- [b]Scripted GUIが不要に:[/b] アラートやアクションバーの要素において、条件付きの表示や有効化状態が必要な場合を除き、Scripted GUIは不要になりました。
-- [b]ドキュメント:[/b] 詳細は [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] を、クイックリファレンスは [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url] を参照してください。
+- [b]ロビー後のオンアクション・フック:[/b] 国家選択後に実行される新しいライフサイクル・フック（on_game_start_after_lobby, on_game_load, on_game_load_after_lobby）を追加。プレイヤー国家向けのバリアントも含まれます。バニラのon_game_startがロビー前に実行されるという制限を解決します。
+- [b]Mod自動有効化:[/b] メインメニューに依存関係チェックのポップアップを表示し、CMFが不足している場合に自動的に有効化、またはワークショップを開きます。
+- [b]アイテムごとのリストフィールド無効化:[/b] リスト設定において、特定のアイテムの特定のフィールド列を非表示にします（cmm_disable_list_field_for_item / cmm_enable_list_field_for_item）。
+- [b]変数マップ・ユーティリティ:[/b] 変数マップを安全に変更するための新しいエフェクト、cmf_change_variable_map、cmf_change_local_variable_map、およびcmf_change_global_variable_mapを追加。
+- [b]バグ修正:[/b] 月次/年次フックのスコープ設定および未設定スコープのエラーを修正。
+- [b]CMMビジュアル・エディタ (v1.1.0):[/b] アイテムごとのフィールド無効化への対応を追加し、リスト反復のボイラープレート名の命名を修正。

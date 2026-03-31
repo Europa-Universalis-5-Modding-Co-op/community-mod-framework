@@ -1,9 +1,6 @@
-- [b]Community Mod Menu (CMM):[/b] Współdzielone okno ustawień modów w grze z opcjami przełączników, przycisków, wartości numerycznych, suwaków (dwukrotne kliknięcie, aby przeciągnąć), list rozwijanych, tekstu (tylko dla trybu jednoosobowego) oraz list. Zawiera karty dla poszczególnych modów, grupy, wyszukiwarkę, ustawienia globalne z edycją dostępną tylko dla hosta w trybie wieloosobowym oraz funkcję Reset do ustawień domyślnych.
-- [b]CMM Visual Editor:[/b] Oparte na przeglądarce narzędzie do tworzenia ustawień CMM bez konieczności ręcznego kodowania. Zawiera podgląd na żywo oraz funkcję układania elementów metodą „przeciągnij i upuść”.
-- [b]is_host Trigger:[/b] Sprawdza, czy obecny kraj jest kontrolowany przez hosta.
-- [b]cmf_suppress Effect:[/b] Tłumi ostrzeżenia silnika „used but never set” oraz „set but never used” za pomocą jednego wywołania efektu.
-- [b]Player Country Hooks:[/b] Współdzielone on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse), które aktywują się dla kraju każdego ludzkiego gracza podczas pulsów rocznych i miesięcznych.
-- [b]Community Mod Toolkit (CMT):[/b] Towarzyszące narzędzia programistyczne — szablon moda, narzędzie do przesyłania do warsztatu oraz automatyczne tłumaczenie.
-- [b]Unified Callback System:[/b] Własne alerty (Custom Alerts) i pasek akcji (Action Bar) korzystają teraz z jednego on_action cmf_on_callback.
-- [b]Scripted GUIs nie są już wymagane:[/b] Alerty i elementy paska akcji wymagają Scripted GUI tylko do warunkowej widoczności lub stanu aktywacji.
-- [b]Dokumentacja:[/b] Pełna dokumentacja na [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] oraz skrócona instrukcja na [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url].
+- [b]Hooki on-action po lobby:[/b] Nowe hooki cyklu życia (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby), które aktywują się po wyborze kraju, wraz z wariantami dla kraju gracza. Rozwiązuje to ograniczenie wersji vanilla, w której on_game_start aktywuje się przed wejściem do lobby.
+- [b]Automatyczne włączanie modów:[/b] Okno sprawdzania zależności w menu głównym, które automatycznie aktywuje CMF lub otwiera Warsztat w przypadku braku moda.
+- [b]Wyłączanie pól listy dla poszczególnych elementów:[/b] Możliwość ukrycia konkretnych kolumn pól dla wybranych elementów w ustawieniach listy (cmm_disable_list_field_for_item / cmm_enable_list_field_for_item).
+- [b]Narzędzia map zmiennych:[/b] Nowe efekty cmf_change_variable_map, cmf_change_local_variable_map oraz cmf_change_global_variable_map do bezpiecznej mutacji map zmiennych.
+- [b]Poprawki błędów:[/b] Naprawiono zakresowanie (scoping) hooków miesięcznych/rocznych oraz błędy nieustalonego zakresu (unset scope).
+- [b]Edytor wizualny CMM (v1.1.0):[/b] Dodano wsparcie dla wyłączania pól dla poszczególnych elementów i naprawiono nazewnictwo szablonów (boilerplate) iteracji listy.

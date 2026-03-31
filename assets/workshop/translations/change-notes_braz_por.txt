@@ -1,9 +1,6 @@
-- [b]Community Mod Menu (CMM):[/b] Uma janela compartilhada de configurações de mods dentro do jogo com alternância, botão, numérico, controle deslizante (clique duplo para arrastar), menu suspenso, texto (apenas para um jogador) e configurações de lista. Inclui abas por mod, grupos, busca, configurações globais com edição restrita ao host no multiplayer e Redefinir para os Padrões.
-- [b]CMM Visual Editor:[/b] Ferramenta baseada em navegador para criar configurações de CMM sem codificação manual. Inclui pré-visualização ao vivo e ordenação por arrastar e soltar.
-- [b]is_host Trigger:[/b] Verifica se o país atual é controlado pelo jogador host.
-- [b]cmf_suppress Effect:[/b] Suprime avisos da engine de "usado, mas nunca definido" e "definido, mas nunca usado" com uma única chamada de efeito.
-- [b]Player Country Hooks:[/b] on_actions compartilhados (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) que são acionados para o país de cada jogador humano em pulsos anuais e mensais.
-- [b]Community Mod Toolkit (CMT):[/b] Ferramentas de desenvolvimento complementares — modelo de mod, uploader da workshop e tradução automatizada.
-- [b]Unified Callback System:[/b] Alertas Personalizados e Barra de Ação agora usam um único on_action cmf_on_callback.
-- [b]Scripted GUIs não são mais obrigatórios:[/b] Elementos de alertas e da barra de ação só precisam de uma Scripted GUI para visibilidade condicional ou estado habilitado.
-- [b]Documentation:[/b] Documentação completa na [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] e referência rápida na [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url].
+- [b]Ganchos (Hooks) On-Action Pós-Lobby:[/b] Novos ganchos de ciclo de vida (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) que são disparados após a seleção do país, com variantes para o país do jogador. Resolve a limitação do vanilla onde o on_game_start é disparado antes do lobby.
+- [b]Ativador Automático de Mod:[/b] Pop-up de verificação de dependência no menu principal que ativa automaticamente o CMF ou abre a Workshop quando estiver faltando.
+- [b]Desativação de Campos de Lista por Item:[/b] Oculte colunas de campos específicas para itens específicos nas configurações de lista (cmm_disable_list_field_for_item / cmm_enable_list_field_for_item).
+- [b]Utilitários de Mapa de Variáveis:[/b] Novos efeitos cmf_change_variable_map, cmf_change_local_variable_map e cmf_change_global_variable_map para mutação segura de mapas de variáveis.
+- [b]Correções de Bugs:[/b] Corrigido o escopo dos ganchos mensais/anuais e erros de escopo não definido (unset scope).
+- [b]Editor Visual do CMM (v1.1.0):[/b] Adicionado suporte para desativação de campos por item e corrigida a nomenclatura de boilerplate de iteração de lista.

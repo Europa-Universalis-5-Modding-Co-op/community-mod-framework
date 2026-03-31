@@ -3,30 +3,32 @@
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Simplified Chinese Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-[b]社区模组框架 (CMF)[/b] 是一个工具类模组，旨在提高模组间的互操作性，同时为模组开发者提供创建新功能的工具。
+[b]社区模组框架 (Community Mod Framework, CMF)[/b] 是一款工具类模组，旨在提高模组间的互操作性，同时为模组制作者提供创建新功能的工具。
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/banner.png[/img]
 
-[b]CMF 应该在您的模组加载顺序中排在首位。[/b]
+[b]CMF 应该在您的模组加载顺序中置于首位。[/b]
 
 如有任何疑问，请随时通过 EU5 Mod Coop Discord 联系：https://discord.gg/aqAAcCZsY7
 
-[h1]功能[/h1]
+[h1]功能特性[/h1]
 [list]
- [*][b]社区模组菜单 (CMM)：[/b] 一个共享的游戏内模组菜单。模组作者可以通过简单的 API 动态注册设置 —— 无需构建自定义设置 UI。
+ [*][b]社区模组菜单 (Community Mod Menu, CMM)：[/b] 一个共享的游戏内模组菜单。模组作者可以通过简单的 API 动态注册设置——无需构建自定义设置 UI。
   [list]
    [*]开关、按钮、数值、滑块（双击拖动）、下拉菜单、文本（仅限单人模式）以及列表设置
-   [*]基于模组的分页、分组和搜索功能
-   [*]全局设置，在多人模式下仅限主机编辑
+   [*]针对每个模组的选项卡、分组和搜索功能
+   [*]全局设置，多人模式下仅限房主编辑
    [*]恢复默认设置
    [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM 可视化编辑器[/url] —— 用于创建模组菜单的浏览器工具
   [/list]
  [*][b]自定义警报：[/b] 通过本地化键在警报栏中创建并显示自定义警报。
- [*][b]动作栏：[/b] 通过本地化键添加自定义动作栏按钮。
- [*][b]is_host 触发器：[/b] 检查当前国家是否由主机玩家控制。
- [*][b]cmf_suppress 效果：[/b] 通过单次效果调用即可抑制引擎的“已使用但从未设置 (used but never set)”和“已设置但从未使用 (set but never used)”警告。
- [*][b]玩家国家钩子：[/b] 共享的 on_actions（cmf_yearly_human_country_pulse、cmf_monthly_human_country_pulse），在年度和月度脉冲时为每个玩家国家触发（比每个模组单独检查玩家效率更高）。
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]社区模组工具包 (CMT)：[/url][/b] 一套配套的开发工具，例如模组模板、创意工坊上传器和模组翻译器。
+ [*][b]动作栏：[/b] 使用本地化键添加自定义动作栏按钮。
+ [*][b]is_host 触发器：[/b] 检查当前国家是否由房主控制。
+ [*][b]cmf_suppress 效果：[/b] 通过单次效果调用抑制引擎的“已使用但未设置 (used but never set)”和“已设置但未使用 (set but never used)”警告。
+ [*][b]On-Action 钩子：[/b] 大厅后游戏开始和存档加载钩子（on_game_start_after_lobby, on_game_load, on_game_load_after_lobby），包含玩家国家变体。还包括针对人类玩家的共享年度和月度脉冲 (Pulses)。
+ [*][b]依赖检查弹窗：[/b] 预制的主菜单弹窗，当缺失 CMF 时会提醒玩家，并提供自动启用和创意工坊订阅选项。
+ [*][b]变量映射工具 (Variable Map Utilities)：[/b] 安全的变量映射更改助手（cmf_change_variable_map 及其本地/全局变体），原子化地处理先移除后添加的操作。
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]社区模组工具箱 (Community Mod Toolkit, CMT)：[/url][/b] 一套配套的开发工具，例如模组模板、创意工坊上传器和模组翻译器。
 [/list]
 
 [h1]文档[/h1]
@@ -43,7 +45,7 @@
  [*]Pickle
 [/list]
 
-[h1]正在使用 CMF 的模组[/h1]
+[h1]使用 CMF 的模组[/h1]
 [list]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
@@ -53,5 +55,5 @@
 [/list]
 
 [h1]更新日志：[/h1]
-请参阅[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]创意工坊页面上的更新说明[/url]。
+请参阅[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]创意工坊页面上的更新记录[/url]。
 

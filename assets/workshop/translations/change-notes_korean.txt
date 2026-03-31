@@ -1,9 +1,6 @@
-- [b]Community Mod Menu (CMM):[/b] 게임 내 공유 모드 설정 창으로 토글, 버튼, 숫자, 슬라이더(더블 클릭하여 드래그), 드롭다운, 텍스트(싱글 플레이어 전용), 리스트 설정을 지원합니다. 모드별 탭, 그룹, 검색, 호스트 전용 멀티플레이어 편집 기능이 포함된 글로벌 설정 및 기본값으로 초기화 기능을 포함합니다.
-- [b]CMM Visual Editor:[/b] 수동 코딩 없이 CMM 설정을 제작할 수 있는 브라우저 기반 도구입니다. 실시간 미리보기와 드래그 앤 드롭 방식의 순서 정렬 기능을 포함합니다.
-- [b]is_host Trigger:[/b] 현재 국가가 호스트 플레이어에 의해 제어되는지 확인합니다.
-- [b]cmf_suppress Effect:[/b] 단 한 번의 이펙트 호출로 "used but never set" 및 "set but never used" 엔진 경고를 억제합니다.
-- [b]Player Country Hooks:[/b] 각 인간 플레이어의 국가에 대해 매년 및 매월 펄스(pulse) 시점에 실행되는 공유 on_actions(cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse)입니다.
-- [b]Community Mod Toolkit (CMT):[/b] 보조 개발 도구 — 모드 템플릿, 창작마당 업로더, 자동 번역 기능을 제공합니다.
-- [b]Unified Callback System:[/b] 커스텀 알림(Alerts) 및 액션 바(Action Bar)가 이제 단일 cmf_on_callback on_action을 사용합니다.
-- [b]Scripted GUIs are no longer required:[/b] 알림 및 액션 바 요소는 조건부 가시성이나 활성화 상태를 설정할 때만 스크립트 GUI가 필요합니다.
-- [b]Documentation:[/b] 전체 문서는 [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url]에서 확인할 수 있으며, [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url]에서 빠른 참조가 가능합니다.
+- [b]포스트 로비 On-Action 훅:[/b] 국가 선택 후에 실행되는 새로운 라이프사이클 훅(on_game_start_after_lobby, on_game_load, on_game_load_after_lobby)이 추가되었으며, 플레이어 국가 전용 버전도 포함됩니다. 이는 on_game_start가 로비 이전에 실행되는 바닐라의 제한 사항을 해결합니다.
+- [b]모드 자동 활성화 도구 (Auto-Enabler):[/b] 메인 메뉴에 종속성 확인 팝업이 추가되어, CMF가 없으면 자동으로 활성화하거나 창작마당 페이지를 엽니다.
+- [b]항목별 리스트 필드 비활성화:[/b] 리스트 설정에서 특정 항목의 특정 필드 열을 숨길 수 있습니다 (cmm_disable_list_field_for_item / cmm_enable_list_field_for_item).
+- [b]변수 맵 유틸리티:[/b] 안전한 변수 맵 수정을 위한 새로운 cmf_change_variable_map, cmf_change_local_variable_map, cmf_change_global_variable_map 효과(effect)가 추가되었습니다.
+- [b]버그 수정:[/b] 월간/연간 훅의 스코핑 문제와 설정되지 않은 스코프(unset scope) 오류를 수정했습니다.
+- [b]CMM 비주얼 에디터 (v1.1.0):[/b] 항목별 필드 비활성화 지원을 추가하고 리스트 반복문 상용구(boilerplate) 명칭 문제를 수정했습니다.

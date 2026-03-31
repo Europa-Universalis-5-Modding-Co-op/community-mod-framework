@@ -1,9 +1,6 @@
-- [b]Menú de Mods de la Comunidad (CMM):[/b] Una ventana compartida de ajustes de mods dentro del juego con opciones de alternancia, botón, numérico, control deslizante (doble clic para arrastrar), desplegable, texto (solo para un jugador) y ajustes de lista. Incluye pestañas por mod, grupos, búsqueda, ajustes globales con edición multijugador exclusiva para el anfitrión y Restablecer valores predeterminados.
-- [b]Editor Visual de CMM:[/b] Herramienta basada en el navegador para crear ajustes de CMM sin programación manual. Incluye vista previa en tiempo real y ordenación mediante arrastrar y soltar.
-- [b]Activador (Trigger) is_host:[/b] Comprueba si el país actual está controlado por el jugador anfitrión.
-- [b]Efecto cmf_suppress:[/b] Suprime las advertencias del motor "used but never set" y "set but never used" con una sola llamada de efecto.
-- [b]Hooks para Países de Jugadores:[/b] on_actions compartidos (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) que se activan para el país de cada jugador humano en los pulsos anuales y mensuales.
-- [b]Kit de Herramientas de Modding de la Comunidad (CMT):[/b] Herramientas de desarrollo complementarias: plantilla de mod, cargador de workshop y traducción automática.
-- [b]Sistema de Callback Unificado:[/b] Las alertas personalizadas y la barra de acción ahora utilizan un único on_action cmf_on_callback.
-- [b]Las Scripted GUIs ya no son obligatorias:[/b] Las alertas y los elementos de la barra de acción solo necesitan una Scripted GUI para visibilidad condicional o estado habilitado.
-- [b]Documentación:[/b] Documentación completa en la [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]Wiki de GitHub[/url] y referencia rápida en la [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Wiki de Paradox[/url].
+- [b]Hooks de On-Action Post-Lobby:[/b] Nuevos hooks de ciclo de vida (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) que se activan tras la selección de país, con variantes para el país del jugador. Resuelve la limitación del juego base (vanilla) donde on_game_start se activa antes del lobby.
+- [b]Auto-Habilitador de Mods:[/b] Ventana emergente de verificación de dependencias en el menú principal que habilita automáticamente el CMF o abre la Workshop si falta.
+- [b]Desactivación de Campos de Lista por Elemento:[/b] Oculta columnas de campos específicos para elementos concretos en los ajustes de lista (cmm_disable_list_field_for_item / cmm_enable_list_field_for_item).
+- [b]Utilidades de Mapas de Variables:[/b] Nuevos efectos cmf_change_variable_map, cmf_change_local_variable_map y cmf_change_global_variable_map para la mutación segura de mapas de variables.
+- [b]Corrección de Errores:[/b] Corregido el alcance (scoping) de los hooks mensuales/anuales y los errores de alcance no definido (unset scope).
+- [b]CMM Visual Editor (v1.1.0):[/b] Añadido soporte para la desactivación de campos por elemento y corregido el nombre del código base (boilerplate) de iteración de listas.

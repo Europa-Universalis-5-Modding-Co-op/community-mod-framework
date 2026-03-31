@@ -3,35 +3,37 @@ Marco y Menú de Mods de la Comunidad / Community Mod Framework & Menu
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Spanish Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-El [b]Community Mod Framework (CMF)[/b] es un mod de utilidad que tiene como objetivo mejorar la interoperabilidad entre mods, al tiempo que ofrece a los creadores herramientas para desarrollar nuevas funcionalidades.
+El [b]Community Mod Framework (CMF)[/b] es un mod de utilidad que tiene como objetivo mejorar la interoperabilidad entre mods, al tiempo que proporciona a los creadores de mods herramientas para desarrollar nuevas funciones.
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/banner.png[/img]
 
-[b]CMF debe cargarse primero en tu orden de carga de mods.[/b]
+[b]CMF debe cargarse primero en el orden de carga de tus mods.[/b]
 
-Si tienes alguna pregunta, no dudes en contactarnos en el Discord de EU5 Mod Coop: https://discord.gg/aqAAcCZsY7
+Si tienes alguna pregunta, no dudes en contactar a través del Discord de EU5 Mod Coop: https://discord.gg/aqAAcCZsY7
 
 [h1]Características[/h1]
 [list]
- [*][b]Community Mod Menu (CMM):[/b] Un menú de mods compartido dentro del juego. Los autores de mods registran sus ajustes de forma dinámica a través de una API sencilla, sin necesidad de crear una interfaz de usuario personalizada para los ajustes.
+ [*][b]Community Mod Menu (CMM):[/b] Un menú de mods compartido dentro del juego. Los autores de mods registran sus ajustes de forma dinámica a través de una API sencilla, sin necesidad de crear una interfaz de usuario personalizada.
   [list]
-   [*]Interruptores, botones, valores numéricos, controles deslizantes (doble clic para arrastrar), menús desplegables, texto (solo para un jugador) y ajustes de lista.
+   [*]Ajustes de tipo interruptor, botón, numérico, deslizador (doble clic para arrastrar), desplegable, texto (solo para un jugador) y lista.
    [*]Pestañas por mod, grupos y búsqueda.
-   [*]Ajustes globales con edición multijugador limitada al anfitrión.
+   [*]Ajustes globales con edición exclusiva para el anfitrión en multijugador.
    [*]Restablecer valores predeterminados.
-   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url]: herramienta web para crear tu menú de mod.
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url] — Herramienta basada en navegador para crear tu menú de mod.
   [/list]
  [*][b]Alertas personalizadas:[/b] Crea y muestra alertas personalizadas en la barra de alertas mediante claves de localización.
  [*][b]Barra de acciones:[/b] Añade botones personalizados a la barra de acciones con claves de localización.
- [*][b]Disparador is_host:[/b] Comprueba si el país actual está controlado por el jugador anfitrión.
+ [*][b]Activador is_host:[/b] Comprueba si el país actual está controlado por el jugador anfitrión.
  [*][b]Efecto cmf_suppress:[/b] Suprime las advertencias del motor "used but never set" y "set but never used" con una sola llamada de efecto.
- [*][b]Hook de país del jugador:[/b] on_actions compartidos (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) que se activan para el país de cada jugador humano en los pulsos anuales y mensuales (ligeramente más eficiente que si cada mod comprobara a los jugadores individualmente).
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Un conjunto complementario de herramientas de desarrollo, como una plantilla de mod, un cargador para el workshop y un traductor de mods.
+ [*][b]Hooks de On-Action:[/b] Hooks de inicio de partida tras el lobby y de carga de partida (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) con variantes para el país del jugador. También incluye pulsos anuales y mensuales compartidos para jugadores humanos.
+ [*][b]Ventana emergente de comprobación de dependencias:[/b] Ventana emergente para el menú principal que avisa a los jugadores cuando falta el CMF, con opciones de auto-activación y suscripción a la Workshop.
+ [*][b]Utilidades de mapas de variables:[/b] Ayudantes para la mutación segura de mapas de variables (cmf_change_variable_map y variantes locales/globales) que gestionan la eliminación y posterior adición de forma atómica.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Un conjunto complementario de herramientas de desarrollo, como una plantilla de mod, cargador de la workshop y traductor de mods.
 [/list]
 
 [h1]Documentación[/h1]
 [list]
- [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]Wiki de GitHub[/url] — Documentación completa
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — Documentación completa
  [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — Referencia rápida
  [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]Repositorio de GitHub[/url]
 [/list]
@@ -43,7 +45,7 @@ Si tienes alguna pregunta, no dudes en contactarnos en el Discord de EU5 Mod Coo
  [*]Pickle
 [/list]
 
-[h1]Mods que utilizan CMF[/h1]
+[h1]Mods que usan CMF[/h1]
 [list]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
@@ -53,5 +55,5 @@ Si tienes alguna pregunta, no dudes en contactarnos en el Discord de EU5 Mod Coo
 [/list]
 
 [h1]Registro de cambios:[/h1]
-Consulta las [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]notas de cambios en la página del workshop[/url].
+Consulta las [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]Notas de cambios en la página de la workshop[/url].
 
