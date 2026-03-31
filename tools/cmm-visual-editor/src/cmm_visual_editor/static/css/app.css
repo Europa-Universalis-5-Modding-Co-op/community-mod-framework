@@ -299,6 +299,22 @@ body {
     letter-spacing: 0.5px;
 }
 
+.collapsible-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.collapsible-header:hover {
+    color: var(--text);
+}
+
+.collapse-indicator {
+    font-size: 10px;
+    margin-right: 4px;
+    display: inline-block;
+    width: 10px;
+}
+
 .item-alias-name {
     flex: 1;
     min-width: 0;

@@ -195,7 +195,11 @@ def _build_model(
             list_field_disables,
         )
         if setting:
-            groups_map[gkey].settings.append(setting)
+            # Deduplicate: skip if same setting_id already exists in this group
+            # (handles if/else branches that register the same setting conditionally)
+            existing_ids = {s.setting_id for s in groups_map[gkey].settings}
+            if setting.setting_id not in existing_ids:
+                groups_map[gkey].settings.append(setting)
 
     # Parse custom on_changed effects from effects and GUI content
     custom_effects = _parse_custom_effects(effects, gui)
