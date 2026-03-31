@@ -223,6 +223,18 @@ cmm_register_list_slider_field = {
 }
 </syntaxhighlight>
 
+=== Disabling Fields for Specific Items ===
+Disable a field column for specific items so the cell renders as empty space:
+<syntaxhighlight lang="text">
+cmm_disable_list_field_for_item = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = enabled
+	item = 2
+}
+</syntaxhighlight>
+Call after registering the field. Shift+click "apply to all" skips disabled items. Use <code>cmm_enable_list_field_for_item</code> with the same parameters to re-enable.
+
 === List Callback ===
 Settings lists require a Scripted GUI callback (unlike other types which use auto-apply):
 <syntaxhighlight lang="text">
