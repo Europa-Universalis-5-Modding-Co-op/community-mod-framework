@@ -45,3 +45,4 @@
  cmm_core__enable_host_only_tools_desc: "Sadece kurucuya özel ayarların ve mod araçlarının etkin olup olmayacağını kontrol eder."
  cmm_core__enable_debug_mode_name: "Hata Ayıklama Modunu Etkinleştir"
  cmm_core__enable_debug_mode_desc: "Mevcut oturum için hata ayıklama modunu açar/kapatır. Hata ayıklama modu durumu oyun yeniden yüklendiğinde sıfırlanır."
+ CMM_SLIDER_DOUBLE_CLICK_DRAG: "Sürüklemek için çift tıklayın ve basılı tutun"

@@ -45,3 +45,4 @@
  cmm_core__enable_host_only_tools_desc: "Legt fest, ob nur für den Host verfügbare Einstellungen und Mod-Werkzeuge aktiviert sind."
  cmm_core__enable_debug_mode_name: "Debug-Modus aktivieren"
  cmm_core__enable_debug_mode_desc: "Schaltet den Debug-Modus für die aktuelle Sitzung um. Der Status des Debug-Modus wird beim Neuladen des Spiels zurückgesetzt."
+ CMM_SLIDER_DOUBLE_CLICK_DRAG: "Doppelklicken und zum Ziehen gedrückt halten"

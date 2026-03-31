@@ -10,6 +10,3 @@
  cmf_settings_action_bar_group_active_buttons: "Активные кнопки"
  cmf_settings_action_bar_group_active_button_activate: "Активировать кнопку"
  cmf_settings_action_bar_group_active_button_deactivate: "Кнопка деактивации"
- cmf_init_popup_title: "Фреймворк модификаций сообщества"
- cmf_init_popup_desc: "Для этого сохранения необходимо инициализировать CMF. Нажмите кнопку ниже, чтобы продолжить."
- cmf_init_popup_button: "Инициализировать"

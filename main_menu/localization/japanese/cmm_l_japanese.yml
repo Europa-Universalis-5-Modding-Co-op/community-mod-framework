@@ -45,3 +45,4 @@
  cmm_core__enable_host_only_tools_desc: "ホスト専用の設定およびホスト専用のMODツールを有効にするかどうかを制御します。"
  cmm_core__enable_debug_mode_name: "デバッグモードを有効にする"
  cmm_core__enable_debug_mode_desc: "現在のセッションのデバッグモードを切り替えます。デバッグモードの状態は、ゲームを再ロードするとリセットされます。"
+ CMM_SLIDER_DOUBLE_CLICK_DRAG: "ダブルクリックして長押しでドラッグ"

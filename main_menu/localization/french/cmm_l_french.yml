@@ -45,3 +45,4 @@
  cmm_core__enable_host_only_tools_desc: "Détermine si les paramètres et les outils de modding réservés à l'hôte sont activés."
  cmm_core__enable_debug_mode_name: "Activer le mode débogage"
  cmm_core__enable_debug_mode_desc: "Active ou désactive le mode de débogage pour la session actuelle. L'état du mode de débogage est réinitialisé lors du rechargement de la partie."
+ CMM_SLIDER_DOUBLE_CLICK_DRAG: "Double-cliquez et maintenez pour faire glisser"

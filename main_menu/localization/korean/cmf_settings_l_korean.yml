@@ -10,6 +10,3 @@
  cmf_settings_action_bar_group_active_buttons: "활성화된 버튼"
  cmf_settings_action_bar_group_active_button_activate: "활성화 버튼"
  cmf_settings_action_bar_group_active_button_deactivate: "비활성화 버튼"
- cmf_init_popup_title: "커뮤니티 모드 프레임워크"
- cmf_init_popup_desc: "이 세이브를 위해 CMF 초기화가 필요합니다. 계속하려면 아래 버튼을 클릭하십시오."
- cmf_init_popup_button: "초기화"

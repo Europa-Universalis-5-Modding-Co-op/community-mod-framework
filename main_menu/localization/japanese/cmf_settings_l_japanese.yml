@@ -10,6 +10,3 @@
  cmf_settings_action_bar_group_active_buttons: "有効なボタン"
  cmf_settings_action_bar_group_active_button_activate: "有効化ボタン"
  cmf_settings_action_bar_group_active_button_deactivate: "無効化ボタン"
- cmf_init_popup_title: "コミュニティ・モッド・フレームワーク"
- cmf_init_popup_desc: "このセーブでCMFを初期化する必要があります。続行するには下のボタンをクリックしてください。"
- cmf_init_popup_button: "初期化"

@@ -45,3 +45,4 @@
  cmm_core__enable_host_only_tools_desc: "Controla se as configurações e ferramentas de mod exclusivas do anfitrião estão habilitadas."
  cmm_core__enable_debug_mode_name: "Ativar Modo de Depuração"
  cmm_core__enable_debug_mode_desc: "Alterna o modo de depuração para a sessão atual. O estado do modo de depuração é redefinido ao recarregar o jogo."
+ CMM_SLIDER_DOUBLE_CLICK_DRAG: "Clique duas vezes e segure para arrastar"

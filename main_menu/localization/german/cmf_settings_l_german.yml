@@ -10,6 +10,3 @@
  cmf_settings_action_bar_group_active_buttons: "Aktive Schaltflächen"
  cmf_settings_action_bar_group_active_button_activate: "Schaltfläche aktivieren"
  cmf_settings_action_bar_group_active_button_deactivate: "Deaktivieren-Schaltfläche"
- cmf_init_popup_title: "Community-Mod-Framework"
- cmf_init_popup_desc: "CMF muss für diesen Spielstand initialisiert werden. Klicke auf die Schaltfläche unten, um fortzufahren."
- cmf_init_popup_button: "Initialisieren"

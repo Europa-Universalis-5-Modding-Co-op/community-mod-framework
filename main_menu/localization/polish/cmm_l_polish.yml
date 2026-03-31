@@ -45,3 +45,4 @@
  cmm_core__enable_host_only_tools_desc: "Określa, czy ustawienia i narzędzia moderskie dostępne tylko dla hosta są włączone."
  cmm_core__enable_debug_mode_name: "Włącz tryb debugowania"
  cmm_core__enable_debug_mode_desc: "Przełącza tryb debugowania dla bieżącej sesji. Stan trybu debugowania resetuje się po ponownym wczytaniu gry."
+ CMM_SLIDER_DOUBLE_CLICK_DRAG: "Kliknij dwukrotnie i przytrzymaj, aby przeciągnąć"

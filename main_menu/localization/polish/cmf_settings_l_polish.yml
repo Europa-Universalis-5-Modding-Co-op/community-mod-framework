@@ -10,6 +10,3 @@
  cmf_settings_action_bar_group_active_buttons: "Aktywne przyciski"
  cmf_settings_action_bar_group_active_button_activate: "Aktywuj przycisk"
  cmf_settings_action_bar_group_active_button_deactivate: "Przycisk dezaktywacji"
- cmf_init_popup_title: "Framework Modów Społeczności"
- cmf_init_popup_desc: "CMF wymaga inicjalizacji dla tego zapisu gry. Kliknij poniższy przycisk, aby kontynuować."
- cmf_init_popup_button: "Inicjuj"

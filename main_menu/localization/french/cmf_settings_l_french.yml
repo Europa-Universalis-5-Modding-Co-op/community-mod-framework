@@ -10,6 +10,3 @@
  cmf_settings_action_bar_group_active_buttons: "Boutons actifs"
  cmf_settings_action_bar_group_active_button_activate: "Bouton d'activation"
  cmf_settings_action_bar_group_active_button_deactivate: "Bouton de désactivation"
- cmf_init_popup_title: "Framework de modding communautaire"
- cmf_init_popup_desc: "CMF doit être initialisé pour cette sauvegarde. Cliquez sur le bouton ci-dessous pour continuer."
- cmf_init_popup_button: "Initialiser"

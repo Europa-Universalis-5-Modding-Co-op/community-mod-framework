@@ -10,6 +10,3 @@
  cmf_settings_action_bar_group_active_buttons: "Botones activos"
  cmf_settings_action_bar_group_active_button_activate: "Activar botón"
  cmf_settings_action_bar_group_active_button_deactivate: "Botón de desactivación"
- cmf_init_popup_title: "Marco para Mods de la Comunidad"
- cmf_init_popup_desc: "CMF debe ser inicializado para esta partida. Haz clic en el botón de abajo para continuar."
- cmf_init_popup_button: "Inicializar"
