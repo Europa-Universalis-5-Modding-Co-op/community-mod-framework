@@ -59,17 +59,17 @@ cmf_feature_test_on_game_load_after_lobby = {
 	}
 }
 
-# Post-lobby hook tests (player country scope).
-# on_game_start_after_lobby_player_country: changes player pops to Danish (new game only).
-# on_game_load_player_country: changes player pops to English (every save load).
-# on_game_load_after_lobby_player_country: changes player pops to French (save load, past lobby only).
-on_game_start_after_lobby_player_country = {
+# Post-lobby hook tests (human country scope).
+# on_game_start_after_lobby_human_country: changes human pops to Danish (new game only).
+# on_game_load_human_country: changes human pops to English (every save load).
+# on_game_load_after_lobby_human_country: changes human pops to French (save load, past lobby only).
+on_game_start_after_lobby_human_country = {
 	on_actions = {
-		cmf_feature_test_on_game_start_after_lobby_player_country
+		cmf_feature_test_on_game_start_after_lobby_human_country
 	}
 }
 
-cmf_feature_test_on_game_start_after_lobby_player_country = {
+cmf_feature_test_on_game_start_after_lobby_human_country = {
 	effect = {
 		every_owned_location = {
 			every_pop = {
@@ -80,13 +80,13 @@ cmf_feature_test_on_game_start_after_lobby_player_country = {
 	}
 }
 
-on_game_load_player_country = {
+on_game_load_human_country = {
 	on_actions = {
-		cmf_feature_test_on_game_load_player_country
+		cmf_feature_test_on_game_load_human_country
 	}
 }
 
-cmf_feature_test_on_game_load_player_country = {
+cmf_feature_test_on_game_load_human_country = {
 	effect = {
 		every_owned_location = {
 			every_pop = {
@@ -97,13 +97,13 @@ cmf_feature_test_on_game_load_player_country = {
 	}
 }
 
-on_game_load_after_lobby_player_country = {
+on_game_load_after_lobby_human_country = {
 	on_actions = {
-		cmf_feature_test_on_game_load_after_lobby_player_country
+		cmf_feature_test_on_game_load_after_lobby_human_country
 	}
 }
 
-cmf_feature_test_on_game_load_after_lobby_player_country = {
+cmf_feature_test_on_game_load_after_lobby_human_country = {
 	effect = {
 		every_owned_location = {
 			every_pop = {

@@ -88,16 +88,16 @@ on_game_start_after_lobby = {
 		every_country = {
 			limit = { is_ai = no }
 			trigger_event_silently = {
-				on_action = on_game_start_after_lobby_player_country
+				on_action = on_game_start_after_lobby_human_country
 			}
 		}
 	}
 	on_actions = { }
 }
 
-# Player country variant of on_game_start_after_lobby.
+# Human country variant of on_game_start_after_lobby.
 # Scope: country
-on_game_start_after_lobby_player_country = {
+on_game_start_after_lobby_human_country = {
 	on_actions = {
 		_cmf_on_cmm_registration
 		cmf_on_mod_registration
@@ -112,16 +112,16 @@ on_game_load = {
 		every_country = {
 			limit = { is_ai = no }
 			trigger_event_silently = {
-				on_action = on_game_load_player_country
+				on_action = on_game_load_human_country
 			}
 		}
 	}
 	on_actions = { }
 }
 
-# Player country variant of on_game_load.
+# Human country variant of on_game_load.
 # Scope: country
-on_game_load_player_country = {
+on_game_load_human_country = {
 	on_actions = {
 		_cmf_on_cmm_registration
 	}
@@ -136,16 +136,16 @@ on_game_load_after_lobby = {
 		every_country = {
 			limit = { is_ai = no }
 			trigger_event_silently = {
-				on_action = on_game_load_after_lobby_player_country
+				on_action = on_game_load_after_lobby_human_country
 			}
 		}
 	}
 	on_actions = { }
 }
 
-# Player country variant of on_game_load_after_lobby.
+# Human country variant of on_game_load_after_lobby.
 # Scope: country
-on_game_load_after_lobby_player_country = {
+on_game_load_after_lobby_human_country = {
 	on_actions = {
 		_cmf_on_cmm_registration
 		cmf_on_mod_registration
