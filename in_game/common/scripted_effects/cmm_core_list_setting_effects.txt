@@ -500,6 +500,7 @@ cmm_begin_global_settings_list = {
 cmm_add_list_item_at_index = {
 	set_variable = { name = cmm_list_item_owner_setting_$mod_id$__$setting_id$_i$item$ value = flag:$mod_id$__$setting_id$ }
 	set_variable = { name = $mod_id$__$setting_id$_i$item$_name value = flag:$name_flag$ }
+	set_variable = { name = $mod_id$__$setting_id$_i$item$_desc value = flag:$mod_id$__$setting_id$_i$item$_desc }
 	clear_variable_list = $mod_id$__$setting_id$_i$item$_value
 	add_to_variable_list = { name = $mod_id$__$setting_id$_i$item$_value target = $value$ }
 	add_to_$vt$_list = { name = cmm_list_items_$mod_id$__$setting_id$ target = flag:$mod_id$__$setting_id$_i$item$ }

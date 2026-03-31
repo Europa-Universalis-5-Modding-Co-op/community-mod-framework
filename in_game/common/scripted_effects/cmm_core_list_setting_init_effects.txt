@@ -35,6 +35,10 @@ cmm_initialize_list_item_metadata = {
 		name = $mod_id$__$setting_id$_i$item$_name
 		value = flag:$mod_id$__$setting_id$_i$item$_name
 	}
+	set_variable = {
+		name = $mod_id$__$setting_id$_i$item$_desc
+		value = flag:$mod_id$__$setting_id$_i$item$_desc
+	}
 }
 
 # Add one stable item identity to the ordered list storage.
@@ -574,6 +578,26 @@ cmm_suppress_list_setting_warnings = {
 		cmf_suppress = { v = $mod_id$__$setting_id$_i18_name }
 		cmf_suppress = { v = $mod_id$__$setting_id$_i19_name }
 		cmf_suppress = { v = $mod_id$__$setting_id$_i20_name }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i1_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i2_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i3_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i4_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i5_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i6_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i7_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i8_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i9_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i10_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i11_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i12_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i13_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i14_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i15_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i16_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i17_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i18_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i19_desc }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i20_desc }
 		cmf_suppress = { v = $mod_id$__$setting_id$_item_column_name }
 		cmf_suppress = { v = cmm_list_add_counter_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = $mod_id$__$setting_id$_i1_value }

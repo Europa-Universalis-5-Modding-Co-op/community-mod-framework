@@ -241,6 +241,10 @@
 			text_single = {
 				layoutpolicy_horizontal = expanding
 				align = left|nobaseline
+				tagtooltip_enabled = yes
+				tooltip = "[CMMLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltip_enabled = "[CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltipwidget = { BasicFunctionalTooltip = {} }
 				text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
 			}
 
