@@ -46,24 +46,25 @@ const ListEditorComponent = {
                 <button class="btn btn-sm" @click="addField" :disabled="(setting.fields||[]).length >= 5">+ Add Field</button>
             </div>
             <div v-for="(field, fi) in (setting.fields||[])" :key="fi" class="field-card">
-                <div class="field-card-header">
+                <div class="field-card-header" @click="toggleFieldCollapsed(fi)" style="cursor: pointer;">
+                    <span class="collapse-indicator">{{ isFieldCollapsed(fi) ? '&#9654;' : '&#9660;' }}</span>
                     <span class="setting-type-badge" :class="field.field_type">{{ field.field_type }}</span>
                     <span>{{ field.name || field.field_id || 'Field ' + (fi+1) }}</span>
                     <span v-if="fieldAccessor(fi)" class="accessor-group">
                         <span class="accessor-label">{{ fieldAccessorLabel(fi) }}</span>
                         <template v-if="editingFieldAlias !== fi">
-                            <span v-if="hasItemAliases(fi)" class="setting-accessor" @click="copyFieldAccessor(fi)" title="Click to copy all per-item aliases">
+                            <span v-if="hasItemAliases(fi)" class="setting-accessor" @click.stop="copyFieldAccessor(fi)" title="Click to copy all per-item aliases">
                                 <code>per-item</code>
                                 <span v-if="copiedField === fi" class="copied-flash">Copied!</span>
                             </span>
-                            <span v-else class="setting-accessor" @click="copyFieldAccessor(fi)" :title="'Click to copy: ' + fieldAccessor(fi)">
+                            <span v-else class="setting-accessor" @click.stop="copyFieldAccessor(fi)" :title="'Click to copy: ' + fieldAccessor(fi)">
                                 <code>{{ fieldAccessor(fi) }}</code>
                                 <span v-if="copiedField === fi" class="copied-flash">Copied!</span>
                             </span>
-                            <button v-if="!hasItemAliases(fi)" class="btn-icon btn-alias-edit" @click="startEditFieldAlias(fi)" title="Edit accessor alias">&#9998;</button>
+                            <button v-if="!hasItemAliases(fi)" class="btn-icon btn-alias-edit" @click.stop="startEditFieldAlias(fi)" title="Edit accessor alias">&#9998;</button>
                         </template>
                         <template v-else>
-                            <span class="alias-edit-group">
+                            <span class="alias-edit-group" @click.stop>
                                 <span class="accessor-prefix">var:</span>
                                 <input class="alias-edit-input" v-model="fieldAliasInput" @keyup.enter="confirmFieldAlias(fi)" @keyup.escape="cancelFieldAlias" ref="fieldAliasInput" :placeholder="defaultFieldAccessorKey(fi)">
                                 <button class="btn-icon" @click="confirmFieldAlias(fi)" title="Confirm">&#10003;</button>
@@ -72,96 +73,108 @@ const ListEditorComponent = {
                             </span>
                         </template>
                     </span>
-                    <button class="btn-icon btn-danger" @click="removeField(fi)">&times;</button>
+                    <button class="btn-icon btn-danger" @click.stop="removeField(fi)">&times;</button>
                 </div>
-                <div class="field-grid">
-                    <div class="field-row">
-                        <label>Field ID <span class="required">*</span></label>
-                        <input v-model="field.field_id" placeholder="enabled" @input="sanitizeFieldId(field)">
-                    </div>
-                    <div class="field-row">
-                        <label>Type</label>
-                        <select v-model="field.field_type" @change="onFieldTypeChange(field)">
-                            <option value="bool">Bool</option>
-                            <option value="dropdown">Dropdown</option>
-                            <option value="numeric">Numeric</option>
-                            <option value="slider">Slider</option>
-                        </select>
-                    </div>
-                    <div class="field-row">
-                        <label>Name</label>
-                        <input v-model="field.name" placeholder="Field Name">
-                    </div>
-                </div>
-
-                <!-- Bool field -->
-                <div v-if="field.field_type === 'bool'" class="field-row">
-                    <label>Default</label>
-                    <select v-model.number="field.default_value">
-                        <option :value="0">Off (0)</option>
-                        <option :value="1">On (1)</option>
-                    </select>
-                </div>
-
-                <!-- Dropdown field -->
-                <div v-if="field.field_type === 'dropdown'">
+                <div v-show="!isFieldCollapsed(fi)">
                     <div class="field-grid">
                         <div class="field-row">
-                            <label>Default Index</label>
-                            <input type="number" v-model.number="field.default_index" min="1">
+                            <label>Field ID <span class="required">*</span></label>
+                            <input v-model="field.field_id" placeholder="enabled" @input="sanitizeFieldId(field)">
                         </div>
                         <div class="field-row">
-                            <label>Option Count</label>
-                            <input type="number" v-model.number="field.option_count" min="1" @input="syncFieldOptions(field)">
+                            <label>Type</label>
+                            <select v-model="field.field_type" @change="onFieldTypeChange(field)">
+                                <option value="bool">Bool</option>
+                                <option value="dropdown">Dropdown</option>
+                                <option value="numeric">Numeric</option>
+                                <option value="slider">Slider</option>
+                            </select>
+                        </div>
+                        <div class="field-row">
+                            <label>Name</label>
+                            <input v-model="field.name" placeholder="Field Name">
                         </div>
                     </div>
-                    <div v-for="(opt, oi) in (field.options||[])" :key="oi" class="field-row compact">
-                        <label class="compact-label">{{ oi + 1 }}</label>
-                        <input v-model="opt.name" :placeholder="'Option ' + (oi+1)">
-                        <input v-model="opt.desc" placeholder="description (optional)">
-                    </div>
-                </div>
 
-                <!-- Numeric / Slider field -->
-                <div v-if="field.field_type === 'numeric' || field.field_type === 'slider'" class="field-grid">
-                    <div class="field-row">
+                    <!-- Bool field -->
+                    <div v-if="field.field_type === 'bool'" class="field-row">
                         <label>Default</label>
-                        <input type="number" v-model.number="field.default_value">
+                        <select v-model.number="field.default_value">
+                            <option :value="0">Off (0)</option>
+                            <option :value="1">On (1)</option>
+                        </select>
                     </div>
-                    <div class="field-row">
-                        <label>Min</label>
-                        <input type="number" v-model.number="field.min_value">
-                    </div>
-                    <div class="field-row">
-                        <label>Max</label>
-                        <input type="number" v-model.number="field.max_value">
-                    </div>
-                    <div class="field-row">
-                        <label>Step</label>
-                        <input type="number" v-model.number="field.step_value" min="1">
-                    </div>
-                </div>
 
-                <!-- Per-item field visibility (static lists only) -->
-                <div v-if="listMode === 'static' && field.field_id && (setting.item_count || 1) > 1" class="per-item-aliases">
-                    <h6>Per-Item Visibility</h6>
-                    <div v-for="(name, ii) in (setting.item_names || [])" :key="'vis-'+ii" class="field-row compact list-item-row">
-                        <label class="compact-label">{{ ii + 1 }}</label>
-                        <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
-                        <label class="item-visibility-toggle">
-                            <input type="checkbox" :checked="isItemFieldEnabled(fi, ii)" @change="toggleItemFieldEnabled(fi, ii)">
-                            <span class="item-visibility-label">{{ isItemFieldEnabled(fi, ii) ? 'Shown' : 'Hidden' }}</span>
-                        </label>
+                    <!-- Dropdown field -->
+                    <div v-if="field.field_type === 'dropdown'">
+                        <div class="field-grid">
+                            <div class="field-row">
+                                <label>Default Index</label>
+                                <input type="number" v-model.number="field.default_index" min="1">
+                            </div>
+                            <div class="field-row">
+                                <label>Option Count</label>
+                                <input type="number" v-model.number="field.option_count" min="1" @input="syncFieldOptions(field)">
+                            </div>
+                        </div>
+                        <div v-for="(opt, oi) in (field.options||[])" :key="oi" class="field-row compact">
+                            <label class="compact-label">{{ oi + 1 }}</label>
+                            <input v-model="opt.name" :placeholder="'Option ' + (oi+1)">
+                            <input v-model="opt.desc" placeholder="description (optional)">
+                        </div>
                     </div>
-                </div>
 
-                <!-- Per-item aliases (static lists only) -->
-                <div v-if="listMode === 'static' && field.field_id" class="per-item-aliases">
-                    <h6>Per-Item Aliases</h6>
-                    <div v-for="(name, ii) in (setting.item_names || [])" :key="ii" class="field-row compact list-item-row">
-                        <label class="compact-label">{{ ii + 1 }}</label>
-                        <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
-                        <input :value="getItemAlias(fi, ii)" @input="setItemAlias(fi, ii, $event.target.value)" placeholder="alias (optional)" class="item-alias-input">
+                    <!-- Numeric / Slider field -->
+                    <div v-if="field.field_type === 'numeric' || field.field_type === 'slider'" class="field-grid">
+                        <div class="field-row">
+                            <label>Default</label>
+                            <input type="number" v-model.number="field.default_value">
+                        </div>
+                        <div class="field-row">
+                            <label>Min</label>
+                            <input type="number" v-model.number="field.min_value">
+                        </div>
+                        <div class="field-row">
+                            <label>Max</label>
+                            <input type="number" v-model.number="field.max_value">
+                        </div>
+                        <div class="field-row">
+                            <label>Step</label>
+                            <input type="number" v-model.number="field.step_value" min="1">
+                        </div>
+                    </div>
+
+                    <!-- Per-item field visibility (static lists only) -->
+                    <div v-if="listMode === 'static' && field.field_id && (setting.item_count || 1) > 1" class="per-item-aliases">
+                        <h6 class="collapsible-header" @click="togglePerItemSection(fi, 'visibility')">
+                            <span class="collapse-indicator">{{ isPerItemSectionOpen(fi, 'visibility') ? '&#9660;' : '&#9654;' }}</span>
+                            Per-Item Visibility
+                        </h6>
+                        <div v-show="isPerItemSectionOpen(fi, 'visibility')">
+                            <div v-for="(name, ii) in (setting.item_names || [])" :key="'vis-'+ii" class="field-row compact list-item-row">
+                                <label class="compact-label">{{ ii + 1 }}</label>
+                                <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
+                                <label class="item-visibility-toggle">
+                                    <input type="checkbox" :checked="isItemFieldEnabled(fi, ii)" @change="toggleItemFieldEnabled(fi, ii)">
+                                    <span class="item-visibility-label">{{ isItemFieldEnabled(fi, ii) ? 'Shown' : 'Hidden' }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Per-item aliases (static lists only) -->
+                    <div v-if="listMode === 'static' && field.field_id" class="per-item-aliases">
+                        <h6 class="collapsible-header" @click="togglePerItemSection(fi, 'aliases')">
+                            <span class="collapse-indicator">{{ isPerItemSectionOpen(fi, 'aliases') ? '&#9660;' : '&#9654;' }}</span>
+                            Per-Item Aliases
+                        </h6>
+                        <div v-show="isPerItemSectionOpen(fi, 'aliases')">
+                            <div v-for="(name, ii) in (setting.item_names || [])" :key="ii" class="field-row compact list-item-row">
+                                <label class="compact-label">{{ ii + 1 }}</label>
+                                <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
+                                <input :value="getItemAlias(fi, ii)" @input="setItemAlias(fi, ii, $event.target.value)" placeholder="alias (optional)" class="item-alias-input">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -174,9 +187,24 @@ const ListEditorComponent = {
             listMode: this.setting.list_source ? 'from_list' : 'static',
             editingFieldAlias: -1,
             fieldAliasInput: '',
+            collapsedFields: {},       // fi -> true if collapsed
+            perItemSections: {},       // "fi:type" -> true if open
         };
     },
     methods: {
+        isFieldCollapsed(fi) {
+            return !!this.collapsedFields[fi];
+        },
+        toggleFieldCollapsed(fi) {
+            this.collapsedFields = { ...this.collapsedFields, [fi]: !this.collapsedFields[fi] };
+        },
+        isPerItemSectionOpen(fi, type) {
+            return !!this.perItemSections[`${fi}:${type}`];
+        },
+        togglePerItemSection(fi, type) {
+            const key = `${fi}:${type}`;
+            this.perItemSections = { ...this.perItemSections, [key]: !this.perItemSections[key] };
+        },
         defaultFieldAccessorKey(fi) {
             if (!this.modId || !this.setting.setting_id) return '';
             const slot = fi + 1;
