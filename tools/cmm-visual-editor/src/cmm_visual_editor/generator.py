@@ -425,6 +425,14 @@ def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField
         lines.append(f"\t\tmax_value = {_num(field.max_value, 10)}")
         lines.append(f"\t\tstep_value = {_num(field.step_value, 1)}")
         lines.append(f"\t}}")
+    # Per-item field disables
+    for item in (field.disabled_items or []):
+        lines.append(f"\tcmm_disable_list_field_for_item = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting_id}")
+        lines.append(f"\t\tfield_id = {field.field_id}")
+        lines.append(f"\t\titem = {item}")
+        lines.append(f"\t}}")
 
 
 def _emit_list_iteration_boilerplate(lines: list, mod_id: str, setting: Setting):
@@ -444,10 +452,10 @@ def _emit_list_iteration_boilerplate(lines: list, mod_id: str, setting: Setting)
     lines.append(f"#")
     lines.append(f"# cmm_for_each_list_item = {{")
     lines.append(f"#     setting = {qid}")
-    lines.append(f"#     effect = {qid}_each_item")
+    lines.append(f"#     effect = {qid.replace('__', '_')}_each_item")
     lines.append(f"# }}")
     lines.append(f"#")
-    lines.append(f"# {qid}_each_item = {{")
+    lines.append(f"# {qid.replace('__', '_')}_each_item = {{")
     lines.append(f"#     # $i$ is the resolved item number (1-{item_count})")
     if has_values:
         lines.append(f"#     # scope:cmm_list_current_item_value  (attached game object)")

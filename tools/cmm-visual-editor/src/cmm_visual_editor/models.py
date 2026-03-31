@@ -30,6 +30,8 @@ class ListField:
     # alias
     alias: str = ""
     item_aliases: Optional[list] = None  # per-item aliases (list of str, one per item)
+    # per-item field visibility
+    disabled_items: Optional[list] = None  # 1-based item indices where this field is hidden
 
 
 @dataclass
@@ -179,6 +181,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["alias"] = f.alias
         if f.item_aliases and any(a for a in f.item_aliases):
             d["item_aliases"] = f.item_aliases
+        if f.disabled_items:
+            d["disabled_items"] = f.disabled_items
         if f.field_type == "bool":
             d["default_value"] = f.default_value
         elif f.field_type == "dropdown":
@@ -246,6 +250,7 @@ def dict_to_model(data: dict) -> ModModel:
             step_value=f.get("step_value"),
             alias=f.get("alias", ""),
             item_aliases=f.get("item_aliases"),
+            disabled_items=f.get("disabled_items"),
         )
 
     def _parse_setting(s: dict) -> Setting:

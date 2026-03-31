@@ -1,12 +1,12 @@
 ﻿# Internal: Register a button setting with explicit global flag.
 # Scope: country
 # Args: mod_id (key), setting_id (key), tab_id (key), group_id (key), is_global (0|1)
-cmm_register_button_setting_internal = {
+_cmm_register_button_setting_internal = {
 	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 6 }
 	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = $is_global$ }
 	set_variable = { name = $mod_id$__$setting_id$_text value = flag:$mod_id$__$setting_id$_text }
 
-	cmm_register_setting_metadata = {
+	_cmm_register_setting_metadata = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		tab_id = $tab_id$
@@ -28,7 +28,7 @@ cmm_register_button_setting_internal = {
 # - tab_id (key): Owner tab id within mod.
 # - group_id (key): Owner group id within mod.
 cmm_register_button_setting = {
-	cmm_register_button_setting_internal = {
+	_cmm_register_button_setting_internal = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		tab_id = $tab_id$
@@ -45,7 +45,7 @@ cmm_register_button_setting = {
 # - tab_id (key): Owner tab id within mod.
 # - group_id (key): Owner group id within mod.
 cmm_register_global_button_setting = {
-	cmm_register_button_setting_internal = {
+	_cmm_register_button_setting_internal = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		tab_id = $tab_id$

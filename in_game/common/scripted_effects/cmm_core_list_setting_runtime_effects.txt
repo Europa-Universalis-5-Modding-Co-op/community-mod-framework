@@ -4,7 +4,7 @@
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - vt (variable/global_variable): Variable type token.
 # - lt (in/in_global): List iteration token.
-cmm_reorder_list_setting = {
+_cmm_reorder_list_setting = {
 	clear_variable_list = cmm_list_rebuild_temp
 	set_local_variable = { name = cmm_list_source_index value = 0 }
 	set_local_variable = { name = cmm_list_found_moving_item value = 0 }
@@ -85,7 +85,7 @@ cmm_reorder_list_setting = {
 # Prepare the bulk bool-field target value from one item field slot.
 # Scope: country
 # Args: setting (key), item (number), slot (number)
-cmm_list_prepare_bool_field_value_from_slot_item = {
+_cmm_list_prepare_bool_field_value_from_slot_item = {
 	set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$item$_f$slot$ }
 	if = {
 		limit = { var:cmm_tmp_is_global_list >= 1 }
@@ -116,21 +116,21 @@ cmm_list_prepare_bool_field_value_from_slot_item = {
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - item (number): Stable item identity ordinal (`1..20`).
-cmm_list_prepare_bool_field_value_from_item = {
+_cmm_list_prepare_bool_field_value_from_item = {
 	switch = {
 		trigger = var:cmm_list_field_slot_to_apply
-		1 = { cmm_list_prepare_bool_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 1 } }
-		2 = { cmm_list_prepare_bool_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 2 } }
-		3 = { cmm_list_prepare_bool_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 3 } }
-		4 = { cmm_list_prepare_bool_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 4 } }
-		5 = { cmm_list_prepare_bool_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 5 } }
+		1 = { _cmm_list_prepare_bool_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 1 } }
+		2 = { _cmm_list_prepare_bool_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 2 } }
+		3 = { _cmm_list_prepare_bool_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 3 } }
+		4 = { _cmm_list_prepare_bool_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 4 } }
+		5 = { _cmm_list_prepare_bool_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 5 } }
 	}
 }
 
 # Prepare the bulk numeric-field target value from one item field slot.
 # Scope: country
 # Args: setting (key), item (number), slot (number)
-cmm_list_prepare_numeric_field_value_from_slot_item = {
+_cmm_list_prepare_numeric_field_value_from_slot_item = {
 	if = {
 		limit = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } }
 		set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$item$_f$slot$ }
@@ -155,14 +155,14 @@ cmm_list_prepare_numeric_field_value_from_slot_item = {
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - item (number): Stable item identity ordinal (`1..20`).
-cmm_list_prepare_numeric_field_value_from_item = {
+_cmm_list_prepare_numeric_field_value_from_item = {
 	switch = {
 		trigger = var:cmm_list_field_slot_to_apply
-		1 = { cmm_list_prepare_numeric_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 1 } }
-		2 = { cmm_list_prepare_numeric_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 2 } }
-		3 = { cmm_list_prepare_numeric_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 3 } }
-		4 = { cmm_list_prepare_numeric_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 4 } }
-		5 = { cmm_list_prepare_numeric_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 5 } }
+		1 = { _cmm_list_prepare_numeric_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 1 } }
+		2 = { _cmm_list_prepare_numeric_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 2 } }
+		3 = { _cmm_list_prepare_numeric_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 3 } }
+		4 = { _cmm_list_prepare_numeric_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 4 } }
+		5 = { _cmm_list_prepare_numeric_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 5 } }
 	}
 }
 
@@ -173,47 +173,51 @@ cmm_list_prepare_numeric_field_value_from_item = {
 # - item (number): Stable item identity ordinal (`1..20`).
 # - slot (number): Field slot index (`1..5`).
 # - vt (variable/global_variable): Variable type token.
-cmm_list_apply_numeric_field_slot = {
+_cmm_list_apply_numeric_field_slot = {
+	set_local_variable = { name = cmm_tmp_disabled_fk value = flag:$setting$_i$item$_f$slot$ }
 	if = {
-		limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } has_variable = cmm_numeric_step_delta_to_apply } }
-		set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$item$_f$slot$ }
+		limit = { NOT = { is_key_in_variable_map = { name = cmm_list_field_disabled target = local_var:cmm_tmp_disabled_fk } } }
 		if = {
-			limit = { var:cmm_tmp_is_global_list >= 1 }
-			set_variable = { name = cmm_tmp_numeric_value value = "global_variable_map(cmm|local_var:cmm_tmp_fk)" }
-		}
-		else = {
-			set_variable = { name = cmm_tmp_numeric_value value = "variable_map(cmm|local_var:cmm_tmp_fk)" }
-		}
-		set_variable = { name = cmm_tmp_numeric_delta value = var:cmm_list_field_$slot$_step_$setting$ }
-		change_variable = { name = cmm_tmp_numeric_delta multiply = var:cmm_numeric_step_delta_to_apply }
-		change_variable = { name = cmm_tmp_numeric_value add = var:cmm_tmp_numeric_delta }
+			limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } has_variable = cmm_numeric_step_delta_to_apply } }
+			set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$item$_f$slot$ }
+			if = {
+				limit = { var:cmm_tmp_is_global_list >= 1 }
+				set_variable = { name = cmm_tmp_numeric_value value = "global_variable_map(cmm|local_var:cmm_tmp_fk)" }
+			}
+			else = {
+				set_variable = { name = cmm_tmp_numeric_value value = "variable_map(cmm|local_var:cmm_tmp_fk)" }
+			}
+			set_variable = { name = cmm_tmp_numeric_delta value = var:cmm_list_field_$slot$_step_$setting$ }
+			change_variable = { name = cmm_tmp_numeric_delta multiply = var:cmm_numeric_step_delta_to_apply }
+			change_variable = { name = cmm_tmp_numeric_value add = var:cmm_tmp_numeric_delta }
 
-		if = {
-			limit = { var:cmm_tmp_numeric_value > var:cmm_list_field_$slot$_max_$setting$ }
-			set_variable = { name = cmm_tmp_numeric_value value = var:cmm_list_field_$slot$_max_$setting$ }
-		}
+			if = {
+				limit = { var:cmm_tmp_numeric_value > var:cmm_list_field_$slot$_max_$setting$ }
+				set_variable = { name = cmm_tmp_numeric_value value = var:cmm_list_field_$slot$_max_$setting$ }
+			}
 
-		if = {
-			limit = { var:cmm_tmp_numeric_value < var:cmm_list_field_$slot$_min_$setting$ }
-			set_variable = { name = cmm_tmp_numeric_value value = var:cmm_list_field_$slot$_min_$setting$ }
-		}
+			if = {
+				limit = { var:cmm_tmp_numeric_value < var:cmm_list_field_$slot$_min_$setting$ }
+				set_variable = { name = cmm_tmp_numeric_value value = var:cmm_list_field_$slot$_min_$setting$ }
+			}
 
-		remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-		add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_numeric_value }
-		remove_variable = cmm_tmp_numeric_value
-		remove_variable = cmm_tmp_numeric_delta
-	}
-	else_if = {
-		limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } has_variable = cmm_numeric_change_to_apply } }
-		if = {
-			limit = { var:cmm_numeric_change_to_apply > 0 }
 			remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_list_field_$slot$_max_$setting$ }
+			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_numeric_value }
+			remove_variable = cmm_tmp_numeric_value
+			remove_variable = cmm_tmp_numeric_delta
 		}
 		else_if = {
-			limit = { var:cmm_numeric_change_to_apply < 0 }
-			remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_list_field_$slot$_min_$setting$ }
+			limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } has_variable = cmm_numeric_change_to_apply } }
+			if = {
+				limit = { var:cmm_numeric_change_to_apply > 0 }
+				remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
+				add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_list_field_$slot$_max_$setting$ }
+			}
+			else_if = {
+				limit = { var:cmm_numeric_change_to_apply < 0 }
+				remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
+				add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_list_field_$slot$_min_$setting$ }
+			}
 		}
 	}
 
@@ -221,6 +225,8 @@ cmm_list_apply_numeric_field_slot = {
 	if = {
 		limit = { always = no }
 		cmf_suppress = { v = cmm_tmp_fk }
+		cmf_suppress = { v = cmm_tmp_disabled_fk }
+		cmf_suppress = { v = cmm_list_field_disabled }
 	}
 }
 
@@ -230,14 +236,14 @@ cmm_list_apply_numeric_field_slot = {
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - item (number): Stable item identity ordinal (`1..20`).
 # - vt (variable/global_variable): Variable type token.
-cmm_list_apply_numeric_field_at_item = {
+_cmm_list_apply_numeric_field_at_item = {
 	switch = {
 		trigger = var:cmm_list_field_slot_to_apply
-		1 = { cmm_list_apply_numeric_field_slot = { setting = $setting$ item = $item$ slot = 1 vt = $vt$ } }
-		2 = { cmm_list_apply_numeric_field_slot = { setting = $setting$ item = $item$ slot = 2 vt = $vt$ } }
-		3 = { cmm_list_apply_numeric_field_slot = { setting = $setting$ item = $item$ slot = 3 vt = $vt$ } }
-		4 = { cmm_list_apply_numeric_field_slot = { setting = $setting$ item = $item$ slot = 4 vt = $vt$ } }
-		5 = { cmm_list_apply_numeric_field_slot = { setting = $setting$ item = $item$ slot = 5 vt = $vt$ } }
+		1 = { _cmm_list_apply_numeric_field_slot = { setting = $setting$ item = $item$ slot = 1 vt = $vt$ } }
+		2 = { _cmm_list_apply_numeric_field_slot = { setting = $setting$ item = $item$ slot = 2 vt = $vt$ } }
+		3 = { _cmm_list_apply_numeric_field_slot = { setting = $setting$ item = $item$ slot = 3 vt = $vt$ } }
+		4 = { _cmm_list_apply_numeric_field_slot = { setting = $setting$ item = $item$ slot = 4 vt = $vt$ } }
+		5 = { _cmm_list_apply_numeric_field_slot = { setting = $setting$ item = $item$ slot = 5 vt = $vt$ } }
 	}
 }
 
@@ -248,42 +254,46 @@ cmm_list_apply_numeric_field_at_item = {
 # - item (number): Stable item identity ordinal (`1..20`).
 # - slot (number): Field slot index (`1..5`).
 # - vt (variable/global_variable): Variable type token.
-cmm_list_apply_slider_field_slot = {
+_cmm_list_apply_slider_field_slot = {
+	set_local_variable = { name = cmm_tmp_disabled_fk value = flag:$setting$_i$item$_f$slot$ }
 	if = {
-		limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 4 has_variable = cmm_slider_index_to_apply } }
-
-		set_local_variable = { name = cmm_tmp_actual_last value = var:cmm_list_field_$slot$_slider_actual_last_index_$setting$ }
-		set_local_variable = { name = cmm_tmp_step value = var:cmm_list_field_$slot$_step_$setting$ }
-		set_local_variable = { name = cmm_tmp_min value = var:cmm_list_field_$slot$_min_$setting$ }
-		set_local_variable = { name = cmm_tmp_max value = var:cmm_list_field_$slot$_max_$setting$ }
-
-		set_variable = { name = cmm_tmp_slider_actual_index value = var:cmm_slider_index_to_apply }
-		change_variable = { name = cmm_tmp_slider_actual_index multiply = local_var:cmm_tmp_actual_last }
-		change_variable = { name = cmm_tmp_slider_actual_index divide = 100 }
-		round_variable = {
-			name = cmm_tmp_slider_actual_index
-			nearest = 1
-		}
-
-		set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_step }
-		change_variable = { name = cmm_tmp_slider_value multiply = var:cmm_tmp_slider_actual_index }
-		change_variable = { name = cmm_tmp_slider_value add = local_var:cmm_tmp_min }
-
+		limit = { NOT = { is_key_in_variable_map = { name = cmm_list_field_disabled target = local_var:cmm_tmp_disabled_fk } } }
 		if = {
-			limit = { var:cmm_tmp_slider_value < local_var:cmm_tmp_min }
-			set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_min }
+			limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 4 has_variable = cmm_slider_index_to_apply } }
+
+			set_local_variable = { name = cmm_tmp_actual_last value = var:cmm_list_field_$slot$_slider_actual_last_index_$setting$ }
+			set_local_variable = { name = cmm_tmp_step value = var:cmm_list_field_$slot$_step_$setting$ }
+			set_local_variable = { name = cmm_tmp_min value = var:cmm_list_field_$slot$_min_$setting$ }
+			set_local_variable = { name = cmm_tmp_max value = var:cmm_list_field_$slot$_max_$setting$ }
+
+			set_variable = { name = cmm_tmp_slider_actual_index value = var:cmm_slider_index_to_apply }
+			change_variable = { name = cmm_tmp_slider_actual_index multiply = local_var:cmm_tmp_actual_last }
+			change_variable = { name = cmm_tmp_slider_actual_index divide = 100 }
+			round_variable = {
+				name = cmm_tmp_slider_actual_index
+				nearest = 1
+			}
+
+			set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_step }
+			change_variable = { name = cmm_tmp_slider_value multiply = var:cmm_tmp_slider_actual_index }
+			change_variable = { name = cmm_tmp_slider_value add = local_var:cmm_tmp_min }
+
+			if = {
+				limit = { var:cmm_tmp_slider_value < local_var:cmm_tmp_min }
+				set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_min }
+			}
+
+			if = {
+				limit = { var:cmm_tmp_slider_value > local_var:cmm_tmp_max }
+				set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_max }
+			}
+
+			remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
+			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_slider_value }
+
+			remove_variable = cmm_tmp_slider_actual_index
+			remove_variable = cmm_tmp_slider_value
 		}
-
-		if = {
-			limit = { var:cmm_tmp_slider_value > local_var:cmm_tmp_max }
-			set_variable = { name = cmm_tmp_slider_value value = local_var:cmm_tmp_max }
-		}
-
-		remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-		add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_slider_value }
-
-		remove_variable = cmm_tmp_slider_actual_index
-		remove_variable = cmm_tmp_slider_value
 	}
 
 	# Benign warning suppression
@@ -294,6 +304,7 @@ cmm_list_apply_slider_field_slot = {
 		cmf_suppress = { v = cmm_tmp_min }
 		cmf_suppress = { v = cmm_tmp_max }
 		cmf_suppress = { v = cmm_slider_index_to_apply }
+		cmf_suppress = { v = cmm_tmp_disabled_fk }
 	}
 }
 
@@ -303,14 +314,14 @@ cmm_list_apply_slider_field_slot = {
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - item (number): Stable item identity ordinal (`1..20`).
 # - vt (variable/global_variable): Variable type token.
-cmm_list_apply_slider_field_at_item = {
+_cmm_list_apply_slider_field_at_item = {
 	switch = {
 		trigger = var:cmm_list_field_slot_to_apply
-		1 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 1 vt = $vt$ } }
-		2 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 2 vt = $vt$ } }
-		3 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 3 vt = $vt$ } }
-		4 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 4 vt = $vt$ } }
-		5 = { cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 5 vt = $vt$ } }
+		1 = { _cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 1 vt = $vt$ } }
+		2 = { _cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 2 vt = $vt$ } }
+		3 = { _cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 3 vt = $vt$ } }
+		4 = { _cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 4 vt = $vt$ } }
+		5 = { _cmm_list_apply_slider_field_slot = { setting = $setting$ item = $item$ slot = 5 vt = $vt$ } }
 	}
 }
 
@@ -321,97 +332,101 @@ cmm_list_apply_slider_field_at_item = {
 # - item (number): Stable item identity ordinal (`1..20`).
 # - slot (number): Field slot index (`1..5`).
 # - vt (variable/global_variable): Variable type token.
-cmm_list_apply_field_slot_at_item = {
-	set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$item$_f$slot$ }
+_cmm_list_apply_field_slot_at_item = {
+	set_local_variable = { name = cmm_tmp_disabled_fk value = flag:$setting$_i$item$_f$slot$ }
 	if = {
-		limit = { var:cmm_tmp_is_global_list >= 1 }
-		set_local_variable = { name = cmm_field_val value = "global_variable_map(cmm|local_var:cmm_tmp_fk)" }
-	}
-	else = {
-		set_local_variable = { name = cmm_field_val value = "variable_map(cmm|local_var:cmm_tmp_fk)" }
-	}
-
-	if = {
-		limit = { AND = { var:cmm_list_action_to_apply = 5 var:cmm_list_field_$slot$_type_$setting$ = 1 } }
+		limit = { NOT = { is_key_in_variable_map = { name = cmm_list_field_disabled target = local_var:cmm_tmp_disabled_fk } } }
+		set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$item$_f$slot$ }
 		if = {
-			limit = { local_var:cmm_field_val = 1 }
-			remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = 0 }
+			limit = { var:cmm_tmp_is_global_list >= 1 }
+			set_local_variable = { name = cmm_field_val value = "global_variable_map(cmm|local_var:cmm_tmp_fk)" }
 		}
 		else = {
+			set_local_variable = { name = cmm_field_val value = "variable_map(cmm|local_var:cmm_tmp_fk)" }
+		}
+
+		if = {
+			limit = { AND = { var:cmm_list_action_to_apply = 5 var:cmm_list_field_$slot$_type_$setting$ = 1 } }
+			if = {
+				limit = { local_var:cmm_field_val = 1 }
+				remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
+				add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = 0 }
+			}
+			else = {
+				remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
+				add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = 1 }
+			}
+		}
+		else_if = {
+			limit = { AND = { var:cmm_list_action_to_apply = 6 var:cmm_list_field_$slot$_type_$setting$ = 2 } }
+			set_variable = { name = cmm_tmp_field_new value = local_var:cmm_field_val }
+			change_variable = { name = cmm_tmp_field_new add = 1 }
+			if = {
+				limit = { var:cmm_tmp_field_new > var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
+				set_variable = { name = cmm_tmp_field_new value = 1 }
+			}
 			remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = 1 }
+			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_field_new }
+			remove_variable = cmm_tmp_field_new
 		}
-	}
-	else_if = {
-		limit = { AND = { var:cmm_list_action_to_apply = 6 var:cmm_list_field_$slot$_type_$setting$ = 2 } }
-		set_variable = { name = cmm_tmp_field_new value = local_var:cmm_field_val }
-		change_variable = { name = cmm_tmp_field_new add = 1 }
-		if = {
-			limit = { var:cmm_tmp_field_new > var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
-			set_variable = { name = cmm_tmp_field_new value = 1 }
+		else_if = {
+			limit = { AND = { var:cmm_list_action_to_apply = 7 var:cmm_list_field_$slot$_type_$setting$ = 2 } }
+			set_variable = { name = cmm_tmp_field_new value = local_var:cmm_field_val }
+			change_variable = { name = cmm_tmp_field_new add = -1 }
+			if = {
+				limit = { var:cmm_tmp_field_new < 1 }
+				set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
+			}
+			remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
+			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_field_new }
+			remove_variable = cmm_tmp_field_new
 		}
-		remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-		add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_field_new }
-		remove_variable = cmm_tmp_field_new
-	}
-	else_if = {
-		limit = { AND = { var:cmm_list_action_to_apply = 7 var:cmm_list_field_$slot$_type_$setting$ = 2 } }
-		set_variable = { name = cmm_tmp_field_new value = local_var:cmm_field_val }
-		change_variable = { name = cmm_tmp_field_new add = -1 }
-		if = {
-			limit = { var:cmm_tmp_field_new < 1 }
-			set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
+		else_if = {
+			limit = { AND = { var:cmm_list_action_to_apply = 8 var:cmm_list_field_$slot$_type_$setting$ = 2 has_variable = cmm_dropdown_index_to_apply } }
+			set_variable = { name = cmm_tmp_field_new value = var:cmm_dropdown_index_to_apply }
+			if = {
+				limit = { var:cmm_tmp_field_new < 1 }
+				set_variable = { name = cmm_tmp_field_new value = 1 }
+			}
+			if = {
+				limit = { var:cmm_tmp_field_new > var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
+				set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
+			}
+			remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
+			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_field_new }
+			remove_variable = cmm_tmp_field_new
 		}
-		remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-		add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_field_new }
-		remove_variable = cmm_tmp_field_new
-	}
-	else_if = {
-		limit = { AND = { var:cmm_list_action_to_apply = 8 var:cmm_list_field_$slot$_type_$setting$ = 2 has_variable = cmm_dropdown_index_to_apply } }
-		set_variable = { name = cmm_tmp_field_new value = var:cmm_dropdown_index_to_apply }
-		if = {
-			limit = { var:cmm_tmp_field_new < 1 }
-			set_variable = { name = cmm_tmp_field_new value = 1 }
+		else_if = {
+			limit = { AND = { OR = { var:cmm_list_action_to_apply = 9 var:cmm_list_action_to_apply = 10 var:cmm_list_action_to_apply = 11 } has_variable = cmm_list_field_value_to_apply } }
+			set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_value_to_apply }
+			if = {
+				limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 1 var:cmm_tmp_field_new < 0 } }
+				set_variable = { name = cmm_tmp_field_new value = 0 }
+			}
+			if = {
+				limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 1 var:cmm_tmp_field_new > 1 } }
+				set_variable = { name = cmm_tmp_field_new value = 1 }
+			}
+			if = {
+				limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 2 var:cmm_tmp_field_new < 1 } }
+				set_variable = { name = cmm_tmp_field_new value = 1 }
+			}
+			if = {
+				limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 2 var:cmm_tmp_field_new > var:cmm_list_field_$slot$_dropdown_last_index_$setting$ } }
+				set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
+			}
+			if = {
+				limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } var:cmm_tmp_field_new < var:cmm_list_field_$slot$_min_$setting$ } }
+				set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_min_$setting$ }
+			}
+			if = {
+				limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } var:cmm_tmp_field_new > var:cmm_list_field_$slot$_max_$setting$ } }
+				set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_max_$setting$ }
+			}
+			remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
+			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_field_new }
+			remove_variable = cmm_tmp_field_new
 		}
-		if = {
-			limit = { var:cmm_tmp_field_new > var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
-			set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
-		}
-		remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-		add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_field_new }
-		remove_variable = cmm_tmp_field_new
-	}
-	else_if = {
-		limit = { AND = { OR = { var:cmm_list_action_to_apply = 9 var:cmm_list_action_to_apply = 10 var:cmm_list_action_to_apply = 11 } has_variable = cmm_list_field_value_to_apply } }
-		set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_value_to_apply }
-		if = {
-			limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 1 var:cmm_tmp_field_new < 0 } }
-			set_variable = { name = cmm_tmp_field_new value = 0 }
-		}
-		if = {
-			limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 1 var:cmm_tmp_field_new > 1 } }
-			set_variable = { name = cmm_tmp_field_new value = 1 }
-		}
-		if = {
-			limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 2 var:cmm_tmp_field_new < 1 } }
-			set_variable = { name = cmm_tmp_field_new value = 1 }
-		}
-		if = {
-			limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 2 var:cmm_tmp_field_new > var:cmm_list_field_$slot$_dropdown_last_index_$setting$ } }
-			set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
-		}
-		if = {
-			limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } var:cmm_tmp_field_new < var:cmm_list_field_$slot$_min_$setting$ } }
-			set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_min_$setting$ }
-		}
-		if = {
-			limit = { AND = { OR = { var:cmm_list_field_$slot$_type_$setting$ = 3 var:cmm_list_field_$slot$_type_$setting$ = 4 } var:cmm_tmp_field_new > var:cmm_list_field_$slot$_max_$setting$ } }
-			set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_max_$setting$ }
-		}
-		remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-		add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_field_new }
-		remove_variable = cmm_tmp_field_new
 	}
 
 	# Benign warning suppression
@@ -419,6 +434,7 @@ cmm_list_apply_field_slot_at_item = {
 		limit = { always = no }
 		cmf_suppress = { v = cmm_tmp_fk }
 		cmf_suppress = { v = cmm_field_val }
+		cmf_suppress = { v = cmm_tmp_disabled_fk }
 	}
 }
 
@@ -428,14 +444,14 @@ cmm_list_apply_field_slot_at_item = {
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - item (number): Stable item identity ordinal (`1..20`).
 # - vt (variable/global_variable): Variable type token.
-cmm_list_apply_field_at_item = {
+_cmm_list_apply_field_at_item = {
 	switch = {
 		trigger = var:cmm_list_field_slot_to_apply
-		1 = { cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 1 vt = $vt$ } }
-		2 = { cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 2 vt = $vt$ } }
-		3 = { cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 3 vt = $vt$ } }
-		4 = { cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 4 vt = $vt$ } }
-		5 = { cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 5 vt = $vt$ } }
+		1 = { _cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 1 vt = $vt$ } }
+		2 = { _cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 2 vt = $vt$ } }
+		3 = { _cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 3 vt = $vt$ } }
+		4 = { _cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 4 vt = $vt$ } }
+		5 = { _cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 5 vt = $vt$ } }
 	}
 }
 
@@ -445,14 +461,14 @@ cmm_list_apply_field_at_item = {
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - item (number): Stable item identity ordinal (`1..20`).
 # - vt (variable/global_variable): Variable type token.
-cmm_list_dispatch_item_action = {
+_cmm_list_dispatch_item_action = {
 	switch = {
 		trigger = var:cmm_list_dispatch_action
-		1 = { cmm_list_prepare_bool_field_value_from_item = { setting = $setting$ item = $item$ } }
-		2 = { cmm_list_prepare_numeric_field_value_from_item = { setting = $setting$ item = $item$ } }
-		3 = { cmm_list_apply_numeric_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
-		4 = { cmm_list_apply_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
-		5 = { cmm_list_apply_slider_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
+		1 = { _cmm_list_prepare_bool_field_value_from_item = { setting = $setting$ item = $item$ } }
+		2 = { _cmm_list_prepare_numeric_field_value_from_item = { setting = $setting$ item = $item$ } }
+		3 = { _cmm_list_apply_numeric_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
+		4 = { _cmm_list_apply_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
+		5 = { _cmm_list_apply_slider_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
 	}
 }
 
@@ -461,86 +477,86 @@ cmm_list_dispatch_item_action = {
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - vt (variable/global_variable): Variable type token.
-cmm_list_dispatch_saved_item_action = {
+_cmm_list_dispatch_saved_item_action = {
 	if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i1 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 1 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 1 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i2 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 2 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 2 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i3 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 3 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 3 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i4 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 4 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 4 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i5 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 5 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 5 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i6 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 6 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 6 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i7 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 7 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 7 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i8 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 8 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 8 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i9 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 9 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 9 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i10 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 10 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 10 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i11 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 11 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 11 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i12 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 12 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 12 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i13 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 13 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 13 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i14 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 14 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 14 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i15 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 15 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 15 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i16 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 16 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 16 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i17 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 17 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 17 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i18 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 18 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 18 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i19 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 19 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 19 vt = $vt$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i20 }
-		cmm_list_dispatch_item_action = { setting = $setting$ item = 20 vt = $vt$ }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 20 vt = $vt$ }
 	}
 }
 
@@ -550,7 +566,7 @@ cmm_list_dispatch_saved_item_action = {
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - lt (in/in_global): List iteration token.
 # - vt (variable/global_variable): Variable type token.
-cmm_list_apply_dispatch_to_marked_position = {
+_cmm_list_apply_dispatch_to_marked_position = {
 	set_local_variable = { name = cmm_list_iter_index value = 0 }
 	set_local_variable = { name = cmm_list_marked_position value = var:cmm_list_position_to_apply }
 
@@ -561,7 +577,7 @@ cmm_list_apply_dispatch_to_marked_position = {
 		if = {
 			limit = { local_var:cmm_list_iter_index = local_var:cmm_list_marked_position }
 			root = {
-				cmm_list_dispatch_saved_item_action = { setting = $setting$ vt = $vt$ }
+				_cmm_list_dispatch_saved_item_action = { setting = $setting$ vt = $vt$ }
 			}
 		}
 
@@ -575,13 +591,13 @@ cmm_list_apply_dispatch_to_marked_position = {
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - lt (in/in_global): List iteration token.
 # - vt (variable/global_variable): Variable type token.
-cmm_list_apply_dispatch_to_all_items = {
+_cmm_list_apply_dispatch_to_all_items = {
 	every_$lt$_list = {
 		variable = cmm_list_items_$setting$
 		save_scope_as = cmm_list_current_item
 
 		root = {
-			cmm_list_dispatch_saved_item_action = { setting = $setting$ vt = $vt$ }
+			_cmm_list_dispatch_saved_item_action = { setting = $setting$ vt = $vt$ }
 		}
 	}
 }
@@ -592,9 +608,9 @@ cmm_list_apply_dispatch_to_all_items = {
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - lt (in/in_global): List iteration token.
 # - vt (variable/global_variable): Variable type token.
-cmm_list_apply_field_value_to_all_items = {
+_cmm_list_apply_field_value_to_all_items = {
 	set_variable = { name = cmm_list_dispatch_action value = 4 }
-	cmm_list_apply_dispatch_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
+	_cmm_list_apply_dispatch_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
 }
 
 # Internal: apply the pending list change using parameterized variable types.
@@ -604,7 +620,7 @@ cmm_list_apply_field_value_to_all_items = {
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
 # - vt (variable/global_variable): Variable type token.
 # - lt (in/in_global): List iteration token.
-cmm_apply_list_change_internal = {
+_cmm_apply_list_change_internal = {
 	if = {
 		limit = {
 			AND = {
@@ -620,56 +636,56 @@ cmm_apply_list_change_internal = {
 		if = {
 			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_setting_list_is_ordered_$setting$ = 1 var:cmm_list_action_to_apply = 1 var:cmm_list_position_to_apply > 0 } }
 			set_local_variable = { name = cmm_list_target_index value = { value = var:cmm_list_position_to_apply subtract = 1 } }
-			cmm_reorder_list_setting = { setting = $setting$ vt = $vt$ lt = $lt$ }
+			_cmm_reorder_list_setting = { setting = $setting$ vt = $vt$ lt = $lt$ }
 		}
 		else_if = {
 			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_setting_list_is_ordered_$setting$ = 1 var:cmm_list_action_to_apply = 2 var:cmm_list_position_to_apply < var:cmm_setting_list_last_index_$setting$ } }
 			set_local_variable = { name = cmm_list_target_index value = { value = var:cmm_list_position_to_apply add = 1 } }
-			cmm_reorder_list_setting = { setting = $setting$ vt = $vt$ lt = $lt$ }
+			_cmm_reorder_list_setting = { setting = $setting$ vt = $vt$ lt = $lt$ }
 		}
 		else_if = {
 			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_setting_list_is_ordered_$setting$ = 1 var:cmm_list_action_to_apply = 3 var:cmm_list_position_to_apply > 0 } }
 			set_local_variable = { name = cmm_list_target_index value = 0 }
-			cmm_reorder_list_setting = { setting = $setting$ vt = $vt$ lt = $lt$ }
+			_cmm_reorder_list_setting = { setting = $setting$ vt = $vt$ lt = $lt$ }
 		}
 		else_if = {
 			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_setting_list_is_ordered_$setting$ = 1 var:cmm_list_action_to_apply = 4 var:cmm_list_position_to_apply < var:cmm_setting_list_last_index_$setting$ } }
 			set_local_variable = { name = cmm_list_target_index value = var:cmm_setting_list_last_index_$setting$ }
-			cmm_reorder_list_setting = { setting = $setting$ vt = $vt$ lt = $lt$ }
+			_cmm_reorder_list_setting = { setting = $setting$ vt = $vt$ lt = $lt$ }
 		}
 		else_if = {
 			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_list_action_to_apply = 9 has_variable = cmm_list_field_slot_to_apply } }
 			set_variable = { name = cmm_list_dispatch_action value = 1 }
-			cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+			_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
 
 			if = {
 				limit = { has_variable = cmm_list_field_value_to_apply }
-				cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
+				_cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
 			}
 		}
 		else_if = {
 			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_list_action_to_apply = 10 has_variable = cmm_list_field_slot_to_apply has_variable = cmm_dropdown_index_to_apply } }
 			set_variable = { name = cmm_list_field_value_to_apply value = var:cmm_dropdown_index_to_apply }
-			cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
+			_cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
 		}
 		else_if = {
 			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_list_action_to_apply = 11 has_variable = cmm_list_field_slot_to_apply } }
 			set_variable = { name = cmm_list_dispatch_action value = 2 }
-			cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+			_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
 
 			if = {
 				limit = { has_variable = cmm_list_field_value_to_apply }
-				cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
+				_cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
 			}
 		}
 		else_if = {
 			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_list_action_to_apply = 12 has_variable = cmm_list_field_slot_to_apply } }
 			set_variable = { name = cmm_list_dispatch_action value = 2 }
-			cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+			_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
 
 			if = {
 				limit = { has_variable = cmm_list_field_value_to_apply }
-				cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
+				_cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
 			}
 		}
 		else_if = {
@@ -680,7 +696,7 @@ cmm_apply_list_change_internal = {
 				}
 			}
 			set_variable = { name = cmm_list_dispatch_action value = 5 }
-			cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+			_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
 		}
 		else_if = {
 			limit = {
@@ -693,7 +709,7 @@ cmm_apply_list_change_internal = {
 				}
 			}
 			set_variable = { name = cmm_list_dispatch_action value = 3 }
-			cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+			_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
 		}
 		else_if = {
 			limit = {
@@ -704,7 +720,7 @@ cmm_apply_list_change_internal = {
 				}
 			}
 			set_variable = { name = cmm_list_dispatch_action value = 4 }
-			cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+			_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
 		}
 	}
 }
@@ -719,10 +735,10 @@ cmm_apply_list_change = {
 
 	if = {
 		limit = { var:cmm_tmp_is_global_list >= 1 }
-		cmm_apply_list_change_internal = { setting = $setting$ vt = global_variable lt = in_global }
+		_cmm_apply_list_change_internal = { setting = $setting$ vt = global_variable lt = in_global }
 	}
 	else = {
-		cmm_apply_list_change_internal = { setting = $setting$ vt = variable lt = in }
+		_cmm_apply_list_change_internal = { setting = $setting$ vt = variable lt = in }
 	}
 
 	if = {
@@ -802,7 +818,7 @@ cmm_for_each_list_item = {
 			save_scope_as = cmm_list_current_item
 
 			root = {
-				cmm_resolve_list_item_and_call = { setting = $setting$ effect = $effect$ }
+				_cmm_resolve_list_item_and_call = { setting = $setting$ effect = $effect$ }
 			}
 		}
 	}
@@ -812,7 +828,7 @@ cmm_for_each_list_item = {
 			save_scope_as = cmm_list_current_item
 
 			root = {
-				cmm_resolve_list_item_and_call = { setting = $setting$ effect = $effect$ }
+				_cmm_resolve_list_item_and_call = { setting = $setting$ effect = $effect$ }
 			}
 		}
 	}
@@ -830,7 +846,7 @@ cmm_for_each_list_item = {
 # If no value was set for the item, the scope is simply not available.
 # Scope: country
 # Args: setting (key), item (number), effect (key)
-cmm_save_list_item_value_and_call = {
+_cmm_save_list_item_value_and_call = {
 	every_in_list = {
 		variable = $setting$_i$item$_value
 		save_scope_as = cmm_list_current_item_value
@@ -844,85 +860,85 @@ cmm_save_list_item_value_and_call = {
 # Args:
 # - setting (key): Composite setting key.
 # - effect (key): Name of the scripted effect to call.
-cmm_resolve_list_item_and_call = {
+_cmm_resolve_list_item_and_call = {
 	if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i1 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 1 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 1 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i2 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 2 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 2 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i3 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 3 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 3 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i4 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 4 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 4 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i5 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 5 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 5 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i6 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 6 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 6 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i7 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 7 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 7 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i8 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 8 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 8 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i9 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 9 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 9 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i10 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 10 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 10 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i11 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 11 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 11 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i12 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 12 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 12 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i13 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 13 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 13 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i14 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 14 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 14 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i15 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 15 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 15 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i16 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 16 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 16 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i17 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 17 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 17 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i18 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 18 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 18 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i19 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 19 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 19 effect = $effect$ }
 	}
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i20 }
-		cmm_save_list_item_value_and_call = { setting = $setting$ item = 20 effect = $effect$ }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 20 effect = $effect$ }
 	}
 }

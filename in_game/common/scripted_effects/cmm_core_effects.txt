@@ -2,7 +2,7 @@
 # Idempotent: add_to_variable_map is a no-op for existing keys.
 # Scope: country
 # Args: none
-cmm_init_variable_maps = {
+_cmm_init_variable_maps = {
 	add_to_variable_map = { name = cmm key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_type key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_is_global key = flag:cmm_init value = 0 }
@@ -21,6 +21,7 @@ cmm_init_variable_maps = {
 	add_to_variable_map = { name = cmm_list_is_ordered key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_has_sgui key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_no_reset key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_list_field_disabled key = flag:cmm_init value = 0 }
 	add_to_global_variable_map = { name = cmm key = flag:cmm_init value = 0 }
 
 	# Benign warning suppression
@@ -45,6 +46,7 @@ cmm_init_variable_maps = {
 			has_variable_map = cmm_list_is_ordered
 			has_variable_map = cmm_has_sgui
 			has_variable_map = cmm_no_reset
+			has_variable_map = cmm_list_field_disabled
 			has_global_variable_map = cmm
 		}
 		cmf_suppress = { v = cmm_init }
@@ -55,8 +57,8 @@ cmm_init_variable_maps = {
 # Scope: country
 # Args:
 # - mod_id (key): Mod identifier; derives `<mod_id>_name` and `<mod_id>_desc`.
-cmm_register_mod = {
-	cmm_init_variable_maps = yes
+_cmm_register_mod = {
+	_cmm_init_variable_maps = yes
 	set_variable = { name = $mod_id$_name value = flag:$mod_id$_name }
 	set_variable = { name = $mod_id$_desc value = flag:$mod_id$_desc }
 
@@ -87,8 +89,8 @@ cmm_register_mod = {
 # Args:
 # - mod_id (key): Owner mod id.
 # - tab_id (key): Tab id unique within mod.
-cmm_register_tab = {
-	cmm_register_mod = {
+_cmm_register_tab = {
+	_cmm_register_mod = {
 		mod_id = $mod_id$
 	}
 
@@ -130,8 +132,8 @@ cmm_register_tab = {
 # - mod_id (key): Owner mod id.
 # - tab_id (key): Owner tab id within mod.
 # - group_id (key): Group id unique within tab.
-cmm_register_group = {
-	cmm_register_tab = {
+_cmm_register_group = {
+	_cmm_register_tab = {
 		mod_id = $mod_id$
 		tab_id = $tab_id$
 	}
@@ -173,8 +175,8 @@ cmm_register_group = {
 # - setting_id (key): Setting id unique within mod.
 # - tab_id (key): Owner tab id within mod.
 # - group_id (key): Owner group id within tab.
-cmm_register_setting_metadata = {
-	cmm_register_group = {
+_cmm_register_setting_metadata = {
+	_cmm_register_group = {
 		mod_id = $mod_id$
 		tab_id = $tab_id$
 		group_id = $group_id$

@@ -119,8 +119,42 @@ All effects require '''country scope'''.
 
 Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
 
-== Player Country Hooks ==
-CMF provides shared on_actions that fire for each human player's country. Slightly more efficient than each mod checking <code>is_ai = no</code> individually. Hook into them the same way as <code>cmf_on_mod_registration</code>:
+== On-Action Hooks ==
+CMF provides shared on_action hooks. Hook into them the same way as <code>cmf_on_mod_registration</code>.
+
+=== Game Start & Load Hooks ===
+All fire once in no scope (like vanilla <code>on_game_start</code>). Each has a <code>_player_country</code> variant that fires in country scope for each human player.
+
+{| class="wikitable"
+! Hook !! Scope !! When
+|-
+| <code>on_game_start_after_lobby</code> || none || Once on new game, after country selection
+|-
+| <code>on_game_start_after_lobby_player_country</code> || country || Same, per player country
+|-
+| <code>on_game_load</code> || none || Every save load (including from country selection)
+|-
+| <code>on_game_load_player_country</code> || country || Same, per player country
+|-
+| <code>on_game_load_after_lobby</code> || none || Every save load, only after passing country selection
+|-
+| <code>on_game_load_after_lobby_player_country</code> || country || Same, per player country
+|}
+
+<syntaxhighlight lang="text">
+# No scope — for global effects
+on_game_start_after_lobby = {
+	on_actions = { your_mod_on_new_game }
+}
+
+# Country scope — for player country effects
+on_game_start_after_lobby_player_country = {
+	on_actions = { your_mod_on_new_game_country }
+}
+</syntaxhighlight>
+
+=== Recurring Hooks ===
+Slightly more efficient than each mod checking <code>is_ai = no</code> individually:
 
 {| class="wikitable"
 ! Hook !! Frequency
@@ -143,6 +177,9 @@ cmf_monthly_human_country_pulse = {
 	}
 }
 </syntaxhighlight>
+
+== Dependency Check Popup ==
+Main menu popup that alerts players when CMF is missing. Offers to enable or subscribe automatically. Download <code>cmf-dependency-check.zip</code> from the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/releases latest release] and extract into your mod folder. See the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Dependency-Check-Popup GitHub wiki] for details.
 
 == is_host Trigger ==
 CMF provides a trigger to check if the current country is controlled by the host player. Always evaluates to yes in singleplayer.

@@ -134,16 +134,18 @@ const PreviewPanelComponent = {
                                                 </span>
                                                 <span class="cmm-list-col cmm-list-item-col">{{ iname }}</span>
                                                 <span class="cmm-list-col" v-for="f in (setting.fields||[])">
-                                                    <span v-if="f.field_type==='bool'" class="cmm-checkbox" :class="{checked: f.default_value}"></span>
-                                                    <span v-if="f.field_type==='dropdown'" class="cmm-mini-dropdown">{{ fieldOptionName(f) }}</span>
-                                                    <span v-if="f.field_type==='numeric'" class="cmm-mini-numeric">{{ f.default_value }}</span>
-                                                    <span v-if="f.field_type==='slider'" class="cmm-mini-slider">
-                                                        <span class="cmm-mini-slider-track">
-                                                            <span class="cmm-mini-slider-fill" :style="{width: fieldSliderPercent(f) + '%'}"></span>
-                                                            <span class="cmm-mini-slider-thumb" :style="{left: fieldSliderPercent(f) + '%'}"></span>
+                                                    <template v-if="!isFieldDisabledForItem(f, ii)">
+                                                        <span v-if="f.field_type==='bool'" class="cmm-checkbox" :class="{checked: f.default_value}"></span>
+                                                        <span v-if="f.field_type==='dropdown'" class="cmm-mini-dropdown">{{ fieldOptionName(f) }}</span>
+                                                        <span v-if="f.field_type==='numeric'" class="cmm-mini-numeric">{{ f.default_value }}</span>
+                                                        <span v-if="f.field_type==='slider'" class="cmm-mini-slider">
+                                                            <span class="cmm-mini-slider-track">
+                                                                <span class="cmm-mini-slider-fill" :style="{width: fieldSliderPercent(f) + '%'}"></span>
+                                                                <span class="cmm-mini-slider-thumb" :style="{left: fieldSliderPercent(f) + '%'}"></span>
+                                                            </span>
+                                                            <span class="cmm-mini-slider-value">{{ f.default_value }}</span>
                                                         </span>
-                                                        <span class="cmm-mini-slider-value">{{ f.default_value }}</span>
-                                                    </span>
+                                                    </template>
                                                 </span>
                                             </div>
                                         </div>
@@ -192,6 +194,10 @@ const PreviewPanelComponent = {
                 return field.options[idx - 1].name;
             }
             return `Option ${idx}`;
+        },
+        isFieldDisabledForItem(field, itemIndex) {
+            if (!field.disabled_items) return false;
+            return field.disabled_items.includes(itemIndex + 1);
         },
     },
 };

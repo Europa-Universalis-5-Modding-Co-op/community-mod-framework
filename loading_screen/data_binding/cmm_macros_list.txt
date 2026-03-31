@@ -144,6 +144,22 @@ macro = {
     replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)4')"
 }
 
+# Args: ItemKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list item field is disabled for its slot"
+    definition = "CMMListItemFieldIsDisabled(ItemKey,SlotKey)"
+    replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_list_field_disabled', Concatenate(ItemKey, Concatenate('_f', SlotKey))))"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list item field is enabled for its slot"
+    definition = "CMMListItemFieldIsEnabled(ItemKey,SlotKey)"
+    replace_with = "Not(CMMListItemFieldIsDisabled(ItemKey, SlotKey))"
+}
+
 # Args: SettingKey (string), SlotKey (string)
 # Returns: CFixedPoint
 macro = {

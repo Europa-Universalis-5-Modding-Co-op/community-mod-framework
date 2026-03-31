@@ -299,6 +299,22 @@ body {
     letter-spacing: 0.5px;
 }
 
+.collapsible-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.collapsible-header:hover {
+    color: var(--text);
+}
+
+.collapse-indicator {
+    font-size: 10px;
+    margin-right: 4px;
+    display: inline-block;
+    width: 10px;
+}
+
 .item-alias-name {
     flex: 1;
     min-width: 0;
@@ -314,6 +330,22 @@ body {
     min-width: 0;
     font-family: var(--font-mono, monospace);
     font-size: 11px;
+}
+
+.item-visibility-toggle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.item-visibility-toggle input[type="checkbox"] {
+    margin: 0;
+}
+
+.item-visibility-label {
+    font-size: 11px;
+    color: var(--text-muted);
 }
 
 /* Buttons */
@@ -612,7 +644,7 @@ body {
     margin-bottom: 6px;
 }
 
-.field-card-header span:nth-child(2) {
+.field-card-header .field-card-title {
     flex: 1;
     font-size: 12px;
     font-weight: 500;

@@ -8,7 +8,7 @@
 # - default_index (number): Initial selected option ordinal (`1..option_count`).
 # - option_count (number): Number of options (`>= 1`; numbered `1..option_count`).
 cmm_register_dropdown_setting = {
-	cmm_register_dropdown_setting_internal = {
+	_cmm_register_dropdown_setting_internal = {
 		mod_id = $mod_id$ setting_id = $setting_id$ tab_id = $tab_id$ group_id = $group_id$
 		default_index = $default_index$ option_count = $option_count$
 		is_global = 0 vt = variable
@@ -25,7 +25,7 @@ cmm_register_dropdown_setting = {
 # - default_index (number): Initial global selected option ordinal (`1..option_count`).
 # - option_count (number): Number of options (`>= 1`; numbered `1..option_count`).
 cmm_register_global_dropdown_setting = {
-	cmm_register_dropdown_setting_internal = {
+	_cmm_register_dropdown_setting_internal = {
 		mod_id = $mod_id$ setting_id = $setting_id$ tab_id = $tab_id$ group_id = $group_id$
 		default_index = $default_index$ option_count = $option_count$
 		is_global = 1 vt = global_variable
@@ -36,7 +36,7 @@ cmm_register_global_dropdown_setting = {
 # Scope: country
 # Args: mod_id (key), setting_id (key), tab_id (key), group_id (key), default_index (number),
 #   option_count (number), is_global (1/0), vt (variable/global_variable)
-cmm_register_dropdown_setting_internal = {
+_cmm_register_dropdown_setting_internal = {
 	add_to_variable_map = { name = cmm_type key = flag:$mod_id$__$setting_id$ value = 2 }
 	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$ value = $is_global$ }
 	add_to_variable_map = { name = cmm_default key = flag:$mod_id$__$setting_id$ value = $default_index$ }
@@ -50,7 +50,7 @@ cmm_register_dropdown_setting_internal = {
 	add_to_variable_map = { name = cmm_dropdown_last_index key = flag:$mod_id$__$setting_id$ value = var:cmm_tmp_dd_count }
 	remove_variable = cmm_tmp_dd_count
 
-	cmm_register_setting_metadata = {
+	_cmm_register_setting_metadata = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		tab_id = $tab_id$
@@ -98,7 +98,7 @@ cmm_register_dropdown_setting_internal = {
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
-cmm_apply_dropdown_change = {
+_cmm_apply_dropdown_change = {
 	if = {
 		limit = { has_variable = cmm_dropdown_index_to_apply }
 

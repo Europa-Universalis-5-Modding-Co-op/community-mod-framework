@@ -1,0 +1,115 @@
+﻿# Post-lobby hook tests (no scope).
+# on_game_start_after_lobby: changes France's pops to Albanian (new game only).
+# on_game_load: changes England's pops to Bacan (every save load).
+# on_game_load_after_lobby: changes Castile's pops to Cabecar (save load, past lobby only).
+on_game_start_after_lobby = {
+	on_actions = {
+		cmf_feature_test_on_game_start_after_lobby
+	}
+}
+
+cmf_feature_test_on_game_start_after_lobby = {
+	effect = {
+		c:FRA = {
+			every_owned_location = {
+				every_pop = {
+					change_pop_culture = culture:albanian
+				}
+				force_refresh_culture_and_religion = this
+			}
+		}
+	}
+}
+
+on_game_load = {
+	on_actions = {
+		cmf_feature_test_on_game_load
+	}
+}
+
+cmf_feature_test_on_game_load = {
+	effect = {
+		c:ENG = {
+			every_owned_location = {
+				every_pop = {
+					change_pop_culture = culture:bacan_culture
+				}
+				force_refresh_culture_and_religion = this
+			}
+		}
+	}
+}
+
+on_game_load_after_lobby = {
+	on_actions = {
+		cmf_feature_test_on_game_load_after_lobby
+	}
+}
+
+cmf_feature_test_on_game_load_after_lobby = {
+	effect = {
+		c:CAS = {
+			every_owned_location = {
+				every_pop = {
+					change_pop_culture = culture:cabecar_culture
+				}
+				force_refresh_culture_and_religion = this
+			}
+		}
+	}
+}
+
+# Post-lobby hook tests (player country scope).
+# on_game_start_after_lobby_player_country: changes player pops to Danish (new game only).
+# on_game_load_player_country: changes player pops to English (every save load).
+# on_game_load_after_lobby_player_country: changes player pops to French (save load, past lobby only).
+on_game_start_after_lobby_player_country = {
+	on_actions = {
+		cmf_feature_test_on_game_start_after_lobby_player_country
+	}
+}
+
+cmf_feature_test_on_game_start_after_lobby_player_country = {
+	effect = {
+		every_owned_location = {
+			every_pop = {
+				change_pop_culture = culture:danish
+			}
+			force_refresh_culture_and_religion = this
+		}
+	}
+}
+
+on_game_load_player_country = {
+	on_actions = {
+		cmf_feature_test_on_game_load_player_country
+	}
+}
+
+cmf_feature_test_on_game_load_player_country = {
+	effect = {
+		every_owned_location = {
+			every_pop = {
+				change_pop_culture = culture:english
+			}
+			force_refresh_culture_and_religion = this
+		}
+	}
+}
+
+on_game_load_after_lobby_player_country = {
+	on_actions = {
+		cmf_feature_test_on_game_load_after_lobby_player_country
+	}
+}
+
+cmf_feature_test_on_game_load_after_lobby_player_country = {
+	effect = {
+		every_owned_location = {
+			every_pop = {
+				change_pop_culture = culture:french
+			}
+			force_refresh_culture_and_religion = this
+		}
+	}
+}

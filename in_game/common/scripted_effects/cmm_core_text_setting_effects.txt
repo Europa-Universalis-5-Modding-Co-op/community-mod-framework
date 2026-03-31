@@ -20,7 +20,7 @@ cmm_register_text_setting = {
 	add_to_variable_map = { name = cmm_text_char_limit key = flag:$mod_id$__$setting_id$ value = var:cmm_tmp_char_limit }
 	remove_variable = cmm_tmp_char_limit
 
-	cmm_register_setting_metadata = {
+	_cmm_register_setting_metadata = {
 		mod_id = $mod_id$
 		setting_id = $setting_id$
 		tab_id = $tab_id$

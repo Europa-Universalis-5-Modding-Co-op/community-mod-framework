@@ -85,14 +85,23 @@ jobs:
       - name: Create Release Artifact
         run: |
           cd ../mod-release
-          zip -r ${{ github.workspace }}/release-${{ steps.project.outputs.version }}.zip .
+          zip -r ${{ github.workspace }}/community-mod-framework-${{ steps.project.outputs.version }}.zip .
+
+        # Package the dependency check template as a separate zip
+        # Mod authors unzip this into their mod folder to get the CMF dependency popup
+      - name: Create Dependency Check Artifact
+        run: |
+          mkdir -p ../dep-check/main_menu/gui
+          cp submods/cmf-example-mod/main_menu/gui/cmf_dependency_check.gui ../dep-check/main_menu/gui/
+          cd ../dep-check
+          zip -r ${{ github.workspace }}/cmf-dependency-check.zip .
 
         # Attach mod package to the workflow run
       - name: Upload Release Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Release
-          path: release-${{ steps.project.outputs.version }}.zip
+          path: community-mod-framework-${{ steps.project.outputs.version }}.zip
 
         # Create a GitHub release
         # Includes the mod package and visual editor tool
@@ -104,7 +113,8 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            release-${{ steps.project.outputs.version }}.zip
+            community-mod-framework-${{ steps.project.outputs.version }}.zip
+            cmf-dependency-check.zip
             tools/cmm-visual-editor.bat
           tag_name: ${{ steps.project.outputs.version }}
           name: ${{ steps.project.outputs.version }}

@@ -4,7 +4,7 @@
 # the cmm value map (global or local) using remove-before-add.
 # Scope: country
 # Args: none
-cmm_reset_to_defaults = {
+_cmm_reset_to_defaults = {
 	every_in_list = {
 		variable = cmm_registered_setting_keys
 

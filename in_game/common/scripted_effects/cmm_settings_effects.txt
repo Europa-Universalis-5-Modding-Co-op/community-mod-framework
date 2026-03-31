@@ -1,7 +1,7 @@
 ﻿# Register built-in CMM settings.
 # Scope: country
 # Args: none
-cmm_register_menu_settings = {
+_cmm_register_menu_settings = {
 	if = {
 		limit = { has_multiple_players = no }
 		cmm_register_global_bool_setting = {
@@ -38,7 +38,7 @@ cmm_register_menu_settings = {
 # Store the current country as the CMM host country.
 # Scope: country
 # Args: none
-cmm_mark_host_country = {
+_cmm_mark_host_country = {
 	set_global_variable = { name = cmm_core_host_country value = this }
 
 	# Benign warning suppression

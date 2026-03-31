@@ -97,7 +97,7 @@ cmm_auto_apply_numeric = {
 	scope = country
 	saved_scopes = { setting }
 	effect = {
-		cmm_auto_apply_numeric_from_scope = yes
+		_cmm_auto_apply_numeric_from_scope = yes
 
 		# Benign warning suppression
 		if = {
@@ -175,7 +175,7 @@ cmm_auto_apply_slider = {
 			remove_variable = cmf_callback
 		}
 		else = {
-			cmm_auto_apply_numeric_from_scope = yes
+			_cmm_auto_apply_numeric_from_scope = yes
 		}
 
 		# Benign warning suppression
