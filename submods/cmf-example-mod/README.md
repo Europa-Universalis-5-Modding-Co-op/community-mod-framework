@@ -8,9 +8,7 @@ This is a reference integration mod for `community_mod_framework`.
 - Declaring dependency on Community Mod Framework in `.metadata/metadata.json`.
 - Registering settings under mod id `cmm_example` with derived localization keys.
 - Appending into CMM shared registration hook `cmm_on_mod_registration`.
-- Defining immediate per-setting callbacks for country-scope bool, button, numeric, slider, dropdown, text, and list examples.
-- Defining immediate per-setting callbacks for global bool, button, numeric, slider, and dropdown examples.
-- Splitting country-scope and global-scope examples across separate `General` and `Global` tabs.
+- Defining per-setting callbacks for bool, button, numeric, slider, dropdown, text, and list examples.
 - Grouping the `General` tab into `Toggles`, `Values`, and `Lists` sections using tab-specific group ids.
 - Global settings
 
