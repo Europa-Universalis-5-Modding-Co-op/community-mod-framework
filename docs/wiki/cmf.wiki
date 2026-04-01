@@ -218,6 +218,19 @@ if = {
 
 Group multiple calls in one <code>if</code> block so the engine evaluates <code>always = no</code> only once.
 
+== cmf_change_variable_map Effect ==
+Helper effects for updating variable map entries. Vanilla <code>add_to_variable_map</code> does not overwrite an existing key — these remove the key first, then add the new value. All work in any scope.
+
+{| class="wikitable"
+! Effect !! Description
+|-
+| <code>cmf_change_variable_map = { name = ... key = ... value = ... }</code> || Update a country-scoped variable map entry
+|-
+| <code>cmf_change_local_variable_map = { name = ... key = ... value = ... }</code> || Update a local variable map entry
+|-
+| <code>cmf_change_global_variable_map = { name = ... key = ... value = ... }</code> || Update a global variable map entry
+|}
+
 == Community Mod Toolkit (CMT) ==
 The [[Community Mod Toolkit]] is a companion set of development tools for EU5 mod authors. It provides a structured mod template and automation tools that work together through shared configuration:
 
@@ -228,9 +241,6 @@ The [[Community Mod Toolkit]] is a companion set of development tools for EU5 mo
 See the [[Community Mod Toolkit|CMT page]] for details.
 
 = Additional Configuration =
-
-== Dependency Check Popup ==
-Main menu popup that alerts players when CMF is missing. Offers to enable or open workshop to subscribe automatically. Download <code>cmf-dependency-check.zip</code> from the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/releases latest release] and extract into your mod folder. See the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Dependency-Check-Popup GitHub wiki] for details.
 
 == Conditional Visibility ==
 Any CMM setting or CMF element (action bar buttons) can optionally use a Scripted GUI for dynamic visibility or enabled state. Create a Scripted GUI named after the element and register it with <code>cmf_register_scripted_gui</code>:
@@ -256,6 +266,9 @@ your_mod__your_toggle_on_changed = {
 	}
 }
 </syntaxhighlight>
+
+== Dependency Check Popup ==
+Main menu popup that alerts players when CMF is missing. Offers to enable or open workshop to subscribe automatically. Download <code>cmf-dependency-check.zip</code> from the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/releases latest release] and extract into your mod folder. See the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Dependency-Check-Popup GitHub wiki] for details.
 
 = Links =
 * [https://steamcommunity.com/sharedfiles/filedetails/?id=3692202776 Steam Workshop]
