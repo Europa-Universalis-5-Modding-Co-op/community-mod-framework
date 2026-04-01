@@ -57,7 +57,7 @@ You can create your mod menu using the [https://github.com/Europa-Universalis-5-
 
 == Action Bar ==
 [[File:CMF_Action_Bar.png|thumb|300px|Custom action bar buttons.]]
-The Action Bar is a shared UI bar where mods can place interactive buttons. Players can reposition the bar (top, bottom-left, or bottom-right) and toggle individual buttons on or off through a built-in settings panel. The default position is bottom-right. When no mods register buttons, the action bar is invisible.
+The Action Bar is a shared UI bar where mods can place interactive buttons. Players can reposition the bar (top, bottom-left, or bottom-right) and toggle individual buttons on or off through a built-in settings panel.
 
 Each button requires localization keys:
 <syntaxhighlight lang="yaml">
@@ -68,18 +68,6 @@ l_english:
  cmf_action_bar_element_example_name: "Some Button"
  cmf_action_bar_element_example_tooltip: "This is a custom Action Bar Button."
 </syntaxhighlight>
-
-{| class="wikitable"
-! Key !! Description
-|-
-| <code><root_key>_color</code> || Button color: <code>blue</code>, <code>gold</code>, <code>red</code>, <code>dark_red</code>, <code>green</code>, <code>dark_green</code>, <code>purple</code>, <code>dark_purple</code>, <code>yellow</code>, <code>silver</code>, <code>bronze</code>, <code>turquoise</code>, <code>white</code>, <code>grey</code>, and more
-|-
-| <code><root_key>_icon</code> || Text icon (e.g. <code>@advance!</code>)
-|-
-| <code><root_key>_name</code> || Tooltip header text
-|-
-| <code><root_key>_tooltip</code> || Tooltip body text
-|}
 
 {| class="wikitable"
 ! Effect !! Description
