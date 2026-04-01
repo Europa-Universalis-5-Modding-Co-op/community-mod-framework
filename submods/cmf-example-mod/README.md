@@ -32,7 +32,7 @@ This is a reference integration mod for `community_mod_framework`.
 - `main_menu/localization/english/cmf_action_bar_example_l_english.yml`
 - `main_menu/localization/english/cmf_alert_example_l_english.yml`
 
-## How to test
+## How to use
 
 1. Enable both `community_mod_framework` and `community_mod_framework_example`.
 2. Start a new game as any country.
