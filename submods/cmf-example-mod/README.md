@@ -12,7 +12,7 @@ This is a reference integration mod for `community_mod_framework`.
 - Defining immediate per-setting callbacks for global bool, button, numeric, slider, and dropdown examples.
 - Splitting country-scope and global-scope examples across separate `General` and `Global` tabs.
 - Grouping the `General` tab into `Toggles`, `Values`, and `Lists` sections using tab-specific group ids.
-- Demonstrating the full global setting surface; global text is intentionally omitted because CMM does not expose a global text-setting API.
+- Global settings
 
 ### CMF (Framework Features)
 - Creating and showing a custom alert with localization keys and a scripted GUI callback.
