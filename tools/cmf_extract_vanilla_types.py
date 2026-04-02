@@ -22,6 +22,7 @@ MOD_GUI_DIR = PROJECT_ROOT / "in_game" / "gui"
 OUTPUT_DIR = MOD_GUI_DIR / "vanilla"
 
 VANILLA_FILES = [
+	"build_location_lateralview.gui",
     "foreign_country_lateralview.gui",
     "government_lateralview.gui",
     "ingame_topbar.gui",
