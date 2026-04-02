@@ -109,6 +109,7 @@ on_game_start_after_lobby_human_country = {
 # Scope: none
 on_game_load = {
 	effect = {
+		set_global_variable = { name = cmf_active value = yes }
 		every_country = {
 			limit = { is_ai = no }
 			trigger_event_silently = {
