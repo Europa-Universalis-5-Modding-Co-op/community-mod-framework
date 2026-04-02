@@ -158,7 +158,6 @@ jobs:
         run: |
           MOD_RELEASE=$(realpath ../mod-release)
           TITLE=$(grep -Po '(?<=\s"name":\s").+(?=",)' ../mod-release/.metadata/metadata.json)
-          DESCRIPTION=$(sed '/--NO-TRANSLATE-BELOW--/d' ../steam-release/workshop-description.bbcode | sed "s/\\\$item-id\\\$/${{ inputs.workshop-id }}/g")
           CHANGE_NOTE=""
           if [ "${{ inputs.upload-change-notes }}" = "true" ] && [ -f "assets/workshop/change-notes.bbcode" ]; then
             VERSION="${{ steps.project.outputs.version }}"
@@ -211,7 +210,6 @@ jobs:
             printf '\t"contentfolder" "%s"\n' "${MOD_RELEASE}"
             printf '\t"previewfile" "%s/.metadata/thumbnail.png"\n' "${MOD_RELEASE}"
             printf '\t"title" "%s"\n' "${TITLE}"
-            printf '\t"description" "%s"\n' "${DESCRIPTION}"
             [ -n "$CHANGE_NOTE" ] && printf '\t"changenote" "%s"\n' "${CHANGE_NOTE}"
             echo '}'
           } > ../steam-release/workshop.vdf
@@ -401,4 +399,14 @@ jobs:
           done <<< "$SUBMODS"
           echo "# Submods" >> $GITHUB_STEP_SUMMARY
           echo "Uploaded **${upload_count}** submod(s)." >> $GITHUB_STEP_SUMMARY
+
+        # Update .upload_versions.json so local upload.py knows this version was published
+      - name: Update Upload Versions
+        if: ${{ inputs.publish == 'true' }}
+        run: |
+          VERSION="${{ steps.project.outputs.version }}"
+          jq --indent 2 ".entries[\"main:release\"] = \"${VERSION}\"" tools/dependencies/.upload_versions.json > tmp.json && mv tmp.json tools/dependencies/.upload_versions.json
+          git add tools/dependencies/.upload_versions.json
+          git commit -m "Bump upload versions to ${VERSION}"
+          git push origin main
 
