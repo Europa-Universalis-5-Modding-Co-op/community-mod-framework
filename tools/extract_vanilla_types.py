@@ -311,9 +311,6 @@ def process_file(filename, mod_types, mod_templates):
             print(f"  SKIP: All content overridden by mod ({len(overridden)} items)")
             for item in overridden:
                 print(f"    {item}")
-            if output_path.exists():
-                output_path.unlink()
-                print(f"  Removed stale: {output_name}")
         else:
             print(f"  SKIP: No types or templates found")
         return False
@@ -343,6 +340,9 @@ def process_file(filename, mod_types, mod_templates):
 
 
 def main():
+    if OUTPUT_DIR.exists():
+        for f in OUTPUT_DIR.glob("*.gui"):
+            f.unlink()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     mod_types, mod_templates = collect_mod_definitions()
