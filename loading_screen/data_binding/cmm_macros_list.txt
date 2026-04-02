@@ -144,6 +144,22 @@ macro = {
     replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)4')"
 }
 
+# Args: SettingKey (string), SlotKey (string)
+# Returns: int32
+macro = {
+    description = "Pixel width for one list field cell: 198 slider, 48 bool, 132 other"
+    definition = "CMMListFieldWidth(SettingKey,SlotKey)"
+    replace_with = "Select_int32(CMMListFieldIsSlider(SettingKey, SlotKey), '(int32)198', Select_int32(CMMListFieldIsBool(SettingKey, SlotKey), '(int32)48', '(int32)132'))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: int32
+macro = {
+    description = "Max text width for one list field header: 160 slider, 48 bool, 132 other"
+    definition = "CMMListFieldHeaderMaxWidth(SettingKey,SlotKey)"
+    replace_with = "Select_int32(CMMListFieldIsSlider(SettingKey, SlotKey), '(int32)160', Select_int32(CMMListFieldIsBool(SettingKey, SlotKey), '(int32)48', '(int32)132'))"
+}
+
 # Args: ItemKey (string), SlotKey (string)
 # Returns: boolean
 macro = {

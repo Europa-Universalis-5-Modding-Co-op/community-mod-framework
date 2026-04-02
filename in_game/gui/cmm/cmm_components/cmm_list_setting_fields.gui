@@ -15,12 +15,12 @@
 
 		item = {
 			widget = {
-				min_width = "[Select_int32(CMMListFieldIsSlider(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(int32)198', '(int32)132')]"
+				min_width = "[CMMListFieldWidth(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				minimumsize = { 0 0 }
 
 				text_single = {
 					size = { 100% 0 }
-					max_width = "[Select_int32(CMMListFieldIsSlider(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(int32)160', '(int32)132')]"
+					max_width = "[CMMListFieldHeaderMaxWidth(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 					fontsize = 14
 					autoresize = no
 					default_format = "#medium"
@@ -57,9 +57,9 @@
 	# Writes:
 	# - GetVariableSystem.Set('cmm_list_hover_field_slot', ...) [effect]: caches the currently hovered field slot.
 	type cmm_list_setting_field_cell = widget {
-		size = { 132 28 }
-		minimumsize = { 132 28 }
-		min_width = "[Select_int32(CMMListFieldIsSlider(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(int32)198', '(int32)132')]"
+		minimumsize = { 0 28 }
+		min_width = "[CMMListFieldWidth(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+		max_width = "[CMMListFieldWidth(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 		onmousehierarchyenter = "[GetVariableSystem.Set('cmm_list_hover_field_slot', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 
 		cmm_list_setting_bool_field = {
@@ -92,8 +92,8 @@
 	# - GetScriptedGui('CMM_MarkListFieldToggleAll').Execute(...) [effect]: marks a bulk bool toggle.
 	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
 	type cmm_list_setting_bool_field = widget {
-		size = { 132 28 }
-		minimumsize = { 132 28 }
+		size = { 48 28 }
+		minimumsize = { 48 28 }
 
 		checkbox_square_alt = {
 			parentanchor = center
@@ -909,7 +909,7 @@
 		}
 
 		button = {
-			size = { 132 28 }
+			size = { 48 28 }
 			parentanchor = center
 			widgetanchor = center
 			visible = "[UIAction.IsLeftClickModifierEnabled('shift')]"
