@@ -170,6 +170,10 @@ _cmm_initialize_list_bool_field_slot = {
 		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
 		value = flag:$mod_id$__$setting_id$__$field_id$_name
 	}
+	set_variable = {
+		name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$
+		value = flag:$mod_id$__$setting_id$__$field_id$
+	}
 
 	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 0 } _cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 1 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
 	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 1 } _cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 2 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
@@ -258,6 +262,10 @@ _cmm_initialize_list_dropdown_field_slot = {
 	set_variable = {
 		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
 		value = flag:$mod_id$__$setting_id$__$field_id$_name
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$
+		value = flag:$mod_id$__$setting_id$__$field_id$
 	}
 	set_variable = {
 		name = cmm_list_field_$slot$_option_root_$mod_id$__$setting_id$
@@ -372,6 +380,10 @@ _cmm_initialize_list_numeric_field_slot = {
 		value = flag:$mod_id$__$setting_id$__$field_id$_name
 	}
 	set_variable = {
+		name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$
+		value = flag:$mod_id$__$setting_id$__$field_id$
+	}
+	set_variable = {
 		name = cmm_list_field_$slot$_min_$mod_id$__$setting_id$
 		value = $min_value$
 	}
@@ -473,6 +485,10 @@ _cmm_initialize_list_slider_field_slot = {
 	set_variable = {
 		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
 		value = flag:$mod_id$__$setting_id$__$field_id$_name
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$
+		value = flag:$mod_id$__$setting_id$__$field_id$
 	}
 	set_variable = {
 		name = cmm_list_field_$slot$_min_$mod_id$__$setting_id$

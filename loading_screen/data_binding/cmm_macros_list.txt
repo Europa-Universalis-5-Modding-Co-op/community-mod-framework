@@ -160,6 +160,46 @@ macro = {
     replace_with = "Select_int32(CMMListFieldIsSlider(SettingKey, SlotKey), '(int32)160', Select_int32(CMMListFieldIsBool(SettingKey, SlotKey), '(int32)48', '(int32)132'))"
 }
 
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a postfix is registered for one list field"
+    definition = "CMMListFieldHasPostfix(SettingKey,SlotKey)"
+    replace_with = "CMMListFieldMetadataVar(SettingKey, SlotKey, '_sfx_').IsSet"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Postfix text for one list field (auto-localized from flag name)"
+    definition = "CMMListFieldPostfix(SettingKey,SlotKey)"
+    replace_with = "CMMListFieldMetadataFlag(SettingKey, SlotKey, '_sfx_')"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a prefix is registered for one list field"
+    definition = "CMMListFieldHasPrefix(SettingKey,SlotKey)"
+    replace_with = "CMMListFieldMetadataVar(SettingKey, SlotKey, '_pfx_').IsSet"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Prefix text for one list field (auto-localized from flag name)"
+    definition = "CMMListFieldPrefix(SettingKey,SlotKey)"
+    replace_with = "CMMListFieldMetadataFlag(SettingKey, SlotKey, '_pfx_')"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when any formatting (postfix or prefix) is registered for one list field"
+    definition = "CMMListFieldHasFormat(SettingKey,SlotKey)"
+    replace_with = "Or(CMMListFieldHasPostfix(SettingKey, SlotKey), CMMListFieldHasPrefix(SettingKey, SlotKey))"
+}
+
 # Args: ItemKey (string), SlotKey (string)
 # Returns: boolean
 macro = {
