@@ -32,6 +32,9 @@ class ListField:
     item_aliases: Optional[list] = None  # per-item aliases (list of str, one per item)
     # per-item field visibility
     disabled_items: Optional[list] = None  # 1-based item indices where this field is hidden
+    # format display
+    postfix: str = ""  # text appended after the value (e.g. "%")
+    prefix: str = ""  # text prepended before the value (e.g. a color code)
 
 
 @dataclass

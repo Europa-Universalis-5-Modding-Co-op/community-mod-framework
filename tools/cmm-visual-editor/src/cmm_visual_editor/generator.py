@@ -659,6 +659,10 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
         for field in (setting.fields or []):
             fqid = f"{qid}__{field.field_id}"
             lines.append(f' {fqid}_name: "{_esc(field.name or field.field_id)}"')
+            if field.postfix:
+                lines.append(f' {fqid}_postfix: "{_esc(field.postfix)}"')
+            if field.prefix:
+                lines.append(f' {fqid}_prefix: "{_esc(field.prefix)}"')
             if field.field_type == "dropdown":
                 for opt in (field.options or []):
                     lines.append(f' {fqid}_option_{opt.index}_name: "{_esc(opt.name)}"')
@@ -729,4 +733,4 @@ def _esc(s: str) -> str:
     """Escape a string for Paradox localization YAML."""
     if not s:
         return ""
-    return s.replace("\\", "\\\\").replace('"', '\\"')
+    return s.replace("\\", "\\\\").replace("\\\\n", "\\n").replace('"', '\\"')

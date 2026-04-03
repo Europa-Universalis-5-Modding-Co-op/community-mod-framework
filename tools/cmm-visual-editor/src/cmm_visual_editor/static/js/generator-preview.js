@@ -720,6 +720,12 @@ ${prefix}_on_cmf_callback = {
             for (const field of (setting.fields || [])) {
                 const fqid = `${qid}__${field.field_id}`;
                 lines.push(` ${fqid}_name: "${this._esc(field.name || field.field_id)}"`);
+                if (field.postfix) {
+                    lines.push(` ${fqid}_postfix: "${this._esc(field.postfix)}"`);
+                }
+                if (field.prefix) {
+                    lines.push(` ${fqid}_prefix: "${this._esc(field.prefix)}"`);
+                }
                 if (field.field_type === 'dropdown') {
                     for (const opt of (field.options || [])) {
                         lines.push(` ${fqid}_option_${opt.index}_name: "${this._esc(opt.name)}"`);
