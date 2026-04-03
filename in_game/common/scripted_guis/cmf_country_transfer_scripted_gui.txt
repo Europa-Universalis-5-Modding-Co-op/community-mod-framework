@@ -11,9 +11,11 @@ _cmf_on_country_transfer = {
 			every_key_in_variable_map = {
 				variable = cmm
 				save_scope_as = cmm_transfer_key
-				set_local_variable = { name = cmm_transfer_val value = "variable_map(cmm|scope:cmm_transfer_key)" }
-				scope:new_country = {
-					add_to_variable_map = { name = cmm key = scope:cmm_transfer_key value = local_var:cmm_transfer_val }
+				scope:old_country = {
+					set_local_variable = { name = cmm_transfer_val value = "variable_map(cmm|scope:cmm_transfer_key)" }
+					scope:new_country = {
+						add_to_variable_map = { name = cmm key = scope:cmm_transfer_key value = local_var:cmm_transfer_val }
+					}
 				}
 			}
 		}
