@@ -59,23 +59,24 @@
 	type cmm_list_setting_field_cell = widget {
 		minimumsize = { 0 28 }
 		min_width = "[CMMListFieldWidth(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
-		max_width = "[CMMListFieldWidth(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+		max_width = 198
+		visible = "[CMMListItemFieldIsEnabled(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 		onmousehierarchyenter = "[GetVariableSystem.Set('cmm_list_hover_field_slot', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 
 		cmm_list_setting_bool_field = {
-			visible = "[And(CMMListItemFieldIsEnabled(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldIsBool(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+			visible = "[CMMListFieldIsBool(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 		}
 
 		cmm_list_setting_numeric_field = {
-			visible = "[And(CMMListItemFieldIsEnabled(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldIsNumeric(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+			visible = "[CMMListFieldIsNumeric(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 		}
 
 		cmm_list_setting_dropdown_field = {
-			visible = "[And(CMMListItemFieldIsEnabled(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldIsDropdown(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+			visible = "[CMMListFieldIsDropdown(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 		}
 
 		cmm_list_setting_slider_field = {
-			visible = "[And(CMMListItemFieldIsEnabled(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldIsSlider(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+			visible = "[CMMListFieldIsSlider(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 		}
 	}
 
