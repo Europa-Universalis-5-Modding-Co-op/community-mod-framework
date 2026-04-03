@@ -659,10 +659,12 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
         for field in (setting.fields or []):
             fqid = f"{qid}__{field.field_id}"
             lines.append(f' {fqid}_name: "{_esc(field.name or field.field_id)}"')
-            if field.postfix:
-                lines.append(f' {fqid}_postfix: "{_esc(field.postfix)}"')
-            if field.prefix:
-                lines.append(f' {fqid}_prefix: "{_esc(field.prefix)}"')
+            if field.display_format and "$VALUE$" in field.display_format:
+                parts = field.display_format.split("$VALUE$", 1)
+                if parts[0]:
+                    lines.append(f' {fqid}_prefix: "{_esc(parts[0])}"')
+                if parts[1]:
+                    lines.append(f' {fqid}_postfix: "{_esc(parts[1])}"')
             if field.field_type == "dropdown":
                 for opt in (field.options or []):
                     lines.append(f' {fqid}_option_{opt.index}_name: "{_esc(opt.name)}"')

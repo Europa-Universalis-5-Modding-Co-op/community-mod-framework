@@ -32,9 +32,8 @@ class ListField:
     item_aliases: Optional[list] = None  # per-item aliases (list of str, one per item)
     # per-item field visibility
     disabled_items: Optional[list] = None  # 1-based item indices where this field is hidden
-    # format display
-    postfix: str = ""  # text appended after the value (e.g. "%")
-    prefix: str = ""  # text prepended before the value (e.g. a color code)
+    # format display (use $VALUE$ as placeholder, e.g. "$VALUE$%" or "#G$VALUE$%#!")
+    display_format: str = ""
 
 
 @dataclass
@@ -200,10 +199,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["min_value"] = f.min_value
             d["max_value"] = f.max_value
             d["step_value"] = f.step_value
-        if f.postfix:
-            d["postfix"] = f.postfix
-        if f.prefix:
-            d["prefix"] = f.prefix
+        if f.display_format:
+            d["display_format"] = f.display_format
         return d
 
     return {
@@ -258,8 +255,7 @@ def dict_to_model(data: dict) -> ModModel:
             alias=f.get("alias", ""),
             item_aliases=f.get("item_aliases"),
             disabled_items=f.get("disabled_items"),
-            postfix=f.get("postfix", ""),
-            prefix=f.get("prefix", ""),
+            display_format=f.get("display_format", ""),
         )
 
     def _parse_setting(s: dict) -> Setting:

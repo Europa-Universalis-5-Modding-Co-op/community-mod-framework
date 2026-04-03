@@ -720,11 +720,14 @@ ${prefix}_on_cmf_callback = {
             for (const field of (setting.fields || [])) {
                 const fqid = `${qid}__${field.field_id}`;
                 lines.push(` ${fqid}_name: "${this._esc(field.name || field.field_id)}"`);
-                if (field.postfix) {
-                    lines.push(` ${fqid}_postfix: "${this._esc(field.postfix)}"`);
-                }
-                if (field.prefix) {
-                    lines.push(` ${fqid}_prefix: "${this._esc(field.prefix)}"`);
+                if (field.display_format && field.display_format.includes('$VALUE$')) {
+                    const parts = field.display_format.split('$VALUE$');
+                    if (parts[0]) {
+                        lines.push(` ${fqid}_prefix: "${this._esc(parts[0])}"`);
+                    }
+                    if (parts[1]) {
+                        lines.push(` ${fqid}_postfix: "${this._esc(parts[1])}"`);
+                    }
                 }
                 if (field.field_type === 'dropdown') {
                     for (const opt of (field.options || [])) {

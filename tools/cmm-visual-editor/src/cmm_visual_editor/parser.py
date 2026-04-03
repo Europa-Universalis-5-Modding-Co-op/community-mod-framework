@@ -847,9 +847,11 @@ def _parse_list_field(
         field.max_value = _to_float(reg.get("max_value", "10"))
         field.step_value = _to_float(reg.get("step_value", "1"))
 
-    # Format display
-    field.postfix = loc_map.get(f"{fqid}_postfix", "")
-    field.prefix = loc_map.get(f"{fqid}_prefix", "")
+    # Format display — reconstruct $VALUE$ format from prefix/postfix loc keys
+    pfx = loc_map.get(f"{fqid}_prefix", "")
+    sfx = loc_map.get(f"{fqid}_postfix", "")
+    if pfx or sfx:
+        field.display_format = f"{pfx}$VALUE${sfx}"
 
     return field
 

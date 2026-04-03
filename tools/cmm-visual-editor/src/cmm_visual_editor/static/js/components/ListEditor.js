@@ -143,12 +143,8 @@ const ListEditorComponent = {
                             <input type="number" v-model.number="field.step_value" min="1">
                         </div>
                         <div class="field-row">
-                            <label>Postfix</label>
-                            <input type="text" v-model="field.postfix" placeholder='e.g. %'>
-                        </div>
-                        <div class="field-row">
-                            <label>Prefix</label>
-                            <input type="text" v-model="field.prefix" placeholder='e.g. color code'>
+                            <label>Format</label>
+                            <input type="text" v-model="field.display_format" placeholder='e.g. $VALUE$%'>
                         </div>
                     </div>
 
