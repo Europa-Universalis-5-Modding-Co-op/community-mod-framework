@@ -403,50 +403,6 @@ cmm_enable_list_field_for_item = {
 	}
 }
 
-# Set a format postfix for one list field (e.g. "%" for percentages).
-# The postfix localization key value is appended after the value in the GUI display.
-# Scope: country
-# Args:
-# - mod_id (key): Owner mod id.
-# - setting_id (key): Target list setting id within the mod.
-# - field_id (key): Field id to format.
-# - postfix (key): Localization key whose value is the postfix text.
-cmm_set_list_field_postfix = {
-	if = {
-		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
-		switch = {
-			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
-			1 = { set_variable = { name = cmm_list_field_1_sfx_$mod_id$__$setting_id$ value = flag:$postfix$ } }
-			2 = { set_variable = { name = cmm_list_field_2_sfx_$mod_id$__$setting_id$ value = flag:$postfix$ } }
-			3 = { set_variable = { name = cmm_list_field_3_sfx_$mod_id$__$setting_id$ value = flag:$postfix$ } }
-			4 = { set_variable = { name = cmm_list_field_4_sfx_$mod_id$__$setting_id$ value = flag:$postfix$ } }
-			5 = { set_variable = { name = cmm_list_field_5_sfx_$mod_id$__$setting_id$ value = flag:$postfix$ } }
-		}
-	}
-}
-
-# Set a format prefix for one list field (e.g. a color code).
-# The prefix localization key value is prepended before the value in the GUI display.
-# Scope: country
-# Args:
-# - mod_id (key): Owner mod id.
-# - setting_id (key): Target list setting id within the mod.
-# - field_id (key): Field id to format.
-# - prefix (key): Localization key whose value is the prefix text.
-cmm_set_list_field_prefix = {
-	if = {
-		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
-		switch = {
-			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
-			1 = { set_variable = { name = cmm_list_field_1_pfx_$mod_id$__$setting_id$ value = flag:$prefix$ } }
-			2 = { set_variable = { name = cmm_list_field_2_pfx_$mod_id$__$setting_id$ value = flag:$prefix$ } }
-			3 = { set_variable = { name = cmm_list_field_3_pfx_$mod_id$__$setting_id$ value = flag:$prefix$ } }
-			4 = { set_variable = { name = cmm_list_field_4_pfx_$mod_id$__$setting_id$ value = flag:$prefix$ } }
-			5 = { set_variable = { name = cmm_list_field_5_pfx_$mod_id$__$setting_id$ value = flag:$prefix$ } }
-		}
-	}
-}
-
 # Attach a game object scope as the value of one list item (call after cmm_register_settings_list).
 # Stores the scope in a single-element variable list per item.
 # When iterating with cmm_for_each_list_item, the scope is available as
