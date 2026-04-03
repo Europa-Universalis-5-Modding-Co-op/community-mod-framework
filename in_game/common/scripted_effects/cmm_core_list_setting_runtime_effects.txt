@@ -848,17 +848,37 @@ cmm_for_each_list_item = {
 # - list_name (key): Name of the variable list to populate.
 cmm_build_list_ordered_values = {
 	clear_variable_list = $list_name$
+	clear_variable_list = _cmm_tmp_ordered_values
 	cmm_for_each_list_item = {
 		setting = $setting$
 		effect = _cmm_build_list_ordered_values_item
 	}
+	every_in_list = {
+		variable = _cmm_tmp_ordered_values
+		save_scope_as = _cmm_tmp_val
+		root = { add_to_variable_list = { name = $list_name$ target = scope:_cmm_tmp_val } }
+	}
+	clear_variable_list = _cmm_tmp_ordered_values
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = _cmm_tmp_ordered_values }
+		cmf_suppress = { v = _cmm_tmp_val }
+	}
 }
 
 # Internal: called per item by cmm_build_list_ordered_values.
+# Writes to fixed temp list; parent copies to target after iteration.
 # Scope: country
 # Args: setting (key), i (number)
 _cmm_build_list_ordered_values_item = {
-	add_to_variable_list = { name = $list_name$ target = scope:cmm_list_current_item_value }
+	add_to_variable_list = { name = _cmm_tmp_ordered_values target = scope:cmm_list_current_item_value }
+
+	# Accept setting/i params from cmm_for_each_list_item (unused here)
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $setting$_$i$ }
+	}
 }
 
 # Build a variable map from a list field, keyed by item values (game object scopes).
@@ -871,12 +891,22 @@ _cmm_build_list_ordered_values_item = {
 # - multiply (number): Optional scale factor applied to each value (e.g. 0.01 to convert 0-100 to 0-1). Use 1 for no scaling.
 cmm_build_list_field_map = {
 	clear_variable_map = $map_name$
+	clear_variable_map = _cmm_tmp_field_map
 	set_variable = { name = cmm_blfm_field_slot value = $field_slot$ }
 	set_variable = { name = cmm_blfm_multiply value = $multiply$ }
 	cmm_for_each_list_item = {
 		setting = $setting$
 		effect = _cmm_build_list_field_map_item
 	}
+	every_key_in_variable_map = {
+		variable = _cmm_tmp_field_map
+		save_scope_as = _cmm_tmp_map_key
+		root = {
+			set_local_variable = { name = _cmm_tmp_map_val value = "variable_map(_cmm_tmp_field_map|scope:_cmm_tmp_map_key)" }
+			add_to_variable_map = { name = $map_name$ key = scope:_cmm_tmp_map_key value = local_var:_cmm_tmp_map_val }
+		}
+	}
+	clear_variable_map = _cmm_tmp_field_map
 
 	# Benign warning suppression
 	if = {
@@ -884,10 +914,14 @@ cmm_build_list_field_map = {
 		cmf_suppress = { v = cmm_blfm_field_slot }
 		cmf_suppress = { v = cmm_blfm_multiply }
 		cmf_suppress = { v = cmm_blfm_value }
+		cmf_suppress = { v = _cmm_tmp_field_map }
+		cmf_suppress = { v = _cmm_tmp_map_key }
+		cmf_suppress = { v = cmm_tmp_key }
 	}
 }
 
 # Internal: called per item by cmm_build_list_field_map.
+# Writes to fixed temp map; parent copies to target after iteration.
 # Scope: country
 # Args: setting (key), i (number)
 _cmm_build_list_field_map_item = {
@@ -899,7 +933,7 @@ _cmm_build_list_field_map_item = {
 
 	set_variable = { name = cmm_blfm_value value = "variable_map(cmm|local_var:cmm_tmp_key)" }
 	change_variable = { name = cmm_blfm_value multiply = var:cmm_blfm_multiply }
-	add_to_variable_map = { name = $map_name$ key = scope:cmm_list_current_item_value value = var:cmm_blfm_value }
+	add_to_variable_map = { name = _cmm_tmp_field_map key = scope:cmm_list_current_item_value value = var:cmm_blfm_value }
 }
 
 # Build a variable list of item values where a bool field is true.
@@ -912,20 +946,29 @@ _cmm_build_list_field_map_item = {
 # - list_name (key): Name of the variable list to populate.
 cmm_build_list_bool_list = {
 	clear_variable_list = $list_name$
+	clear_variable_list = _cmm_tmp_bool_list
 	set_variable = { name = cmm_blbl_field_slot value = $field_slot$ }
 	cmm_for_each_list_item = {
 		setting = $setting$
 		effect = _cmm_build_list_bool_list_item
 	}
+	every_in_list = {
+		variable = _cmm_tmp_bool_list
+		save_scope_as = _cmm_tmp_val
+		root = { add_to_variable_list = { name = $list_name$ target = scope:_cmm_tmp_val } }
+	}
+	clear_variable_list = _cmm_tmp_bool_list
 
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
 		cmf_suppress = { v = cmm_blbl_field_slot }
+		cmf_suppress = { v = _cmm_tmp_bool_list }
 	}
 }
 
 # Internal: called per item by cmm_build_list_bool_list.
+# Writes to fixed temp list; parent copies to target after iteration.
 # Scope: country
 # Args: setting (key), i (number)
 _cmm_build_list_bool_list_item = {
@@ -937,7 +980,7 @@ _cmm_build_list_bool_list_item = {
 
 	if = {
 		limit = { "variable_map(cmm|local_var:cmm_tmp_key)" >= 1 }
-		add_to_variable_list = { name = $list_name$ target = scope:cmm_list_current_item_value }
+		add_to_variable_list = { name = _cmm_tmp_bool_list target = scope:cmm_list_current_item_value }
 	}
 }
 
