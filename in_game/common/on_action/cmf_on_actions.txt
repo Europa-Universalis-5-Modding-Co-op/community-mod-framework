@@ -68,6 +68,7 @@ cmf_monthly_human_country_pulse = {
 # Scope: country
 _cmf_on_cmm_registration = {
 	effect = {
+		clear_variable_list = cmm_registered_mod_ids
 		_cmm_register_menu_settings = yes
 	}
 }

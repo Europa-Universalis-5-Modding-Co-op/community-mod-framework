@@ -62,15 +62,19 @@ _cmm_register_mod = {
 	set_variable = { name = $mod_id$_name value = flag:$mod_id$_name }
 	set_variable = { name = $mod_id$_desc value = flag:$mod_id$_desc }
 
-	# First-time registration path for this mod id.
+	# Ensure mod is in the id list (rebuilt each registration cycle).
 	if = {
-		limit = { NOT = { has_variable = cmm_registered_mod_$mod_id$ } }
-		set_variable = { name = cmm_registered_mod_$mod_id$ value = yes }
-		# Global mod id list; used by left-panel datamodel iteration.
+		limit = { NOT = { is_target_in_variable_list = { name = cmm_registered_mod_ids target = flag:$mod_id$ } } }
 		add_to_variable_list = {
 			name = cmm_registered_mod_ids
 			target = flag:$mod_id$
 		}
+	}
+
+	# First-time registration path for this mod id.
+	if = {
+		limit = { NOT = { has_variable = cmm_registered_mod_$mod_id$ } }
+		set_variable = { name = cmm_registered_mod_$mod_id$ value = yes }
 	}
 
 	# Benign warning suppression
