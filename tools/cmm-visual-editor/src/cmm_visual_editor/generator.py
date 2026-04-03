@@ -730,7 +730,12 @@ def _num(v, default=0):
 
 
 def _esc(s: str) -> str:
-    """Escape a string for Paradox localization YAML."""
+    """Escape a string for Paradox localization YAML.
+
+    Only quotes need escaping. Backslashes are NOT escaped because
+    Paradox localization uses \\n for newlines — doubling backslashes
+    would break newline sequences.
+    """
     if not s:
         return ""
-    return s.replace("\\", "\\\\").replace("\\\\n", "\\n").replace('"', '\\"')
+    return s.replace('"', '\\"')

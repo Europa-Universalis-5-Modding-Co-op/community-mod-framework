@@ -543,13 +543,22 @@ def _parse_custom_effects(effects: str, gui: str = "") -> dict:
             block = gui[m.end():block_end]
             if "cmm_apply_list_change" not in block:
                 continue
-            # Find custom effect calls (effect_name = yes) after cmm_apply_list_change
-            for line in block.split("\n"):
+            # Find the effect = { ... } sub-block to avoid matching is_shown/is_valid content
+            effect_m = re.search(r"\beffect\s*=\s*\{", block)
+            if not effect_m:
+                continue
+            effect_end = _find_closing_brace(block, effect_m.end())
+            if effect_end < 0:
+                continue
+            effect_block = block[effect_m.end():effect_end]
+            # Find custom effect calls (effect_name = yes) within the effect block
+            _skip = {"cmm_apply_list_change", "always"}
+            for line in effect_block.split("\n"):
                 line = line.strip()
                 if not line or line.startswith("#") or line.startswith("}"):
                     continue
                 em = re.match(r"(\w+)\s*=\s*yes\s*$", line)
-                if em and em.group(1) not in ("cmm_apply_list_change",):
+                if em and em.group(1) not in _skip:
                     result[qid] = {"effect": em.group(1), "no_pass": True}
                     break
 
@@ -650,17 +659,21 @@ def _find_closing_brace(content: str, start: int) -> int:
 
 
 def _parse_params(block: str) -> dict:
-    """Extract key = value pairs from a block."""
+    """Extract key = value pairs from a block.
+
+    Handles both multi-line (one pair per line) and single-line
+    (multiple pairs on one line) formats.
+    """
     result = {}
-    for line in block.split("\n"):
-        line = line.strip()
-        if line.startswith("#"):
-            continue
-        m = re.match(r"(\w+)\s*=\s*(.+)", line)
-        if m:
-            key = m.group(1)
-            val = m.group(2).strip()
-            result[key] = val
+    # Strip comments
+    cleaned = "\n".join(
+        l for l in block.split("\n")
+        if not l.strip().startswith("#")
+    )
+    # Find all key = value pairs where value is a non-whitespace token.
+    # This handles single-line blocks like: mod_id = lsq setting_id = foo item = 1
+    for m in re.finditer(r"(\w+)\s*=\s*(\S+)", cleaned):
+        result[m.group(1)] = m.group(2)
     return result
 
 
