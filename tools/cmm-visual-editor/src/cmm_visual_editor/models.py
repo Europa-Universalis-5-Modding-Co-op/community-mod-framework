@@ -200,6 +200,10 @@ def model_to_dict(model: ModModel) -> dict:
             d["min_value"] = f.min_value
             d["max_value"] = f.max_value
             d["step_value"] = f.step_value
+        if f.postfix:
+            d["postfix"] = f.postfix
+        if f.prefix:
+            d["prefix"] = f.prefix
         return d
 
     return {
@@ -254,6 +258,8 @@ def dict_to_model(data: dict) -> ModModel:
             alias=f.get("alias", ""),
             item_aliases=f.get("item_aliases"),
             disabled_items=f.get("disabled_items"),
+            postfix=f.get("postfix", ""),
+            prefix=f.get("prefix", ""),
         )
 
     def _parse_setting(s: dict) -> Setting:
