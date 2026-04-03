@@ -16,6 +16,20 @@ from .parser import parse_mod_directory, parse_uploaded_files
 
 STATIC_DIR = Path(__file__).parent / "static"
 
+
+def _get_version():
+    from importlib.metadata import version, PackageNotFoundError
+    try:
+        return version("cmm-visual-editor")
+    except PackageNotFoundError:
+        # Fallback: parse pyproject.toml when running from source
+        pyproject = Path(__file__).resolve().parents[2] / "pyproject.toml"
+        if pyproject.is_file():
+            for line in pyproject.read_text().splitlines():
+                if line.strip().startswith("version"):
+                    return line.split("=", 1)[1].strip().strip('"').strip("'")
+        return "unknown"
+
 MIME_TYPES = {
     ".html": "text/html; charset=utf-8",
     ".css": "text/css; charset=utf-8",
@@ -50,6 +64,10 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path
+
+        if path == "/api/version":
+            self._send_json({"version": _get_version()})
+            return
 
         if path == "/api/health":
             self._send_json({"status": "ok"})

@@ -95,6 +95,7 @@ const app = createApp({
         const saveStatus = ref('');       // '', 'saving', 'saved', 'error'
         const saveError = ref('');
         const showSettings = ref(false);
+        const appVersion = ref('');
 
         // Undo/redo reactivity helpers (Vue can't observe getters on a plain object)
         const undoCount = ref(0);
@@ -645,6 +646,13 @@ const app = createApp({
 
         // Auto-open mod directory if server detected one
         onMounted(async () => {
+            // Fetch version
+            try {
+                const vResp = await fetch('/api/version');
+                const vData = await vResp.json();
+                if (vData.version) appVersion.value = vData.version;
+            } catch (e) { /* ignore */ }
+
             try {
                 const resp = await fetch('/api/auto-open');
                 const data = await resp.json();
@@ -681,7 +689,7 @@ const app = createApp({
             state, selectedTabIdx, selectedGroupIdx, rightTab,
             showImport, importPath, importWarnings,
             selectedTab, selectedGroup,
-            modDir, dirty, saveStatus, saveError, showSettings,
+            modDir, dirty, saveStatus, saveError, showSettings, appVersion,
             undoCount, redoCount,
             drag, resetDrag,
             sanitizeId, addTab, removeTab, addGroup, removeGroup,
