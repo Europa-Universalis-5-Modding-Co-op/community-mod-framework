@@ -661,11 +661,17 @@ _cmm_suppress_list_bool_field_warnings = {
 		cmf_suppress = { v = cmm_registered_list_field_$mod_id$__$setting_id$__$field_id$ }
 		cmf_suppress = { v = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
 		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$_name }
+		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$ }
 		cmf_suppress = { v = cmm_list_field_1_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_2_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_3_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_4_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_5_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
 	}
 }
 
@@ -687,6 +693,11 @@ _cmm_suppress_list_dropdown_field_warnings = {
 		cmf_suppress = { v = cmm_list_field_3_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_4_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_5_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_1_option_root_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_2_option_root_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_3_option_root_$mod_id$__$setting_id$ }
@@ -707,11 +718,17 @@ _cmm_suppress_list_numeric_field_warnings = {
 		cmf_suppress = { v = cmm_registered_list_field_$mod_id$__$setting_id$__$field_id$ }
 		cmf_suppress = { v = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
 		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$_name }
+		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$ }
 		cmf_suppress = { v = cmm_list_field_1_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_2_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_3_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_4_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_5_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_1_min_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_2_min_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_3_min_$mod_id$__$setting_id$ }
@@ -742,11 +759,17 @@ _cmm_suppress_list_slider_field_warnings = {
 		cmf_suppress = { v = cmm_registered_list_field_$mod_id$__$setting_id$__$field_id$ }
 		cmf_suppress = { v = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
 		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$_name }
+		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$ }
 		cmf_suppress = { v = cmm_list_field_1_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_2_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_3_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_4_name_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_5_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_1_min_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_2_min_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_3_min_$mod_id$__$setting_id$ }
