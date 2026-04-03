@@ -232,6 +232,7 @@
                     <span class="field-hint">Suppresses IDE inspections for mods that don't add CMF as a dependency.</span>
                 </div>
                 <div class="modal-actions">
+                    <span v-if="appVersion" class="app-version">v{{ appVersion }}</span>
                     <button class="btn btn-primary" @click="showSettings = false">Done</button>
                 </div>
             </div>

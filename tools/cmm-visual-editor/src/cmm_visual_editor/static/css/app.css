@@ -44,6 +44,12 @@ body {
     color: var(--gold);
 }
 
+.app-version {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-right: auto;
+}
+
 .header-left {
     display: flex;
     align-items: center;
