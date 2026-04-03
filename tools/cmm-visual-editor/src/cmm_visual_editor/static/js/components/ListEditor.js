@@ -142,6 +142,14 @@ const ListEditorComponent = {
                             <label>Step</label>
                             <input type="number" v-model.number="field.step_value" min="1">
                         </div>
+                        <div class="field-row">
+                            <label>Postfix</label>
+                            <input type="text" v-model="field.postfix" placeholder='e.g. %'>
+                        </div>
+                        <div class="field-row">
+                            <label>Prefix</label>
+                            <input type="text" v-model="field.prefix" placeholder='e.g. color code'>
+                        </div>
                     </div>
 
                     <!-- Per-item field visibility (static lists only) -->

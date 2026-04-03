@@ -834,6 +834,10 @@ def _parse_list_field(
         field.max_value = _to_float(reg.get("max_value", "10"))
         field.step_value = _to_float(reg.get("step_value", "1"))
 
+    # Format display
+    field.postfix = loc_map.get(f"{fqid}_postfix", "")
+    field.prefix = loc_map.get(f"{fqid}_prefix", "")
+
     return field
 
 
