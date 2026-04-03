@@ -1,0 +1,35 @@
+﻿# Fired by the country transfer monitor widget when the player's country tag changes.
+# Copies all CMM setting values from the old country to the new country, then
+# re-runs registration and fires the cmf_on_country_transfer on_action.
+# Scope: none
+# Saved scopes: old_country (country), new_country (country)
+_cmf_on_country_transfer = {
+	saved_scopes = { old_country new_country }
+	effect = {
+		# Copy all CMM setting values from old to new country
+		scope:old_country = {
+			every_key_in_variable_map = {
+				variable = cmm
+				save_scope_as = cmm_transfer_key
+				set_local_variable = { name = cmm_transfer_val value = "variable_map(cmm|scope:cmm_transfer_key)" }
+				scope:new_country = {
+					add_to_variable_map = { name = cmm key = scope:cmm_transfer_key value = local_var:cmm_transfer_val }
+				}
+			}
+		}
+
+		# Re-run registration on the new country to rebuild metadata and lookup tables
+		scope:new_country = {
+			trigger_event_silently = {
+				on_action = cmf_on_mod_registration
+			}
+		}
+
+		# Fire the country transfer on_action for mods that need custom transfer logic
+		scope:new_country = {
+			trigger_event_silently = {
+				on_action = cmf_on_country_transfer
+			}
+		}
+	}
+}

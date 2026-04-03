@@ -840,6 +840,107 @@ cmm_for_each_list_item = {
 	}
 }
 
+# Build a variable list of item values in display order (respects list reordering).
+# Requires item values set via cmm_set_list_item_value. Clears the target list first.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - list_name (key): Name of the variable list to populate.
+cmm_build_list_ordered_values = {
+	clear_variable_list = $list_name$
+	cmm_for_each_list_item = {
+		setting = $setting$
+		effect = _cmm_build_list_ordered_values_item
+	}
+}
+
+# Internal: called per item by cmm_build_list_ordered_values.
+# Scope: country
+# Args: setting (key), i (number)
+_cmm_build_list_ordered_values_item = {
+	add_to_variable_list = { name = $list_name$ target = scope:cmm_list_current_item_value }
+}
+
+# Build a variable map from a list field, keyed by item values (game object scopes).
+# Requires item values set via cmm_set_list_item_value. Clears the target map first.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - field_slot (number): Field slot number (1-5).
+# - map_name (key): Name of the variable map to populate.
+# - multiply (number): Optional scale factor applied to each value (e.g. 0.01 to convert 0-100 to 0-1). Use 1 for no scaling.
+cmm_build_list_field_map = {
+	clear_variable_map = $map_name$
+	set_variable = { name = cmm_blfm_field_slot value = $field_slot$ }
+	set_variable = { name = cmm_blfm_multiply value = $multiply$ }
+	cmm_for_each_list_item = {
+		setting = $setting$
+		effect = _cmm_build_list_field_map_item
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_blfm_field_slot }
+		cmf_suppress = { v = cmm_blfm_multiply }
+		cmf_suppress = { v = cmm_blfm_value }
+	}
+}
+
+# Internal: called per item by cmm_build_list_field_map.
+# Scope: country
+# Args: setting (key), i (number)
+_cmm_build_list_field_map_item = {
+	set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f1 }
+	if = { limit = { var:cmm_blfm_field_slot = 2 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f2 } }
+	if = { limit = { var:cmm_blfm_field_slot = 3 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f3 } }
+	if = { limit = { var:cmm_blfm_field_slot = 4 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f4 } }
+	if = { limit = { var:cmm_blfm_field_slot = 5 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f5 } }
+
+	set_variable = { name = cmm_blfm_value value = "variable_map(cmm|local_var:cmm_tmp_key)" }
+	change_variable = { name = cmm_blfm_value multiply = var:cmm_blfm_multiply }
+	add_to_variable_map = { name = $map_name$ key = scope:cmm_list_current_item_value value = var:cmm_blfm_value }
+}
+
+# Build a variable list of item values where a bool field is true.
+# Requires item values set via cmm_set_list_item_value. Clears the target list first.
+# Iterates in display order (respects list reordering).
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - field_slot (number): Bool field slot number (1-5).
+# - list_name (key): Name of the variable list to populate.
+cmm_build_list_bool_list = {
+	clear_variable_list = $list_name$
+	set_variable = { name = cmm_blbl_field_slot value = $field_slot$ }
+	cmm_for_each_list_item = {
+		setting = $setting$
+		effect = _cmm_build_list_bool_list_item
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_blbl_field_slot }
+	}
+}
+
+# Internal: called per item by cmm_build_list_bool_list.
+# Scope: country
+# Args: setting (key), i (number)
+_cmm_build_list_bool_list_item = {
+	set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f1 }
+	if = { limit = { var:cmm_blbl_field_slot = 2 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f2 } }
+	if = { limit = { var:cmm_blbl_field_slot = 3 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f3 } }
+	if = { limit = { var:cmm_blbl_field_slot = 4 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f4 } }
+	if = { limit = { var:cmm_blbl_field_slot = 5 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f5 } }
+
+	if = {
+		limit = { "variable_map(cmm|local_var:cmm_tmp_key)" >= 1 }
+		add_to_variable_list = { name = $list_name$ target = scope:cmm_list_current_item_value }
+	}
+}
+
 # Internal: save the item's value scope (if set) and invoke the user-provided effect.
 # The value is read from the single-element variable list `<setting>_item_<item>_value`
 # and exposed as `scope:cmm_list_current_item_value` inside the called effect.

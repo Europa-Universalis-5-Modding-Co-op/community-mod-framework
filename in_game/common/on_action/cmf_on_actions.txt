@@ -160,3 +160,13 @@ on_game_load_after_lobby_human_country = {
 cmf_on_callback = {
 	on_actions = { }
 }
+
+# Country transfer extension point. Fires after the player switches countries
+# (tag switch, inheritance, etc.). CMF has already copied all CMM setting values
+# from the old country and re-run registration on the new country. Mods can hook
+# into this to copy mod-specific non-CMM data or rebuild derived state.
+# scope:old_country and scope:new_country are available.
+# Scope: country (new country)
+cmf_on_country_transfer = {
+	on_actions = { }
+}
