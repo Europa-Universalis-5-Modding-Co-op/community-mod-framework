@@ -215,3 +215,11 @@ macro = {
     definition = "CMMMatchesSelectedModAndTab(ModId,TabKey)"
     replace_with = "And(CMMSelectedHasValue('cmm_selected_mod', ModId), CMMSelectedHasValue('cmm_selected_tab', TabKey))"
 }
+
+# Args: Index (int32)
+# Returns: string
+macro = {
+    description = "Localized action text for a log entry by datamodel index"
+    definition = "CMFLogAction(Index)"
+    replace_with = "Localize(GetGlobalVariable(Concatenate('cmf_log_', Concatenate(ToString_int32(Index), '_action'))).GetFlagName)"
+}

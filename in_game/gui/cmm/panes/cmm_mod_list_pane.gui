@@ -57,13 +57,21 @@
 		}
 
 		hbox = {
-			visible = "[CMMHasRegisteredMods]"
 			layoutpolicy_horizontal = expanding
 			margin = { 0 8 }
+			spacing = 8
 
 			expand = {}
 
 			button_regular_diamond = {
+				minimumsize = { 140 32 }
+				onclick = "[GetVariableSystem.Toggle('cmm_log_view')]"
+				text = "CMM_LOG_BUTTON"
+				tooltip = "CMM_LOG_BUTTON_TOOLTIP"
+			}
+
+			button_regular_diamond = {
+				visible = "[CMMHasRegisteredMods]"
 				minimumsize = { 168 32 }
 				onclick = "[CMMExecuteGui('CMM_ResetToDefaults')]"
 				text = "CMM_RESET_TO_DEFAULTS"
@@ -117,6 +125,7 @@
 				using = bg_card_header_01_production
 				onclick = "[GetVariableSystem.Set('cmm_selected_mod', Scope.GetFlagName)]"
 				onclick = "[GetVariableSystem.Set('cmm_selected_tab', CMMMetadataFlag('cmm_mod_default_tab_', Scope.GetFlagName))]"
+				onclick = "[GetVariableSystem.Clear('cmm_log_view')]"
 				down = "[GetVariableSystem.HasValue('cmm_selected_mod', Scope.GetFlagName)]"
 				tagtooltip_enabled = yes
 				tooltip = "[CMMLocalizedSuffixText(Scope.GetFlagName, '_desc')]"

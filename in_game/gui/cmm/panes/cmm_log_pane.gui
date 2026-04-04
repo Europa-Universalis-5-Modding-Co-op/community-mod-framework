@@ -1,0 +1,125 @@
+﻿types CMMLogTypes
+{
+	# Log pane showing recorded mod actions.
+	# Reads:
+	# - GetGlobalList('cmf_log_entries') [list<country>]: log entry actors in chronological order.
+	# - GetGlobalVariable(Concatenate('cmf_log_', ...)) [flag]: action localization key per entry slot.
+	# Writes:
+	# - CMF_ClearLog scripted GUI [effect]: clears all log entries.
+	type cmm_log_panel = vbox {
+		using = layoutpolicy_expanding
+
+		header_main_tabs = {
+			blockoverride "content" {
+				button_main_tab_alt = {
+					using = layoutpolicy_expanding
+					size = { -1 40 }
+					down = yes
+					tooltip_enabled = no
+
+					hbox = {
+						margin = { 5 0 }
+						margin_top = 4
+						text_single = {
+							text = "CMM_LOG_TITLE"
+							using = Font_Type_Headers
+							using = layoutpolicy_expanding
+							align = center
+							autoresize = no
+						}
+					}
+				}
+			}
+		}
+
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_main_inner_alt
+			margin = { 12 12 }
+			spacing = 10
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				text_multi = {
+					visible = "[Not(DataModelHasItems(GetGlobalList('cmf_log_entries')))]"
+					text = "CMM_LOG_EMPTY"
+					autoresize = yes
+					max_width = 680
+				}
+
+				scrollbox = {
+					visible = "[DataModelHasItems(GetGlobalList('cmf_log_entries'))]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					minimumsize = { 0 420 }
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 2
+							datamodel = "[GetGlobalList('cmf_log_entries')]"
+
+							item = {
+								cmm_log_entry_row = {}
+							}
+						}
+					}
+				}
+
+				expand = {}
+			}
+
+			hbox = {
+				visible = "[DataModelHasItems(GetGlobalList('cmf_log_entries'))]"
+				layoutpolicy_horizontal = expanding
+				margin = { 0 4 }
+
+				expand = {}
+
+				button_regular_diamond = {
+					minimumsize = { 168 32 }
+					onclick = "[CMMExecuteGui('CMF_ClearLog')]"
+					text = "CMM_LOG_CLEAR"
+					tooltip = "CMM_LOG_CLEAR_TOOLTIP"
+				}
+
+				expand = {}
+			}
+		}
+	}
+
+	# Single log entry row displaying actor country and action text.
+	# Reads:
+	# - Scope.GetCountry [country]: the actor country from the global list entry.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: entry position for action variable lookup.
+	# Writes:
+	# - none [n/a]: no writes.
+	type cmm_log_entry_row = hbox {
+		layoutpolicy_horizontal = expanding
+		minimumsize = { 0 36 }
+		using = bg_window_default_alt
+		margin = { 8 2 }
+		spacing = 8
+
+		coa_country_medium = {
+			datacontext = "[Scope.GetCountry]"
+		}
+
+		text_single = {
+			minimumsize = { 120 0 }
+			maximumsize = { 120 -1 }
+			autoresize = no
+			align = left|vcenter
+			default_format = "#bold"
+			text = "[Scope.GetCountry.GetName]"
+		}
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			align = left|vcenter
+			text = "[CMFLogAction(PdxGuiWidget.GetIndexInDataModel)]"
+		}
+	}
+}
