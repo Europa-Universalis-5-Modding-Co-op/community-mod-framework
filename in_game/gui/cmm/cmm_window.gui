@@ -18,7 +18,15 @@
 		window_header_alt = {
 			blockoverride "header_text_object" {
 				hbox = {
-					visible = "[Not(CMMSelectedModExists)]"
+					visible = "[GetVariableSystem.Exists('cmm_log_view')]"
+
+					header_title = {
+						text = "CMM_LOG_TITLE"
+					}
+				}
+
+				hbox = {
+					visible = "[And(Not(CMMSelectedModExists), Not(GetVariableSystem.Exists('cmm_log_view')))]"
 
 					header_title = {
 						text = "CMM_WINDOW_TITLE"
@@ -26,7 +34,7 @@
 				}
 
 				hbox = {
-					visible = "[CMMSelectedModExists]"
+					visible = "[And(CMMSelectedModExists, Not(GetVariableSystem.Exists('cmm_log_view')))]"
 
 					header_title = {
 						size = { -1 40 }
@@ -48,7 +56,12 @@
 			spacing = 12
 
 			cmm_mod_list_panel = {}
-			cmm_settings_panel = {}
+			cmm_settings_panel = {
+				visible = "[Not(GetVariableSystem.Exists('cmm_log_view'))]"
+			}
+			cmm_log_panel = {
+				visible = "[GetVariableSystem.Exists('cmm_log_view')]"
+			}
 		}
 	}
 

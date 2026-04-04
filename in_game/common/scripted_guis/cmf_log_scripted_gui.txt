@@ -1,0 +1,8 @@
+﻿# Clear all mod log entries.
+# Scope: country
+CMF_ClearLog = {
+	scope = country
+	effect = {
+		cmf_clear_log = yes
+	}
+}
