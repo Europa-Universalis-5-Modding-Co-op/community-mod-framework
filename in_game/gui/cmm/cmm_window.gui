@@ -3,7 +3,7 @@
 	alwaystransparent = no
 	reorder_on_mouse = never
 	resizable = no
-	movable = no
+	movable = yes
 	parentanchor = center
 	widgetanchor = center
 	size = { 1140 760 }
