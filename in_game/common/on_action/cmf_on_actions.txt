@@ -69,6 +69,9 @@ cmf_monthly_human_country_pulse = {
 _cmf_on_cmm_registration = {
 	effect = {
 		clear_variable_list = cmm_registered_mod_ids
+		clear_variable_list = cmm_registered_tab_keys
+		clear_variable_list = cmm_registered_group_keys
+		clear_variable_list = cmm_registered_setting_keys
 		_cmm_register_menu_settings = yes
 	}
 }
