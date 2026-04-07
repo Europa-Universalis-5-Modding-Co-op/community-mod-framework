@@ -72,7 +72,7 @@
 			}
 
 			hbox = {
-				visible = "[CMFLogHasEntries]"
+				visible = "[And(CMFLogHasEntries, CMMGuiIsShown('CMF_ClearLog'))]"
 				layoutpolicy_horizontal = expanding
 				margin = { 0 4 }
 

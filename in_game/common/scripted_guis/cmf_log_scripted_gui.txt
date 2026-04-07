@@ -1,7 +1,10 @@
-﻿# Clear all mod log entries.
+﻿# Clear all mod log entries. Disabled in multiplayer.
 # Scope: country
 CMF_ClearLog = {
 	scope = country
+	is_shown = {
+		has_multiple_players = no
+	}
 	effect = {
 		cmf_clear_log = yes
 	}
