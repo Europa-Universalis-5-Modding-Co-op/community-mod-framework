@@ -41,6 +41,8 @@
  ENGINE_TEST_32_LABEL: "32: ordered_key_in_variable_map with max"
  ENGINE_TEST_33_LABEL: "33: every_key_in_global_variable_map (variable only)"
  ENGINE_TEST_34_LABEL: "34: ordered_key without max defaults to 1?"
+ ENGINE_TEST_35_LABEL: "35: Global map write/read with var: numeric key"
+ ENGINE_TEST_GUI_SECTION: "GUI Map Read Tests (var: numeric keys):"
  ENGINE_TEST_PASS: "#G PASS#!"
  ENGINE_TEST_FAIL: "#R FAIL#!"
  ENGINE_TEST_NOT_RUN: "---"

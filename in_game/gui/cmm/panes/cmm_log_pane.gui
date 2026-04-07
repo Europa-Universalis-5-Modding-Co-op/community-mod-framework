@@ -3,7 +3,7 @@
 	# Log pane showing recorded mod actions.
 	# Reads:
 	# - GetGlobalVariable('cmf_log_count') [value]: entry count for DataModelRepeatedItem.
-	# - GetVariableFromGlobalVariableMap('cmf_log_*', MakeScopeValue(Index)) [variable]: per-entry data.
+	# - GetVariableFromGlobalVariableMap('cmf_log_*', MakeScopeFlag(...)) [variable]: per-entry data.
 	# Writes:
 	# - CMF_ClearLog scripted GUI [effect]: clears all log entries.
 	type cmm_log_panel = vbox {
@@ -92,11 +92,8 @@
 
 	# Single log entry row displaying actor country and action text.
 	# Reads:
-	# - PdxGuiWidget.GetIndexInDataModel [int32]: entry index from DataModelRepeatedItem.
-	# - GetVariableFromGlobalVariableMap('cmf_log_actor', MakeScopeValue(Index)) [country]: actor.
-	# - GetVariableFromGlobalVariableMap('cmf_log_action', MakeScopeValue(Index)) [flag]: action key.
-	# - GetVariableFromGlobalVariableMap('cmf_log_arg1', MakeScopeValue(Index)) [flag]: optional arg1.
-	# - GetVariableFromGlobalVariableMap('cmf_log_arg2', MakeScopeValue(Index)) [flag]: optional arg2.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: entry index for flag key construction.
+	# - GetVariableFromGlobalVariableMap('cmf_log_*', MakeScopeFlag(Concatenate('cmf_log_', ...))) [variable]: per-entry data.
 	# Writes:
 	# - none [n/a]: no writes.
 	type cmm_log_entry_row = hbox {
