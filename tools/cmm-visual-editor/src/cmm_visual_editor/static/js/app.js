@@ -78,6 +78,7 @@ const app = createApp({
             metadata_short_description: '',
             metadata_tags: ['Utilities'],
             metadata_game_version: '1.1.*',
+            metadata_relationships: [],
             noinspection: false,
             tabs: [],
         });
@@ -600,7 +601,8 @@ const app = createApp({
                 mod_id: '', file_prefix: '', mod_name: '', mod_desc: '',
                 metadata_name: '', metadata_id: '', metadata_version: '0.1',
                 metadata_short_description: '', metadata_tags: ['Utilities'],
-                metadata_game_version: '1.1.*', noinspection: false, tabs: [],
+                metadata_game_version: '1.1.*', metadata_relationships: [],
+                noinspection: false, tabs: [],
             };
             Object.assign(state, defaults);
             selectedTabIdx.value = 0;
