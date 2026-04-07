@@ -770,13 +770,16 @@ ${prefix}_on_cmf_callback = {
             supported_game_version: state.metadata_game_version,
             short_description: state.metadata_short_description || state.mod_desc,
             tags: state.metadata_tags,
-            relationships: [{
-                rel_type: "dependency",
-                id: "community_mod_framework",
-                display_name: "Community Mod Framework",
-                resource_type: "mod",
-                version: "2.*",
-            }],
+            relationships: [
+                {
+                    rel_type: "dependency",
+                    id: "community_mod_framework",
+                    display_name: "Community Mod Framework",
+                    resource_type: "mod",
+                    version: "2.*",
+                },
+                ...(state.metadata_relationships || []),
+            ],
             game_custom_data: {},
         }, null, 4);
     },
