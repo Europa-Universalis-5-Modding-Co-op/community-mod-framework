@@ -705,7 +705,8 @@ def _gen_metadata(model: ModModel) -> str:
                 "display_name": "Community Mod Framework",
                 "resource_type": "mod",
                 "version": "2.*",
-            }
+            },
+            *model.metadata_relationships,
         ],
         "game_custom_data": {},
     }
