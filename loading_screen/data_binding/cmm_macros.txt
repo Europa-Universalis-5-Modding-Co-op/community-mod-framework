@@ -219,9 +219,9 @@ macro = {
 # Args: Index (int32)
 # Returns: scope
 macro = {
-    description = "Construct a value scope key for a log entry index"
+    description = "Construct a flag scope key for a log entry index"
     definition = "CMFLogKey(Index)"
-    replace_with = "MakeScopeValue(Index)"
+    replace_with = "MakeScopeFlag(Concatenate('cmf_log_', ToString_int32(Index)))"
 }
 
 # Args: Index (int32)

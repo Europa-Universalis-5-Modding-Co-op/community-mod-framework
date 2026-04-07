@@ -707,6 +707,44 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_34_passed value = 1 }
 		}
 
+		# ── Test 35 ─────────────────────────────────────────────
+		# Write global map with var: (country variable holding
+		# numeric 0) as key, read back with var: in quoted string.
+		# Verifies the var: key is usable for script-side reads.
+		set_variable = { name = engine_test_35_passed value = 0 }
+		set_variable = { name = _et_idx value = 0 }
+		add_to_global_variable_map = {
+			name = engine_test_gui_map
+			key = var:_et_idx
+			value = 42
+		}
+		# Also store a flag value in a parallel map (for GUI read test)
+		add_to_global_variable_map = {
+			name = engine_test_gui_action
+			key = var:_et_idx
+			value = flag:engine_test_key_a
+		}
+		if = {
+			limit = {
+				"global_variable_map(engine_test_gui_map|var:_et_idx)" >= 42
+			}
+			set_variable = { name = engine_test_35_passed value = 1 }
+		}
+
+		# Add a second entry at index 1
+		change_variable = { name = _et_idx add = 1 }
+		add_to_global_variable_map = {
+			name = engine_test_gui_map
+			key = var:_et_idx
+			value = 99
+		}
+		add_to_global_variable_map = {
+			name = engine_test_gui_action
+			key = var:_et_idx
+			value = flag:engine_test_hardcoded
+		}
+		remove_variable = _et_idx
+
 		# Mark that the global test suite has been executed
 		set_variable = { name = engine_test_global_has_run value = 1 }
 	}
