@@ -239,6 +239,10 @@ def _build_model(
         metadata_short_description=meta.get("short_description", ""),
         metadata_tags=meta.get("tags", ["Utilities"]),
         metadata_game_version=meta.get("supported_game_version", "1.1.*"),
+        metadata_relationships=[
+            r for r in meta.get("relationships", [])
+            if r.get("id") != "community_mod_framework"
+        ],
         noinspection=noinspection,
         tabs=[tabs_map[tid] for tid in tab_order],
     )

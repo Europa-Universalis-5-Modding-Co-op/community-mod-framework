@@ -109,6 +109,7 @@ class ModModel:
     metadata_short_description: str = ""
     metadata_tags: list = field(default_factory=lambda: ["Utilities"])
     metadata_game_version: str = "1.1.*"
+    metadata_relationships: list = field(default_factory=list)
     noinspection: bool = False
     tabs: list = field(default_factory=list)
 
@@ -214,6 +215,7 @@ def model_to_dict(model: ModModel) -> dict:
         "metadata_short_description": model.metadata_short_description,
         "metadata_tags": model.metadata_tags,
         "metadata_game_version": model.metadata_game_version,
+        "metadata_relationships": model.metadata_relationships,
         "noinspection": model.noinspection,
         "tabs": [
             {
@@ -305,6 +307,7 @@ def dict_to_model(data: dict) -> ModModel:
         metadata_short_description=data.get("metadata_short_description", ""),
         metadata_tags=data.get("metadata_tags", ["Utilities"]),
         metadata_game_version=data.get("metadata_game_version", "1.1.*"),
+        metadata_relationships=data.get("metadata_relationships", []),
         noinspection=data.get("noinspection", False),
         tabs=[
             Tab(
