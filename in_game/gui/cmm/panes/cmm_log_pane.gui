@@ -2,8 +2,8 @@
 {
 	# Log pane showing recorded mod actions.
 	# Reads:
-	# - GetGlobalList('cmf_log_entries') [list<country>]: log entry actors in chronological order.
-	# - GetGlobalVariable(Concatenate('cmf_log_', ...)) [flag]: action localization key per entry slot.
+	# - GetGlobalVariable('cmf_log_count') [value]: entry count for DataModelRepeatedItem.
+	# - GetVariableFromGlobalVariableMap('cmf_log_*', MakeScopeValue(Index)) [variable]: per-entry data.
 	# Writes:
 	# - CMF_ClearLog scripted GUI [effect]: clears all log entries.
 	type cmm_log_panel = vbox {
@@ -43,14 +43,14 @@
 				layoutpolicy_vertical = expanding
 
 				text_multi = {
-					visible = "[Not(DataModelHasItems(GetGlobalList('cmf_log_entries')))]"
+					visible = "[Not(CMFLogHasEntries)]"
 					text = "CMM_LOG_EMPTY"
 					autoresize = yes
 					max_width = 680
 				}
 
 				scrollbox = {
-					visible = "[DataModelHasItems(GetGlobalList('cmf_log_entries'))]"
+					visible = "[CMFLogHasEntries]"
 					layoutpolicy_horizontal = expanding
 					layoutpolicy_vertical = expanding
 					minimumsize = { 0 420 }
@@ -59,7 +59,7 @@
 						vbox = {
 							layoutpolicy_horizontal = expanding
 							spacing = 2
-							datamodel = "[GetGlobalList('cmf_log_entries')]"
+							datamodel = "[DataModelRepeatedItem(CMFLogCount)]"
 
 							item = {
 								cmm_log_entry_row = {}
@@ -72,7 +72,7 @@
 			}
 
 			hbox = {
-				visible = "[DataModelHasItems(GetGlobalList('cmf_log_entries'))]"
+				visible = "[CMFLogHasEntries]"
 				layoutpolicy_horizontal = expanding
 				margin = { 0 4 }
 
@@ -92,8 +92,11 @@
 
 	# Single log entry row displaying actor country and action text.
 	# Reads:
-	# - Scope.GetCountry [country]: the actor country from the global list entry.
-	# - PdxGuiWidget.GetIndexInDataModel [int32]: entry position for action variable lookup.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: entry index from DataModelRepeatedItem.
+	# - GetVariableFromGlobalVariableMap('cmf_log_actor', MakeScopeValue(Index)) [country]: actor.
+	# - GetVariableFromGlobalVariableMap('cmf_log_action', MakeScopeValue(Index)) [flag]: action key.
+	# - GetVariableFromGlobalVariableMap('cmf_log_arg1', MakeScopeValue(Index)) [flag]: optional arg1.
+	# - GetVariableFromGlobalVariableMap('cmf_log_arg2', MakeScopeValue(Index)) [flag]: optional arg2.
 	# Writes:
 	# - none [n/a]: no writes.
 	type cmm_log_entry_row = hbox {
@@ -103,8 +106,8 @@
 		margin = { 8 2 }
 		spacing = 8
 
-		coa_country_medium = {
-			datacontext = "[Scope.GetCountry]"
+		country_flag_small = {
+			datacontext = "[CMFLogActorCountry(PdxGuiWidget.GetIndexInDataModel)]"
 		}
 
 		text_single = {
@@ -113,13 +116,13 @@
 			autoresize = no
 			align = left|vcenter
 			default_format = "#bold"
-			text = "[Scope.GetCountry.GetName]"
+			text = "[CMFLogActorCountry(PdxGuiWidget.GetIndexInDataModel).GetName]"
 		}
 
 		text_single = {
 			layoutpolicy_horizontal = expanding
 			align = left|vcenter
-			text = "[CMFLogAction(PdxGuiWidget.GetIndexInDataModel)]"
+			text = "[CMFLogEntryText(PdxGuiWidget.GetIndexInDataModel)]"
 		}
 	}
 }

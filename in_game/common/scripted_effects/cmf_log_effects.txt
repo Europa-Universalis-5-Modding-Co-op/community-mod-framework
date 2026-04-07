@@ -2,6 +2,41 @@
 # Scope: country (the actor performing the action)
 # Args: action (flag) — localization key for the action text
 cmf_log = {
+	_cmf_log_core = { action = $action$ arg1 = _cmf_log_no_arg arg2 = _cmf_log_no_arg }
+}
+
+# Log an action with two named arguments.
+# Entry text renders as: [arg1] [action] [arg2]
+# Scope: country (the actor performing the action)
+# Args:
+# - action (flag): localization key for the action/connecting text
+# - arg1 (flag): localization key for the first argument (before action text)
+# - arg2 (flag): localization key for the second argument (after action text)
+cmf_log_with_args = {
+	_cmf_log_core = { action = $action$ arg1 = $arg1$ arg2 = $arg2$ }
+}
+
+# Clear all log entries.
+# Scope: country
+# Args: none
+cmf_clear_log = {
+	while = {
+		limit = { global_var:cmf_log_count > 0 }
+		set_variable = { name = _cmf_log_tmp value = global_var:cmf_log_count }
+		change_variable = { name = _cmf_log_tmp subtract = 1 }
+		set_global_variable = { name = cmf_log_count value = var:_cmf_log_tmp }
+		remove_from_global_variable_map = { name = cmf_log_action key = var:_cmf_log_tmp }
+		remove_from_global_variable_map = { name = cmf_log_actor key = var:_cmf_log_tmp }
+		remove_from_global_variable_map = { name = cmf_log_arg1 key = var:_cmf_log_tmp }
+		remove_from_global_variable_map = { name = cmf_log_arg2 key = var:_cmf_log_tmp }
+		remove_variable = _cmf_log_tmp
+	}
+}
+
+# Internal: shared log core.
+# Scope: country (the actor)
+# Args: action (flag), arg1 (flag), arg2 (flag)
+_cmf_log_core = {
 	save_scope_as = _cmf_log_actor
 
 	if = {
@@ -9,129 +44,25 @@ cmf_log = {
 		set_global_variable = { name = cmf_log_count value = 0 }
 	}
 
-	if = {
-		limit = { global_var:cmf_log_count < 50 }
-		_cmf_log_dispatch = { action = $action$ }
-		add_to_global_variable_list = { name = cmf_log_entries value = scope:_cmf_log_actor }
-		change_global_variable = { name = cmf_log_count add = 1 }
-	}
+	# Use current count as the map key
+	set_variable = { name = _cmf_log_idx value = global_var:cmf_log_count }
+
+	add_to_global_variable_map = { name = cmf_log_action key = var:_cmf_log_idx value = flag:$action$ }
+	add_to_global_variable_map = { name = cmf_log_actor key = var:_cmf_log_idx value = scope:_cmf_log_actor }
+	add_to_global_variable_map = { name = cmf_log_arg1 key = var:_cmf_log_idx value = flag:$arg1$ }
+	add_to_global_variable_map = { name = cmf_log_arg2 key = var:_cmf_log_idx value = flag:$arg2$ }
+
+	# Increment count
+	change_variable = { name = _cmf_log_idx add = 1 }
+	set_global_variable = { name = cmf_log_count value = var:_cmf_log_idx }
+	remove_variable = _cmf_log_idx
 
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
 		cmf_suppress = { v = _cmf_log_actor }
+		cmf_suppress = { v = _cmf_log_no_arg }
+		cmf_suppress = { v = _cmf_log_idx }
+		cmf_suppress = { v = _cmf_log_tmp }
 	}
-}
-
-# Clear all log entries.
-# Scope: any
-# Args: none
-cmf_clear_log = {
-	clear_global_variable_list = cmf_log_entries
-	set_global_variable = { name = cmf_log_count value = 0 }
-}
-
-# Internal: dispatch to the correct slot group based on current count.
-# Scope: country
-# Args: action (flag)
-_cmf_log_dispatch = {
-	if = {
-		limit = { global_var:cmf_log_count < 10 }
-		_cmf_log_write_0x = { action = $action$ }
-	}
-	else_if = {
-		limit = { global_var:cmf_log_count < 20 }
-		_cmf_log_write_1x = { action = $action$ }
-	}
-	else_if = {
-		limit = { global_var:cmf_log_count < 30 }
-		_cmf_log_write_2x = { action = $action$ }
-	}
-	else_if = {
-		limit = { global_var:cmf_log_count < 40 }
-		_cmf_log_write_3x = { action = $action$ }
-	}
-	else = {
-		_cmf_log_write_4x = { action = $action$ }
-	}
-}
-
-# Internal: write action to slots 0-9.
-# Scope: country
-# Args: action (flag)
-_cmf_log_write_0x = {
-	if = { limit = { global_var:cmf_log_count = 0 } set_global_variable = { name = cmf_log_0_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 1 } set_global_variable = { name = cmf_log_1_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 2 } set_global_variable = { name = cmf_log_2_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 3 } set_global_variable = { name = cmf_log_3_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 4 } set_global_variable = { name = cmf_log_4_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 5 } set_global_variable = { name = cmf_log_5_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 6 } set_global_variable = { name = cmf_log_6_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 7 } set_global_variable = { name = cmf_log_7_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 8 } set_global_variable = { name = cmf_log_8_action value = flag:$action$ } }
-	else = { set_global_variable = { name = cmf_log_9_action value = flag:$action$ } }
-}
-
-# Internal: write action to slots 10-19.
-# Scope: country
-# Args: action (flag)
-_cmf_log_write_1x = {
-	if = { limit = { global_var:cmf_log_count = 10 } set_global_variable = { name = cmf_log_10_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 11 } set_global_variable = { name = cmf_log_11_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 12 } set_global_variable = { name = cmf_log_12_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 13 } set_global_variable = { name = cmf_log_13_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 14 } set_global_variable = { name = cmf_log_14_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 15 } set_global_variable = { name = cmf_log_15_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 16 } set_global_variable = { name = cmf_log_16_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 17 } set_global_variable = { name = cmf_log_17_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 18 } set_global_variable = { name = cmf_log_18_action value = flag:$action$ } }
-	else = { set_global_variable = { name = cmf_log_19_action value = flag:$action$ } }
-}
-
-# Internal: write action to slots 20-29.
-# Scope: country
-# Args: action (flag)
-_cmf_log_write_2x = {
-	if = { limit = { global_var:cmf_log_count = 20 } set_global_variable = { name = cmf_log_20_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 21 } set_global_variable = { name = cmf_log_21_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 22 } set_global_variable = { name = cmf_log_22_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 23 } set_global_variable = { name = cmf_log_23_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 24 } set_global_variable = { name = cmf_log_24_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 25 } set_global_variable = { name = cmf_log_25_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 26 } set_global_variable = { name = cmf_log_26_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 27 } set_global_variable = { name = cmf_log_27_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 28 } set_global_variable = { name = cmf_log_28_action value = flag:$action$ } }
-	else = { set_global_variable = { name = cmf_log_29_action value = flag:$action$ } }
-}
-
-# Internal: write action to slots 30-39.
-# Scope: country
-# Args: action (flag)
-_cmf_log_write_3x = {
-	if = { limit = { global_var:cmf_log_count = 30 } set_global_variable = { name = cmf_log_30_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 31 } set_global_variable = { name = cmf_log_31_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 32 } set_global_variable = { name = cmf_log_32_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 33 } set_global_variable = { name = cmf_log_33_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 34 } set_global_variable = { name = cmf_log_34_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 35 } set_global_variable = { name = cmf_log_35_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 36 } set_global_variable = { name = cmf_log_36_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 37 } set_global_variable = { name = cmf_log_37_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 38 } set_global_variable = { name = cmf_log_38_action value = flag:$action$ } }
-	else = { set_global_variable = { name = cmf_log_39_action value = flag:$action$ } }
-}
-
-# Internal: write action to slots 40-49.
-# Scope: country
-# Args: action (flag)
-_cmf_log_write_4x = {
-	if = { limit = { global_var:cmf_log_count = 40 } set_global_variable = { name = cmf_log_40_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 41 } set_global_variable = { name = cmf_log_41_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 42 } set_global_variable = { name = cmf_log_42_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 43 } set_global_variable = { name = cmf_log_43_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 44 } set_global_variable = { name = cmf_log_44_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 45 } set_global_variable = { name = cmf_log_45_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 46 } set_global_variable = { name = cmf_log_46_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 47 } set_global_variable = { name = cmf_log_47_action value = flag:$action$ } }
-	else_if = { limit = { global_var:cmf_log_count = 48 } set_global_variable = { name = cmf_log_48_action value = flag:$action$ } }
-	else = { set_global_variable = { name = cmf_log_49_action value = flag:$action$ } }
 }

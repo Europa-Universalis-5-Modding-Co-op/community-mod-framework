@@ -25,6 +25,20 @@ cmf_feature_test_register_cmf_mod = {
 		group_id = toggles
 	}
 
+	cmm_register_button_setting = {
+		mod_id = cmf_feature_test
+		setting_id = log_test
+		tab_id = settings
+		group_id = toggles
+	}
+
+	cmm_register_button_setting = {
+		mod_id = cmf_feature_test
+		setting_id = log_test_args
+		tab_id = settings
+		group_id = toggles
+	}
+
 	## Values (values) Group
 	cmm_register_numeric_setting = {
 		mod_id = cmf_feature_test
@@ -472,6 +486,12 @@ cmf_feature_test_handle_cmf_callback = {
 				alias = cft_toggle_alias
 			}
 		}
+		flag:cmf_feature_test__log_test = {
+			cmf_log = { action = cft_log_test_action }
+		}
+		flag:cmf_feature_test__log_test_args = {
+			cmf_log_with_args = { action = cft_log_transferred_to arg1 = cft_log_test_location arg2 = cft_log_test_country }
+		}
 	}
 }
 
@@ -519,5 +539,9 @@ cmf_feature_test_suppress_from_list_flags = {
 		cmf_suppress = { v = cft_global_item_alpha }
 		cmf_suppress = { v = cft_global_item_beta }
 		cmf_suppress = { v = cft_global_item_gamma }
+		cmf_suppress = { v = cft_log_test_action }
+		cmf_suppress = { v = cft_log_transferred_to }
+		cmf_suppress = { v = cft_log_test_location }
+		cmf_suppress = { v = cft_log_test_country }
 	}
 }
