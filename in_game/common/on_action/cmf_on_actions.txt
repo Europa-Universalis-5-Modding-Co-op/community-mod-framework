@@ -162,7 +162,17 @@ on_game_load_after_lobby_human_country = {
 # var:cmf_callback contains the flag key of the target (setting, alert, or element).
 # Scope: country
 cmf_on_callback = {
-	on_actions = { }
+	on_actions = {
+		_cmf_on_core_callback
+	}
+}
+
+# Internal: CMM core callback handler.
+# Scope: country
+_cmf_on_core_callback = {
+	effect = {
+		_cmm_handle_core_callback = yes
+	}
 }
 
 # Country transfer extension point. Fires after the player switches countries

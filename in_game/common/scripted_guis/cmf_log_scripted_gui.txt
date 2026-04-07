@@ -6,3 +6,15 @@ CMF_ClearLog = {
 		cmf_clear_log = yes
 	}
 }
+
+# Close the log view.
+# Scope: country
+CMF_CloseLogView = {
+	scope = country
+	effect = {
+		if = {
+			limit = { has_global_variable = cmf_log_view_open }
+			remove_global_variable = cmf_log_view_open
+		}
+	}
+}

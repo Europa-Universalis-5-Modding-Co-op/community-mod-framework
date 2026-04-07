@@ -33,6 +33,35 @@ _cmm_register_menu_settings = {
 			default_value = 0
 		}
 	}
+
+	cmm_register_button_setting = {
+		mod_id = cmm_core
+		setting_id = open_log
+		tab_id = general
+		group_id = session
+	}
+}
+
+# Handle CMM core button callbacks.
+# Scope: country
+# Args: none
+_cmm_handle_core_callback = {
+	if = {
+		limit = { var:cmf_callback = flag:cmm_core__open_log }
+		if = {
+			limit = { has_global_variable = cmf_log_view_open }
+			remove_global_variable = cmf_log_view_open
+		}
+		else = {
+			set_global_variable = { name = cmf_log_view_open value = yes }
+		}
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmf_log_view_open }
+	}
 }
 
 # Store the current country as the CMM host country.
