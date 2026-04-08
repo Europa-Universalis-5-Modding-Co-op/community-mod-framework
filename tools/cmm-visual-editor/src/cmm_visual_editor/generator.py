@@ -280,6 +280,15 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
                     lines.append(f"\t\tvalue = {val}")
                     lines.append(f"\t}}")
 
+        # Hidden items
+        for item in (setting.hidden_items or []):
+            lines.append("")
+            lines.append(f"\tcmm_hide_list_item = {{")
+            lines.append(f"\t\tmod_id = {mod_id}")
+            lines.append(f"\t\tsetting_id = {setting.setting_id}")
+            lines.append(f"\t\titem = {item}")
+            lines.append(f"\t}}")
+
         # List fields
         for field in (setting.fields or []):
             lines.append("")
