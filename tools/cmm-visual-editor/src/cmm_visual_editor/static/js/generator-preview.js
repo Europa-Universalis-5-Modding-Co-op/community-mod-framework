@@ -222,6 +222,16 @@ ${prefix}_on_cmf_callback = {
                     }
                 }
             }
+            // Hidden items
+            for (const item of (setting.hidden_items || [])) {
+                lines.push('');
+                lines.push(`\tcmm_hide_list_item = {`);
+                lines.push(`\t\tmod_id = ${modId}`);
+                lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+                lines.push(`\t\titem = ${item}`);
+                lines.push(`\t}`);
+            }
+
             for (const field of (setting.fields || [])) {
                 lines.push('');
                 this._emitListField(lines, modId, setting.setting_id, field);

@@ -132,9 +132,17 @@ def _build_model(
     list_fields = {}  # setting_id -> [field_regs]
     list_item_values = {}  # setting_id -> {item_number: value}
     list_field_disables = {}  # (setting_id, field_id) -> [item_number]
+    list_item_hides = {}  # setting_id -> [item_number]
     for reg in registrations:
         reg_type = reg.get("_type", "")
-        if reg_type == "list_field_disable":
+        if reg_type == "list_item_hide":
+            sid = reg.get("setting_id", "")
+            item = _to_int(reg.get("item", "0"))
+            if sid and item > 0:
+                if sid not in list_item_hides:
+                    list_item_hides[sid] = []
+                list_item_hides[sid].append(item)
+        elif reg_type == "list_field_disable":
             sid = reg.get("setting_id", "")
             fid = reg.get("field_id", "")
             item = _to_int(reg.get("item", "0"))
@@ -192,7 +200,7 @@ def _build_model(
         setting = _reg_to_setting(
             reg, mod_id, loc_map, list_fields, list_item_values,
             setting_aliases, inverted_aliases, field_aliases, option_aliases,
-            list_field_disables,
+            list_field_disables, list_item_hides,
         )
         if setting:
             # Deduplicate: skip if same setting_id already exists in this group
@@ -577,7 +585,7 @@ def _parse_registrations(content: str, warnings: list) -> list:
         r"slider_setting|dropdown_setting|text_setting|settings_list|"
         r"settings_list_from_list|"
         r"list_bool_field|list_dropdown_field|list_numeric_field|list_slider_field)|"
-        r"cmm_set_list_item_value|cmm_disable_list_field_for_item)\s*=\s*\{",
+        r"cmm_set_list_item_value|cmm_disable_list_field_for_item|cmm_hide_list_item)\s*=\s*\{",
         re.IGNORECASE,
     )
 
@@ -633,6 +641,8 @@ def _func_to_type(func_name: str) -> str:
         return "list_item_value"
     if "disable_list_field_for_item" in fn:
         return "list_field_disable"
+    if "hide_list_item" in fn:
+        return "list_item_hide"
     if "bool_setting" in fn:
         return "bool"
     if "button_setting" in fn:
@@ -689,6 +699,7 @@ def _reg_to_setting(
     field_aliases: dict = None,
     option_aliases: dict = None,
     list_field_disables: dict = None,
+    list_item_hides: dict = None,
 ) -> Setting:
     """Convert a registration dict to a Setting."""
     reg_type = reg.get("_type", "")
@@ -769,6 +780,11 @@ def _reg_to_setting(
             for i in range(1, count + 1):
                 item_values.append(values_map.get(i, ""))
             setting.item_values = item_values
+
+        # Collect hidden items
+        hidden = (list_item_hides or {}).get(sid)
+        if hidden:
+            setting.hidden_items = sorted(hidden)
 
         fields = []
         for fi, freg in enumerate(list_fields.get(sid, [])):

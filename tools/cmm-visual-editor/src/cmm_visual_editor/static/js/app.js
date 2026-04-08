@@ -86,6 +86,7 @@ const app = createApp({
         const selectedTabIdx = ref(0);
         const selectedGroupIdx = ref(0);
         const rightTab = ref('preview');
+        const collapseSignal = ref(null);   // { collapsed: bool, key: number }
         const showImport = ref(false);
         const importPath = ref('');
         const importWarnings = ref([]);
@@ -202,6 +203,10 @@ const app = createApp({
             if (!tab) return;
             tab.groups.splice(i, 1);
             clampSelection();
+        }
+
+        function onToggleAllSettings(shouldCollapse) {
+            collapseSignal.value = { collapsed: shouldCollapse, key: Date.now() };
         }
 
         function addSetting() {
@@ -350,6 +355,11 @@ const app = createApp({
             return tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA';
         }
 
+        // Track mousedown target so dragstart can check what was actually clicked
+        // (event.target in dragstart is always the draggable wrapper, not the clicked child)
+        let _dragOriginEl = null;
+        document.addEventListener('mousedown', (e) => { _dragOriginEl = e.target; });
+
         // ── Drag start ─────────────────────────────────────────────
         function onDragStartTab(event, i) {
             drag.type = 'tab';
@@ -369,8 +379,7 @@ const app = createApp({
         }
 
         function onDragStartSetting(event, si) {
-            if (!event.target.closest('.setting-card-header')) { event.preventDefault(); return; }
-            if (isInputEl(event.target)) { event.preventDefault(); return; }
+            if (!_dragOriginEl || !_dragOriginEl.closest('.setting-card-header') || isInputEl(_dragOriginEl)) { event.preventDefault(); return; }
             drag.type = 'setting';
             drag.sourceTabIdx = selectedTabIdx.value;
             drag.sourceGroupIdx = selectedGroupIdx.value;
@@ -452,9 +461,12 @@ const app = createApp({
                 const targetGroups = state.tabs[i].groups;
                 moveItem('group', drag.sourceTabIdx, 0, drag.sourceItemIdx, i, 0, targetGroups.length);
             } else if (drag.type === 'setting') {
-                // Move setting to end of first group of target tab
+                // Move setting to end of first group of target tab (auto-create group if empty)
                 const targetTab = state.tabs[i];
-                if (targetTab && targetTab.groups.length) {
+                if (targetTab) {
+                    if (!targetTab.groups.length) {
+                        targetTab.groups.push({ group_id: '', name: '', desc: '', settings: [] });
+                    }
                     const targetSettings = targetTab.groups[0].settings;
                     moveItem('setting', drag.sourceTabIdx, drag.sourceGroupIdx, drag.sourceItemIdx, i, 0, targetSettings.length);
                 }
@@ -688,14 +700,14 @@ const app = createApp({
         });
 
         return {
-            state, selectedTabIdx, selectedGroupIdx, rightTab,
+            state, selectedTabIdx, selectedGroupIdx, rightTab, collapseSignal,
             showImport, importPath, importWarnings,
             selectedTab, selectedGroup,
             modDir, dirty, saveStatus, saveError, showSettings, appVersion,
             undoCount, redoCount,
             drag, resetDrag,
             sanitizeId, addTab, removeTab, addGroup, removeGroup,
-            addSetting, removeSetting, moveSetting, onUpdate,
+            addSetting, removeSetting, moveSetting, onUpdate, onToggleAllSettings,
             onDragStartTab, onDragStartGroup, onDragStartSetting,
             onDragOverTab, onDragOverGroup, onDragOverSetting,
             onDragLeaveTab, onDragLeaveGroup, onDragLeaveSetting,
