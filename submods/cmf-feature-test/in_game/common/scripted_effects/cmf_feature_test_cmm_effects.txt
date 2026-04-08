@@ -39,6 +39,13 @@ cmf_feature_test_register_cmf_mod = {
 		group_id = toggles
 	}
 
+	cmm_register_button_setting = {
+		mod_id = cmf_feature_test
+		setting_id = log_test_scope_args
+		tab_id = settings
+		group_id = toggles
+	}
+
 	## Values (values) Group
 	cmm_register_numeric_setting = {
 		mod_id = cmf_feature_test
@@ -491,6 +498,18 @@ cmf_feature_test_handle_cmf_callback = {
 		}
 		flag:cmf_feature_test__log_test_args = {
 			cmf_log_with_args = { action = cft_log_transferred_to arg1 = cft_log_test_location arg2 = cft_log_test_country }
+		}
+		flag:cmf_feature_test__log_test_scope_args = {
+			# Save two countries as scope args, then log with scope variant
+			random_country = {
+				limit = { NOT = { this = root } }
+				save_scope_as = cmf_log_arg1
+			}
+			random_country = {
+				limit = { NOT = { this = root } NOT = { this = scope:cmf_log_arg1 } }
+				save_scope_as = cmf_log_arg2
+			}
+			cmf_log_with_scope_args = { action = cft_log_transferred_to }
 		}
 	}
 }

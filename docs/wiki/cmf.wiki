@@ -140,7 +140,9 @@ cmf_clear_log = yes
 |-
 | <code>cmf_log = { action = <flag> }</code> || Log an action (country scope = actor)
 |-
-| <code>cmf_log_with_args = { action = <flag> arg1 = <flag> arg2 = <flag> }</code> || Log with two named arguments
+| <code>cmf_log_with_args = { action = <flag> arg1 = <flag> arg2 = <flag> }</code> || Log with two named arguments (localization keys)
+|-
+| <code>cmf_log_with_scope_args = { action = <flag> }</code> || Log with two country scope arguments (requires <code>scope:cmf_log_arg1</code> and <code>scope:cmf_log_arg2</code>)
 |-
 | <code>cmf_clear_log = yes</code> || Clear all entries
 |}
