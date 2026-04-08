@@ -63,6 +63,13 @@ _cmf_log_core_flag = {
 		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = flag:$arg2$ }
 		change_global_variable = { name = cmf_log_count add = 1 }
 	}
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
+		cmf_suppress = { v = $arg1$ }
+		cmf_suppress = { v = $arg2$ }
+	}
 }
 
 # Internal: log core for single scope arg (arg2 only).
@@ -86,6 +93,11 @@ _cmf_log_core_scope_single = {
 		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
 		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = scope:cmf_log_arg2 }
 		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
 	}
 }
 
@@ -112,7 +124,15 @@ _cmf_log_core_scope = {
 		change_global_variable = { name = cmf_log_count add = 1 }
 	}
 
-	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
+	}
+}
+
+# Benign warning suppression for log flags and maps.
+# This is a dedicated unused effect — the engine scans it at parse time.
+_cmf_log_suppress = {
 	if = {
 		limit = { always = no }
 		cmf_suppress = { v = _cmf_log_actor }
