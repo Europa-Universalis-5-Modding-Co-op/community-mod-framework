@@ -235,6 +235,17 @@ cmm_disable_list_field_for_item = {
 </syntaxhighlight>
 Call after registering the field. Shift+click "apply to all" skips disabled items. Use <code>cmm_enable_list_field_for_item</code> with the same parameters to re-enable.
 
+=== Hiding Specific Items ===
+Hide entire item rows from the menu (items remain in the datamodel):
+<syntaxhighlight lang="text">
+cmm_hide_list_item = {
+	mod_id = your_mod
+	setting_id = your_list
+	item = 3
+}
+</syntaxhighlight>
+Call after registering the list. Use <code>cmm_show_list_item</code> with the same parameters to show again.
+
 === List Callback ===
 Settings lists require a Scripted GUI callback (unlike other types which use auto-apply):
 <syntaxhighlight lang="text">

@@ -403,6 +403,29 @@ cmm_enable_list_field_for_item = {
 	}
 }
 
+# Hide one item row in a list setting so it does not render in the menu.
+# The item still exists in the datamodel and is still iterated by cmm_for_each_list_item.
+# Call after the list has been registered (e.g. cmm_register_settings_list).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - item (number): Item ordinal to hide (`1..item_count`).
+cmm_hide_list_item = {
+	add_to_variable_map = { name = cmm_list_item_hidden key = flag:$mod_id$__$setting_id$_i$item$ value = 1 }
+}
+
+# Show a previously hidden item row in a list setting.
+# Reverses cmm_hide_list_item.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - item (number): Item ordinal to show (`1..item_count`).
+cmm_show_list_item = {
+	remove_from_variable_map = { name = cmm_list_item_hidden key = flag:$mod_id$__$setting_id$_i$item$ }
+}
+
 # Attach a game object scope as the value of one list item (call after cmm_register_settings_list).
 # Stores the scope in a single-element variable list per item.
 # When iterating with cmm_for_each_list_item, the scope is available as

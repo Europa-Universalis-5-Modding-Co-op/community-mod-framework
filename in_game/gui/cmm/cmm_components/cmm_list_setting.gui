@@ -120,6 +120,7 @@
 	type cmm_list_setting_row_widget = widget {
 		layoutpolicy_horizontal = expanding
 		minimumsize = { 0 32 }
+		visible = "[CMMListItemIsVisible(Scope.GetFlagName)]"
 		onmousehierarchyenter = "[GetVariableSystem.Set('cmm_list_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 		using = bg_square_outline_tile
 
