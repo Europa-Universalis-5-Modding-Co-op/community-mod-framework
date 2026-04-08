@@ -243,9 +243,17 @@ macro = {
 # Args: Index (int32)
 # Returns: boolean
 macro = {
+    description = "True when arg mode is scope-based (1) for a log entry"
+    definition = "CMFLogIsScopeArgs(Index)"
+    replace_with = "EqualTo_CFixedPoint(GetVariableFromGlobalVariableMap('cmf_log_arg_mode', CMFLogKey(Index)).GetValue, '(CFixedPoint)1')"
+}
+
+# Args: Index (int32)
+# Returns: boolean
+macro = {
     description = "True when arg1 is present on a log entry"
     definition = "CMFLogHasArg1(Index)"
-    replace_with = "Not(EqualTo_string(GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetFlagName, '_cmf_log_no_arg'))"
+    replace_with = "Or(CMFLogIsScopeArgs(Index), Not(EqualTo_string(GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetFlagName, '_cmf_log_no_arg')))"
 }
 
 # Args: Index (int32)
@@ -253,23 +261,23 @@ macro = {
 macro = {
     description = "True when arg2 is present on a log entry"
     definition = "CMFLogHasArg2(Index)"
-    replace_with = "Not(EqualTo_string(GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetFlagName, '_cmf_log_no_arg'))"
+    replace_with = "Or(CMFLogIsScopeArgs(Index), Not(EqualTo_string(GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetFlagName, '_cmf_log_no_arg')))"
 }
 
 # Args: Index (int32)
 # Returns: string
 macro = {
-    description = "Localized arg1 name for a log entry"
+    description = "Resolved arg1 text for a log entry (flag localization or country name)"
     definition = "CMFLogArg1Name(Index)"
-    replace_with = "Localize(GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetFlagName)"
+    replace_with = "Select_CString(CMFLogIsScopeArgs(Index), GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetName, Localize(GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetFlagName))"
 }
 
 # Args: Index (int32)
 # Returns: string
 macro = {
-    description = "Localized arg2 name for a log entry"
+    description = "Resolved arg2 text for a log entry (flag localization or scope name)"
     definition = "CMFLogArg2Name(Index)"
-    replace_with = "Localize(GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetFlagName)"
+    replace_with = "Select_CString(CMFLogIsScopeArgs(Index), GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetName, Localize(GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetFlagName))"
 }
 
 # Args: Index (int32)

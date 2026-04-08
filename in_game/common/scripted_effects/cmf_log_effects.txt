@@ -2,10 +2,10 @@
 # Scope: country (the actor performing the action)
 # Args: action (flag) — localization key for the action text
 cmf_log = {
-	_cmf_log_core = { action = $action$ arg1 = _cmf_log_no_arg arg2 = _cmf_log_no_arg }
+	_cmf_log_core_flag = { action = $action$ arg1 = _cmf_log_no_arg arg2 = _cmf_log_no_arg arg_mode = 0 }
 }
 
-# Log an action with two named arguments.
+# Log an action with two named arguments (localization keys).
 # Entry text renders as: [arg1] [action] [arg2]
 # Scope: country (the actor performing the action)
 # Args:
@@ -13,7 +13,16 @@ cmf_log = {
 # - arg1 (flag): localization key for the first argument (before action text)
 # - arg2 (flag): localization key for the second argument (after action text)
 cmf_log_with_args = {
-	_cmf_log_core = { action = $action$ arg1 = $arg1$ arg2 = $arg2$ }
+	_cmf_log_core_flag = { action = $action$ arg1 = $arg1$ arg2 = $arg2$ arg_mode = 0 }
+}
+
+# Log an action with two country scope arguments.
+# Entry text renders as: [arg1 country name] [action] [arg2 country name]
+# Scope: country (the actor performing the action)
+# Requires: scope:cmf_log_arg1 and scope:cmf_log_arg2 saved before calling.
+# Args: action (flag) — localization key for the action/connecting text
+cmf_log_with_scope_args = {
+	_cmf_log_core_scope = { action = $action$ arg_mode = 1 }
 }
 
 # Clear all log entries.
@@ -24,10 +33,10 @@ cmf_clear_log = {
 	set_global_variable = { name = cmf_log_count value = 0 }
 }
 
-# Internal: shared log core.
+# Internal: log core for flag-based args.
 # Scope: country (the actor)
-# Args: action (flag), arg1 (flag), arg2 (flag)
-_cmf_log_core = {
+# Args: action (flag), arg1 (flag), arg2 (flag), arg_mode (0)
+_cmf_log_core_flag = {
 	save_scope_as = _cmf_log_actor
 
 	if = {
@@ -40,8 +49,33 @@ _cmf_log_core = {
 		_cmf_log_select_key = yes
 		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
 		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = $arg_mode$ }
 		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:$arg1$ }
 		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = flag:$arg2$ }
+		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+}
+
+# Internal: log core for scope-based args.
+# Scope: country (the actor)
+# Requires: scope:cmf_log_arg1 and scope:cmf_log_arg2 saved before calling.
+# Args: action (flag), arg_mode (1)
+_cmf_log_core_scope = {
+	save_scope_as = _cmf_log_actor
+
+	if = {
+		limit = { NOT = { has_global_variable = cmf_log_count } }
+		set_global_variable = { name = cmf_log_count value = 0 }
+	}
+
+	if = {
+		limit = { global_var:cmf_log_count < 200 }
+		_cmf_log_select_key = yes
+		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
+		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = $arg_mode$ }
+		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = scope:cmf_log_arg1 }
+		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = scope:cmf_log_arg2 }
 		change_global_variable = { name = cmf_log_count add = 1 }
 	}
 
@@ -53,6 +87,7 @@ _cmf_log_core = {
 		cmf_suppress = { v = _cmf_log_key }
 		cmf_suppress = { v = cmf_log_action }
 		cmf_suppress = { v = cmf_log_actor }
+		cmf_suppress = { v = cmf_log_arg_mode }
 		cmf_suppress = { v = cmf_log_arg1 }
 		cmf_suppress = { v = cmf_log_arg2 }
 		cmf_suppress = { v = cmf_log_0 }
@@ -560,6 +595,7 @@ _cmf_log_clear_maps = {
 		_cmf_log_select_key = yes
 		remove_from_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key }
 		remove_from_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key }
+		remove_from_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key }
 		remove_from_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key }
 		remove_from_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key }
 	}
