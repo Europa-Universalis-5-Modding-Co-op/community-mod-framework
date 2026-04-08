@@ -224,6 +224,22 @@ macro = {
     replace_with = "Not(CMMListItemFieldIsDisabled(ItemKey, SlotKey))"
 }
 
+# Args: ItemKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list item row is hidden"
+    definition = "CMMListItemIsHidden(ItemKey)"
+    replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_list_item_hidden', ItemKey))"
+}
+
+# Args: ItemKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list item row is visible"
+    definition = "CMMListItemIsVisible(ItemKey)"
+    replace_with = "Not(CMMListItemIsHidden(ItemKey))"
+}
+
 # Args: SettingKey (string), SlotKey (string)
 # Returns: CFixedPoint
 macro = {
