@@ -469,6 +469,16 @@ body {
     cursor: grab;
 }
 
+.setting-card.collapsed .setting-card-header {
+    border-bottom: none;
+}
+
+.setting-card-header > .collapse-indicator {
+    cursor: pointer;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
 .setting-card-header:active { cursor: grabbing; }
 .setting-card-header button,
 .setting-card-header input,
