@@ -2,11 +2,9 @@
 - [b]Global Log System:[/b] New shared in-game log for recording mod actions. Entries display an actor country, action text, and optional arguments (flag or country scope). View and clear the log from the Mod Menu. Supports up to 200 entries per session.
 - [b]Country Transfer:[/b] CMM settings now automatically transfer when the player switches countries (tag switches, inheritance, etc.). Includes a cmf_on_country_transfer on_action for mods needing custom transfer logic.
 - [b]Settings List Enhancements:[/b] Prefix/postfix formatting for list field values, per-item row hiding (cmm_hide_list_item / cmm_show_list_item), visible conditions for list settings, and dynamic column widths based on field type.
-- [b]Draggable Mod Menu:[/b] The CMM window is now movable.
-- [b]Version Display:[/b] The CMM version number now shows in the settings panel.
-- [b]Mod Removal:[/b] Disabled mod settings automatically disappear from existing save games. Mods can also be removed from the mod list.
-- [b]Vanilla Type Extraction Tool:[/b] New Python tool (cmf_extract_vanilla_types.py) for extracting vanilla GUI type definitions, enabling mods to override top-level widgets without breaking shared types.
-- [b]LSQ Widget Stubs:[/b] Cross-mod compatibility stubs for GlorpUI to safely reference LSQ widget types.
+- [b]Mod Removal:[/b] Disabled mods/settings automatically disappear from existing save games.
+- [b]More Compatible File Writes:[/b] Allows mods to override top-level widgets without overwriting the types present in the same file.
+- [b]GlorpUI-Auto Expand Integration:[/b] Cross-mod compatibility stubs for GlorpUI to reference Auto Expand widget types.
 - [b]CMM Visual Editor (v1.2.0):[/b] Added list field display formatting (prefix/postfix), per-item row hiding UI, metadata dependency preservation on re-save, collapsible setting cards and preview groups, version display, and multiple bug fixes.
 
 # v2.1.2:
