@@ -1,9 +1,10 @@
 const SettingEditorComponent = {
-    props: ['setting', 'index', 'total', 'modId'],
-    emits: ['remove', 'move-up', 'move-down'],
+    props: ['setting', 'index', 'total', 'modId', 'collapseSignal'],
+    emits: ['remove', 'move-up', 'move-down', 'toggle-all'],
     template: `
-    <div class="setting-card">
-        <div class="setting-card-header">
+    <div class="setting-card" :class="{collapsed: collapsed}">
+        <div class="setting-card-header" @click="toggleCollapse($event)" title="Click to collapse/expand. Shift+click to toggle all.">
+            <span class="collapse-indicator">{{ collapsed ? '&#9654;' : '&#9660;' }}</span>
             <span class="setting-type-badge" :class="setting.setting_type">{{ setting.setting_type }}</span>
             <span class="setting-title">{{ setting.name || setting.setting_id || 'New Setting' }}</span>
             <span v-if="setting.is_global" class="global-badge">Global</span>
@@ -36,7 +37,7 @@ const SettingEditorComponent = {
             </div>
         </div>
 
-        <div class="setting-card-body">
+        <div class="setting-card-body" v-show="!collapsed">
             <div class="field-grid">
                 <div class="field-row">
                     <label>Setting ID <span class="required">*</span></label>
@@ -195,7 +196,12 @@ const SettingEditorComponent = {
     </div>
     `,
     data() {
-        return { copied: false, copiedTemplate: false, editingAlias: false, aliasInput: '' };
+        return { copied: false, copiedTemplate: false, editingAlias: false, aliasInput: '', collapsed: false };
+    },
+    watch: {
+        collapseSignal(val) {
+            if (val) this.collapsed = val.collapsed;
+        },
     },
     computed: {
         canBeGlobal() {
@@ -248,6 +254,14 @@ const SettingEditorComponent = {
         },
     },
     methods: {
+        toggleCollapse(e) {
+            if (e.target.closest('button, input, .accessor-group')) return;
+            if (e.shiftKey) {
+                this.$emit('toggle-all', !this.collapsed);
+                return;
+            }
+            this.collapsed = !this.collapsed;
+        },
         copyLoopTemplate() {
             const qid = `${this.modId}__${this.setting.setting_id}`;
             const fields = this.setting.fields || [];

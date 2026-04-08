@@ -40,6 +40,23 @@ const ListEditorComponent = {
             </div>
         </div>
 
+        <div v-if="listMode === 'static' && (setting.item_count || 1) > 1" class="per-item-aliases">
+            <h6 class="collapsible-header" @click="togglePerItemSection(-1, 'row-visibility')">
+                <span class="collapse-indicator">{{ isPerItemSectionOpen(-1, 'row-visibility') ? '&#9660;' : '&#9654;' }}</span>
+                Per-Item Row Visibility
+            </h6>
+            <div v-show="isPerItemSectionOpen(-1, 'row-visibility')">
+                <div v-for="(name, ii) in (setting.item_names || [])" :key="'rowvis-'+ii" class="field-row compact list-item-row">
+                    <label class="compact-label">{{ ii + 1 }}</label>
+                    <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
+                    <label class="item-visibility-toggle">
+                        <input type="checkbox" :checked="isItemVisible(ii)" @change="toggleItemVisibility(ii)">
+                        <span class="item-visibility-label">{{ isItemVisible(ii) ? 'Shown' : 'Hidden' }}</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
         <div class="subsection">
             <div class="section-header">
                 <h5>Fields (max 5)</h5>
@@ -307,6 +324,11 @@ const ListEditorComponent = {
             while (this.setting.item_values.length > count) {
                 this.setting.item_values.pop();
             }
+            // Sync hidden_items (remove out-of-range items)
+            if (this.setting.hidden_items) {
+                this.setting.hidden_items = this.setting.hidden_items.filter(i => i >= 1 && i <= count);
+                if (this.setting.hidden_items.length === 0) this.setting.hidden_items = null;
+            }
             // Sync per-item disabled_items arrays on all fields (remove out-of-range items)
             for (const field of (this.setting.fields || [])) {
                 if (field.disabled_items) {
@@ -324,6 +346,29 @@ const ListEditorComponent = {
                         field.item_aliases.pop();
                     }
                 }
+            }
+        },
+        isItemVisible(itemIndex) {
+            if (!this.setting.hidden_items) return true;
+            return !this.setting.hidden_items.includes(itemIndex + 1);
+        },
+        toggleItemVisibility(itemIndex) {
+            const item = itemIndex + 1;  // 1-based
+            if (!this.setting.hidden_items) {
+                this.setting.hidden_items = [];
+            }
+            const idx = this.setting.hidden_items.indexOf(item);
+            if (idx >= 0) {
+                this.setting.hidden_items.splice(idx, 1);
+            } else {
+                this.setting.hidden_items.push(item);
+                this.setting.hidden_items.sort((a, b) => a - b);
+            }
+            // Trigger reactivity
+            this.setting.hidden_items = [...this.setting.hidden_items];
+            // Clean up empty array
+            if (this.setting.hidden_items.length === 0) {
+                this.setting.hidden_items = null;
             }
         },
         isItemFieldEnabled(fi, itemIndex) {
