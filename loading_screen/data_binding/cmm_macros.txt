@@ -253,7 +253,7 @@ macro = {
 macro = {
     description = "True when arg1 is present on a log entry"
     definition = "CMFLogHasArg1(Index)"
-    replace_with = "Or(CMFLogIsScopeArgs(Index), Not(EqualTo_string(GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetFlagName, '_cmf_log_no_arg')))"
+    replace_with = "Not(EqualTo_string(GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetFlagName, '_cmf_log_no_arg'))"
 }
 
 # Args: Index (int32)
@@ -261,7 +261,7 @@ macro = {
 macro = {
     description = "True when arg2 is present on a log entry"
     definition = "CMFLogHasArg2(Index)"
-    replace_with = "Or(CMFLogIsScopeArgs(Index), Not(EqualTo_string(GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetFlagName, '_cmf_log_no_arg')))"
+    replace_with = "Not(EqualTo_string(GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetFlagName, '_cmf_log_no_arg'))"
 }
 
 # Args: Index (int32)
