@@ -801,6 +801,6 @@ ${prefix}_on_cmf_callback = {
 
     _esc(s) {
         if (!s) return '';
-        return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        return s.replace(/"/g, '\\"');
     },
 };
