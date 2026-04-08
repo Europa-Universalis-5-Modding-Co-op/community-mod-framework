@@ -400,6 +400,10 @@ Check with: <code>has_variable = using_feature_b</code>
 | <code>[mod_id]__[setting_id]__[field_id]_name</code> || List field column label
 |-
 | <code>[mod_id]__[setting_id]__[field_id]_option_[N]_name</code> || List dropdown field option
+|-
+| <code>[mod_id]__[setting_id]__[field_id]_prefix</code> || List field value prefix (optional)
+|-
+| <code>[mod_id]__[setting_id]__[field_id]_postfix</code> || List field value postfix (optional)
 |}
 
 = Links =
