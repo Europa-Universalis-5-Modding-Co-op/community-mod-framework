@@ -413,6 +413,14 @@ cmm_enable_list_field_for_item = {
 # - item (number): Item ordinal to hide (`1..item_count`).
 cmm_hide_list_item = {
 	add_to_variable_map = { name = cmm_list_item_hidden key = flag:$mod_id$__$setting_id$_i$item$ value = 1 }
+
+	# Benign warning suppression
+	if = {
+		limit = {
+			always = no
+			has_variable_map = cmm_list_item_hidden
+		}
+	}
 }
 
 # Show a previously hidden item row in a list setting.
