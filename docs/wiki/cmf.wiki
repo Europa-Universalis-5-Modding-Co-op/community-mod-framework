@@ -142,6 +142,8 @@ cmf_clear_log = yes
 |-
 | <code>cmf_log_with_args = { action = <flag> arg1 = <flag> arg2 = <flag> }</code> || Log with two named arguments (localization keys)
 |-
+| <code>cmf_log_with_scope_arg = { action = <flag> }</code> || Log with one country scope argument (requires <code>scope:cmf_log_arg2</code>)
+|-
 | <code>cmf_log_with_scope_args = { action = <flag> }</code> || Log with two country scope arguments (requires <code>scope:cmf_log_arg1</code> and <code>scope:cmf_log_arg2</code>)
 |-
 | <code>cmf_clear_log = yes</code> || Clear all entries
@@ -180,6 +182,14 @@ on_game_start_after_lobby = {
 # Country scope — for human country effects
 on_game_start_after_lobby_human_country = {
 	on_actions = { your_mod_on_new_game_country }
+}
+</syntaxhighlight>
+
+=== Country Transfer ===
+<code>cmf_on_country_transfer</code> fires when the player switches countries (tag switches, inheritance, etc.). CMF auto-copies CMM settings and re-runs registration before this fires. <code>scope:old_country</code> and <code>scope:new_country</code> are available.
+<syntaxhighlight lang="text">
+cmf_on_country_transfer = {
+	on_actions = { your_mod_on_country_transfer }
 }
 </syntaxhighlight>
 
