@@ -16,8 +16,17 @@ cmf_log_with_args = {
 	_cmf_log_core_flag = { action = $action$ arg1 = $arg1$ arg2 = $arg2$ arg_mode = 0 }
 }
 
+# Log an action with one country scope argument.
+# Entry text renders as: [action] [arg2 name]
+# Scope: country (the actor performing the action)
+# Requires: scope:cmf_log_arg2 saved before calling.
+# Args: action (flag) — localization key for the action text
+cmf_log_with_scope_arg = {
+	_cmf_log_core_scope_single = { action = $action$ arg_mode = 1 }
+}
+
 # Log an action with two country scope arguments.
-# Entry text renders as: [arg1 country name] [action] [arg2 country name]
+# Entry text renders as: [arg1 name] [action] [arg2 name]
 # Scope: country (the actor performing the action)
 # Requires: scope:cmf_log_arg1 and scope:cmf_log_arg2 saved before calling.
 # Args: action (flag) — localization key for the action/connecting text
@@ -56,7 +65,31 @@ _cmf_log_core_flag = {
 	}
 }
 
-# Internal: log core for scope-based args.
+# Internal: log core for single scope arg (arg2 only).
+# Scope: country (the actor)
+# Requires: scope:cmf_log_arg2 saved before calling.
+# Args: action (flag), arg_mode (1)
+_cmf_log_core_scope_single = {
+	save_scope_as = _cmf_log_actor
+
+	if = {
+		limit = { NOT = { has_global_variable = cmf_log_count } }
+		set_global_variable = { name = cmf_log_count value = 0 }
+	}
+
+	if = {
+		limit = { global_var:cmf_log_count < 200 }
+		_cmf_log_select_key = yes
+		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
+		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = $arg_mode$ }
+		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
+		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = scope:cmf_log_arg2 }
+		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+}
+
+# Internal: log core for two scope args.
 # Scope: country (the actor)
 # Requires: scope:cmf_log_arg1 and scope:cmf_log_arg2 saved before calling.
 # Args: action (flag), arg_mode (1)
