@@ -269,15 +269,15 @@ macro = {
 macro = {
     description = "Resolved arg1 text for a log entry (flag localization or country name)"
     definition = "CMFLogArg1Name(Index)"
-    replace_with = "Select_CString(CMFLogIsScopeArgs(Index), GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetName, Localize(GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetFlagName))"
+    replace_with = "Select_CString(CMFLogIsScopeArgs(Index), GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetCountry.GetName, Localize(GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetFlagName))"
 }
 
 # Args: Index (int32)
 # Returns: string
 macro = {
-    description = "Resolved arg2 text for a log entry (flag localization or scope name)"
+    description = "Resolved arg2 text for a log entry (flag localization or country name)"
     definition = "CMFLogArg2Name(Index)"
-    replace_with = "Select_CString(CMFLogIsScopeArgs(Index), GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetName, Localize(GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetFlagName))"
+    replace_with = "Select_CString(CMFLogIsScopeArgs(Index), GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetCountry.GetName, Localize(GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetFlagName))"
 }
 
 # Args: Index (int32)
