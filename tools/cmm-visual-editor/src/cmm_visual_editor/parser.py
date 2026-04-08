@@ -175,6 +175,8 @@ def _build_model(
             continue  # already collected above
         if reg_type == "list_field_disable":
             continue  # already collected above
+        if reg_type == "list_item_hide":
+            continue  # already collected above
 
         tab_id = reg.get("tab_id", "general")
         group_id = reg.get("group_id", reg.get("setting_id", "default"))
@@ -709,6 +711,8 @@ def _reg_to_setting(
         return None  # item values handled separately
     if reg_type == "list_field_disable":
         return None  # field disables handled separately
+    if reg_type == "list_item_hide":
+        return None  # item hides handled separately
 
     sid = reg.get("setting_id", "")
     is_global = reg.get("_is_global", False)
