@@ -279,14 +279,14 @@
 					size = { 100% 100% }
 					align = center|nobaseline
 					autoresize = no
-					visible = "[Not(CMMListFieldHasFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+					visible = "[Not(CMMListFieldHasRegisteredFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 					text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				}
 				text_single = {
 					size = { 100% 100% }
 					align = center|nobaseline
 					autoresize = no
-					visible = "[CMMListFieldHasFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+					visible = "[CMMListFieldHasRegisteredFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 					text = "[CMMListFieldResolvedPrefix(CMMListItemOwnerSettingKey(Scope.GetFlagName), Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListFieldResolvedPostfix(CMMListItemOwnerSettingKey(Scope.GetFlagName), Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				}
 			}
@@ -435,7 +435,6 @@
 					size = { 100% 28 }
 
 					button_dropdown = {
-						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
 						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 						tooltip_enabled = no
 					}
@@ -559,7 +558,6 @@
 					size = { 100% 28 }
 
 					button_dropdown = {
-						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
 						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 						tooltip_enabled = no
 					}
@@ -683,7 +681,6 @@
 					size = { 100% 28 }
 
 					button_dropdown = {
-						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
 						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 						tooltip_enabled = no
 					}
@@ -807,7 +804,6 @@
 					size = { 100% 28 }
 
 					button_dropdown = {
-						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
 						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 						tooltip_enabled = no
 					}
@@ -931,7 +927,6 @@
 					size = { 100% 28 }
 
 					button_dropdown = {
-						enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
 						onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 						tooltip_enabled = no
 					}
@@ -1314,14 +1309,14 @@
 				size = { 100% 100% }
 				align = center|nobaseline
 				autoresize = no
-				visible = "[Not(CMMListFieldHasFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+				visible = "[Not(CMMListFieldHasRegisteredFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 				text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 			text_single = {
 				size = { 100% 100% }
 				align = center|nobaseline
 				autoresize = no
-				visible = "[CMMListFieldHasFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[CMMListFieldHasRegisteredFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				text = "[CMMListFieldResolvedPrefix(CMMListItemOwnerSettingKey(Scope.GetFlagName), Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListFieldResolvedPostfix(CMMListItemOwnerSettingKey(Scope.GetFlagName), Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 		}
@@ -1354,7 +1349,7 @@
 				align = center|nobaseline
 				autoresize = no
 				default_format = "#medium"
-				visible = "[Not(CMMListFieldHasFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+				visible = "[Not(CMMListFieldHasRegisteredFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 				text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 			text_single = {
@@ -1362,7 +1357,7 @@
 				align = center|nobaseline
 				autoresize = no
 				default_format = "#medium"
-				visible = "[CMMListFieldHasFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[CMMListFieldHasRegisteredFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				text = "[CMMListFieldResolvedPrefix(CMMListItemOwnerSettingKey(Scope.GetFlagName), Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListFieldResolvedPostfix(CMMListItemOwnerSettingKey(Scope.GetFlagName), Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 		}

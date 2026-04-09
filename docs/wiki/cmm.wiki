@@ -223,6 +223,17 @@ cmm_register_list_slider_field = {
 }
 </syntaxhighlight>
 
+=== List Field Display Formatting ===
+Enable prefix/postfix display for numeric, slider, or data fields. Call after registering the field:
+<syntaxhighlight lang="text">
+cmm_set_list_field_format = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = weight
+}
+</syntaxhighlight>
+Then define <code>_prefix</code> / <code>_postfix</code> localization keys (and optional <code>_prefix_high</code> / <code>_postfix_high</code> / <code>_prefix_low</code> / <code>_postfix_low</code> for sign-conditional formatting).
+
 === Disabling Fields for Specific Items ===
 Disable a field column for specific items so the cell renders as empty space:
 <syntaxhighlight lang="text">

@@ -434,6 +434,13 @@ def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField
         lines.append(f"\t\tmax_value = {_num(field.max_value, 10)}")
         lines.append(f"\t\tstep_value = {_num(field.step_value, 1)}")
         lines.append(f"\t}}")
+    # List field format flag
+    if field.display_format or field.display_format_high or field.display_format_low:
+        lines.append(f"\tcmm_set_list_field_format = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting_id}")
+        lines.append(f"\t\tfield_id = {field.field_id}")
+        lines.append(f"\t}}")
     # Per-item field disables
     for item in (field.disabled_items or []):
         lines.append(f"\tcmm_disable_list_field_for_item = {{")

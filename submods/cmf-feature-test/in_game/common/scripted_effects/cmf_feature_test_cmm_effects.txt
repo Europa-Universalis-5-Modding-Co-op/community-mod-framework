@@ -196,6 +196,11 @@ cmf_feature_test_register_cmf_mod = {
 		max_value = 5
 		step_value = 1
 	}
+	cmm_set_list_field_format = {
+		mod_id = cmf_feature_test
+		setting_id = ordered_list
+		field_id = weight
+	}
 
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 1 value = root }
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 2 value = root }
