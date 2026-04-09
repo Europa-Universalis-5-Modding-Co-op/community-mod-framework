@@ -103,6 +103,8 @@
  cmf_feature_test__ordered_list__mode_option_2_name: "Standard"
  cmf_feature_test__ordered_list__mode_option_3_name: "High"
  cmf_feature_test__ordered_list__weight_name: "Weight"
+ cmf_feature_test__ordered_list__weight_prefix: "#G "
+ cmf_feature_test__ordered_list__weight_postfix: "%#!"
  ## Unordered List (unordered_list) Group
  cmf_feature_test__lists__unordered_list_name: "Unordered List"
  cmf_feature_test__lists__unordered_list_desc: "Static unordered list with 3 items and 3 fields."
