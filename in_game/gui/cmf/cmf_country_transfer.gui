@@ -17,7 +17,7 @@ widget = {
 
 	# Monitor for tag changes
 	hbox = {
-		visible = "[And(GetVariableSystem.Exists('cmf_player_tag'), Not(EqualTo_string(Localize('CMF_PLAYER_TAG'), GetVariableSystem.Get('cmf_player_tag'))))]"
+		visible = "[And(And(GetVariableSystem.Exists('cmf_player_tag'), Not(EqualTo_string(Localize('CMF_PLAYER_TAG'), GetVariableSystem.Get('cmf_player_tag')))), GetCountry(GetVariableSystem.Get('cmf_player_tag')).IsValid)]"
 		state = {
 			name = cmf_country_transfer_detect
 			trigger_on_create = yes
