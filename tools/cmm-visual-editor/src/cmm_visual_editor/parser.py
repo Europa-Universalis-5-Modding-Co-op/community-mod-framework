@@ -876,6 +876,14 @@ def _parse_list_field(
     sfx = loc_map.get(f"{fqid}_postfix", "")
     if pfx or sfx:
         field.display_format = f"{pfx}$VALUE${sfx}"
+    pfx_high = loc_map.get(f"{fqid}_prefix_high", "")
+    sfx_high = loc_map.get(f"{fqid}_postfix_high", "")
+    if pfx_high or sfx_high:
+        field.display_format_high = f"{pfx_high}$VALUE${sfx_high}"
+    pfx_low = loc_map.get(f"{fqid}_prefix_low", "")
+    sfx_low = loc_map.get(f"{fqid}_postfix_low", "")
+    if pfx_low or sfx_low:
+        field.display_format_low = f"{pfx_low}$VALUE${sfx_low}"
 
     return field
 

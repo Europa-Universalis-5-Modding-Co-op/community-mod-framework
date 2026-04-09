@@ -163,6 +163,14 @@ const ListEditorComponent = {
                             <label>Format</label>
                             <input type="text" v-model="field.display_format" placeholder='e.g. $VALUE$%'>
                         </div>
+                        <div class="field-row">
+                            <label>Format (&gt; 0)</label>
+                            <input type="text" v-model="field.display_format_high" placeholder='e.g. #G $VALUE$%#!'>
+                        </div>
+                        <div class="field-row">
+                            <label>Format (&lt; 0)</label>
+                            <input type="text" v-model="field.display_format_low" placeholder='e.g. #R $VALUE$%#!'>
+                        </div>
                     </div>
 
                     <!-- Per-item field visibility (static lists only) -->
@@ -451,6 +459,9 @@ const ListEditorComponent = {
                 min_value: 0,
                 max_value: 10,
                 step_value: 1,
+                display_format: '',
+                display_format_high: '',
+                display_format_low: '',
             });
         },
         removeField(i) {
