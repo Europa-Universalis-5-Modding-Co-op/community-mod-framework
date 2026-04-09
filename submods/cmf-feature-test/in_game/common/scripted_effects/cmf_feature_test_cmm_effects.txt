@@ -191,9 +191,9 @@ cmf_feature_test_register_cmf_mod = {
 		mod_id = cmf_feature_test
 		setting_id = ordered_list
 		field_id = weight
-		default_value = 5
-		min_value = 0
-		max_value = 10
+		default_value = 0
+		min_value = -5
+		max_value = 5
 		step_value = 1
 	}
 
