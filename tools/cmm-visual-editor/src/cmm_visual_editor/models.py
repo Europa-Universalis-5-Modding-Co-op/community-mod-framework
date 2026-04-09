@@ -32,8 +32,10 @@ class ListField:
     item_aliases: Optional[list] = None  # per-item aliases (list of str, one per item)
     # per-item field visibility
     disabled_items: Optional[list] = None  # 1-based item indices where this field is hidden
-    # format display (use $VALUE$ as placeholder, e.g. "$VALUE$%" or "#G$VALUE$%#!")
+    # format display (use $VALUE$ as placeholder, e.g. "$VALUE$%" or "#G $VALUE$%#!")
     display_format: str = ""
+    display_format_high: str = ""  # format when value > 0
+    display_format_low: str = ""   # format when value < 0
 
 
 @dataclass
@@ -205,6 +207,10 @@ def model_to_dict(model: ModModel) -> dict:
             d["step_value"] = f.step_value
         if f.display_format:
             d["display_format"] = f.display_format
+        if f.display_format_high:
+            d["display_format_high"] = f.display_format_high
+        if f.display_format_low:
+            d["display_format_low"] = f.display_format_low
         return d
 
     return {
@@ -261,6 +267,8 @@ def dict_to_model(data: dict) -> ModModel:
             item_aliases=f.get("item_aliases"),
             disabled_items=f.get("disabled_items"),
             display_format=f.get("display_format", ""),
+            display_format_high=f.get("display_format_high", ""),
+            display_format_low=f.get("display_format_low", ""),
         )
 
     def _parse_setting(s: dict) -> Setting:
