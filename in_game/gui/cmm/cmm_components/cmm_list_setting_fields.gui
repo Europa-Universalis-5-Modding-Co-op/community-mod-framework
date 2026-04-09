@@ -16,9 +16,14 @@
 		item = {
 			widget = {
 				min_width = "[CMMListFieldWidth(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
-				minimumsize = { 0 0 }
+				minimumsize = { 0 20 }
+				tagtooltip_enabled = yes
+				tooltip = "[CMMListFieldDescText(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				tooltip_enabled = "[CMMListFieldHasDesc(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				tooltipwidget = { BasicFunctionalTooltip = {} }
 
 				text_single = {
+					parentanchor = vcenter
 					size = { 100% 0 }
 					max_width = "[CMMListFieldHeaderMaxWidth(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 					fontsize = 14
