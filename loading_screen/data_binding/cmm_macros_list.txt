@@ -93,7 +93,7 @@ macro = {
 macro = {
     description = "List item field value accessor"
     definition = "CMMListItemFieldValue(ItemKey,SlotKey)"
-    replace_with = "Select_CFixedPoint(CMMSettingIsGlobal(CMMListItemOwnerSettingKey(ItemKey)), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey)))).GetValue, CMMListItemFieldVar(ItemKey, SlotKey).GetValue)"
+    replace_with = "Select_CFixedPoint(GetVariableSystem.HasValue('cmm_list_is_global', 'yes'), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey)))).GetValue, CMMListItemFieldVar(ItemKey, SlotKey).GetValue)"
 }
 
 # Args: ItemKey (string), SlotKey (string)
@@ -350,4 +350,79 @@ macro = {
     description = "Slider thumb visual index on 0-100 scale for one list item field"
     definition = "CMMListSliderThumbIndex(ItemKey,SlotKey)"
     replace_with = "FixedPointToInt(Add_CFixedPoint(Multiply_CFixedPoint(Divide_CFixedPoint(CMMListFieldSliderNormalizedValue(ItemKey, SlotKey), CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(ItemKey), SlotKey)), '(CFixedPoint)100'), '(CFixedPoint)0.500'))"
+}
+
+# Cached setting key from cmm_list_setting container state
+# Args: none
+# Returns: string
+macro = {
+    description = "Cached list setting key from VariableSystem"
+    definition = "CMMCachedListSettingKey"
+    replace_with = "GetVariableSystem.Get('cmm_list_sk')"
+}
+
+# Cached field type checks (slot ordinal as string)
+# Args: SlotStr (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when list field slot is bool"
+    definition = "CMMCachedFieldIsBool(SlotStr)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate('cmm_list_ft_', SlotStr), '1')"
+}
+
+# Args: SlotStr (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when list field slot is dropdown"
+    definition = "CMMCachedFieldIsDropdown(SlotStr)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate('cmm_list_ft_', SlotStr), '2')"
+}
+
+# Args: SlotStr (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when list field slot is numeric"
+    definition = "CMMCachedFieldIsNumeric(SlotStr)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate('cmm_list_ft_', SlotStr), '3')"
+}
+
+# Args: SlotStr (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when list field slot is slider"
+    definition = "CMMCachedFieldIsSlider(SlotStr)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate('cmm_list_ft_', SlotStr), '4')"
+}
+
+# Args: SlotStr (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when list field slot is data"
+    definition = "CMMCachedFieldIsData(SlotStr)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate('cmm_list_ft_', SlotStr), '5')"
+}
+
+# Cached format checks (slot ordinal as string)
+# Args: SlotStr (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when list field has no registered format"
+    definition = "CMMCachedFieldNoFormat(SlotStr)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate('cmm_list_hf_', SlotStr), '0')"
+}
+
+# Args: SlotStr (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when list field has simple format"
+    definition = "CMMCachedFieldHasSimpleFormat(SlotStr)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate('cmm_list_hf_', SlotStr), '1')"
+}
+
+# Args: SlotStr (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when list field has conditional format"
+    definition = "CMMCachedFieldHasConditionalFormat(SlotStr)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate('cmm_list_hf_', SlotStr), '2')"
 }
