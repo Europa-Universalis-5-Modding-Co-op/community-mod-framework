@@ -179,6 +179,22 @@ macro = {
 # Args: SettingKey (string), SlotKey (string)
 # Returns: boolean
 macro = {
+    description = "True when a _desc localization key exists for one list field"
+    definition = "CMMListFieldHasDesc(SettingKey,SlotKey)"
+    replace_with = "Not(EqualTo_string(Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_desc')), Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_desc')))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Resolved _desc localization text for one list field"
+    definition = "CMMListFieldDescText(SettingKey,SlotKey)"
+    replace_with = "Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_desc'))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
     description = "True when a _postfix localization key exists for one list field"
     definition = "CMMListFieldHasPostfix(SettingKey,SlotKey)"
     replace_with = "Not(EqualTo_string(Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_postfix')), Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_postfix')))"
