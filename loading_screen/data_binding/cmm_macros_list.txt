@@ -211,9 +211,97 @@ macro = {
 # Args: SettingKey (string), SlotKey (string)
 # Returns: boolean
 macro = {
-    description = "True when any formatting (postfix or prefix) exists for one list field"
+    description = "True when a _postfix_low localization key exists for one list field"
+    definition = "CMMListFieldHasPostfixLow(SettingKey,SlotKey)"
+    replace_with = "Not(EqualTo_string(Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_postfix_low')), Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_postfix_low')))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Resolved _postfix_low localization text for one list field"
+    definition = "CMMListFieldPostfixLow(SettingKey,SlotKey)"
+    replace_with = "Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_postfix_low'))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a _prefix_low localization key exists for one list field"
+    definition = "CMMListFieldHasPrefixLow(SettingKey,SlotKey)"
+    replace_with = "Not(EqualTo_string(Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_prefix_low')), Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_prefix_low')))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Resolved _prefix_low localization text for one list field"
+    definition = "CMMListFieldPrefixLow(SettingKey,SlotKey)"
+    replace_with = "Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_prefix_low'))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a _postfix_high localization key exists for one list field"
+    definition = "CMMListFieldHasPostfixHigh(SettingKey,SlotKey)"
+    replace_with = "Not(EqualTo_string(Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_postfix_high')), Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_postfix_high')))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Resolved _postfix_high localization text for one list field"
+    definition = "CMMListFieldPostfixHigh(SettingKey,SlotKey)"
+    replace_with = "Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_postfix_high'))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a _prefix_high localization key exists for one list field"
+    definition = "CMMListFieldHasPrefixHigh(SettingKey,SlotKey)"
+    replace_with = "Not(EqualTo_string(Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_prefix_high')), Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_prefix_high')))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Resolved _prefix_high localization text for one list field"
+    definition = "CMMListFieldPrefixHigh(SettingKey,SlotKey)"
+    replace_with = "Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_prefix_high'))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when conditional formatting (any _low or _high variant) exists for one list field"
+    definition = "CMMListFieldHasConditionalFormat(SettingKey,SlotKey)"
+    replace_with = "Or(Or(CMMListFieldHasPrefixLow(SettingKey, SlotKey), CMMListFieldHasPostfixLow(SettingKey, SlotKey)), Or(CMMListFieldHasPrefixHigh(SettingKey, SlotKey), CMMListFieldHasPostfixHigh(SettingKey, SlotKey)))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when any formatting (postfix, prefix, or conditional) exists for one list field"
     definition = "CMMListFieldHasFormat(SettingKey,SlotKey)"
-    replace_with = "Or(CMMListFieldHasPostfix(SettingKey, SlotKey), CMMListFieldHasPrefix(SettingKey, SlotKey))"
+    replace_with = "Or(Or(CMMListFieldHasPostfix(SettingKey, SlotKey), CMMListFieldHasPrefix(SettingKey, SlotKey)), CMMListFieldHasConditionalFormat(SettingKey, SlotKey))"
+}
+
+# Args: SettingKey (string), ItemKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Conditional prefix: selects _prefix_high (>0), _prefix (==0), or _prefix_low (<0) based on field value sign"
+    definition = "CMMListFieldResolvedPrefix(SettingKey,ItemKey,SlotKey)"
+    replace_with = "Select_CString(And(GreaterThan_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotKey), '(CFixedPoint)0'), CMMListFieldHasPrefixHigh(SettingKey, SlotKey)), CMMListFieldPrefixHigh(SettingKey, SlotKey), Select_CString(And(LessThan_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotKey), '(CFixedPoint)0'), CMMListFieldHasPrefixLow(SettingKey, SlotKey)), CMMListFieldPrefixLow(SettingKey, SlotKey), AddTextIf(CMMListFieldHasPrefix(SettingKey, SlotKey), CMMListFieldPrefix(SettingKey, SlotKey))))"
+}
+
+# Args: SettingKey (string), ItemKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Conditional postfix: selects _postfix_high (>0), _postfix (==0), or _postfix_low (<0) based on field value sign"
+    definition = "CMMListFieldResolvedPostfix(SettingKey,ItemKey,SlotKey)"
+    replace_with = "Select_CString(And(GreaterThan_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotKey), '(CFixedPoint)0'), CMMListFieldHasPostfixHigh(SettingKey, SlotKey)), CMMListFieldPostfixHigh(SettingKey, SlotKey), Select_CString(And(LessThan_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotKey), '(CFixedPoint)0'), CMMListFieldHasPostfixLow(SettingKey, SlotKey)), CMMListFieldPostfixLow(SettingKey, SlotKey), AddTextIf(CMMListFieldHasPostfix(SettingKey, SlotKey), CMMListFieldPostfix(SettingKey, SlotKey))))"
 }
 
 # Args: ItemKey (string), SlotKey (string)
