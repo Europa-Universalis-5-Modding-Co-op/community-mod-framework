@@ -439,6 +439,29 @@ cmm_set_list_field_format = {
 	}
 }
 
+# Mark a list field as having sign-conditional prefix/postfix format localization keys (_high/_low variants).
+# Enables conditional value display that selects between _prefix_high/_postfix_high (value > 0),
+# _prefix_low/_postfix_low (value < 0), and _prefix/_postfix (value == 0).
+# Call after the field has been registered (e.g. cmm_register_list_numeric_field).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id to mark as conditionally formatted.
+cmm_set_list_field_conditional_format = {
+	if = {
+		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = { set_variable = { name = cmm_list_field_1_has_format_$mod_id$__$setting_id$ value = 2 } }
+			2 = { set_variable = { name = cmm_list_field_2_has_format_$mod_id$__$setting_id$ value = 2 } }
+			3 = { set_variable = { name = cmm_list_field_3_has_format_$mod_id$__$setting_id$ value = 2 } }
+			4 = { set_variable = { name = cmm_list_field_4_has_format_$mod_id$__$setting_id$ value = 2 } }
+			5 = { set_variable = { name = cmm_list_field_5_has_format_$mod_id$__$setting_id$ value = 2 } }
+		}
+	}
+}
+
 # Disable one field column for one specific item in a list setting.
 # The field cell will render as empty space, preserving column alignment.
 # Call after the field has been registered (e.g. cmm_register_list_bool_field).

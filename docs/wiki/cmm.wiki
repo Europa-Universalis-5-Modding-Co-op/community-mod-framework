@@ -232,7 +232,7 @@ cmm_set_list_field_format = {
 	field_id = weight
 }
 </syntaxhighlight>
-Then define <code>_prefix</code> / <code>_postfix</code> localization keys (and optional <code>_prefix_high</code> / <code>_postfix_high</code> / <code>_prefix_low</code> / <code>_postfix_low</code> for sign-conditional formatting).
+Then define <code>_prefix</code> / <code>_postfix</code> localization keys. For sign-conditional formatting (<code>_prefix_high</code> / <code>_postfix_high</code> / <code>_prefix_low</code> / <code>_postfix_low</code>), use <code>cmm_set_list_field_conditional_format</code> instead.
 
 === Disabling Fields for Specific Items ===
 Disable a field column for specific items so the cell renders as empty space:

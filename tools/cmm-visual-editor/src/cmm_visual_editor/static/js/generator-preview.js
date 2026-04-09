@@ -381,7 +381,13 @@ ${prefix}_on_cmf_callback = {
             lines.push(`\t}`);
         }
         // List field format flag
-        if (field.display_format || field.display_format_high || field.display_format_low) {
+        if (field.display_format_high || field.display_format_low) {
+            lines.push(`\tcmm_set_list_field_conditional_format = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${settingId}`);
+            lines.push(`\t\tfield_id = ${field.field_id}`);
+            lines.push(`\t}`);
+        } else if (field.display_format) {
             lines.push(`\tcmm_set_list_field_format = {`);
             lines.push(`\t\tmod_id = ${modId}`);
             lines.push(`\t\tsetting_id = ${settingId}`);

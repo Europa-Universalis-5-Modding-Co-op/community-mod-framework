@@ -435,7 +435,13 @@ def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField
         lines.append(f"\t\tstep_value = {_num(field.step_value, 1)}")
         lines.append(f"\t}}")
     # List field format flag
-    if field.display_format or field.display_format_high or field.display_format_low:
+    if field.display_format_high or field.display_format_low:
+        lines.append(f"\tcmm_set_list_field_conditional_format = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting_id}")
+        lines.append(f"\t\tfield_id = {field.field_id}")
+        lines.append(f"\t}}")
+    elif field.display_format:
         lines.append(f"\tcmm_set_list_field_format = {{")
         lines.append(f"\t\tmod_id = {mod_id}")
         lines.append(f"\t\tsetting_id = {setting_id}")
