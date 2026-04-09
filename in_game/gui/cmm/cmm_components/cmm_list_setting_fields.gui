@@ -285,14 +285,14 @@
 					align = center|nobaseline
 					autoresize = no
 					visible = "[CMMCachedFieldHasSimpleFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
-					text = "[AddTextIf(CMMListFieldHasPrefix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldPrefix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMListFieldHasPostfix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldPostfix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+					text = "[AddTextIf(CMMCachedFieldHasPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMCachedFieldHasPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 				}
 				text_single = {
 					size = { 100% 100% }
 					align = center|nobaseline
 					autoresize = no
 					visible = "[CMMCachedFieldHasConditionalFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
-					text = "[CMMListFieldConditionalPrefix(CMMCachedListSettingKey, Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListFieldConditionalPostfix(CMMCachedListSettingKey, Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+					text = "[CMMCachedConditionalPrefix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMCachedConditionalPostfix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				}
 			}
 		}
@@ -1312,14 +1312,14 @@
 				align = center|nobaseline
 				autoresize = no
 				visible = "[CMMCachedFieldHasSimpleFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
-				text = "[AddTextIf(CMMListFieldHasPrefix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldPrefix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMListFieldHasPostfix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldPostfix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+				text = "[AddTextIf(CMMCachedFieldHasPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMCachedFieldHasPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 			}
 			text_single = {
 				size = { 100% 100% }
 				align = center|nobaseline
 				autoresize = no
 				visible = "[CMMCachedFieldHasConditionalFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
-				text = "[CMMListFieldConditionalPrefix(CMMCachedListSettingKey, Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListFieldConditionalPostfix(CMMCachedListSettingKey, Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				text = "[CMMCachedConditionalPrefix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMCachedConditionalPostfix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 		}
 	}
@@ -1360,7 +1360,7 @@
 				autoresize = no
 				default_format = "#medium"
 				visible = "[CMMCachedFieldHasSimpleFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
-				text = "[AddTextIf(CMMListFieldHasPrefix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldPrefix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMListFieldHasPostfix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldPostfix(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+				text = "[AddTextIf(CMMCachedFieldHasPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMCachedFieldHasPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 			}
 			text_single = {
 				size = { 100% 100% }
@@ -1368,7 +1368,7 @@
 				autoresize = no
 				default_format = "#medium"
 				visible = "[CMMCachedFieldHasConditionalFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
-				text = "[CMMListFieldConditionalPrefix(CMMCachedListSettingKey, Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListFieldConditionalPostfix(CMMCachedListSettingKey, Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				text = "[CMMCachedConditionalPrefix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMCachedConditionalPostfix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 		}
 	}
