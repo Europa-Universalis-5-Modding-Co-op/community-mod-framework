@@ -235,7 +235,7 @@ macro = {
 # Args: SettingKey (string)
 # Returns: value
 macro = {
-    description = "Setting value by key (works in localization [expr] context where Scope is unavailable)"
+    description = "Setting value by key (works in localization [expr] context; uses Player.MakeScope because Scope is unavailable)"
     definition = "CMMV(SettingKey)"
     replace_with = "Select_CFixedPoint(EqualTo_CFixedPoint(Player.MakeScope.GetVariableFromVariableMap('cmm_is_global', MakeScopeFlag(SettingKey)).GetValue, '(CFixedPoint)1'), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(SettingKey)).GetValue, Player.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag(SettingKey)).GetValue)"
 }
