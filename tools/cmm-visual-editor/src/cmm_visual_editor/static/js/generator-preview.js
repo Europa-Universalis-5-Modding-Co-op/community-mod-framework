@@ -380,6 +380,14 @@ ${prefix}_on_cmf_callback = {
             lines.push(`\t\tstep_value = ${this._num(field.step_value, 1)}`);
             lines.push(`\t}`);
         }
+        // List field format flag
+        if (field.display_format || field.display_format_high || field.display_format_low) {
+            lines.push(`\tcmm_set_list_field_format = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${settingId}`);
+            lines.push(`\t\tfield_id = ${field.field_id}`);
+            lines.push(`\t}`);
+        }
         // Per-item field disables
         for (const item of (field.disabled_items || [])) {
             lines.push(`\tcmm_disable_list_field_for_item = {`);

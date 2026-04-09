@@ -417,6 +417,28 @@ cmm_register_list_data_field = {
 	}
 }
 
+# Mark a list field as having prefix/postfix format localization keys.
+# Enables formatted value display (prefix + value + postfix) for numeric, slider, and data fields.
+# Call after the field has been registered (e.g. cmm_register_list_numeric_field).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id to mark as formatted.
+cmm_set_list_field_format = {
+	if = {
+		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = { set_variable = { name = cmm_list_field_1_has_format_$mod_id$__$setting_id$ value = 1 } }
+			2 = { set_variable = { name = cmm_list_field_2_has_format_$mod_id$__$setting_id$ value = 1 } }
+			3 = { set_variable = { name = cmm_list_field_3_has_format_$mod_id$__$setting_id$ value = 1 } }
+			4 = { set_variable = { name = cmm_list_field_4_has_format_$mod_id$__$setting_id$ value = 1 } }
+			5 = { set_variable = { name = cmm_list_field_5_has_format_$mod_id$__$setting_id$ value = 1 } }
+		}
+	}
+}
+
 # Disable one field column for one specific item in a list setting.
 # The field cell will render as empty space, preserving column alignment.
 # Call after the field has been registered (e.g. cmm_register_list_bool_field).
