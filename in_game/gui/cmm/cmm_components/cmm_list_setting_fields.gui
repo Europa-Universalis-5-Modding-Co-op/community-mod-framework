@@ -46,7 +46,7 @@
 	type cmm_list_setting_row_fields = hbox {
 		ignoreinvisible = yes
 		spacing = 8
-		datamodel = "[DataModelRepeatedItem(CMMListFieldCount(CMMCachedListSettingKey))]"
+		datamodel = "[DataModelRepeatedItem(CMMListFieldCount(CMMListItemOwnerSettingKey(Scope.GetFlagName)))]"
 		datamodel_reuse_widgets = yes
 
 		item = {
@@ -63,7 +63,7 @@
 	# - GetVariableSystem.Set('cmm_list_hover_field_slot', ...) [effect]: caches the currently hovered field slot.
 	type cmm_list_setting_field_cell = widget {
 		minimumsize = { 0 28 }
-		min_width = "[CMMListFieldWidth(CMMCachedListSettingKey, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+		min_width = "[CMMListFieldWidth(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 		max_width = 198
 		onmousehierarchyenter = "[GetVariableSystem.Set('cmm_list_hover_field_slot', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 
@@ -82,23 +82,23 @@
 			enabled = "[GetVariableSystem.HasValue('cmm_can_edit_list', 'yes')]"
 
 			cmm_list_setting_bool_field = {
-				visible = "[CMMCachedFieldIsBool(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[CMMListFieldIsBool(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 
 			cmm_list_setting_numeric_field = {
-				visible = "[CMMCachedFieldIsNumeric(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[CMMListFieldIsNumeric(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 
 			cmm_list_setting_dropdown_field = {
-				visible = "[CMMCachedFieldIsDropdown(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[CMMListFieldIsDropdown(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 
 			cmm_list_setting_slider_field = {
-				visible = "[CMMCachedFieldIsSlider(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[CMMListFieldIsSlider(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 
 			cmm_list_setting_data_field = {
-				visible = "[CMMCachedFieldIsData(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[CMMListFieldIsData(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 		}
 	}
@@ -279,7 +279,7 @@
 									textbox = {
 										using = text_single_template
 										align = left|nobaseline
-										raw_text = "[CMMListFieldMetadataValue(CMMCachedListSettingKey, GetVariableSystem.Get('cmm_list_hover_field_slot'), '_min_')] - [CMMListFieldMetadataValue(CMMCachedListSettingKey, GetVariableSystem.Get('cmm_list_hover_field_slot'), '_max_')]"
+										raw_text = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_min_')] - [CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_max_')]"
 									}
 								}
 							}
@@ -291,21 +291,21 @@
 					size = { 100% 100% }
 					align = center|nobaseline
 					autoresize = no
-					visible = "[CMMCachedFieldNoFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+					visible = "[Not(CMMListFieldHasRegisteredFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 					text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				}
 				text_single = {
 					size = { 100% 100% }
 					align = center|nobaseline
 					autoresize = no
-					visible = "[CMMCachedFieldHasSimpleFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+					visible = "[CMMListFieldHasSimpleFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 					text = "[AddTextIf(CMMCachedFieldHasPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMCachedFieldHasPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 				}
 				text_single = {
 					size = { 100% 100% }
 					align = center|nobaseline
 					autoresize = no
-					visible = "[CMMCachedFieldHasConditionalFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+					visible = "[CMMListFieldHasConditionalFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 					text = "[CMMCachedConditionalPrefix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMCachedConditionalPostfix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				}
 			}
@@ -387,7 +387,7 @@
 			widgetanchor = center
 			visible = "[EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)0')]"
 			alwaystransparent = no
-			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMCachedListSettingKey, '1', '_dropdown_count_'))]"
+			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), '1', '_dropdown_count_'))]"
 			selectedindex = "[CMMListItemFieldWidgetIndex(Scope.GetFlagName, '1')]"
 			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '1')]"
@@ -435,7 +435,7 @@
 							autoresize = no
 							align = left|nobaseline
 							fontsize_min = 13
-							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMCachedListSettingKey, '1', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '1'))]"
+							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '1', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '1'))]"
 						}
 
 						icon = {
@@ -468,7 +468,7 @@
 						align = left|nobaseline
 						fontsize_min = 13
 						default_format = "#medium"
-						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMCachedListSettingKey, '1', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
+						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '1', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
 					}
 				}
 			}
@@ -511,7 +511,7 @@
 			widgetanchor = center
 			visible = "[EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)1')]"
 			alwaystransparent = no
-			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMCachedListSettingKey, '2', '_dropdown_count_'))]"
+			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), '2', '_dropdown_count_'))]"
 			selectedindex = "[CMMListItemFieldWidgetIndex(Scope.GetFlagName, '2')]"
 			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '2')]"
@@ -559,7 +559,7 @@
 							autoresize = no
 							align = left|nobaseline
 							fontsize_min = 13
-							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMCachedListSettingKey, '2', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '2'))]"
+							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '2', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '2'))]"
 						}
 
 						icon = {
@@ -592,7 +592,7 @@
 						align = left|nobaseline
 						fontsize_min = 13
 						default_format = "#medium"
-						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMCachedListSettingKey, '2', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
+						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '2', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
 					}
 				}
 			}
@@ -635,7 +635,7 @@
 			widgetanchor = center
 			visible = "[EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)2')]"
 			alwaystransparent = no
-			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMCachedListSettingKey, '3', '_dropdown_count_'))]"
+			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), '3', '_dropdown_count_'))]"
 			selectedindex = "[CMMListItemFieldWidgetIndex(Scope.GetFlagName, '3')]"
 			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '3')]"
@@ -683,7 +683,7 @@
 							autoresize = no
 							align = left|nobaseline
 							fontsize_min = 13
-							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMCachedListSettingKey, '3', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '3'))]"
+							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '3', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '3'))]"
 						}
 
 						icon = {
@@ -716,7 +716,7 @@
 						align = left|nobaseline
 						fontsize_min = 13
 						default_format = "#medium"
-						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMCachedListSettingKey, '3', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
+						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '3', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
 					}
 				}
 			}
@@ -759,7 +759,7 @@
 			widgetanchor = center
 			visible = "[EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)3')]"
 			alwaystransparent = no
-			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMCachedListSettingKey, '4', '_dropdown_count_'))]"
+			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), '4', '_dropdown_count_'))]"
 			selectedindex = "[CMMListItemFieldWidgetIndex(Scope.GetFlagName, '4')]"
 			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '4')]"
@@ -807,7 +807,7 @@
 							autoresize = no
 							align = left|nobaseline
 							fontsize_min = 13
-							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMCachedListSettingKey, '4', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '4'))]"
+							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '4', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '4'))]"
 						}
 
 						icon = {
@@ -840,7 +840,7 @@
 						align = left|nobaseline
 						fontsize_min = 13
 						default_format = "#medium"
-						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMCachedListSettingKey, '4', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
+						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '4', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
 					}
 				}
 			}
@@ -883,7 +883,7 @@
 			widgetanchor = center
 			visible = "[EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)4')]"
 			alwaystransparent = no
-			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMCachedListSettingKey, '5', '_dropdown_count_'))]"
+			datamodel = "[DataModelRepeatedItem(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), '5', '_dropdown_count_'))]"
 			selectedindex = "[CMMListItemFieldWidgetIndex(Scope.GetFlagName, '5')]"
 			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 			onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '5')]"
@@ -931,7 +931,7 @@
 							autoresize = no
 							align = left|nobaseline
 							fontsize_min = 13
-							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMCachedListSettingKey, '5', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '5'))]"
+							text = "[CMMOptionLabel(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '5', '_option_root_'), CMMListItemFieldInt(Scope.GetFlagName, '5'))]"
 						}
 
 						icon = {
@@ -964,7 +964,7 @@
 						align = left|nobaseline
 						fontsize_min = 13
 						default_format = "#medium"
-						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMCachedListSettingKey, '5', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
+						text = "[CMMOptionLabelFromWidgetIndex(CMMListFieldMetadataFlag(CMMListItemOwnerSettingKey(Scope.GetFlagName), '5', '_option_root_'), PdxGuiWidget.GetIndexInDataModel)]"
 					}
 				}
 			}
@@ -1100,8 +1100,8 @@
 						minimumsize = { -1 14 }
 						enabled = "[GetVariableSystem.HasValue('cmm_can_edit_list', 'yes')]"
 						min = 0
-						max = "[CMMListFieldSliderNormalizedMax(CMMCachedListSettingKey, GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-						step = "[CMMListFieldMetadataValue(CMMCachedListSettingKey, GetVariableSystem.Get('cmm_list_hover_field_slot'), '_step_')]"
+						max = "[CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+						step = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_step_')]"
 						wheelstep = 0
 						value = "[CMMListFieldSliderNormalizedValue(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
 
@@ -1333,7 +1333,7 @@
 								textbox = {
 									using = text_single_template
 									align = left|nobaseline
-									raw_text = "[CMMListFieldMetadataValue(CMMCachedListSettingKey, GetVariableSystem.Get('cmm_list_hover_field_slot'), '_min_')] - [CMMListFieldMetadataValue(CMMCachedListSettingKey, GetVariableSystem.Get('cmm_list_hover_field_slot'), '_max_')]"
+									raw_text = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_min_')] - [CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_max_')]"
 								}
 							}
 						}
@@ -1345,21 +1345,21 @@
 				size = { 100% 100% }
 				align = center|nobaseline
 				autoresize = no
-				visible = "[CMMCachedFieldNoFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[Not(CMMListFieldHasRegisteredFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 				text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 			text_single = {
 				size = { 100% 100% }
 				align = center|nobaseline
 				autoresize = no
-				visible = "[CMMCachedFieldHasSimpleFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[CMMListFieldHasSimpleFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				text = "[AddTextIf(CMMCachedFieldHasPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMCachedFieldHasPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 			}
 			text_single = {
 				size = { 100% 100% }
 				align = center|nobaseline
 				autoresize = no
-				visible = "[CMMCachedFieldHasConditionalFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[CMMListFieldHasConditionalFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				text = "[CMMCachedConditionalPrefix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMCachedConditionalPostfix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 		}
@@ -1392,7 +1392,7 @@
 				align = center|nobaseline
 				autoresize = no
 				default_format = "#medium"
-				visible = "[CMMCachedFieldNoFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[Not(CMMListFieldHasRegisteredFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 				text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 			text_single = {
@@ -1400,7 +1400,7 @@
 				align = center|nobaseline
 				autoresize = no
 				default_format = "#medium"
-				visible = "[CMMCachedFieldHasSimpleFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[CMMListFieldHasSimpleFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				text = "[AddTextIf(CMMCachedFieldHasPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMCachedFieldHasPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 			}
 			text_single = {
@@ -1408,7 +1408,7 @@
 				align = center|nobaseline
 				autoresize = no
 				default_format = "#medium"
-				visible = "[CMMCachedFieldHasConditionalFormat(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				visible = "[CMMListFieldHasConditionalFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				text = "[CMMCachedConditionalPrefix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMCachedConditionalPostfix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 		}
