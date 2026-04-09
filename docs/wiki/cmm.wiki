@@ -233,7 +233,7 @@ cmm_disable_list_field_for_item = {
 	item = 2
 }
 </syntaxhighlight>
-Call after registering the field. Shift+click "apply to all" skips disabled items. Use <code>cmm_enable_list_field_for_item</code> with the same parameters to re-enable.
+Call after registering the field. Right-click "apply to all" skips disabled items. Use <code>cmm_enable_list_field_for_item</code> with the same parameters to re-enable.
 
 === Hiding Specific Items ===
 Hide entire item rows from the menu (items remain in the datamodel):

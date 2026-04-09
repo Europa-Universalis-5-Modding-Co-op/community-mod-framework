@@ -167,7 +167,6 @@
 							action_tooltip = {
 								click_mode = single
 								click_type = left
-								click_modifier = default
 								title = "CMM_LIST_MOVE_UP"
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveUp')]"
@@ -176,8 +175,7 @@
 
 							action_tooltip = {
 								click_mode = single
-								click_type = left
-								click_modifier = shift
+								click_type = right
 								title = "CMM_LIST_MOVE_TO_TOP"
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveToTop')]"
@@ -209,7 +207,6 @@
 							action_tooltip = {
 								click_mode = single
 								click_type = left
-								click_modifier = default
 								title = "CMM_LIST_MOVE_DOWN"
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveDown')]"
@@ -218,8 +215,7 @@
 
 							action_tooltip = {
 								click_mode = single
-								click_type = left
-								click_modifier = shift
+								click_type = right
 								title = "CMM_LIST_MOVE_TO_BOTTOM"
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveToBottom')]"

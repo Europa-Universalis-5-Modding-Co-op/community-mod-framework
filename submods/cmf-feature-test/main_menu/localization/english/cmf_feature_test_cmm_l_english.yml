@@ -129,6 +129,7 @@
  cmf_feature_test__dynamic_list__active_name: "Active"
  cmf_feature_test__dynamic_list__priority_name: "Priority"
  cmf_feature_test__dynamic_list__intensity_name: "Intensity"
+ cmf_feature_test__dynamic_list__score_name: "Score"
  ## From-List (from_list) Group
  cmf_feature_test__lists__from_list_name: "From-List"
  cmf_feature_test__lists__from_list_desc: "Unordered list built from a country variable list."
