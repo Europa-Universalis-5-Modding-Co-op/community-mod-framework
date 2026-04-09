@@ -167,6 +167,18 @@ _cmm_initialize_list_bool_field_slot = {
 		value = 1
 	}
 	set_variable = {
+		name = cmm_list_field_$slot$_width_$mod_id$__$setting_id$
+		value = 48
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
+		value = 48
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$
+		value = 0
+	}
+	set_variable = {
 		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
 		value = flag:$mod_id$__$setting_id$__$field_id$_name
 	}
@@ -258,6 +270,18 @@ _cmm_initialize_list_dropdown_field_slot = {
 	set_variable = {
 		name = cmm_list_field_$slot$_type_$mod_id$__$setting_id$
 		value = 2
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_width_$mod_id$__$setting_id$
+		value = 132
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
+		value = 132
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$
+		value = 0
 	}
 	set_variable = {
 		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
@@ -376,6 +400,18 @@ _cmm_initialize_list_numeric_field_slot = {
 		value = 3
 	}
 	set_variable = {
+		name = cmm_list_field_$slot$_width_$mod_id$__$setting_id$
+		value = 132
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
+		value = 132
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$
+		value = 0
+	}
+	set_variable = {
 		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
 		value = flag:$mod_id$__$setting_id$__$field_id$_name
 	}
@@ -483,6 +519,18 @@ _cmm_initialize_list_slider_field_slot = {
 		value = 4
 	}
 	set_variable = {
+		name = cmm_list_field_$slot$_width_$mod_id$__$setting_id$
+		value = 198
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
+		value = 160
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$
+		value = 0
+	}
+	set_variable = {
 		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
 		value = flag:$mod_id$__$setting_id$__$field_id$_name
 	}
@@ -571,6 +619,18 @@ _cmm_initialize_list_data_field_slot = {
 	set_variable = {
 		name = cmm_list_field_$slot$_type_$mod_id$__$setting_id$
 		value = 5
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_width_$mod_id$__$setting_id$
+		value = 132
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
+		value = 132
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$
+		value = 0
 	}
 	set_variable = {
 		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
@@ -736,6 +796,21 @@ _cmm_suppress_list_bool_field_warnings = {
 		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_has_format_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_1_min_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_2_min_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_3_min_$mod_id$__$setting_id$ }
@@ -777,6 +852,21 @@ _cmm_suppress_list_dropdown_field_warnings = {
 		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_has_format_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_1_option_root_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_2_option_root_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_3_option_root_$mod_id$__$setting_id$ }
@@ -823,6 +913,21 @@ _cmm_suppress_list_numeric_field_warnings = {
 		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_has_format_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_1_min_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_2_min_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_3_min_$mod_id$__$setting_id$ }
@@ -864,6 +969,21 @@ _cmm_suppress_list_slider_field_warnings = {
 		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_has_format_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_1_min_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_2_min_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_3_min_$mod_id$__$setting_id$ }
@@ -910,5 +1030,20 @@ _cmm_suppress_list_data_field_warnings = {
 		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_has_format_$mod_id$__$setting_id$ }
 	}
 }
