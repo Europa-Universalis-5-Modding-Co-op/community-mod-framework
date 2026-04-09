@@ -20,6 +20,35 @@
 		spacing = 1
 		margin = { 6 8 }
 
+		state = {
+			name = cmm_can_edit_list_on
+			trigger_when = "[CMMCanEditSetting(Scope.GetFlagName)]"
+			on_start = "[GetVariableSystem.Set('cmm_can_edit_list', 'yes')]"
+		}
+
+		state = {
+			name = cmm_can_edit_list_off
+			trigger_when = "[Not(CMMCanEditSetting(Scope.GetFlagName))]"
+			on_start = "[GetVariableSystem.Set('cmm_can_edit_list', 'no')]"
+		}
+
+		state = {
+			name = cmm_cache_list_metadata
+			trigger_when = "[Not(GetVariableSystem.HasValue('cmm_list_sk', Scope.GetFlagName))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_sk', Scope.GetFlagName)]"
+			on_start = "[GetVariableSystem.Set('cmm_list_is_global', Select_CString(CMMSettingIsGlobal(Scope.GetFlagName), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_ft_1', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '1', '_type_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_ft_2', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '2', '_type_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_ft_3', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '3', '_type_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_ft_4', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '4', '_type_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_ft_5', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '5', '_type_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hf_1', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '1', '_has_format_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hf_2', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '2', '_has_format_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hf_3', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '3', '_has_format_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hf_4', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '4', '_has_format_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hf_5', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '5', '_has_format_')))]"
+		}
+
 		widget = {
 			layoutpolicy_horizontal = expanding
 			minimumsize = { 0 32 }
@@ -147,6 +176,7 @@
 				size = { 56 28 }
 				minimumsize = { 56 28 }
 				visible = "[CMMListItemSettingIsOrdered(Scope.GetFlagName)]"
+				enabled = "[GetVariableSystem.HasValue('cmm_can_edit_list', 'yes')]"
 
 				hbox = {
 					parentanchor = center
@@ -162,7 +192,6 @@
 							parentanchor = center
 							widgetanchor = center
 							visible = "[Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)0'))]"
-							enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
 
 							action_tooltip = {
 								click_mode = single
@@ -201,8 +230,7 @@
 							size = { 24 24 }
 							parentanchor = center
 							widgetanchor = center
-							visible = "[Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, CMMMapInt('cmm_list_last_index', CMMListItemOwnerSettingKey(Scope.GetFlagName))))]"
-							enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
+							visible = "[Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, CMMMapInt('cmm_list_last_index', CMMCachedListSettingKey)))]"
 
 							action_tooltip = {
 								click_mode = single
