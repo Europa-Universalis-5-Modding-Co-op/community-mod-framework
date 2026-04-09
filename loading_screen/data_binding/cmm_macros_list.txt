@@ -508,7 +508,7 @@ macro = {
 macro = {
     description = "Cached: sign-conditional prefix using cached loc keys"
     definition = "CMMCachedConditionalPrefix(ItemKey,SlotStr)"
-    replace_with = "Select_CString(GreaterThan_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotStr), '(CFixedPoint)0'), CMMCachedFieldPrefixHigh(SlotStr), Select_CString(LessThan_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotStr), '(CFixedPoint)0'), CMMCachedFieldPrefixLow(SlotStr), AddTextIf(CMMCachedFieldHasPrefix(SlotStr), CMMCachedFieldPrefix(SlotStr))))"
+    replace_with = "Select_CString(GetVariableSystem.HasValue(Concatenate(ItemKey, Concatenate('_fs_', SlotStr)), '1'), CMMCachedFieldPrefixHigh(SlotStr), Select_CString(GetVariableSystem.HasValue(Concatenate(ItemKey, Concatenate('_fs_', SlotStr)), '-1'), CMMCachedFieldPrefixLow(SlotStr), AddTextIf(CMMCachedFieldHasPrefix(SlotStr), CMMCachedFieldPrefix(SlotStr))))"
 }
 
 # Args: ItemKey (string), SlotStr (string)
@@ -516,5 +516,5 @@ macro = {
 macro = {
     description = "Cached: sign-conditional postfix using cached loc keys"
     definition = "CMMCachedConditionalPostfix(ItemKey,SlotStr)"
-    replace_with = "Select_CString(GreaterThan_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotStr), '(CFixedPoint)0'), CMMCachedFieldPostfixHigh(SlotStr), Select_CString(LessThan_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotStr), '(CFixedPoint)0'), CMMCachedFieldPostfixLow(SlotStr), AddTextIf(CMMCachedFieldHasPostfix(SlotStr), CMMCachedFieldPostfix(SlotStr))))"
+    replace_with = "Select_CString(GetVariableSystem.HasValue(Concatenate(ItemKey, Concatenate('_fs_', SlotStr)), '1'), CMMCachedFieldPostfixHigh(SlotStr), Select_CString(GetVariableSystem.HasValue(Concatenate(ItemKey, Concatenate('_fs_', SlotStr)), '-1'), CMMCachedFieldPostfixLow(SlotStr), AddTextIf(CMMCachedFieldHasPostfix(SlotStr), CMMCachedFieldPostfix(SlotStr))))"
 }
