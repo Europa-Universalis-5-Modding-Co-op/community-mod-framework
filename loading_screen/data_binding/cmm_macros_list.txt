@@ -153,19 +153,27 @@ macro = {
 }
 
 # Args: SettingKey (string), SlotKey (string)
-# Returns: int32
+# Returns: boolean
 macro = {
-    description = "Pixel width for one list field cell: 198 slider, 48 bool, 132 other"
-    definition = "CMMListFieldWidth(SettingKey,SlotKey)"
-    replace_with = "Select_int32(CMMListFieldIsSlider(SettingKey, SlotKey), '(int32)198', Select_int32(CMMListFieldIsBool(SettingKey, SlotKey), '(int32)48', '(int32)132'))"
+    description = "True when one list field has registered prefix/postfix format"
+    definition = "CMMListFieldHasRegisteredFormat(SettingKey,SlotKey)"
+    replace_with = "CMMValueEqualsOne(CMMListFieldMetadataValue(SettingKey, SlotKey, '_has_format_'))"
 }
 
 # Args: SettingKey (string), SlotKey (string)
 # Returns: int32
 macro = {
-    description = "Max text width for one list field header: 160 slider, 48 bool, 132 other"
+    description = "Pixel width for one list field cell (pre-computed at registration)"
+    definition = "CMMListFieldWidth(SettingKey,SlotKey)"
+    replace_with = "CMMListFieldMetadataInt(SettingKey, SlotKey, '_width_')"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: int32
+macro = {
+    description = "Max text width for one list field header (pre-computed at registration)"
     definition = "CMMListFieldHeaderMaxWidth(SettingKey,SlotKey)"
-    replace_with = "Select_int32(CMMListFieldIsSlider(SettingKey, SlotKey), '(int32)160', Select_int32(CMMListFieldIsBool(SettingKey, SlotKey), '(int32)48', '(int32)132'))"
+    replace_with = "CMMListFieldMetadataInt(SettingKey, SlotKey, '_header_max_width_')"
 }
 
 # Args: SettingKey (string), SlotKey (string)
@@ -286,22 +294,6 @@ macro = {
     description = "Resolved _prefix_high localization text for one list field"
     definition = "CMMListFieldPrefixHigh(SettingKey,SlotKey)"
     replace_with = "Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_prefix_high'))"
-}
-
-# Args: SettingKey (string), SlotKey (string)
-# Returns: boolean
-macro = {
-    description = "True when conditional formatting (any _low or _high variant) exists for one list field"
-    definition = "CMMListFieldHasConditionalFormat(SettingKey,SlotKey)"
-    replace_with = "Or(Or(CMMListFieldHasPrefixLow(SettingKey, SlotKey), CMMListFieldHasPostfixLow(SettingKey, SlotKey)), Or(CMMListFieldHasPrefixHigh(SettingKey, SlotKey), CMMListFieldHasPostfixHigh(SettingKey, SlotKey)))"
-}
-
-# Args: SettingKey (string), SlotKey (string)
-# Returns: boolean
-macro = {
-    description = "True when any formatting (postfix, prefix, or conditional) exists for one list field"
-    definition = "CMMListFieldHasFormat(SettingKey,SlotKey)"
-    replace_with = "Or(Or(CMMListFieldHasPostfix(SettingKey, SlotKey), CMMListFieldHasPrefix(SettingKey, SlotKey)), CMMListFieldHasConditionalFormat(SettingKey, SlotKey))"
 }
 
 # Args: SettingKey (string), ItemKey (string), SlotKey (string)
