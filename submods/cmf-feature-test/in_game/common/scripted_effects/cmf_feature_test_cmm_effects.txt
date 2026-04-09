@@ -196,7 +196,7 @@ cmf_feature_test_register_cmf_mod = {
 		max_value = 5
 		step_value = 1
 	}
-	cmm_set_list_field_format = {
+	cmm_set_list_field_conditional_format = {
 		mod_id = cmf_feature_test
 		setting_id = ordered_list
 		field_id = weight
