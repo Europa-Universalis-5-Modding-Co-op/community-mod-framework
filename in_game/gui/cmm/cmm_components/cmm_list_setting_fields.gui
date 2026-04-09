@@ -82,10 +82,14 @@
 			cmm_list_setting_slider_field = {
 				visible = "[CMMListFieldIsSlider(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
+
+			cmm_list_setting_data_field = {
+				visible = "[CMMListFieldIsData(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			}
 		}
 	}
 
-	# Ordered list bool field control with optional shift-apply-to-all behavior.
+	# Ordered list bool field control with optional right-click-apply-to-all behavior.
 	# Reads:
 	# - Scope.GetFlagName [string]: current ordered list item key.
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel.
@@ -120,19 +124,21 @@
 			action_tooltip = {
 				click_mode = single
 				click_type = left
-				click_modifier = shift
-				title = "CMM_LIST_TOGGLE_ALL"
+				title = "CMM_LIST_TOGGLE"
+				on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				on_action = "[CMMExecuteGui('CMM_MarkListFieldToggle')]"
+				on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 			}
 
-			click_modifiers = {
-				ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
-				ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-				ondefault = "[CMMExecuteGui('CMM_MarkListFieldToggle')]"
-				ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
-				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
-				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-				onshift = "[CMMExecuteGui('CMM_MarkListFieldToggleAll')]"
-				onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+			action_tooltip = {
+				click_mode = single
+				click_type = right
+				title = "CMM_LIST_TOGGLE_ALL"
+				on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				on_action = "[CMMExecuteGui('CMM_MarkListFieldToggleAll')]"
+				on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 			}
 
 			tooltipwidget = {
@@ -141,7 +147,7 @@
 		}
 	}
 
-	# Ordered list numeric field control with shared numeric markers and shift-apply-to-all behavior.
+	# Ordered list numeric field control with shared numeric markers and right-click-apply-to-all behavior.
 	# Reads:
 	# - Scope.GetFlagName [string]: current ordered list item key.
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel.
@@ -168,14 +174,14 @@
 				click_mode = single
 				click_type = left
 				click_modifier = default
-				title = "CMM_NUMERIC_DECREASE"
+				title = "CMM_LIST_NUMERIC_DECREASE"
 			}
 
 			action_tooltip = {
 				click_mode = single
 				click_type = left
 				click_modifier = ctrl
-				title = "CMM_NUMERIC_DECREASE_5X"
+				title = "CMM_LIST_NUMERIC_DECREASE_5X"
 			}
 
 			action_tooltip = {
@@ -237,16 +243,12 @@
 
 					action_tooltip = {
 						click_mode = single
-						click_type = left
-						click_modifier = shift
+						click_type = right
 						title = "CMM_LIST_APPLY_NUMBER_TO_ALL"
-					}
-
-					click_modifiers = {
-						onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
-						onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-						onshift = "[CMMExecuteGui('CMM_MarkListFieldSelectNumericAll')]"
-						onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+						on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+						on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+						on_action = "[CMMExecuteGui('CMM_MarkListFieldSelectNumericAll')]"
+						on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 					}
 
 					tooltipwidget = {
@@ -294,14 +296,14 @@
 				click_mode = single
 				click_type = left
 				click_modifier = default
-				title = "CMM_NUMERIC_INCREASE"
+				title = "CMM_LIST_NUMERIC_INCREASE"
 			}
 
 			action_tooltip = {
 				click_mode = single
 				click_type = left
 				click_modifier = ctrl
-				title = "CMM_NUMERIC_INCREASE_5X"
+				title = "CMM_LIST_NUMERIC_INCREASE_5X"
 			}
 
 			action_tooltip = {
@@ -332,7 +334,7 @@
 		}
 	}
 
-	# Ordered list dropdown field control with per-slot dropdown variants and shift-apply-to-all behavior.
+	# Ordered list dropdown field control with per-slot dropdown variants and right-click-apply-to-all behavior.
 	# Reads:
 	# - Scope.GetFlagName [string]: current ordered list item key.
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel or current 0-based widget dropdown option index in option rows.
@@ -379,8 +381,18 @@
 						action_tooltip = {
 							click_mode = single
 							click_type = left
-							click_modifier = shift
+							title = "CMM_LIST_SELECT_OPTION"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = right
 							title = "CMM_LIST_APPLY_OPTION_TO_ALL"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '1')]"
+							on_action = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdownAll')]"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, '1')))]"
+							on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 						}
 
 						tooltipwidget = { BasicFunctionalTooltip = {} }
@@ -493,8 +505,18 @@
 						action_tooltip = {
 							click_mode = single
 							click_type = left
-							click_modifier = shift
+							title = "CMM_LIST_SELECT_OPTION"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = right
 							title = "CMM_LIST_APPLY_OPTION_TO_ALL"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '2')]"
+							on_action = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdownAll')]"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, '2')))]"
+							on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 						}
 
 						tooltipwidget = { BasicFunctionalTooltip = {} }
@@ -607,8 +629,18 @@
 						action_tooltip = {
 							click_mode = single
 							click_type = left
-							click_modifier = shift
+							title = "CMM_LIST_SELECT_OPTION"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = right
 							title = "CMM_LIST_APPLY_OPTION_TO_ALL"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '3')]"
+							on_action = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdownAll')]"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, '3')))]"
+							on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 						}
 
 						tooltipwidget = { BasicFunctionalTooltip = {} }
@@ -721,8 +753,18 @@
 						action_tooltip = {
 							click_mode = single
 							click_type = left
-							click_modifier = shift
+							title = "CMM_LIST_SELECT_OPTION"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = right
 							title = "CMM_LIST_APPLY_OPTION_TO_ALL"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '4')]"
+							on_action = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdownAll')]"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, '4')))]"
+							on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 						}
 
 						tooltipwidget = { BasicFunctionalTooltip = {} }
@@ -835,8 +877,18 @@
 						action_tooltip = {
 							click_mode = single
 							click_type = left
-							click_modifier = shift
+							title = "CMM_LIST_SELECT_OPTION"
+						}
+
+						action_tooltip = {
+							click_mode = single
+							click_type = right
 							title = "CMM_LIST_APPLY_OPTION_TO_ALL"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', '5')]"
+							on_action = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdownAll')]"
+							on_action = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, '5')))]"
+							on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 						}
 
 						tooltipwidget = { BasicFunctionalTooltip = {} }
@@ -922,32 +974,6 @@
 			}
 		}
 
-		button = {
-			size = { 48 28 }
-			parentanchor = center
-			widgetanchor = center
-			visible = "[UIAction.IsLeftClickModifierEnabled('shift')]"
-			enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
-			alpha = 0
-			effectname = "NoHighlight"
-
-			action_tooltip = {
-				click_mode = single
-				click_type = left
-				click_modifier = shift
-				title = "CMM_LIST_APPLY_OPTION_TO_ALL"
-			}
-
-			click_modifiers = {
-				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
-				onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
-				onshift = "[CMMExecuteGui('CMM_MarkListFieldSelectDropdownAll')]"
-				onshift = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', ToString_int32(CMMListItemFieldWidgetIndex(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))))]"
-				onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
-			}
-
-			tooltipwidget = { BasicFunctionalTooltip = {} }
-		}
 	}
 
 	# Ordered list slider field control with compact draggable scrollbar, value display, and dec/inc buttons.
@@ -994,14 +1020,14 @@
 							click_mode = single
 							click_type = left
 							click_modifier = default
-							title = "CMM_NUMERIC_DECREASE"
+							title = "CMM_LIST_NUMERIC_DECREASE"
 						}
 
 						action_tooltip = {
 							click_mode = single
 							click_type = left
 							click_modifier = ctrl
-							title = "CMM_NUMERIC_DECREASE_5X"
+							title = "CMM_LIST_NUMERIC_DECREASE_5X"
 						}
 
 						action_tooltip = {
@@ -1138,17 +1164,17 @@
 											enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
 											onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
 											onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
+											onrightclick = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+											onrightclick = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+											onrightclick = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+											onrightclick = "[CMMExecuteGui('CMM_MarkListFieldSliderAll')]"
+											onrightclick = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 
 											click_modifiers = {
 												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
 												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
 												ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
-												onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
-												onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-												onshift = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
-												onshift = "[CMMExecuteGui('CMM_MarkListFieldSliderAll')]"
-												onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 											}
 
 											tooltip_enabled = no
@@ -1200,14 +1226,14 @@
 							click_mode = single
 							click_type = left
 							click_modifier = default
-							title = "CMM_NUMERIC_INCREASE"
+							title = "CMM_LIST_NUMERIC_INCREASE"
 						}
 
 						action_tooltip = {
 							click_mode = single
 							click_type = left
 							click_modifier = ctrl
-							title = "CMM_NUMERIC_INCREASE_5X"
+							title = "CMM_LIST_NUMERIC_INCREASE_5X"
 						}
 
 						action_tooltip = {
@@ -1252,16 +1278,12 @@
 
 				action_tooltip = {
 					click_mode = single
-					click_type = left
-					click_modifier = shift
+					click_type = right
 					title = "CMM_LIST_APPLY_NUMBER_TO_ALL"
-				}
-
-				click_modifiers = {
-					onshift = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
-					onshift = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-					onshift = "[CMMExecuteGui('CMM_MarkListFieldSliderAll')]"
-					onshift = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+					on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+					on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+					on_action = "[CMMExecuteGui('CMM_MarkListFieldSliderAll')]"
+					on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 				}
 
 				tooltipwidget = {
@@ -1294,6 +1316,47 @@
 				size = { 100% 100% }
 				align = center|nobaseline
 				autoresize = no
+				visible = "[CMMListFieldHasFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+				raw_text = "[AddTextIf(CMMListFieldHasPrefix(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldPrefix(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMListFieldHasPostfix(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldPostfix(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+			}
+		}
+	}
+
+	# Ordered list data field — read-only numeric display with optional prefix/postfix.
+	# Reads:
+	# - Scope.GetFlagName [string]: current ordered list item key.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel.
+	# Writes:
+	# - none [n/a]: no writes.
+	type cmm_list_setting_data_field = widget {
+		size = { 132 28 }
+		minimumsize = { 120 28 }
+
+		widget = {
+			size = { 100% 24 }
+			parentanchor = vcenter
+			widgetanchor = vcenter
+			using = bg_square_outline_tile
+
+			background = {
+				using = color_dark_brown_texture
+				margin = { 2 2 }
+				alpha = 0.35
+			}
+
+			text_single = {
+				size = { 100% 100% }
+				align = center|nobaseline
+				autoresize = no
+				default_format = "#medium"
+				visible = "[Not(CMMListFieldHasFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+				text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			}
+			text_single = {
+				size = { 100% 100% }
+				align = center|nobaseline
+				autoresize = no
+				default_format = "#medium"
 				visible = "[CMMListFieldHasFormat(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				raw_text = "[AddTextIf(CMMListFieldHasPrefix(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldPrefix(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMListFieldHasPostfix(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldPostfix(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 			}

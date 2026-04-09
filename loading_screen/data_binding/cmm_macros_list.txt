@@ -145,6 +145,14 @@ macro = {
 }
 
 # Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list field slot is data (display-only)"
+    definition = "CMMListFieldIsData(SettingKey,SlotKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)5')"
+}
+
+# Args: SettingKey (string), SlotKey (string)
 # Returns: int32
 macro = {
     description = "Pixel width for one list field cell: 198 slider, 48 bool, 132 other"

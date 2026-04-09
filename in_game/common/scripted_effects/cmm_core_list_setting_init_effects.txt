@@ -539,6 +539,70 @@ _cmm_initialize_list_slider_field_slot = {
 	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 19 } _cmm_initialize_list_slider_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 20 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
 }
 
+# Initialize one ordered list data field value for one stable item identity.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Owner setting id.
+# - slot (number): Field slot index (`1..5`).
+# - item (number): Stable item identity ordinal (`1..20`).
+# - default_value (number): Default display value for new saves.
+# - vt (variable/global_variable): Variable type for map commands.
+# - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
+_cmm_initialize_list_data_field_item = {
+	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $is_global$ }
+	if = {
+		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
+		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_value$ }
+	}
+}
+
+# Initialize one ordered list data field slot and set its per-item values.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Owner setting id.
+# - field_id (key): Field id unique within the list setting.
+# - slot (number): Field slot index (`1..5`).
+# - default_value (number): Default display value for new saves.
+# - vt (variable/global_variable): Variable type for map commands.
+# - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
+_cmm_initialize_list_data_field_slot = {
+	set_variable = {
+		name = cmm_list_field_$slot$_type_$mod_id$__$setting_id$
+		value = 5
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
+		value = flag:$mod_id$__$setting_id$__$field_id$_name
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$
+		value = flag:$mod_id$__$setting_id$__$field_id$
+	}
+
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 0 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 1 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 1 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 2 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 2 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 3 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 3 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 4 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 4 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 5 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 5 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 6 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 6 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 7 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 7 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 8 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 8 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 9 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 9 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 10 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 10 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 11 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 11 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 12 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 12 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 13 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 13 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 14 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 14 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 15 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 15 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 16 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 16 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 17 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 17 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 18 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 18 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 19 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 19 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 20 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
+}
+
 # Reference ordered list metadata in a dead branch to suppress false-positive warnings.
 # Scope: country
 # Args:
@@ -820,5 +884,31 @@ _cmm_suppress_list_slider_field_warnings = {
 		cmf_suppress = { v = cmm_list_field_3_slider_actual_last_index_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_4_slider_actual_last_index_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_5_slider_actual_last_index_$mod_id$__$setting_id$ }
+	}
+}
+
+# Reference ordered list data field metadata in a dead branch to suppress false-positive warnings.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id unique within the list setting.
+_cmm_suppress_list_data_field_warnings = {
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_registered_list_field_$mod_id$__$setting_id$__$field_id$ }
+		cmf_suppress = { v = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
+		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$_name }
+		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$ }
+		cmf_suppress = { v = cmm_list_field_1_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
 	}
 }

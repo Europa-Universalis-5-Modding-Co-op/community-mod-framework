@@ -328,6 +328,18 @@ cmf_feature_test_register_cmf_mod = {
 		step_value = 5
 	}
 
+	cmm_register_list_data_field = {
+		mod_id = cmf_feature_test
+		setting_id = dynamic_list
+		field_id = score
+		default_value = 0
+	}
+
+	cmm_set_list_data_value = { mod_id = cmf_feature_test setting_id = dynamic_list field_id = score item = 1 value = 42 }
+	cmm_set_list_data_value = { mod_id = cmf_feature_test setting_id = dynamic_list field_id = score item = 2 value = 87 }
+	cmm_set_list_data_value = { mod_id = cmf_feature_test setting_id = dynamic_list field_id = score item = 3 value = 15 }
+	cmm_set_list_data_value = { mod_id = cmf_feature_test setting_id = dynamic_list field_id = score item = 4 value = 63 }
+
 	## From-List (from_list) Group
 	clear_variable_list = cft_test_list
 	add_to_variable_list = { name = cft_test_list target = flag:cft_item_alpha }
