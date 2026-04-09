@@ -24,7 +24,7 @@
  CMM_LIST_MOVE_DOWN: "Move Down"
  CMM_LIST_MOVE_TO_BOTTOM: "Move to Bottom"
  CMM_LIST_TOGGLE: "Toggle"
- CMM_LIST_TOGGLE_ALL: "Toggle This Field for All Rows"
+ CMM_LIST_TOGGLE_ALL: "Toggle All"
  CMM_LIST_SELECT_OPTION: "Select Option"
  CMM_LIST_APPLY_OPTION_TO_ALL: "Apply This Option to All Rows"
  CMM_LIST_APPLY_NUMBER_TO_ALL: "Apply This Number to All Rows"
