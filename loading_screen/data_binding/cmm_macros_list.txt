@@ -459,7 +459,7 @@ macro = {
 macro = {
     description = "Cached: resolved prefix text for one list field slot"
     definition = "CMMCachedFieldPrefix(SlotStr)"
-    replace_with = "Localize(Concatenate(CMMCachedFieldLocKey(SlotStr), '_prefix'))"
+    replace_with = "GetVariableSystem.Get(Concatenate('cmm_list_pfx_', SlotStr))"
 }
 
 # Args: SlotStr (string)
@@ -467,7 +467,7 @@ macro = {
 macro = {
     description = "Cached: resolved postfix text for one list field slot"
     definition = "CMMCachedFieldPostfix(SlotStr)"
-    replace_with = "Localize(Concatenate(CMMCachedFieldLocKey(SlotStr), '_postfix'))"
+    replace_with = "GetVariableSystem.Get(Concatenate('cmm_list_pofx_', SlotStr))"
 }
 
 # Args: SlotStr (string)
@@ -475,7 +475,7 @@ macro = {
 macro = {
     description = "Cached: resolved prefix_high text for one list field slot"
     definition = "CMMCachedFieldPrefixHigh(SlotStr)"
-    replace_with = "Localize(Concatenate(CMMCachedFieldLocKey(SlotStr), '_prefix_high'))"
+    replace_with = "GetVariableSystem.Get(Concatenate('cmm_list_pfxh_', SlotStr))"
 }
 
 # Args: SlotStr (string)
@@ -483,7 +483,7 @@ macro = {
 macro = {
     description = "Cached: resolved prefix_low text for one list field slot"
     definition = "CMMCachedFieldPrefixLow(SlotStr)"
-    replace_with = "Localize(Concatenate(CMMCachedFieldLocKey(SlotStr), '_prefix_low'))"
+    replace_with = "GetVariableSystem.Get(Concatenate('cmm_list_pfxl_', SlotStr))"
 }
 
 # Args: SlotStr (string)
@@ -491,7 +491,7 @@ macro = {
 macro = {
     description = "Cached: resolved postfix_high text for one list field slot"
     definition = "CMMCachedFieldPostfixHigh(SlotStr)"
-    replace_with = "Localize(Concatenate(CMMCachedFieldLocKey(SlotStr), '_postfix_high'))"
+    replace_with = "GetVariableSystem.Get(Concatenate('cmm_list_pofxh_', SlotStr))"
 }
 
 # Args: SlotStr (string)
@@ -499,7 +499,7 @@ macro = {
 macro = {
     description = "Cached: resolved postfix_low text for one list field slot"
     definition = "CMMCachedFieldPostfixLow(SlotStr)"
-    replace_with = "Localize(Concatenate(CMMCachedFieldLocKey(SlotStr), '_postfix_low'))"
+    replace_with = "GetVariableSystem.Get(Concatenate('cmm_list_pofxl_', SlotStr))"
 }
 
 # Cached conditional prefix/postfix using cached loc keys
