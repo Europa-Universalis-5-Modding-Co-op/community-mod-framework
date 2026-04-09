@@ -739,6 +739,24 @@ ${prefix}_on_cmf_callback = {
                         lines.push(` ${fqid}_postfix: "${this._esc(parts[1])}"`);
                     }
                 }
+                if (field.display_format_high && field.display_format_high.includes('$VALUE$')) {
+                    const parts = field.display_format_high.split('$VALUE$');
+                    if (parts[0]) {
+                        lines.push(` ${fqid}_prefix_high: "${this._esc(parts[0])}"`);
+                    }
+                    if (parts[1]) {
+                        lines.push(` ${fqid}_postfix_high: "${this._esc(parts[1])}"`);
+                    }
+                }
+                if (field.display_format_low && field.display_format_low.includes('$VALUE$')) {
+                    const parts = field.display_format_low.split('$VALUE$');
+                    if (parts[0]) {
+                        lines.push(` ${fqid}_prefix_low: "${this._esc(parts[0])}"`);
+                    }
+                    if (parts[1]) {
+                        lines.push(` ${fqid}_postfix_low: "${this._esc(parts[1])}"`);
+                    }
+                }
                 if (field.field_type === 'dropdown') {
                     for (const opt of (field.options || [])) {
                         lines.push(` ${fqid}_option_${opt.index}_name: "${this._esc(opt.name)}"`);
