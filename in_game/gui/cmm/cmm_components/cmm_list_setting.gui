@@ -285,7 +285,7 @@
 							size = { 24 24 }
 							parentanchor = center
 							widgetanchor = center
-							visible = "[Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, CMMMapInt('cmm_list_last_index', CMMCachedListSettingKey)))]"
+							visible = "[Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, CMMMapInt('cmm_list_last_index', CMMListItemOwnerSettingKey(Scope.GetFlagName))))]"
 
 							action_tooltip = {
 								click_mode = single
