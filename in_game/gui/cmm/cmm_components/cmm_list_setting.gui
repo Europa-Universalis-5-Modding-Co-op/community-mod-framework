@@ -35,7 +35,6 @@
 		state = {
 			name = cmm_cache_list_metadata
 			trigger_when = "[Not(GetVariableSystem.HasValue('cmm_list_sk', Scope.GetFlagName))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_dirty', 'yes')]"
 			on_start = "[GetVariableSystem.Set('cmm_list_sk', Scope.GetFlagName)]"
 			on_start = "[GetVariableSystem.Set('cmm_list_is_global', Select_CString(CMMSettingIsGlobal(Scope.GetFlagName), 'yes', 'no'))]"
 			on_start = "[GetVariableSystem.Set('cmm_list_ft_1', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '1', '_type_')))]"
@@ -95,11 +94,11 @@
 			on_start = "[GetVariableSystem.Set('cmm_list_pofxl_5', Localize(Concatenate(CMMCachedFieldLocKey('5'), '_postfix_low')))]"
 		}
 
+		# Delays field cell re-caching by one frame after a click so that scripted GUI effects have committed before values are read.
 		state = {
-			name = cmm_dirty_clear
-			trigger_when = "[GetVariableSystem.Exists('cmm_list_dirty')]"
-			duration = 0.02
-			on_finish = "[GetVariableSystem.Clear('cmm_list_dirty')]"
+			name = cmm_recache_delay
+			duration = 0.001
+			on_finish = "[PdxGuiTriggerAllAnimations('cmm_cache_field_cell')]"
 		}
 
 		widget = {
@@ -253,7 +252,7 @@
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveUp')]"
 								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
-								on_action = "[GetVariableSystem.Set('cmm_list_dirty', 'yes')]"
+								on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 							}
 
 							action_tooltip = {
@@ -263,7 +262,7 @@
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveToTop')]"
 								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
-								on_action = "[GetVariableSystem.Set('cmm_list_dirty', 'yes')]"
+								on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 							}
 
 							tooltipwidget = { BasicFunctionalTooltip = {} }
@@ -294,7 +293,7 @@
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveDown')]"
 								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
-								on_action = "[GetVariableSystem.Set('cmm_list_dirty', 'yes')]"
+								on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 							}
 
 							action_tooltip = {
@@ -304,7 +303,7 @@
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveToBottom')]"
 								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
-								on_action = "[GetVariableSystem.Set('cmm_list_dirty', 'yes')]"
+								on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 							}
 
 							tooltipwidget = { BasicFunctionalTooltip = {} }
