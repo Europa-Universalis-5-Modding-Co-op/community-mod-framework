@@ -7,30 +7,42 @@ _cmf_on_country_transfer = {
 	saved_scopes = { old_country new_country }
 	effect = {
 		# Copy all CMM setting values from old to new country
-		scope:old_country = {
-			every_key_in_variable_map = {
-				variable = cmm
-				save_scope_as = cmm_transfer_key
-				scope:old_country = {
-					set_local_variable = { name = cmm_transfer_val value = "variable_map(cmm|scope:cmm_transfer_key)" }
-					scope:new_country = {
-						add_to_variable_map = { name = cmm key = scope:cmm_transfer_key value = local_var:cmm_transfer_val }
+		if = {
+			limit = {
+				exists = scope:old_country
+				exists = scope:new_country
+			}
+			scope:old_country = {
+				every_key_in_variable_map = {
+					variable = cmm
+					save_scope_as = cmm_transfer_key
+					scope:old_country = {
+						set_local_variable = { name = cmm_transfer_val value = "variable_map(cmm|scope:cmm_transfer_key)" }
+						scope:new_country = {
+							add_to_variable_map = { name = cmm key = scope:cmm_transfer_key value = local_var:cmm_transfer_val }
+						}
 					}
 				}
 			}
 		}
 
 		# Re-run registration on the new country to rebuild metadata and lookup tables
-		scope:new_country = {
-			trigger_event_silently = {
-				on_action = cmf_on_mod_registration
+		if = {
+			limit = { exists = scope:new_country }
+			scope:new_country = {
+				trigger_event_silently = {
+					on_action = cmf_on_mod_registration
+				}
 			}
 		}
 
 		# Fire the country transfer on_action for mods that need custom transfer logic
-		scope:new_country = {
-			trigger_event_silently = {
-				on_action = cmf_on_country_transfer
+		if = {
+			limit = { exists = scope:new_country }
+			scope:new_country = {
+				trigger_event_silently = {
+					on_action = cmf_on_country_transfer
+				}
 			}
 		}
 	}
