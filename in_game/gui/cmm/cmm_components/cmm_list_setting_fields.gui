@@ -1011,7 +1011,7 @@
 	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_field_<slot>')) [value]: current slider field value for this row item.
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_min_', <setting_key>)) [value]: slider minimum bound.
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_max_', <setting_key>)) [value]: slider maximum bound.
-	# - GetVariableSystem.Get('cmm_list_hover_field_slot') [string]: cached hovered field slot for nested button actions.
+	# - GetVariableSystem.Get('cmm_list_hover_field_slot') [string]: cached hovered field slot for button click actions and overlay points.
 	# Writes:
 	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: marks the hovered row position.
 	# - GetScriptedGui('CMM_MarkListFieldSlot_<slot>').Execute(...) [effect]: marks the clicked field slot.
@@ -1102,10 +1102,10 @@
 						minimumsize = { -1 14 }
 						enabled = "[GetVariableSystem.HasValue('cmm_can_edit_list', 'yes')]"
 						min = 0
-						max = "[CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-						step = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_step_')]"
+						max = "[CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+						step = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)), '_step_')]"
 						wheelstep = 0
-						value = "[CMMListFieldSliderNormalizedValue(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+						value = "[CMMListFieldSliderNormalizedValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 
 						track = {
 							EconomySlider_TrackRange = {}
@@ -1118,14 +1118,14 @@
 
 								state = {
 									name = slider_hover_on
-									trigger_when = "[CMMSliderThumbHover(CMMListSliderThumbIndex(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot')), Scope.GetFlagName)]"
+									trigger_when = "[CMMSliderThumbHover(CMMListSliderThumbIndex(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), Scope.GetFlagName)]"
 									alpha = 1.0
 									duration = 0.1
 								}
 
 								state = {
 									name = slider_hover_off
-									trigger_when = "[Not(CMMSliderThumbHover(CMMListSliderThumbIndex(Scope.GetFlagName, GetVariableSystem.Get('cmm_list_hover_field_slot')), Scope.GetFlagName))]"
+									trigger_when = "[Not(CMMSliderThumbHover(CMMListSliderThumbIndex(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), Scope.GetFlagName))]"
 									alpha = 0.7
 									duration = 0.1
 								}
