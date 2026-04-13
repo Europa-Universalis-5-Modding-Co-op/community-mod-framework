@@ -70,8 +70,6 @@
 		state = {
 			name = cmm_cache_field_cell
 			trigger_on_create = yes
-			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, Concatenate('_fe_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), Select_CString(CMMListItemFieldIsEnabled(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, Concatenate('_fc_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), Select_CString(CMMValueEqualsOne(CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), 'yes', 'no'))]"
 			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, Concatenate('_fs_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), Select_CString(GreaterThan_CFixedPoint(CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(CFixedPoint)0'), '1', Select_CString(LessThan_CFixedPoint(CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(CFixedPoint)0'), '-1', '0')))]"
 			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, Concatenate('_tp_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), ToString_int32(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)), '_type_')))]"
 			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, Concatenate('_hf_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), ToString_int32(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)), '_has_format_')))]"
@@ -80,7 +78,7 @@
 		# Inner container hides content for disabled fields while cell stays visible to preserve column alignment.
 		widget = {
 			size = { 100% 100% }
-			visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_fe_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), 'yes')]"
+			visible = "[CMMListItemFieldIsEnabled(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			enabled = "[GetVariableSystem.HasValue('cmm_can_edit_list', 'yes')]"
 
 			cmm_list_setting_bool_field = {
@@ -124,7 +122,7 @@
 		checkbox_square_alt = {
 			parentanchor = center
 			widgetanchor = center
-			checked = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_fc_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), 'yes')]"
+			checked = "[CMMValueEqualsOne(CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 			tooltip_enabled = no
 		}
 
