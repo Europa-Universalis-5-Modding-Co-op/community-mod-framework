@@ -16,8 +16,8 @@ CMF_CloseLogView = {
 	scope = country
 	effect = {
 		if = {
-			limit = { has_global_variable = cmf_log_view_open }
-			remove_global_variable = cmf_log_view_open
+			limit = { has_variable = cmf_log_view_open }
+			remove_variable = cmf_log_view_open
 		}
 	}
 }

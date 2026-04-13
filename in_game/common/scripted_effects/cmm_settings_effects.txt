@@ -49,11 +49,11 @@ _cmm_handle_core_callback = {
 	if = {
 		limit = { var:cmf_callback = flag:cmm_core__open_log }
 		if = {
-			limit = { has_global_variable = cmf_log_view_open }
-			remove_global_variable = cmf_log_view_open
+			limit = { has_variable = cmf_log_view_open }
+			remove_variable = cmf_log_view_open
 		}
 		else = {
-			set_global_variable = { name = cmf_log_view_open value = yes }
+			set_variable = { name = cmf_log_view_open value = yes }
 		}
 	}
 
