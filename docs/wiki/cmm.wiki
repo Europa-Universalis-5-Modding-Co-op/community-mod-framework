@@ -179,7 +179,7 @@ cmm_register_settings_list = {
 	mod_id = your_mod
 	setting_id = your_list
 	tab_id = general
-	item_count = 5    # Number of rows (1-20)
+	item_count = 5    # Number of rows (1-50)
 	is_ordered = 1    # 1 = players can reorder, 0 = fixed order
 }
 </syntaxhighlight>
@@ -337,7 +337,7 @@ cmm_register_settings_list_from_list = {
 	setting_id = your_list
 	tab_id = general
 	is_ordered = 0
-	list = my_variable_list  # Country variable list of scopes (max 20)
+	list = my_variable_list  # Country variable list of scopes (max 50)
 }
 # Register fields after this
 </syntaxhighlight>
