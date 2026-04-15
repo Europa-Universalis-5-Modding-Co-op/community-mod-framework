@@ -9,6 +9,7 @@
 _cmf_on_init = {
 	effect = {
 		set_global_variable = { name = cmf_active value = yes }
+		set_global_variable = { name = _cmf_pending_new_game value = yes }
 		if = {
 			limit = { NOT = { has_global_variable = cmf_log_count } }
 			set_global_variable = { name = cmf_log_count value = 0 }
