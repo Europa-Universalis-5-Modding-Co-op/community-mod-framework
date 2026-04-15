@@ -22,8 +22,8 @@ const ListEditorComponent = {
                 <input v-model="setting.item_column_name" placeholder="Item">
             </div>
             <div v-if="listMode === 'static'" class="field-row">
-                <label>Item Count (1-20)</label>
-                <input type="number" v-model.number="setting.item_count" min="1" max="20" @input="syncItemNames">
+                <label>Item Count (1-50)</label>
+                <input type="number" v-model.number="setting.item_count" min="1" max="50" @input="syncItemNames">
             </div>
             <div v-if="listMode === 'from_list'" class="field-row">
                 <label>Variable List Name</label>
@@ -315,7 +315,7 @@ const ListEditorComponent = {
             setTimeout(() => { this.copiedField = -1; }, 1200);
         },
         syncItemNames() {
-            const count = Math.max(1, Math.min(20, this.setting.item_count || 1));
+            const count = Math.max(1, Math.min(50, this.setting.item_count || 1));
             this.setting.item_count = count;
             if (!this.setting.item_names) this.setting.item_names = [];
             while (this.setting.item_names.length < count) {
