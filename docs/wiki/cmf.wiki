@@ -231,6 +231,20 @@ if = {
 }
 </syntaxhighlight>
 
+== cmf_can_use_unrestricted_tools Trigger ==
+True when the "Enable Unrestricted Tools" setting (labelled "Enable Host-Only Tools" in multiplayer) is on and this country is the host (or in singleplayer). Use to gate restricted features not meant for normal play — e.g. unrestricted state transfer.
+
+<syntaxhighlight lang="text">
+if = {
+	limit = {
+		cmf_can_use_unrestricted_tools = yes
+	}
+	# Runs if this country is the host and unrestricted tools are enabled
+}
+</syntaxhighlight>
+
+Mark individual CMM settings as requiring Unrestricted Tools with <code>cmm_set_requires_unrestricted_tools_enabled</code> (call after registration) — the CMM menu will disable editing of marked settings unless the "Enable Unrestricted Tools" setting is on.
+
 == cmf_suppress Effect ==
 CMF provides a <code>cmf_suppress</code> effect to silence "used but never set" and "set but never used" engine warnings. Call inside an <code>always = no</code> dead branch:
 

@@ -247,3 +247,13 @@ cmm_set_no_reset = {
 	add_to_variable_map = { name = cmm_no_reset key = flag:$mod_id$__$setting_id$ value = 1 }
 }
 
+# Mark a setting as requiring the Unrestricted Tools setting to be enabled (editable only when that setting is on).
+# Use for settings outside normal play (e.g. debug/cheat-style tools). Call after the setting registration effect.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id.
+cmm_set_requires_unrestricted_tools_enabled = {
+	add_to_variable_map = { name = cmm_requires_unrestricted_tools_enabled key = flag:$mod_id$__$setting_id$ value = 1 }
+}
+
