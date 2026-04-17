@@ -6,7 +6,7 @@ _cmm_register_menu_settings = {
 		limit = { has_multiple_players = no }
 		cmm_register_global_bool_setting = {
 			mod_id = cmm_core
-			setting_id = enable_host_only_tools
+			setting_id = enable_unrestricted_tools
 			tab_id = general
 			group_id = session
 			default_value = 1
@@ -15,7 +15,7 @@ _cmm_register_menu_settings = {
 	else = {
 		cmm_register_global_bool_setting = {
 			mod_id = cmm_core
-			setting_id = enable_host_only_tools
+			setting_id = enable_unrestricted_tools
 			tab_id = general
 			group_id = session
 			default_value = 0
@@ -31,6 +31,10 @@ _cmm_register_menu_settings = {
 			tab_id = general
 			group_id = session
 			default_value = 0
+		}
+		cmm_set_requires_unrestricted_tools_enabled = {
+			mod_id = cmm_core
+			setting_id = enable_debug_mode
 		}
 	}
 
