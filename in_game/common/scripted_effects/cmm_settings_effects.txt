@@ -2,24 +2,12 @@
 # Scope: country
 # Args: none
 _cmm_register_menu_settings = {
-	if = {
-		limit = { has_multiple_players = no }
-		cmm_register_global_bool_setting = {
-			mod_id = cmm_core
-			setting_id = enable_unrestricted_tools
-			tab_id = general
-			group_id = session
-			default_value = 1
-		}
-	}
-	else = {
-		cmm_register_global_bool_setting = {
-			mod_id = cmm_core
-			setting_id = enable_unrestricted_tools
-			tab_id = general
-			group_id = session
-			default_value = 0
-		}
+	cmm_register_global_bool_setting = {
+		mod_id = cmm_core
+		setting_id = enable_unrestricted_tools
+		tab_id = general
+		group_id = session
+		default_value = 0
 	}
 
 	# Debug mode is singleplayer-only (console command does not work in multiplayer)
