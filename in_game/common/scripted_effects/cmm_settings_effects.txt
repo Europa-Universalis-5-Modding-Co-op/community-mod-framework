@@ -32,10 +32,6 @@ _cmm_register_menu_settings = {
 			group_id = session
 			default_value = 0
 		}
-		cmm_set_requires_unrestricted_tools_enabled = {
-			mod_id = cmm_core
-			setting_id = enable_debug_mode
-		}
 	}
 
 	cmm_register_button_setting = {
