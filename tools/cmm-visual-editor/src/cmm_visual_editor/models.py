@@ -15,8 +15,9 @@ class DropdownOption:
 @dataclass
 class ListField:
     field_id: str
-    field_type: str  # "bool" | "dropdown" | "numeric" | "slider"
+    field_type: str  # "bool" | "dropdown" | "numeric" | "slider" | "data"
     name: str
+    desc: str = ""  # header tooltip (optional; maps to _desc localization key)
     # bool
     default_value: Optional[int] = None
     # dropdown
@@ -27,6 +28,8 @@ class ListField:
     min_value: Optional[float] = None
     max_value: Optional[float] = None
     step_value: Optional[float] = None
+    # data field per-item values (1-based; aligned with item_count)
+    item_data_values: Optional[list] = None
     # alias
     alias: str = ""
     item_aliases: Optional[list] = None  # per-item aliases (list of str, one per item)
@@ -76,6 +79,8 @@ class Setting:
     no_pass_value: Optional[bool] = None
     # reset
     no_reset: Optional[bool] = None
+    # unrestricted tools gating — marks this setting as requiring the master "Enable Unrestricted Tools" setting to be on
+    requires_unrestricted_tools: Optional[bool] = None
     # alias
     alias: str = ""
     alias_inverted: bool = False
@@ -167,6 +172,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["no_pass_value"] = s.no_pass_value
         if s.no_reset:
             d["no_reset"] = s.no_reset
+        if s.requires_unrestricted_tools:
+            d["requires_unrestricted_tools"] = s.requires_unrestricted_tools
         if s.alias:
             d["alias"] = s.alias
         if s.alias_inverted:
@@ -185,6 +192,8 @@ def model_to_dict(model: ModModel) -> dict:
             "field_type": f.field_type,
             "name": f.name,
         }
+        if f.desc:
+            d["desc"] = f.desc
         if f.alias:
             d["alias"] = f.alias
         if f.item_aliases and any(a for a in f.item_aliases):
@@ -205,6 +214,10 @@ def model_to_dict(model: ModModel) -> dict:
             d["min_value"] = f.min_value
             d["max_value"] = f.max_value
             d["step_value"] = f.step_value
+        elif f.field_type == "data":
+            d["default_value"] = f.default_value
+            if f.item_data_values and any(v is not None and v != "" for v in f.item_data_values):
+                d["item_data_values"] = f.item_data_values
         if f.display_format:
             d["display_format"] = f.display_format
         if f.display_format_high:
@@ -256,6 +269,7 @@ def dict_to_model(data: dict) -> ModModel:
             field_id=f["field_id"],
             field_type=f["field_type"],
             name=f.get("name", ""),
+            desc=f.get("desc", ""),
             default_value=f.get("default_value"),
             default_index=f.get("default_index"),
             option_count=f.get("option_count"),
@@ -263,6 +277,7 @@ def dict_to_model(data: dict) -> ModModel:
             min_value=f.get("min_value"),
             max_value=f.get("max_value"),
             step_value=f.get("step_value"),
+            item_data_values=f.get("item_data_values"),
             alias=f.get("alias", ""),
             item_aliases=f.get("item_aliases"),
             disabled_items=f.get("disabled_items"),
@@ -301,6 +316,7 @@ def dict_to_model(data: dict) -> ModModel:
             pass_value_param=s.get("pass_value_param"),
             no_pass_value=s.get("no_pass_value"),
             no_reset=s.get("no_reset"),
+            requires_unrestricted_tools=s.get("requires_unrestricted_tools"),
             alias=s.get("alias", ""),
             alias_inverted=s.get("alias_inverted", False),
             scripted_gui=s.get("scripted_gui"),
