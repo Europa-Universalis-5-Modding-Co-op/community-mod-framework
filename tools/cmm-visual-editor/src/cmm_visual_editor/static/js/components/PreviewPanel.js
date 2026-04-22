@@ -147,6 +147,7 @@ const PreviewPanelComponent = {
                                                             </span>
                                                             <span class="cmm-mini-slider-value">{{ f.default_value }}</span>
                                                         </span>
+                                                        <span v-if="f.field_type==='data'" class="cmm-mini-numeric">{{ (f.item_data_values||[])[ii] ?? f.default_value }}</span>
                                                     </template>
                                                 </span>
                                             </div>

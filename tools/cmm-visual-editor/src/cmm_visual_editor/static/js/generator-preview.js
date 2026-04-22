@@ -274,6 +274,12 @@ ${prefix}_on_cmf_callback = {
                 lines.push(`\t\tsetting_id = ${setting.setting_id}`);
                 lines.push(`\t}`);
             }
+            if (setting.requires_unrestricted_tools) {
+                lines.push(`\tcmm_set_requires_unrestricted_tools_enabled = {`);
+                lines.push(`\t\tmod_id = ${modId}`);
+                lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+                lines.push(`\t}`);
+            }
             return;
         }
 
@@ -340,6 +346,14 @@ ${prefix}_on_cmf_callback = {
             lines.push(`\t\tsetting_id = ${setting.setting_id}`);
             lines.push(`\t}`);
         }
+
+        // Requires Unrestricted Tools
+        if (setting.requires_unrestricted_tools) {
+            lines.push(`\tcmm_set_requires_unrestricted_tools_enabled = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+            lines.push(`\t}`);
+        }
     },
 
     _emitListField(lines, modId, settingId, field) {
@@ -379,6 +393,19 @@ ${prefix}_on_cmf_callback = {
             lines.push(`\t\tmax_value = ${this._num(field.max_value, 10)}`);
             lines.push(`\t\tstep_value = ${this._num(field.step_value, 1)}`);
             lines.push(`\t}`);
+        } else if (ft === 'data') {
+            lines.push(`\tcmm_register_list_data_field = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${settingId}`);
+            lines.push(`\t\tfield_id = ${field.field_id}`);
+            lines.push(`\t\tdefault_value = ${this._num(field.default_value, 0)}`);
+            lines.push(`\t}`);
+            const dataVals = field.item_data_values || [];
+            for (let i = 0; i < dataVals.length; i++) {
+                const v = dataVals[i];
+                if (v === null || v === undefined || v === '') continue;
+                lines.push(`\tcmm_set_list_data_value = { mod_id = ${modId} setting_id = ${settingId} field_id = ${field.field_id} item = ${i + 1} value = ${this._num(v, 0)} }`);
+            }
         }
         // List field format flag
         if (field.display_format_high || field.display_format_low) {
@@ -744,6 +771,9 @@ ${prefix}_on_cmf_callback = {
             for (const field of (setting.fields || [])) {
                 const fqid = `${qid}__${field.field_id}`;
                 lines.push(` ${fqid}_name: "${this._esc(field.name || field.field_id)}"`);
+                if (field.desc) {
+                    lines.push(` ${fqid}_desc: "${this._esc(field.desc)}"`);
+                }
                 if (field.display_format && field.display_format.includes('$VALUE$')) {
                     const parts = field.display_format.split('$VALUE$');
                     if (parts[0]) {

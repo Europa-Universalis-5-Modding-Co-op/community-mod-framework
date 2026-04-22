@@ -105,11 +105,16 @@ const ListEditorComponent = {
                                 <option value="dropdown">Dropdown</option>
                                 <option value="numeric">Numeric</option>
                                 <option value="slider">Slider</option>
+                                <option value="data">Data (read-only)</option>
                             </select>
                         </div>
                         <div class="field-row">
                             <label>Name</label>
                             <input v-model="field.name" placeholder="Field Name">
+                        </div>
+                        <div class="field-row">
+                            <label>Header Tooltip</label>
+                            <input v-model="field.desc" placeholder="Optional header tooltip text">
                         </div>
                     </div>
 
@@ -138,6 +143,41 @@ const ListEditorComponent = {
                             <label class="compact-label">{{ oi + 1 }}</label>
                             <input v-model="opt.name" :placeholder="'Option ' + (oi+1)">
                             <input v-model="opt.desc" placeholder="description (optional)">
+                        </div>
+                    </div>
+
+                    <!-- Data field (read-only display) -->
+                    <div v-if="field.field_type === 'data'" class="field-grid">
+                        <div class="field-row">
+                            <label>Default</label>
+                            <input type="number" v-model.number="field.default_value">
+                        </div>
+                        <div class="field-row">
+                            <label>Format</label>
+                            <input type="text" v-model="field.display_format" placeholder='e.g. $VALUE$%'>
+                        </div>
+                        <div class="field-row">
+                            <label>Format (&gt; 0)</label>
+                            <input type="text" v-model="field.display_format_high" placeholder='e.g. #G $VALUE$%#!'>
+                        </div>
+                        <div class="field-row">
+                            <label>Format (&lt; 0)</label>
+                            <input type="text" v-model="field.display_format_low" placeholder='e.g. #R $VALUE$%#!'>
+                        </div>
+                    </div>
+
+                    <!-- Data field per-item values (static lists only) -->
+                    <div v-if="field.field_type === 'data' && listMode === 'static' && field.field_id" class="per-item-aliases">
+                        <h6 class="collapsible-header" @click="togglePerItemSection(fi, 'data_values')">
+                            <span class="collapse-indicator">{{ isPerItemSectionOpen(fi, 'data_values') ? '&#9660;' : '&#9654;' }}</span>
+                            Per-Item Data Values
+                        </h6>
+                        <div v-show="isPerItemSectionOpen(fi, 'data_values')">
+                            <div v-for="(name, ii) in (setting.item_names || [])" :key="'dv-'+ii" class="field-row compact list-item-row">
+                                <label class="compact-label">{{ ii + 1 }}</label>
+                                <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
+                                <input type="number" :value="(field.item_data_values||[])[ii] ?? ''" @input="setItemDataValue(fi, ii, $event.target.value)" placeholder="value">
+                            </div>
                         </div>
                     </div>
 
@@ -354,6 +394,14 @@ const ListEditorComponent = {
                         field.item_aliases.pop();
                     }
                 }
+                if (field.item_data_values) {
+                    while (field.item_data_values.length < count) {
+                        field.item_data_values.push('');
+                    }
+                    while (field.item_data_values.length > count) {
+                        field.item_data_values.pop();
+                    }
+                }
             }
         },
         isItemVisible(itemIndex) {
@@ -434,6 +482,17 @@ const ListEditorComponent = {
             }
             this.setting.item_values[index] = value;
         },
+        setItemDataValue(fi, itemIndex, value) {
+            const field = (this.setting.fields || [])[fi];
+            if (!field) return;
+            if (!field.item_data_values) field.item_data_values = [];
+            const count = this.setting.item_count || 1;
+            while (field.item_data_values.length < count) {
+                field.item_data_values.push('');
+            }
+            field.item_data_values[itemIndex] = value === '' ? '' : Number(value);
+            field.item_data_values = [...field.item_data_values];
+        },
         onListModeChange() {
             if (this.listMode === 'from_list') {
                 this.setting.list_source = this.setting.list_source || '';
@@ -448,6 +507,7 @@ const ListEditorComponent = {
                 field_id: '',
                 field_type: 'bool',
                 name: '',
+                desc: '',
                 default_value: 0,
                 default_index: 1,
                 option_count: 3,

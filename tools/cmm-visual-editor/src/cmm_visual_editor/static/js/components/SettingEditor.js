@@ -245,6 +245,7 @@ const SettingEditorComponent = {
             if (this.setting.setting_type !== 'list') {
                 flags.push({ key: 'scripted_gui', label: 'Scripted GUI', hint: '(Enable is_shown / is_valid conditions)' });
             }
+            flags.push({ key: 'requires_unrestricted_tools', label: 'Requires Unrestricted Tools', hint: '(Only editable when the master "Enable Unrestricted Tools" setting is on)' });
             return flags;
         },
         accessorLabel() {

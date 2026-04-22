@@ -119,6 +119,7 @@ def _build_model(
     field_aliases = _parse_field_aliases(effects)
     option_aliases = _parse_option_aliases(effects)
     no_reset_settings = _parse_no_reset_settings(effects)
+    requires_unrestricted_tools_settings = _parse_requires_unrestricted_tools_settings(effects)
     sgui_settings = _parse_sgui_settings(effects)
     sgui_conditions = _parse_sgui_conditions(gui)
 
@@ -133,6 +134,7 @@ def _build_model(
     list_item_values = {}  # setting_id -> {item_number: value}
     list_field_disables = {}  # (setting_id, field_id) -> [item_number]
     list_item_hides = {}  # setting_id -> [item_number]
+    list_data_values = {}  # (setting_id, field_id) -> {item_number: value}
     for reg in registrations:
         reg_type = reg.get("_type", "")
         if reg_type == "list_item_hide":
@@ -164,6 +166,16 @@ def _build_model(
                 if sid not in list_item_values:
                     list_item_values[sid] = {}
                 list_item_values[sid][item] = value
+        elif reg_type == "list_data_value":
+            sid = reg.get("setting_id", "")
+            fid = reg.get("field_id", "")
+            item = _to_int(reg.get("item", "0"))
+            value = reg.get("value", "")
+            if sid and fid and item > 0 and value != "":
+                key = (sid, fid)
+                if key not in list_data_values:
+                    list_data_values[key] = {}
+                list_data_values[key][item] = _to_float(value)
 
     # Second pass: build tabs/groups/settings
     for reg in registrations:
@@ -172,6 +184,8 @@ def _build_model(
         if reg_type.startswith("list_") and "_field" in reg_type:
             continue  # already collected above
         if reg_type == "list_item_value":
+            continue  # already collected above
+        if reg_type == "list_data_value":
             continue  # already collected above
         if reg_type == "list_field_disable":
             continue  # already collected above
@@ -202,7 +216,7 @@ def _build_model(
         setting = _reg_to_setting(
             reg, mod_id, loc_map, list_fields, list_item_values,
             setting_aliases, inverted_aliases, field_aliases, option_aliases,
-            list_field_disables, list_item_hides,
+            list_field_disables, list_item_hides, list_data_values,
         )
         if setting:
             # Deduplicate: skip if same setting_id already exists in this group
@@ -225,6 +239,8 @@ def _build_model(
                     setting.no_pass_value = True
             if setting.setting_id in no_reset_settings:
                 setting.no_reset = True
+            if setting.setting_id in requires_unrestricted_tools_settings:
+                setting.requires_unrestricted_tools = True
             if setting.setting_id in sgui_settings:
                 setting.scripted_gui = True
             if qid in sgui_conditions:
@@ -363,6 +379,22 @@ def _parse_no_reset_settings(content: str) -> set:
     """Extract cmm_set_no_reset blocks -> set of setting_ids."""
     result = set()
     pattern = re.compile(r"cmm_set_no_reset\s*=\s*\{", re.IGNORECASE)
+    for m in pattern.finditer(content):
+        block_end = _find_closing_brace(content, m.end())
+        if block_end < 0:
+            continue
+        block = content[m.end():block_end]
+        params = _parse_params(block)
+        sid = params.get("setting_id", "")
+        if sid:
+            result.add(sid)
+    return result
+
+
+def _parse_requires_unrestricted_tools_settings(content: str) -> set:
+    """Extract cmm_set_requires_unrestricted_tools_enabled blocks -> set of setting_ids."""
+    result = set()
+    pattern = re.compile(r"cmm_set_requires_unrestricted_tools_enabled\s*=\s*\{", re.IGNORECASE)
     for m in pattern.finditer(content):
         block_end = _find_closing_brace(content, m.end())
         if block_end < 0:
@@ -586,8 +618,8 @@ def _parse_registrations(content: str, warnings: list) -> list:
         r"(cmm_register_(?:global_)?(?:bool_setting|button_setting|numeric_setting|"
         r"slider_setting|dropdown_setting|text_setting|settings_list|"
         r"settings_list_from_list|"
-        r"list_bool_field|list_dropdown_field|list_numeric_field|list_slider_field)|"
-        r"cmm_set_list_item_value|cmm_disable_list_field_for_item|cmm_hide_list_item)\s*=\s*\{",
+        r"list_bool_field|list_dropdown_field|list_numeric_field|list_slider_field|list_data_field)|"
+        r"cmm_set_list_item_value|cmm_set_list_data_value|cmm_disable_list_field_for_item|cmm_hide_list_item)\s*=\s*\{",
         re.IGNORECASE,
     )
 
@@ -635,12 +667,16 @@ def _func_to_type(func_name: str) -> str:
         return "list_numeric_field"
     if "list_slider_field" in fn:
         return "list_slider_field"
+    if "list_data_field" in fn:
+        return "list_data_field"
     if "settings_list_from_list" in fn:
         return "list_from_list"
     if "settings_list" in fn:
         return "list"
     if "set_list_item_value" in fn:
         return "list_item_value"
+    if "set_list_data_value" in fn:
+        return "list_data_value"
     if "disable_list_field_for_item" in fn:
         return "list_field_disable"
     if "hide_list_item" in fn:
@@ -702,6 +738,7 @@ def _reg_to_setting(
     option_aliases: dict = None,
     list_field_disables: dict = None,
     list_item_hides: dict = None,
+    list_data_values: dict = None,
 ) -> Setting:
     """Convert a registration dict to a Setting."""
     reg_type = reg.get("_type", "")
@@ -709,6 +746,8 @@ def _reg_to_setting(
         return None  # fields handled separately
     if reg_type == "list_item_value":
         return None  # item values handled separately
+    if reg_type == "list_data_value":
+        return None  # data values handled separately
     if reg_type == "list_field_disable":
         return None  # field disables handled separately
     if reg_type == "list_item_hide":
@@ -797,6 +836,12 @@ def _reg_to_setting(
                 list_field_disables,
             )
             if fld:
+                # Attach data values if this is a data field
+                if fld.field_type == "data":
+                    dv_map = (list_data_values or {}).get((sid, fld.field_id))
+                    if dv_map:
+                        count = setting.item_count or 1
+                        fld.item_data_values = [dv_map.get(i, "") for i in range(1, count + 1)]
                 fields.append(fld)
         setting.fields = fields
 
@@ -818,6 +863,8 @@ def _parse_list_field(
         ftype = "slider"
     elif "numeric" in ftype_raw:
         ftype = "numeric"
+    elif "data" in ftype_raw:
+        ftype = "data"
     else:
         return None
 
@@ -849,6 +896,7 @@ def _parse_list_field(
         field_id=fid,
         field_type=ftype,
         name=loc_map.get(f"{fqid}_name", fid),
+        desc=loc_map.get(f"{fqid}_desc", ""),
         alias=alias,
         item_aliases=item_aliases,
         disabled_items=disabled_items,
@@ -870,6 +918,8 @@ def _parse_list_field(
         field.min_value = _to_float(reg.get("min_value", "0"))
         field.max_value = _to_float(reg.get("max_value", "10"))
         field.step_value = _to_float(reg.get("step_value", "1"))
+    elif ftype == "data":
+        field.default_value = _to_float(reg.get("default_value", "0"))
 
     # Format display — reconstruct $VALUE$ format from prefix/postfix loc keys
     pfx = loc_map.get(f"{fqid}_prefix", "")
