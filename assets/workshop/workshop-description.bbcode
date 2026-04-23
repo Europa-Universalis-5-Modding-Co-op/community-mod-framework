@@ -8,19 +8,20 @@ Any questions, feel free to reach out on the EU5 Mod Coop Discord: https://disco
 
 [h1]Features[/h1]
 [list]
- [*][b]Community Mod Menu (CMM):[/b] A shared in-game mod menu. Mod authors register settings dynamically through a simple API — no need to build a custom settings UI.
+ [*][b]Community Mod Menu (CMM):[/b] A shared in-game mod menu. Mod authors register settings dynamically through a simple API, no need to build a custom settings UI.
   [list]
    [*]Toggle, button, numeric, slider (double click to drag), dropdown, text (singleplayer-only), and list settings
    [*]Per-mod tabs, groups, and search
    [*]Global settings with host-only multiplayer editing
    [*]Reset to Defaults
    [*]Draggable window
-   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url] — browser-based tool for creating your mod menu
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url]: browser-based tool for creating your mod menu
   [/list]
  [*][b]Custom Alerts:[/b] Create and show custom alerts in the alert bar through localization keys.
  [*][b]Action Bar:[/b] Add custom action bar buttons with localization keys.
  [*][b]Country Transfer:[/b] CMM settings automatically transfer when switching countries (tag switches, inheritance, etc.).
  [*][b]is_host Trigger:[/b] Check if the current country is controlled by the host player.
+ [*][b]Unrestricted Tools:[/b] Gate restricted features behind a master "Enable Unrestricted Tools" setting (cmf_can_use_unrestricted_tools trigger, cmm_set_requires_unrestricted_tools_enabled per-setting flag).
  [*][b]cmf_suppress Effect:[/b] Suppress "used but never set" and "set but never used" engine warnings with a single effect call.
  [*][b]On-Action Hooks:[/b] Post-lobby game start and save load hooks (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) with player country variants. Also includes shared yearly and monthly pulses for human players.
  [*][b]Variable Map Utilities:[/b] Safe variable map mutation helpers (cmf_change_variable_map and local/global variants) that handle remove-then-add atomically.
@@ -30,8 +31,8 @@ Any questions, feel free to reach out on the EU5 Mod Coop Discord: https://disco
 
 [h1]Documentation[/h1]
 [list]
- [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — Full documentation
- [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — Quick reference
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url]: Full documentation
+ [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url]: Quick reference
  [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub Repository[/url]
 [/list]
 
