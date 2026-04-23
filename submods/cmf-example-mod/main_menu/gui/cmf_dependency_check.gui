@@ -1,4 +1,6 @@
-﻿types cmf_dependency_check
+### CMF dependency check popup
+### To use: copy this file into your mod's main_menu/gui/ directory.
+types cmf_dependency_check
 {
 	type FrontEndNews = widget {
 		size = { 100% 100% }
@@ -62,9 +64,6 @@
 			}
 		}
 
-		### CMF dependency check popup
-		### To use: copy this file into your mod's main_menu/gui/ directory.
-		### No localization file needed — all text is inlined below.
 		widget = {
 			size = { 100% 100% }
 			parentanchor = center
