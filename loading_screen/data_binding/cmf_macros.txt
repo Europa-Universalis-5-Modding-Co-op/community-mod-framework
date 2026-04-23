@@ -1,0 +1,23 @@
+﻿# Args: A (boolean), B (boolean)
+# Returns: boolean
+macro = {
+	description = "Logical NAND"
+	definition = "Nand(A,B)"
+	replace_with = "Not(And(A,B))"
+}
+
+# Args: A (boolean), B (boolean)
+# Returns: boolean
+macro = {
+	description = "Logical NOR"
+	definition = "Nor(A,B)"
+	replace_with = "Not(Or(A,B))"
+}
+
+# Args: A (boolean), B (boolean)
+# Returns: boolean
+macro = {
+	description = "Logical XOR"
+	definition = "Xor(A,B)"
+	replace_with = "And(Or(A,B),Nand(A,B))"
+}
