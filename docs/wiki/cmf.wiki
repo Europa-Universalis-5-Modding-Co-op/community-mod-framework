@@ -271,6 +271,13 @@ Helper effects for updating variable map entries. Vanilla <code>add_to_variable_
 | <code>cmf_change_global_variable_map = { name = ... key = ... value = ... }</code> || Update a global variable map entry
 |}
 
+== GUI Macros ==
+<syntaxhighlight lang="text">
+visible = "[Nand(Foo, Bar)]"   # not both
+visible = "[Nor(Foo, Bar)]"    # neither
+visible = "[Xor(Foo, Bar)]"    # exactly one
+</syntaxhighlight>
+
 == Community Mod Toolkit (CMT) ==
 The [[Community Mod Toolkit]] is a companion set of development tools for EU5 mod authors. It provides a structured mod template and automation tools that work together through shared configuration:
 

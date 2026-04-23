@@ -23,6 +23,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3692202776
 - **[On-Action Hooks](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks)** — Post-lobby game start/load hooks and recurring yearly/monthly pulses for human players.
 - **[Dependency Check Popup](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Dependency-Check-Popup)** — Main menu popup that auto-enables CMF when missing.
 - **[cmf_suppress Effect](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Warning-Suppression)** — Suppress "used but never set" and "set but never used" engine warnings.
+- **[GUI Macros](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/GUI-Macros)**: Extended GUI data binding macros (NAND, NOR, XOR logical operators).
 - **[Community Mod Toolkit (CMT)](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit)** — A companion set of development tools, such as a mod template, workshop uploader and mod translator.
 
 ## Getting Started
