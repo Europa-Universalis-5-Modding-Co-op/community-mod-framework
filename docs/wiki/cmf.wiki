@@ -121,8 +121,8 @@ All effects require '''country scope'''.
 
 Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
 
-== Log ==
-The Log system provides a shared, global in-game log where mods can record actions. Each entry stores the actor country and localized action text, with optional named arguments for richer messages.
+== Mod Action Log ==
+The Mod Action Log provides a shared, global in-game log where mods can record actions. Each entry stores the actor country and localized action text, with optional named arguments for richer messages.
 
 <syntaxhighlight lang="text">
 # Simple entry — actor is the current country scope
@@ -149,7 +149,7 @@ cmf_clear_log = yes
 | <code>cmf_clear_log = yes</code> || Clear all entries
 |}
 
-All arguments are localization keys. The log is viewed via '''Mod Menu > General > Session > Log'''.
+All arguments are localization keys. The log is viewed via '''Mod Menu > General > Session > Mod Action Log'''.
 
 == On-Action Hooks ==
 CMF provides shared on_action hooks. Hook into them the same way as <code>cmf_on_mod_registration</code>.

@@ -18,7 +18,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3692202776
 - **[CMM Visual Editor](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor)** - Allows creating your mod menu from a interactive GUI application which generate all required files.
 - **[Custom Alerts](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Custom-Alerts)** — Dynamic, dismissable notifications in the in-game alert bar.
 - **[Action Bar](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar)** — Custom action bar with configurable buttons.
-- **[Log](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Log)** — Global in-game log for recording mod actions with actor and arguments.
+- **[Mod Action Log](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Action-Log)**: Global in-game log for recording mod actions with actor and arguments.
 - **[is_host Trigger](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger)** — Check if the current country is controlled by the host player.
 - **[On-Action Hooks](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks)** — Post-lobby game start/load hooks and recurring yearly/monthly pulses for human players.
 - **[Dependency Check Popup](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Dependency-Check-Popup)** — Main menu popup that auto-enables CMF when missing.
