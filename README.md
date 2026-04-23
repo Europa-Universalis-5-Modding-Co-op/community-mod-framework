@@ -1,5 +1,5 @@
 # Community Mod Framework (CMF)
-![banner](assets/images/cmf/banner.png)
+![banner](assets/images/cmf/CMF_Banner.png)
 
 A shared mod framework and menu for **Europa Universalis 5**. Includes the Community Mod Menu (CMM), custom alerts, action bar elements, and more.
 
@@ -63,6 +63,7 @@ The goal is to provide mods that make use of it, new ways to show content or hoo
 - [Bahmut](https://steamcommunity.com/id/Bahmut/)
 - [CaesarVincens](https://github.com/CaesarVincens)
 - [Conner](https://steamcommunity.com/id/ARealConner/)
+- [Glorp](https://steamcommunity.com/id/clickypoo)
 - [Pickle](https://steamcommunity.com/id/pickled-dev)
 - [RomanImperator](https://steamcommunity.com/id/romaimperator)
 

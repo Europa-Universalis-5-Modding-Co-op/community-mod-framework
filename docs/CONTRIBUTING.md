@@ -1,5 +1,5 @@
 # Community Mod Framework
-![banner.png](/assets/images/cmf/banner.png)
+![banner.png](/assets/images/cmf/CMF_Banner.png)
 
 As the Community Mod Framework aims to support compatibility between different mods - sometimes you have to add something to it so your mods can integrate successfully.
 
