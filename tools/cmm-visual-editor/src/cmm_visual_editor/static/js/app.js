@@ -78,6 +78,7 @@ const app = createApp({
             metadata_short_description: '',
             metadata_tags: ['Utilities'],
             metadata_game_version: '1.1.*',
+            metadata_relationships: [],
             noinspection: false,
             tabs: [],
         });
@@ -85,6 +86,7 @@ const app = createApp({
         const selectedTabIdx = ref(0);
         const selectedGroupIdx = ref(0);
         const rightTab = ref('preview');
+        const collapseSignal = ref(null);   // { collapsed: bool, key: number }
         const showImport = ref(false);
         const importPath = ref('');
         const importWarnings = ref([]);
@@ -95,6 +97,7 @@ const app = createApp({
         const saveStatus = ref('');       // '', 'saving', 'saved', 'error'
         const saveError = ref('');
         const showSettings = ref(false);
+        const appVersion = ref('');
 
         // Undo/redo reactivity helpers (Vue can't observe getters on a plain object)
         const undoCount = ref(0);
@@ -200,6 +203,10 @@ const app = createApp({
             if (!tab) return;
             tab.groups.splice(i, 1);
             clampSelection();
+        }
+
+        function onToggleAllSettings(shouldCollapse) {
+            collapseSignal.value = { collapsed: shouldCollapse, key: Date.now() };
         }
 
         function addSetting() {
@@ -348,6 +355,11 @@ const app = createApp({
             return tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA';
         }
 
+        // Track mousedown target so dragstart can check what was actually clicked
+        // (event.target in dragstart is always the draggable wrapper, not the clicked child)
+        let _dragOriginEl = null;
+        document.addEventListener('mousedown', (e) => { _dragOriginEl = e.target; });
+
         // ── Drag start ─────────────────────────────────────────────
         function onDragStartTab(event, i) {
             drag.type = 'tab';
@@ -367,8 +379,7 @@ const app = createApp({
         }
 
         function onDragStartSetting(event, si) {
-            if (!event.target.closest('.setting-card-header')) { event.preventDefault(); return; }
-            if (isInputEl(event.target)) { event.preventDefault(); return; }
+            if (!_dragOriginEl || !_dragOriginEl.closest('.setting-card-header') || isInputEl(_dragOriginEl)) { event.preventDefault(); return; }
             drag.type = 'setting';
             drag.sourceTabIdx = selectedTabIdx.value;
             drag.sourceGroupIdx = selectedGroupIdx.value;
@@ -450,9 +461,12 @@ const app = createApp({
                 const targetGroups = state.tabs[i].groups;
                 moveItem('group', drag.sourceTabIdx, 0, drag.sourceItemIdx, i, 0, targetGroups.length);
             } else if (drag.type === 'setting') {
-                // Move setting to end of first group of target tab
+                // Move setting to end of first group of target tab (auto-create group if empty)
                 const targetTab = state.tabs[i];
-                if (targetTab && targetTab.groups.length) {
+                if (targetTab) {
+                    if (!targetTab.groups.length) {
+                        targetTab.groups.push({ group_id: '', name: '', desc: '', settings: [] });
+                    }
                     const targetSettings = targetTab.groups[0].settings;
                     moveItem('setting', drag.sourceTabIdx, drag.sourceGroupIdx, drag.sourceItemIdx, i, 0, targetSettings.length);
                 }
@@ -599,7 +613,8 @@ const app = createApp({
                 mod_id: '', file_prefix: '', mod_name: '', mod_desc: '',
                 metadata_name: '', metadata_id: '', metadata_version: '0.1',
                 metadata_short_description: '', metadata_tags: ['Utilities'],
-                metadata_game_version: '1.1.*', noinspection: false, tabs: [],
+                metadata_game_version: '1.1.*', metadata_relationships: [],
+                noinspection: false, tabs: [],
             };
             Object.assign(state, defaults);
             selectedTabIdx.value = 0;
@@ -645,6 +660,13 @@ const app = createApp({
 
         // Auto-open mod directory if server detected one
         onMounted(async () => {
+            // Fetch version
+            try {
+                const vResp = await fetch('/api/version');
+                const vData = await vResp.json();
+                if (vData.version) appVersion.value = vData.version;
+            } catch (e) { /* ignore */ }
+
             try {
                 const resp = await fetch('/api/auto-open');
                 const data = await resp.json();
@@ -678,14 +700,14 @@ const app = createApp({
         });
 
         return {
-            state, selectedTabIdx, selectedGroupIdx, rightTab,
+            state, selectedTabIdx, selectedGroupIdx, rightTab, collapseSignal,
             showImport, importPath, importWarnings,
             selectedTab, selectedGroup,
-            modDir, dirty, saveStatus, saveError, showSettings,
+            modDir, dirty, saveStatus, saveError, showSettings, appVersion,
             undoCount, redoCount,
             drag, resetDrag,
             sanitizeId, addTab, removeTab, addGroup, removeGroup,
-            addSetting, removeSetting, moveSetting, onUpdate,
+            addSetting, removeSetting, moveSetting, onUpdate, onToggleAllSettings,
             onDragStartTab, onDragStartGroup, onDragStartSetting,
             onDragOverTab, onDragOverGroup, onDragOverSetting,
             onDragLeaveTab, onDragLeaveGroup, onDragLeaveSetting,

@@ -3,37 +3,41 @@
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Simplified Chinese Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-[b]社区模组框架 (Community Mod Framework, CMF)[/b] 是一款功能性模组，旨在提高模组间的互操作性，同时为模组创作者提供开发新功能的工具。
+[b]社区模组框架 (CMF)[/b] 是一个实用型模组，旨在提高模组间的互操作性，同时为模组开发者提供创建新功能的工具。
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/banner.png[/img]
 
-[b]在您的模组加载顺序中，CMF 应当被排在首位。[/b]
+[b]CMF 应当在您的模组加载顺序中排在第一位。[/b]
 
-如有任何疑问，欢迎在 EU5 Mod Coop Discord 频道联系我们：https://discord.gg/aqAAcCZsY7
+如有任何疑问，欢迎前往 EU5 Mod Coop Discord 进行交流：https://discord.gg/aqAAcCZsY7
 
-[h1]功能[/h1]
+[h1]功能特性[/h1]
 [list]
- [*][b]社区模组菜单 (Community Mod Menu, CMM)：[/b] 一个共享的游戏内模组菜单。模组作者可以通过简单的 API 动态注册设置——无需自行构建自定义设置界面。
+ [*][b]社区模组菜单 (CMM)：[/b] 一个共享的游戏内模组菜单。模组作者可以通过简单的 API 动态注册设置，无需自行构建自定义设置界面。
   [list]
    [*]开关、按钮、数值、滑块（双击拖动）、下拉菜单、文本（仅限单人模式）以及列表设置
-   [*]针对单个模组的分页、分组和搜索功能
-   [*]全局设置，在多人模式下仅限房主编辑
+   [*]基于每个模组的分页、分组及搜索功能
+   [*]全局设置，多人游戏中仅房主可编辑
    [*]重置为默认值
-   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM 可视化编辑器[/url] — 用于创建模组菜单的基于浏览器的工具
+   [*]可拖动窗口
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM 可视化编辑器[/url]：用于创建模组菜单的基于浏览器的工具
   [/list]
- [*][b]自定义提示：[/b] 通过本地化键位在提示栏中创建并显示自定义提示（Alerts）。
- [*][b]动作栏：[/b] 通过本地化键位添加自定义动作栏按钮。
+ [*][b]自定义警报：[/b] 通过本地化键在警报栏中创建并显示自定义警报。
+ [*][b]操作栏：[/b] 使用本地化键添加自定义操作栏按钮。
+ [*][b]国家转移：[/b] 在切换国家（如切 Tag、继承等）时，CMM 设置会自动转移。
  [*][b]is_host 触发器：[/b] 检查当前国家是否由房主玩家控制。
- [*][b]cmf_suppress 效果：[/b] 通过单一的效果调用来抑制引擎中“已使用但未设置”和“已设置但未使用”的警告。
- [*][b]On-Action 钩子：[/b] 离开大厅后的游戏开始及存档读取钩子（on_game_start_after_lobby、on_game_load、on_game_load_after_lobby），包含玩家国家变体。还包括面向人类玩家的共享年度和月度脉冲（Pulses）。
- [*][b]变量映射工具：[/b] 安全的变量映射（Variable Map）更改辅助工具（cmf_change_variable_map 及其局部/全局变体），以原子方式处理“先删除后添加”操作。
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]社区模组工具箱 (Community Mod Toolkit, CMT)：[/url][/b] 一套配套的开发工具，包含模组模板、创意工坊上传器和模组翻译器。
+ [*][b]无限制工具：[/b] 通过主设置“启用无限制工具”来管控受限功能（涉及 cmf_can_use_unrestricted_tools 触发器和 cmm_set_requires_unrestricted_tools_enabled 单项设置标记）。
+ [*][b]cmf_suppress 效果：[/b] 通过单次效果调用，屏蔽引擎中“已使用但从未设置”和“已设置但从未快使用”的警告。
+ [*][b]On-Action 钩子：[/b] 提供大厅后游戏开始和存档加载钩子（on_game_start_after_lobby、on_game_load、on_game_load_after_lobby）及其玩家国家变体。还包括面向人类玩家的共享年度和月度脉冲。
+ [*][b]变量映射工具：[/b] 安全的变量映射（Variable Map）变更辅助程序（cmf_change_variable_map 及其本地/全局变体），以原子方式处理“先删除再添加”的操作。
+ [*][b]日志：[/b] 全局游戏内日志，用于记录模组行为，包含行动国家、动作文本和可选参数。
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]社区模组工具包 (CMT)：[/url][/b] 一套配套的开发工具，例如模组模板、创意工坊上传器和模组翻译器。
 [/list]
 
 [h1]文档[/h1]
 [list]
- [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — 完整文档
- [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — 快速参考
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url]：完整文档
+ [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url]：快速参考
  [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub 仓库[/url]
 [/list]
 
@@ -42,6 +46,7 @@
  [*]Bahmut
  [*]Conner
  [*]Pickle
+ [*]RomanImperator
 [/list]
 
 [h1]正在使用 CMF 的模组[/h1]
@@ -55,5 +60,5 @@
 [/list]
 
 [h1]更新日志：[/h1]
-请参阅[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]创意工坊页面上的更改说明[/url]。
+请查看 [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]创意工坊页面上的更新说明[/url]。
 

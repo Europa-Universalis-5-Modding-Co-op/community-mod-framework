@@ -1,3 +1,15 @@
+# v2.2.0:
+- [b]Log System:[/b] Shared in-game log for mod actions. View and clear from the Mod Menu. 200 entries per session.
+- [b]Country Transfer:[/b] CMM settings follow the player when they switch countries (tag switch, inheritance). cmf_on_country_transfer on_action for custom transfer logic.
+- [b]Unrestricted Tools:[/b] New master "Enable Unrestricted Tools" setting. cmf_can_use_unrestricted_tools trigger to gate features at runtime; cmm_set_requires_unrestricted_tools_enabled to lock individual settings unless the master toggle is on.
+- [b]Settings Lists:[/b] Item limit raised to 50. New read-only data field type. Prefix/postfix value formatting with sign-conditional variants. Per-item row hiding. Column header tooltips. is_shown on list scripted GUIs. Auto-sized column widths.
+- [b]Mod Removal:[/b] When a mod is disabled, its settings disappear from existing save games.
+- [b]Overridable Top-Level Widgets:[/b] Top-level vanilla widgets like lateralview can only be overridden by replacing the whole file they're defined in, which also wipes out any type definitions in that file. CMF now ships extracted copies of those types so they stay intact when a mod overrides the widget.
+- [b]GlorpUI Stubs:[/b] GlorpUI can reference LSQ widget types when LSQ is absent.
+- [b]Performance:[/b] CMM performance improved by ~3x.
+- [b]Bug Fixes:[/b] on_game_start_after_lobby no longer fires on loads where CMF is inactive. Non-English translations updated.
+- [b]CMM Visual Editor (v1.2.0):[/b] Updated to cover every new v2.2 CMM feature. Bug fix: drag-and-drop now works when the drag starts from an input field.
+
 # v2.1.2:
 - Fix GlorpUI compatability on existing save games
 
@@ -18,7 +30,7 @@
 - [b]is_host Trigger:[/b] Check if the current country is controlled by the host player.
 - [b]cmf_suppress Effect:[/b] Suppress "used but never set" and "set but never used" engine warnings with a single effect call.
 - [b]Player Country Hooks:[/b] Shared on_actions (cmf_yearly_human_country_pulse, cmf_monthly_human_country_pulse) that fire for each human player's country on yearly and monthly pulses.
-- [b]Community Mod Toolkit (CMT):[/b] Companion development tools — mod template, workshop uploader, and automated translation.
+- [b]Community Mod Toolkit (CMT):[/b] Companion development tools: mod template, workshop uploader, and automated translation.
 - [b]Unified Callback System:[/b] Custom Alerts and Action Bar now use a single cmf_on_callback on_action.
 - [b]Scripted GUIs are no longer required:[/b] Alerts and action bar elements only need a Scripted GUI for conditional visibility or enabled state.
 - [b]Documentation:[/b] Full documentation on the [url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] and quick reference on the [url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Paradox Wiki[/url].

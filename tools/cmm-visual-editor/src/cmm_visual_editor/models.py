@@ -15,8 +15,9 @@ class DropdownOption:
 @dataclass
 class ListField:
     field_id: str
-    field_type: str  # "bool" | "dropdown" | "numeric" | "slider"
+    field_type: str  # "bool" | "dropdown" | "numeric" | "slider" | "data"
     name: str
+    desc: str = ""  # header tooltip (optional; maps to _desc localization key)
     # bool
     default_value: Optional[int] = None
     # dropdown
@@ -27,11 +28,17 @@ class ListField:
     min_value: Optional[float] = None
     max_value: Optional[float] = None
     step_value: Optional[float] = None
+    # data field per-item values (1-based; aligned with item_count)
+    item_data_values: Optional[list] = None
     # alias
     alias: str = ""
     item_aliases: Optional[list] = None  # per-item aliases (list of str, one per item)
     # per-item field visibility
     disabled_items: Optional[list] = None  # 1-based item indices where this field is hidden
+    # format display (use $VALUE$ as placeholder, e.g. "$VALUE$%" or "#G $VALUE$%#!")
+    display_format: str = ""
+    display_format_high: str = ""  # format when value > 0
+    display_format_low: str = ""   # format when value < 0
 
 
 @dataclass
@@ -63,6 +70,7 @@ class Setting:
     item_column_name: Optional[str] = None
     item_names: Optional[list] = None
     item_values: Optional[list] = None  # per-item scope values (e.g. "building_type:fine_cloth_guild")
+    hidden_items: Optional[list] = None  # 1-based item indices where entire row is hidden
     list_source: Optional[str] = None  # variable list name for cmm_register_settings_list_from_list
     fields: Optional[list] = None
     # callback
@@ -71,6 +79,8 @@ class Setting:
     no_pass_value: Optional[bool] = None
     # reset
     no_reset: Optional[bool] = None
+    # unrestricted tools gating — marks this setting as requiring the master "Enable Unrestricted Tools" setting to be on
+    requires_unrestricted_tools: Optional[bool] = None
     # alias
     alias: str = ""
     alias_inverted: bool = False
@@ -107,6 +117,7 @@ class ModModel:
     metadata_short_description: str = ""
     metadata_tags: list = field(default_factory=lambda: ["Utilities"])
     metadata_game_version: str = "1.1.*"
+    metadata_relationships: list = field(default_factory=list)
     noinspection: bool = False
     tabs: list = field(default_factory=list)
 
@@ -149,6 +160,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["item_column_name"] = s.item_column_name or ""
             d["item_names"] = s.item_names or []
             d["item_values"] = s.item_values or []
+            if s.hidden_items:
+                d["hidden_items"] = s.hidden_items
             d["list_source"] = s.list_source or ""
             d["fields"] = [_list_field(f) for f in (s.fields or [])]
         if s.on_changed_effect:
@@ -159,6 +172,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["no_pass_value"] = s.no_pass_value
         if s.no_reset:
             d["no_reset"] = s.no_reset
+        if s.requires_unrestricted_tools:
+            d["requires_unrestricted_tools"] = s.requires_unrestricted_tools
         if s.alias:
             d["alias"] = s.alias
         if s.alias_inverted:
@@ -177,6 +192,8 @@ def model_to_dict(model: ModModel) -> dict:
             "field_type": f.field_type,
             "name": f.name,
         }
+        if f.desc:
+            d["desc"] = f.desc
         if f.alias:
             d["alias"] = f.alias
         if f.item_aliases and any(a for a in f.item_aliases):
@@ -197,6 +214,16 @@ def model_to_dict(model: ModModel) -> dict:
             d["min_value"] = f.min_value
             d["max_value"] = f.max_value
             d["step_value"] = f.step_value
+        elif f.field_type == "data":
+            d["default_value"] = f.default_value
+            if f.item_data_values and any(v is not None and v != "" for v in f.item_data_values):
+                d["item_data_values"] = f.item_data_values
+        if f.display_format:
+            d["display_format"] = f.display_format
+        if f.display_format_high:
+            d["display_format_high"] = f.display_format_high
+        if f.display_format_low:
+            d["display_format_low"] = f.display_format_low
         return d
 
     return {
@@ -210,6 +237,7 @@ def model_to_dict(model: ModModel) -> dict:
         "metadata_short_description": model.metadata_short_description,
         "metadata_tags": model.metadata_tags,
         "metadata_game_version": model.metadata_game_version,
+        "metadata_relationships": model.metadata_relationships,
         "noinspection": model.noinspection,
         "tabs": [
             {
@@ -241,6 +269,7 @@ def dict_to_model(data: dict) -> ModModel:
             field_id=f["field_id"],
             field_type=f["field_type"],
             name=f.get("name", ""),
+            desc=f.get("desc", ""),
             default_value=f.get("default_value"),
             default_index=f.get("default_index"),
             option_count=f.get("option_count"),
@@ -248,9 +277,13 @@ def dict_to_model(data: dict) -> ModModel:
             min_value=f.get("min_value"),
             max_value=f.get("max_value"),
             step_value=f.get("step_value"),
+            item_data_values=f.get("item_data_values"),
             alias=f.get("alias", ""),
             item_aliases=f.get("item_aliases"),
             disabled_items=f.get("disabled_items"),
+            display_format=f.get("display_format", ""),
+            display_format_high=f.get("display_format_high", ""),
+            display_format_low=f.get("display_format_low", ""),
         )
 
     def _parse_setting(s: dict) -> Setting:
@@ -276,12 +309,14 @@ def dict_to_model(data: dict) -> ModModel:
             item_column_name=s.get("item_column_name"),
             item_names=s.get("item_names"),
             item_values=s.get("item_values"),
+            hidden_items=s.get("hidden_items"),
             list_source=s.get("list_source"),
             fields=[_parse_list_field(f) for f in s.get("fields", [])],
             on_changed_effect=s.get("on_changed_effect"),
             pass_value_param=s.get("pass_value_param"),
             no_pass_value=s.get("no_pass_value"),
             no_reset=s.get("no_reset"),
+            requires_unrestricted_tools=s.get("requires_unrestricted_tools"),
             alias=s.get("alias", ""),
             alias_inverted=s.get("alias_inverted", False),
             scripted_gui=s.get("scripted_gui"),
@@ -300,6 +335,7 @@ def dict_to_model(data: dict) -> ModModel:
         metadata_short_description=data.get("metadata_short_description", ""),
         metadata_tags=data.get("metadata_tags", ["Utilities"]),
         metadata_game_version=data.get("metadata_game_version", "1.1.*"),
+        metadata_relationships=data.get("metadata_relationships", []),
         noinspection=data.get("noinspection", False),
         tabs=[
             Tab(
