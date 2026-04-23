@@ -61,7 +61,7 @@ The goal is to provide mods that make use of it, new ways to show content or hoo
 
 ## Contributors
 - [Bahmut](https://steamcommunity.com/id/Bahmut/)
-- [CaesarVincens](https://github.com/CaesarVincens)
+- [CaesarVincens](https://steamcommunity.com/id/caesarvincens)
 - [Conner](https://steamcommunity.com/id/ARealConner/)
 - [Glorp](https://steamcommunity.com/id/clickypoo)
 - [Pickle](https://steamcommunity.com/id/pickled-dev)
