@@ -3,35 +3,36 @@
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Simplified Chinese Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-[b]社区模组框架 (CMF)[/b] 是一个实用型模组，旨在提高模组间的互操作性，同时为模组开发者提供创建新功能的工具。
+[b]Community Mod Framework (CMF)[/b] 是一款功能性 Mod，旨在提高 Mod 间的互操作性，同时为 Mod 制作者提供创建新功能的工具。
 
-[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/banner.png[/img]
+[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Banner.png[/img]
 
-[b]CMF 应当在您的模组加载顺序中排在第一位。[/b]
+[b]CMF 应置于 Mod 加载顺序的第一位。[/b]
 
-如有任何疑问，欢迎前往 EU5 Mod Coop Discord 进行交流：https://discord.gg/aqAAcCZsY7
+如有任何疑问，欢迎通过 EU5 Mod Coop Discord 联系：https://discord.gg/aqAAcCZsY7
 
-[h1]功能特性[/h1]
+[h1]特性[/h1]
 [list]
- [*][b]社区模组菜单 (CMM)：[/b] 一个共享的游戏内模组菜单。模组作者可以通过简单的 API 动态注册设置，无需自行构建自定义设置界面。
+ [*][b]社区 Mod 菜单 (CMM)：[/b] 一个共享的游戏内 Mod 菜单。Mod 作者通过简单的 API 动态注册设置，无需自行构建自定义设置界面。
   [list]
-   [*]开关、按钮、数值、滑块（双击拖动）、下拉菜单、文本（仅限单人模式）以及列表设置
-   [*]基于每个模组的分页、分组及搜索功能
-   [*]全局设置，多人游戏中仅房主可编辑
-   [*]重置为默认值
-   [*]可拖动窗口
-   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM 可视化编辑器[/url]：用于创建模组菜单的基于浏览器的工具
+   [*]开关、按钮、数字、滑块（双击拖动）、下拉菜单、文本（仅限单人模式）以及列表设置
+   [*]针对每个 Mod 的标签页、分组和搜索功能
+   [*]全局设置，在多人模式下仅限主机修改
+   [*]重置为默认设置
+   [*]可拖动的窗口
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM 可视化编辑器[/url]：用于创建 Mod 菜单的浏览器工具
   [/list]
  [*][b]自定义警报：[/b] 通过本地化键在警报栏中创建并显示自定义警报。
- [*][b]操作栏：[/b] 使用本地化键添加自定义操作栏按钮。
- [*][b]国家转移：[/b] 在切换国家（如切 Tag、继承等）时，CMM 设置会自动转移。
- [*][b]is_host 触发器：[/b] 检查当前国家是否由房主玩家控制。
- [*][b]无限制工具：[/b] 通过主设置“启用无限制工具”来管控受限功能（涉及 cmf_can_use_unrestricted_tools 触发器和 cmm_set_requires_unrestricted_tools_enabled 单项设置标记）。
- [*][b]cmf_suppress 效果：[/b] 通过单次效果调用，屏蔽引擎中“已使用但从未设置”和“已设置但从未快使用”的警告。
- [*][b]On-Action 钩子：[/b] 提供大厅后游戏开始和存档加载钩子（on_game_start_after_lobby、on_game_load、on_game_load_after_lobby）及其玩家国家变体。还包括面向人类玩家的共享年度和月度脉冲。
- [*][b]变量映射工具：[/b] 安全的变量映射（Variable Map）变更辅助程序（cmf_change_variable_map 及其本地/全局变体），以原子方式处理“先删除再添加”的操作。
- [*][b]日志：[/b] 全局游戏内日志，用于记录模组行为，包含行动国家、动作文本和可选参数。
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]社区模组工具包 (CMT)：[/url][/b] 一套配套的开发工具，例如模组模板、创意工坊上传器和模组翻译器。
+ [*][b]动作条：[/b] 通过本地化键添加自定义动作条按钮。
+ [*][b]国家转移：[/b] 在切换国家（更变国家代码、继承等）时，CMM 设置会自动转移。
+ [*][b]is_host 触发器：[/b] 检查当前国家是否由主机玩家控制。
+ [*][b]无限制工具：[/b] 将受限功能置于主开关“启用无限制工具”之后（使用 cmf_can_use_unrestricted_tools 触发器和每个设置的 cmm_set_requires_unrestricted_tools_enabled 标记）。
+ [*][b]cmf_suppress 效果：[/b] 通过单一效果调用，抑制引擎产生的“已使用但从未设置”和“已设置但从未使用”的警告。
+ [*][b]GUI 宏：[/b] Nand、Nor 和 Xor 逻辑运算符宏。
+ [*][b]On-Action 钩子：[/b] 包含进入游戏后、加载存档后以及多人联机进入游戏后的钩子（on_game_start_after_lobby、on_game_load、on_game_load_after_lobby），并带有玩家国家变体。此外还包含针对人类玩家的共享年度和月度脉冲（Pulses）。
+ [*][b]变量映射工具：[/b] 安全的变量映射更改助手（cmf_change_variable_map 及其本地/全局变体），原子化地处理“先删除后添加”的操作。
+ [*][b]日志：[/b] 全局游戏内日志，用于记录 Mod 行为，包含执行者国家、行为文本和可选参数。
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]社区 Mod 工具箱 (CMT)：[/url][/b] 配套的开发工具集，例如 Mod 模板、创意工坊上传器和 Mod 翻译器。
 [/list]
 
 [h1]文档[/h1]
@@ -43,13 +44,15 @@
 
 [h1]贡献者[/h1]
 [list]
- [*]Bahmut
- [*]Conner
- [*]Pickle
- [*]RomanImperator
+ [*][url=https://steamcommunity.com/id/Bahmut]Bahmut[/url]
+ [*][url=https://steamcommunity.com/id/caesarvincens]CaesarVincens[/url]
+ [*][url=https://steamcommunity.com/id/ARealConner]Conner[/url]
+ [*][url=https://steamcommunity.com/id/clickypoo]Glorp[/url]
+ [*][url=https://steamcommunity.com/id/pickled-dev]Pickle[/url]
+ [*][url=https://steamcommunity.com/id/romaimperator]RomanImperator[/url]
 [/list]
 
-[h1]正在使用 CMF 的模组[/h1]
+[h1]使用 CMF 的 Mod[/h1]
 [list]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
@@ -60,5 +63,7 @@
 [/list]
 
 [h1]更新日志：[/h1]
-请查看 [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]创意工坊页面上的更新说明[/url]。
+请查看[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]创意工坊页面上的更新说明[/url]。
+
+[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Bottom_Banner.png[/img]
 

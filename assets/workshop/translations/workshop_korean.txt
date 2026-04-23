@@ -3,53 +3,56 @@
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Korean Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-[b]Community Mod Framework (CMF)[/b]는 모더들에게 새로운 기능을 제작할 수 있는 도구를 제공함과 동시에 모드 간 상호 호환성을 개선하는 것을 목표로 하는 유틸리티 모드입니다.
+[b]커뮤니티 모드 프레임워크 (CMF)[/b]는 모드 간의 상호 운용성을 개선하는 동시에 모드 제작자에게 새로운 기능을 개발할 수 있는 도구를 제공하는 것을 목표로 하는 유틸리티 모드입니다.
 
-[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/banner.png[/img]
+[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Banner.png[/img]
 
 [b]CMF는 모드 불러오기 순서에서 가장 먼저 배치되어야 합니다.[/b]
 
 질문이 있으시면 EU5 Mod Coop 디스코드에서 언제든지 문의해 주세요: https://discord.gg/aqAAcCZsY7
 
-[h1]기능[/h1]
+[h1]특징 및 기능[/h1]
 [list]
- [*][b]Community Mod Menu (CMM):[/b] 공유 인게임 모드 메뉴입니다. 모드 제작자는 별도의 설정 UI를 구축할 필요 없이 간단한 API를 통해 동적으로 설정을 등록할 수 있습니다.
+ [*][b]커뮤니티 모드 메뉴 (CMM):[/b] 공유형 인게임 모드 메뉴입니다. 모드 제작자는 단순한 API를 통해 설정을 동적으로 등록할 수 있으며, 별도의 커스텀 설정 UI를 구축할 필요가 없습니다.
   [list]
-   [*]토글, 버튼, 숫자, 슬라이더(더블 클릭으로 드래그), 드롭다운, 텍스트(싱글 플레이 전용), 리스트 설정 지원
-   [*]모드별 탭, 그룹 및 검색 기능
-   [*]멀티플레이어 시 호스트 전용 편집이 가능한 전역 설정
+   [*]토글, 버튼, 숫자형, 슬라이더 (더블 클릭하여 드래그), 드롭다운, 텍스트 (싱글플레이 전용), 리스트 설정 지원
+   [*]모드별 탭, 그룹화 및 검색 기능
+   [*]멀티플레이어에서 호스트 전용 편집이 가능한 전역 설정
    [*]기본값으로 초기화
    [*]드래그 가능한 창
-   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url]: 모드 메뉴 제작을 위한 브라우저 기반 도구
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM 비주얼 에디터[/url]: 모드 메뉴 제작을 위한 브라우저 기반 도구
   [/list]
- [*][b]커스텀 알림:[/b] 로컬라이제이션 키를 통해 알림 표시줄에 커스텀 알림을 생성하고 표시합니다.
+ [*][b]커스텀 알림:[/b] 로컬라이제이션 키를 통해 알림 바에 커스텀 알림을 생성하고 표시합니다.
  [*][b]액션 바:[/b] 로컬라이제이션 키를 사용하여 커스텀 액션 바 버튼을 추가합니다.
  [*][b]국가 이전:[/b] 국가 변경(태그 변경, 상속 등) 시 CMM 설정이 자동으로 이전됩니다.
  [*][b]is_host 트리거:[/b] 현재 국가가 호스트 플레이어에 의해 제어되는지 확인합니다.
- [*][b]비제한 도구(Unrestricted Tools):[/b] "비제한 도구 활성화" 마스터 설정을 통해 제한된 기능을 제어합니다 (cmf_can_use_unrestricted_tools 트리거, 설정별 cmm_set_requires_unrestricted_tools_enabled 플래그).
- [*][b]cmf_suppress 이펙트:[/b] 단일 이펙트 호출로 엔진의 "used but never set" 및 "set but never used" 경고를 억제합니다.
- [*][b]On-Action 훅:[/b] 로비 이후 게임 시작 및 세이브 로드 훅(on_game_start_after_lobby, on_game_load, on_game_load_after_lobby)과 플레이어 국가 변형을 제공합니다. 또한 유저 플레이어를 위한 공유 연간 및 월간 펄스(pulse)를 포함합니다.
- [*][b]Variable Map 유틸리티:[/b] 제거 후 추가 과정을 원자적으로 처리하는 안전한 변수 맵 수정 헬퍼(cmf_change_variable_map 및 로컬/전역 변형)입니다.
- [*][b]로그:[/b] 주체 국가, 액션 텍스트 및 선택적 인수를 포함하여 모드 활동을 기록하는 전역 인게임 로그입니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] 모드 템플릿, 창작마당 업로더, 모드 번역기 등과 같은 개발 도구 세트입니다.
+ [*][b]비제한 도구 (Unrestricted Tools):[/b] 마스터 "비제한 도구 활성화" 설정을 통해 제한된 기능들을 관리합니다. (cmf_can_use_unrestricted_tools 트리거, 설정당 cmm_set_requires_unrestricted_tools_enabled 플래그 사용)
+ [*][b]cmf_suppress 이펙트:[/b] 단 한 번의 이펙트 호출로 "사용되었으나 설정되지 않음(used but never set)" 및 "설정되었으나 사용되지 않음(set but never used)" 엔진 경고를 억제합니다.
+ [*][b]GUI 매크로:[/b] Nand, Nor, Xor 논리 연산자 매크로를 제공합니다.
+ [*][b]온-액션 훅 (On-Action Hooks):[/b] 로비 이후 게임 시작 및 세이브 불러오기 훅(on_game_start_after_lobby, on_game_load, on_game_load_after_lobby)과 플레이어 국가 변형 기능을 제공합니다. 또한 인간 플레이어를 위한 공유형 연간 및 월간 펄스(pulses)를 포함합니다.
+ [*][b]변수 맵 유틸리티:[/b] 삭제 후 추가 과정을 원자적으로 처리하는 안전한 변수 맵 변형 헬퍼(cmf_change_variable_map 및 로컬/전역 변형)를 제공합니다.
+ [*][b]로그:[/b] 수행 국가, 행동 텍스트, 선택적 인자를 포함하여 모드 동작을 기록하는 전역 인게임 로그입니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]커뮤니티 모드 툴킷 (CMT):[/url][/b] 모드 템플릿, 창작마당 업로더, 모드 번역기 등과 같은 개발용 동반 도구 세트입니다.
 [/list]
 
 [h1]문서[/h1]
 [list]
  [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url]: 전체 문서
- [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url]: 빠른 참조
+ [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url]: 빠른 참조 가이드
  [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub 저장소[/url]
 [/list]
 
 [h1]기여자[/h1]
 [list]
- [*]Bahmut
- [*]Conner
- [*]Pickle
- [*]RomanImperator
+ [*][url=https://steamcommunity.com/id/Bahmut]Bahmut[/url]
+ [*][url=https://steamcommunity.com/id/caesarvincens]CaesarVincens[/url]
+ [*][url=https://steamcommunity.com/id/ARealConner]Conner[/url]
+ [*][url=https://steamcommunity.com/id/clickypoo]Glorp[/url]
+ [*][url=https://steamcommunity.com/id/pickled-dev]Pickle[/url]
+ [*][url=https://steamcommunity.com/id/romaimperator]RomanImperator[/url]
 [/list]
 
-[h1]CMF를 사용하는 모드[/h1]
+[h1]사용 중인 모드[/h1]
 [list]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
@@ -59,6 +62,8 @@
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3696243603]Autonomous Diplomats[/url]
 [/list]
 
-[h1]변경 로그:[/h1]
-[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]창작마당 페이지의 변경 노트[/url]를 확인하세요.
+[h1]변경 사항:[/h1]
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]창작마당 페이지의 업데이트 내역[/url]을 확인하세요.
+
+[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Bottom_Banner.png[/img]
 

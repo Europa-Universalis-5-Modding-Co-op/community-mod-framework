@@ -3,35 +3,36 @@ Framework e Menu de Mods da Comunidade / Community Mod Framework & Menu
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Portuguese (Brazil) Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-O [b]Community Mod Framework (CMF)[/b] é um mod de utilidade que visa melhorar a interoperabilidade entre mods, ao mesmo tempo que fornece ferramentas para modders criarem novas funcionalidades.
+O [b]Community Mod Framework (CMF)[/b] é um mod utilitário que visa melhorar a interoperabilidade entre mods, ao mesmo tempo em que fornece ferramentas para modders criarem novos recursos.
 
-[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/banner.png[/img]
+[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Banner.png[/img]
 
 [b]O CMF deve ser carregado primeiro na sua ordem de carregamento de mods.[/b]
 
 Qualquer dúvida, sinta-se à vontade para entrar em contato no Discord do EU5 Mod Coop: https://discord.gg/aqAAcCZsY7
 
-[h1]Funcionalidades[/h1]
+[h1]Recursos[/h1]
 [list]
- [*][b]Community Mod Menu (CMM):[/b] Um menu de mods compartilhado dentro do jogo. Autores de mods registram configurações dinamicamente através de uma API simples, sem a necessidade de construir uma interface de configurações personalizada.
+ [*][b]Community Mod Menu (CMM):[/b] Um menu de mods compartilhado dentro do jogo. Autores de mods registram configurações dinamicamente através de uma API simples, sem a necessidade de construir uma interface de usuário de configurações personalizada.
   [list]
-   [*]Alternância (Toggle), botão, numérico, controle deslizante (clique duplo para arrastar), menu suspenso (dropdown), texto (apenas singleplayer) e configurações de lista
-   [*]Abas por mod, grupos e busca
-   [*]Configurações globais com edição apenas para o anfitrião (host) no multijogador
-   [*]Restaurar Padrões
-   [*]Janela arrastável
-   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url]: ferramenta baseada em navegador para criar seu menu de mods
+   [*]Configurações de alternância (toggle), botão, numérico, controle deslizante (clique duplo para arrastar), menu suspenso, texto (apenas para um jogador) e lista.
+   [*]Abas por mod, grupos e busca.
+   [*]Configurações globais com edição multijogador restrita ao host.
+   [*]Redefinir para os Padrões.
+   [*]Janela arrastável.
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url]: ferramenta baseada em navegador para criar seu menu de mod.
   [/list]
  [*][b]Alertas Personalizados:[/b] Crie e exiba alertas personalizados na barra de alertas através de chaves de localização.
- [*][b]Barra de Ação:[/b] Adicione botões personalizados à barra de ação com chaves de localização.
- [*][b]Transferência de País:[/b] As configurações do CMM são transferidas automaticamente ao trocar de país (trocas de tag, herança, etc.).
- [*][b]Gatilho is_host:[/b] Verifica se o país atual é controlado pelo jogador anfitrião.
- [*][b]Ferramentas Sem Restrições:[/b] Restrinja funcionalidades específicas por meio de uma configuração mestre "Habilitar Ferramentas Sem Restrições" (gatilho cmf_can_use_unrestricted_tools, flag cmm_set_requires_unrestricted_tools_enabled por configuração).
- [*][b]Efeito cmf_suppress:[/b] Suprima avisos da engine de "usado mas nunca definido" (used but never set) e "definido mas nunca usado" (set but never used) com uma única chamada de efeito.
- [*][b]Ganchos On-Action:[/b] Ganchos de início de jogo pós-lobby e carregamento de save (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) com variantes para o país do jogador. Também inclui pulsos anuais e mensais compartilhados para jogadores humanos.
- [*][b]Utilitários de Mapa de Variáveis:[/b] Auxiliares de mutação segura de mapa de variáveis (cmf_change_variable_map e variantes locais/globais) que lidam com remoção e adição de forma atômica.
- [*][b]Log:[/b] Log global dentro do jogo para registrar ações de mods com país do ator, texto da ação e argumentos opcionais.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Um conjunto complementar de ferramentas de desenvolvimento, como um modelo de mod, uploader para a workshop e tradutor de mods.
+ [*][b]Barra de Ação:[/b] Adicione botões personalizados na barra de ação com chaves de localização.
+ [*][b]Transferência de País:[/b] As configurações do CMM são transferidas automaticamente ao trocar de país (mudanças de tag, herança, etc.).
+ [*][b]Gatilho is_host:[/b] Verifica se o país atual é controlado pelo jogador host.
+ [*][b]Ferramentas Irrestritas:[/b] Restrinja recursos específicos atrás de uma configuração mestre "Habilitar Ferramentas Irrestritas" (gatilho cmf_can_use_unrestricted_tools, flag por configuração cmm_set_requires_unrestricted_tools_enabled).
+ [*][b]Efeito cmf_suppress:[/b] Suprima avisos da engine de "usado, mas nunca definido" e "definido, mas nunca usado" com uma única chamada de efeito.
+ [*][b]Macros de GUI:[/b] Macros de operadores lógicos Nand, Nor e Xor.
+ [*][b]Hooks de On-Action:[/b] Hooks de início de jogo pós-lobby e carregamento de save (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) com variantes para o país do jogador. Também inclui pulsos anuais e mensais compartilhados para jogadores humanos.
+ [*][b]Utilitários de Mapa de Variáveis:[/b] Auxiliares seguros de mutação de mapa de variáveis (cmf_change_variable_map e variantes locais/globais) que lidam com remoção e adição de forma atômica.
+ [*][b]Log:[/b] Log global dentro do jogo para registrar ações de mods com o país do ator, texto da ação e argumentos opcionais.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Um conjunto complementar de ferramentas de desenvolvimento, como modelo de mod, carregador da workshop e tradutor de mods.
 [/list]
 
 [h1]Documentação[/h1]
@@ -43,10 +44,12 @@ Qualquer dúvida, sinta-se à vontade para entrar em contato no Discord do EU5 M
 
 [h1]Colaboradores[/h1]
 [list]
- [*]Bahmut
- [*]Conner
- [*]Pickle
- [*]RomanImperator
+ [*][url=https://steamcommunity.com/id/Bahmut]Bahmut[/url]
+ [*][url=https://steamcommunity.com/id/caesarvincens]CaesarVincens[/url]
+ [*][url=https://steamcommunity.com/id/ARealConner]Conner[/url]
+ [*][url=https://steamcommunity.com/id/clickypoo]Glorp[/url]
+ [*][url=https://steamcommunity.com/id/pickled-dev]Pickle[/url]
+ [*][url=https://steamcommunity.com/id/romaimperator]RomanImperator[/url]
 [/list]
 
 [h1]Mods que usam o CMF[/h1]
@@ -61,4 +64,6 @@ Qualquer dúvida, sinta-se à vontade para entrar em contato no Discord do EU5 M
 
 [h1]Registro de Alterações:[/h1]
 Veja as [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]Notas de Alteração na página da workshop[/url].
+
+[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Bottom_Banner.png[/img]
 

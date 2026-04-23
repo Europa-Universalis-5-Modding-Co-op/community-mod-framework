@@ -3,50 +3,53 @@
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Japanese Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-[b]Community Mod Framework (CMF)[/b] は、Mod間の相互運用性を向上させると同時に、Mod制作者に新機能を作成するためのツールを提供することを目的としたユーティリティModです。
+[b]Community Mod Framework (CMF)[/b] は、Mod間の互換性を向上させ、Mod制作者に新機能作成のためのツールを提供することを目的としたユーティリティModです。
 
-[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/banner.png[/img]
+[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Banner.png[/img]
 
-[b]CMFはModのロード順の最初に読み込む必要があります。[/b]
+[b]CMFは、Modのロード順序の最初に読み込む必要があります。[/b]
 
 ご質問がある場合は、EU5 Mod Coop Discordまでお気軽にお問い合わせください: https://discord.gg/aqAAcCZsY7
 
-[h1]機能[/h1]
+[h1]主な機能[/h1]
 [list]
- [*][b]Community Mod Menu (CMM):[/b] 共有のゲーム内Modメニュー。Mod制作者はシンプルなAPIを通じて動的に設定を登録でき、カスタム設定UIを構築する必要はありません。
+ [*][b]Community Mod Menu (CMM):[/b] 共有のゲーム内Modメニュー。Mod制作者はシンプルなAPIを通じて設定を動的に登録でき、カスタム設定UIを作成する必要はありません。
   [list]
-   [*]トグル、ボタン、数値、スライダー（ダブルクリックでドラッグ）、ドロップダウン、テキスト（シングルプレイヤー限定）、リスト設定
+   [*]トグル、ボタン、数値、スライダー（ダブルクリックでドラッグ）、ドロップダウン、テキスト（シングルプレイヤーのみ）、リスト設定
    [*]Modごとのタブ、グループ、検索機能
-   [*]マルチプレイヤーでのホスト限定編集が可能なグローバル設定
+   [*]ホストのみが編集可能なマルチプレイヤー向けグローバル設定
    [*]デフォルトにリセット
    [*]ドラッグ可能なウィンドウ
    [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url]: Modメニュー作成用のブラウザベースのツール
   [/list]
- [*][b]カスタムアラート:[/b] ローカライズキーを使用して、アラートバーにカスタムアラートを作成・表示します。
- [*][b]アクションバー:[/b] ローカライズキーを使用して、カスタムアクションバーボタンを追加します。
- [*][b]国家の引き継ぎ:[/b] 国家を切り替えた際（タグスイッチ、継承など）、CMMの設定が自動的に引き継がれます。
+ [*][b]カスタムアラート:[/b] ローカライゼーションキーを使用して、アラートバーにカスタムアラートを作成・表示します。
+ [*][b]アクションバー:[/b] ローカライゼーションキーを使用して、カスタムアクションバーボタンを追加します。
+ [*][b]国家の移譲:[/b] 国家の切り替え（タグの変更、継承など）時にCMMの設定が自動的に引き継がれます。
  [*][b]is_host トリガー:[/b] 現在の国家がホストプレイヤーによって操作されているかを確認します。
- [*][b]制限なしツール:[/b] マスター設定「Enable Unrestricted Tools」によって制限付き機能を制御します（cmf_can_use_unrestricted_tools トリガー、設定ごとの cmm_set_requires_unrestricted_tools_enabled フラグ）。
- [*][b]cmf_suppress エフェクト:[/b] 1つのエフェクト呼び出しで、「used but never set（使用されているが設定されていない）」および「set but never used（設定されているが使用されていない）」というエンジン警告を抑制します。
- [*][b]オンアクション・フック:[/b] ロビー後のゲーム開始およびセーブロードのフック（on_game_start_after_lobby, on_game_load, on_game_load_after_lobby）と、プレイヤー国家向けのバリアント。人間プレイヤー用の共有の年次および月次パルスも含まれます。
- [*][b]変数マップ・ユーティリティ:[/b] 削除してから追加する処理をアトミックに処理する、安全な変数マップ変更ヘルパー（cmf_change_variable_map およびローカル/グローバルバリアント）。
- [*][b]ログ:[/b] 実行国家、アクションテキスト、およびオプションの引数を含む、Modのアクションを記録するための共有ゲーム内ログ。
+ [*][b]無制限ツール (Unrestricted Tools):[/b] 制限された機能をマスター設定「無制限ツールの有効化 (Enable Unrestricted Tools)」で管理します（cmf_can_use_unrestricted_tools トリガー、設定ごとの cmm_set_requires_unrestricted_tools_enabled フラグ）。
+ [*][b]cmf_suppress エフェクト:[/b] 1回のエフェクト呼び出しで、「使用されているが設定されていない」および「設定されているが使用されていない」というエンジンの警告を抑制します。
+ [*][b]GUIマクロ:[/b] Nand、Nor、Xorの論理演算子マクロ。
+ [*][b]オンアクション・フック (On-Action Hooks):[/b] ロビー後のゲーム開始およびセーブデータのロード用フック（on_game_start_after_lobby、on_game_load、on_game_load_after_lobby）と、そのプレイヤー国家版。また、人間プレイヤー向けの共有の年次・月次パルスが含まれます。
+ [*][b]変数マップ・ユーティリティ:[/b] 「削除してから追加」をアトミックに処理する、安全な変数マップ変更ヘルパー（cmf_change_variable_map およびそのローカル/グローバル版）。
+ [*][b]ログ:[/b] アクターの国家、アクションテキスト、およびオプションの引数を使用してModのアクションを記録する、グローバルなゲーム内ログ。
  [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Modテンプレート、ワークショップアップローダー、Mod翻訳ツールなどの開発ツールセット。
 [/list]
 
 [h1]ドキュメント[/h1]
 [list]
- [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url]: 完全なドキュメント
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url]: 全ドキュメント
  [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url]: クイックリファレンス
- [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub リポジトリ[/url]
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHubリポジトリ[/url]
 [/list]
 
 [h1]貢献者[/h1]
 [list]
- [*]Bahmut
- [*]Conner
- [*]Pickle
- [*]RomanImperator
+ [*][url=https://steamcommunity.com/id/Bahmut]Bahmut[/url]
+ [*][url=https://steamcommunity.com/id/caesarvincens]CaesarVincens[/url]
+ [*][url=https://steamcommunity.com/id/ARealConner]Conner[/url]
+ [*][url=https://steamcommunity.com/id/clickypoo]Glorp[/url]
+ [*][url=https://steamcommunity.com/id/pickled-dev]Pickle[/url]
+ [*][url=https://steamcommunity.com/id/romaimperator]RomanImperator[/url]
 [/list]
 
 [h1]CMFを使用しているMod[/h1]
@@ -60,5 +63,7 @@
 [/list]
 
 [h1]更新履歴:[/h1]
-[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]ワークショップページの更新履歴[/url] を参照してください。
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]ワークショップページ内の「更新履歴 (Change Notes)」[/url]をご覧ください。
+
+[img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Bottom_Banner.png[/img]
 
