@@ -154,17 +154,17 @@
 
 								hbox = {
 									size = { 100% 20 }
-									datamodel = "[DataModelRepeatedItem('(int32)101')]"
+									datamodel = "[DataModelRepeatedItem('(int32)21')]"
 									datamodel_reuse_widgets = yes
 
 									item = {
 										widget = {
-											size = { 2 20 }
-											minimumsize = { 2 20 }
+											layoutpolicy_horizontal = expanding
+											size = { 0 20 }
 											allow_outside = yes
 											onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
-											onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
-											onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_SliderDragHover_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+											onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+											onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_SliderDragHover_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
 											onmousehierarchyenter = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 
 											button = {
@@ -173,7 +173,7 @@
 												effectname = "NoHighlight"
 												enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 												onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
-												onpressed = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+												onpressed = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
 												onpressed = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
 												onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
 												tooltip = "CMM_SLIDER_DOUBLE_CLICK_DRAG"

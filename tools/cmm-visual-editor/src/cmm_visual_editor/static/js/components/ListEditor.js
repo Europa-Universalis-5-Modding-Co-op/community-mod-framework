@@ -22,8 +22,8 @@ const ListEditorComponent = {
                 <input v-model="setting.item_column_name" placeholder="Item">
             </div>
             <div v-if="listMode === 'static'" class="field-row">
-                <label>Item Count (1-20)</label>
-                <input type="number" v-model.number="setting.item_count" min="1" max="20" @input="syncItemNames">
+                <label>Item Count (1-50)</label>
+                <input type="number" v-model.number="setting.item_count" min="1" max="50" @input="syncItemNames">
             </div>
             <div v-if="listMode === 'from_list'" class="field-row">
                 <label>Variable List Name</label>
@@ -37,6 +37,23 @@ const ListEditorComponent = {
                 <label class="compact-label">{{ i + 1 }}</label>
                 <input :value="name" @input="setting.item_names[i] = $event.target.value" :placeholder="'Item ' + (i+1)" class="item-name-input">
                 <input :value="(setting.item_values||[])[i] || ''" @input="setItemValue(i, $event.target.value)" placeholder="value (e.g. building_type:fine_cloth_guild)" class="item-value-input">
+            </div>
+        </div>
+
+        <div v-if="listMode === 'static' && (setting.item_count || 1) > 1" class="per-item-aliases">
+            <h6 class="collapsible-header" @click="togglePerItemSection(-1, 'row-visibility')">
+                <span class="collapse-indicator">{{ isPerItemSectionOpen(-1, 'row-visibility') ? '&#9660;' : '&#9654;' }}</span>
+                Per-Item Row Visibility
+            </h6>
+            <div v-show="isPerItemSectionOpen(-1, 'row-visibility')">
+                <div v-for="(name, ii) in (setting.item_names || [])" :key="'rowvis-'+ii" class="field-row compact list-item-row">
+                    <label class="compact-label">{{ ii + 1 }}</label>
+                    <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
+                    <label class="item-visibility-toggle">
+                        <input type="checkbox" :checked="isItemVisible(ii)" @change="toggleItemVisibility(ii)">
+                        <span class="item-visibility-label">{{ isItemVisible(ii) ? 'Shown' : 'Hidden' }}</span>
+                    </label>
+                </div>
             </div>
         </div>
 
@@ -88,11 +105,16 @@ const ListEditorComponent = {
                                 <option value="dropdown">Dropdown</option>
                                 <option value="numeric">Numeric</option>
                                 <option value="slider">Slider</option>
+                                <option value="data">Data (read-only)</option>
                             </select>
                         </div>
                         <div class="field-row">
                             <label>Name</label>
                             <input v-model="field.name" placeholder="Field Name">
+                        </div>
+                        <div class="field-row">
+                            <label>Header Tooltip</label>
+                            <input v-model="field.desc" placeholder="Optional header tooltip text">
                         </div>
                     </div>
 
@@ -124,6 +146,41 @@ const ListEditorComponent = {
                         </div>
                     </div>
 
+                    <!-- Data field (read-only display) -->
+                    <div v-if="field.field_type === 'data'" class="field-grid">
+                        <div class="field-row">
+                            <label>Default</label>
+                            <input type="number" v-model.number="field.default_value">
+                        </div>
+                        <div class="field-row">
+                            <label>Format</label>
+                            <input type="text" v-model="field.display_format" placeholder='e.g. $VALUE$%'>
+                        </div>
+                        <div class="field-row">
+                            <label>Format (&gt; 0)</label>
+                            <input type="text" v-model="field.display_format_high" placeholder='e.g. #G $VALUE$%#!'>
+                        </div>
+                        <div class="field-row">
+                            <label>Format (&lt; 0)</label>
+                            <input type="text" v-model="field.display_format_low" placeholder='e.g. #R $VALUE$%#!'>
+                        </div>
+                    </div>
+
+                    <!-- Data field per-item values (static lists only) -->
+                    <div v-if="field.field_type === 'data' && listMode === 'static' && field.field_id" class="per-item-aliases">
+                        <h6 class="collapsible-header" @click="togglePerItemSection(fi, 'data_values')">
+                            <span class="collapse-indicator">{{ isPerItemSectionOpen(fi, 'data_values') ? '&#9660;' : '&#9654;' }}</span>
+                            Per-Item Data Values
+                        </h6>
+                        <div v-show="isPerItemSectionOpen(fi, 'data_values')">
+                            <div v-for="(name, ii) in (setting.item_names || [])" :key="'dv-'+ii" class="field-row compact list-item-row">
+                                <label class="compact-label">{{ ii + 1 }}</label>
+                                <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
+                                <input type="number" :value="(field.item_data_values||[])[ii] ?? ''" @input="setItemDataValue(fi, ii, $event.target.value)" placeholder="value">
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Numeric / Slider field -->
                     <div v-if="field.field_type === 'numeric' || field.field_type === 'slider'" class="field-grid">
                         <div class="field-row">
@@ -141,6 +198,18 @@ const ListEditorComponent = {
                         <div class="field-row">
                             <label>Step</label>
                             <input type="number" v-model.number="field.step_value" min="1">
+                        </div>
+                        <div class="field-row">
+                            <label>Format</label>
+                            <input type="text" v-model="field.display_format" placeholder='e.g. $VALUE$%'>
+                        </div>
+                        <div class="field-row">
+                            <label>Format (&gt; 0)</label>
+                            <input type="text" v-model="field.display_format_high" placeholder='e.g. #G $VALUE$%#!'>
+                        </div>
+                        <div class="field-row">
+                            <label>Format (&lt; 0)</label>
+                            <input type="text" v-model="field.display_format_low" placeholder='e.g. #R $VALUE$%#!'>
                         </div>
                     </div>
 
@@ -286,7 +355,7 @@ const ListEditorComponent = {
             setTimeout(() => { this.copiedField = -1; }, 1200);
         },
         syncItemNames() {
-            const count = Math.max(1, Math.min(20, this.setting.item_count || 1));
+            const count = Math.max(1, Math.min(50, this.setting.item_count || 1));
             this.setting.item_count = count;
             if (!this.setting.item_names) this.setting.item_names = [];
             while (this.setting.item_names.length < count) {
@@ -302,6 +371,11 @@ const ListEditorComponent = {
             }
             while (this.setting.item_values.length > count) {
                 this.setting.item_values.pop();
+            }
+            // Sync hidden_items (remove out-of-range items)
+            if (this.setting.hidden_items) {
+                this.setting.hidden_items = this.setting.hidden_items.filter(i => i >= 1 && i <= count);
+                if (this.setting.hidden_items.length === 0) this.setting.hidden_items = null;
             }
             // Sync per-item disabled_items arrays on all fields (remove out-of-range items)
             for (const field of (this.setting.fields || [])) {
@@ -320,6 +394,37 @@ const ListEditorComponent = {
                         field.item_aliases.pop();
                     }
                 }
+                if (field.item_data_values) {
+                    while (field.item_data_values.length < count) {
+                        field.item_data_values.push('');
+                    }
+                    while (field.item_data_values.length > count) {
+                        field.item_data_values.pop();
+                    }
+                }
+            }
+        },
+        isItemVisible(itemIndex) {
+            if (!this.setting.hidden_items) return true;
+            return !this.setting.hidden_items.includes(itemIndex + 1);
+        },
+        toggleItemVisibility(itemIndex) {
+            const item = itemIndex + 1;  // 1-based
+            if (!this.setting.hidden_items) {
+                this.setting.hidden_items = [];
+            }
+            const idx = this.setting.hidden_items.indexOf(item);
+            if (idx >= 0) {
+                this.setting.hidden_items.splice(idx, 1);
+            } else {
+                this.setting.hidden_items.push(item);
+                this.setting.hidden_items.sort((a, b) => a - b);
+            }
+            // Trigger reactivity
+            this.setting.hidden_items = [...this.setting.hidden_items];
+            // Clean up empty array
+            if (this.setting.hidden_items.length === 0) {
+                this.setting.hidden_items = null;
             }
         },
         isItemFieldEnabled(fi, itemIndex) {
@@ -377,6 +482,17 @@ const ListEditorComponent = {
             }
             this.setting.item_values[index] = value;
         },
+        setItemDataValue(fi, itemIndex, value) {
+            const field = (this.setting.fields || [])[fi];
+            if (!field) return;
+            if (!field.item_data_values) field.item_data_values = [];
+            const count = this.setting.item_count || 1;
+            while (field.item_data_values.length < count) {
+                field.item_data_values.push('');
+            }
+            field.item_data_values[itemIndex] = value === '' ? '' : Number(value);
+            field.item_data_values = [...field.item_data_values];
+        },
         onListModeChange() {
             if (this.listMode === 'from_list') {
                 this.setting.list_source = this.setting.list_source || '';
@@ -391,6 +507,7 @@ const ListEditorComponent = {
                 field_id: '',
                 field_type: 'bool',
                 name: '',
+                desc: '',
                 default_value: 0,
                 default_index: 1,
                 option_count: 3,
@@ -402,6 +519,9 @@ const ListEditorComponent = {
                 min_value: 0,
                 max_value: 10,
                 step_value: 1,
+                display_format: '',
+                display_format_high: '',
+                display_format_low: '',
             });
         },
         removeField(i) {

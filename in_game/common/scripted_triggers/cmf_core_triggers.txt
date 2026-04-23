@@ -1,22 +1,30 @@
 ﻿#noinspection ALL
-# True when host-only tools are enabled and this country counts as host.
+# True when this country is controlled by the host player, or in singleplayer.
 # Scope: country
 # Args: none
 is_host = {
+	OR = {
+		AND = {
+			has_multiple_players = no
+			is_human = yes
+		}
+		AND = {
+			has_multiple_players = yes
+			has_global_variable = cmm_core_host_country
+			this ?= global_var:cmm_core_host_country
+		}
+	}
+}
+
+# True when this country can use unrestricted tools: the unrestricted-tools setting is on and this country is the host (or in singleplayer).
+# Gate for restricted features not meant for normal play.
+# Scope: country
+# Args: none
+cmf_can_use_unrestricted_tools = {
 	AND = {
 		has_global_variable_map = cmm
-		is_key_in_global_variable_map = { name = cmm target = flag:cmm_core__enable_host_only_tools }
-		"global_variable_map(cmm|flag:cmm_core__enable_host_only_tools)" >= 1
-		OR = {
-			AND = {
-				has_multiple_players = no
-				is_human = yes
-			}
-			AND = {
-				has_multiple_players = yes
-				has_global_variable = cmm_core_host_country
-				this ?= global_var:cmm_core_host_country
-			}
-		}
+		is_key_in_global_variable_map = { name = cmm target = flag:cmm_core__enable_unrestricted_tools }
+		"global_variable_map(cmm|flag:cmm_core__enable_unrestricted_tools)" >= 1
+		is_host = yes
 	}
 }

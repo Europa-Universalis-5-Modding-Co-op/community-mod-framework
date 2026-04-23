@@ -222,6 +222,16 @@ ${prefix}_on_cmf_callback = {
                     }
                 }
             }
+            // Hidden items
+            for (const item of (setting.hidden_items || [])) {
+                lines.push('');
+                lines.push(`\tcmm_hide_list_item = {`);
+                lines.push(`\t\tmod_id = ${modId}`);
+                lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+                lines.push(`\t\titem = ${item}`);
+                lines.push(`\t}`);
+            }
+
             for (const field of (setting.fields || [])) {
                 lines.push('');
                 this._emitListField(lines, modId, setting.setting_id, field);
@@ -260,6 +270,12 @@ ${prefix}_on_cmf_callback = {
             }
             if (setting.no_reset) {
                 lines.push(`\tcmm_set_no_reset = {`);
+                lines.push(`\t\tmod_id = ${modId}`);
+                lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+                lines.push(`\t}`);
+            }
+            if (setting.requires_unrestricted_tools) {
+                lines.push(`\tcmm_set_requires_unrestricted_tools_enabled = {`);
                 lines.push(`\t\tmod_id = ${modId}`);
                 lines.push(`\t\tsetting_id = ${setting.setting_id}`);
                 lines.push(`\t}`);
@@ -330,6 +346,14 @@ ${prefix}_on_cmf_callback = {
             lines.push(`\t\tsetting_id = ${setting.setting_id}`);
             lines.push(`\t}`);
         }
+
+        // Requires Unrestricted Tools
+        if (setting.requires_unrestricted_tools) {
+            lines.push(`\tcmm_set_requires_unrestricted_tools_enabled = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${setting.setting_id}`);
+            lines.push(`\t}`);
+        }
     },
 
     _emitListField(lines, modId, settingId, field) {
@@ -368,6 +392,33 @@ ${prefix}_on_cmf_callback = {
             lines.push(`\t\tmin_value = ${this._num(field.min_value, 0)}`);
             lines.push(`\t\tmax_value = ${this._num(field.max_value, 10)}`);
             lines.push(`\t\tstep_value = ${this._num(field.step_value, 1)}`);
+            lines.push(`\t}`);
+        } else if (ft === 'data') {
+            lines.push(`\tcmm_register_list_data_field = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${settingId}`);
+            lines.push(`\t\tfield_id = ${field.field_id}`);
+            lines.push(`\t\tdefault_value = ${this._num(field.default_value, 0)}`);
+            lines.push(`\t}`);
+            const dataVals = field.item_data_values || [];
+            for (let i = 0; i < dataVals.length; i++) {
+                const v = dataVals[i];
+                if (v === null || v === undefined || v === '') continue;
+                lines.push(`\tcmm_set_list_data_value = { mod_id = ${modId} setting_id = ${settingId} field_id = ${field.field_id} item = ${i + 1} value = ${this._num(v, 0)} }`);
+            }
+        }
+        // List field format flag
+        if (field.display_format_high || field.display_format_low) {
+            lines.push(`\tcmm_set_list_field_conditional_format = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${settingId}`);
+            lines.push(`\t\tfield_id = ${field.field_id}`);
+            lines.push(`\t}`);
+        } else if (field.display_format) {
+            lines.push(`\tcmm_set_list_field_format = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${settingId}`);
+            lines.push(`\t\tfield_id = ${field.field_id}`);
             lines.push(`\t}`);
         }
         // Per-item field disables
@@ -720,6 +771,36 @@ ${prefix}_on_cmf_callback = {
             for (const field of (setting.fields || [])) {
                 const fqid = `${qid}__${field.field_id}`;
                 lines.push(` ${fqid}_name: "${this._esc(field.name || field.field_id)}"`);
+                if (field.desc) {
+                    lines.push(` ${fqid}_desc: "${this._esc(field.desc)}"`);
+                }
+                if (field.display_format && field.display_format.includes('$VALUE$')) {
+                    const parts = field.display_format.split('$VALUE$');
+                    if (parts[0]) {
+                        lines.push(` ${fqid}_prefix: "${this._esc(parts[0])}"`);
+                    }
+                    if (parts[1]) {
+                        lines.push(` ${fqid}_postfix: "${this._esc(parts[1])}"`);
+                    }
+                }
+                if (field.display_format_high && field.display_format_high.includes('$VALUE$')) {
+                    const parts = field.display_format_high.split('$VALUE$');
+                    if (parts[0]) {
+                        lines.push(` ${fqid}_prefix_high: "${this._esc(parts[0])}"`);
+                    }
+                    if (parts[1]) {
+                        lines.push(` ${fqid}_postfix_high: "${this._esc(parts[1])}"`);
+                    }
+                }
+                if (field.display_format_low && field.display_format_low.includes('$VALUE$')) {
+                    const parts = field.display_format_low.split('$VALUE$');
+                    if (parts[0]) {
+                        lines.push(` ${fqid}_prefix_low: "${this._esc(parts[0])}"`);
+                    }
+                    if (parts[1]) {
+                        lines.push(` ${fqid}_postfix_low: "${this._esc(parts[1])}"`);
+                    }
+                }
                 if (field.field_type === 'dropdown') {
                     for (const opt of (field.options || [])) {
                         lines.push(` ${fqid}_option_${opt.index}_name: "${this._esc(opt.name)}"`);
@@ -761,13 +842,16 @@ ${prefix}_on_cmf_callback = {
             supported_game_version: state.metadata_game_version,
             short_description: state.metadata_short_description || state.mod_desc,
             tags: state.metadata_tags,
-            relationships: [{
-                rel_type: "dependency",
-                id: "community_mod_framework",
-                display_name: "Community Mod Framework",
-                resource_type: "mod",
-                version: "2.*",
-            }],
+            relationships: [
+                {
+                    rel_type: "dependency",
+                    id: "community_mod_framework",
+                    display_name: "Community Mod Framework",
+                    resource_type: "mod",
+                    version: "2.*",
+                },
+                ...(state.metadata_relationships || []),
+            ],
             game_custom_data: {},
         }, null, 4);
     },
@@ -779,6 +863,6 @@ ${prefix}_on_cmf_callback = {
 
     _esc(s) {
         if (!s) return '';
-        return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        return s.replace(/"/g, '\\"');
     },
 };

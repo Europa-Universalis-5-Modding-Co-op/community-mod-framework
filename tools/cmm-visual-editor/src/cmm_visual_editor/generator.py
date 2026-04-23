@@ -280,6 +280,15 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
                     lines.append(f"\t\tvalue = {val}")
                     lines.append(f"\t}}")
 
+        # Hidden items
+        for item in (setting.hidden_items or []):
+            lines.append("")
+            lines.append(f"\tcmm_hide_list_item = {{")
+            lines.append(f"\t\tmod_id = {mod_id}")
+            lines.append(f"\t\tsetting_id = {setting.setting_id}")
+            lines.append(f"\t\titem = {item}")
+            lines.append(f"\t}}")
+
         # List fields
         for field in (setting.fields or []):
             lines.append("")
@@ -313,6 +322,11 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
     if st == "list":
         if setting.no_reset:
             lines.append(f"\tcmm_set_no_reset = {{")
+            lines.append(f"\t\tmod_id = {mod_id}")
+            lines.append(f"\t\tsetting_id = {setting.setting_id}")
+            lines.append(f"\t}}")
+        if setting.requires_unrestricted_tools:
+            lines.append(f"\tcmm_set_requires_unrestricted_tools_enabled = {{")
             lines.append(f"\t\tmod_id = {mod_id}")
             lines.append(f"\t\tsetting_id = {setting.setting_id}")
             lines.append(f"\t}}")
@@ -387,6 +401,13 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
         lines.append(f"\t\tsetting_id = {setting.setting_id}")
         lines.append(f"\t}}")
 
+    # Requires Unrestricted Tools
+    if setting.requires_unrestricted_tools:
+        lines.append(f"\tcmm_set_requires_unrestricted_tools_enabled = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting.setting_id}")
+        lines.append(f"\t}}")
+
 
 def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField):
     ft = field.field_type
@@ -424,6 +445,30 @@ def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField
         lines.append(f"\t\tmin_value = {_num(field.min_value, 0)}")
         lines.append(f"\t\tmax_value = {_num(field.max_value, 10)}")
         lines.append(f"\t\tstep_value = {_num(field.step_value, 1)}")
+        lines.append(f"\t}}")
+    elif ft == "data":
+        lines.append(f"\tcmm_register_list_data_field = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting_id}")
+        lines.append(f"\t\tfield_id = {field.field_id}")
+        lines.append(f"\t\tdefault_value = {_num(field.default_value, 0)}")
+        lines.append(f"\t}}")
+        for i, val in enumerate(field.item_data_values or [], start=1):
+            if val is None or val == "":
+                continue
+            lines.append(f"\tcmm_set_list_data_value = {{ mod_id = {mod_id} setting_id = {setting_id} field_id = {field.field_id} item = {i} value = {_num(val, 0)} }}")
+    # List field format flag
+    if field.display_format_high or field.display_format_low:
+        lines.append(f"\tcmm_set_list_field_conditional_format = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting_id}")
+        lines.append(f"\t\tfield_id = {field.field_id}")
+        lines.append(f"\t}}")
+    elif field.display_format:
+        lines.append(f"\tcmm_set_list_field_format = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting_id}")
+        lines.append(f"\t\tfield_id = {field.field_id}")
         lines.append(f"\t}}")
     # Per-item field disables
     for item in (field.disabled_items or []):
@@ -659,6 +704,26 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
         for field in (setting.fields or []):
             fqid = f"{qid}__{field.field_id}"
             lines.append(f' {fqid}_name: "{_esc(field.name or field.field_id)}"')
+            if field.desc:
+                lines.append(f' {fqid}_desc: "{_esc(field.desc)}"')
+            if field.display_format and "$VALUE$" in field.display_format:
+                parts = field.display_format.split("$VALUE$", 1)
+                if parts[0]:
+                    lines.append(f' {fqid}_prefix: "{_esc(parts[0])}"')
+                if parts[1]:
+                    lines.append(f' {fqid}_postfix: "{_esc(parts[1])}"')
+            if field.display_format_high and "$VALUE$" in field.display_format_high:
+                parts = field.display_format_high.split("$VALUE$", 1)
+                if parts[0]:
+                    lines.append(f' {fqid}_prefix_high: "{_esc(parts[0])}"')
+                if parts[1]:
+                    lines.append(f' {fqid}_postfix_high: "{_esc(parts[1])}"')
+            if field.display_format_low and "$VALUE$" in field.display_format_low:
+                parts = field.display_format_low.split("$VALUE$", 1)
+                if parts[0]:
+                    lines.append(f' {fqid}_prefix_low: "{_esc(parts[0])}"')
+                if parts[1]:
+                    lines.append(f' {fqid}_postfix_low: "{_esc(parts[1])}"')
             if field.field_type == "dropdown":
                 for opt in (field.options or []):
                     lines.append(f' {fqid}_option_{opt.index}_name: "{_esc(opt.name)}"')
@@ -699,7 +764,8 @@ def _gen_metadata(model: ModModel) -> str:
                 "display_name": "Community Mod Framework",
                 "resource_type": "mod",
                 "version": "2.*",
-            }
+            },
+            *model.metadata_relationships,
         ],
         "game_custom_data": {},
     }
@@ -726,7 +792,12 @@ def _num(v, default=0):
 
 
 def _esc(s: str) -> str:
-    """Escape a string for Paradox localization YAML."""
+    """Escape a string for Paradox localization YAML.
+
+    Only quotes need escaping. Backslashes are NOT escaped because
+    Paradox localization uses \\n for newlines — doubling backslashes
+    would corrupt these sequences.
+    """
     if not s:
         return ""
-    return s.replace("\\", "\\\\").replace('"', '\\"')
+    return s.replace('"', '\\"')

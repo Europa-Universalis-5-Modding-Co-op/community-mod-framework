@@ -1,0 +1,4 @@
+﻿l_french:
+ # Internal: resolves to the current player's country debug tag at runtime.
+ # Used by the country transfer widget to detect tag switches.
+ CMF_PLAYER_TAG: "[GetPlayer.GetDebugTag]"

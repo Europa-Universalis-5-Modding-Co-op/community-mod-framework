@@ -3,6 +3,7 @@ const PreviewPanelComponent = {
     data() {
         return {
             previewTabIdx: 0,
+            collapsedGroups: {},
         };
     },
     computed: {
@@ -54,11 +55,12 @@ const PreviewPanelComponent = {
                     </div>
 
                     <div class="cmm-settings-area" v-if="currentTab">
-                        <div v-for="group in (currentTab.groups || [])" :key="group.group_id" class="cmm-group">
-                            <div class="cmm-group-header">
+                        <div v-for="(group, gi) in (currentTab.groups || [])" :key="group.group_id" class="cmm-group">
+                            <div class="cmm-group-header" @click="toggleGroup(gi)" style="cursor:pointer">
                                 <span>{{ group.name || group.group_id }}</span>
+                                <span class="cmm-group-collapse">{{ isGroupCollapsed(gi) ? '&#9654;' : '&#9660;' }}</span>
                             </div>
-                            <div class="cmm-group-body">
+                            <div class="cmm-group-body" v-show="!isGroupCollapsed(gi)">
                                 <div v-for="setting in (group.settings || [])" :key="setting.setting_id" class="cmm-setting-row">
                                     <!-- Bool -->
                                     <template v-if="setting.setting_type === 'bool'">
@@ -128,7 +130,7 @@ const PreviewPanelComponent = {
                                                 <span class="cmm-list-col cmm-list-item-col">{{ setting.item_column_name || 'Item' }}</span>
                                                 <span class="cmm-list-col" v-for="f in (setting.fields||[])">{{ f.name || f.field_id }}</span>
                                             </div>
-                                            <div v-for="(iname, ii) in (setting.item_names||[]).slice(0, setting.item_count)" :key="ii" class="cmm-list-row">
+                                            <div v-for="(iname, ii) in (setting.item_names||[]).slice(0, setting.item_count)" :key="ii" class="cmm-list-row" v-show="!isItemHidden(setting, ii)">
                                                 <span class="cmm-list-col" v-if="setting.is_ordered" style="width:30px">
                                                     <span class="cmm-list-move">&#9650;&#9660;</span>
                                                 </span>
@@ -145,6 +147,7 @@ const PreviewPanelComponent = {
                                                             </span>
                                                             <span class="cmm-mini-slider-value">{{ f.default_value }}</span>
                                                         </span>
+                                                        <span v-if="f.field_type==='data'" class="cmm-mini-numeric">{{ (f.item_data_values||[])[ii] ?? f.default_value }}</span>
                                                     </template>
                                                 </span>
                                             </div>
@@ -167,6 +170,12 @@ const PreviewPanelComponent = {
     </div>
     `,
     methods: {
+        toggleGroup(gi) {
+            this.collapsedGroups[gi] = !this.collapsedGroups[gi];
+        },
+        isGroupCollapsed(gi) {
+            return !!this.collapsedGroups[gi];
+        },
         sliderPercent(setting) {
             const min = setting.min_value || 0;
             const max = setting.max_value || 100;
@@ -194,6 +203,10 @@ const PreviewPanelComponent = {
                 return field.options[idx - 1].name;
             }
             return `Option ${idx}`;
+        },
+        isItemHidden(setting, itemIndex) {
+            if (!setting.hidden_items) return false;
+            return setting.hidden_items.includes(itemIndex + 1);
         },
         isFieldDisabledForItem(field, itemIndex) {
             if (!field.disabled_items) return false;

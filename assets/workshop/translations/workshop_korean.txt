@@ -3,37 +3,40 @@
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Korean Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-[b]Community Mod Framework (CMF)[/b]는 모더들에게 새로운 기능을 제작할 수 있는 도구를 제공하는 동시에, 모드 간의 상호 호환성을 개선하는 것을 목표로 하는 유틸리티 모드입니다.
+[b]Community Mod Framework (CMF)[/b]는 모드 제작자에게 새로운 기능을 제작할 수 있는 도구를 제공하는 동시에 모드 간 상호 운용성을 개선하는 것을 목표로 하는 유틸리티 모드입니다.
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/banner.png[/img]
 
 [b]CMF는 모드 불러오기 순서에서 가장 먼저 배치되어야 합니다.[/b]
 
-질문이 있으시면 언제든지 EU5 Mod Coop Discord를 방문해 주세요: https://discord.gg/aqAAcCZsY7
+질문 사항이 있다면 EU5 Mod Coop Discord를 방문해 주세요: https://discord.gg/aqAAcCZsY7
 
 [h1]주요 기능[/h1]
 [list]
- [*][b]Community Mod Menu (CMM):[/b] 공유 인게임 모드 메뉴입니다. 모드 제작자는 간단한 API를 통해 설정을 동적으로 등록할 수 있으며, 별도의 설정 UI를 직접 만들 필요가 없습니다.
+ [*][b]Community Mod Menu (CMM):[/b] 공유 인게임 모드 메뉴입니다. 모드 제작자는 간단한 API를 통해 설정을 동적으로 등록할 수 있어, 커스텀 설정 UI를 별도로 제작할 필요가 없습니다.
   [list]
-   [*]토글, 버튼, 숫자, 슬라이더(더블 클릭하여 드래그), 드롭다운, 텍스트(싱글플레이 전용) 및 리스트 설정
+   [*]토글, 버튼, 숫자, 슬라이더 (더블 클릭하여 드래그), 드롭다운, 텍스트 (싱글 플레이어 전용), 리스트 설정 지원
    [*]모드별 탭, 그룹 및 검색 기능
-   [*]멀티플레이어에서 호스트만 수정 가능한 글로벌 설정
+   [*]글로벌 설정 및 멀티플레이어 호스트 전용 편집 기능
    [*]기본값으로 초기화
-   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url] — 모드 메뉴 제작을 위한 브라우저 기반 도구
+   [*]드래그 가능한 창
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM 비주얼 에디터[/url] — 브라우저 기반의 모드 메뉴 제작 도구
   [/list]
- [*][b]Custom Alerts:[/b] 로컬라이제이션 키를 통해 알림 표시줄에 커스텀 알림을 생성하고 표시합니다.
- [*][b]Action Bar:[/b] 로컬라이제이션 키를 사용하여 커스텀 액션 바 버튼을 추가합니다.
- [*][b]is_host Trigger:[/b] 현재 국가가 호스트 플레이어에 의해 제어되는지 확인합니다.
- [*][b]cmf_suppress Effect:[/b] 단 한 번의 효과 호출로 엔진의 "used but never set" 및 "set but never used" 경고를 억제합니다.
- [*][b]On-Action Hooks:[/b] 로비 이후 게임 시작 및 세이브 로드 훅(on_game_start_after_lobby, on_game_load, on_game_load_after_lobby)과 플레이어 국가 전용 변형을 제공합니다. 또한 유저 플레이어를 위한 공유 연간 및 월간 펄스(pulse)를 포함합니다.
- [*][b]Variable Map Utilities:[/b] 제거 후 추가 과정을 원자적으로 처리하는 안전한 변수 맵(variable map) 수정 헬퍼(cmf_change_variable_map 및 로컬/글로벌 변형)입니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] 모드 템플릿, 창작마당 업로더, 모드 번역기 등 개발을 돕는 도구 모음입니다.
+ [*][b]커스텀 알림:[/b] 로컬라이제이션 키를 통해 알림 바에 커스텀 알림을 생성하고 표시합니다.
+ [*][b]액션 바:[/b] 로컬라이제이션 키를 사용하여 커스텀 액션 바 버튼을 추가합니다.
+ [*][b]국가 이전 (Country Transfer):[/b] 국가 변경(태그 변경, 상속 등) 시 CMM 설정이 자동으로 이전됩니다.
+ [*][b]is_host 트리거:[/b] 현재 국가가 호스트 플레이어에 의해 제어되는지 확인합니다.
+ [*][b]cmf_suppress 이펙트:[/b] 단 한 번의 이펙트 호출로 "used but never set" 및 "set but never used" 엔진 경고를 억제합니다.
+ [*][b]On-Action 훅:[/b] 플레이어 국가 변형이 포함된 로비 이후 게임 시작 및 세이브 로드 훅(on_game_start_after_lobby, on_game_load, on_game_load_after_lobby)을 제공합니다. 또한 플레이어를 위한 공유 연간 및 월간 펄스를 포함합니다.
+ [*][b]변수 맵 유틸리티 (Variable Map Utilities):[/b] 제거 후 추가를 원자적으로(atomically) 처리하는 안전한 변수 맵 변경 헬퍼(cmf_change_variable_map 및 로컬/글로벌 변형)를 제공합니다.
+ [*][b]로그 (Log):[/b] 주체 국가, 액션 텍스트 및 선택적 인자를 포함하여 모드 액션을 기록하는 글로벌 인게임 로그입니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] 모드 템플릿, 창작마당 업로더, 모드 번역기 등 개발 도구 모음입니다.
 [/list]
 
 [h1]문서[/h1]
 [list]
- [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub 위키[/url] — 전체 문서
- [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox 위키[/url] — 빠른 참조
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — 전체 문서
+ [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — 빠른 참조
  [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub 저장소[/url]
 [/list]
 
@@ -42,9 +45,10 @@
  [*]Bahmut
  [*]Conner
  [*]Pickle
+ [*]RomanImperator
 [/list]
 
-[h1]CMF를 사용하는 모드[/h1]
+[h1]CMF 사용 모드[/h1]
 [list]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
@@ -54,6 +58,6 @@
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3696243603]Autonomous Diplomats[/url]
 [/list]
 
-[h1]변경 로그:[/h1]
-[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]창작마당 페이지의 변경 내역[/url]을 확인하세요.
+[h1]변경 사항:[/h1]
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]창작마당 페이지의 변경 참고 사항[/url]을 확인하세요.
 
