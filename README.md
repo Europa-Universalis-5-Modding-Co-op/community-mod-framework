@@ -60,8 +60,10 @@ The goal is to provide mods that make use of it, new ways to show content or hoo
 
 ## Contributors
 - [Bahmut](https://steamcommunity.com/id/Bahmut/)
+- [CaesarVincens](https://github.com/CaesarVincens)
 - [Conner](https://steamcommunity.com/id/ARealConner/)
 - [Pickle](https://steamcommunity.com/id/pickled-dev)
+- [RomanImperator](https://steamcommunity.com/id/romaimperator)
 
 ## License
 
