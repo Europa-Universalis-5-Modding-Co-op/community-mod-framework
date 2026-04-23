@@ -7,36 +7,37 @@ Społecznościowy Framework i Menu Modyfikacji / Community Mod Framework & Menu
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/banner.png[/img]
 
-[b]CMF powinien być ładowany jako pierwszy w Twojej kolejności ładowania modów.[/b]
+[b]CMF powinien być ładowany jako pierwszy w kolejności wczytywania modów.[/b]
 
 W razie pytań zapraszamy do kontaktu na Discordzie EU5 Mod Coop: https://discord.gg/aqAAcCZsY7
 
 [h1]Funkcje[/h1]
 [list]
- [*][b]Community Mod Menu (CMM):[/b] Wspólne menu modów w grze. Autorzy modów rejestrują ustawienia dynamicznie poprzez proste API — bez konieczności budowania własnego interfejsu użytkownika dla ustawień.
+ [*][b]Community Mod Menu (CMM):[/b] Współdzielone menu modów w grze. Autorzy modów rejestrują ustawienia dynamicznie poprzez proste API, bez konieczności budowania własnego interfejsu użytkownika dla ustawień.
   [list]
-   [*]Przełączniki, przyciski, wartości numeryczne, suwaki (podwójne kliknięcie, aby przeciągnąć), listy rozwijane, pole tekstowe (tylko tryb jednoosobowy) oraz ustawienia list.
-   [*]Karty dla poszczególnych modów, grupy i wyszukiwarka.
-   [*]Ustawienia globalne z edycją dostępną tylko dla hosta w trybie wieloosobowym.
-   [*]Przywracanie ustawień domyślnych.
-   [*]Przesuwane okno.
-   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url] — narzędzie przeglądarkowe do tworzenia menu Twojego moda.
+   [*]Ustawienia typu: przełącznik, przycisk, wartość numeryczna, suwak (podwójne kliknięcie, aby przeciągnąć), lista rozwijana, tekst (tylko tryb jednoosobowy) oraz lista.
+   [*]Zakładki dla poszczególnych modów, grupy i wyszukiwarka.
+   [*]Ustawienia globalne z możliwością edycji tylko przez hosta w trybie wieloosobowym.
+   [*]Przywracanie ustawień domyślnych (Reset to Defaults).
+   [*]Okno z możliwością przeciągania.
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url]: narzędzie przeglądarkowe do tworzenia menu Twojego moda.
   [/list]
- [*][b]Własne powiadomienia (Custom Alerts):[/b] Twórz i wyświetlaj własne powiadomienia na pasku powiadomień za pomocą kluczy lokalizacyjnych.
- [*][b]Pasek akcji (Action Bar):[/b] Dodawaj własne przyciski paska akcji za pomocą kluczy lokalizacyjnych.
+ [*][b]Własne alerty:[/b] Twórz i wyświetlaj własne alerty na pasku alertów przy użyciu kluczy lokalizacyjnych.
+ [*][b]Pasek akcji:[/b] Dodawaj własne przyciski paska akcji za pomocą kluczy lokalizacyjnych.
  [*][b]Transfer kraju:[/b] Ustawienia CMM są automatycznie przenoszone przy zmianie kraju (zmiana tagu, dziedziczenie itp.).
- [*][b]Wyzwalacz is_host:[/b] Sprawdza, czy obecny kraj jest kontrolowany przez gracza będącego hostem.
- [*][b]Efekt cmf_suppress:[/b] Tłumienie ostrzeżeń silnika "used but never set" oraz "set but never used" za pomocą jednego wywołania efektu.
- [*][b]Punkty zaczepienia On-Action:[/b] Haki rozpoczęcia gry po lobby oraz wczytania zapisu (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) z wariantami dla krajów graczy. Zawiera również wspólne impulsy roczne i miesięczne dla graczy ludzkich.
- [*][b]Narzędzia map zmiennych (Variable Map Utilities):[/b] Bezpieczne funkcje pomocnicze do modyfikacji map zmiennych (cmf_change_variable_map oraz warianty lokalne/globalne), które obsługują operację usunięcia i dodania w sposób atomowy.
- [*][b]Log:[/b] Globalny log w grze do rejestrowania działań modów wraz z krajem aktora, tekstem akcji i opcjonalnymi argumentami.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Zestaw towarzyszących narzędzi deweloperskich, takich jak szablon moda, uploader do warsztatu i translator modów.
+ [*][b]Trigger is_host:[/b] Sprawdza, czy bieżący kraj jest kontrolowany przez hosta.
+ [*][b]Nieograniczone narzędzia:[/b] Możliwość blokowania zaawansowanych funkcji za pomocą nadrzędnego ustawienia „Włącz nieograniczone narzędzia” (trigger cmf_can_use_unrestricted_tools, flaga cmf_set_requires_unrestricted_tools_enabled dla poszczególnych ustawień).
+ [*][b]Efekt cmf_suppress:[/b] Wyciszanie ostrzeżeń silnika typu „used but never set” oraz „set but never used” za pomocą jednego wywołania efektu.
+ [*][b]Hooki On-Action:[/b] Hooki startu gry po wyjściu z lobby oraz ładowania zapisu (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) wraz z wariantami dla kraju gracza. Zawiera również współdzielone pulsy roczne i miesięczne dla graczy.
+ [*][b]Narzędzia map zmiennych:[/b] Pomocnicy bezpiecznej mutacji map zmiennych (cmf_change_variable_map oraz warianty lokalne/globalne), które atomowo obsługują operację usuń-następnie-dodaj.
+ [*][b]Dziennik (Log):[/b] Globalny dziennik w grze do rejestrowania akcji modów z informacją o kraju aktora, tekstem akcji i opcjonalnymi argumentami.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] Towarzyszący zestaw narzędzi deweloperskich, takich jak szablon moda, uploader warsztatu oraz translator modów.
 [/list]
 
 [h1]Dokumentacja[/h1]
 [list]
- [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] — Pełna dokumentacja
- [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] — Skrócony przewodnik
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url]: Pełna dokumentacja
+ [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url]: Szybkie odniesienie
  [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]Repozytorium GitHub[/url]
 [/list]
 
@@ -58,6 +59,6 @@ W razie pytań zapraszamy do kontaktu na Discordzie EU5 Mod Coop: https://discor
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3696243603]Autonomous Diplomats[/url]
 [/list]
 
-[h1]Rejestr zmian:[/h1]
-Zobacz [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]historię zmian na stronie warsztatu[/url].
+[h1]Lista zmian:[/h1]
+Zobacz [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]Notatki o zmianach na stronie warsztatu[/url].
 
