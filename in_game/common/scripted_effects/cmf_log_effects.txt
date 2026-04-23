@@ -1,0 +1,655 @@
+﻿# Log an action to the global mod log.
+# Scope: country (the actor performing the action)
+# Args: action (flag) — localization key for the action text
+cmf_log = {
+	_cmf_log_core_flag = { action = $action$ arg1 = _cmf_log_no_arg arg2 = _cmf_log_no_arg arg_mode = 0 }
+}
+
+# Log an action with two named arguments (localization keys).
+# Entry text renders as: [arg1] [action] [arg2]
+# Scope: country (the actor performing the action)
+# Args:
+# - action (flag): localization key for the action/connecting text
+# - arg1 (flag): localization key for the first argument (before action text)
+# - arg2 (flag): localization key for the second argument (after action text)
+cmf_log_with_args = {
+	_cmf_log_core_flag = { action = $action$ arg1 = $arg1$ arg2 = $arg2$ arg_mode = 0 }
+}
+
+# Log an action with one country scope argument.
+# Entry text renders as: [action] [arg2 name]
+# Scope: country (the actor performing the action)
+# Requires: scope:cmf_log_arg2 saved before calling.
+# Args: action (flag) — localization key for the action text
+cmf_log_with_scope_arg = {
+	_cmf_log_core_scope_single = { action = $action$ arg_mode = 1 }
+}
+
+# Log an action with two country scope arguments.
+# Entry text renders as: [arg1 name] [action] [arg2 name]
+# Scope: country (the actor performing the action)
+# Requires: scope:cmf_log_arg1 and scope:cmf_log_arg2 saved before calling.
+# Args: action (flag) — localization key for the action/connecting text
+cmf_log_with_scope_args = {
+	_cmf_log_core_scope = { action = $action$ arg_mode = 1 }
+}
+
+# Clear all log entries.
+# Scope: country
+# Args: none
+cmf_clear_log = {
+	_cmf_log_clear_maps = yes
+	set_global_variable = { name = cmf_log_count value = 0 }
+}
+
+# Internal: log core for flag-based args.
+# Scope: country (the actor)
+# Args: action (flag), arg1 (flag), arg2 (flag), arg_mode (0)
+_cmf_log_core_flag = {
+	save_scope_as = _cmf_log_actor
+
+	if = {
+		limit = { NOT = { has_global_variable = cmf_log_count } }
+		set_global_variable = { name = cmf_log_count value = 0 }
+	}
+
+	if = {
+		limit = { global_var:cmf_log_count < 200 }
+		_cmf_log_select_key = yes
+		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
+		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = $arg_mode$ }
+		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:$arg1$ }
+		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = flag:$arg2$ }
+		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
+		cmf_suppress = { v = $arg1$ }
+		cmf_suppress = { v = $arg2$ }
+	}
+}
+
+# Internal: log core for single scope arg (arg2 only).
+# Scope: country (the actor)
+# Requires: scope:cmf_log_arg2 saved before calling.
+# Args: action (flag), arg_mode (1)
+_cmf_log_core_scope_single = {
+	save_scope_as = _cmf_log_actor
+
+	if = {
+		limit = { NOT = { has_global_variable = cmf_log_count } }
+		set_global_variable = { name = cmf_log_count value = 0 }
+	}
+
+	if = {
+		limit = { global_var:cmf_log_count < 200 }
+		_cmf_log_select_key = yes
+		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
+		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = $arg_mode$ }
+		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
+		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = scope:cmf_log_arg2 }
+		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
+	}
+}
+
+# Internal: log core for two scope args.
+# Scope: country (the actor)
+# Requires: scope:cmf_log_arg1 and scope:cmf_log_arg2 saved before calling.
+# Args: action (flag), arg_mode (1)
+_cmf_log_core_scope = {
+	save_scope_as = _cmf_log_actor
+
+	if = {
+		limit = { NOT = { has_global_variable = cmf_log_count } }
+		set_global_variable = { name = cmf_log_count value = 0 }
+	}
+
+	if = {
+		limit = { global_var:cmf_log_count < 200 }
+		_cmf_log_select_key = yes
+		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
+		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = $arg_mode$ }
+		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = scope:cmf_log_arg1 }
+		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = scope:cmf_log_arg2 }
+		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
+	}
+}
+
+# Benign warning suppression for log flags and maps.
+# This is a dedicated unused effect — the engine scans it at parse time.
+_cmf_log_suppress = {
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = _cmf_log_actor }
+		cmf_suppress = { v = _cmf_log_no_arg }
+		cmf_suppress = { v = _cmf_log_key }
+		cmf_suppress = { v = cmf_log_action }
+		cmf_suppress = { v = cmf_log_actor }
+		cmf_suppress = { v = cmf_log_arg_mode }
+		cmf_suppress = { v = cmf_log_arg1 }
+		cmf_suppress = { v = cmf_log_arg2 }
+		cmf_suppress = { v = cmf_log_0 }
+		cmf_suppress = { v = cmf_log_1 }
+		cmf_suppress = { v = cmf_log_2 }
+		cmf_suppress = { v = cmf_log_3 }
+		cmf_suppress = { v = cmf_log_4 }
+		cmf_suppress = { v = cmf_log_5 }
+		cmf_suppress = { v = cmf_log_6 }
+		cmf_suppress = { v = cmf_log_7 }
+		cmf_suppress = { v = cmf_log_8 }
+		cmf_suppress = { v = cmf_log_9 }
+		cmf_suppress = { v = cmf_log_10 }
+		cmf_suppress = { v = cmf_log_11 }
+		cmf_suppress = { v = cmf_log_12 }
+		cmf_suppress = { v = cmf_log_13 }
+		cmf_suppress = { v = cmf_log_14 }
+		cmf_suppress = { v = cmf_log_15 }
+		cmf_suppress = { v = cmf_log_16 }
+		cmf_suppress = { v = cmf_log_17 }
+		cmf_suppress = { v = cmf_log_18 }
+		cmf_suppress = { v = cmf_log_19 }
+		cmf_suppress = { v = cmf_log_20 }
+		cmf_suppress = { v = cmf_log_21 }
+		cmf_suppress = { v = cmf_log_22 }
+		cmf_suppress = { v = cmf_log_23 }
+		cmf_suppress = { v = cmf_log_24 }
+		cmf_suppress = { v = cmf_log_25 }
+		cmf_suppress = { v = cmf_log_26 }
+		cmf_suppress = { v = cmf_log_27 }
+		cmf_suppress = { v = cmf_log_28 }
+		cmf_suppress = { v = cmf_log_29 }
+		cmf_suppress = { v = cmf_log_30 }
+		cmf_suppress = { v = cmf_log_31 }
+		cmf_suppress = { v = cmf_log_32 }
+		cmf_suppress = { v = cmf_log_33 }
+		cmf_suppress = { v = cmf_log_34 }
+		cmf_suppress = { v = cmf_log_35 }
+		cmf_suppress = { v = cmf_log_36 }
+		cmf_suppress = { v = cmf_log_37 }
+		cmf_suppress = { v = cmf_log_38 }
+		cmf_suppress = { v = cmf_log_39 }
+		cmf_suppress = { v = cmf_log_40 }
+		cmf_suppress = { v = cmf_log_41 }
+		cmf_suppress = { v = cmf_log_42 }
+		cmf_suppress = { v = cmf_log_43 }
+		cmf_suppress = { v = cmf_log_44 }
+		cmf_suppress = { v = cmf_log_45 }
+		cmf_suppress = { v = cmf_log_46 }
+		cmf_suppress = { v = cmf_log_47 }
+		cmf_suppress = { v = cmf_log_48 }
+		cmf_suppress = { v = cmf_log_49 }
+		cmf_suppress = { v = cmf_log_50 }
+		cmf_suppress = { v = cmf_log_51 }
+		cmf_suppress = { v = cmf_log_52 }
+		cmf_suppress = { v = cmf_log_53 }
+		cmf_suppress = { v = cmf_log_54 }
+		cmf_suppress = { v = cmf_log_55 }
+		cmf_suppress = { v = cmf_log_56 }
+		cmf_suppress = { v = cmf_log_57 }
+		cmf_suppress = { v = cmf_log_58 }
+		cmf_suppress = { v = cmf_log_59 }
+		cmf_suppress = { v = cmf_log_60 }
+		cmf_suppress = { v = cmf_log_61 }
+		cmf_suppress = { v = cmf_log_62 }
+		cmf_suppress = { v = cmf_log_63 }
+		cmf_suppress = { v = cmf_log_64 }
+		cmf_suppress = { v = cmf_log_65 }
+		cmf_suppress = { v = cmf_log_66 }
+		cmf_suppress = { v = cmf_log_67 }
+		cmf_suppress = { v = cmf_log_68 }
+		cmf_suppress = { v = cmf_log_69 }
+		cmf_suppress = { v = cmf_log_70 }
+		cmf_suppress = { v = cmf_log_71 }
+		cmf_suppress = { v = cmf_log_72 }
+		cmf_suppress = { v = cmf_log_73 }
+		cmf_suppress = { v = cmf_log_74 }
+		cmf_suppress = { v = cmf_log_75 }
+		cmf_suppress = { v = cmf_log_76 }
+		cmf_suppress = { v = cmf_log_77 }
+		cmf_suppress = { v = cmf_log_78 }
+		cmf_suppress = { v = cmf_log_79 }
+		cmf_suppress = { v = cmf_log_80 }
+		cmf_suppress = { v = cmf_log_81 }
+		cmf_suppress = { v = cmf_log_82 }
+		cmf_suppress = { v = cmf_log_83 }
+		cmf_suppress = { v = cmf_log_84 }
+		cmf_suppress = { v = cmf_log_85 }
+		cmf_suppress = { v = cmf_log_86 }
+		cmf_suppress = { v = cmf_log_87 }
+		cmf_suppress = { v = cmf_log_88 }
+		cmf_suppress = { v = cmf_log_89 }
+		cmf_suppress = { v = cmf_log_90 }
+		cmf_suppress = { v = cmf_log_91 }
+		cmf_suppress = { v = cmf_log_92 }
+		cmf_suppress = { v = cmf_log_93 }
+		cmf_suppress = { v = cmf_log_94 }
+		cmf_suppress = { v = cmf_log_95 }
+		cmf_suppress = { v = cmf_log_96 }
+		cmf_suppress = { v = cmf_log_97 }
+		cmf_suppress = { v = cmf_log_98 }
+		cmf_suppress = { v = cmf_log_99 }
+		cmf_suppress = { v = cmf_log_100 }
+		cmf_suppress = { v = cmf_log_101 }
+		cmf_suppress = { v = cmf_log_102 }
+		cmf_suppress = { v = cmf_log_103 }
+		cmf_suppress = { v = cmf_log_104 }
+		cmf_suppress = { v = cmf_log_105 }
+		cmf_suppress = { v = cmf_log_106 }
+		cmf_suppress = { v = cmf_log_107 }
+		cmf_suppress = { v = cmf_log_108 }
+		cmf_suppress = { v = cmf_log_109 }
+		cmf_suppress = { v = cmf_log_110 }
+		cmf_suppress = { v = cmf_log_111 }
+		cmf_suppress = { v = cmf_log_112 }
+		cmf_suppress = { v = cmf_log_113 }
+		cmf_suppress = { v = cmf_log_114 }
+		cmf_suppress = { v = cmf_log_115 }
+		cmf_suppress = { v = cmf_log_116 }
+		cmf_suppress = { v = cmf_log_117 }
+		cmf_suppress = { v = cmf_log_118 }
+		cmf_suppress = { v = cmf_log_119 }
+		cmf_suppress = { v = cmf_log_120 }
+		cmf_suppress = { v = cmf_log_121 }
+		cmf_suppress = { v = cmf_log_122 }
+		cmf_suppress = { v = cmf_log_123 }
+		cmf_suppress = { v = cmf_log_124 }
+		cmf_suppress = { v = cmf_log_125 }
+		cmf_suppress = { v = cmf_log_126 }
+		cmf_suppress = { v = cmf_log_127 }
+		cmf_suppress = { v = cmf_log_128 }
+		cmf_suppress = { v = cmf_log_129 }
+		cmf_suppress = { v = cmf_log_130 }
+		cmf_suppress = { v = cmf_log_131 }
+		cmf_suppress = { v = cmf_log_132 }
+		cmf_suppress = { v = cmf_log_133 }
+		cmf_suppress = { v = cmf_log_134 }
+		cmf_suppress = { v = cmf_log_135 }
+		cmf_suppress = { v = cmf_log_136 }
+		cmf_suppress = { v = cmf_log_137 }
+		cmf_suppress = { v = cmf_log_138 }
+		cmf_suppress = { v = cmf_log_139 }
+		cmf_suppress = { v = cmf_log_140 }
+		cmf_suppress = { v = cmf_log_141 }
+		cmf_suppress = { v = cmf_log_142 }
+		cmf_suppress = { v = cmf_log_143 }
+		cmf_suppress = { v = cmf_log_144 }
+		cmf_suppress = { v = cmf_log_145 }
+		cmf_suppress = { v = cmf_log_146 }
+		cmf_suppress = { v = cmf_log_147 }
+		cmf_suppress = { v = cmf_log_148 }
+		cmf_suppress = { v = cmf_log_149 }
+		cmf_suppress = { v = cmf_log_150 }
+		cmf_suppress = { v = cmf_log_151 }
+		cmf_suppress = { v = cmf_log_152 }
+		cmf_suppress = { v = cmf_log_153 }
+		cmf_suppress = { v = cmf_log_154 }
+		cmf_suppress = { v = cmf_log_155 }
+		cmf_suppress = { v = cmf_log_156 }
+		cmf_suppress = { v = cmf_log_157 }
+		cmf_suppress = { v = cmf_log_158 }
+		cmf_suppress = { v = cmf_log_159 }
+		cmf_suppress = { v = cmf_log_160 }
+		cmf_suppress = { v = cmf_log_161 }
+		cmf_suppress = { v = cmf_log_162 }
+		cmf_suppress = { v = cmf_log_163 }
+		cmf_suppress = { v = cmf_log_164 }
+		cmf_suppress = { v = cmf_log_165 }
+		cmf_suppress = { v = cmf_log_166 }
+		cmf_suppress = { v = cmf_log_167 }
+		cmf_suppress = { v = cmf_log_168 }
+		cmf_suppress = { v = cmf_log_169 }
+		cmf_suppress = { v = cmf_log_170 }
+		cmf_suppress = { v = cmf_log_171 }
+		cmf_suppress = { v = cmf_log_172 }
+		cmf_suppress = { v = cmf_log_173 }
+		cmf_suppress = { v = cmf_log_174 }
+		cmf_suppress = { v = cmf_log_175 }
+		cmf_suppress = { v = cmf_log_176 }
+		cmf_suppress = { v = cmf_log_177 }
+		cmf_suppress = { v = cmf_log_178 }
+		cmf_suppress = { v = cmf_log_179 }
+		cmf_suppress = { v = cmf_log_180 }
+		cmf_suppress = { v = cmf_log_181 }
+		cmf_suppress = { v = cmf_log_182 }
+		cmf_suppress = { v = cmf_log_183 }
+		cmf_suppress = { v = cmf_log_184 }
+		cmf_suppress = { v = cmf_log_185 }
+		cmf_suppress = { v = cmf_log_186 }
+		cmf_suppress = { v = cmf_log_187 }
+		cmf_suppress = { v = cmf_log_188 }
+		cmf_suppress = { v = cmf_log_189 }
+		cmf_suppress = { v = cmf_log_190 }
+		cmf_suppress = { v = cmf_log_191 }
+		cmf_suppress = { v = cmf_log_192 }
+		cmf_suppress = { v = cmf_log_193 }
+		cmf_suppress = { v = cmf_log_194 }
+		cmf_suppress = { v = cmf_log_195 }
+		cmf_suppress = { v = cmf_log_196 }
+		cmf_suppress = { v = cmf_log_197 }
+		cmf_suppress = { v = cmf_log_198 }
+		cmf_suppress = { v = cmf_log_199 }
+	}
+}
+
+# Internal: write entry data to maps using scope:_cmf_log_key.
+# Scope: country
+# Args: action (flag), arg1 (flag), arg2 (flag)
+
+# Internal: select flag key based on current count and save as scope.
+# Sets scope:_cmf_log_key to flag:cmf_log_N where N = cmf_log_count.
+# Scope: country
+# Args: none
+_cmf_log_select_key = {
+	if = { limit = { global_var:cmf_log_count < 10 } _cmf_log_key_0x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 20 } _cmf_log_key_1x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 30 } _cmf_log_key_2x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 40 } _cmf_log_key_3x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 50 } _cmf_log_key_4x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 60 } _cmf_log_key_5x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 70 } _cmf_log_key_6x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 80 } _cmf_log_key_7x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 90 } _cmf_log_key_8x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 100 } _cmf_log_key_9x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 110 } _cmf_log_key_10x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 120 } _cmf_log_key_11x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 130 } _cmf_log_key_12x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 140 } _cmf_log_key_13x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 150 } _cmf_log_key_14x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 160 } _cmf_log_key_15x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 170 } _cmf_log_key_16x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 180 } _cmf_log_key_17x = yes }
+	else_if = { limit = { global_var:cmf_log_count < 190 } _cmf_log_key_18x = yes }
+	else = { _cmf_log_key_19x = yes }
+}
+
+_cmf_log_key_0x = {
+	if = { limit = { global_var:cmf_log_count = 0 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_0 } }
+	else_if = { limit = { global_var:cmf_log_count = 1 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_1 } }
+	else_if = { limit = { global_var:cmf_log_count = 2 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_2 } }
+	else_if = { limit = { global_var:cmf_log_count = 3 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_3 } }
+	else_if = { limit = { global_var:cmf_log_count = 4 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_4 } }
+	else_if = { limit = { global_var:cmf_log_count = 5 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_5 } }
+	else_if = { limit = { global_var:cmf_log_count = 6 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_6 } }
+	else_if = { limit = { global_var:cmf_log_count = 7 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_7 } }
+	else_if = { limit = { global_var:cmf_log_count = 8 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_8 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_9 } }
+}
+
+_cmf_log_key_1x = {
+	if = { limit = { global_var:cmf_log_count = 10 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_10 } }
+	else_if = { limit = { global_var:cmf_log_count = 11 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_11 } }
+	else_if = { limit = { global_var:cmf_log_count = 12 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_12 } }
+	else_if = { limit = { global_var:cmf_log_count = 13 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_13 } }
+	else_if = { limit = { global_var:cmf_log_count = 14 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_14 } }
+	else_if = { limit = { global_var:cmf_log_count = 15 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_15 } }
+	else_if = { limit = { global_var:cmf_log_count = 16 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_16 } }
+	else_if = { limit = { global_var:cmf_log_count = 17 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_17 } }
+	else_if = { limit = { global_var:cmf_log_count = 18 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_18 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_19 } }
+}
+
+_cmf_log_key_2x = {
+	if = { limit = { global_var:cmf_log_count = 20 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_20 } }
+	else_if = { limit = { global_var:cmf_log_count = 21 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_21 } }
+	else_if = { limit = { global_var:cmf_log_count = 22 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_22 } }
+	else_if = { limit = { global_var:cmf_log_count = 23 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_23 } }
+	else_if = { limit = { global_var:cmf_log_count = 24 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_24 } }
+	else_if = { limit = { global_var:cmf_log_count = 25 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_25 } }
+	else_if = { limit = { global_var:cmf_log_count = 26 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_26 } }
+	else_if = { limit = { global_var:cmf_log_count = 27 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_27 } }
+	else_if = { limit = { global_var:cmf_log_count = 28 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_28 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_29 } }
+}
+
+_cmf_log_key_3x = {
+	if = { limit = { global_var:cmf_log_count = 30 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_30 } }
+	else_if = { limit = { global_var:cmf_log_count = 31 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_31 } }
+	else_if = { limit = { global_var:cmf_log_count = 32 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_32 } }
+	else_if = { limit = { global_var:cmf_log_count = 33 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_33 } }
+	else_if = { limit = { global_var:cmf_log_count = 34 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_34 } }
+	else_if = { limit = { global_var:cmf_log_count = 35 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_35 } }
+	else_if = { limit = { global_var:cmf_log_count = 36 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_36 } }
+	else_if = { limit = { global_var:cmf_log_count = 37 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_37 } }
+	else_if = { limit = { global_var:cmf_log_count = 38 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_38 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_39 } }
+}
+
+_cmf_log_key_4x = {
+	if = { limit = { global_var:cmf_log_count = 40 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_40 } }
+	else_if = { limit = { global_var:cmf_log_count = 41 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_41 } }
+	else_if = { limit = { global_var:cmf_log_count = 42 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_42 } }
+	else_if = { limit = { global_var:cmf_log_count = 43 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_43 } }
+	else_if = { limit = { global_var:cmf_log_count = 44 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_44 } }
+	else_if = { limit = { global_var:cmf_log_count = 45 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_45 } }
+	else_if = { limit = { global_var:cmf_log_count = 46 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_46 } }
+	else_if = { limit = { global_var:cmf_log_count = 47 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_47 } }
+	else_if = { limit = { global_var:cmf_log_count = 48 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_48 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_49 } }
+}
+
+_cmf_log_key_5x = {
+	if = { limit = { global_var:cmf_log_count = 50 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_50 } }
+	else_if = { limit = { global_var:cmf_log_count = 51 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_51 } }
+	else_if = { limit = { global_var:cmf_log_count = 52 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_52 } }
+	else_if = { limit = { global_var:cmf_log_count = 53 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_53 } }
+	else_if = { limit = { global_var:cmf_log_count = 54 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_54 } }
+	else_if = { limit = { global_var:cmf_log_count = 55 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_55 } }
+	else_if = { limit = { global_var:cmf_log_count = 56 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_56 } }
+	else_if = { limit = { global_var:cmf_log_count = 57 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_57 } }
+	else_if = { limit = { global_var:cmf_log_count = 58 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_58 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_59 } }
+}
+
+_cmf_log_key_6x = {
+	if = { limit = { global_var:cmf_log_count = 60 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_60 } }
+	else_if = { limit = { global_var:cmf_log_count = 61 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_61 } }
+	else_if = { limit = { global_var:cmf_log_count = 62 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_62 } }
+	else_if = { limit = { global_var:cmf_log_count = 63 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_63 } }
+	else_if = { limit = { global_var:cmf_log_count = 64 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_64 } }
+	else_if = { limit = { global_var:cmf_log_count = 65 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_65 } }
+	else_if = { limit = { global_var:cmf_log_count = 66 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_66 } }
+	else_if = { limit = { global_var:cmf_log_count = 67 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_67 } }
+	else_if = { limit = { global_var:cmf_log_count = 68 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_68 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_69 } }
+}
+
+_cmf_log_key_7x = {
+	if = { limit = { global_var:cmf_log_count = 70 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_70 } }
+	else_if = { limit = { global_var:cmf_log_count = 71 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_71 } }
+	else_if = { limit = { global_var:cmf_log_count = 72 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_72 } }
+	else_if = { limit = { global_var:cmf_log_count = 73 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_73 } }
+	else_if = { limit = { global_var:cmf_log_count = 74 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_74 } }
+	else_if = { limit = { global_var:cmf_log_count = 75 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_75 } }
+	else_if = { limit = { global_var:cmf_log_count = 76 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_76 } }
+	else_if = { limit = { global_var:cmf_log_count = 77 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_77 } }
+	else_if = { limit = { global_var:cmf_log_count = 78 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_78 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_79 } }
+}
+
+_cmf_log_key_8x = {
+	if = { limit = { global_var:cmf_log_count = 80 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_80 } }
+	else_if = { limit = { global_var:cmf_log_count = 81 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_81 } }
+	else_if = { limit = { global_var:cmf_log_count = 82 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_82 } }
+	else_if = { limit = { global_var:cmf_log_count = 83 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_83 } }
+	else_if = { limit = { global_var:cmf_log_count = 84 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_84 } }
+	else_if = { limit = { global_var:cmf_log_count = 85 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_85 } }
+	else_if = { limit = { global_var:cmf_log_count = 86 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_86 } }
+	else_if = { limit = { global_var:cmf_log_count = 87 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_87 } }
+	else_if = { limit = { global_var:cmf_log_count = 88 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_88 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_89 } }
+}
+
+_cmf_log_key_9x = {
+	if = { limit = { global_var:cmf_log_count = 90 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_90 } }
+	else_if = { limit = { global_var:cmf_log_count = 91 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_91 } }
+	else_if = { limit = { global_var:cmf_log_count = 92 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_92 } }
+	else_if = { limit = { global_var:cmf_log_count = 93 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_93 } }
+	else_if = { limit = { global_var:cmf_log_count = 94 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_94 } }
+	else_if = { limit = { global_var:cmf_log_count = 95 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_95 } }
+	else_if = { limit = { global_var:cmf_log_count = 96 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_96 } }
+	else_if = { limit = { global_var:cmf_log_count = 97 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_97 } }
+	else_if = { limit = { global_var:cmf_log_count = 98 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_98 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_99 } }
+}
+
+_cmf_log_key_10x = {
+	if = { limit = { global_var:cmf_log_count = 100 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_100 } }
+	else_if = { limit = { global_var:cmf_log_count = 101 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_101 } }
+	else_if = { limit = { global_var:cmf_log_count = 102 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_102 } }
+	else_if = { limit = { global_var:cmf_log_count = 103 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_103 } }
+	else_if = { limit = { global_var:cmf_log_count = 104 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_104 } }
+	else_if = { limit = { global_var:cmf_log_count = 105 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_105 } }
+	else_if = { limit = { global_var:cmf_log_count = 106 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_106 } }
+	else_if = { limit = { global_var:cmf_log_count = 107 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_107 } }
+	else_if = { limit = { global_var:cmf_log_count = 108 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_108 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_109 } }
+}
+
+_cmf_log_key_11x = {
+	if = { limit = { global_var:cmf_log_count = 110 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_110 } }
+	else_if = { limit = { global_var:cmf_log_count = 111 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_111 } }
+	else_if = { limit = { global_var:cmf_log_count = 112 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_112 } }
+	else_if = { limit = { global_var:cmf_log_count = 113 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_113 } }
+	else_if = { limit = { global_var:cmf_log_count = 114 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_114 } }
+	else_if = { limit = { global_var:cmf_log_count = 115 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_115 } }
+	else_if = { limit = { global_var:cmf_log_count = 116 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_116 } }
+	else_if = { limit = { global_var:cmf_log_count = 117 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_117 } }
+	else_if = { limit = { global_var:cmf_log_count = 118 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_118 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_119 } }
+}
+
+_cmf_log_key_12x = {
+	if = { limit = { global_var:cmf_log_count = 120 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_120 } }
+	else_if = { limit = { global_var:cmf_log_count = 121 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_121 } }
+	else_if = { limit = { global_var:cmf_log_count = 122 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_122 } }
+	else_if = { limit = { global_var:cmf_log_count = 123 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_123 } }
+	else_if = { limit = { global_var:cmf_log_count = 124 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_124 } }
+	else_if = { limit = { global_var:cmf_log_count = 125 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_125 } }
+	else_if = { limit = { global_var:cmf_log_count = 126 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_126 } }
+	else_if = { limit = { global_var:cmf_log_count = 127 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_127 } }
+	else_if = { limit = { global_var:cmf_log_count = 128 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_128 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_129 } }
+}
+
+_cmf_log_key_13x = {
+	if = { limit = { global_var:cmf_log_count = 130 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_130 } }
+	else_if = { limit = { global_var:cmf_log_count = 131 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_131 } }
+	else_if = { limit = { global_var:cmf_log_count = 132 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_132 } }
+	else_if = { limit = { global_var:cmf_log_count = 133 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_133 } }
+	else_if = { limit = { global_var:cmf_log_count = 134 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_134 } }
+	else_if = { limit = { global_var:cmf_log_count = 135 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_135 } }
+	else_if = { limit = { global_var:cmf_log_count = 136 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_136 } }
+	else_if = { limit = { global_var:cmf_log_count = 137 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_137 } }
+	else_if = { limit = { global_var:cmf_log_count = 138 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_138 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_139 } }
+}
+
+_cmf_log_key_14x = {
+	if = { limit = { global_var:cmf_log_count = 140 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_140 } }
+	else_if = { limit = { global_var:cmf_log_count = 141 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_141 } }
+	else_if = { limit = { global_var:cmf_log_count = 142 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_142 } }
+	else_if = { limit = { global_var:cmf_log_count = 143 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_143 } }
+	else_if = { limit = { global_var:cmf_log_count = 144 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_144 } }
+	else_if = { limit = { global_var:cmf_log_count = 145 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_145 } }
+	else_if = { limit = { global_var:cmf_log_count = 146 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_146 } }
+	else_if = { limit = { global_var:cmf_log_count = 147 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_147 } }
+	else_if = { limit = { global_var:cmf_log_count = 148 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_148 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_149 } }
+}
+
+_cmf_log_key_15x = {
+	if = { limit = { global_var:cmf_log_count = 150 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_150 } }
+	else_if = { limit = { global_var:cmf_log_count = 151 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_151 } }
+	else_if = { limit = { global_var:cmf_log_count = 152 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_152 } }
+	else_if = { limit = { global_var:cmf_log_count = 153 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_153 } }
+	else_if = { limit = { global_var:cmf_log_count = 154 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_154 } }
+	else_if = { limit = { global_var:cmf_log_count = 155 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_155 } }
+	else_if = { limit = { global_var:cmf_log_count = 156 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_156 } }
+	else_if = { limit = { global_var:cmf_log_count = 157 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_157 } }
+	else_if = { limit = { global_var:cmf_log_count = 158 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_158 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_159 } }
+}
+
+_cmf_log_key_16x = {
+	if = { limit = { global_var:cmf_log_count = 160 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_160 } }
+	else_if = { limit = { global_var:cmf_log_count = 161 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_161 } }
+	else_if = { limit = { global_var:cmf_log_count = 162 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_162 } }
+	else_if = { limit = { global_var:cmf_log_count = 163 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_163 } }
+	else_if = { limit = { global_var:cmf_log_count = 164 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_164 } }
+	else_if = { limit = { global_var:cmf_log_count = 165 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_165 } }
+	else_if = { limit = { global_var:cmf_log_count = 166 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_166 } }
+	else_if = { limit = { global_var:cmf_log_count = 167 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_167 } }
+	else_if = { limit = { global_var:cmf_log_count = 168 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_168 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_169 } }
+}
+
+_cmf_log_key_17x = {
+	if = { limit = { global_var:cmf_log_count = 170 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_170 } }
+	else_if = { limit = { global_var:cmf_log_count = 171 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_171 } }
+	else_if = { limit = { global_var:cmf_log_count = 172 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_172 } }
+	else_if = { limit = { global_var:cmf_log_count = 173 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_173 } }
+	else_if = { limit = { global_var:cmf_log_count = 174 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_174 } }
+	else_if = { limit = { global_var:cmf_log_count = 175 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_175 } }
+	else_if = { limit = { global_var:cmf_log_count = 176 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_176 } }
+	else_if = { limit = { global_var:cmf_log_count = 177 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_177 } }
+	else_if = { limit = { global_var:cmf_log_count = 178 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_178 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_179 } }
+}
+
+_cmf_log_key_18x = {
+	if = { limit = { global_var:cmf_log_count = 180 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_180 } }
+	else_if = { limit = { global_var:cmf_log_count = 181 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_181 } }
+	else_if = { limit = { global_var:cmf_log_count = 182 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_182 } }
+	else_if = { limit = { global_var:cmf_log_count = 183 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_183 } }
+	else_if = { limit = { global_var:cmf_log_count = 184 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_184 } }
+	else_if = { limit = { global_var:cmf_log_count = 185 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_185 } }
+	else_if = { limit = { global_var:cmf_log_count = 186 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_186 } }
+	else_if = { limit = { global_var:cmf_log_count = 187 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_187 } }
+	else_if = { limit = { global_var:cmf_log_count = 188 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_188 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_189 } }
+}
+
+_cmf_log_key_19x = {
+	if = { limit = { global_var:cmf_log_count = 190 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_190 } }
+	else_if = { limit = { global_var:cmf_log_count = 191 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_191 } }
+	else_if = { limit = { global_var:cmf_log_count = 192 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_192 } }
+	else_if = { limit = { global_var:cmf_log_count = 193 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_193 } }
+	else_if = { limit = { global_var:cmf_log_count = 194 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_194 } }
+	else_if = { limit = { global_var:cmf_log_count = 195 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_195 } }
+	else_if = { limit = { global_var:cmf_log_count = 196 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_196 } }
+	else_if = { limit = { global_var:cmf_log_count = 197 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_197 } }
+	else_if = { limit = { global_var:cmf_log_count = 198 } save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_198 } }
+	else = { save_scope_value_as = { name = _cmf_log_key value = flag:cmf_log_199 } }
+}
+
+# Internal: clear all variable map entries using flag keys.
+# Uses a while loop + the same dispatch chain to resolve flag keys for removal.
+# Scope: country
+# Args: none
+_cmf_log_clear_maps = {
+	while = {
+		limit = { global_var:cmf_log_count > 0 }
+		change_global_variable = { name = cmf_log_count subtract = 1 }
+		_cmf_log_select_key = yes
+		remove_from_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key }
+		remove_from_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key }
+		remove_from_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key }
+		remove_from_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key }
+		remove_from_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key }
+	}
+}

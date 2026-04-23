@@ -3,7 +3,7 @@
 	alwaystransparent = no
 	reorder_on_mouse = never
 	resizable = no
-	movable = no
+	movable = yes
 	parentanchor = center
 	widgetanchor = center
 	size = { 1140 760 }
@@ -18,7 +18,15 @@
 		window_header_alt = {
 			blockoverride "header_text_object" {
 				hbox = {
-					visible = "[Not(CMMSelectedModExists)]"
+					visible = "[Player.MakeScope.GetVariable('cmf_log_view_open').IsSet]"
+
+					header_title = {
+						text = "CMM_LOG_TITLE"
+					}
+				}
+
+				hbox = {
+					visible = "[And(Not(CMMSelectedModExists), Not(Player.MakeScope.GetVariable('cmf_log_view_open').IsSet))]"
 
 					header_title = {
 						text = "CMM_WINDOW_TITLE"
@@ -26,7 +34,7 @@
 				}
 
 				hbox = {
-					visible = "[CMMSelectedModExists]"
+					visible = "[And(CMMSelectedModExists, Not(Player.MakeScope.GetVariable('cmf_log_view_open').IsSet))]"
 
 					header_title = {
 						size = { -1 40 }
@@ -48,7 +56,12 @@
 			spacing = 12
 
 			cmm_mod_list_panel = {}
-			cmm_settings_panel = {}
+			cmm_settings_panel = {
+				visible = "[Not(Player.MakeScope.GetVariable('cmf_log_view_open').IsSet)]"
+			}
+			cmm_log_panel = {
+				visible = "[Player.MakeScope.GetVariable('cmf_log_view_open').IsSet]"
+			}
 		}
 	}
 

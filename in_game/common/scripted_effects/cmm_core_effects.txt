@@ -21,6 +21,7 @@ _cmm_init_variable_maps = {
 	add_to_variable_map = { name = cmm_list_is_ordered key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_has_sgui key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_no_reset key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_requires_unrestricted_tools_enabled key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_list_field_disabled key = flag:cmm_init value = 0 }
 	add_to_global_variable_map = { name = cmm key = flag:cmm_init value = 0 }
 
@@ -46,6 +47,7 @@ _cmm_init_variable_maps = {
 			has_variable_map = cmm_list_is_ordered
 			has_variable_map = cmm_has_sgui
 			has_variable_map = cmm_no_reset
+			has_variable_map = cmm_requires_unrestricted_tools_enabled
 			has_variable_map = cmm_list_field_disabled
 			has_global_variable_map = cmm
 		}
@@ -62,15 +64,15 @@ _cmm_register_mod = {
 	set_variable = { name = $mod_id$_name value = flag:$mod_id$_name }
 	set_variable = { name = $mod_id$_desc value = flag:$mod_id$_desc }
 
-	# First-time registration path for this mod id.
+	# Ensure mod is in the id list (rebuilt each registration cycle).
 	if = {
-		limit = { NOT = { has_variable = cmm_registered_mod_$mod_id$ } }
-		set_variable = { name = cmm_registered_mod_$mod_id$ value = yes }
-		# Global mod id list; used by left-panel datamodel iteration.
+		limit = { NOT = { is_target_in_variable_list = { name = cmm_registered_mod_ids target = flag:$mod_id$ } } }
 		add_to_variable_list = {
 			name = cmm_registered_mod_ids
 			target = flag:$mod_id$
 		}
+		# Reset default tab so the first registered tab becomes default this cycle.
+		remove_variable = cmm_mod_default_tab_$mod_id$
 	}
 
 	# Benign warning suppression
@@ -80,7 +82,6 @@ _cmm_register_mod = {
 		cmf_suppress = { v = $mod_id$_name }
 		cmf_suppress = { v = $mod_id$_desc }
 		cmf_suppress = { v = cmm_registered_mod_ids }
-		cmf_suppress = { v = cmm_registered_mod_$mod_id$ }
 	}
 }
 
@@ -94,12 +95,12 @@ _cmm_register_tab = {
 		mod_id = $mod_id$
 	}
 
-	# First-time registration path for this tab key.
+	# Registration path for this tab key (list rebuilt each cycle).
 	if = {
-		limit = { NOT = { has_variable = cmm_registered_tab_$mod_id$__$tab_id$ } }
-		set_variable = { name = cmm_registered_tab_$mod_id$__$tab_id$ value = yes }
+		limit = { NOT = { is_target_in_variable_list = { name = cmm_registered_tab_keys target = flag:$mod_id$__$tab_id$ } } }
 		set_variable = { name = cmm_tab_owner_mod_id_$mod_id$__$tab_id$ value = flag:$mod_id$ }
 		set_variable = { name = $mod_id$__$tab_id$_name value = flag:$mod_id$__$tab_id$_name }
+		set_variable = { name = cmm_tab_setting_count_$mod_id$__$tab_id$ value = 0 }
 
 		# Global tab key list; used by right-panel tab datamodel iteration.
 		add_to_variable_list = {
@@ -120,9 +121,9 @@ _cmm_register_tab = {
 		cmf_suppress = { v = $mod_id$__$tab_id$ }
 		cmf_suppress = { v = $mod_id$__$tab_id$_name }
 		cmf_suppress = { v = cmm_registered_tab_keys }
-		cmf_suppress = { v = cmm_registered_tab_$mod_id$__$tab_id$ }
 		cmf_suppress = { v = cmm_mod_default_tab_$mod_id$ }
 		cmf_suppress = { v = cmm_tab_owner_mod_id_$mod_id$__$tab_id$ }
+		cmf_suppress = { v = cmm_tab_setting_count_$mod_id$__$tab_id$ }
 	}
 }
 
@@ -138,14 +139,16 @@ _cmm_register_group = {
 		tab_id = $tab_id$
 	}
 
-	# First-time registration path for this group key.
+	# Registration path for this group key (list rebuilt each cycle).
 	if = {
-		limit = { NOT = { has_variable = cmm_registered_group_$mod_id$__$tab_id$__$group_id$ } }
-		set_variable = { name = cmm_registered_group_$mod_id$__$tab_id$__$group_id$ value = yes }
+		limit = { NOT = { is_target_in_variable_list = { name = cmm_registered_group_keys target = flag:$mod_id$__$tab_id$__$group_id$ } } }
 		set_variable = { name = cmm_group_owner_mod_id_$mod_id$__$tab_id$__$group_id$ value = flag:$mod_id$ }
 		set_variable = { name = cmm_group_owner_tab_key_$mod_id$__$tab_id$__$group_id$ value = flag:$mod_id$__$tab_id$ }
 		set_variable = { name = $mod_id$__$tab_id$__$group_id$_name value = flag:$mod_id$__$tab_id$__$group_id$_name }
 		set_variable = { name = $mod_id$__$tab_id$__$group_id$_desc value = flag:$mod_id$__$tab_id$__$group_id$_desc }
+
+		# Clear per-group setting list so stale settings from old saves are removed.
+		clear_variable_list = cmm_group_setting_keys_$mod_id$__$tab_id$__$group_id$
 
 		# Global group key list; used by settings-panel group datamodel iteration.
 		add_to_variable_list = {
@@ -162,9 +165,9 @@ _cmm_register_group = {
 		cmf_suppress = { v = $mod_id$__$tab_id$__$group_id$_desc }
 		cmf_suppress = { v = $mod_id$__$tab_id$ }
 		cmf_suppress = { v = cmm_registered_group_keys }
-		cmf_suppress = { v = cmm_registered_group_$mod_id$__$tab_id$__$group_id$ }
 		cmf_suppress = { v = cmm_group_owner_mod_id_$mod_id$__$tab_id$__$group_id$ }
 		cmf_suppress = { v = cmm_group_owner_tab_key_$mod_id$__$tab_id$__$group_id$ }
+		cmf_suppress = { v = cmm_group_setting_keys_$mod_id$__$tab_id$__$group_id$ }
 	}
 }
 
@@ -182,10 +185,9 @@ _cmm_register_setting_metadata = {
 		group_id = $group_id$
 	}
 
-	# First-time registration path for this setting key.
+	# Registration path for this setting key (list rebuilt each cycle).
 	if = {
-		limit = { NOT = { has_variable = cmm_registered_setting_$mod_id$__$setting_id$ } }
-		set_variable = { name = cmm_registered_setting_$mod_id$__$setting_id$ value = yes }
+		limit = { NOT = { is_target_in_variable_list = { name = cmm_registered_setting_keys target = flag:$mod_id$__$setting_id$ } } }
 		set_variable = { name = cmm_setting_owner_mod_id_$mod_id$__$setting_id$ value = flag:$mod_id$ }
 		set_variable = { name = cmm_setting_owner_tab_key_$mod_id$__$setting_id$ value = flag:$mod_id$__$tab_id$ }
 		set_variable = { name = cmm_setting_owner_group_key_$mod_id$__$setting_id$ value = flag:$mod_id$__$tab_id$__$group_id$ }
@@ -205,10 +207,6 @@ _cmm_register_setting_metadata = {
 		}
 
 		# Per-tab count; used for "no settings in this tab" UI state.
-		if = {
-			limit = { NOT = { has_variable = cmm_tab_setting_count_$mod_id$__$tab_id$ } }
-			set_variable = { name = cmm_tab_setting_count_$mod_id$__$tab_id$ value = 0 }
-		}
 		change_variable = { name = cmm_tab_setting_count_$mod_id$__$tab_id$ add = 1 }
 	}
 
@@ -222,7 +220,6 @@ _cmm_register_setting_metadata = {
 		cmf_suppress = { v = $mod_id$__$setting_id$_desc }
 		cmf_suppress = { v = $mod_id$__$tab_id$__$group_id$_name }
 		cmf_suppress = { v = cmm_registered_setting_keys }
-		cmf_suppress = { v = cmm_registered_setting_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_setting_owner_mod_id_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_setting_owner_tab_key_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_setting_owner_group_key_$mod_id$__$setting_id$ }
@@ -250,5 +247,15 @@ cmm_add_scripted_gui = {
 # - setting_id (key): Setting id.
 cmm_set_no_reset = {
 	add_to_variable_map = { name = cmm_no_reset key = flag:$mod_id$__$setting_id$ value = 1 }
+}
+
+# Mark a setting as requiring the Unrestricted Tools setting to be enabled (editable only when that setting is on).
+# Use for settings outside normal play (e.g. debug/cheat-style tools). Call after the setting registration effect.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Setting id.
+cmm_set_requires_unrestricted_tools_enabled = {
+	add_to_variable_map = { name = cmm_requires_unrestricted_tools_enabled key = flag:$mod_id$__$setting_id$ value = 1 }
 }
 

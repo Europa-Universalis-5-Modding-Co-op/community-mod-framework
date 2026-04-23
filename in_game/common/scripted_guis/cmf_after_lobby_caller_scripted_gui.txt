@@ -5,7 +5,8 @@
 cmf_after_lobby_caller = {
 	effect = {
 		if = {
-			limit = { NOT = { has_global_variable = cmf_game_started_after_lobby } }
+			limit = { has_global_variable = _cmf_pending_new_game }
+			remove_global_variable = _cmf_pending_new_game
 			set_global_variable = { name = cmf_game_started_after_lobby value = yes }
 			set_global_variable = { name = cmf_is_new_game value = yes }
 			trigger_event_silently = {
@@ -13,6 +14,7 @@ cmf_after_lobby_caller = {
 			}
 		}
 		else = {
+			set_global_variable = { name = cmf_game_started_after_lobby value = yes }
 			trigger_event_silently = {
 				on_action = on_game_load
 			}
@@ -23,7 +25,7 @@ cmf_after_lobby_caller = {
 # Fires on_game_load_after_lobby from a GUI trigger_on_create state.
 # Only fires when past the lobby on a save load (not on new games).
 # Order-independent: on a new game, either cmf_is_new_game is set (Widget 1
-# fired first) or cmf_game_started_after_lobby is not set (Widget 2 fired first).
+# fired first) or cmf_game_started_after_lobby is not yet set (Widget 2 fired first).
 # Scope: none
 cmf_load_after_lobby_caller = {
 	effect = {

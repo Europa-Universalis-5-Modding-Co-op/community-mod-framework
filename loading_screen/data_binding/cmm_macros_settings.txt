@@ -75,9 +75,17 @@ macro = {
 # Args: SettingKey (string)
 # Returns: boolean
 macro = {
+    description = "True when a setting key requires the Unrestricted Tools setting to be enabled"
+    definition = "CMMSettingRequiresUnrestrictedToolsEnabled(SettingKey)"
+    replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_requires_unrestricted_tools_enabled', SettingKey))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
     description = "True when local player can edit this setting"
     definition = "CMMCanEditSetting(SettingKey)"
-    replace_with = "Or(Not(CMMSettingIsGlobal(SettingKey)), And(Or(EqualTo_string(SettingKey, 'cmm_core__enable_host_only_tools'), And(CMMSettingIsRegistered('cmm_core__enable_host_only_tools'), CMMValueEqualsOne(CMMSettingValue('cmm_core__enable_host_only_tools')))), Or(Not(GameIsMultiplayer), IsHost)))"
+    replace_with = "And(Or(Not(CMMSettingIsGlobal(SettingKey)), Or(Not(GameIsMultiplayer), IsHost)), Or(Not(CMMSettingRequiresUnrestrictedToolsEnabled(SettingKey)), Or(EqualTo_string(SettingKey, 'cmm_core__enable_unrestricted_tools'), And(CMMSettingIsRegistered('cmm_core__enable_unrestricted_tools'), CMMValueEqualsOne(CMMSettingValue('cmm_core__enable_unrestricted_tools'))))))"
 }
 
 # Args: SettingKey (string)
@@ -235,7 +243,7 @@ macro = {
 # Args: SettingKey (string)
 # Returns: value
 macro = {
-    description = "Setting value by key (works in localization [expr] context where Scope is unavailable)"
+    description = "Setting value by key (works in localization [expr] context; uses Player.MakeScope because Scope is unavailable)"
     definition = "CMMV(SettingKey)"
     replace_with = "Select_CFixedPoint(EqualTo_CFixedPoint(Player.MakeScope.GetVariableFromVariableMap('cmm_is_global', MakeScopeFlag(SettingKey)).GetValue, '(CFixedPoint)1'), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(SettingKey)).GetValue, Player.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag(SettingKey)).GetValue)"
 }

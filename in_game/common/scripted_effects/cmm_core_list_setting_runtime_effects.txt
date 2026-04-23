@@ -115,7 +115,7 @@ _cmm_list_prepare_bool_field_value_from_slot_item = {
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
-# - item (number): Stable item identity ordinal (`1..20`).
+# - item (number): Stable item identity ordinal (`1..50`).
 _cmm_list_prepare_bool_field_value_from_item = {
 	switch = {
 		trigger = var:cmm_list_field_slot_to_apply
@@ -154,7 +154,7 @@ _cmm_list_prepare_numeric_field_value_from_slot_item = {
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
-# - item (number): Stable item identity ordinal (`1..20`).
+# - item (number): Stable item identity ordinal (`1..50`).
 _cmm_list_prepare_numeric_field_value_from_item = {
 	switch = {
 		trigger = var:cmm_list_field_slot_to_apply
@@ -170,7 +170,7 @@ _cmm_list_prepare_numeric_field_value_from_item = {
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
-# - item (number): Stable item identity ordinal (`1..20`).
+# - item (number): Stable item identity ordinal (`1..50`).
 # - slot (number): Field slot index (`1..5`).
 # - vt (variable/global_variable): Variable type token.
 _cmm_list_apply_numeric_field_slot = {
@@ -234,7 +234,7 @@ _cmm_list_apply_numeric_field_slot = {
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
-# - item (number): Stable item identity ordinal (`1..20`).
+# - item (number): Stable item identity ordinal (`1..50`).
 # - vt (variable/global_variable): Variable type token.
 _cmm_list_apply_numeric_field_at_item = {
 	switch = {
@@ -251,7 +251,7 @@ _cmm_list_apply_numeric_field_at_item = {
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
-# - item (number): Stable item identity ordinal (`1..20`).
+# - item (number): Stable item identity ordinal (`1..50`).
 # - slot (number): Field slot index (`1..5`).
 # - vt (variable/global_variable): Variable type token.
 _cmm_list_apply_slider_field_slot = {
@@ -312,7 +312,7 @@ _cmm_list_apply_slider_field_slot = {
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
-# - item (number): Stable item identity ordinal (`1..20`).
+# - item (number): Stable item identity ordinal (`1..50`).
 # - vt (variable/global_variable): Variable type token.
 _cmm_list_apply_slider_field_at_item = {
 	switch = {
@@ -329,7 +329,7 @@ _cmm_list_apply_slider_field_at_item = {
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
-# - item (number): Stable item identity ordinal (`1..20`).
+# - item (number): Stable item identity ordinal (`1..50`).
 # - slot (number): Field slot index (`1..5`).
 # - vt (variable/global_variable): Variable type token.
 _cmm_list_apply_field_slot_at_item = {
@@ -442,7 +442,7 @@ _cmm_list_apply_field_slot_at_item = {
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
-# - item (number): Stable item identity ordinal (`1..20`).
+# - item (number): Stable item identity ordinal (`1..50`).
 # - vt (variable/global_variable): Variable type token.
 _cmm_list_apply_field_at_item = {
 	switch = {
@@ -459,7 +459,7 @@ _cmm_list_apply_field_at_item = {
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
-# - item (number): Stable item identity ordinal (`1..20`).
+# - item (number): Stable item identity ordinal (`1..50`).
 # - vt (variable/global_variable): Variable type token.
 _cmm_list_dispatch_item_action = {
 	switch = {
@@ -557,6 +557,126 @@ _cmm_list_dispatch_saved_item_action = {
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i20 }
 		_cmm_list_dispatch_item_action = { setting = $setting$ item = 20 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i21 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 21 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i22 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 22 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i23 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 23 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i24 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 24 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i25 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 25 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i26 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 26 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i27 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 27 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i28 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 28 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i29 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 29 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i30 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 30 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i31 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 31 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i32 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 32 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i33 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 33 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i34 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 34 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i35 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 35 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i36 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 36 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i37 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 37 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i38 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 38 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i39 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 39 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i40 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 40 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i41 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 41 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i42 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 42 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i43 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 43 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i44 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 44 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i45 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 45 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i46 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 46 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i47 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 47 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i48 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 48 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i49 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 49 vt = $vt$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i50 }
+		_cmm_list_dispatch_item_action = { setting = $setting$ item = 50 vt = $vt$ }
 	}
 }
 
@@ -800,7 +920,7 @@ cmm_apply_list_change = {
 }
 
 # Iterate over every item in a list setting and call a user-provided effect for each.
-# The effect receives `$i$` as the resolved item number (1-20) and `$setting$` as the
+# The effect receives `$i$` as the resolved item number (1-50) and `$setting$` as the
 # composite key, so the caller can read field values from the cmm variable map like
 # `"variable_map(cmm|flag:$setting$_i$i$_f1)"`.
 # If the item has a value (set via cmm_set_list_item_value or cmm_add_settings_list_item),
@@ -837,6 +957,171 @@ cmm_for_each_list_item = {
 	if = {
 		limit = { always = no }
 		cmf_suppress = { v = cmm_tmp_flag }
+	}
+}
+
+# Build a variable list of item values in display order (respects list reordering).
+# Requires item values set via cmm_set_list_item_value. Clears the target list first.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - list_name (key): Name of the variable list to populate.
+cmm_build_list_ordered_values = {
+	clear_variable_list = $list_name$
+	clear_variable_list = _cmm_tmp_ordered_values
+	cmm_for_each_list_item = {
+		setting = $setting$
+		effect = _cmm_build_list_ordered_values_item
+	}
+	every_in_list = {
+		variable = _cmm_tmp_ordered_values
+		save_scope_as = _cmm_tmp_val
+		root = { add_to_variable_list = { name = $list_name$ target = scope:_cmm_tmp_val } }
+	}
+	clear_variable_list = _cmm_tmp_ordered_values
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = _cmm_tmp_ordered_values }
+		cmf_suppress = { v = _cmm_tmp_val }
+	}
+}
+
+# Internal: called per item by cmm_build_list_ordered_values.
+# Writes to fixed temp list; parent copies to target after iteration.
+# Scope: country
+# Args: setting (key), i (number)
+_cmm_build_list_ordered_values_item = {
+	add_to_variable_list = { name = _cmm_tmp_ordered_values target = scope:cmm_list_current_item_value }
+
+	# Accept setting/i params from cmm_for_each_list_item (unused here)
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $setting$_$i$ }
+	}
+}
+
+# Build a variable map from a list field, keyed by item values (game object scopes).
+# Requires item values set via cmm_set_list_item_value. Clears the target map first.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - field_slot (number): Field slot number (1-5).
+# - map_name (key): Name of the variable map to populate.
+# - multiply (number): Scale factor applied to each value (e.g. 0.01 to convert 0-100 to 0-1). Use 1 for no scaling.
+cmm_build_list_field_map = {
+	clear_variable_map = $map_name$
+	clear_variable_map = _cmm_tmp_field_map
+	set_variable = { name = cmm_blfm_field_slot value = $field_slot$ }
+	set_variable = { name = cmm_blfm_multiply value = $multiply$ }
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	set_variable = { name = cmm_blfm_is_global value = "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" }
+	cmm_for_each_list_item = {
+		setting = $setting$
+		effect = _cmm_build_list_field_map_item
+	}
+	every_key_in_variable_map = {
+		variable = _cmm_tmp_field_map
+		save_scope_as = _cmm_tmp_map_key
+		root = {
+			set_local_variable = { name = _cmm_tmp_map_val value = "variable_map(_cmm_tmp_field_map|scope:_cmm_tmp_map_key)" }
+			add_to_variable_map = { name = $map_name$ key = scope:_cmm_tmp_map_key value = local_var:_cmm_tmp_map_val }
+		}
+	}
+	clear_variable_map = _cmm_tmp_field_map
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_blfm_field_slot }
+		cmf_suppress = { v = cmm_blfm_multiply }
+		cmf_suppress = { v = cmm_blfm_is_global }
+		cmf_suppress = { v = cmm_blfm_value }
+		cmf_suppress = { v = _cmm_tmp_field_map }
+		cmf_suppress = { v = _cmm_tmp_map_key }
+		cmf_suppress = { v = cmm_tmp_key }
+	}
+}
+
+# Internal: called per item by cmm_build_list_field_map.
+# Writes to fixed temp map; parent copies to target after iteration.
+# Scope: country
+# Args: setting (key), i (number)
+_cmm_build_list_field_map_item = {
+	set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f1 }
+	if = { limit = { var:cmm_blfm_field_slot = 2 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f2 } }
+	if = { limit = { var:cmm_blfm_field_slot = 3 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f3 } }
+	if = { limit = { var:cmm_blfm_field_slot = 4 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f4 } }
+	if = { limit = { var:cmm_blfm_field_slot = 5 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f5 } }
+
+	if = {
+		limit = { var:cmm_blfm_is_global >= 1 }
+		set_variable = { name = cmm_blfm_value value = "global_variable_map(cmm|local_var:cmm_tmp_key)" }
+	}
+	else = {
+		set_variable = { name = cmm_blfm_value value = "variable_map(cmm|local_var:cmm_tmp_key)" }
+	}
+	change_variable = { name = cmm_blfm_value multiply = var:cmm_blfm_multiply }
+	add_to_variable_map = { name = _cmm_tmp_field_map key = scope:cmm_list_current_item_value value = var:cmm_blfm_value }
+}
+
+# Build a variable list of item values where a bool field is true.
+# Requires item values set via cmm_set_list_item_value. Clears the target list first.
+# Iterates in display order (respects list reordering).
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - field_slot (number): Bool field slot number (1-5).
+# - list_name (key): Name of the variable list to populate.
+cmm_build_list_bool_list = {
+	clear_variable_list = $list_name$
+	clear_variable_list = _cmm_tmp_bool_list
+	set_variable = { name = cmm_blbl_field_slot value = $field_slot$ }
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	set_variable = { name = cmm_blbl_is_global value = "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" }
+	cmm_for_each_list_item = {
+		setting = $setting$
+		effect = _cmm_build_list_bool_list_item
+	}
+	every_in_list = {
+		variable = _cmm_tmp_bool_list
+		save_scope_as = _cmm_tmp_val
+		root = { add_to_variable_list = { name = $list_name$ target = scope:_cmm_tmp_val } }
+	}
+	clear_variable_list = _cmm_tmp_bool_list
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_blbl_field_slot }
+		cmf_suppress = { v = cmm_blbl_is_global }
+		cmf_suppress = { v = _cmm_tmp_bool_list }
+	}
+}
+
+# Internal: called per item by cmm_build_list_bool_list.
+# Writes to fixed temp list; parent copies to target after iteration.
+# Scope: country
+# Args: setting (key), i (number)
+_cmm_build_list_bool_list_item = {
+	set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f1 }
+	if = { limit = { var:cmm_blbl_field_slot = 2 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f2 } }
+	if = { limit = { var:cmm_blbl_field_slot = 3 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f3 } }
+	if = { limit = { var:cmm_blbl_field_slot = 4 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f4 } }
+	if = { limit = { var:cmm_blbl_field_slot = 5 } set_local_variable = { name = cmm_tmp_key value = flag:$setting$_i$i$_f5 } }
+
+	if = {
+		limit = { var:cmm_blbl_is_global >= 1 }
+		if = {
+			limit = { "global_variable_map(cmm|local_var:cmm_tmp_key)" >= 1 }
+			add_to_variable_list = { name = _cmm_tmp_bool_list target = scope:cmm_list_current_item_value }
+		}
+	}
+	else = {
+		if = {
+			limit = { "variable_map(cmm|local_var:cmm_tmp_key)" >= 1 }
+			add_to_variable_list = { name = _cmm_tmp_bool_list target = scope:cmm_list_current_item_value }
+		}
 	}
 }
 
@@ -940,5 +1225,125 @@ _cmm_resolve_list_item_and_call = {
 	else_if = {
 		limit = { scope:cmm_list_current_item = flag:$setting$_i20 }
 		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 20 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i21 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 21 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i22 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 22 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i23 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 23 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i24 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 24 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i25 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 25 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i26 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 26 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i27 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 27 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i28 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 28 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i29 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 29 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i30 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 30 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i31 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 31 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i32 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 32 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i33 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 33 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i34 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 34 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i35 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 35 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i36 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 36 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i37 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 37 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i38 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 38 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i39 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 39 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i40 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 40 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i41 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 41 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i42 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 42 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i43 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 43 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i44 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 44 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i45 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 45 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i46 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 46 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i47 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 47 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i48 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 48 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i49 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 49 effect = $effect$ }
+	}
+	else_if = {
+		limit = { scope:cmm_list_current_item = flag:$setting$_i50 }
+		_cmm_save_list_item_value_and_call = { setting = $setting$ item = 50 effect = $effect$ }
 	}
 }

@@ -121,6 +121,36 @@ All effects require '''country scope'''.
 
 Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
 
+== Log ==
+The Log system provides a shared, global in-game log where mods can record actions. Each entry stores the actor country and localized action text, with optional named arguments for richer messages.
+
+<syntaxhighlight lang="text">
+# Simple entry — actor is the current country scope
+cmf_log = { action = my_mod_action_key }
+
+# Entry with arguments — renders as: [arg1] [action] [arg2]
+cmf_log_with_args = { action = transferred_to arg1 = paris arg2 = FRA }
+
+# Clear all entries (disabled in multiplayer)
+cmf_clear_log = yes
+</syntaxhighlight>
+
+{| class="wikitable"
+! Effect !! Description
+|-
+| <code>cmf_log = { action = <flag> }</code> || Log an action (country scope = actor)
+|-
+| <code>cmf_log_with_args = { action = <flag> arg1 = <flag> arg2 = <flag> }</code> || Log with two named arguments (localization keys)
+|-
+| <code>cmf_log_with_scope_arg = { action = <flag> }</code> || Log with one country scope argument (requires <code>scope:cmf_log_arg2</code>)
+|-
+| <code>cmf_log_with_scope_args = { action = <flag> }</code> || Log with two country scope arguments (requires <code>scope:cmf_log_arg1</code> and <code>scope:cmf_log_arg2</code>)
+|-
+| <code>cmf_clear_log = yes</code> || Clear all entries
+|}
+
+All arguments are localization keys. The log is viewed via '''Mod Menu > General > Session > Log'''.
+
 == On-Action Hooks ==
 CMF provides shared on_action hooks. Hook into them the same way as <code>cmf_on_mod_registration</code>.
 
@@ -152,6 +182,14 @@ on_game_start_after_lobby = {
 # Country scope — for human country effects
 on_game_start_after_lobby_human_country = {
 	on_actions = { your_mod_on_new_game_country }
+}
+</syntaxhighlight>
+
+=== Country Transfer ===
+<code>cmf_on_country_transfer</code> fires when the player switches countries (tag switches, inheritance, etc.). CMF auto-copies CMM settings and re-runs registration before this fires. <code>scope:old_country</code> and <code>scope:new_country</code> are available.
+<syntaxhighlight lang="text">
+cmf_on_country_transfer = {
+	on_actions = { your_mod_on_country_transfer }
 }
 </syntaxhighlight>
 
@@ -192,6 +230,20 @@ if = {
 	# Runs if the country is controlled by the host
 }
 </syntaxhighlight>
+
+== cmf_can_use_unrestricted_tools Trigger ==
+True when the "Enable Unrestricted Tools" setting (labelled "Enable Host-Only Tools" in multiplayer) is on and this country is the host (or in singleplayer). Use to gate restricted features not meant for normal play — e.g. unrestricted state transfer.
+
+<syntaxhighlight lang="text">
+if = {
+	limit = {
+		cmf_can_use_unrestricted_tools = yes
+	}
+	# Runs if this country is the host and unrestricted tools are enabled
+}
+</syntaxhighlight>
+
+Mark individual CMM settings as requiring Unrestricted Tools with <code>cmm_set_requires_unrestricted_tools_enabled</code> (call after registration) — the CMM menu will disable editing of marked settings unless the "Enable Unrestricted Tools" setting is on.
 
 == cmf_suppress Effect ==
 CMF provides a <code>cmf_suppress</code> effect to silence "used but never set" and "set but never used" engine warnings. Call inside an <code>always = no</code> dead branch:

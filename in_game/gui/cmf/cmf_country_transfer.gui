@@ -1,0 +1,29 @@
+﻿# Country transfer detector: monitors GetPlayer tag via GetVariableSystem.
+# When the stored tag differs from the current tag, fires the transfer
+# scripted GUI with scope:old_country and scope:new_country, then updates
+# the stored tag. Re-triggers itself to keep monitoring.
+widget = {
+	name = "cmf_country_transfer_monitor"
+	size = { 0 0 }
+	datacontext = "[GetPlayer]"
+	visible = "[Country.IsValid]"
+
+	# Initialize the stored tag on first create
+	state = {
+		name = cmf_country_transfer_init
+		trigger_on_create = yes
+		on_finish = "[GetVariableSystem.SetIf('cmf_player_tag', Localize('CMF_PLAYER_TAG'), Not(GetVariableSystem.Exists('cmf_player_tag')))]"
+	}
+
+	# Monitor for tag changes
+	hbox = {
+		visible = "[And(And(GetVariableSystem.Exists('cmf_player_tag'), Not(EqualTo_string(Localize('CMF_PLAYER_TAG'), GetVariableSystem.Get('cmf_player_tag')))), GetCountry(GetVariableSystem.Get('cmf_player_tag')).IsValid)]"
+		state = {
+			name = cmf_country_transfer_detect
+			trigger_on_create = yes
+			on_finish = "[GetScriptedGui('_cmf_on_country_transfer').Execute(GuiScope.AddScope('new_country', GetPlayer.MakeScope).AddScope('old_country', GetCountry(GetVariableSystem.Get('cmf_player_tag')).MakeScope).End)]"
+			on_finish = "[GetVariableSystem.Set('cmf_player_tag', Localize('CMF_PLAYER_TAG'))]"
+			on_finish = "[PdxGuiWidget.TriggerAnimation('cmf_country_transfer_detect')]"
+		}
+	}
+}
