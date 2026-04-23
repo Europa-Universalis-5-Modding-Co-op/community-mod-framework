@@ -278,6 +278,11 @@ visible = "[Nor(Foo, Bar)]"    # neither
 visible = "[Xor(Foo, Bar)]"    # exactly one
 </syntaxhighlight>
 
+== Improved Vanilla Top-Level Widget Overrides ==
+Top-level vanilla widgets like lateralviews can only be overridden by replacing the whole file they're defined in, which normally forces you to copy every type and template in that file too. CMF includes extracted copies of those definitions, so your override only needs the top-level widget itself. That reduces what you have to maintain and lowers the chance of conflicts with other mods that override the same file.
+
+Covered files: <code>foreign_country_lateralview.gui</code>, <code>government_lateralview.gui</code>, <code>ingame_topbar.gui</code>, <code>location_window.gui</code>, <code>outliner_entries.gui</code>, <code>single_unit_window.gui</code>, <code>technology_lateralview.gui</code>.
+
 == Community Mod Toolkit (CMT) ==
 The [[Community Mod Toolkit]] is a companion set of development tools for EU5 mod authors. It provides a structured mod template and automation tools that work together through shared configuration:
 

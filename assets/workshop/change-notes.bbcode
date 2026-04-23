@@ -7,7 +7,7 @@
 - [b]GUI Macros:[/b] New Nand, Nor, and Xor logical operator macros.
 - [b]Performance:[/b] CMM performance improved by ~3x.
 - [b]Bug Fixes:[/b] on_game_start_after_lobby no longer fires on loads where CMF is inactive.
-- [b]Overridable Top-Level Widgets:[/b] Top-level vanilla widgets like lateralview can only be overridden by replacing the whole file they're defined in, which also wipes out any type definitions in that file. CMF now ships extracted copies of those types so they stay intact when a mod overrides the widget.
+- [b]Improved Vanilla Top-Level Widget Overrides:[/b] Top-level vanilla widgets like lateralviews can only be overridden by replacing the whole file they're defined in, which normally forces you to copy every type and template in that file too. CMF now includes extracted copies of those definitions so your override only needs the top-level widget itself.
 
 # v2.1.2:
 - Fix GlorpUI compatability on existing save games
