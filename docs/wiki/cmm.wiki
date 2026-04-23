@@ -221,6 +221,14 @@ cmm_register_list_slider_field = {
 	max_value = 100
 	step_value = 5
 }
+
+cmm_register_list_data_field = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = score
+	default_value = 0
+}
+# Data fields are read-only; update at runtime with cmm_set_list_data_value
 </syntaxhighlight>
 
 === List Field Display Formatting ===
@@ -409,6 +417,8 @@ Check with: <code>has_variable = using_feature_b</code>
 | <code>[mod_id]__[setting_id]_i[N]_name</code> || List row label
 |-
 | <code>[mod_id]__[setting_id]__[field_id]_name</code> || List field column label
+|-
+| <code>[mod_id]__[setting_id]__[field_id]_desc</code> || List field column header tooltip (optional)
 |-
 | <code>[mod_id]__[setting_id]__[field_id]_option_[N]_name</code> || List dropdown field option
 |-
