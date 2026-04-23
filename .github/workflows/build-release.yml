@@ -156,6 +156,11 @@ jobs:
         id: metadata
         shell: bash
         run: |
+          # Escape backslashes and double quotes for VDF string values.
+          # SteamCMD's VDF parser treats an unescaped " as the end of a value.
+          vdf_escape() {
+            printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
+          }
           MOD_RELEASE=$(realpath ../mod-release)
           TITLE=$(grep -Po '(?<=\s"name":\s").+(?=",)' ../mod-release/.metadata/metadata.json)
           CHANGE_NOTE=""
@@ -209,8 +214,8 @@ jobs:
             printf '\t"publishedfileid" "%s"\n' "${{ inputs.workshop-id }}"
             printf '\t"contentfolder" "%s"\n' "${MOD_RELEASE}"
             printf '\t"previewfile" "%s/.metadata/thumbnail.png"\n' "${MOD_RELEASE}"
-            printf '\t"title" "%s"\n' "${TITLE}"
-            [ -n "$CHANGE_NOTE" ] && printf '\t"changenote" "%s"\n' "${CHANGE_NOTE}"
+            printf '\t"title" "%s"\n' "$(vdf_escape "${TITLE}")"
+            [ -n "$CHANGE_NOTE" ] && printf '\t"changenote" "%s"\n' "$(vdf_escape "${CHANGE_NOTE}")"
             echo '}'
           } > ../steam-release/workshop.vdf
           echo "vdf=$(realpath ../steam-release/workshop.vdf)" >> "$GITHUB_OUTPUT"
@@ -243,8 +248,15 @@ jobs:
             [polish]=polish [russian]=russian [simp_chinese]=schinese
             [turkish]=turkish [braz_por]=brazilian [japanese]=japanese [korean]=koreana
           )
+          # Escape backslashes and double quotes for VDF string values.
+          # SteamCMD's VDF parser treats an unescaped " as the end of a value.
+          vdf_escape() {
+            printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
+          }
           write_page_vdf() {
             local vdf_path="$1" steam_lang="$2" title="$3" desc="$4"
+            title=$(vdf_escape "$title")
+            desc=$(vdf_escape "$desc")
             {
               echo '"workshopitem"'
               echo '{'
@@ -291,6 +303,11 @@ jobs:
         if: ${{ inputs.publish == 'true' && inputs.upload-submods == 'true' }}
         shell: bash
         run: |
+          # Escape backslashes and double quotes for VDF string values.
+          # SteamCMD's VDF parser treats an unescaped " as the end of a value.
+          vdf_escape() {
+            printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
+          }
           parse_change_note() {
             local file="$1" version="$2" item_id="$3"
             [ -f "$file" ] || return
@@ -389,8 +406,8 @@ jobs:
               printf '\t"publishedfileid" "%s"\n' "$WID"
               printf '\t"contentfolder" "%s"\n' "${SUBMOD_RELEASE}"
               [ -n "$PREVIEW_PATH" ] && printf '\t"previewfile" "%s"\n' "${PREVIEW_PATH}"
-              [ -n "$SUBMOD_NAME" ] && printf '\t"title" "%s"\n' "${SUBMOD_NAME}"
-              [ -n "$CHANGE_NOTE" ] && printf '\t"changenote" "%s"\n' "${CHANGE_NOTE}"
+              [ -n "$SUBMOD_NAME" ] && printf '\t"title" "%s"\n' "$(vdf_escape "${SUBMOD_NAME}")"
+              [ -n "$CHANGE_NOTE" ] && printf '\t"changenote" "%s"\n' "$(vdf_escape "${CHANGE_NOTE}")"
               echo '}'
             } > "../steam-release/submod-${MOD_ID}.vdf"
             echo "Uploading submod '${MOD_ID}' (Workshop ID: ${WID})..."
