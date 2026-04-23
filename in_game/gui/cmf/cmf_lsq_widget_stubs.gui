@@ -1,0 +1,25 @@
+﻿### CMF: Stub widget types for LSQ (Location Specialization QoL)
+# These empty types are overridden by LSQ's real implementations when LSQ is loaded.
+# They exist so that GlorpUI can reference LSQ widget types without erroring when LSQ is absent.
+
+types cmf_lsq_stub_types {
+	type lsq_is_auto_expand_on_icon_green = widget {
+		visible = no
+	}
+
+	type lsq_is_auto_expand_on_icon_red = widget {
+		visible = no
+	}
+
+	type lsq_auto_expand_rgo_widget_location_window = widget {
+		visible = no
+	}
+
+	type lsq_auto_expand_rgo_widget_expand_raw_goods_lateralview = widget {
+		visible = no
+	}
+
+	type lsq_auto_expand_widget_global_construction = widget {
+		visible = no
+	}
+}

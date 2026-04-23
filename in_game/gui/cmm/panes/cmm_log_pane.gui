@@ -1,0 +1,125 @@
+﻿types CMMLogTypes
+{
+	# Log pane showing recorded mod actions.
+	# Reads:
+	# - GetGlobalVariable('cmf_log_count') [value]: entry count for DataModelRepeatedItem.
+	# - GetVariableFromGlobalVariableMap('cmf_log_*', MakeScopeFlag(...)) [variable]: per-entry data.
+	# Writes:
+	# - CMF_ClearLog scripted GUI [effect]: clears all log entries.
+	type cmm_log_panel = vbox {
+		using = layoutpolicy_expanding
+
+		header_main_tabs = {
+			blockoverride "content" {
+				button_main_tab_alt = {
+					using = layoutpolicy_expanding
+					size = { -1 40 }
+					down = yes
+					tooltip_enabled = no
+
+					hbox = {
+						margin = { 5 0 }
+						margin_top = 4
+						text_single = {
+							text = "CMM_LOG_TITLE"
+							using = Font_Type_Headers
+							using = layoutpolicy_expanding
+							align = center
+							autoresize = no
+						}
+					}
+				}
+			}
+		}
+
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_main_inner_alt
+			margin = { 12 12 }
+			spacing = 10
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				text_multi = {
+					visible = "[Not(CMFLogHasEntries)]"
+					text = "CMM_LOG_EMPTY"
+					autoresize = yes
+					max_width = 680
+				}
+
+				scrollbox = {
+					visible = "[CMFLogHasEntries]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					minimumsize = { 0 420 }
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 2
+							datamodel = "[DataModelRepeatedItem(CMFLogCount)]"
+
+							item = {
+								cmm_log_entry_row = {}
+							}
+						}
+					}
+				}
+
+				expand = {}
+			}
+
+			hbox = {
+				visible = "[And(CMFLogHasEntries, CMMGuiIsShown('CMF_ClearLog'))]"
+				layoutpolicy_horizontal = expanding
+				margin = { 0 4 }
+
+				expand = {}
+
+				button_regular_diamond = {
+					minimumsize = { 168 32 }
+					onclick = "[CMMExecuteGui('CMF_ClearLog')]"
+					text = "CMM_LOG_CLEAR"
+					tooltip = "CMM_LOG_CLEAR_TOOLTIP"
+				}
+
+				expand = {}
+			}
+		}
+	}
+
+	# Single log entry row displaying actor country and action text.
+	# Reads:
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: entry index for flag key construction.
+	# - GetVariableFromGlobalVariableMap('cmf_log_*', MakeScopeFlag(Concatenate('cmf_log_', ...))) [variable]: per-entry data.
+	# Writes:
+	# - none [n/a]: no writes.
+	type cmm_log_entry_row = hbox {
+		layoutpolicy_horizontal = expanding
+		minimumsize = { 0 36 }
+		using = bg_window_default_alt
+		margin = { 8 2 }
+		spacing = 8
+
+		country_flag_small = {
+			datacontext = "[CMFLogActorCountry(PdxGuiWidget.GetIndexInDataModel)]"
+		}
+
+		text_single = {
+			minimumsize = { 120 0 }
+			maximumsize = { 120 -1 }
+			autoresize = no
+			align = left|vcenter
+			default_format = "#bold"
+			text = "[CMFLogActorCountry(PdxGuiWidget.GetIndexInDataModel).GetName]"
+		}
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			align = left|vcenter
+			text = "[CMFLogEntryText(PdxGuiWidget.GetIndexInDataModel)]"
+		}
+	}
+}

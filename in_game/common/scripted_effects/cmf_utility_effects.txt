@@ -7,8 +7,10 @@ cmf_suppress = {
 			always = no
 			exists = var:$v$
 			exists = flag:$v$
+			exists = scope:$v$
 		}
 		set_variable = { name = $v$ value = flag:$v$ }
+		save_scope_as = $v$
 	}
 }
 

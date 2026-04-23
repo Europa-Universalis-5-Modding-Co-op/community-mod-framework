@@ -20,6 +20,87 @@
 		spacing = 1
 		margin = { 6 8 }
 
+		state = {
+			name = cmm_can_edit_list_on
+			trigger_when = "[CMMCanEditSetting(Scope.GetFlagName)]"
+			on_start = "[GetVariableSystem.Set('cmm_can_edit_list', 'yes')]"
+		}
+
+		state = {
+			name = cmm_can_edit_list_off
+			trigger_when = "[Not(CMMCanEditSetting(Scope.GetFlagName))]"
+			on_start = "[GetVariableSystem.Set('cmm_can_edit_list', 'no')]"
+		}
+
+		state = {
+			name = cmm_cache_list_metadata
+			trigger_when = "[Not(GetVariableSystem.HasValue('cmm_list_sk', Scope.GetFlagName))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_sk', Scope.GetFlagName)]"
+			on_start = "[GetVariableSystem.Set('cmm_list_is_global', Select_CString(CMMSettingIsGlobal(Scope.GetFlagName), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_ft_1', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '1', '_type_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_ft_2', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '2', '_type_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_ft_3', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '3', '_type_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_ft_4', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '4', '_type_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_ft_5', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '5', '_type_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hf_1', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '1', '_has_format_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hf_2', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '2', '_has_format_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hf_3', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '3', '_has_format_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hf_4', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '4', '_has_format_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hf_5', ToString_int32(CMMListFieldMetadataInt(Scope.GetFlagName, '5', '_has_format_')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_lk_1', CMMListFieldLocKey(Scope.GetFlagName, '1'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_lk_2', CMMListFieldLocKey(Scope.GetFlagName, '2'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_lk_3', CMMListFieldLocKey(Scope.GetFlagName, '3'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_lk_4', CMMListFieldLocKey(Scope.GetFlagName, '4'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_lk_5', CMMListFieldLocKey(Scope.GetFlagName, '5'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hp_1', Select_CString(CMMListFieldHasPrefix(Scope.GetFlagName, '1'), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hp_2', Select_CString(CMMListFieldHasPrefix(Scope.GetFlagName, '2'), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hp_3', Select_CString(CMMListFieldHasPrefix(Scope.GetFlagName, '3'), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hp_4', Select_CString(CMMListFieldHasPrefix(Scope.GetFlagName, '4'), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hp_5', Select_CString(CMMListFieldHasPrefix(Scope.GetFlagName, '5'), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hpp_1', Select_CString(CMMListFieldHasPostfix(Scope.GetFlagName, '1'), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hpp_2', Select_CString(CMMListFieldHasPostfix(Scope.GetFlagName, '2'), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hpp_3', Select_CString(CMMListFieldHasPostfix(Scope.GetFlagName, '3'), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hpp_4', Select_CString(CMMListFieldHasPostfix(Scope.GetFlagName, '4'), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_hpp_5', Select_CString(CMMListFieldHasPostfix(Scope.GetFlagName, '5'), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfx_1', Localize(Concatenate(CMMCachedFieldLocKey('1'), '_prefix')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfx_2', Localize(Concatenate(CMMCachedFieldLocKey('2'), '_prefix')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfx_3', Localize(Concatenate(CMMCachedFieldLocKey('3'), '_prefix')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfx_4', Localize(Concatenate(CMMCachedFieldLocKey('4'), '_prefix')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfx_5', Localize(Concatenate(CMMCachedFieldLocKey('5'), '_prefix')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfxh_1', Localize(Concatenate(CMMCachedFieldLocKey('1'), '_prefix_high')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfxh_2', Localize(Concatenate(CMMCachedFieldLocKey('2'), '_prefix_high')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfxh_3', Localize(Concatenate(CMMCachedFieldLocKey('3'), '_prefix_high')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfxh_4', Localize(Concatenate(CMMCachedFieldLocKey('4'), '_prefix_high')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfxh_5', Localize(Concatenate(CMMCachedFieldLocKey('5'), '_prefix_high')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfxl_1', Localize(Concatenate(CMMCachedFieldLocKey('1'), '_prefix_low')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfxl_2', Localize(Concatenate(CMMCachedFieldLocKey('2'), '_prefix_low')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfxl_3', Localize(Concatenate(CMMCachedFieldLocKey('3'), '_prefix_low')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfxl_4', Localize(Concatenate(CMMCachedFieldLocKey('4'), '_prefix_low')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pfxl_5', Localize(Concatenate(CMMCachedFieldLocKey('5'), '_prefix_low')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofx_1', Localize(Concatenate(CMMCachedFieldLocKey('1'), '_postfix')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofx_2', Localize(Concatenate(CMMCachedFieldLocKey('2'), '_postfix')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofx_3', Localize(Concatenate(CMMCachedFieldLocKey('3'), '_postfix')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofx_4', Localize(Concatenate(CMMCachedFieldLocKey('4'), '_postfix')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofx_5', Localize(Concatenate(CMMCachedFieldLocKey('5'), '_postfix')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofxh_1', Localize(Concatenate(CMMCachedFieldLocKey('1'), '_postfix_high')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofxh_2', Localize(Concatenate(CMMCachedFieldLocKey('2'), '_postfix_high')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofxh_3', Localize(Concatenate(CMMCachedFieldLocKey('3'), '_postfix_high')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofxh_4', Localize(Concatenate(CMMCachedFieldLocKey('4'), '_postfix_high')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofxh_5', Localize(Concatenate(CMMCachedFieldLocKey('5'), '_postfix_high')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofxl_1', Localize(Concatenate(CMMCachedFieldLocKey('1'), '_postfix_low')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofxl_2', Localize(Concatenate(CMMCachedFieldLocKey('2'), '_postfix_low')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofxl_3', Localize(Concatenate(CMMCachedFieldLocKey('3'), '_postfix_low')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofxl_4', Localize(Concatenate(CMMCachedFieldLocKey('4'), '_postfix_low')))]"
+			on_start = "[GetVariableSystem.Set('cmm_list_pofxl_5', Localize(Concatenate(CMMCachedFieldLocKey('5'), '_postfix_low')))]"
+		}
+
+		# Delays field cell re-caching by one frame after a click so that scripted GUI effects have committed before values are read.
+		state = {
+			name = cmm_recache_delay
+			duration = 0.001
+			on_finish = "[PdxGuiTriggerAllAnimations('cmm_cache_field_cell')]"
+		}
+
 		widget = {
 			layoutpolicy_horizontal = expanding
 			minimumsize = { 0 32 }
@@ -120,6 +201,7 @@
 	type cmm_list_setting_row_widget = widget {
 		layoutpolicy_horizontal = expanding
 		minimumsize = { 0 32 }
+		visible = "[CMMListItemIsVisible(Scope.GetFlagName)]"
 		onmousehierarchyenter = "[GetVariableSystem.Set('cmm_list_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 		using = bg_square_outline_tile
 
@@ -146,6 +228,7 @@
 				size = { 56 28 }
 				minimumsize = { 56 28 }
 				visible = "[CMMListItemSettingIsOrdered(Scope.GetFlagName)]"
+				enabled = "[GetVariableSystem.HasValue('cmm_can_edit_list', 'yes')]"
 
 				hbox = {
 					parentanchor = center
@@ -161,26 +244,25 @@
 							parentanchor = center
 							widgetanchor = center
 							visible = "[Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)0'))]"
-							enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
 
 							action_tooltip = {
 								click_mode = single
 								click_type = left
-								click_modifier = default
 								title = "CMM_LIST_MOVE_UP"
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveUp')]"
 								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+								on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 							}
 
 							action_tooltip = {
 								click_mode = single
-								click_type = left
-								click_modifier = shift
+								click_type = right
 								title = "CMM_LIST_MOVE_TO_TOP"
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveToTop')]"
 								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+								on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 							}
 
 							tooltipwidget = { BasicFunctionalTooltip = {} }
@@ -203,26 +285,25 @@
 							parentanchor = center
 							widgetanchor = center
 							visible = "[Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, CMMMapInt('cmm_list_last_index', CMMListItemOwnerSettingKey(Scope.GetFlagName))))]"
-							enabled = "[CMMCanEditListItemSetting(Scope.GetFlagName)]"
 
 							action_tooltip = {
 								click_mode = single
 								click_type = left
-								click_modifier = default
 								title = "CMM_LIST_MOVE_DOWN"
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveDown')]"
 								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+								on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 							}
 
 							action_tooltip = {
 								click_mode = single
-								click_type = left
-								click_modifier = shift
+								click_type = right
 								title = "CMM_LIST_MOVE_TO_BOTTOM"
 								on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 								on_action = "[CMMExecuteGui('CMM_MarkListMoveToBottom')]"
 								on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+								on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 							}
 
 							tooltipwidget = { BasicFunctionalTooltip = {} }

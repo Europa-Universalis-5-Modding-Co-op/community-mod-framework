@@ -44,6 +44,12 @@ body {
     color: var(--gold);
 }
 
+.app-version {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-right: auto;
+}
+
 .header-left {
     display: flex;
     align-items: center;
@@ -461,6 +467,16 @@ body {
     background: var(--bg-card);
     border-bottom: 1px solid var(--border);
     cursor: grab;
+}
+
+.setting-card.collapsed .setting-card-header {
+    border-bottom: none;
+}
+
+.setting-card-header > .collapse-indicator {
+    cursor: pointer;
+    color: var(--text-muted);
+    flex-shrink: 0;
 }
 
 .setting-card-header:active { cursor: grabbing; }

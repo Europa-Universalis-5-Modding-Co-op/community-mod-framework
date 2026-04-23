@@ -2,6 +2,10 @@
 # Scope: country
 CMM_RegisterCoreMod = {
 	effect = {
+		clear_variable_list = cmm_registered_mod_ids
+		clear_variable_list = cmm_registered_tab_keys
+		clear_variable_list = cmm_registered_group_keys
+		clear_variable_list = cmm_registered_setting_keys
 		_cmm_register_menu_settings = yes
 		trigger_event_silently = {
 			on_action = cmf_on_mod_registration
@@ -14,6 +18,10 @@ CMM_RegisterCoreMod = {
 CMM_SetHostAndRegisterCoreMod = {
 	effect = {
 		_cmm_mark_host_country = yes
+		clear_variable_list = cmm_registered_mod_ids
+		clear_variable_list = cmm_registered_tab_keys
+		clear_variable_list = cmm_registered_group_keys
+		clear_variable_list = cmm_registered_setting_keys
 		_cmm_register_menu_settings = yes
 		trigger_event_silently = {
 			on_action = cmf_on_mod_registration
