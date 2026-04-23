@@ -13,32 +13,32 @@ Pour toute question, n'hésitez pas à nous contacter sur le Discord EU5 Mod Coo
 
 [h1]Fonctionnalités[/h1]
 [list]
- [*][b]Community Mod Menu (CMM) :[/b] Un menu de mod partagé en jeu. Les auteurs de mods enregistrent les paramètres dynamiquement via une simple API, sans avoir besoin de créer une interface utilisateur de paramètres personnalisée.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Community-Mod-Menu]Community Mod Menu (CMM) :[/url][/b] Un menu de mod partagé en jeu. Les auteurs de mods enregistrent les paramètres de manière dynamique via une API simple, sans avoir besoin de créer une interface utilisateur de paramètres personnalisée.
   [list]
-   [*]Paramètres de type bouton bascule, bouton, numérique, curseur (double-cliquer pour faire glisser), menu déroulant, texte (solo uniquement) et liste.
+   [*]Paramètres de type interrupteur, bouton, numérique, curseur (double-cliquer pour faire glisser), menu déroulant, texte (solo uniquement) et liste.
    [*]Onglets par mod, groupes et recherche.
    [*]Paramètres globaux avec modification réservée à l'hôte en multijoueur.
    [*]Réinitialiser aux valeurs par défaut.
    [*]Fenêtre déplaçable.
    [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url] : outil par navigateur pour créer votre menu de mod.
   [/list]
- [*][b]Alertes personnalisées :[/b] Créez et affichez des alertes personnalisées dans la barre d'alertes via des clés de localisation.
- [*][b]Barre d'action :[/b] Ajoutez des boutons de barre d'action personnalisés avec des clés de localisation.
- [*][b]Transfert de pays :[/b] Les paramètres du CMM sont automatiquement transférés lors du changement de pays (changement de tag, héritage, etc.).
- [*][b]Déclencheur is_host :[/b] Vérifie si le pays actuel est contrôlé par le joueur hôte.
- [*][b]Outils non restreints :[/b] Verrouillez les fonctionnalités restreintes derrière un paramètre maître "Activer les outils non restreints" (déclencheur cmf_can_use_unrestricted_tools, flag cmm_set_requires_unrestricted_tools_enabled par paramètre).
- [*][b]Effet cmf_suppress :[/b] Supprimez les avertissements du moteur "utilisé mais jamais défini" et "défini mais jamais utilisé" avec un seul appel d'effet.
- [*][b]Macros GUI :[/b] Macros pour les opérateurs logiques Nand, Nor et Xor.
- [*][b]Hooks d'actions (On-Action) :[/b] Hooks de début de partie après-salon et de chargement de sauvegarde (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) avec des variantes pour le pays du joueur. Inclut également des pulses annuels et mensuels partagés pour les joueurs humains.
- [*][b]Utilitaires de cartes de variables (Variable Map) :[/b] Assistants de mutation sécurisée de cartes de variables (cmf_change_variable_map et variantes locales/globales) qui gèrent la suppression puis l'ajout de manière atomique.
- [*][b]Journal (Log) :[/b] Journal global en jeu pour enregistrer les actions des mods avec le pays acteur, le texte de l'action et des arguments facultatifs.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT) :[/url][/b] Un ensemble d'outils de développement compagnons, tels qu'un modèle de mod, un téléchargeur pour le workshop et un traducteur de mod.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Custom-Alerts]Alertes personnalisées :[/url][/b] Créez et affichez des alertes personnalisées dans la barre d'alerte via des clés de localisation.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar]Barre d'action :[/url][/b] Ajoutez des boutons personnalisés à la barre d'action avec des clés de localisation.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks#country-transfer]Transfert de pays :[/url][/b] Les paramètres du CMM sont automatiquement transférés lors d'un changement de pays (changement de tag, héritage, etc.).
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger]Trigger is_host :[/url][/b] Vérifie si le pays actuel est contrôlé par le joueur hôte.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger#cmf_can_use_unrestricted_tools]Bascule des outils non restreints :[/url][/b] Verrouillez les fonctionnalités restreintes derrière un paramètre "Activer les outils non restreints" (trigger cmf_can_use_unrestricted_tools, flag par paramètre cmm_set_requires_unrestricted_tools_enabled). Disponible uniquement pour l'hôte en multijoueur.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Warning-Suppression]Effet cmf_suppress :[/url][/b] Supprimez les avertissements du moteur "used but never set" et "set but never used" avec un seul appel d'effet.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/GUI-Macros]Macros GUI :[/url][/b] Macros d'opérateurs logiques Nand, Nor et Xor.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks]Hooks On-Action :[/url][/b] Hooks de début de partie après le lobby et de chargement de sauvegarde (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) avec des variantes pour le pays du joueur. Inclut également des pulses annuels et mensuels partagés pour les joueurs humains.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/cmf_change_variable_map-Effect]Utilitaires de Variable Map :[/url][/b] Aides à la mutation sécurisée des variable maps (cmf_change_variable_map et variantes locales/globales) qui gèrent la suppression puis l'ajout de manière atomique.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Log]Log :[/url][/b] Journal (log) global en jeu pour enregistrer les actions des mods (par ex. les actions des outils de l'hôte en multijoueur, car le journal ne peut pas être effacé en multijoueur).
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT) :[/url][/b] Un ensemble d'outils de développement compagnons, tels qu'un modèle de mod, un utilitaire d'upload sur le workshop et un traducteur de mod.
 [/list]
 
 [h1]Documentation[/h1]
 [list]
- [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] : Documentation complète
- [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] : Référence rapide
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]Wiki GitHub[/url] : Documentation complète
+ [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Wiki Paradox EU5[/url] : Référence rapide
  [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]Dépôt GitHub[/url]
 [/list]
 
@@ -54,16 +54,17 @@ Pour toute question, n'hésitez pas à nous contacter sur le Discord EU5 Mod Coo
 
 [h1]Mods utilisant le CMF[/h1]
 [list]
- [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
- [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
- [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
- [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
- [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url]
  [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3696243603]Autonomous Diplomats[/url]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3662193478]Faster Universalis[/url]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3601047146]GlorpUI[/url]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3619130338]Improved Subject Management[/url]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3640830258]Location Transfer Tool[/url]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3691186720]More Restricted Colonization[/url]
+ [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3599735023]The Idea Variation 2[/url]
 [/list]
 
 [h1]Journal des modifications :[/h1]
-Consultez les [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]notes de mise à jour sur la page du workshop[/url].
+Consultez les [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]notes de changement sur la page du workshop[/url].
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Bottom_Banner.png[/img]
 
