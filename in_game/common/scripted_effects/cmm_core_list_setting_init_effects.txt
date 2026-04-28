@@ -871,10 +871,6 @@ _cmm_initialize_list_data_field_slot = {
 	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 47 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 48 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
 	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 48 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 49 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
 	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 49 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 50 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 21 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 22 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 22 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 23 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 23 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 24 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
-	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 24 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 25 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
 }
 
 # Reference ordered list metadata in a dead branch to suppress false-positive warnings.
