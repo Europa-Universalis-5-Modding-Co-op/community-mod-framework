@@ -4,7 +4,7 @@ CMM_MarkListPosition_ = { }
 # No-op fallback when cmm_list_hover_field_slot is unset (empty string suffix).
 CMM_MarkListFieldSlot_ = { }
 
-# Mark the next ordered list interaction as row position `0`.
+# Mark the next ordered list interaction as a row position.
 # Scope: country
 # Args: none
 CMM_MarkListPosition_0 = {
@@ -21,446 +21,103 @@ CMM_MarkListPosition_0 = {
 	}
 }
 
-# Mark the next ordered list interaction as row position `1`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_1 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 1 }
-	}
-}
+CMM_MarkListPosition_1 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 1 } } }
 
-# Mark the next ordered list interaction as row position `2`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_2 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 2 }
-	}
-}
+CMM_MarkListPosition_2 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 2 } } }
 
-# Mark the next ordered list interaction as row position `3`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_3 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 3 }
-	}
-}
+CMM_MarkListPosition_3 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 3 } } }
 
-# Mark the next ordered list interaction as row position `4`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_4 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 4 }
-	}
-}
+CMM_MarkListPosition_4 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 4 } } }
 
-# Mark the next ordered list interaction as row position `5`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_5 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 5 }
-	}
-}
+CMM_MarkListPosition_5 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 5 } } }
 
-# Mark the next ordered list interaction as row position `6`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_6 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 6 }
-	}
-}
+CMM_MarkListPosition_6 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 6 } } }
 
-# Mark the next ordered list interaction as row position `7`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_7 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 7 }
-	}
-}
+CMM_MarkListPosition_7 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 7 } } }
 
-# Mark the next ordered list interaction as row position `8`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_8 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 8 }
-	}
-}
+CMM_MarkListPosition_8 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 8 } } }
 
-# Mark the next ordered list interaction as row position `9`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_9 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 9 }
-	}
-}
+CMM_MarkListPosition_9 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 9 } } }
 
-# Mark the next ordered list interaction as row position `10`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_10 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 10 }
-	}
-}
+CMM_MarkListPosition_10 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 10 } } }
 
-# Mark the next ordered list interaction as row position `11`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_11 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 11 }
-	}
-}
+CMM_MarkListPosition_11 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 11 } } }
 
-# Mark the next ordered list interaction as row position `12`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_12 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 12 }
-	}
-}
+CMM_MarkListPosition_12 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 12 } } }
 
-# Mark the next ordered list interaction as row position `13`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_13 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 13 }
-	}
-}
+CMM_MarkListPosition_13 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 13 } } }
 
-# Mark the next ordered list interaction as row position `14`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_14 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 14 }
-	}
-}
+CMM_MarkListPosition_14 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 14 } } }
 
-# Mark the next ordered list interaction as row position `15`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_15 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 15 }
-	}
-}
+CMM_MarkListPosition_15 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 15 } } }
 
-# Mark the next ordered list interaction as row position `16`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_16 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 16 }
-	}
-}
+CMM_MarkListPosition_16 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 16 } } }
 
-# Mark the next ordered list interaction as row position `17`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_17 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 17 }
-	}
-}
+CMM_MarkListPosition_17 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 17 } } }
 
-# Mark the next ordered list interaction as row position `18`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_18 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 18 }
-	}
-}
+CMM_MarkListPosition_18 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 18 } } }
 
-# Mark the next ordered list interaction as row position `19`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_19 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 19 }
-	}
-}
+CMM_MarkListPosition_19 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 19 } } }
 
-# Mark the next ordered list interaction as row position `20`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_20 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 20 }
-	}
-}
+CMM_MarkListPosition_20 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 20 } } }
 
-# Mark the next ordered list interaction as row position `21`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_21 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 21 }
-	}
-}
+CMM_MarkListPosition_21 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 21 } } }
 
-# Mark the next ordered list interaction as row position `22`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_22 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 22 }
-	}
-}
+CMM_MarkListPosition_22 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 22 } } }
 
-# Mark the next ordered list interaction as row position `23`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_23 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 23 }
-	}
-}
+CMM_MarkListPosition_23 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 23 } } }
 
-# Mark the next ordered list interaction as row position `24`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_24 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 24 }
-	}
-}
+CMM_MarkListPosition_24 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 24 } } }
 
-# Mark the next ordered list interaction as row position `25`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_25 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 25 }
-	}
-}
+CMM_MarkListPosition_25 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 25 } } }
 
-# Mark the next ordered list interaction as row position `26`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_26 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 26 }
-	}
-}
+CMM_MarkListPosition_26 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 26 } } }
 
-# Mark the next ordered list interaction as row position `27`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_27 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 27 }
-	}
-}
+CMM_MarkListPosition_27 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 27 } } }
 
-# Mark the next ordered list interaction as row position `28`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_28 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 28 }
-	}
-}
+CMM_MarkListPosition_28 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 28 } } }
 
-# Mark the next ordered list interaction as row position `29`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_29 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 29 }
-	}
-}
+CMM_MarkListPosition_29 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 29 } } }
 
-# Mark the next ordered list interaction as row position `30`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_30 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 30 }
-	}
-}
+CMM_MarkListPosition_30 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 30 } } }
 
-# Mark the next ordered list interaction as row position `31`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_31 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 31 }
-	}
-}
+CMM_MarkListPosition_31 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 31 } } }
 
-# Mark the next ordered list interaction as row position `32`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_32 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 32 }
-	}
-}
+CMM_MarkListPosition_32 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 32 } } }
 
-# Mark the next ordered list interaction as row position `33`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_33 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 33 }
-	}
-}
+CMM_MarkListPosition_33 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 33 } } }
 
-# Mark the next ordered list interaction as row position `34`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_34 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 34 }
-	}
-}
+CMM_MarkListPosition_34 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 34 } } }
 
-# Mark the next ordered list interaction as row position `35`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_35 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 35 }
-	}
-}
+CMM_MarkListPosition_35 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 35 } } }
 
-# Mark the next ordered list interaction as row position `36`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_36 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 36 }
-	}
-}
+CMM_MarkListPosition_36 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 36 } } }
 
-# Mark the next ordered list interaction as row position `37`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_37 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 37 }
-	}
-}
+CMM_MarkListPosition_37 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 37 } } }
 
-# Mark the next ordered list interaction as row position `38`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_38 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 38 }
-	}
-}
+CMM_MarkListPosition_38 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 38 } } }
 
-# Mark the next ordered list interaction as row position `39`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_39 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 39 }
-	}
-}
+CMM_MarkListPosition_39 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 39 } } }
 
-# Mark the next ordered list interaction as row position `40`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_40 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 40 }
-	}
-}
+CMM_MarkListPosition_40 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 40 } } }
 
-# Mark the next ordered list interaction as row position `41`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_41 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 41 }
-	}
-}
+CMM_MarkListPosition_41 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 41 } } }
 
-# Mark the next ordered list interaction as row position `42`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_42 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 42 }
-	}
-}
+CMM_MarkListPosition_42 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 42 } } }
 
-# Mark the next ordered list interaction as row position `43`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_43 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 43 }
-	}
-}
+CMM_MarkListPosition_43 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 43 } } }
 
-# Mark the next ordered list interaction as row position `44`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_44 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 44 }
-	}
-}
+CMM_MarkListPosition_44 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 44 } } }
 
-# Mark the next ordered list interaction as row position `45`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_45 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 45 }
-	}
-}
+CMM_MarkListPosition_45 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 45 } } }
 
-# Mark the next ordered list interaction as row position `46`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_46 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 46 }
-	}
-}
+CMM_MarkListPosition_46 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 46 } } }
 
-# Mark the next ordered list interaction as row position `47`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_47 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 47 }
-	}
-}
+CMM_MarkListPosition_47 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 47 } } }
 
-# Mark the next ordered list interaction as row position `48`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_48 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 48 }
-	}
-}
+CMM_MarkListPosition_48 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 48 } } }
 
-# Mark the next ordered list interaction as row position `49`.
-# Scope: country
-# Args: none
-CMM_MarkListPosition_49 = {
-	effect = {
-		set_variable = { name = cmm_list_position_to_apply value = 49 }
-	}
-}
+CMM_MarkListPosition_49 = { effect = { set_variable = { name = cmm_list_position_to_apply value = 49 } } }
 
 # Mark the next ordered list interaction as move-up.
 # Scope: country
@@ -498,50 +155,18 @@ CMM_MarkListMoveToBottom = {
 	}
 }
 
-# Mark the next ordered list interaction as field slot `1`.
+# Mark the next ordered list interaction as a field slot.
 # Scope: country
 # Args: none
-CMM_MarkListFieldSlot_1 = {
-	effect = {
-		set_variable = { name = cmm_list_field_slot_to_apply value = 1 }
-	}
-}
+CMM_MarkListFieldSlot_1 = { effect = { set_variable = { name = cmm_list_field_slot_to_apply value = 1 } } }
 
-# Mark the next ordered list interaction as field slot `2`.
-# Scope: country
-# Args: none
-CMM_MarkListFieldSlot_2 = {
-	effect = {
-		set_variable = { name = cmm_list_field_slot_to_apply value = 2 }
-	}
-}
+CMM_MarkListFieldSlot_2 = { effect = { set_variable = { name = cmm_list_field_slot_to_apply value = 2 } } }
 
-# Mark the next ordered list interaction as field slot `3`.
-# Scope: country
-# Args: none
-CMM_MarkListFieldSlot_3 = {
-	effect = {
-		set_variable = { name = cmm_list_field_slot_to_apply value = 3 }
-	}
-}
+CMM_MarkListFieldSlot_3 = { effect = { set_variable = { name = cmm_list_field_slot_to_apply value = 3 } } }
 
-# Mark the next ordered list interaction as field slot `4`.
-# Scope: country
-# Args: none
-CMM_MarkListFieldSlot_4 = {
-	effect = {
-		set_variable = { name = cmm_list_field_slot_to_apply value = 4 }
-	}
-}
+CMM_MarkListFieldSlot_4 = { effect = { set_variable = { name = cmm_list_field_slot_to_apply value = 4 } } }
 
-# Mark the next ordered list interaction as field slot `5`.
-# Scope: country
-# Args: none
-CMM_MarkListFieldSlot_5 = {
-	effect = {
-		set_variable = { name = cmm_list_field_slot_to_apply value = 5 }
-	}
-}
+CMM_MarkListFieldSlot_5 = { effect = { set_variable = { name = cmm_list_field_slot_to_apply value = 5 } } }
 
 # Mark the next ordered list interaction as a bool-field toggle.
 # Scope: country
