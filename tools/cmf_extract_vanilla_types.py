@@ -33,8 +33,13 @@ VANILLA_FILES = [
 
 BOM = "\ufeff"
 
-TYPE_DEF_RE = re.compile(r"^type\s+(\w+)\s*=")
-TEMPLATE_RE = re.compile(r"^template\s+(\w+)")
+TYPE_DEF_RE = re.compile(r'^type\s+(?:"([^"]+)"|(\w+))\s*=')
+TEMPLATE_RE = re.compile(r'^template\s+(?:"([^"]+)"|(\w+))')
+
+
+def _name_from_match(match):
+    """Return the captured name from either the quoted or unquoted group."""
+    return match.group(1) or match.group(2)
 
 
 def parse_braces(line):
@@ -85,7 +90,7 @@ def _collect_types_from_block(lines, start, end, mod_types):
         if old_depth == 1:
             match = TYPE_DEF_RE.match(stripped)
             if match:
-                mod_types.add(match.group(1))
+                mod_types.add(_name_from_match(match))
 
 
 def collect_mod_definitions():
@@ -114,7 +119,7 @@ def collect_mod_definitions():
 
             match = TEMPLATE_RE.match(stripped)
             if match:
-                mod_templates.add(match.group(1))
+                mod_templates.add(_name_from_match(match))
                 i = find_block_end(lines, i)
                 continue
 
@@ -171,7 +176,7 @@ def filter_types_block(block_lines, mod_types):
 
         match = TYPE_DEF_RE.match(stripped)
         if match:
-            type_name = match.group(1)
+            type_name = _name_from_match(match)
             total_types += 1
             type_end = find_block_end(body, i)
 
@@ -243,8 +248,8 @@ def extract_types_templates(content, mod_types=None, mod_templates=None):
         if stripped.startswith("template "):
             match = TEMPLATE_RE.match(stripped)
             block_end = find_block_end(lines, i)
-            if match and match.group(1) in mod_templates:
-                overridden.append(f"template {match.group(1)}")
+            if match and _name_from_match(match) in mod_templates:
+                overridden.append(f"template {_name_from_match(match)}")
                 buffer = []
                 i = block_end
                 continue
