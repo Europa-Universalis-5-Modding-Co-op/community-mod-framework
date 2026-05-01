@@ -9,14 +9,5 @@
         "Utilities",
         "User Interface"
     ],
-    "relationships": [
-        {
-            "rel_type": "dependency",
-            "id": "community_mod_framework",
-            "display_name": "Community Mod Framework",
-            "resource_type": "mod",
-            "version": "2.*"
-        }
-    ],
     "game_custom_data": {}
 }
