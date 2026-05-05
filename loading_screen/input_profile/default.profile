@@ -108,6 +108,10 @@ input_context={
 			modifier=ctrl
 		}
 	}
+}
+
+input_context={
+	name="window_tab"
 
 	input_action={
 		name="cmm_open_menu"
@@ -763,4 +767,4 @@ input_context={
 
 input_context={
 	name="frontend"
-}
+}
