@@ -116,10 +116,7 @@ input_context={
 	input_action={
 		name="cmm_open_menu"
 		text="CMM_INPUT_ACTION_OPEN_MENU"
-		binding={
-			scancode=16
-			modifier=ctrl
-		}
+		scancode=16
 	}
 }
 
@@ -652,7 +649,6 @@ input_context={
 	input_action={
 		name="mapmode_menu"
 		text="SETTING_INPUT_ACTION_MAPMODE_MENU"
-		scancode=16
 	}
 
 	input_action={

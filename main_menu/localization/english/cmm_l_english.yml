@@ -2,6 +2,8 @@
  CMM_PAUSE_MENU_BUTTON: "Mod Menu"
  CMM_PAUSE_MENU_BUTTON_TOOLTIP: "Open Mod Menu"
  CMM_INPUT_ACTION_OPEN_MENU: "Open Mod Menu"
+ SETTING_INPUT_CONTEXT_WINDOW_TAB: "Mods"
+ SETTING_INPUT_CONTEXT_WINDOW_TAB_TOOLTIP: "#T Mods #! Key bindings registered by mods"
  CMM_WINDOW_TITLE: "Mod Menu"
  CMM_MOD_LIST_TITLE: "Mods"
  CMM_MOD_LIST_PLACEHOLDER: "Registered mods are listed below."
