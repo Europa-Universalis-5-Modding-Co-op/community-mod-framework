@@ -295,10 +295,10 @@ def run_git(args, cwd=ROOT_DIR, check=True, env=None):
             check=check,
             env=run_env,
         )
+        if not check and result.returncode != 0:
+            return None
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
-        if not check:
-            return None
         print(f"Git error: git {' '.join(args)}")
         if e.stdout:
             print(e.stdout.strip())
