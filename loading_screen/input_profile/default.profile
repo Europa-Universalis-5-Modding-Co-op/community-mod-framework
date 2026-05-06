@@ -648,8 +648,8 @@ input_context={
 	}
 
 	input_action={
-		name="mapmode_terrain"
-		text="mapmode_terrain_name"
+		name="mapmode_slot_1"
+		text="mapmode_slot_1_name"
 		binding={
 			scancode=20
 			modifier=ctrl
@@ -657,8 +657,8 @@ input_context={
 	}
 
 	input_action={
-		name="mapmode_political"
-		text="mapmode_political_name"
+		name="mapmode_slot_2"
+		text="mapmode_slot_2_name"
 		binding={
 			scancode=26
 			modifier=ctrl
@@ -666,26 +666,26 @@ input_context={
 	}
 
 	input_action={
-		name="mapmode_culture"
-		text="mapmode_culture_name"
+		name="mapmode_slot_3"
+		text="mapmode_slot_3_name"
 		binding={
-			scancode=9
+			scancode=8
 			modifier=ctrl
 		}
 	}
 
 	input_action={
-		name="mapmode_location_religion"
-		text="mapmode_location_religion_name"
+		name="mapmode_slot_4"
+		text="mapmode_slot_4_name"
 		binding={
-			scancode=10
+			scancode=21
 			modifier=ctrl
 		}
 	}
 
 	input_action={
-		name="mapmode_control"
-		text="mapmode_control_name"
+		name="mapmode_slot_5"
+		text="mapmode_slot_5_name"
 		binding={
 		scancode=23
 		modifier=ctrl
@@ -693,8 +693,8 @@ input_context={
 	}
 
 	input_action={
-		name="mapmode_proximity"
-		text="mapmode_proximity_name"
+		name="mapmode_slot_6"
+		text="mapmode_slot_6_name"
 		binding={
 			scancode=28
 			modifier=ctrl
@@ -702,17 +702,17 @@ input_context={
 	}
 
 	input_action={
-		name="mapmode_population"
-		text="mapmode_population_name"
+		name="mapmode_slot_7"
+		text="mapmode_slot_7_name"
 		binding={
-			scancode=7
+			scancode=4
 			modifier=ctrl
 		}
 	}
 
 	input_action={
-		name="mapmode_market"
-		text="mapmode_market_name"
+		name="mapmode_slot_8"
+		text="mapmode_slot_8_name"
 		binding={
 			scancode=22
 			modifier=ctrl
@@ -720,28 +720,37 @@ input_context={
 	}
 
 	input_action={
-		name="mapmode_diplomacy"
-		text="mapmode_diplomacy_name"
+		name="mapmode_slot_9"
+		text="mapmode_slot_9_name"
+		binding={
+			scancode=7
+			modifier=ctrl
+		}
+	}
+
+	input_action={
+		name="mapmode_slot_10"
+		text="mapmode_slot_10_name"
+		binding={
+			scancode=9
+			modifier=ctrl
+		}
+	}
+
+	input_action={
+		name="mapmode_slot_11"
+		text="mapmode_slot_11_name"
+		binding={
+			scancode=10
+			modifier=ctrl
+		}
+	}
+
+	input_action={
+		name="mapmode_slot_12"
+		text="mapmode_slot_12_name"
 		binding={
 			scancode=11
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_tactical"
-		text="mapmode_tactical_name"
-		binding={
-			scancode=13
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_tax_base"
-		text="mapmode_tax_base_name"
-		binding={
-			scancode=21
 			modifier=ctrl
 		}
 	}
