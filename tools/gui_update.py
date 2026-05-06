@@ -769,10 +769,12 @@ def cmd_apply(args):
         if has_crlf:
             result = result.replace("\n", "\r\n")
 
+        new_raw = (b"\xef\xbb\xbf" if has_bom else b"") + result.encode("utf-8")
+        if new_raw == raw:
+            continue
+
         with open(abs_mod, "wb") as f:
-            if has_bom:
-                f.write(b"\xef\xbb\xbf")
-            f.write(result.encode("utf-8"))
+            f.write(new_raw)
 
         applied += 1
         print(f"  Applied: {key} -> {mod_file}")
@@ -782,8 +784,8 @@ def cmd_apply(args):
     if applied:
         print(f"\n{applied} definition(s) applied to mod files.")
         print("Review the changes and commit when ready.")
-    else:
-        print("\nNo definitions to apply.")
+    elif not errors:
+        print("\nAll mod files already up to date.")
 
     return 1 if errors else 0
 
