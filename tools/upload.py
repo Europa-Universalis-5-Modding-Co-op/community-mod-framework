@@ -166,28 +166,32 @@ def load_optional_bool(config, key, default):
     return value
 
 def resolve_upload_targets(args, config):
-    """Resolve whether to upload mod, workshop pages, submods, and change notes."""
+    """Resolve whether to upload mod, workshop pages, submods, and change notes.
+
+    Returns a fifth boolean indicating CLI target flags were used, which also
+    bypasses version gating for the current run.
+    """
     if args.mod or args.workshop_pages or args.submods or args.change_notes:
-        # CLI target flags override config defaults for this run.
-        return args.mod, args.workshop_pages, args.submods, args.change_notes
+        # CLI target flags override config defaults and bypass version gating.
+        return args.mod, args.workshop_pages, args.submods, args.change_notes, True
 
     upload_mod = load_required_bool(config, UPLOAD_MOD_DEFAULT_KEY)
     if upload_mod is None:
-        return None, None, None, None
+        return None, None, None, None, False
 
     upload_workshop_pages = load_required_bool(config, UPLOAD_WORKSHOP_PAGES_DEFAULT_KEY)
     if upload_workshop_pages is None:
-        return None, None, None, None
+        return None, None, None, None, False
 
     upload_submods = load_optional_bool(config, UPLOAD_SUBMODS_DEFAULT_KEY, False)
     if upload_submods is None:
-        return None, None, None, None
+        return None, None, None, None, False
 
     upload_change_notes = load_optional_bool(config, UPLOAD_CHANGE_NOTES_DEFAULT_KEY, False)
     if upload_change_notes is None:
-        return None, None, None, None
+        return None, None, None, None, False
 
-    return upload_mod, upload_workshop_pages, upload_submods, upload_change_notes
+    return upload_mod, upload_workshop_pages, upload_submods, upload_change_notes, False
 
 def load_upload_versions(path):
     """Load cached uploaded versions for main mod and submods."""
@@ -573,7 +577,7 @@ def ensure_submod_item_id(steam, mod_id, workshop_id, config_path):
 
     return new_id
 
-def upload_submods(steam, config, version_gate_enabled=False, version_cache=None, upload_change_notes=False):
+def upload_submods(steam, config, version_gate_enabled=False, force_upload=False, version_cache=None, upload_change_notes=False):
     submods_root = os.path.join(ROOT_DIR, SUBMODS_DIR_NAME)
     if not os.path.isdir(submods_root):
         print(f"Warning: submods folder not found: {submods_root}")
@@ -613,7 +617,7 @@ def upload_submods(steam, config, version_gate_enabled=False, version_cache=None
             if version_cache is None:
                 print("Error: Internal version cache not provided for submod upload gating.")
                 return False, cache_changed
-            if not should_upload_for_version(version_cache, cache_key, version):
+            if not force_upload and not should_upload_for_version(version_cache, cache_key, version):
                 print(f"Skipping submod '{mod_id}': version '{version}' already uploaded.")
                 continue
 
@@ -885,12 +889,18 @@ def parse_change_notes_entry(text, version=None):
     for line in text.splitlines(keepends=True):
         m = CHANGE_NOTES_VERSION_RE.match(line.strip())
         if m:
-            if current_version is not None:
-                entries.append((current_version, current_has_colon, current_is_bb, "".join(current_lines).strip()))
-            current_version = m.group('ver').strip()
-            current_has_colon = ":" in m.group('tail')
-            current_is_bb = m.group('bb') is not None
-            current_lines = []
+            new_ver = m.group('ver').strip()
+            if new_ver == current_version:
+                # Duplicate header for the same version (e.g. markdown ``# v1.0``
+                # followed by BBCode ``[b]v1.0[/b]``).  Treat as body content.
+                current_lines.append(line)
+            else:
+                if current_version is not None:
+                    entries.append((current_version, current_has_colon, current_is_bb, "".join(current_lines).strip()))
+                current_version = new_ver
+                current_has_colon = ":" in m.group('tail')
+                current_is_bb = m.group('bb') is not None
+                current_lines = []
         elif current_version is not None:
             current_lines.append(line)
 
@@ -1183,12 +1193,12 @@ def parse_args():
     parser.add_argument(
         "-m", "--mod",
         action="store_true",
-        help="Upload mod content only. When set, config default target settings are ignored."
+        help="Upload mod content only. When set, config default target settings and upload_only_on_version_change are ignored."
     )
     parser.add_argument(
         "-wp", "--workshop-pages",
         action="store_true",
-        help="Upload Workshop title/description pages only. When set, config default target settings are ignored."
+        help="Upload Workshop title/description pages only. When set, config default target settings and upload_only_on_version_change are ignored."
     )
     parser.add_argument(
         "-d", "--dev",
@@ -1198,12 +1208,12 @@ def parse_args():
     parser.add_argument(
         "-s", "--submods",
         action="store_true",
-        help="Upload all submods found in the submods folder."
+        help="Upload all submods found in the submods folder. When set, config default target settings and upload_only_on_version_change are ignored."
     )
     parser.add_argument(
         "-cn", "--change-notes",
         action="store_true",
-        help="Upload change notes. When set, config default target settings are ignored."
+        help="Upload change notes. When set, config default target settings and upload_only_on_version_change are ignored."
     )
     return parser.parse_args()
 
@@ -1213,7 +1223,7 @@ def main():
     if config is None:
         return 1
 
-    upload_mod, upload_workshop_pages, upload_submods_selected, upload_change_notes = resolve_upload_targets(args, config)
+    upload_mod, upload_workshop_pages, upload_submods_selected, upload_change_notes, force_upload = resolve_upload_targets(args, config)
     if upload_mod is None:
         return 1
 
@@ -1237,7 +1247,7 @@ def main():
         main_version = load_metadata_version(METADATA_PATH, "main mod")
         if main_version is None:
             return 1
-        if not should_upload_for_version(version_cache, main_cache_key, main_version):
+        if not force_upload and not should_upload_for_version(version_cache, main_cache_key, main_version):
             print(f"Skipping main mod upload: version '{main_version}' already uploaded.")
             upload_mod_effective = False
     if upload_change_notes and main_version is None:
@@ -1302,6 +1312,7 @@ def main():
                 steam,
                 config,
                 version_gate_enabled=upload_only_on_version_change,
+                force_upload=force_upload,
                 version_cache=version_cache,
                 upload_change_notes=upload_change_notes
             )
