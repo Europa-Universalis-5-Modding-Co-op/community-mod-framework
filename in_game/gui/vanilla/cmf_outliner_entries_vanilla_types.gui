@@ -767,7 +767,7 @@ template "diplomacy_expanded_big_content"
 			}
 			OutlinerTextBase = {
 				using = layoutpolicy_expanding
-				fontsize = 13
+				fontsize = 14
 				align = left
 				autoresize = no
 				text = "[OutlinerDiplomacyEntry.GetText]"
@@ -776,6 +776,7 @@ template "diplomacy_expanded_big_content"
 			OutlinerTextBase = {
 				align = right
 				text = "[OutlinerDiplomacyEntry.GetStatus]"
+				fontsize = 14
 			}
 		}
 	}
@@ -916,8 +917,8 @@ template category_big_template {
 			OutlinerTextBase = {
 				using = layoutpolicy_expanding
 				autoresize = no
-				fontsize = 13
 				align = left
+				fontsize = 15
 				block "category_name" {
 					text = "[OutlinerCategoryEntry.GetName|T]"
 				}
@@ -1176,6 +1177,7 @@ template category_icon_template {
 			autoresize = no
 			align = center
 			block "outliner_category_count" { text = "[OutlinerCategoryEntry.GetEntryCount]" }
+			fontsize = 14
 		}
 	}
 }

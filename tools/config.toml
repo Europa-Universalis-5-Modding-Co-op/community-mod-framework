@@ -1,6 +1,6 @@
 ### Translation ###
 source_language = "english" # Options: english, french, german, spanish, polish, russian, simp_chinese, turkish, braz_por, japanese, korean
-translate_workshop = true # Auto-translate workshop title/description into other languages. You can also use -wp/--workshop-pages instead.
+translate_workshop_by_default = false # Auto-translate workshop title/description into other languages. You can also use -wp/--workshop-pages instead.
 translate_change_notes_by_default = false # Should running translate.py translate change notes? You can also use -cn/--change-notes instead.
 translate_submods_by_default = false # Should running translate.py include all submods from submods/? You can also use -s/--submods instead.
 localization_translator = "gemini-3-flash" # Options: deepl, gemini-3-flash
@@ -22,6 +22,9 @@ upload_only_on_version_change = true # If true, mod/submod uploads only run when
 upload_change_notes_by_default = true # Should running upload.py upload change notes? You can also use -cn/--change-notes instead.
 upload_submods_by_default = false # Should running upload.py upload all submods from submods/? You can also use -s/--submods instead.
 workshop_dev_name = "" # Optional: override dev mod name for upload.py -d/--dev
+
+### GUI Update ###
+game_directory = "" # Path to EU5 game directory (e.g. "C:/Steam/steamapps/common/Europa Universalis V/game"). Auto-detected if empty.
 
 ### Optional submod upload mapping (used with upload.py -s/--submods) ###
 # [[submods]]

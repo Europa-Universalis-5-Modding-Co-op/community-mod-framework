@@ -168,12 +168,12 @@ def load_config(config_path):
 		print("Error: gemini_localization_system_prompt must be a non-empty string.")
 		return invalid
 
-	if "translate_workshop" not in data:
-		print(f"Error: translate_workshop not set in {config_path}")
+	if "translate_workshop_by_default" not in data:
+		print(f"Error: translate_workshop_by_default not set in {config_path}")
 		return invalid
-	translate_workshop = data.get("translate_workshop")
-	if not isinstance(translate_workshop, bool):
-		print("Error: translate_workshop must be a boolean (true/false).")
+	translate_workshop_by_default = data.get("translate_workshop_by_default")
+	if not isinstance(translate_workshop_by_default, bool):
+		print("Error: translate_workshop_by_default must be a boolean (true/false).")
 		return invalid
 
 	if "translate_submods_by_default" not in data:
@@ -245,7 +245,7 @@ def load_config(config_path):
 
 	return (
 		source_language,
-		translate_workshop,
+		translate_workshop_by_default,
 		translate_submods_by_default,
 		translate_change_notes_by_default,
 		localization_translator,
@@ -285,13 +285,13 @@ def parse_args():
 	)
 	return parser.parse_args()
 
-def resolve_translate_targets(args, translate_workshop, translate_submods_default, translate_cn_default):
+def resolve_translate_targets(args, translate_workshop_by_default, translate_submods_default, translate_cn_default):
 	"""Resolve whether to translate mod, workshop pages, submods, and change notes."""
 	if args.mod or args.workshop_pages or args.submods or args.change_notes:
 		# CLI target flags override config defaults for this run.
 		return args.mod, args.workshop_pages, args.submods, args.change_notes
 	# No flags: use config defaults (mod localization always on).
-	return True, translate_workshop, translate_submods_default, translate_cn_default
+	return True, translate_workshop_by_default, translate_submods_default, translate_cn_default
 
 def build_translation_targets(include_submods):
 	"""Build translation targets for the main mod and optional submods."""
@@ -1589,7 +1589,7 @@ def main():
 
 	(
 		source_language,
-		translate_workshop,
+		translate_workshop_by_default,
 		translate_submods_by_default,
 		translate_change_notes_by_default,
 		localization_translator,
@@ -1612,7 +1612,7 @@ def main():
 	hashes_modified = False
 
 	translate_mod, translate_wp, include_submods, translate_cn = resolve_translate_targets(
-		args, translate_workshop, translate_submods_by_default, translate_change_notes_by_default
+		args, translate_workshop_by_default, translate_submods_by_default, translate_change_notes_by_default
 	)
 
 	if not translate_mod and not translate_wp and not include_submods and not translate_cn:
