@@ -59,3 +59,4 @@
  cmm_core__enable_unrestricted_tools_name_multiplayer_set: "启用房主专用工具 - 房主国家：[GetGlobalVariable('cmm_core_host_country').GetCountry.GetName]"
  cmm_core__enable_unrestricted_tools_name_multiplayer_unset: "启用房主专用工具 - 房主国家：未设置"
  cmm_core__enable_unrestricted_tools_desc: "启用常规游戏内容之外的功能（如房主工具、调试工具、作弊、测试辅助工具等）。在多人模式下，只有房主可以切换此项并使用其解锁的功能。"
+ CMM_INPUT_ACTION_OPEN_MENU: "打开模组菜单"

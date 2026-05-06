@@ -59,3 +59,4 @@
  cmm_core__enable_unrestricted_tools_name_multiplayer_set: "Включить инструменты только для хоста — Страна хоста: [GetGlobalVariable('cmm_core_host_country').GetCountry.GetName]"
  cmm_core__enable_unrestricted_tools_name_multiplayer_unset: "Включить инструменты только для хоста — Страна хоста: не установлена"
  cmm_core__enable_unrestricted_tools_desc: "Включает функции, выходящие за рамки обычного игрового процесса (инструменты хоста, инструменты отладки, читы, средства тестирования и т. д.). В многопользовательской игре только хост может переключать эту опцию и использовать то, что она разблокирует."
+ CMM_INPUT_ACTION_OPEN_MENU: "Открыть меню модов"

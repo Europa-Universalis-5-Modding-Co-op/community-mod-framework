@@ -59,3 +59,4 @@
  cmm_core__enable_unrestricted_tools_name_multiplayer_set: "Sadece Kurucu Araçlarını Etkinleştir - Kurucu Ülke: [GetGlobalVariable('cmm_core_host_country').GetCountry.GetName]"
  cmm_core__enable_unrestricted_tools_name_multiplayer_unset: "Sadece Kurucuya Özel Araçları Etkinleştir - Kurucu Ülke: Belirlenmedi"
  cmm_core__enable_unrestricted_tools_desc: "Normal oynanışın dışındaki özellikleri (sunucu araçları, hata ayıklama araçları, hileler, test yardımcıları vb.) etkinleştirir. Çok oyunculu modda yalnızca sunucu bunu açıp kapatabilir ve açtığı özellikleri kullanabilir."
+ CMM_INPUT_ACTION_OPEN_MENU: "Mod Menüsünü Aç"

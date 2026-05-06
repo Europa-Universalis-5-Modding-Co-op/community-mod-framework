@@ -59,3 +59,4 @@
  cmm_core__enable_unrestricted_tools_name_multiplayer_set: "Activer les outils réservés à l'hôte - Pays de l'hôte : [GetGlobalVariable('cmm_core_host_country').GetCountry.GetName]"
  cmm_core__enable_unrestricted_tools_name_multiplayer_unset: "Activer les outils réservés à l'hôte - Pays de l'hôte : Non défini"
  cmm_core__enable_unrestricted_tools_desc: "Active les fonctionnalités qui se situent en dehors du cadre de jeu normal (outils d'hôte, outils de débogage, triches, aides aux tests, etc.). En multijoueur, seul l'hôte peut l'activer et utiliser ce qu'il déverrouille."
+ CMM_INPUT_ACTION_OPEN_MENU: "Ouvrir le menu des mods"

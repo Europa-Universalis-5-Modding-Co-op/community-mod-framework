@@ -59,3 +59,4 @@
  cmm_core__enable_unrestricted_tools_name_multiplayer_set: "Activar herramientas solo para el anfitrión - País del anfitrión: [GetGlobalVariable('cmm_core_host_country').GetCountry.GetName]"
  cmm_core__enable_unrestricted_tools_name_multiplayer_unset: "Habilitar herramientas solo para el anfitrión - País anfitrión: No establecido"
  cmm_core__enable_unrestricted_tools_desc: "Habilita funciones ajenas al desarrollo normal del juego (herramientas de anfitrión, herramientas de depuración, trucos, ayudas de prueba, etc.). En multijugador, solo el anfitrión puede activarlo y usar lo que desbloquea."
+ CMM_INPUT_ACTION_OPEN_MENU: "Abrir menú de mods"

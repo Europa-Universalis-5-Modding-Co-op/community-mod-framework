@@ -59,3 +59,4 @@
  cmm_core__enable_unrestricted_tools_name_multiplayer_set: "Host-exklusive Werkzeuge aktivieren - Land des Gastgebers: [GetGlobalVariable('cmm_core_host_country').GetCountry.GetName]"
  cmm_core__enable_unrestricted_tools_name_multiplayer_unset: "Host-Tools aktivieren - Host-Land: Nicht festgelegt"
  cmm_core__enable_unrestricted_tools_desc: "Aktiviert Funktionen, die außerhalb des normalen Spielverlaufs liegen (Host-Werkzeuge, Debug-Tools, Cheats, Testhilfen usw.). Im Mehrspielermodus kann nur der Host diese Option umschalten und die dadurch freigeschalteten Inhalte nutzen."
+ CMM_INPUT_ACTION_OPEN_MENU: "Mod-Menü öffnen"

@@ -59,3 +59,4 @@
  cmm_core__enable_unrestricted_tools_name_multiplayer_set: "ホスト専用ツールを有効化 - ホスト国: [GetGlobalVariable('cmm_core_host_country').GetCountry.GetName]"
  cmm_core__enable_unrestricted_tools_name_multiplayer_unset: "ホスト専用ツールを有効にする - ホスト国：未設定"
  cmm_core__enable_unrestricted_tools_desc: "通常のプレイ範囲外の機能（ホスト用ツール、デバッグツール、チート、テスト支援など）を有効にします。マルチプレイヤーではホストのみが切り替え可能で、それによって解放される機能を使用できます。"
+ CMM_INPUT_ACTION_OPEN_MENU: "Modメニューを開く"
