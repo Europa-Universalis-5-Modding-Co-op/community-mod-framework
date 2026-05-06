@@ -39,8 +39,8 @@ CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.toml")
 GUI_SOURCES = ["in_game", "main_menu", "loading_screen"]
 # Subdirs treated as vanilla extracts (not mod overrides) and skipped.
 EXCLUDED_DIRS = {"vanilla"}
-TRACKING_DIR_NAME = ".gui-tracking"
-TRACKING_DIR = os.path.join(ROOT_DIR, TRACKING_DIR_NAME)
+TRACKING_DIR_NAME = "tools/dependencies/gui-tracking"
+TRACKING_DIR = os.path.join(ROOT_DIR, *TRACKING_DIR_NAME.split("/"))
 MANIFEST_PATH = os.path.join(TRACKING_DIR, "manifest.json")
 MANIFEST_VERSION = 1
 VANILLA_BRANCH = "gui/vanilla"
@@ -697,8 +697,8 @@ def cmd_merge(args):
         print(f"\nConflicts in {len(conflicts)} file(s):")
         for c in conflicts:
             print(f"  {c}")
-        print("\nResolve conflicts in .gui-tracking/, then:")
-        print("  git add .gui-tracking/")
+        print(f"\nResolve conflicts in {TRACKING_DIR_NAME}/, then:")
+        print(f"  git add {TRACKING_DIR_NAME}/")
         print("  git commit")
         print("  python tools/gui_update.py apply")
         return 1
@@ -864,7 +864,7 @@ def cmd_refresh(args):
 
     print(f"\nRefreshed: {len(new_set)} definition(s) tracked.")
     if added or removed:
-        print("Stage and commit .gui-tracking/ changes when ready.")
+        print(f"Stage and commit {TRACKING_DIR_NAME}/ changes when ready.")
     return 0
 
 
