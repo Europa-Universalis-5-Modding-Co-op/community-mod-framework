@@ -138,7 +138,7 @@ template special_advance {
 		icon = {
 			parentanchor = center
 			visible = "[AdvanceNode.GetItem.IsSpecialUnlock]"
-			texture = "gfx/interface/icons/location_icons/culture.dds"
+			using = culture_icon
 			size = { 35 35 }
 
 			glow = {
@@ -155,14 +155,15 @@ template special_advance {
 					blockoverride "title_icon" {
 						icon = {
 							using = tooltip_title_icon_size
-							texture = "gfx/interface/icons/location_icons/culture.dds"
+							using = culture_icon
 							texture_density = 2
 							alpha = 1
 						}
 					}
 
 					blockoverride "tooltip_content" {
-						TooltipRequirementsList = {
+						TooltipScrolledRequirementsList = {
+							blockoverride "block_scrollarea" { maximumsize = { -1 400 } }
 							textcontext = "[TitleDescTooltip.GetDesc]"
 						}
 					}
@@ -340,7 +341,8 @@ template special_advance {
 					}
 					lowpriotextcontext = "[AdvanceNode.GetItem.GetUnlockInformation]"
 					blockoverride "tooltip_content" {
-						TooltipRequirementsList = {
+						TooltipScrolledRequirementsList = {
+							blockoverride "block_scrollarea" { maximumsize = { -1 400 } }
 							textcontext = "[TitleDescTooltip.GetDesc]"
 						}
 					}
@@ -460,6 +462,16 @@ template special_advance {
 
 types AdvancesTreeView
 {
+	type advance_frame_with_icon = widget {
+		widget = {
+			size = { 77% 77% }
+			datacontext = "[Advance.GetDefinition]"
+			datacontext = "[GetPlayer]"
+			parentanchor = center
+			using = advance_icon
+		}
+	}
+
 	type advances_tree_item = container {
 		name = "advances_tree_item"
 		ignoreinvisible = yes
@@ -470,12 +482,12 @@ types AdvancesTreeView
 		# These two widgets determine the margin between graph nodes
 		widget = {
 			name = "margin_top_left" # Do not change this name
-			size = { 0 50 }
+			size = { 0 0 }
 		}
 
 		widget = {
 			name = "margin_bottom_right" # Do not change this name
-			size = { 0 350 }
+			size = { 0 75 }
 		}
 
 		# This widget tells the layout how to offset and space the lines
@@ -570,67 +582,13 @@ types AdvancesTreeView
 									}
 								}
 
-								# round bckg
+								
 								widget = {
-									parentanchor = center
-									size = { 105% 105% }
-									position = {0 2}
-
-									background = {
-										texture = "gfx/interface/advance/backgrounds/green.dds"
-										texture_density = 2
-										modify_texture = {
-											using = color_bronze_texture
-											blend_mode = multiply
-											alpha = 0.4
-										}
-									}
-								}
-
-								icon =  {
-									parentanchor = center
 									size = { 100% 100% }
-									visible = "[Not(AdvanceNode.GetItem.GetAdvance.GetDefinition.HasSubunitUnlocks)]"
-									# gfx\interface\icons\advance
-									texture = "[GetAdvanceIcon(AdvanceNode.GetItem.GetAdvance.GetDefinition)]"
-								}
-
-								widget = {
-									size = { 112% 112% }
-									position = {10 10}
-									visible = "[And(AdvanceNode.GetItem.GetAdvance.GetDefinition.HasSubunitUnlocks, Not(AdvanceNode.GetItem.GetAdvance.GetDefinition.HasNavyUnlocks))]"
-									background = {
-										texture = "[GetSubunitTypeIllustration(AdvanceNode.GetItem.GetAdvance.GetDefinition.GetFirstSubunitUnlock, GetPlayer.GetCulture)]"
-										fittype = start
-										texture_density = 2
-										spriteborder = { 0 0 }
-										frame_grid = {2 1}
-										frame = 1
-										modify_texture = {
-											texture = "gfx/interface/component_masks/advance_unit_unlock_mask.dds"
-											texture_density = 2
-											blend_mode = alphamultiply
-										}
-									}
-								}
-
-								widget = {
-									size = { 114% 114% }
-									position = {8 -23}
-									visible = "[And(AdvanceNode.GetItem.GetAdvance.GetDefinition.HasSubunitUnlocks, AdvanceNode.GetItem.GetAdvance.GetDefinition.HasNavyUnlocks)]"
-									background = {
-										texture = "[GetSubunitTypeIllustration(AdvanceNode.GetItem.GetAdvance.GetDefinition.GetFirstSubunitUnlock, GetPlayer.GetCulture)]"
-										fittype = start
-										texture_density = 2
-										spriteborder = { 0 0 }
-										frame_grid = {3 1}
-										frame = 2
-										modify_texture = {
-											texture = "gfx/interface/component_masks/advance_unit_unlock_navy_mask.dds"
-											texture_density = 2
-											blend_mode = alphamultiply
-										}
-									}
+									parentanchor = center
+									datacontext = "[AdvanceNode.GetItem.GetAdvance.GetDefinition]"
+									datacontext = "[GetPlayer]"
+									using = advance_icon
 								}
 							}
 						}
@@ -760,6 +718,7 @@ types AdvancesTreeView
 																	margin_left = 10
 
 																	widget = {
+																		visible = yes
 																		size = { 40 40 }
 																		icon = {
 																			alwaystransparent = yes
@@ -780,6 +739,36 @@ types AdvancesTreeView
 																			alwaystransparent = yes
 																			size = { 40 40 }
 																			texture = "gfx/interface/graphical_cultures/european_gfx/circle_frame.dds"
+																			modify_texture = {
+																				blend_mode = overlay
+																				alpha = 1
+																			}
+																		}
+																	}
+
+																	# governmentreforms
+																	widget = {
+																		visible = no
+																		size = { 40 40 }
+																		icon = {
+																			alwaystransparent = yes
+																			size = { 40 40 }
+																			texture = "gfx/interface/buttons/checkbox_bg_square.dds"
+																			modify_texture = {
+																				blend_mode = overlay
+																				alpha = 1
+																			}
+																		}
+																		text_single = {
+																			layoutpolicy_horizontal = growing
+																			size = { 25 25 }
+																			parentanchor = center
+																			text = "[AdvanceEffectItem.GetIcon]"
+																		}
+																		icon = {
+																			alwaystransparent = yes
+																			size = { 40 40 }
+																			texture = "gfx/interface/buttons/checkbox_frame_square.dds"
 																			modify_texture = {
 																				blend_mode = overlay
 																				alpha = 1
@@ -818,91 +807,10 @@ types AdvancesTreeView
 								}
 							}
 
-							# icon
-							widget = {
+							advance_frame_with_icon = {
 								size = { 113 113 }
 								parentanchor = hcenter|top
-
-								widget = {
-									size = { 77% 77% }
-									parentanchor = center
-
-									# round bckg
-									widget = {
-										parentanchor = center
-										size = { 105% 105% }
-										position = {0 2}
-
-										background = {
-											texture = "gfx/interface/advance/backgrounds/green.dds"
-											texture_density = 2
-										}
-									}
-
-									# round bckg
-									widget = {
-										parentanchor = center
-										size = { 105% 105% }
-										position = {0 2}
-										datacontext = "[AdvanceNode.GetItem.GetAdvance.GetDefinition]"
-										using = background_advance
-									}
-
-									icon =  {
-										parentanchor = center
-										size = { 100% 100% }
-										visible = "[Not(AdvanceNode.GetItem.GetAdvance.GetDefinition.HasSubunitUnlocks)]"
-										# gfx\interface\icons\advance
-										texture = "[GetAdvanceIcon(AdvanceNode.GetItem.GetAdvance.GetDefinition)]"
-									}
-									
-									# icon =  {
-									# 	parentanchor = center
-									# 	size = { 100% 100% }
-									# 	visible = "[AdvanceNode.GetItem.GetAdvance.GetDefinition.HasSubunitUnlocks]"
-									# 	texture = "[GetSubunitTypeIllustration(AdvanceNode.GetItem.GetAdvance.GetDefinition.GetFirstSubunitUnlock)]"
-									# }
-
-									widget = {
-										parentanchor = center
-										size = { 112% 112% }
-										position = {8 10}
-										visible = "[And(AdvanceNode.GetItem.GetAdvance.GetDefinition.HasSubunitUnlocks, Not(AdvanceNode.GetItem.GetAdvance.GetDefinition.HasNavyUnlocks))]"
-										background = {
-											texture = "[GetSubunitTypeIllustration(AdvanceNode.GetItem.GetAdvance.GetDefinition.GetFirstSubunitUnlock, GetPlayer.GetCulture)]"
-											fittype = start
-											texture_density = 2
-											spriteborder = { 0 0 }
-											frame_grid = {2 1}
-											frame = 1
-											modify_texture = {
-												texture = "gfx/interface/component_masks/advance_unit_unlock_mask.dds"
-												texture_density = 2
-												blend_mode = alphamultiply
-											}
-										}
-									}
-
-									widget = {
-										parentanchor = center
-										size = { 114% 114% }
-										position = {8 -3}
-										visible = "[And(AdvanceNode.GetItem.GetAdvance.GetDefinition.HasSubunitUnlocks, AdvanceNode.GetItem.GetAdvance.GetDefinition.HasNavyUnlocks)]"
-										background = {
-											texture = "[GetSubunitTypeIllustration(AdvanceNode.GetItem.GetAdvance.GetDefinition.GetFirstSubunitUnlock, GetPlayer.GetCulture)]"
-											fittype = start
-											texture_density = 2
-											spriteborder = { 0 0 }
-											frame_grid = {3 1}
-											frame = 2
-											modify_texture = {
-												texture = "gfx/interface/component_masks/advance_unit_unlock_navy_mask.dds"
-												texture_density = 2
-												blend_mode = alphamultiply
-											}
-										}
-									}
-								}
+								datacontext = "[AdvanceNode.GetItem.GetAdvance]"
 							}
 
 							icon = {
@@ -1089,7 +997,9 @@ types AdvancesTreeView
 										size = { 100% 100% }
 										parentanchor = center
 										allow_outside = yes
-										using = round_advance_icon
+										datacontext = "[AdvanceNode.GetItem.GetAdvance.GetDefinition]"
+										datacontext = "[GetPlayer]"
+										using = advance_icon_base
 									}
 								}
 							}
@@ -1156,14 +1066,9 @@ types AdvancesTreeView
 									size = { 100% 100% }
 									parentanchor = center
 									allow_outside = yes
-									using = round_advance_icon
-									blockoverride "round_advance_icon_army_position" {
-										position = { 8 -10 }
-									}
-									blockoverride "round_advance_icon_navy_position" {
-										parentanchor = center
-										position = { 0 -10 }
-									}
+									datacontext = "[AdvanceNode.GetItem.GetAdvance.GetDefinition]"
+									datacontext = "[GetPlayer]"
+									using = advance_icon_base
 								}
 							}
 						}
@@ -1331,7 +1236,9 @@ types AdvancesTreeView
 										size = { 100% 100% }
 										parentanchor = center
 										allow_outside = yes
-										using = round_advance_icon
+										datacontext = "[AdvanceNode.GetItem.GetAdvance.GetDefinition]"
+										datacontext = "[GetPlayer]"
+										using = advance_icon_base
 									}
 
 									piechart = {
@@ -1604,11 +1511,23 @@ template advances_tree_item_modifiers {
 										margin_left = 10
 
 										widget = {
-											size = { 35 35 }
+											visible = yes
+											size = { 40 40 }
 											icon = {
+												visible = "[Not(AdvanceEffectItem.IsGovernmentReformUnlock)]"
 												alwaystransparent = yes
-												size = { 35 35 }
+												size = { 40 40 }
 												texture = "gfx/interface/icons/outliner/background/_defaultbg.dds"
+												modify_texture = {
+													blend_mode = overlay
+													alpha = 1
+												}
+											}
+											icon = {
+												visible = "[AdvanceEffectItem.IsGovernmentReformUnlock]"
+												alwaystransparent = yes
+												size = { 40 40 }
+												texture = "gfx/interface/buttons/checkbox_bg_square.dds"
 												modify_texture = {
 													blend_mode = overlay
 													alpha = 1
@@ -1621,9 +1540,20 @@ template advances_tree_item_modifiers {
 												text = "[AdvanceEffectItem.GetIcon]"
 											}
 											icon = {
+												visible = "[Not(AdvanceEffectItem.IsGovernmentReformUnlock)]"
 												alwaystransparent = yes
-												size = { 35 35 }
+												size = { 40 40 }
 												texture = "gfx/interface/graphical_cultures/european_gfx/circle_frame.dds"
+												modify_texture = {
+													blend_mode = overlay
+													alpha = 1
+												}
+											}
+											icon = {
+												visible = "[AdvanceEffectItem.IsGovernmentReformUnlock]"
+												alwaystransparent = yes
+												size = { 40 40 }
+												texture = "gfx/interface/buttons/checkbox_frame_square.dds"
 												modify_texture = {
 													blend_mode = overlay
 													alpha = 1
