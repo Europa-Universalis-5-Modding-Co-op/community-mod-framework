@@ -1,6 +1,6 @@
 ### Translation ###
 source_language = "english" # Options: english, french, german, spanish, polish, russian, simp_chinese, turkish, braz_por, japanese, korean
-translate_workshop_by_default = false # Auto-translate workshop title/description into other languages. You can also use -wp/--workshop-pages instead.
+translate_workshop_by_default = true # Auto-translate workshop title/description into other languages. You can also use -wp/--workshop-pages instead.
 translate_change_notes_by_default = false # Should running translate.py translate change notes? You can also use -cn/--change-notes instead.
 translate_submods_by_default = false # Should running translate.py include all submods from submods/? You can also use -s/--submods instead.
 localization_translator = "gemini-3-flash" # Options: deepl, gemini-3-flash
