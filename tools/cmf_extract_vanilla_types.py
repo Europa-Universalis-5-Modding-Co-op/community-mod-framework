@@ -16,6 +16,8 @@ import re
 import sys
 from pathlib import Path
 
+PREFIX = "cmf_"
+
 GAME_GUI_DIR = Path(r"C:\Steam\steamapps\common\Europa Universalis V\game\in_game\gui")
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MOD_GUI_DIR = PROJECT_ROOT / "in_game" / "gui"
@@ -309,7 +311,7 @@ def process_file(filename, mod_types, mod_templates):
         extracted.pop()
 
     stem = filename.removesuffix(".gui")
-    output_name = f"cmf_{stem}_vanilla_types.gui"
+    output_name = f"{PREFIX}{stem}_vanilla_types.gui"
     output_path = OUTPUT_DIR / output_name
 
     if not stats["variables"] and not stats["templates"] and not stats["types_blocks"]:
