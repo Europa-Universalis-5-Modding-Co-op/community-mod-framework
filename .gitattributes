@@ -3,3 +3,9 @@
 
 # Force LF for all shell scripts
 *.sh text eol=lf
+
+# Don't normalize line endings for game files
+in_game/** -text
+main_menu/** -text
+loading_screen/** -text
+tools/dependencies/gui-tracking/** -text
