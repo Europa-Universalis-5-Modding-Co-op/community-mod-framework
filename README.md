@@ -1,7 +1,7 @@
 # Community Mod Framework (CMF)
 ![banner](assets/images/cmf/CMF_Banner.png)
 
-A shared mod framework and menu for **Europa Universalis 5**. Includes the Community Mod Menu (CMM), custom alerts, action bar elements, and more.
+A shared mod framework for **Europa Universalis 5**. Includes the Community Mod Menu (CMM), custom alerts, action bar elements, and more.
 
 ## Contents
 * [Features](#features)
