@@ -1,4 +1,4 @@
-widget = {
+﻿widget = {
     name = "cmf_interaction_layer"
     layer = topbar
     size = { 100% 100% }
@@ -10,7 +10,6 @@ widget = {
     widget = {
         size = { 100% 100% }
         alwaystransparent = yes
-        visible = "[DataModelHasItems(GetGlobalList('cmf_action_bar_elements'))]"
 
         cmf_action_bar_top = {}
         cmf_action_bar_bottom_left = {}
@@ -27,4 +26,4 @@ widget = {
     alwaystransparent = yes
 
     cmf_settings_window = {}
-}
+}

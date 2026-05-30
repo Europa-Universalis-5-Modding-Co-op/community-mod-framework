@@ -398,6 +398,84 @@ types cmf_action_bar {
 
         cmf_action_bar_button = {
             blockoverride "visibility" {
+                visible = "[Or(Not(GameIsMultiplayer), IsHost)]"
+            }
+            blockoverride "base_color" {
+                using = color_intense_bg_blue_texture
+            }
+            blockoverride "icon" {
+                icon = {
+                    size = { 20 20 }
+                    parentanchor = center
+                    texture = "gfx/interface/icons/flat_icons/tabicons/europedia_flat_icon.dds"
+                }
+            }
+            blockoverride "action" {
+                on_action = "[GetScriptedGui('CMM_SetHostAndRegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                on_action = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
+                on_action = "[GetVariableSystem.Set('cmm_selected_mod', Select_CString(CMMSelectedModExists, GetVariableSystem.Get('cmm_selected_mod'), 'cmm_core'))]"
+                on_action = "[GetVariableSystem.Set('cmm_selected_tab', Select_CString(CMMSelectedTabExists, GetVariableSystem.Get('cmm_selected_tab'), CMMMetadataFlag('cmm_mod_default_tab_', 'cmm_core')))]"
+                on_action = "[GetVariableSystem.Toggle('cmm_window_open')]"
+            }
+            blockoverride "action_bar_button_tooltip" {
+                tooltipwidget = {
+                    ContextualTooltipType = {
+                        blockoverride "title_text" {
+                            text = "cmf_action_bar_cmm_tooltip_title"
+                        }
+                        blockoverride "tooltip_content" {
+                            TooltipTextBlock = {
+                                blockoverride "text" {
+                                    text = "cmf_action_bar_cmm_tooltip_text"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        cmf_action_bar_button = {
+            blockoverride "visibility" {
+                visible = "[And(GameIsMultiplayer, Not(IsHost))]"
+            }
+            blockoverride "base_color" {
+                using = color_intense_bg_blue_texture
+            }
+            blockoverride "icon" {
+                icon = {
+                    size = { 20 20 }
+                    parentanchor = center
+                    texture = "gfx/interface/icons/flat_icons/tabicons/europedia_flat_icon.dds"
+                }
+            }
+            blockoverride "action" {
+                on_action = "[GetScriptedGui('CMM_RegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                on_action = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
+                on_action = "[GetVariableSystem.Set('cmm_selected_mod', Select_CString(CMMSelectedModExists, GetVariableSystem.Get('cmm_selected_mod'), 'cmm_core'))]"
+                on_action = "[GetVariableSystem.Set('cmm_selected_tab', Select_CString(CMMSelectedTabExists, GetVariableSystem.Get('cmm_selected_tab'), CMMMetadataFlag('cmm_mod_default_tab_', 'cmm_core')))]"
+                on_action = "[GetVariableSystem.Toggle('cmm_window_open')]"
+            }
+            blockoverride "action_bar_button_tooltip" {
+                tooltipwidget = {
+                    ContextualTooltipType = {
+                        blockoverride "title_text" {
+                            text = "cmf_action_bar_cmm_tooltip_title"
+                        }
+                        blockoverride "tooltip_content" {
+                            TooltipTextBlock = {
+                                blockoverride "text" {
+                                    text = "cmf_action_bar_cmm_tooltip_text"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        cmf_action_bar_button = {
+            blockoverride "visibility" {
                 visible = "[InDebugMode]"
             }
             blockoverride "base_color" {
@@ -489,6 +567,84 @@ types cmf_action_bar {
         }
 
         datamodel = "[GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements')]"
+
+        cmf_action_tab_button = {
+            blockoverride "visibility" {
+                visible = "[Or(Not(GameIsMultiplayer), IsHost)]"
+            }
+            blockoverride "base_color" {
+                using = color_intense_bg_blue_texture
+            }
+            blockoverride "icon" {
+                icon = {
+                    size = { 20 20 }
+                    parentanchor = center
+                    texture = "gfx/interface/icons/flat_icons/tabicons/europedia_flat_icon.dds"
+                }
+            }
+            blockoverride "action" {
+                on_action = "[GetScriptedGui('CMM_SetHostAndRegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                on_action = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
+                on_action = "[GetVariableSystem.Set('cmm_selected_mod', Select_CString(CMMSelectedModExists, GetVariableSystem.Get('cmm_selected_mod'), 'cmm_core'))]"
+                on_action = "[GetVariableSystem.Set('cmm_selected_tab', Select_CString(CMMSelectedTabExists, GetVariableSystem.Get('cmm_selected_tab'), CMMMetadataFlag('cmm_mod_default_tab_', 'cmm_core')))]"
+                on_action = "[GetVariableSystem.Toggle('cmm_window_open')]"
+            }
+            blockoverride "action_bar_button_tooltip" {
+                tooltipwidget = {
+                    ContextualTooltipType = {
+                        blockoverride "title_text" {
+                            text = "cmf_action_bar_cmm_tooltip_title"
+                        }
+                        blockoverride "tooltip_content" {
+                            TooltipTextBlock = {
+                                blockoverride "text" {
+                                    text = "cmf_action_bar_cmm_tooltip_text"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        cmf_action_tab_button = {
+            blockoverride "visibility" {
+                visible = "[And(GameIsMultiplayer, Not(IsHost))]"
+            }
+            blockoverride "base_color" {
+                using = color_intense_bg_blue_texture
+            }
+            blockoverride "icon" {
+                icon = {
+                    size = { 20 20 }
+                    parentanchor = center
+                    texture = "gfx/interface/icons/flat_icons/tabicons/europedia_flat_icon.dds"
+                }
+            }
+            blockoverride "action" {
+                on_action = "[GetScriptedGui('CMM_RegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                on_action = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
+                on_action = "[GetVariableSystem.Set('cmm_selected_mod', Select_CString(CMMSelectedModExists, GetVariableSystem.Get('cmm_selected_mod'), 'cmm_core'))]"
+                on_action = "[GetVariableSystem.Set('cmm_selected_tab', Select_CString(CMMSelectedTabExists, GetVariableSystem.Get('cmm_selected_tab'), CMMMetadataFlag('cmm_mod_default_tab_', 'cmm_core')))]"
+                on_action = "[GetVariableSystem.Toggle('cmm_window_open')]"
+            }
+            blockoverride "action_bar_button_tooltip" {
+                tooltipwidget = {
+                    ContextualTooltipType = {
+                        blockoverride "title_text" {
+                            text = "cmf_action_bar_cmm_tooltip_title"
+                        }
+                        blockoverride "tooltip_content" {
+                            TooltipTextBlock = {
+                                blockoverride "text" {
+                                    text = "cmf_action_bar_cmm_tooltip_text"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         cmf_action_tab_button = {
             blockoverride "visibility" {
@@ -690,4 +846,4 @@ types cmf_action_bar {
         }
     }
 
-}
+}
