@@ -58,6 +58,7 @@ cmf_yearly_human_country_pulse = {
 	on_actions = {
 		_cmf_on_cmm_registration
 		cmf_on_mod_registration
+		_cmf_on_cmm_registration_late
 	}
 }
 
@@ -87,6 +88,16 @@ cmf_on_mod_registration = {
 	on_actions = { }
 }
 
+# CMM menu settings registration that depends on other mods having completed
+# their own registration first (e.g. action bar element lists). Runs after
+# cmf_on_mod_registration.
+# Scope: country
+_cmf_on_cmm_registration_late = {
+	effect = {
+		_cmm_register_menu_settings_late = yes
+	}
+}
+
 # Post-lobby game start hook. Fires once on a new game when the in-game UI
 # is created, after the player has selected their country. Vanilla on_game_start
 # fires before the country selection screen, so player-scoped effects
@@ -110,6 +121,7 @@ on_game_start_after_lobby_human_country = {
 	on_actions = {
 		_cmf_on_cmm_registration
 		cmf_on_mod_registration
+		_cmf_on_cmm_registration_late
 	}
 }
 
@@ -134,6 +146,7 @@ on_game_load = {
 on_game_load_human_country = {
 	on_actions = {
 		_cmf_on_cmm_registration
+		_cmf_on_cmm_registration_late
 	}
 }
 
@@ -159,6 +172,7 @@ on_game_load_after_lobby_human_country = {
 	on_actions = {
 		_cmf_on_cmm_registration
 		cmf_on_mod_registration
+		_cmf_on_cmm_registration_late
 	}
 }
 

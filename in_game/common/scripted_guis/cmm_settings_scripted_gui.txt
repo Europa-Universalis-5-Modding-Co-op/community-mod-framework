@@ -10,6 +10,7 @@ CMM_RegisterCoreMod = {
 		trigger_event_silently = {
 			on_action = cmf_on_mod_registration
 		}
+		_cmm_register_menu_settings_late = yes
 	}
 }
 
@@ -26,6 +27,7 @@ CMM_SetHostAndRegisterCoreMod = {
 		trigger_event_silently = {
 			on_action = cmf_on_mod_registration
 		}
+		_cmm_register_menu_settings_late = yes
 	}
 }
 
@@ -35,5 +37,45 @@ CMM_ResetToDefaults = {
 	scope = country
 	effect = {
 		_cmm_reset_to_defaults = yes
+	}
+}
+
+# List _on_changed for the action-bar visible-buttons list.
+# Mirrors the toggled row to cmf_action_bar_active_elements before applying
+# the change to the bool field's stored value.
+# Scope: country
+cmm_core__action_bar_buttons_on_changed = {
+	scope = country
+
+	effect = {
+		if = {
+			limit = {
+				has_variable = cmm_list_position_to_apply
+				has_variable = cmm_list_field_slot_to_apply
+				has_variable = cmm_list_field_value_to_apply
+				var:cmm_list_field_slot_to_apply = 1
+			}
+			set_variable = { name = _cmm_action_bar_change_pos value = var:cmm_list_position_to_apply }
+			set_variable = { name = _cmm_action_bar_change_val value = var:cmm_list_field_value_to_apply }
+
+			cmm_for_each_list_item = {
+				setting = cmm_core__action_bar_buttons
+				effect = _cmm_handle_action_bar_button_change
+			}
+
+			remove_variable = _cmm_action_bar_change_pos
+			remove_variable = _cmm_action_bar_change_val
+		}
+
+		cmm_apply_list_change = {
+			setting = cmm_core__action_bar_buttons
+		}
+
+		# Benign warning suppression
+		if = {
+			limit = { always = no }
+			cmf_suppress = { v = _cmm_action_bar_change_pos }
+			cmf_suppress = { v = _cmm_action_bar_change_val }
+		}
 	}
 }

@@ -7,13 +7,14 @@
 types cmf_action_bar {
 
     type cmf_action_bar_bottom_left = cmf_action_bar_bottom {
-        visible = "[And3(
+        visible = "[And4(
             Not(LeftView.IsShown),
             Not(GetVariableSystem.Exists('cmf_hide_action_bar')),
-            GetScriptedGui('sgui_cmf_setting_action_bar_position').IsShown(GuiScope
-                .SetRoot(GetPlayer.MakeScope)
-                .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_bottom_left')))
-                .End
+            EqualTo_CFixedPoint(CMMSettingValue('cmm_core__action_bar_position'), '(CFixedPoint)2'),
+            Or3(
+                Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button'))),
+                InDebugMode,
+                DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
             )
         )]"
         position = { 300 0 }
@@ -21,16 +22,17 @@ types cmf_action_bar {
     }
 
     type cmf_action_bar_bottom_right = cmf_action_bar_bottom {
-        visible = "[And3(
+        visible = "[And4(
             Not(RightView.IsShown),
             Not(GetVariableSystem.Exists('cmf_hide_action_bar')),
             Or(
-                Not(GetPlayer.MakeScope.Var('cmf_action_bar_position').IsSet),
-                GetScriptedGui('sgui_cmf_setting_action_bar_position').IsShown(GuiScope
-                    .SetRoot(GetPlayer.MakeScope)
-                    .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_bottom_right')))
-                    .End
-                )
+                Not(CMMSettingIsRegistered('cmm_core__action_bar_position')),
+                EqualTo_CFixedPoint(CMMSettingValue('cmm_core__action_bar_position'), '(CFixedPoint)1')
+            ),
+            Or3(
+                Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button'))),
+                InDebugMode,
+                DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
             )
         )]"
         position = { -300 0 }
@@ -38,13 +40,14 @@ types cmf_action_bar {
     }
 
     type cmf_action_bar_top = cmf_action_bar_top_tabs {
-        visible = "[And3(
+        visible = "[And4(
             Not(LeftView.IsShown),
             Not(GetVariableSystem.Exists('cmf_hide_action_bar')),
-            GetScriptedGui('sgui_cmf_setting_action_bar_position').IsShown(GuiScope
-                .SetRoot(GetPlayer.MakeScope)
-                .AddScope('position', MakeScopeValue(GetPlayer.MakeScope.ScriptValue('cmf_action_bar_top')))
-                .End
+            EqualTo_CFixedPoint(CMMSettingValue('cmm_core__action_bar_position'), '(CFixedPoint)3'),
+            Or3(
+                Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button'))),
+                InDebugMode,
+                DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
             )
         )]"
     }
@@ -398,7 +401,10 @@ types cmf_action_bar {
 
         cmf_action_bar_button = {
             blockoverride "visibility" {
-                visible = "[Or(Not(GameIsMultiplayer), IsHost)]"
+                visible = "[And(
+                    Or(Not(GameIsMultiplayer), IsHost),
+                    Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button')))
+                )]"
             }
             blockoverride "base_color" {
                 using = color_intense_bg_blue_texture
@@ -407,7 +413,7 @@ types cmf_action_bar {
                 icon = {
                     size = { 20 20 }
                     parentanchor = center
-                    texture = "gfx/interface/icons/flat_icons/tabicons/europedia_flat_icon.dds"
+                    texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
                 }
             }
             blockoverride "action" {
@@ -437,7 +443,10 @@ types cmf_action_bar {
 
         cmf_action_bar_button = {
             blockoverride "visibility" {
-                visible = "[And(GameIsMultiplayer, Not(IsHost))]"
+                visible = "[And(
+                    And(GameIsMultiplayer, Not(IsHost)),
+                    Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button')))
+                )]"
             }
             blockoverride "base_color" {
                 using = color_intense_bg_blue_texture
@@ -446,7 +455,7 @@ types cmf_action_bar {
                 icon = {
                     size = { 20 20 }
                     parentanchor = center
-                    texture = "gfx/interface/icons/flat_icons/tabicons/europedia_flat_icon.dds"
+                    texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
                 }
             }
             blockoverride "action" {
@@ -509,38 +518,6 @@ types cmf_action_bar {
             }
         }
 
-        cmf_action_bar_button = {
-            blockoverride "visibility" {}
-            blockoverride "base_color" {
-                using = color_dark_purple_texture
-            }
-            blockoverride "icon" {
-                icon = {
-                    size = { 20 20 }
-                    parentanchor = center
-                    texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
-                }
-            }
-            blockoverride "action" {
-                on_action = "[GetVariableSystem.Toggle('cmf_settings')]"
-            }
-            blockoverride "action_bar_button_tooltip" {
-                tooltipwidget = {
-                    ContextualTooltipType = {
-                        blockoverride "title_text" {
-                            text = "cmf_action_bar_settings_tooltip_title"
-                        }
-                        blockoverride "tooltip_content" {
-                            TooltipTextBlock = {
-                                blockoverride "text" {
-                                    text = "cmf_action_bar_settings_tooltip_text"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     type cmf_action_bar_top_tabs = hbox {
@@ -570,7 +547,10 @@ types cmf_action_bar {
 
         cmf_action_tab_button = {
             blockoverride "visibility" {
-                visible = "[Or(Not(GameIsMultiplayer), IsHost)]"
+                visible = "[And(
+                    Or(Not(GameIsMultiplayer), IsHost),
+                    Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button')))
+                )]"
             }
             blockoverride "base_color" {
                 using = color_intense_bg_blue_texture
@@ -579,7 +559,7 @@ types cmf_action_bar {
                 icon = {
                     size = { 20 20 }
                     parentanchor = center
-                    texture = "gfx/interface/icons/flat_icons/tabicons/europedia_flat_icon.dds"
+                    texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
                 }
             }
             blockoverride "action" {
@@ -609,7 +589,10 @@ types cmf_action_bar {
 
         cmf_action_tab_button = {
             blockoverride "visibility" {
-                visible = "[And(GameIsMultiplayer, Not(IsHost))]"
+                visible = "[And(
+                    And(GameIsMultiplayer, Not(IsHost)),
+                    Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button')))
+                )]"
             }
             blockoverride "base_color" {
                 using = color_intense_bg_blue_texture
@@ -618,7 +601,7 @@ types cmf_action_bar {
                 icon = {
                     size = { 20 20 }
                     parentanchor = center
-                    texture = "gfx/interface/icons/flat_icons/tabicons/europedia_flat_icon.dds"
+                    texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
                 }
             }
             blockoverride "action" {
@@ -673,39 +656,6 @@ types cmf_action_bar {
                             TooltipTextBlock = {
                                 blockoverride "text" {
                                     text = "cmf_action_bar_log_viewer_tooltip_text"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        cmf_action_tab_button = {
-            blockoverride "visibility" {}
-            blockoverride "base_color" {
-                using = color_dark_purple_texture
-            }
-            blockoverride "icon" {
-                icon = {
-                    size = { 20 20 }
-                    parentanchor = center
-                    texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
-                }
-            }
-            blockoverride "action" {
-                on_action = "[GetVariableSystem.Toggle('cmf_settings')]"
-            }
-            blockoverride "action_bar_button_tooltip" {
-                tooltipwidget = {
-                    ContextualTooltipType = {
-                        blockoverride "title_text" {
-                            text = "cmf_action_bar_settings_tooltip_title"
-                        }
-                        blockoverride "tooltip_content" {
-                            TooltipTextBlock = {
-                                blockoverride "text" {
-                                    text = "cmf_action_bar_settings_tooltip_text"
                                 }
                             }
                         }

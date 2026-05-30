@@ -57,7 +57,7 @@ You can create your mod menu using the [https://github.com/Europa-Universalis-5-
 
 == Action Bar ==
 [[File:CMF_Action_Bar.png|thumb|300px|Custom action bar buttons.]]
-The Action Bar is a shared UI bar where mods can place interactive buttons. Players can reposition the bar (top, bottom-left, or bottom-right) and toggle individual buttons on or off through a built-in settings panel.
+The Action Bar is a shared UI bar where mods can place interactive buttons. Players can reposition the bar (top, bottom-left, or bottom-right) and toggle individual buttons on or off from the Action Bar tab of the Community Mod Framework entry in the mod menu.
 
 Each button requires localization keys:
 <syntaxhighlight lang="yaml">

@@ -28,6 +28,146 @@ _cmm_register_menu_settings = {
 		tab_id = general
 		group_id = session
 	}
+
+	cmm_register_dropdown_setting = {
+		mod_id = cmm_core
+		setting_id = action_bar_position
+		tab_id = action_bar
+		group_id = layout
+		default_index = 1
+		option_count = 3
+	}
+
+	cmm_register_bool_setting = {
+		mod_id = cmm_core
+		setting_id = show_mod_menu_button
+		tab_id = action_bar
+		group_id = layout
+		default_value = 1
+	}
+}
+
+# Register built-in CMM settings whose contents depend on other mods having
+# completed their registration (so cmf_action_bar_elements is fully populated).
+# Called after cmf_on_mod_registration.
+# Scope: country
+# Args: none
+_cmm_register_menu_settings_late = {
+	# Mirror the global cmf_action_bar_elements list into a per-country list so
+	# CMM list bool fields can be stored per-country (per-player preference).
+	clear_variable_list = cmf_action_bar_elements_local
+	every_in_global_list = {
+		variable = cmf_action_bar_elements
+		save_scope_as = _cmf_tmp_element
+		root = {
+			add_to_variable_list = {
+				name = cmf_action_bar_elements_local
+				target = scope:_cmf_tmp_element
+			}
+		}
+	}
+
+	# Force the action-bar buttons list to rebuild every registration so newly
+	# added or removed mod elements stay in sync with cmf_action_bar_elements.
+	if = {
+		limit = { has_variable = cmm_list_initialized_cmm_core__action_bar_buttons }
+		remove_variable = cmm_list_initialized_cmm_core__action_bar_buttons
+	}
+
+	cmm_register_settings_list_from_list = {
+		mod_id = cmm_core
+		setting_id = action_bar_buttons
+		tab_id = action_bar
+		is_ordered = 0
+		list = cmf_action_bar_elements_local
+	}
+
+	cmm_register_list_bool_field = {
+		mod_id = cmm_core
+		setting_id = action_bar_buttons
+		field_id = active
+		default_value = 1
+	}
+
+	# Prime the bool field value of every row from cmf_action_bar_active_elements
+	# so the checkbox state matches the actual displayed buttons.
+	cmm_for_each_list_item = {
+		setting = cmm_core__action_bar_buttons
+		effect = _cmm_sync_action_bar_button_active_from_list
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmf_action_bar_elements_local }
+	}
+}
+
+# Per-item: write the bool field at slot 1 (the "active" field) to match
+# cmf_action_bar_active_elements membership for this row's element.
+# Called by cmm_for_each_list_item.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key (cmm_core__action_bar_buttons).
+# - i (number): Item ordinal (1-50).
+_cmm_sync_action_bar_button_active_from_list = {
+	if = {
+		limit = {
+			is_target_in_variable_list = {
+				name = cmf_action_bar_active_elements
+				target = scope:cmm_list_current_item_value
+			}
+		}
+		remove_from_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 }
+		add_to_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 value = 1 }
+	}
+	else = {
+		remove_from_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 }
+		add_to_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 value = 0 }
+	}
+}
+
+# Per-item: when iterating the action-bar buttons list, if the current item is
+# the one being toggled (its ordinal matches _cmm_action_bar_change_pos), update
+# cmf_action_bar_active_elements to add or remove that element based on
+# _cmm_action_bar_change_val.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key (cmm_core__action_bar_buttons).
+# - i (number): Item ordinal (1-50).
+_cmm_handle_action_bar_button_change = {
+	if = {
+		limit = { $i$ = var:_cmm_action_bar_change_pos }
+		if = {
+			limit = { var:_cmm_action_bar_change_val = 1 }
+			if = {
+				limit = {
+					NOT = {
+						is_target_in_variable_list = {
+							name = cmf_action_bar_active_elements
+							target = scope:cmm_list_current_item_value
+						}
+					}
+				}
+				add_to_variable_list = {
+					name = cmf_action_bar_active_elements
+					target = scope:cmm_list_current_item_value
+				}
+			}
+		}
+		else = {
+			remove_list_variable = {
+				name = cmf_action_bar_active_elements
+				target = scope:cmm_list_current_item_value
+			}
+		}
+	}
+
+	# Accept setting param (unused here)
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $setting$_$i$ }
+	}
 }
 
 # Handle CMM core button callbacks.
