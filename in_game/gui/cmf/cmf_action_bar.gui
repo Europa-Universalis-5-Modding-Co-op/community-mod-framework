@@ -17,7 +17,7 @@ types cmf_action_bar {
                 DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
             )
         )]"
-        position = { 300 0 }
+        position = { 200 0 }
         parentanchor = bottom|left
     }
 
@@ -35,7 +35,7 @@ types cmf_action_bar {
                 DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
             )
         )]"
-        position = { -300 0 }
+        position = { -200 0 }
         parentanchor = bottom|right
     }
 
@@ -796,4 +796,4 @@ types cmf_action_bar {
         }
     }
 
-}
+}
