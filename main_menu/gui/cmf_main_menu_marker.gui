@@ -1,5 +1,6 @@
 ﻿types cmf_main_menu_marker
 {
+	# main_menu\gui\frontend_mainview.gui
 	type steam_logo_button = button {
 		gfxtype = framedbuttongfx
 		effectname = "NoHighlight"
@@ -25,4 +26,30 @@
 			on_start = "[GetVariableSystem.Set( 'cmf_active', 'yes' )]"
 		}
 	}
+}
+
+# main_menu\gui\pdx_account
+template sdk_button_style_template {
+	buttonText = {
+		textbox = {
+			using = button_common_textobj_font
+			align = center|nobaseline
+
+			default_format = "#color_white"
+			autoresize = yes
+			resizeparent = yes
+			margin = { 30 5 }
+			minimumsize = { 80 30 }
+		}
+	}
+
+	state = {
+		name = cmf_marker_init_2
+		trigger_on_create = yes
+		on_start = "[GetVariableSystem.Set( 'cmf_active', 'yes' )]"
+	}
+
+	using = button_common_properties_template
+	using = button_regular_texture
+	tooltip_enabled = no
 }
