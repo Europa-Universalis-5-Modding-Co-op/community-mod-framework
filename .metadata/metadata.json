@@ -1,7 +1,7 @@
 {
     "name": "Community Mod Framework - 1.2 Echinades Dev",
     "id": "community_mod_framework.dev",
-    "version": "2.2.4",
+    "version": "2.2.5",
     "game_id": "eu5",
     "supported_game_version": "1.2.*",
     "short_description": "A shared mod framework to improve compatibility between different mods.",
