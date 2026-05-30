@@ -10,9 +10,9 @@ types cmf_action_bar {
         visible = "[And4(
             Not(LeftView.IsShown),
             Not(GetVariableSystem.Exists('cmf_hide_action_bar')),
-            EqualTo_CFixedPoint(CMMSettingValue('cmm_core__action_bar_position'), '(CFixedPoint)2'),
+            EqualTo_CFixedPoint(CMMSettingValue('cmm_core__action_bar_position'), '(CFixedPoint)1'),
             Or3(
-                Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button'))),
+                Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1')),
                 InDebugMode,
                 DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
             )
@@ -27,10 +27,10 @@ types cmf_action_bar {
             Not(GetVariableSystem.Exists('cmf_hide_action_bar')),
             Or(
                 Not(CMMSettingIsRegistered('cmm_core__action_bar_position')),
-                EqualTo_CFixedPoint(CMMSettingValue('cmm_core__action_bar_position'), '(CFixedPoint)1')
+                EqualTo_CFixedPoint(CMMSettingValue('cmm_core__action_bar_position'), '(CFixedPoint)3')
             ),
             Or3(
-                Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button'))),
+                Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1')),
                 InDebugMode,
                 DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
             )
@@ -43,9 +43,9 @@ types cmf_action_bar {
         visible = "[And4(
             Not(LeftView.IsShown),
             Not(GetVariableSystem.Exists('cmf_hide_action_bar')),
-            EqualTo_CFixedPoint(CMMSettingValue('cmm_core__action_bar_position'), '(CFixedPoint)3'),
+            EqualTo_CFixedPoint(CMMSettingValue('cmm_core__action_bar_position'), '(CFixedPoint)2'),
             Or3(
-                Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button'))),
+                Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1')),
                 InDebugMode,
                 DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
             )
@@ -403,7 +403,7 @@ types cmf_action_bar {
             blockoverride "visibility" {
                 visible = "[And(
                     Or(Not(GameIsMultiplayer), IsHost),
-                    Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button')))
+                    Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1'))
                 )]"
             }
             blockoverride "base_color" {
@@ -445,7 +445,7 @@ types cmf_action_bar {
             blockoverride "visibility" {
                 visible = "[And(
                     And(GameIsMultiplayer, Not(IsHost)),
-                    Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button')))
+                    Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1'))
                 )]"
             }
             blockoverride "base_color" {
@@ -549,7 +549,7 @@ types cmf_action_bar {
             blockoverride "visibility" {
                 visible = "[And(
                     Or(Not(GameIsMultiplayer), IsHost),
-                    Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button')))
+                    Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1'))
                 )]"
             }
             blockoverride "base_color" {
@@ -591,7 +591,7 @@ types cmf_action_bar {
             blockoverride "visibility" {
                 visible = "[And(
                     And(GameIsMultiplayer, Not(IsHost)),
-                    Or(Not(CMMSettingIsRegistered('cmm_core__show_mod_menu_button')), CMMValueEqualsOne(CMMSettingValue('cmm_core__show_mod_menu_button')))
+                    Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1'))
                 )]"
             }
             blockoverride "base_color" {

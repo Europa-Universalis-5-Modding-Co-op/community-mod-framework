@@ -74,7 +74,11 @@
 				}
 
 				cmm_dropdown_setting = {
-					visible = "[CMMSettingIsDropdown(Scope.GetFlagName)]"
+					visible = "[And(CMMSettingIsDropdown(Scope.GetFlagName), Not(CMMDropdownIsMultiselector(Scope.GetFlagName)))]"
+				}
+
+				cmm_multiselector_setting = {
+					visible = "[And(CMMSettingIsDropdown(Scope.GetFlagName), CMMDropdownIsMultiselector(Scope.GetFlagName))]"
 				}
 
 				cmm_text_setting = {

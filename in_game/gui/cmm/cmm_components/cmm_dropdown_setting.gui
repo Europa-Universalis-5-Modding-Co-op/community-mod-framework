@@ -1,4 +1,4 @@
-types CMMDropdownSettingTypes
+﻿types CMMDropdownSettingTypes
 {
 	# Dropdown setting widget for one CMM setting row.
 	# Reads:
@@ -111,6 +111,38 @@ types CMMDropdownSettingTypes
 				scrollbar_vertical = {
 					using = Scrollbar_Vertical
 				}
+			}
+		}
+	}
+
+	# Multiselector layout for dropdown settings: every option rendered as a
+	# side-by-side button, the currently-selected button disabled. Designed
+	# for up to 4 options.
+	# Reads:
+	# - Scope.GetFlagName [string]: current setting key in root context (`<mod_id>__<setting_id>`).
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: 0-based widget index of the rendered option button.
+	# Writes:
+	# - GetScriptedGui('CMM_MarkDropdownSelection_<index>').Execute(...) [effect]: stores pending dropdown selected index.
+	# - GetScriptedGui('cmm_auto_apply_dropdown').Execute(...) [effect]: applies the selection.
+	type cmm_multiselector_setting = hbox {
+		spacing = 4
+		datamodel = "[DataModelRepeatedItem(CMMDropdownOptionCount(Scope.GetFlagName))]"
+
+		item = {
+			button = {
+				using = button_regular_texture
+				using = button_common_template
+				size = { 150 30 }
+				text = "[CMMOptionLabelFromWidgetIndex(Scope.GetFlagName, PdxGuiWidget.GetIndexInDataModel)]"
+
+				enabled = "[And(CMMCanEditSetting(Scope.GetFlagName), Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, CMMDropdownSelectedIndex(Scope.GetFlagName))))]"
+
+				onclick = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
+				onclick = "[CMMExecuteAutoApply('cmm_auto_apply_dropdown', Scope.GetFlagName)]"
+
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+				tooltip = "[CMMOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"
+				tooltip_enabled = "[CMMHasOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"
 			}
 		}
 	}

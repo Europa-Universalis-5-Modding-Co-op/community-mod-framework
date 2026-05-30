@@ -138,3 +138,17 @@ _cmm_apply_dropdown_change = {
 		cmf_suppress = { v = cmm_tmp_last }
 	}
 }
+
+# Flag a registered dropdown setting to render as a multiselector: every
+# option as a button shown side by side, the currently-selected button
+# disabled. Supports up to 4 options well; renders more if registered.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+cmm_set_dropdown_multiselector = {
+	if = {
+		limit = { is_key_in_variable_map = { name = cmm_dropdown_multiselector target = flag:$setting$ } }
+		remove_from_variable_map = { name = cmm_dropdown_multiselector key = flag:$setting$ }
+	}
+	add_to_variable_map = { name = cmm_dropdown_multiselector key = flag:$setting$ value = 1 }
+}

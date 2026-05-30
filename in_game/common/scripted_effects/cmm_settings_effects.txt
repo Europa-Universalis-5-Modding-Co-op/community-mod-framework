@@ -34,17 +34,10 @@ _cmm_register_menu_settings = {
 		setting_id = action_bar_position
 		tab_id = action_bar
 		group_id = layout
-		default_index = 1
+		default_index = 3
 		option_count = 3
 	}
-
-	cmm_register_bool_setting = {
-		mod_id = cmm_core
-		setting_id = show_mod_menu_button
-		tab_id = action_bar
-		group_id = layout
-		default_value = 1
-	}
+	cmm_set_dropdown_multiselector = { setting = cmm_core__action_bar_position }
 }
 
 # Register built-in CMM settings whose contents depend on other mods having
@@ -74,12 +67,36 @@ _cmm_register_menu_settings_late = {
 		remove_variable = cmm_list_initialized_cmm_core__action_bar_buttons
 	}
 
-	cmm_register_settings_list_from_list = {
+	cmm_begin_settings_list = {
 		mod_id = cmm_core
 		setting_id = action_bar_buttons
 		tab_id = action_bar
 		is_ordered = 0
-		list = cmf_action_bar_elements_local
+	}
+
+	# Item 1: the mod menu button.
+	cmm_add_settings_list_item = {
+		mod_id = cmm_core
+		setting_id = action_bar_buttons
+		value = flag:cmm_core_mod_menu_button
+		name = cmm_core__action_bar_buttons_mod_menu_item_name
+	}
+
+	every_in_list = {
+		variable = cmf_action_bar_elements_local
+		save_scope_as = cmm_list_staged_item_value
+		root = {
+			_cmm_add_staged_settings_list_item_internal = {
+				mod_id = cmm_core
+				setting_id = action_bar_buttons
+				vt = variable
+			}
+		}
+	}
+
+	cmm_finish_settings_list = {
+		mod_id = cmm_core
+		setting_id = action_bar_buttons
 	}
 
 	cmm_register_list_bool_field = {
@@ -89,8 +106,6 @@ _cmm_register_menu_settings_late = {
 		default_value = 1
 	}
 
-	# Prime the bool field value of every row from cmf_action_bar_active_elements
-	# so the checkbox state matches the actual displayed buttons.
 	cmm_for_each_list_item = {
 		setting = cmm_core__action_bar_buttons
 		effect = _cmm_sync_action_bar_button_active_from_list
@@ -100,6 +115,9 @@ _cmm_register_menu_settings_late = {
 	if = {
 		limit = { always = no }
 		cmf_suppress = { v = cmf_action_bar_elements_local }
+		cmf_suppress = { v = cmm_core_mod_menu_button }
+		cmf_suppress = { v = cmm_core__action_bar_buttons_mod_menu_item_name }
+		add_to_global_variable_list = { name = cmf_action_bar_elements target = flag:cmm_core_mod_menu_button }
 	}
 }
 
@@ -112,18 +130,21 @@ _cmm_register_menu_settings_late = {
 # - i (number): Item ordinal (1-50).
 _cmm_sync_action_bar_button_active_from_list = {
 	if = {
-		limit = {
-			is_target_in_variable_list = {
-				name = cmf_action_bar_active_elements
-				target = scope:cmm_list_current_item_value
+		limit = { NOT = { $i$ = 1 } }
+		if = {
+			limit = {
+				is_target_in_variable_list = {
+					name = cmf_action_bar_active_elements
+					target = scope:cmm_list_current_item_value
+				}
 			}
+			remove_from_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 }
+			add_to_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 value = 1 }
 		}
-		remove_from_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 }
-		add_to_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 value = 1 }
-	}
-	else = {
-		remove_from_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 }
-		add_to_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 value = 0 }
+		else = {
+			remove_from_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 }
+			add_to_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 value = 0 }
+		}
 	}
 }
 
@@ -137,7 +158,10 @@ _cmm_sync_action_bar_button_active_from_list = {
 # - i (number): Item ordinal (1-50).
 _cmm_handle_action_bar_button_change = {
 	if = {
-		limit = { $i$ = var:_cmm_action_bar_change_pos }
+		limit = {
+			$i$ = var:_cmm_action_bar_change_pos
+			NOT = { $i$ = 1 }
+		}
 		if = {
 			limit = { var:_cmm_action_bar_change_val = 1 }
 			if = {

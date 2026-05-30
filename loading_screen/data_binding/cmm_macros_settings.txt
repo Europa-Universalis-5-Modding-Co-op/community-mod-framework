@@ -160,6 +160,14 @@ macro = {
     replace_with = "CMMOrdinalToWidgetIndex(CMMDropdownStoredIndex(SettingKey))"
 }
 
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when a dropdown setting is flagged to render with the multiselector layout"
+    definition = "CMMDropdownIsMultiselector(SettingKey)"
+    replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_dropdown_multiselector', SettingKey))"
+}
+
 # Args: none
 # Returns: boolean
 macro = {
