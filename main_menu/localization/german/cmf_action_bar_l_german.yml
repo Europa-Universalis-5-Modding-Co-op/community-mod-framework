@@ -1,6 +1,6 @@
 ﻿l_german:
  cmf_action_bar_open_action: "Aktion ausführen"
- cmf_action_bar_settings_tooltip_title: "Einstellungen"
- cmf_action_bar_settings_tooltip_text: "Öffne die #v Community Mod Framework#!-Einstellungen."
  cmf_action_bar_log_viewer_tooltip_title: "Log-Viewer"
  cmf_action_bar_log_viewer_tooltip_text: "Öffne den #v Log Viewer#!."
+ cmf_action_bar_cmm_tooltip_title: "Community-Mod-Framework"
+ cmf_action_bar_cmm_tooltip_text: "Öffne die #v Community Mod Framework#!-Einstellungen."

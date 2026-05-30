@@ -1,27 +1,14 @@
 {
   "files": {
     "english\\cmf_action_bar_l_english.yml": {
+      "cmf_action_bar_cmm_tooltip_text": "68b6074d300ca7528c43818bcb8b28f0fc7857bb9f863a01610acbfa48e4d5d1",
+      "cmf_action_bar_cmm_tooltip_title": "adc1941fe6eb21b8beb5f953975ef9b7cda70393161b4b612a750aeb2b6a314e",
       "cmf_action_bar_log_viewer_tooltip_text": "d4162e2de28b78694e5948902b945335f4d8af20298e8e4d3be11011a0425169",
       "cmf_action_bar_log_viewer_tooltip_title": "b26528cf21f8b6051a1e7bc328b85a9c7d16904ab4f0fb8232c570b03aa30715",
-      "cmf_action_bar_open_action": "46fc4f5dd55e0617d3fe812d70b65a773a7e647f7c3cf65c9761a5c89cacff2d",
-      "cmf_action_bar_settings_tooltip_text": "68b6074d300ca7528c43818bcb8b28f0fc7857bb9f863a01610acbfa48e4d5d1",
-      "cmf_action_bar_settings_tooltip_title": "74a883a037bc227f91891ab654a753d3a99f31ab06ae5b5d2b6e594a692b41f8"
+      "cmf_action_bar_open_action": "46fc4f5dd55e0617d3fe812d70b65a773a7e647f7c3cf65c9761a5c89cacff2d"
     },
     "english\\cmf_l_english.yml": {
       "CMF_PLAYER_TAG": "da5380f56472f3d22b0149fa10e4bc66f163000586ce3949d408937c89d55d3b"
-    },
-    "english\\cmf_settings_l_english.yml": {
-      "cmf_settings_action_bar_group_active_button_activate": "eb2258ebcd75efc5d630f9bed871fef432021e776044f6d5ee5a2c4767b056ff",
-      "cmf_settings_action_bar_group_active_button_deactivate": "c4366c8d070f78fef3328b3234bc4af21005c7d3b6575a9ab32b05aec95199f5",
-      "cmf_settings_action_bar_group_active_buttons": "dd94ffe0ca2e45e0127672296afb5a74006edfb040aab27da9c7a5832c54bdcd",
-      "cmf_settings_action_bar_group_layout": "a511909161e1b84fb81b52028fc2ce79525a96b40ccda823caa4a66ee64772b5",
-      "cmf_settings_action_bar_position": "94be4d2f4aac3cbf8a818cf49faba9b76e49a2f2d5958a5d3c11108e72053396",
-      "cmf_settings_action_bar_position_activate": "48ed524d77a5c300d27a695314a8229e3083c1e9cbd119544eac96edc6ac9dfd",
-      "cmf_settings_action_bar_position_bottom_left": "7499760f871251ece7ac8b9b6e6237fa08cdeafe77d6baedcc563a136b82b043",
-      "cmf_settings_action_bar_position_bottom_right": "09b28cd781eda0b536f33eef8f4cf718e40a2d7deee0f64f945154c9efb414b8",
-      "cmf_settings_action_bar_position_top": "d5cdfcf7ff75338fa974145a13378ee35f7ea04cfabd74b8f5fb6df350cfbcca",
-      "cmf_settings_page_action_bar": "f543a9f99ce72320c5ec9f2e86b53614c4e0f0e0f7be31a24a054d28477fddf4",
-      "cmf_settings_title": "adc1941fe6eb21b8beb5f953975ef9b7cda70393161b4b612a750aeb2b6a314e"
     },
     "english\\cmm_l_english.yml": {
       "CMM_DROPDOWN_FIRST": "61f09349d7fd3c2f0562f3c747f5727a6eebb332740c018ec1e6abc578e0f178",
@@ -70,6 +57,18 @@
       "CMM_TEXT_SETTING_MULTIPLAYER_DISABLED": "4dd6849ed169d5a687af4a606c12f2a8c39c9233e9947038802ee19ebff0d995",
       "CMM_TEXT_SETTING_PLACEHOLDER": "3bcca28cc6439a861a8af0a2fc2dd2630ef14b7ae3c2ee8593e1306475d2411a",
       "CMM_WINDOW_TITLE": "436ace6f6df24b0a0f20fec6e18a95c980e9e0c0a621d52e8f71d12c3d0536b3",
+      "cmm_core__action_bar__action_bar_buttons_name": "3684b44e75a13c3afcf10449490eea47958c9bfe9df23fb727200ab8bbee6c4d",
+      "cmm_core__action_bar__layout_name": "a511909161e1b84fb81b52028fc2ce79525a96b40ccda823caa4a66ee64772b5",
+      "cmm_core__action_bar_buttons__active_name": "92340695899bd2d86223e4a007620e0d6502fc0e08809773634c7e0743764a9c",
+      "cmm_core__action_bar_buttons_desc": "518458231b9efdf12fcd32ecef7d957e8944f3c03528cf4304f1c7d2224764d3",
+      "cmm_core__action_bar_buttons_item_column_name": "707eab0c23ecbf6e5382ba61a346bc76aefee81303280fc0e08e59df18afbf8a",
+      "cmm_core__action_bar_buttons_mod_menu_item_name": "436ace6f6df24b0a0f20fec6e18a95c980e9e0c0a621d52e8f71d12c3d0536b3",
+      "cmm_core__action_bar_name": "f543a9f99ce72320c5ec9f2e86b53614c4e0f0e0f7be31a24a054d28477fddf4",
+      "cmm_core__action_bar_position_desc": "dff9639f44764ec8f4197912b6b0f098c18ba7d97da7f092c29a2c93f124a56c",
+      "cmm_core__action_bar_position_name": "6d031af10da7a25e554bb21247f28f0e6cef77f1471175199e7fcc571964dc3d",
+      "cmm_core__action_bar_position_option_1_name": "7499760f871251ece7ac8b9b6e6237fa08cdeafe77d6baedcc563a136b82b043",
+      "cmm_core__action_bar_position_option_2_name": "d5cdfcf7ff75338fa974145a13378ee35f7ea04cfabd74b8f5fb6df350cfbcca",
+      "cmm_core__action_bar_position_option_3_name": "09b28cd781eda0b536f33eef8f4cf718e40a2d7deee0f64f945154c9efb414b8",
       "cmm_core__enable_debug_mode_desc": "89d389518387335a93b7a628b399de5e847a1740bce79e4ab03c72da7c611d1a",
       "cmm_core__enable_debug_mode_name": "414249072089b7658c55983d7bbd61c7d0de706d35170d9a0402ffd06db4c674",
       "cmm_core__enable_unrestricted_tools_desc": "926cf0e08c8604834c711d34a87ee645aa4fd6f662740b2f3450bbc9f9e52129",
@@ -84,7 +83,7 @@
       "cmm_core__open_log_name": "36cfcc30b3284f3292332b705e813647ee5ea43cdf40da853ed71d3691a448e0",
       "cmm_core__open_log_text": "ed077f3d8125d60dca1979c7133601bd187d47c73ed9975028f677e49e709942",
       "cmm_core_desc": "abe9bf1010ecf2a381c8ffe371474f94f18881321b3d59e6925f80b3e09647d0",
-      "cmm_core_name": "436ace6f6df24b0a0f20fec6e18a95c980e9e0c0a621d52e8f71d12c3d0536b3"
+      "cmm_core_name": "adc1941fe6eb21b8beb5f953975ef9b7cda70393161b4b612a750aeb2b6a314e"
     }
   },
   "version": 1,
