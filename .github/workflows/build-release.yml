@@ -156,10 +156,10 @@ jobs:
         id: metadata
         shell: bash
         run: |
-          # Escape backslashes and double quotes for VDF string values.
-          # SteamCMD's VDF parser treats an unescaped " as the end of a value.
+          # Escape backslashes for VDF; substitute " with ' since SteamCMD's
+          # workshop_build_item VDF parser truncates at " even when escaped as \".
           vdf_escape() {
-            printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
+            printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/'\''/g'
           }
           MOD_RELEASE=$(realpath ../mod-release)
           TITLE=$(grep -Po '(?<=\s"name":\s").+(?=",)' ../mod-release/.metadata/metadata.json)
@@ -248,10 +248,10 @@ jobs:
             [polish]=polish [russian]=russian [simp_chinese]=schinese
             [turkish]=turkish [braz_por]=brazilian [japanese]=japanese [korean]=koreana
           )
-          # Escape backslashes and double quotes for VDF string values.
-          # SteamCMD's VDF parser treats an unescaped " as the end of a value.
+          # Escape backslashes for VDF; substitute " with ' since SteamCMD's
+          # workshop_build_item VDF parser truncates at " even when escaped as \".
           vdf_escape() {
-            printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
+            printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/'\''/g'
           }
           write_page_vdf() {
             local vdf_path="$1" steam_lang="$2" title="$3" desc="$4"
@@ -303,10 +303,10 @@ jobs:
         if: ${{ inputs.publish == 'true' && inputs.upload-submods == 'true' }}
         shell: bash
         run: |
-          # Escape backslashes and double quotes for VDF string values.
-          # SteamCMD's VDF parser treats an unescaped " as the end of a value.
+          # Escape backslashes for VDF; substitute " with ' since SteamCMD's
+          # workshop_build_item VDF parser truncates at " even when escaped as \".
           vdf_escape() {
-            printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
+            printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/'\''/g'
           }
           parse_change_note() {
             local file="$1" version="$2" item_id="$3"
