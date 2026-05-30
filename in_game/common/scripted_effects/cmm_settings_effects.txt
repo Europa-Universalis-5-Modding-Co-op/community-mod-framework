@@ -82,6 +82,14 @@ _cmm_register_menu_settings_late = {
 		name = cmm_core__action_bar_buttons_mod_menu_item_name
 	}
 
+	# Item 2: the log viewer button. Row hidden below when debug mode is off.
+	cmm_add_settings_list_item = {
+		mod_id = cmm_core
+		setting_id = action_bar_buttons
+		value = flag:cmm_core_log_viewer_button
+		name = cmm_core__action_bar_buttons_log_viewer_item_name
+	}
+
 	every_in_list = {
 		variable = cmf_action_bar_elements_local
 		save_scope_as = cmm_list_staged_item_value
@@ -106,6 +114,15 @@ _cmm_register_menu_settings_late = {
 		default_value = 1
 	}
 
+	# Show or hide the log viewer row based on the engine's debug mode state.
+	if = {
+		limit = { debug_only = yes }
+		cmm_show_list_item = { mod_id = cmm_core setting_id = action_bar_buttons item = 2 }
+	}
+	else = {
+		cmm_hide_list_item = { mod_id = cmm_core setting_id = action_bar_buttons item = 2 }
+	}
+
 	cmm_for_each_list_item = {
 		setting = cmm_core__action_bar_buttons
 		effect = _cmm_sync_action_bar_button_active_from_list
@@ -116,7 +133,9 @@ _cmm_register_menu_settings_late = {
 		limit = { always = no }
 		cmf_suppress = { v = cmf_action_bar_elements_local }
 		cmf_suppress = { v = cmm_core_mod_menu_button }
+		cmf_suppress = { v = cmm_core_log_viewer_button }
 		cmf_suppress = { v = cmm_core__action_bar_buttons_mod_menu_item_name }
+		cmf_suppress = { v = cmm_core__action_bar_buttons_log_viewer_item_name }
 		add_to_global_variable_list = { name = cmf_action_bar_elements target = flag:cmm_core_mod_menu_button }
 	}
 }
@@ -130,7 +149,10 @@ _cmm_register_menu_settings_late = {
 # - i (number): Item ordinal (1-50).
 _cmm_sync_action_bar_button_active_from_list = {
 	if = {
-		limit = { NOT = { $i$ = 1 } }
+		limit = {
+			NOT = { $i$ = 1 }
+			NOT = { $i$ = 2 }
+		}
 		if = {
 			limit = {
 				is_target_in_variable_list = {
@@ -161,6 +183,7 @@ _cmm_handle_action_bar_button_change = {
 		limit = {
 			$i$ = var:_cmm_action_bar_change_pos
 			NOT = { $i$ = 1 }
+			NOT = { $i$ = 2 }
 		}
 		if = {
 			limit = { var:_cmm_action_bar_change_val = 1 }

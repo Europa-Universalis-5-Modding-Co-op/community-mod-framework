@@ -13,7 +13,7 @@ types cmf_action_bar {
             EqualTo_CFixedPoint(CMMSettingValue('cmm_core__action_bar_position'), '(CFixedPoint)1'),
             Or3(
                 Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1')),
-                InDebugMode,
+                And(InDebugMode, Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i2_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i2_f1')).GetValue, '(CFixedPoint)1'))),
                 DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
             )
         )]"
@@ -31,7 +31,7 @@ types cmf_action_bar {
             ),
             Or3(
                 Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1')),
-                InDebugMode,
+                And(InDebugMode, Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i2_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i2_f1')).GetValue, '(CFixedPoint)1'))),
                 DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
             )
         )]"
@@ -46,7 +46,7 @@ types cmf_action_bar {
             EqualTo_CFixedPoint(CMMSettingValue('cmm_core__action_bar_position'), '(CFixedPoint)2'),
             Or3(
                 Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1')),
-                InDebugMode,
+                And(InDebugMode, Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i2_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i2_f1')).GetValue, '(CFixedPoint)1'))),
                 DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
             )
         )]"
@@ -485,7 +485,10 @@ types cmf_action_bar {
 
         cmf_action_bar_button = {
             blockoverride "visibility" {
-                visible = "[InDebugMode]"
+                visible = "[And(
+                    InDebugMode,
+                    Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i2_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i2_f1')).GetValue, '(CFixedPoint)1'))
+                )]"
             }
             blockoverride "base_color" {
                 using = color_dark_red_texture
@@ -631,7 +634,10 @@ types cmf_action_bar {
 
         cmf_action_tab_button = {
             blockoverride "visibility" {
-                visible = "[InDebugMode]"
+                visible = "[And(
+                    InDebugMode,
+                    Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i2_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmm_core__action_bar_buttons_i2_f1')).GetValue, '(CFixedPoint)1'))
+                )]"
             }
             blockoverride "base_color" {
                 using = color_dark_red_texture
