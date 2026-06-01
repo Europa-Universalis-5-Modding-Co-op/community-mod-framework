@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   notify:
+    if: github.repository == 'Europa-Universalis-5-Modding-Co-op/community-mod-framework'
     runs-on: ubuntu-latest
     steps:
       - name: Dispatch sync to early-access repo
