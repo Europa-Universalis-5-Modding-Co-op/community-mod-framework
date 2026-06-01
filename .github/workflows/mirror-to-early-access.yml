@@ -13,10 +13,10 @@ jobs:
     steps:
       - name: Dispatch sync to early-access repo
         env:
-          GH_TOKEN: ${{ secrets.EARLY_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.CMF_SYNC_TOKEN }}
         run: |
           if [ -z "${GH_TOKEN}" ]; then
-            echo "EARLY_ACCESS_TOKEN not configured yet; skipping dispatch (no-op)."
+            echo "CMF_SYNC_TOKEN not configured yet; skipping dispatch (no-op)."
             exit 0
           fi
           gh api \
