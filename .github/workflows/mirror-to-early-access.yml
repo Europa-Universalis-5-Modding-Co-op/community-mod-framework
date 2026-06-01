@@ -1,0 +1,26 @@
+name: Mirror to early-access
+
+on:
+  push:
+    branches: [main, dev]
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch sync to early-access repo
+        env:
+          GH_TOKEN: ${{ secrets.EARLY_ACCESS_TOKEN }}
+        run: |
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "EARLY_ACCESS_TOKEN not configured yet; skipping dispatch (no-op)."
+            exit 0
+          fi
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            repos/Europa-Universalis-5-Modding-Co-op/community-mod-framework-early-access/dispatches \
+            -f "event_type=public-updated"
