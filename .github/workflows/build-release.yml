@@ -103,6 +103,7 @@ jobs:
           jq --tab '.name |= rtrimstr(" Dev") | .id |= rtrimstr(".dev")' ../mod-release/.metadata/metadata.json > tmp.json && mv tmp.json ../mod-release/.metadata/metadata.json
           if [ -f .metadata/thumbnail-release.png ]; then
             cp .metadata/thumbnail-release.png ../mod-release/.metadata/thumbnail.png
+            rm ../mod-release/.metadata/thumbnail-release.png
           fi
 
         # Package clean mod folder into a zip file
