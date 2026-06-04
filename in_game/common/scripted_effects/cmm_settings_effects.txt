@@ -111,6 +111,11 @@ _cmm_register_menu_settings_late = {
 		effect = _cmm_sync_action_bar_button_active_from_list
 	}
 
+	cmm_for_each_list_item = {
+		setting = cmm_core__action_bar_buttons
+		effect = _cmm_sync_action_bar_button_name_from_element
+	}
+
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
@@ -147,6 +152,23 @@ _cmm_sync_action_bar_button_active_from_list = {
 			remove_from_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 }
 			add_to_variable_map = { name = cmm key = flag:$setting$_i$i$_f1 value = 0 }
 		}
+	}
+}
+
+# Per-item: set the row label to the element's name key from cmf_action_bar_element_name.
+# Item 1 (the mod menu) keeps its explicit name.
+# Called by cmm_for_each_list_item.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key (cmm_core__action_bar_buttons).
+# - i (number): Item ordinal (1-50).
+_cmm_sync_action_bar_button_name_from_element = {
+	if = {
+		limit = { NOT = { $i$ = 1 } }
+		"global_variable_map(cmf_action_bar_element_name|scope:cmm_list_current_item_value)" = {
+			save_scope_as = _cmf_ab_name_key
+		}
+		set_variable = { name = $setting$_i$i$_name value = scope:_cmf_ab_name_key }
 	}
 }
 

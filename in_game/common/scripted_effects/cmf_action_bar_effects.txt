@@ -25,6 +25,9 @@ cmf_add_action_bar_element = {
                 add_to_variable_map = { name = cmf_has_sgui key = flag:$element$ value = 0 }
             }
         }
+
+        # Record the element's name key so the mod menu toggle list can label its row.
+        add_to_global_variable_map = { name = cmf_action_bar_element_name key = flag:$element$ value = flag:$element$_name }
     }
 
     # Benign warning suppression
@@ -35,6 +38,7 @@ cmf_add_action_bar_element = {
         }
         cmf_suppress = { v = $element$ }
         cmf_suppress = { v = cmf_action_bar_elements }
+        cmf_suppress = { v = cmf_action_bar_element_name }
     }
 }
 
@@ -47,6 +51,7 @@ cmf_remove_action_bar_element = {
             name = cmf_action_bar_elements
             target = flag:$element$
         }
+        remove_from_global_variable_map = { name = cmf_action_bar_element_name key = flag:$element$ }
         every_country = {
             remove_list_variable = {
                 name = cmf_action_bar_active_elements
