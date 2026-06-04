@@ -2839,15 +2839,12 @@ types SingleUnitWindowTypes
 									
 									name = "button_pin"
 							
-									onclick = "[PinCollection.Toggle( UnitActionItem.GetKey )]"
-									checked = "[PinCollection.IsPinnedWithDefaultValue( UnitActionItem.GetKey, UnitActionItem.IsPinnedByDefault )]"
-									tooltipwidget = { 
-										LeftClickButtonTooltip = {
-											blockoverride "onclick_text" { 
-												text = "[SelectLocalization(PinCollection.IsPinnedWithDefaultValue( UnitActionItem.GetKey, UnitActionItem.IsPinnedByDefault ), 'UNPIN_ACTION', 'PIN_ACTION')]"
-											}
-										}
+									action_tooltip = {
+										title = "[SelectLocalization(PinCollection.IsPinnedWithDefaultValue( UnitActionItem.GetKey, UnitActionItem.IsPinnedByDefault ), 'UNPIN_ACTION', 'PIN_ACTION')]"
+										on_action = "[PinCollection.Toggle( UnitActionItem.GetKey )]"
 									}
+									tooltipwidget = { BasicFunctionalTooltip = {} }
+									down = "[PinCollection.IsPinnedWithDefaultValue( UnitActionItem.GetKey, UnitActionItem.IsPinnedByDefault )]"
 								}
 							}
 						}

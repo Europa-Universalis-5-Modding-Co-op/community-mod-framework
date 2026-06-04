@@ -227,12 +227,25 @@ types CountryHeaders {
 							#	}
 							#}
 							text_single = {
-								#visible = "[Not(Estate.GetType.IsAlwaysLoyal)]"
+								visible = "[Not(And(GreaterThan_CFixedPoint(Estate.GetRelativePower, '(CFixedPoint)0'), LessThan_CFixedPoint(Estate.GetRelativePower, '(CFixedPoint)0.01')))]"
 								align = left|nobaseline
 								maximumsize = { 55 20 }
 								autoresize = yes
 
 								raw_text = "[Estate.GetRelativePower|0%] @power!|"
+
+								datacontext = "[Estate]"
+								tooltipwidget = {
+									using = estate_relative_power_tooltip
+								}
+							}
+							text_single = {
+								visible = "[And(GreaterThan_CFixedPoint(Estate.GetRelativePower, '(CFixedPoint)0'), LessThan_CFixedPoint(Estate.GetRelativePower, '(CFixedPoint)0.01'))]"
+								align = left|nobaseline
+								maximumsize = { 55 20 }
+								autoresize = yes
+
+								raw_text = "<1% @power!|"
 
 								datacontext = "[Estate]"
 								tooltipwidget = {
@@ -776,31 +789,26 @@ types CountryHeaders {
 
 					card_header_button_04 = {
 						size = {100% 100%}
-						
-						onclick = "[EstatesItem.AddNewPrivilege]"
-						tooltipwidget = { 
-							LeftClickButtonTooltip = {
-								blockoverride "onclick_text" { text = "ADD_NEW_PRIVILEGE" }
-							}
+
+						action_tooltip = {
+							title = "ADD_NEW_PRIVILEGE"
+							on_action = "[EstatesItem.AddNewPrivilege]"
 						}
+						tooltipwidget = { BasicFunctionalTooltip = {} }
 					}
 				}
 						
+				# Toggle button — opens estate actions window
 				hbox = {
-					tooltipmeta = {
-						texture = "gfx/interface/icons/modifier_types/estate_building_destruction_satisfaction_impact.dds"
-					}
-					card_header_action_button_04 = {
-						size = {32 45}
-						title = "PERFORM_REDUCTION_T"
-						
-						actor = "[Player]"
-						parameter = {
-							parameter_name = "target"
-							parameter_value = "[EstatesItem.GetEstate]"
+					card_header_button_04 = {
+						size = { 32 45 }
+
+						action_tooltip = {
+							title = "ESTATE_ACTIONS_MENU_T"
+							on_action = "[EstatesItem.OpenActionsWindow]"
 						}
-						left_click_and_hold_action = { action_name = "perform_reduction" }
-						
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+
 						background = {
 							using = color_government_texture
 							texture_density = 2
@@ -812,82 +820,24 @@ types CountryHeaders {
 								blend_mode = overlay
 								alpha = 0.5
 							}
-							modify_texture = {
-								visible = "[Not(UIAction.IsEnabled)]"
-								using = color_greyish_texture
-								alpha = 1
-								blend_mode = normal
-							}
 						}
-						
+
 						icon = {
 							size = { 80% 60% }
 							parentanchor = center
-							texture = "gfx/interface/icons/modifier_types/estate_building_destruction_satisfaction_impact.dds"
+							texture = "gfx/interface/icons/flat_icons/menu_icon.dds"
 							texture_density = 2
 
 							glow = {
 								name = "drop_shadow"
 								glow_radius = 3
-								color = {0.0 0.0 0.0 1.0}
+								color = { 0.0 0.0 0.0 1.0 }
 								alpha = 0.4
 							}
 						}
-					}				
-				}
-				
-				
-				hbox = {
-					tooltipmeta = {
-						texture = "gfx/interface/icons/resources/bribe.dds"
 					}
-					card_header_action_button_04 = {
-						size = {32 45}
-						title = "BRIBE_ESTATE_T"
-						
-					
-						
-						actor = "[Player]"
-						parameter = {
-							parameter_name = "target"
-							parameter_value = "[EstatesItem.GetEstate]"
-						}
-						left_click_and_hold_action = { action_name = "bribe_estate" }
-						
-						background = {
-							using = color_government_texture
-							texture_density = 2
-							modify_texture = {
-								texture = "gfx/interface/component_overlay/overlay_texture.dds"
-								texture_density = 2
-								spriteType = Corneredtiled
-								spriteborder = { 0 0 }
-								blend_mode = overlay
-								alpha = 0.5
-							}
-							modify_texture = {
-								visible = "[Not(UIAction.IsEnabled)]"
-								using = color_greyish_texture
-								alpha = 1
-								blend_mode = normal
-							}
-						}
-						
-						icon = {
-							size = { 80% 60% }
-							parentanchor = center
-							texture = "gfx/interface/icons/resources/bribe.dds"
-							texture_density = 2
+				}
 
-							glow = {
-								name = "drop_shadow"
-								glow_radius = 3
-								color = {0.0 0.0 0.0 1.0}
-								alpha = 0.4
-							}
-						}
-					}
-				}
 			}
 		}
 	}
@@ -1384,6 +1334,52 @@ types CountryHeaders {
 									using = international_organization_resolution_voting_tooltip
 								}										
 							}
+						}
+					}
+
+					widget = {
+						size = { 31 31 }
+						using = bg_circle
+						visible = "[Or(ResolutionGlue.EnactResolutionIsActive, ResolutionGlue.RepealResolutionIsActive)]"
+
+						piechart = {
+							size = { 100% 100% }
+							using = piechart_angles
+							parentanchor = center
+
+							icon = {
+								visible = "[Not(ResolutionGlue.HasCountryVotedFromPointer(Player.Self))]"
+								parentanchor = center
+								size = { 70% 70% }
+								texture = "gfx/interface/icons/international_organizations/law_voting.dds"
+								texture_density = 2
+							}
+
+							icon = {
+								visible = "[ResolutionGlue.HasCountryVotedFromPointer(Player.Self)]"
+								parentanchor = center
+								size = { 70% 70% }
+								texture = "gfx/interface/icons/international_organizations/law_voting_yes.dds"
+								texture_density = 2
+							}
+
+							pieslice = {
+								texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+								value = "[FixedPointToFloat(ResolutionGlue.GetProgressToDeadline)]"
+								using = color_value_progress_blue
+							}
+
+							pieslice = {
+								texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+								value = "[Subtract_float('(float)100.0', FixedPointToFloat(ResolutionGlue.GetProgressToDeadline))]"
+								using = color_value_progress_gray
+							}
+
+							datacontext = "[ResolutionGlue.GetVoteToEnactAction]"
+
+							tooltipwidget = {
+								using = international_organization_resolution_voting_tooltip
+							}										
 						}
 					}
 				}
@@ -2009,15 +2005,13 @@ types CountryHeaders {
 		
 		blockoverride "reform_action"{
 			datacontext = "[ReformItem.GetReform]"
-			datacontext = "[ReformItem.GetUIAction]"
-			using = button_action_provider
-			enabled = yes
+			using = reform_item_action_provider
 
 			tooltipwidget = {
 				using = GovernmentReform_tooltip
 				blockoverride "UIActionDescription" {
 					TooltipBlockList = {
-						visible = "[Not(StringIsEmpty(ReformItem.GetImplementedTooltip))]"
+						visible = "[And(ReformItem.ShowImplementedTooltip, Not(StringIsEmpty(ReformItem.GetImplementedTooltip)))]"
 						textcontext = "[ReformItem.GetImplementedTooltip]"
 					}
 				}
@@ -2129,7 +2123,7 @@ types CountryHeaders {
 			using = GovernmentReform_tooltip
 			blockoverride "UIActionDescription" {
 				TooltipBlockList = {
-					visible = "[Not(StringIsEmpty(ReformItem.GetImplementedTooltip))]"
+					visible = "[And(ReformItem.ShowImplementedTooltip, Not(StringIsEmpty(ReformItem.GetImplementedTooltip)))]"
 					textcontext = "[ReformItem.GetImplementedTooltip]"
 				}
 				TooltipConditionList = {
@@ -2367,7 +2361,10 @@ template government_main_tabs {
 		tooltipwidget = {
 			using = SubTabValuesTooltip
 		}
-		onclick = "[OpenLateralView('societal_values')]"
+		action_tooltip = {
+			title = "OPEN_TAB"
+			on_action = "[OpenLateralView('societal_values')]"
+		}
 		down = "[IsLateralViewOpened('societal_values')]"
 	}
 
@@ -2386,7 +2383,10 @@ template government_main_tabs {
 			using = SubTabDHETooltip
 		}
 		visible = "[IsInmersionModeDisabled]"
-		onclick = "[ShowDHEHistoryForCountry(Player.Self)]"
+		action_tooltip = {
+			title = "OPEN_TAB"
+			on_action = "[ShowDHEHistoryForCountry(Player.Self)]"
+		}
 		down = "[IsLateralViewOpened('country_dhe')]"
 	}
 
@@ -2404,7 +2404,10 @@ template government_main_tabs {
 			using = TabMissionsTooltip
 		}
 		visible = "[IsMissionsEnabled]"
-		onclick = "[OpenLateralView('missions')]"
+		action_tooltip = {
+			title = "OPEN_TAB"
+			on_action = "[OpenLateralView('missions')]"
+		}
 		down = "[IsLateralViewOpened('missions')]"
 	}
 
@@ -2422,7 +2425,10 @@ template government_main_tabs {
 			using = TabBureaucraciesTooltip
 		}
 		visible = "[PlayerHasBureaucracies]"
-		onclick = "[OpenLateralView('bureaucracies')]"
+		action_tooltip = {
+			title = "OPEN_TAB"
+			on_action = "[OpenLateralView('bureaucracies')]"
+		}
 		down = "[IsLateralViewOpened('bureaucracies')]"
 	}
 }

@@ -528,7 +528,7 @@ template cabinet_entry_action_progress {
 			text = "[Cabinet.GetNameWithNoTooltip]"
 			align = left
 			default_format = "#L"
-			maximumsize = { 200 -1 }
+			maximumsize = { 190 -1 }
 		}
 	}
 	expand = {}
@@ -891,7 +891,7 @@ template category_big_template {
 						size = { 100% 100% }
 
 						onclick = "[OutlinerCategoryEntry.TogglePin]"
-						checked = "[OutlinerCategoryEntry.IsPinned]"
+						down = "[OutlinerCategoryEntry.IsPinned]"
 						tooltipwidget = {
 							LeftClickButtonTooltip = {
 								# block "entry_count" {
@@ -1044,15 +1044,12 @@ template category_small_template {
 					button_pin = {
 						size = { 100% 100% }
 
-						onclick = "[OutlinerCategoryEntry.TogglePin]"
-						checked = "[OutlinerCategoryEntry.IsPinned]"
-						tooltipwidget = {
-							LeftClickButtonTooltip = {
-								blockoverride "onclick_text" {
-									text = "[SelectLocalization(OutlinerCategoryEntry.IsPinned, 'UNPIN_CATEGORY', 'PIN_CATEGORY')]"
-								}
-							}
+						action_tooltip = {
+							title = "[SelectLocalization(OutlinerCategoryEntry.IsPinned, 'UNPIN_CATEGORY', 'PIN_CATEGORY')]"
+							on_action = "[OutlinerCategoryEntry.TogglePin]"
 						}
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+						down = "[OutlinerCategoryEntry.IsPinned]"
 					}
 				}
 			}

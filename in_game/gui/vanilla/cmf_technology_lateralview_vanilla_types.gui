@@ -164,7 +164,7 @@ template special_advance {
 					blockoverride "tooltip_content" {
 						TooltipScrolledRequirementsList = {
 							blockoverride "block_scrollarea" { maximumsize = { -1 400 } }
-							textcontext = "[TitleDescTooltip.GetDesc]"
+							textcontext = "[TitleDescTooltip.GetDesc.GetStringView]"
 						}
 					}
 				}
@@ -312,7 +312,7 @@ template special_advance {
 		# 			lowpriotextcontext = "[AdvanceNode.GetItem.GetUnlockInformation]"
 		# 			blockoverride "tooltip_content" {
 		# 				TooltipRequirementsList = {
-		# 					textcontext = "[TitleDescTooltip.GetDesc]"
+		# 					textcontext = "[TitleDescTooltip.GetDesc.GetStringView]"
 		# 				}
 		# 			}
 		# 		}
@@ -343,7 +343,7 @@ template special_advance {
 					blockoverride "tooltip_content" {
 						TooltipScrolledRequirementsList = {
 							blockoverride "block_scrollarea" { maximumsize = { -1 400 } }
-							textcontext = "[TitleDescTooltip.GetDesc]"
+							textcontext = "[TitleDescTooltip.GetDesc.GetStringView]"
 						}
 					}
 				}
@@ -469,6 +469,8 @@ types AdvancesTreeView
 			datacontext = "[GetPlayer]"
 			parentanchor = center
 			using = advance_icon
+			blockoverride "advance_enabled_visible"  { visible = "[Advance.IsResearchedByPlayer]" }
+			blockoverride "advance_disabled_visible" { visible = "[Not(Advance.IsResearchedByPlayer)]" }
 		}
 	}
 
@@ -535,11 +537,26 @@ types AdvancesTreeView
 					widgetid = "[AdvanceNode.GetKey]"
 					position = "[AdvanceNode.GetPosition]"
 
-					icon = {
+					widget = {
+						visible = "[AdvanceNode.GetItem.IsHighlightedBySearch]"
 						parentanchor = center
 						size = { 300 300 }
-						visible = "[AdvanceNode.GetItem.IsHighlightedBySearch]"
-						texture = "gfx/interface/buttons/advances_buttons_frame_search.dds"
+
+						icon = {
+							visible = "[Not(AdvanceNode.ShowSimplifiedVersion(TechnologyLateralView.Self))]"
+							size = { 100% 100% }
+							texture = "gfx/interface/buttons/advances_buttons_frame_search.dds"
+						}
+
+						icon = {
+							visible = "[AdvanceNode.ShowSimplifiedVersion(TechnologyLateralView.Self)]"
+							size = { 100% 100% }
+							texture = "gfx/interface/advance/backgrounds/blue.dds"
+							modify_texture = {
+								using = color_progress_blue_texture
+								alpha = 0.8
+							}
+						}
 					}
 					
 					flowcontainer = {
@@ -589,6 +606,8 @@ types AdvancesTreeView
 									datacontext = "[AdvanceNode.GetItem.GetAdvance.GetDefinition]"
 									datacontext = "[GetPlayer]"
 									using = advance_icon
+									blockoverride "advance_enabled_visible"  { visible = "[AdvanceNode.GetItem.IsOwned]" }
+									blockoverride "advance_disabled_visible" { visible = "[Not(AdvanceNode.GetItem.IsOwned)]" }
 								}
 							}
 						}
@@ -718,9 +737,9 @@ types AdvancesTreeView
 																	margin_left = 10
 
 																	widget = {
-																		visible = yes
 																		size = { 40 40 }
 																		icon = {
+																			visible = "[Not(AdvanceEffectItem.IsGovernmentReformUnlock)]"
 																			alwaystransparent = yes
 																			size = { 40 40 }
 																			texture = "gfx/interface/icons/outliner/background/_defaultbg.dds"
@@ -729,28 +748,8 @@ types AdvancesTreeView
 																				alpha = 1
 																			}
 																		}
-																		text_single = {
-																			layoutpolicy_horizontal = growing
-																			size = { 25 25 }
-																			parentanchor = center
-																			text = "[AdvanceEffectItem.GetIcon]"
-																		}
 																		icon = {
-																			alwaystransparent = yes
-																			size = { 40 40 }
-																			texture = "gfx/interface/graphical_cultures/european_gfx/circle_frame.dds"
-																			modify_texture = {
-																				blend_mode = overlay
-																				alpha = 1
-																			}
-																		}
-																	}
-
-																	# governmentreforms
-																	widget = {
-																		visible = no
-																		size = { 40 40 }
-																		icon = {
+																			visible = "[AdvanceEffectItem.IsGovernmentReformUnlock]"
 																			alwaystransparent = yes
 																			size = { 40 40 }
 																			texture = "gfx/interface/buttons/checkbox_bg_square.dds"
@@ -766,6 +765,17 @@ types AdvancesTreeView
 																			text = "[AdvanceEffectItem.GetIcon]"
 																		}
 																		icon = {
+																			visible = "[Not(AdvanceEffectItem.IsGovernmentReformUnlock)]"
+																			alwaystransparent = yes
+																			size = { 40 40 }
+																			texture = "gfx/interface/graphical_cultures/european_gfx/circle_frame.dds"
+																			modify_texture = {
+																				blend_mode = overlay
+																				alpha = 1
+																			}
+																		}
+																		icon = {
+																			visible = "[AdvanceEffectItem.IsGovernmentReformUnlock]"
 																			alwaystransparent = yes
 																			size = { 40 40 }
 																			texture = "gfx/interface/buttons/checkbox_frame_square.dds"
@@ -883,6 +893,17 @@ types AdvancesTreeView
 								}
 							}
 
+							widget = {	#unlock chivalric order
+								parentanchor = hcenter|top
+								size = { 305 102 }
+								position = {0 6}
+								visible = "[AdvanceNode.GetItem.GetAdvance.GetDefinition.HasChivalricOrderUnlocks]"
+								using = unlock_icon
+								blockoverride "unlock_texture" {
+									texture = "gfx/interface/advance/unlocks/privileges.dds"	#TODO 
+								}
+							}
+
 							datacontext = "[AdvanceNode.GetItem.GetAdvance]"
 							tooltipwidget = {
 								using = Advance_tooltip_for_tech_tree
@@ -968,6 +989,7 @@ types AdvancesTreeView
 
 							button = {
 								size = { 270 270 }
+								datacontext = "[AdvanceNode.GetItem]"
 								using = advance_button_info
 								tooltipwidget = {
 									using = current_research_tooltip
@@ -1000,6 +1022,8 @@ types AdvancesTreeView
 										datacontext = "[AdvanceNode.GetItem.GetAdvance.GetDefinition]"
 										datacontext = "[GetPlayer]"
 										using = advance_icon_base
+										blockoverride "advance_enabled_visible"  { visible = "[AdvanceNode.GetItem.IsOwned]" }
+										blockoverride "advance_disabled_visible" { visible = "[Not(AdvanceNode.GetItem.IsOwned)]" }
 									}
 								}
 							}
@@ -1010,6 +1034,7 @@ types AdvancesTreeView
 							visible = "[And3(Not(AdvanceNode.GetItem.IsOwned), Not(AdvanceNode.GetItem.IsCurrentResearch), AdvanceNode.ShowSimplifiedVersion(TechnologyLateralView.Self))]"
 							size = { 270 270 }
 							datacontext = "[AdvanceNode.GetItem.GetAdvance]"
+							datacontext = "[AdvanceNode.GetItem]"
 							using = advance_button_info
 							tooltipwidget = {
 								using = Advance_tooltip_for_tech_tree
@@ -1069,10 +1094,12 @@ types AdvancesTreeView
 									datacontext = "[AdvanceNode.GetItem.GetAdvance.GetDefinition]"
 									datacontext = "[GetPlayer]"
 									using = advance_icon_base
+									blockoverride "advance_enabled_visible"  { visible = "[AdvanceNode.GetItem.IsOwned]" }
+									blockoverride "advance_disabled_visible" { visible = "[Not(AdvanceNode.GetItem.IsOwned)]" }
 								}
 							}
 						}
-						
+
 						widget = {
 							visible = "[And(Not(AdvanceNode.GetItem.IsOwned), Not(AdvanceNode.ShowSimplifiedVersion(TechnologyLateralView.Self)))]"
 							size = { 270 270 }
@@ -1267,6 +1294,7 @@ types AdvancesTreeView
 							# button in progress
 							button_advances_inprogress_tree = {
 								visible = "[AdvanceNode.GetItem.IsCurrentResearch]"
+								datacontext = "[AdvanceNode.GetItem]"
 								using = advance_button_info
 								tooltipwidget = {
 									using = current_research_tooltip
@@ -1281,6 +1309,7 @@ types AdvancesTreeView
 							# button not in progress
 							button_advances_tree = {
 								visible = "[Not(AdvanceNode.GetItem.IsCurrentResearch)]"
+								datacontext = "[AdvanceNode.GetItem]"
 								using = advance_button_info
 								tooltipwidget = {
 									using = Advance_tooltip_for_tech_tree
@@ -1351,6 +1380,17 @@ types AdvancesTreeView
 								using = unlock_icon
 								blockoverride "unlock_texture" {
 									texture = "gfx/interface/advance/unlocks/privileges.dds"
+								}
+							}
+
+							widget = {	#unlock chivalric order
+								parentanchor = hcenter|top
+								size = { 305 102 }
+								position = {0 2}
+								visible = "[AdvanceNode.GetItem.GetAdvance.GetDefinition.HasChivalricOrderUnlocks]"
+								using = unlock_icon
+								blockoverride "unlock_texture" {
+									texture = "gfx/interface/advance/unlocks/privileges.dds"	#TODO 
 								}
 							}
 
@@ -1511,7 +1551,6 @@ template advances_tree_item_modifiers {
 										margin_left = 10
 
 										widget = {
-											visible = yes
 											size = { 40 40 }
 											icon = {
 												visible = "[Not(AdvanceEffectItem.IsGovernmentReformUnlock)]"

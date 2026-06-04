@@ -214,14 +214,11 @@ types SubheaderTypes {
 											size = { 80% 80% }
 										}
 
-										onclick = "[OpenInternationalOrganizationView(InternationalOrganization.Self)]"
-										tooltipwidget = {
-											LeftClickButtonTooltip = {
-												blockoverride "onclick_text" {
-													text = "OPEN_IO"
-												}
-											}
+										action_tooltip = {
+											title = "OPEN_IO"
+											on_action = "[OpenInternationalOrganizationView(InternationalOrganization.Self)]"
 										}
+										tooltipwidget = { BasicFunctionalTooltip = {} }
 									}
 								}
 							}
@@ -360,14 +357,11 @@ types SubheaderTypes {
 											size = { 80% 80% }
 										}
 
-										onclick = "[OpenInternationalOrganizationView(InternationalOrganization.Self)]"
-										tooltipwidget = {
-											LeftClickButtonTooltip = {
-												blockoverride "onclick_text" {
-													text = "OPEN_IO"
-												}
-											}
+										action_tooltip = {
+											title = "OPEN_IO"
+											on_action = "[OpenInternationalOrganizationView(InternationalOrganization.Self)]"
 										}
+										tooltipwidget = { BasicFunctionalTooltip = {} }
 									}
 								}
 							}
@@ -789,7 +783,7 @@ types SubheaderTypes {
 				# 									parentanchor = right|top
 
 				# 									onclick = "[PinCollection.Toggle( DiplomaticActionItem.GetTag )]"
-				# 									checked = "[PinCollection.IsPinned( DiplomaticActionItem.GetTag )]"
+				# 									down = "[PinCollection.IsPinned( DiplomaticActionItem.GetTag )]"
 				# 									tooltipwidget = {
 				# 										LeftClickButtonTooltip = {
 				# 											blockoverride "onclick_text" {
