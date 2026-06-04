@@ -73,15 +73,69 @@ jobs:
 
         # Collect commits since the last tag
       - name: Collect Changes
-        id: commits
         run: |
-          {
-            echo 'markdown<<EOF'
-            echo "$(git log ${{ steps.project.outputs.last-tag }}..HEAD --no-merges --pretty=format:' - %s')"
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
           echo "# Commits" >> $GITHUB_STEP_SUMMARY
           echo "$(git log ${{ steps.project.outputs.last-tag }}..HEAD --no-merges --pretty=format:' - %s')" >> $GITHUB_STEP_SUMMARY
+
+        # Extract this version's section from change-notes.bbcode
+        # Convert bbcode to markdown for the GitHub release body
+      - name: Collect Change Notes
+        id: changenotes
+        run: |
+          VERSION="${{ steps.project.outputs.version }}"
+          NOTES=""
+          if [ -f "assets/workshop/change-notes.bbcode" ]; then
+            NOTES=$(awk -v ver="$VERSION" '
+              BEGIN { found=0; body=""; has_colon=0; is_bb=0 }
+              {
+                stripped = $0
+                gsub(/^[[:space:]]+/, "", stripped)
+                gsub(/[[:space:]]+$/, "", stripped)
+              }
+              stripped ~ /^(#[[:space:]]+v|\[b\]v)/ {
+                if (found) exit
+                is_bb = (stripped ~ /^\[b\]/)
+                v = stripped
+                if (is_bb) {
+                  sub(/^\[b\]v/, "", v)
+                  sub(/\[\/b\]$/, "", v)
+                } else {
+                  sub(/^#[[:space:]]+v/, "", v)
+                }
+                sub(/:?[[:space:]]*$/, "", v)
+                if (v == ver) {
+                  found = 1
+                  has_colon = (stripped ~ /:/)
+                }
+                next
+              }
+              found { body = body $0 "\n" }
+              END {
+                if (!found) exit
+                sub(/[[:space:]]+$/, "", body)
+                if (is_bb || has_colon) {
+                  colon = ""
+                  if (has_colon) colon = ":"
+                  header = "**v" ver colon "**"
+                  if (body != "") printf "%s\n%s", header, body
+                  else printf "%s", header
+                } else {
+                  if (body != "") printf "%s", body
+                }
+              }
+            ' assets/workshop/change-notes.bbcode)
+            NOTES=$(printf '%s' "$NOTES" \
+              | sed -E 's/\[b\]([^][]*)\[\/b\]/**\1**/g' \
+              | sed -E 's/\[url=([^][]*)\]([^][]*)\[\/url\]/[\2](\1)/g' \
+              | sed "s/\\\$item-id\\\$/${{ inputs.workshop-id }}/g")
+          fi
+          {
+            echo 'markdown<<EOF'
+            printf '%s\n' "$NOTES"
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+          echo "# Change Notes" >> $GITHUB_STEP_SUMMARY
+          printf '%s\n' "$NOTES" >> $GITHUB_STEP_SUMMARY
 
         # Tag the current commit with the version from metadata.json
       - name: Create Tag
@@ -146,8 +200,7 @@ jobs:
           body: |
             Released a new version of the **Community Mod Framework**.
 
-            ### Commits:
-            ${{ steps.commits.outputs.markdown }}
+            ${{ steps.changenotes.outputs.markdown }}
 
         # Create mod metadata for the steam release
         # Generate VDF inline for SteamCMD workshop upload
