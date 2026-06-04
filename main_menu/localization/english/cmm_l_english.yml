@@ -57,7 +57,6 @@
  cmm_core__action_bar_buttons__active_name: "Active"
  cmm_core__action_bar_buttons_item_column_name: "Button"
  cmm_core__action_bar_buttons_mod_menu_item_name: "Mod Menu"
- cmm_core__action_bar_buttons_log_viewer_item_name: "Log Viewer"
  cmm_core__enable_unrestricted_tools_name: "[SelectLocalization(GameIsMultiplayer, 'cmm_core__enable_unrestricted_tools_name_multiplayer', 'cmm_core__enable_unrestricted_tools_name_singleplayer')]"
  cmm_core__enable_unrestricted_tools_name_singleplayer: "Enable Unrestricted Tools"
  cmm_core__enable_unrestricted_tools_name_multiplayer: "[SelectLocalization(GetGlobalVariable('cmm_core_host_country').IsSet, 'cmm_core__enable_unrestricted_tools_name_multiplayer_set', 'cmm_core__enable_unrestricted_tools_name_multiplayer_unset')]"
