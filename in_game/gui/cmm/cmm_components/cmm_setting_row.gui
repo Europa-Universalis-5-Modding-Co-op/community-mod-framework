@@ -51,7 +51,7 @@
 					visible = "[And(CMMSettingIsBool(Scope.GetFlagName), Not(CMMSettingHasConsoleCommand(Scope.GetFlagName)))]"
 					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 					onclick = "[CMMExecuteAutoApply('cmm_auto_toggle_bool', Scope.GetFlagName)]"
-					checked = "[CMMIsSettingEnabled(Scope.GetFlagName)]"
+					down = "[CMMIsSettingEnabled(Scope.GetFlagName)]"
 					tooltip_enabled = no
 				}
 
@@ -60,7 +60,7 @@
 					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
 					onclick = "[CMMExecuteAutoApply('cmm_auto_toggle_bool', Scope.GetFlagName)]"
 					onclick = "[ExecuteConsoleCommand(CMMSettingConsoleCommand(Scope.GetFlagName))]"
-					checked = "[InDebugMode]"
+					down = "[InDebugMode]"
 					tooltip_enabled = no
 				}
 
