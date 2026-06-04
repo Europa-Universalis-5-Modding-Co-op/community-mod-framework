@@ -86,7 +86,7 @@ jobs:
           NOTES=""
           if [ -f "assets/workshop/change-notes.bbcode" ]; then
             NOTES=$(awk -v ver="$VERSION" '
-              BEGIN { found=0; body=""; has_colon=0; is_bb=0 }
+              BEGIN { found=0; body="" }
               {
                 stripped = $0
                 gsub(/^[[:space:]]+/, "", stripped)
@@ -103,25 +103,14 @@ jobs:
                   sub(/^#[[:space:]]+v/, "", v)
                 }
                 sub(/:?[[:space:]]*$/, "", v)
-                if (v == ver) {
-                  found = 1
-                  has_colon = (stripped ~ /:/)
-                }
+                if (v == ver) found = 1
                 next
               }
               found { body = body $0 "\n" }
               END {
                 if (!found) exit
                 sub(/[[:space:]]+$/, "", body)
-                if (is_bb || has_colon) {
-                  colon = ""
-                  if (has_colon) colon = ":"
-                  header = "**v" ver colon "**"
-                  if (body != "") printf "%s\n%s", header, body
-                  else printf "%s", header
-                } else {
-                  if (body != "") printf "%s", body
-                }
+                printf "%s", body
               }
             ' assets/workshop/change-notes.bbcode)
             NOTES=$(printf '%s' "$NOTES" \
@@ -198,9 +187,9 @@ jobs:
           tag_name: ${{ steps.project.outputs.version }}
           name: ${{ steps.project.outputs.version }}
           body: |
-            Released a new version of the **Community Mod Framework**.
-
             ${{ steps.changenotes.outputs.markdown }}
+
+            **Full Changelog**: ${{ github.server_url }}/${{ github.repository }}/compare/${{ steps.project.outputs.last-tag }}...${{ steps.project.outputs.version }}
 
         # Create mod metadata for the steam release
         # Generate VDF inline for SteamCMD workshop upload
