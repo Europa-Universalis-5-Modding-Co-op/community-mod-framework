@@ -9,9 +9,12 @@ lateralviews) without losing the shared type/template definitions.
 Definitions that the mod already overrides (outside the vanilla output folder)
 are automatically excluded to avoid conflicts.
 
-Usage: python tools/extract_vanilla_types.py
+Usage:
+    python tools/cmf_extract_vanilla_types.py        # standard EU5 install
+    python tools/cmf_extract_vanilla_types.py -b     # closed beta (Project Caesar Review)
 """
 
+import argparse
 import re
 import sys
 from pathlib import Path
@@ -19,6 +22,7 @@ from pathlib import Path
 PREFIX = "cmf_"
 
 GAME_GUI_DIR = Path(r"C:\Steam\steamapps\common\Europa Universalis V\game\in_game\gui")
+BETA_GAME_GUI_DIR = Path(r"C:\Steam\steamapps\common\Project Caesar Review\game\in_game\gui")
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MOD_GUI_DIR = PROJECT_ROOT / "in_game" / "gui"
 OUTPUT_DIR = MOD_GUI_DIR / "vanilla"
@@ -294,9 +298,9 @@ def extract_types_templates(content, mod_types=None, mod_templates=None):
     return result, stats, overridden
 
 
-def process_file(filename, mod_types, mod_templates):
+def process_file(filename, game_gui_dir, mod_types, mod_templates):
     """Process a single vanilla GUI file and write extracted types/templates."""
-    input_path = GAME_GUI_DIR / filename
+    input_path = game_gui_dir / filename
     if not input_path.exists():
         print(f"  SKIP: {input_path} not found")
         return False
@@ -348,6 +352,22 @@ def process_file(filename, mod_types, mod_templates):
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Extract types and templates from vanilla EU5 GUI files."
+    )
+    parser.add_argument(
+        "-b",
+        "--beta",
+        action="store_true",
+        help="Read vanilla files from the closed beta install (Project Caesar Review).",
+    )
+    args = parser.parse_args()
+
+    game_gui_dir = BETA_GAME_GUI_DIR if args.beta else GAME_GUI_DIR
+    if not game_gui_dir.exists():
+        print(f"ERROR: Source directory not found: {game_gui_dir}")
+        return 1
+
     if OUTPUT_DIR.exists():
         for f in OUTPUT_DIR.glob("*.gui"):
             f.unlink()
@@ -355,7 +375,7 @@ def main():
 
     mod_types, mod_templates = collect_mod_definitions()
 
-    print(f"Source: {GAME_GUI_DIR}")
+    print(f"Source: {game_gui_dir}")
     print(f"Output: {OUTPUT_DIR}")
     print(
         f"Mod overrides: {len(mod_types)} types, "
@@ -365,7 +385,7 @@ def main():
     count = 0
     for filename in VANILLA_FILES:
         print(f"Processing {filename}...")
-        if process_file(filename, mod_types, mod_templates):
+        if process_file(filename, game_gui_dir, mod_types, mod_templates):
             count += 1
 
     print(f"\nDone: {count}/{len(VANILLA_FILES)} files processed")
