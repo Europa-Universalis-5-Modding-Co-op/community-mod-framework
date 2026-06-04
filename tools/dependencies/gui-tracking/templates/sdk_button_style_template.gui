@@ -1,0 +1,21 @@
+# vanilla: main_menu/gui/pdx_account/pdx_custom_types.gui
+# mod: main_menu/gui/cmf_main_menu_marker.gui
+
+template sdk_button_style_template {
+    buttonText = {
+        textbox = {
+            using = button_common_textobj_font
+            align = center|nobaseline
+
+            default_format = "#color_white"
+            autoresize = yes
+            resizeparent = yes
+            margin = { 30 5 }
+            minimumsize = { 80 30 }
+        }
+    }
+
+    using = button_common_properties_template
+    using = button_regular_texture
+    tooltip_enabled = no
+}
