@@ -44,10 +44,6 @@ When adding or changing features, update both:
 1. The GitHub wiki (detailed docs).
 2. The Paradox wiki pages in `docs/wiki/` (quick reference).
 
-## Pull Request Reviews
-
-In addition to maintainer reviews, pull requests will receive an automated review from [Qodo](https://www.qodo.ai/). Most of its suggestions will be incorrect or irrelevant and should be ignored — however, it does occasionally catch real issues (mostly spelling mistakes). Do not feel obligated to address its comments unless they point out a genuine problem. In addition to pointing out fake errors, it will also miss real ones and is not a substitute for a human review.
-
 ## Community Engagement
 
 The absolute best place to connect with the project is via the Discord server: [EU5 Mod Coop](https://discord.gg/aqAAcCZsY7)

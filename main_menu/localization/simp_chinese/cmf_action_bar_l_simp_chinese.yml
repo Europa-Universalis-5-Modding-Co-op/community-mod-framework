@@ -1,6 +1,4 @@
 ﻿l_simp_chinese:
  cmf_action_bar_open_action: "执行动作"
- cmf_action_bar_log_viewer_tooltip_title: "日志查看器"
- cmf_action_bar_log_viewer_tooltip_text: "打开#v日志查看器#!。"
- cmf_action_bar_cmm_tooltip_title: "社区模组框架"
- cmf_action_bar_cmm_tooltip_text: "打开#v社区模组框架#!设置。"
+ cmf_action_bar_cmm_tooltip_title: "模组菜单"
+ cmf_action_bar_cmm_tooltip_text: "打开 #v 模组菜单#!。"
