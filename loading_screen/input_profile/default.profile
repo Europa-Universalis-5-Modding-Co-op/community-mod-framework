@@ -25,6 +25,12 @@ input_context={
 	}
 
 	input_action={
+		name="decline"
+		text="SETTING_INPUT_ACTION_DECLINE"
+		scancode=29
+	}
+
+	input_action={
 		name="increase_speed"
 		text="SETTING_INPUT_ACTION_INCREASE_SPEED"
 		scancode=46
