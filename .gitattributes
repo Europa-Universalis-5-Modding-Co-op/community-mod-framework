@@ -5,7 +5,7 @@
 *.sh text eol=lf
 
 # Don't normalize line endings for game files
-in_game/** -text
-main_menu/** -text
-loading_screen/** -text
-tools/dependencies/gui-tracking/** -text
+in_game/** -text !eol
+main_menu/** -text !eol
+loading_screen/** -text !eol
+tools/dependencies/gui-tracking/** -text !eol

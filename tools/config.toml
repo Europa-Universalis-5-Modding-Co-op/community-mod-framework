@@ -25,6 +25,7 @@ workshop_dev_name = "" # Optional: override dev mod name for upload.py -d/--dev
 
 ### GUI Update ###
 game_directory = "" # Path to EU5 game directory (e.g. "C:/Steam/steamapps/common/Europa Universalis V/game"). Auto-detected if empty.
+beta_game_directory = "" # Path to the EU5 closed-beta game directory (Project Caesar Review), used with --beta. Auto-detected if empty.
 
 ### Optional submod upload mapping (used with upload.py -s/--submods) ###
 # [[submods]]

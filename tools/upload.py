@@ -49,6 +49,7 @@ WORKSHOP_DESCRIPTION_MARKER = "===WORKSHOP_DESCRIPTION==="
 WORKSHOP_NO_TRANSLATE_BELOW = "--NO-TRANSLATE-BELOW--"
 WORKSHOP_ITEM_ID_TOKEN = "$item-id$"
 MAX_DESCRIPTION_LENGTH = 8000
+MAX_TITLE_LENGTH = 128
 UPLOAD_MOD_DEFAULT_KEY = "upload_mod_by_default"
 UPLOAD_WORKSHOP_PAGES_DEFAULT_KEY = "upload_workshop_pages_by_default"
 UPLOAD_SUBMODS_DEFAULT_KEY = "upload_submods_by_default"
@@ -251,6 +252,31 @@ def load_metadata_version(metadata_path, label):
         return None
 
     return version
+
+def _clean_tags(raw):
+    """Normalize a raw tags value into a de-duplicated list of non-empty strings."""
+    if not isinstance(raw, list):
+        return []
+    cleaned = []
+    for tag in raw:
+        tag = str(tag).strip()
+        if tag and tag not in cleaned:
+            cleaned.append(tag)
+    return cleaned
+
+def load_workshop_tags(metadata_path, label):
+    """Load Workshop tags from a metadata.json file."""
+    try:
+        with open(metadata_path, "r", encoding="utf-8-sig") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        print(f"Warning: Metadata file not found for {label}: {metadata_path}")
+        return []
+    except Exception as e:
+        print(f"Warning: Failed reading metadata for {label} at '{metadata_path}': {e}")
+        return []
+
+    return _clean_tags(data.get("tags"))
 
 def should_upload_for_version(version_cache, cache_key, current_version):
     """Return True when upload is needed for a version-gated entry."""
@@ -555,7 +581,8 @@ def _load_submod_metadata(mod_dir):
         "name": name,
         "version": version,
         "root": mod_dir,
-        "thumbnail": os.path.join(mod_dir, ".metadata", "thumbnail.png")
+        "thumbnail": os.path.join(mod_dir, ".metadata", "thumbnail.png"),
+        "tags": _clean_tags(data.get("tags"))
     }
 
 def ensure_submod_item_id(steam, mod_id, workshop_id, config_path):
@@ -641,7 +668,7 @@ def upload_submods(steam, config, version_gate_enabled=False, force_upload=False
         if not os.path.exists(preview_path):
             preview_path = None
 
-        if not upload_release(steam, meta["root"], preview_path, workshop_id, title):
+        if not upload_release(steam, meta["root"], preview_path, workshop_id, title, tags=meta["tags"]):
             success = False
             continue
 
@@ -824,7 +851,15 @@ def _submit_and_wait(steam, handle, change_note="", show_progress=False):
 
     return True
 
-def upload_release(steam, content_dir, preview_path, item_id, workshop_title=None, change_note=""):
+def _set_item_tags(workshop, handle, tags):
+    """Apply tags to an open item update handle."""
+    print(f"Setting Workshop tags: {', '.join(tags)}")
+    if workshop.SetItemTags(handle, tags) is False:
+        print("Error: SetItemTags failed.")
+        return False
+    return True
+
+def upload_release(steam, content_dir, preview_path, item_id, workshop_title=None, change_note="", tags=None):
     if not os.path.isdir(content_dir):
         print(f"Error: Release directory not found: {content_dir}")
         return False
@@ -840,6 +875,9 @@ def upload_release(steam, content_dir, preview_path, item_id, workshop_title=Non
         if title_result is False:
             print("Error: SetItemTitle failed.")
             return False
+
+    if tags and not _set_item_tags(workshop, handle, tags):
+        return False
 
     content_result = workshop.SetItemContent(handle, content_dir)
     if content_result is False:
@@ -1039,6 +1077,19 @@ def trim_description(text, lang_label):
         return encoded[:MAX_DESCRIPTION_LENGTH].decode("utf-8", errors="ignore")
     return text
 
+def enforce_title_length(title, lang_label, fallback=None):
+    """Replace an over-length title with the fallback, or drop it when there is none, and warn."""
+    if not title:
+        return title
+
+    if len(title.encode("utf-8")) > MAX_TITLE_LENGTH:
+        if fallback:
+            print(f"Warning: Title for '{lang_label}' exceeds {MAX_TITLE_LENGTH} bytes. Using the source title instead.")
+            return fallback
+        print(f"Warning: Title for '{lang_label}' exceeds {MAX_TITLE_LENGTH} bytes. Skipping title for this language.")
+        return None
+    return title
+
 def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None):
     """Collect source and translated workshop title/description payloads."""
     source_language = load_source_language(config)
@@ -1054,6 +1105,7 @@ def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None):
     base_description = apply_workshop_item_id(base_description, item_id)
     base_description = trim_description(base_description, source_language)
     base_title = load_workshop_source_title(dev_mode=dev_mode, dev_name=dev_name)
+    base_title = enforce_title_length(base_title, source_language)
 
     updates = [{
         "lang": source_language,
@@ -1083,6 +1135,7 @@ def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None):
         if title_text is None and desc_text is None:
             continue
 
+        title_text = enforce_title_length(title_text, lang, fallback=base_title)
         desc_text = trim_description(desc_text, lang)
         translations[lang] = {"title": title_text, "description": desc_text}
 
@@ -1143,7 +1196,7 @@ def build_change_notes_updates(config, item_id, version=None):
 
     return updates
 
-def upload_workshop_pages_for_item(steam, updates, item_id):
+def upload_workshop_pages_for_item(steam, updates, item_id, tags=None):
     """Upload workshop title/description updates for each language entry."""
     if updates is None:
         return False
@@ -1157,6 +1210,18 @@ def upload_workshop_pages_for_item(steam, updates, item_id):
         )
 
     workshop = steam.Workshop
+
+    if tags:
+        handle = workshop.StartItemUpdate(APP_ID, item_id)
+        if not handle:
+            print("Error: StartItemUpdate failed. Check app ID and item ID.")
+            return False
+        if not _set_item_tags(workshop, handle, tags):
+            return False
+        if not _submit_and_wait(steam, handle):
+            print("Error: Workshop tags update failed.")
+            return False
+
     for update in updates:
         handle = workshop.StartItemUpdate(APP_ID, item_id)
         if not handle:
@@ -1198,7 +1263,7 @@ def parse_args():
     parser.add_argument(
         "-wp", "--workshop-pages",
         action="store_true",
-        help="Upload Workshop title/description pages only. When set, config default target settings and upload_only_on_version_change are ignored."
+        help="Upload Workshop page metadata (title, description, tags) only. When set, config default target settings and upload_only_on_version_change are ignored."
     )
     parser.add_argument(
         "-d", "--dev",
@@ -1270,8 +1335,11 @@ def main():
     release_dir = None
     preview_path = None
     workshop_title = None
+    main_tags = []
     if upload_mod_effective:
         release_dir, preview_path, workshop_title = build_release(dev_mode=args.dev, dev_name=dev_name)
+    if upload_mod_effective or upload_workshop_pages:
+        main_tags = load_workshop_tags(METADATA_PATH, "main mod")
 
     uploaded_main = False
 
@@ -1288,7 +1356,7 @@ def main():
 
         if upload_mod_effective:
             if not upload_release(steam, release_dir, preview_path, item_id,
-                                  workshop_title, change_note=change_note):
+                                  workshop_title, change_note=change_note, tags=main_tags):
                 return 1
             uploaded_main = True
 
@@ -1301,7 +1369,8 @@ def main():
             )
             if page_updates is None:
                 return 1
-            if not upload_workshop_pages_for_item(steam, page_updates, item_id):
+            page_tags = [] if uploaded_main else main_tags
+            if not upload_workshop_pages_for_item(steam, page_updates, item_id, tags=page_tags):
                 return 1
             if upload_only_on_version_change:
                 set_uploaded_version(version_cache, main_cache_key, main_version)
