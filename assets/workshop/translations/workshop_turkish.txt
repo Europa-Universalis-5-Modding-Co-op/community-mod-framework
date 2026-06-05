@@ -1,39 +1,39 @@
 ===WORKSHOP_TITLE===
-Topluluk Mod Altyapısı ve Menüsü / Community Mod Framework - 1.2 Echinades
+Topluluk Mod Altyapısı ve Menüsü / Community Mod Framework - 1.3 Pavia
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Turkish Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-[b]Community Mod Framework (CMF)[/b], modlar arası uyumluluğu artırmayı hedeflerken mod yapımcılarına yeni özellikler oluşturmaları için araçlar sunan bir yardımcı moddur.
+[b]Community Mod Framework (CMF)[/b], modculara yeni özellikler oluşturmaları için araçlar sunarken modlar arası uyumluluğu artırmayı amaçlayan bir yardımcı moddur.
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Banner.png[/img]
 
-[b]CMF, mod yükleme sıranızda en başta yüklenmelidir.[/b]
+[b]CMF, mod yükleme sıranızda en başta yer almalıdır.[/b]
 
-Herhangi bir sorunuz olursa EU5 Mod Coop Discord üzerinden iletişime geçmekten çekinmeyin: https://discord.gg/aqAAcCZsY7
+Sorularınız için EU5 Mod Coop Discord adresi üzerinden bize ulaşabilirsiniz: https://discord.gg/aqAAcCZsY7
 
 [h1]Özellikler[/h1]
 [list]
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Community-Mod-Menu]Topluluk Mod Menüsü (CMM):[/url][/b] Paylaşımlı bir oyun içi mod menüsü. Mod yazarları, basit bir API aracılığıyla ayarları dinamik olarak kaydeder; özel bir ayarlar arayüzü oluşturmaya gerek kalmaz.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Community-Mod-Menu]Topluluk Mod Menüsü (CMM):[/url][/b] Ortak bir oyun içi mod menüsü. Mod yazarları, ayarları basit bir API aracılığıyla dinamik olarak kaydeder; özel bir ayar arayüzü (UI) oluşturmaya gerek kalmaz.
   [list]
-   [*]Aç/kapat, buton, sayısal, kaydırıcı (sürüklemek için çift tıklayın), açılır menü, metin (yalnızca tek oyunculu) ve liste ayarları
+   [*]Açma/kapama, düğme, sayısal, kaydırıcı (sürüklemek için çift tıklayın), açılır menü, metin (yalnızca tek oyunculu) ve liste ayarları
    [*]Mod başına sekmeler, gruplar ve arama
-   [*]Çok oyunculu modda yalnızca sunucunun (host) düzenleyebildiği küresel ayarlar
+   [*]Çok oyunculu modda sadece kurucu (host) tarafından düzenlenebilen küresel ayarlar
    [*]Varsayılanlara Sıfırla
    [*]Sürüklenebilir pencere
-   [*]Oyun içindeki duraklatma (escape) menüsünden veya tuş atamasıyla (varsayılan 'm', yeniden atanabilir) açılabilir.
+   [*]Oyun içindeki escape (ESC) menüsünden veya tuş atamasıyla (varsayılan 'm', yeniden atanabilir) açılabilir.
    [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Görsel Düzenleyici[/url]: Mod menünüzü oluşturmak için tarayıcı tabanlı araç
   [/list]
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Custom-Alerts]Özel Uyarılar:[/url][/b] Yerelleştirme (localization) anahtarları aracılığıyla uyarı çubuğunda özel uyarılar oluşturun ve gösterin.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar]Aksiyon Çubuğu:[/url][/b] Yerelleştirme anahtarlarıyla özel aksiyon çubuğu butonları ekleyin.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks#country-transfer]Ülke Transferi:[/url][/b] Ülke değiştirildiğinde (tag değişiklikleri, miras yoluyla geçiş vb.) CMM ayarları otomatik olarak aktarılır.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger]is_host Tetikleyicisi:[/url][/b] Mevcut ülkenin sunucu (host) oyuncusu tarafından kontrol edilip edilmediğini kontrol eder.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger#cmf_can_use_unrestricted_tools]Kısıtlanmamış Araçlar Seçeneği:[/url][/b] Kısıtlı özellikleri bir "Kısıtlanmamış Araçları Etkinleştir" ayarının arkasına gizler (cmf_can_use_unrestricted_tools tetikleyicisi, ayar başına cmm_set_requires_unrestricted_tools_enabled bayrağı). Çok oyunculu modda yalnızca sunucu için kullanılabilir.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Warning-Suppression]cmf_suppress Efekti:[/url][/b] "Kullanılan ancak asla atanmayan" ve "atanan ancak asla kullanılmayan" motor uyarılarını tek bir efekt çağrısıyla bastırın.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Custom-Alerts]Özel Uyarılar:[/url][/b] Yerelleştirme anahtarları aracılığıyla uyarı çubuğunda özel uyarılar oluşturun ve gösterin.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar]Eylem Çubuğu:[/url][/b] Yerelleştirme anahtarlarıyla özel eylem çubuğu düğmeleri ekleyin.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks#country-transfer]Ülke Aktarımı:[/url][/b] Ülke değiştirirken (tag değişimleri, miras vb.) CMM ayarları otomatik olarak aktarılır.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger]is_host Tetikleyicisi:[/url][/b] Mevcut ülkenin kurucu oyuncu (host) tarafından kontrol edilip edilmediğini kontrol edin.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger#cmf_can_use_unrestricted_tools]Kısıtlanmamış Araçlar Geçişi:[/url][/b] Kısıtlı özellikleri bir "Kısıtlanmamış Araçları Etkinleştir" ayarının arkasına bağlayın (cmf_can_use_unrestricted_tools tetikleyicisi, ayar başına cmm_set_requires_unrestricted_tools_enabled bayrağı). Çok oyunculu modda sadece kurucu için kullanılabilir.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Warning-Suppression]cmf_suppress Etkisi:[/url][/b] Tek bir efekt çağrısıyla "kullanılan ancak hiç tanımlanmayan" ve "tanımlanan ancak hiç kullanılmayan" motor uyarılarını gizleyin.
  [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/GUI-Macros]GUI Makroları:[/url][/b] Nand, Nor ve Xor mantıksal operatör makroları.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks]On-Action Kancaları:[/url][/b] Lobi sonrası oyun başlangıcı ve kayıtlı oyun yükleme kancaları (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) ve oyuncu ülke varyantları. Ayrıca gerçek oyuncular için paylaşımlı yıllık ve aylık vuruşlar (pulses) içerir.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/cmf_change_variable_map-Effect]Değişken Haritası Araçları:[/url][/b] Önce kaldır sonra ekle işlemlerini atomik olarak yürüten güvenli değişken haritası mutasyon yardımcıları (cmf_change_variable_map ve yerel/küresel varyantları).
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Action-Log]Mod Aksiyon Günlüğü:[/url][/b] Mod aksiyonlarını kaydetmek için küresel oyun içi günlük (örneğin çok oyunculu modda sunucu aracı aksiyonları, çünkü günlük çok oyunculu modda temizlenemez).
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Topluluk Mod Araç Seti (CMT):[/url][/b] Mod şablonu, atölye yükleyicisi ve mod çevirmeni gibi eşlik eden bir geliştirme araçları seti.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks]On-Action Kancaları:[/url][/b] Oyuncu ülkesi varyantlarıyla birlikte lobi sonrası oyun başlatma ve kayıt yükleme kancaları (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby). Ayrıca gerçek oyuncular için paylaşımlı yıllık ve aylık vuruşlar (pulses) içerir.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/cmf_change_variable_map-Effect]Değişken Haritası Yardımcıları:[/url][/b] Kaldırma ve ardından ekleme işlemlerini atomik olarak gerçekleştiren güvenli değişken haritası mutasyon yardımcıları (cmf_change_variable_map ve yerel/küresel varyantları).
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Action-Log]Mod Eylem Günlüğü:[/url][/b] Mod eylemlerini kaydetmek için küresel oyun içi günlük (örneğin, çok oyunculu modda kurucu araç eylemleri; günlük çok oyunculu modda temizlenemez).
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Topluluk Mod Araç Seti (CMT):[/url][/b] Mod şablonu, atölye yükleyicisi ve mod çevirmeni gibi geliştirme araçlarından oluşan yardımcı bir set.
 [/list]
 
 [h1]Dokümantasyon[/h1]
@@ -55,11 +55,18 @@ Herhangi bir sorunuz olursa EU5 Mod Coop Discord üzerinden iletişime geçmekte
 
 [h1]CMF Kullanan Modlar[/h1]
 [list]
- [*][url=https://steamcommunity.com/workshop/filedetails/?id=3691456335]Community Mod Framework Kullanan Modlar Koleksiyonu'na[/url] göz atın
+ [*]Şuraya göz atın: [url=https://steamcommunity.com/workshop/filedetails/?id=3691456335] Community Mod Framework Kullanan Modlar Koleksiyonu[/url]
 [/list]
 
-[h1]Değişim Günlüğü:[/h1]
-Atölye sayfasındaki [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]Değişim Notlarına[/url] göz atın.
+[h1]Değişiklik Günlüğü:[/h1]
+Atölye sayfasındaki [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]Değişiklik Notlarına[/url] göz atın.
+
+[quote]
+ [h1]Lütfen Sorunları Bildirmeden Önce Okuyun:[/h1]
+ 1.3 açık betadaysanız, modu devre dışı bırakın ve sorunun mod olmadan da mevcut olup olmadığını doğrulayın. Betada Paradox'a bildirilmesi gereken ÇOK SAYIDA sorun var, CMF'ye değil.
+
+ Ek olarak, ister 1.2 ister 1.3 sürümü için bildirimde bulunun, lütfen oyun sürümünüzü ekleyin. CMF her iki sürümle de uyumludur ancak ilgili sorunları gidermek için hangi sürümde olduğunuzu bilmemiz gerekir.
+[/quote]
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Bottom_Banner.png[/img]
 
