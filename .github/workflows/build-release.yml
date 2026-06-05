@@ -466,7 +466,7 @@ jobs:
         run: |
           VERSION="${{ steps.project.outputs.version }}"
           BRANCH="${{ github.ref_name }}"
-          jq --indent 2 ".entries[\"${BRANCH}:release\"] = \"${VERSION}\"" tools/dependencies/.upload_versions.json > tmp.json && mv tmp.json tools/dependencies/.upload_versions.json
+          jq --indent 2 ".entries[\"main:release\"] = \"${VERSION}\"" tools/dependencies/.upload_versions.json > tmp.json && mv tmp.json tools/dependencies/.upload_versions.json
           git add tools/dependencies/.upload_versions.json
           git commit -m "Bump upload versions to ${VERSION}"
           git push origin HEAD:${BRANCH}
