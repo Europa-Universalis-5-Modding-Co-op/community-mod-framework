@@ -25,6 +25,12 @@ Pass ``--beta`` (``-b``) to any vanilla-reading command (init, check, merge,
 refresh) to target the EU5 closed-beta install (Project Caesar Review) instead
 of the live game. Beta-sourced gui/vanilla commits are tagged ``(beta)`` in
 their subject.
+
+Pass ``--repull`` (``--force-pull``) to ``merge`` to force a fresh vanilla
+scan when a previous merge is still pending (gui/vanilla ahead of
+gui/vanilla-merged). The re-pulled snapshot overwrites the pending
+gui/vanilla commit instead of resuming it, so the branch gains no duplicate
+commit.
 """
 
 import argparse
@@ -361,6 +367,8 @@ def run_git(args, cwd=ROOT_DIR, check=True, env=None):
             stderr=subprocess.PIPE,
             text=True,
             encoding="utf-8",
+            # Tolerate stray non-UTF-8 bytes in vanilla GUI content.
+            errors="replace",
             check=check,
             env=run_env,
         )
@@ -484,12 +492,15 @@ def _update_vanilla_branch(tracking_files,
                            message="Update vanilla GUI definitions",
                            version=None,
                            force_push=False,
-                           beta=False):
+                           beta=False,
+                           parent_override=None):
     """Create or update the ``gui/vanilla`` branch via plumbing (no checkout).
 
     *tracking_files* maps relative paths to content strings.
     *version* prefixes the commit subject when provided; *beta* tags it.
-    Returns the new commit SHA.
+    *parent_override* sets the new commit's parent, replacing the current tip
+    rather than stacking on it; the branch is then force-pushed. Returns the
+    new commit SHA.
     """
     message = _versioned_message(message, version, beta=beta)
     tmp_index = os.path.join(ROOT_DIR, ".git", "tmp_gui_index")
@@ -518,7 +529,9 @@ def _update_vanilla_branch(tracking_files,
         tree_sha = run_git(["write-tree"], env=plumbing)
 
         parent_args = []
-        if _vanilla_branch_exists():
+        if parent_override is not None:
+            parent_args = ["-p", parent_override]
+        elif _vanilla_branch_exists():
             parent = run_git(["rev-parse", VANILLA_BRANCH])
             parent_args = ["-p", parent]
 
@@ -529,7 +542,8 @@ def _update_vanilla_branch(tracking_files,
         if os.path.exists(tmp_index):
             os.remove(tmp_index)
 
-    _push_refs([VANILLA_BRANCH], force=force_push)
+    _push_refs([VANILLA_BRANCH],
+               force=force_push or parent_override is not None)
     return commit
 
 # ─── Manifest ────────────────────────────────────────────────────────────────
@@ -1230,7 +1244,6 @@ def cmd_check(args):
 
 
 def cmd_merge(args):
-    game_dir = _resolve_game_dir(args)
     manifest = _load_manifest()
     if manifest is None:
         print("Not initialized. Run 'gui_update.py init' first.")
@@ -1243,9 +1256,17 @@ def cmd_merge(args):
     _ensure_no_merge()
     _ensure_vanilla_merged_ref()
 
+    repull = getattr(args, "repull", False)
     just_advanced = _advance_merged_ref_if_absorbed()
     vanilla_sha = run_git(["rev-parse", VANILLA_BRANCH])
     merged_sha = run_git(["rev-parse", MERGED_BRANCH])
+    # An unfinished merge leaves gui/vanilla ahead of gui/vanilla-merged.
+    # Resuming reuses that tip and skips the game scan; --repull forces a
+    # fresh scan that overwrites the pending commit instead.
+    pending = vanilla_sha != merged_sha
+    resuming = pending and not repull
+    if not resuming:
+        game_dir = _resolve_game_dir(args)
 
     # Sync tracking from mod state. Skip if just advanced — tracking holds
     # the resolution and mod files may still be pre-apply.
@@ -1314,55 +1335,63 @@ def cmd_merge(args):
         else:
             print("  Tracking already in sync with mod.")
 
-    # Build the new vanilla snapshot from current game files.
-    print("Scanning current vanilla GUI files...")
-    vanilla_defs = _scan_definitions(game_dir, GUI_SOURCES)
-    vanilla_map = {}
-    vanilla_consts = {}
-    for d in vanilla_defs:
-        if d.kind == "constant":
-            vanilla_consts.setdefault((d.source_file, d.name), d)
-        else:
-            vanilla_map.setdefault(_tracking_key(d.kind, d.name), d)
-
-    tracking_files = {}
-    updated = 0
-    for key, entry in manifest["definitions"].items():
-        tp = entry["tracking_path"]
-        if key.startswith("constant:"):
-            vd = vanilla_consts.get((entry["vanilla_file"], entry["name"]))
-        else:
-            vd = vanilla_map.get(key)
-        if vd is not None:
-            header = _make_tracking_header(
-                entry["vanilla_file"], entry["mod_file"])
-            new_content = header + vd.text + "\n"
-            old_content = _read_from_branch(VANILLA_BRANCH, tp)
-            tracking_files[tp] = new_content
-            if (old_content is None
-                    or _body_hash(old_content) != _body_hash(new_content)):
-                updated += 1
-
-    # Bookmark behind vanilla without a HEAD merge means the previous run was aborted; re-run.
-    behind_vanilla = vanilla_sha != merged_sha
-
-    if updated == 0 and not behind_vanilla:
-        print("Vanilla branch already up to date. Nothing to merge.")
-        return 0
-
-    if updated > 0:
-        version = _resolve_game_version(args, is_init=False)
-        print(f"Updating {VANILLA_BRANCH} ({updated} definition(s) changed)...")
-        new_vanilla_sha = _update_vanilla_branch(
-            tracking_files,
-            f"Update {updated} vanilla GUI definition(s)",
-            version=version,
-            beta=getattr(args, "beta", False))
-    else:
-        print(f"{VANILLA_BRANCH} has unmerged commits from a previous "
-              "run; resuming merge.")
+    if resuming:
+        print(f"{VANILLA_BRANCH} is ahead of {MERGED_BRANCH} from an "
+              "unfinished merge; resuming it without re-scanning vanilla.")
         new_vanilla_sha = vanilla_sha
         version = _last_vanilla_commit_version()
+    else:
+        # Build the new vanilla snapshot from current game files.
+        print("Scanning current vanilla GUI files...")
+        vanilla_defs = _scan_definitions(game_dir, GUI_SOURCES)
+        vanilla_map = {}
+        vanilla_consts = {}
+        for d in vanilla_defs:
+            if d.kind == "constant":
+                vanilla_consts.setdefault((d.source_file, d.name), d)
+            else:
+                vanilla_map.setdefault(_tracking_key(d.kind, d.name), d)
+
+        tracking_files = {}
+        updated = 0
+        for key, entry in manifest["definitions"].items():
+            tp = entry["tracking_path"]
+            if key.startswith("constant:"):
+                vd = vanilla_consts.get((entry["vanilla_file"], entry["name"]))
+            else:
+                vd = vanilla_map.get(key)
+            if vd is not None:
+                header = _make_tracking_header(
+                    entry["vanilla_file"], entry["mod_file"])
+                new_content = header + vd.text + "\n"
+                old_content = _read_from_branch(VANILLA_BRANCH, tp)
+                tracking_files[tp] = new_content
+                if (old_content is None
+                        or _body_hash(old_content) != _body_hash(new_content)):
+                    updated += 1
+
+        if updated == 0 and not pending:
+            print("Vanilla branch already up to date. Nothing to merge.")
+            return 0
+
+        if updated == 0:
+            print(f"Re-pulled vanilla matches the pending {VANILLA_BRANCH} "
+                  "commit; resuming it.")
+            new_vanilla_sha = vanilla_sha
+            version = _last_vanilla_commit_version()
+        else:
+            # Overwrite the pending commit to avoid a duplicate.
+            parent_override = merged_sha if pending else None
+            version = _resolve_game_version(args, is_init=False)
+            verb = "Overwriting pending" if pending else "Updating"
+            print(f"{verb} {VANILLA_BRANCH} ({updated} definition(s) "
+                  "changed)...")
+            new_vanilla_sha = _update_vanilla_branch(
+                tracking_files,
+                f"Update {updated} vanilla GUI definition(s)",
+                version=version,
+                beta=getattr(args, "beta", False),
+                parent_override=parent_override)
 
     # Per-file three-way merge using gui/vanilla-merged as base and
     # gui/vanilla as theirs.
@@ -1804,6 +1833,12 @@ def main():
     add_beta_arg(check_parser)
     merge_parser = sub.add_parser(
         "merge", help="Update vanilla branch and merge changes")
+    merge_parser.add_argument(
+		"-r", "--repull", "--force-pull", dest="repull", action="store_true",
+        help="Re-scan vanilla game files even when a previous merge is "
+             "pending, overwriting the pending gui/vanilla commit instead "
+             "of resuming it.",
+    )
     add_version_arg(merge_parser)
     add_beta_arg(merge_parser)
     sub.add_parser("apply",

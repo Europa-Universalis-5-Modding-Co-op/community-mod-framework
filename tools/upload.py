@@ -226,7 +226,8 @@ def save_upload_versions(path, data):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     temp_path = path + ".tmp"
     with open(temp_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, sort_keys=True)
+        json.dump(data, f, indent=2)
+        f.write("\n")
     os.replace(temp_path, path)
 
 def load_metadata_version(metadata_path, label):
