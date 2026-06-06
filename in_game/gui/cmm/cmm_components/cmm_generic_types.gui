@@ -5,7 +5,8 @@
 	# - GetVariableSystem.Get('cmm_mod_search_text') [string]: search text key cleared on close.
 	# Writes:
 	# - GetVariableSystem.Clear('cmm_mod_search_text') [void]: clears transient search text.
-	# - GetVariableSystem.Toggle('cmm_window_open') [void]: toggles window visibility state.
+	# - GetVariableSystem.Toggle('cmm_window_open') [void]: toggles window visibility (mouse close).
+	# - GetVariableSystem.Clear('cmm_window_open') [void]: closes the window (Escape).
 	type cmm_window_close_widget = widget {
 		parentanchor = right
 		position = { -5 5 }
@@ -17,6 +18,13 @@
 			blockoverride "close_onclick" {
 				onclick = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
 				onclick = "[GetVariableSystem.Toggle('cmm_window_open')]"
+			}
+			# Escape close: input_action on its own does not fire onclick.
+			blockoverride "close_inputaction" {
+				input_action = "close_window"
+				use_global_input_instance = yes
+				on_input_action_shortcut = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
+				on_input_action_shortcut = "[GetVariableSystem.Clear('cmm_window_open')]"
 			}
 		}
 	}
