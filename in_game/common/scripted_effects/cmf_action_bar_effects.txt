@@ -38,7 +38,6 @@ cmf_add_action_bar_element = {
         }
         cmf_suppress = { v = $element$ }
         cmf_suppress = { v = cmf_action_bar_elements }
-        cmf_suppress = { v = cmf_action_bar_element_name }
     }
 }
 
