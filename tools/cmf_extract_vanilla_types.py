@@ -318,11 +318,15 @@ def process_file(filename, game_gui_dir, mod_types, mod_templates):
     output_name = f"{PREFIX}{stem}_vanilla_types.gui"
     output_path = OUTPUT_DIR / output_name
 
-    if not stats["variables"] and not stats["templates"] and not stats["types_blocks"]:
+    # Variables are file-scoped; an output with no types or templates publishes
+    # nothing other files can consume and breaks the game when loaded.
+    if not stats["templates"] and not stats["types_blocks"]:
         if overridden:
-            print(f"  SKIP: All content overridden by mod ({len(overridden)} items)")
+            print(f"  SKIP: All types/templates overridden by mod ({len(overridden)} items)")
             for item in overridden:
                 print(f"    {item}")
+        elif stats["variables"]:
+            print(f"  SKIP: Only file-scoped variables, no types or templates")
         else:
             print(f"  SKIP: No types or templates found")
         return False
