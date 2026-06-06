@@ -55,14 +55,20 @@ BETA_STEAM_GAME_PATHS = [
 ]
 
 VANILLA_FILES = [
-    "food_production_lateralview.gui",
-    "foreign_country_lateralview.gui",
-    "government_lateralview.gui",
-    "ingame_topbar.gui",
-    "location_window.gui",
-    "outliner_entries.gui",
-    "single_unit_window.gui",
-    "technology_lateralview.gui",
+	"battle_lateralview.gui",
+	"country_dhe_lateralview.gui",
+	"food_production_lateralview.gui",
+	"foreign_country_lateralview.gui",
+	"government_lateralview.gui",
+	"ingame_topbar.gui",
+	"location_window.gui",
+	"map_markers.gui",
+	"multiplayer_chat.gui",
+	"organization/catholic_church.gui",
+	"outliner_entries.gui",
+	"recruit_location_lateralview.gui",
+	"single_unit_window.gui",
+	"technology_lateralview.gui",
 ]
 
 BOM = "\ufeff"
