@@ -9,9 +9,14 @@ lateralviews) without losing the shared type/template definitions.
 Definitions that the mod already overrides (outside the vanilla output folder)
 are automatically excluded to avoid conflicts.
 
+The game directory is auto-detected from the known Steam install locations. Set
+'game_directory' (or 'beta_game_directory') in tools/config.toml to override, or
+pass --game-dir.
+
 Usage:
-    python tools/cmf_extract_vanilla_types.py        # standard EU5 install
-    python tools/cmf_extract_vanilla_types.py -b     # closed beta (Project Caesar Review)
+    python tools/cmf_extract_vanilla_types.py                 # standard EU5 install
+    python tools/cmf_extract_vanilla_types.py -b              # closed beta (Project Caesar Review)
+    python tools/cmf_extract_vanilla_types.py --game-dir DIR  # explicit game directory
 """
 
 import argparse
@@ -19,13 +24,35 @@ import re
 import sys
 from pathlib import Path
 
+try:
+    import tomllib
+except ModuleNotFoundError:
+    try:
+        import tomli as tomllib
+    except ModuleNotFoundError:
+        tomllib = None
+
 PREFIX = "cmf_"
 
-GAME_GUI_DIR = Path(r"C:\Steam\steamapps\common\Europa Universalis V\game\in_game\gui")
-BETA_GAME_GUI_DIR = Path(r"C:\Steam\steamapps\common\Project Caesar Review\game\in_game\gui")
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+CONFIG_PATH = SCRIPT_DIR / "config.toml"
 MOD_GUI_DIR = PROJECT_ROOT / "in_game" / "gui"
 OUTPUT_DIR = MOD_GUI_DIR / "vanilla"
+
+GUI_SUBPATH = Path("in_game") / "gui"
+
+STEAM_GAME_PATHS = [
+    Path(r"C:\Steam\steamapps\common\Europa Universalis V\game"),
+    Path(r"C:\Program Files (x86)\Steam\steamapps\common\Europa Universalis V\game"),
+    Path(r"C:\Program Files\Steam\steamapps\common\Europa Universalis V\game"),
+]
+
+BETA_STEAM_GAME_PATHS = [
+    Path(r"C:\Steam\steamapps\common\Project Caesar Review\game"),
+    Path(r"C:\Program Files (x86)\Steam\steamapps\common\Project Caesar Review\game"),
+    Path(r"C:\Program Files\Steam\steamapps\common\Project Caesar Review\game"),
+]
 
 VANILLA_FILES = [
     "food_production_lateralview.gui",
@@ -355,6 +382,54 @@ def process_file(filename, game_gui_dir, mod_types, mod_templates):
     return True
 
 
+def _load_config():
+    """Return parsed config.toml as a dict, or empty dict if unavailable."""
+    if tomllib is None:
+        return {}
+    try:
+        with open(CONFIG_PATH, "rb") as f:
+            return tomllib.load(f)
+    except FileNotFoundError:
+        return {}
+
+
+def _resolve_game_gui_dir(args):
+    """Resolve the vanilla in_game/gui directory.
+
+    Honors --game-dir, then config.toml (game_directory / beta_game_directory),
+    then the known Steam install locations. Exits if no game directory is found.
+    """
+    if args.game_dir:
+        game_dir = Path(args.game_dir)
+        if game_dir.is_dir():
+            return game_dir / GUI_SUBPATH
+        print(f"ERROR: Game directory not found: {game_dir}")
+        sys.exit(1)
+
+    cfg = _load_config()
+    if args.beta:
+        cfg_dir = cfg.get("beta_game_directory", "")
+        search_paths = BETA_STEAM_GAME_PATHS
+        config_key = "beta_game_directory"
+        label = "EU5 closed beta (Project Caesar Review)"
+    else:
+        cfg_dir = cfg.get("game_directory", "")
+        search_paths = STEAM_GAME_PATHS
+        config_key = "game_directory"
+        label = "EU5 game"
+
+    if cfg_dir and Path(cfg_dir).is_dir():
+        return Path(cfg_dir) / GUI_SUBPATH
+
+    for p in search_paths:
+        if p.is_dir():
+            return p / GUI_SUBPATH
+
+    print(f"ERROR: Could not locate {label} directory.")
+    print(f"Set '{config_key}' in config.toml or use --game-dir.")
+    sys.exit(1)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Extract types and templates from vanilla EU5 GUI files."
@@ -365,11 +440,16 @@ def main():
         action="store_true",
         help="Read vanilla files from the closed beta install (Project Caesar Review).",
     )
+    parser.add_argument(
+        "--game-dir",
+        help="EU5 game directory to read vanilla files from "
+             "(overrides config.toml and auto-detection).",
+    )
     args = parser.parse_args()
 
-    game_gui_dir = BETA_GAME_GUI_DIR if args.beta else GAME_GUI_DIR
-    if not game_gui_dir.exists():
-        print(f"ERROR: Source directory not found: {game_gui_dir}")
+    game_gui_dir = _resolve_game_gui_dir(args)
+    if not game_gui_dir.is_dir():
+        print(f"ERROR: GUI directory not found: {game_gui_dir}")
         return 1
 
     if OUTPUT_DIR.exists():
