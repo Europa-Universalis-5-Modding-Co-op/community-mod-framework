@@ -82,6 +82,9 @@ _cmm_register_menu_settings_late = {
 		name = cmm_core__action_bar_buttons_mod_menu_item_name
 	}
 
+	# Mod menu name-map entry, and cmf_action_bar_element_name's setter on a path the engine treats as reached; the per-element writes in cmf_add_action_bar_element are not.
+	add_to_global_variable_map = { name = cmf_action_bar_element_name key = flag:cmm_core_mod_menu_button value = flag:cmm_core__action_bar_buttons_mod_menu_item_name }
+
 	every_in_list = {
 		variable = cmf_action_bar_elements_local
 		save_scope_as = cmm_list_staged_item_value
