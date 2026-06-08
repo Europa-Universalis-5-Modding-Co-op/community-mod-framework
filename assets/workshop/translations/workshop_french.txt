@@ -3,7 +3,7 @@ Framework et Menu de Mod Communautaire / Community Mod Framework - 1.3 Pavia
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated French Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-Le [b]Community Mod Framework (CMF)[/b] est un mod utilitaire qui vise à améliorer l'interopérabilité des mods tout en offrant aux moddeurs des outils pour créer de nouvelles fonctionnalités.
+Le [b]Community Mod Framework (CMF)[/b] est un mod utilitaire qui vise à améliorer l'interopérabilité entre les mods tout en offrant aux moddeurs des outils pour créer de nouvelles fonctionnalités.
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Banner.png[/img]
 
@@ -13,33 +13,34 @@ Pour toute question, n'hésitez pas à nous contacter sur le Discord EU5 Mod Coo
 
 [h1]Fonctionnalités[/h1]
 [list]
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Community-Mod-Menu]Community Mod Menu (CMM) :[/url][/b] Un menu de mod partagé en jeu. Les auteurs de mods enregistrent les paramètres de manière dynamique via une API simple, évitant ainsi d'avoir à créer une interface utilisateur personnalisée.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Community-Mod-Menu]Community Mod Menu (CMM) :[/url][/b] Un menu de mod partagé en jeu. Les auteurs de mods enregistrent les paramètres dynamiquement via une API simple, sans avoir besoin de créer une interface utilisateur personnalisée.
   [list]
-   [*]Boutons bascules, boutons, paramètres numériques, curseurs (double-cliquer pour faire glisser), menus déroulants, textes (solo uniquement) et listes.
-   [*]Onglets par mod, groupes et recherche.
-   [*]Paramètres globaux avec modification réservée à l'hôte en multijoueur.
-   [*]Réinitialiser par défaut.
-   [*]Fenêtre déplaçable.
-   [*]Peut être ouvert depuis le menu d'échappement en jeu, ou via un raccourci clavier ('m' par défaut, peut être réassigné).
-   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url] : outil par navigateur pour créer votre menu de mod.
+   [*]Paramètres de type interrupteur, bouton, numérique, curseur (double-clic pour faire glisser), menu déroulant, texte (solo uniquement) et liste
+   [*]Onglets par mod, groupes et recherche
+   [*]Paramètres globaux avec modification réservée à l'hôte en multijoueur
+   [*]Réinitialiser aux valeurs par défaut
+   [*]Fenêtre déplaçable
+   [*]Peut être ouvert depuis le menu d'échappement en jeu, ou via un raccourci clavier ('m' par défaut, peut être modifié).
+   [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url] : outil basé sur navigateur pour créer votre menu de mod
   [/list]
  [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Custom-Alerts]Alertes personnalisées :[/url][/b] Créez et affichez des alertes personnalisées dans la barre d'alertes via des clés de localisation.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar]Barre d'action :[/url][/b] Ajoutez des boutons personnalisés à la barre d'action avec des clés de localisation.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar]Barre d'action :[/url][/b] Ajoutez des boutons de barre d'action personnalisés avec des clés de localisation.
  [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks#country-transfer]Transfert de pays :[/url][/b] Les paramètres du CMM sont automatiquement transférés lors d'un changement de pays (changement de tag, héritage, etc.).
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger]Trigger is_host :[/url][/b] Vérifie si le pays actuel est contrôlé par l'hôte.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger#cmf_can_use_unrestricted_tools]Option Outils sans restriction :[/url][/b] Verrouillez les fonctionnalités restreintes derrière un paramètre « Activer les outils sans restriction » (trigger cmf_can_use_unrestricted_tools, indicateur par paramètre cmm_set_requires_unrestricted_tools_enabled). Disponible uniquement pour l'hôte en multijoueur.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Warning-Suppression]Effet cmf_suppress :[/url][/b] Supprime les avertissements du moteur « used but never set » et « set but never used » avec un seul appel d'effet.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger]Trigger is_host :[/url][/b] Vérifie si le pays actuel est contrôlé par le joueur hôte.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger#cmf_can_use_unrestricted_tools]Option Outils sans restriction :[/url][/b] Verrouille les fonctionnalités restreintes derrière un paramètre "Activer les outils sans restriction" (trigger cmf_can_use_unrestricted_tools, flag cmm_set_requires_unrestricted_tools_enabled par paramètre). Uniquement disponible pour l'hôte en multijoueur.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Detection]Détection de mod :[/url][/b] Vérifie si un autre mod est actif avec le trigger cmf_is_mod_active.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Warning-Suppression]Effet cmf_suppress :[/url][/b] Supprime les avertissements du moteur "utilisé mais jamais défini" et "défini mais jamais utilisé" avec un seul appel d'effet.
  [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/GUI-Macros]Macros GUI :[/url][/b] Macros d'opérateurs logiques Nand, Nor et Xor.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks]Hooks On-Action :[/url][/b] Hooks de démarrage de partie post-salon et de chargement de sauvegarde (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) avec des variantes pour le pays du joueur. Comprend également des pulses annuels et mensuels partagés pour les joueurs humains.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/cmf_change_variable_map-Effect]Utilitaires de Map de variables :[/url][/b] Assistants de mutation sécurisée de map de variables (cmf_change_variable_map et variantes locales/globales) gérant l'opération de suppression puis d'ajout de manière atomique.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Action-Log]Journal d'actions du mod :[/url][/b] Journal global en jeu pour enregistrer les actions du mod (ex: actions d'outils de l'hôte en multijoueur, le journal ne pouvant pas être effacé en MP).
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT) :[/url][/b] Un ensemble d'outils de développement complémentaires, tels qu'un modèle de mod, un utilitaire de mise en ligne sur le workshop et un traducteur de mod.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks]Hooks On-Action :[/url][/b] Hooks de démarrage de partie après le lobby et de chargement de sauvegarde (on_game_start_after_lobby, on_game_load, on_game_load_after_lobby) avec des variantes pour le pays du joueur. Inclut également des pulses annuels et mensuels partagés pour les joueurs humains.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/cmf_change_variable_map-Effect]Utilitaires de Map de Variables :[/url][/b] Assistants de mutation sécurisée de map de variables (cmf_change_variable_map et variantes locales/globales) qui gèrent la suppression puis l'ajout de manière atomique.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Action-Log]Journal d'actions de mod :[/url][/b] Journal global en jeu pour enregistrer les actions des mods (ex: actions d'outils de l'hôte en multijoueur, car le journal ne peut pas être effacé en multijoueur).
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT) :[/url][/b] Un ensemble d'outils de développement compagnon, tel qu'un modèle de mod, un outil d'upload vers le workshop et un traducteur de mod.
 [/list]
 
 [h1]Documentation[/h1]
 [list]
- [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]Wiki GitHub[/url] : Documentation complète
- [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]Wiki Paradox EU5[/url] : Référence rapide
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url] : Documentation complète
+ [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url] : Référence rapide
  [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]Dépôt GitHub[/url]
 [/list]
 
@@ -55,7 +56,7 @@ Pour toute question, n'hésitez pas à nous contacter sur le Discord EU5 Mod Coo
 
 [h1]Mods utilisant le CMF[/h1]
 [list]
- [*]Voir la [url=https://steamcommunity.com/workshop/filedetails/?id=3691456335]collection des mods utilisant le Community Mod Framework[/url]
+ [*]Voir la [url=https://steamcommunity.com/workshop/filedetails/?id=3691456335]Collection des mods utilisant le Community Mod Framework[/url]
 [/list]
 
 [h1]Journal des modifications :[/h1]
@@ -63,9 +64,9 @@ Voir les [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/36922
 
 [quote]
  [h1]À lire avant de signaler un problème :[/h1]
- Si vous êtes sur la bêta ouverte 1.3, désactivez le mod et vérifiez que le problème n'est pas présent sans lui. Il y a des TONNES de problèmes avec la bêta, qui doivent être signalés à Paradox, pas au CMF.
+ Si vous utilisez l'open beta 1.3, désactivez le mod et vérifiez que le problème ne persiste pas sans lui. Il y a ÉNORMÉMENT de problèmes avec la beta, qui doivent être signalés à Paradox, pas au CMF.
 
- De plus, que vous fassiez un signalement sur la 1.2 ou la 1.3, veuillez inclure votre version du jeu. Le CMF est compatible avec les deux versions, mais nous avons besoin de savoir laquelle vous utilisez pour traiter les problèmes concernés.
+ De plus, que vous signaliez un problème sur la 1.2 ou la 1.3, veuillez inclure votre version du jeu. Le CMF est compatible avec les deux versions, mais nous avons besoin de savoir laquelle vous utilisez pour traiter les problèmes concernés.
 [/quote]
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Bottom_Banner.png[/img]
