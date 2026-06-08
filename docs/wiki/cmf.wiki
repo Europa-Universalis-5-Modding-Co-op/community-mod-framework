@@ -245,6 +245,19 @@ if = {
 
 Mark individual CMM settings as requiring Unrestricted Tools with <code>cmm_set_requires_unrestricted_tools_enabled</code> (call after registration) — the CMM menu will disable editing of marked settings unless the "Enable Unrestricted Tools" setting is on.
 
+== Mod Detection ==
+<code>cmf_is_mod_active</code> checks whether another mod is active in the current game. Mods that register CMM settings are detected automatically; other mods call <code>cmf_register_mod</code> in their <code>cmf_on_mod_registration</code> hook.
+
+<syntaxhighlight lang="text">
+if = {
+	limit = { cmf_is_mod_active = { mod_id = some_other_mod } }
+	# Runs only when some_other_mod is loaded
+}
+
+# Non-CMM mods: register so others can detect you
+cmf_register_mod = { mod_id = your_mod }
+</syntaxhighlight>
+
 == cmf_suppress Effect ==
 CMF provides a <code>cmf_suppress</code> effect to silence "used but never set" and "set but never used" engine warnings. Call inside an <code>always = no</code> dead branch:
 

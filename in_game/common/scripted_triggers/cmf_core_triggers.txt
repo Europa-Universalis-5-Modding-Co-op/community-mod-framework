@@ -28,3 +28,15 @@ cmf_can_use_unrestricted_tools = {
 		is_host = yes
 	}
 }
+
+# True when a mod with the given id is active in the current game.
+# Scope: any
+# Args: mod_id (key)
+cmf_is_mod_active = {
+	hidden_trigger = {
+		is_target_in_global_variable_list = {
+			name = cmf_active_mod_ids
+			target = flag:$mod_id$
+		}
+	}
+}

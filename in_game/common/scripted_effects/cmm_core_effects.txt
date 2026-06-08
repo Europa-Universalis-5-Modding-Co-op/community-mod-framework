@@ -71,6 +71,7 @@ _cmm_register_mod = {
 			name = cmm_registered_mod_ids
 			target = flag:$mod_id$
 		}
+		cmf_register_mod = { mod_id = $mod_id$ }
 		# Reset default tab so the first registered tab becomes default this cycle.
 		remove_variable = cmm_mod_default_tab_$mod_id$
 	}

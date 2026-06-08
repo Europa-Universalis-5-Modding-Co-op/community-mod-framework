@@ -11,3 +11,27 @@ cmf_register_scripted_gui = {
         }
     }
 }
+
+# Mark a mod active for the current game. Idempotent by mod_id.
+# Mods that register CMM settings are marked active automatically.
+# Scope: any
+# Args: mod_id (key)
+cmf_register_mod = {
+    if = {
+        limit = { NOT = { is_target_in_global_variable_list = { name = cmf_active_mod_ids target = flag:$mod_id$ } } }
+        add_to_global_variable_list = {
+            name = cmf_active_mod_ids
+            target = flag:$mod_id$
+        }
+    }
+
+    # Benign warning suppression
+    if = {
+        limit = {
+            always = no
+            has_global_variable_list = cmf_active_mod_ids
+        }
+        cmf_suppress = { v = cmf_active_mod_ids }
+        cmf_suppress = { v = $mod_id$ }
+    }
+}
