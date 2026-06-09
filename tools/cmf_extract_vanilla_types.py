@@ -370,7 +370,7 @@ def process_file(filename, game_gui_dir, mod_types, mod_templates):
         "",
     ]
 
-    output_content = BOM + "\r\n".join(header + extracted) + "\r\n"
+    output_content = BOM + "\n".join(header + extracted) + "\n"
     output_path.write_bytes(output_content.encode("utf-8"))
 
     parts = []

@@ -4,14 +4,14 @@ BOM = b"\xef\xbb\xbf"
 
 
 def encode_bom(text: str) -> bytes:
-    """Encode text as UTF-8 with BOM prefix and CRLF line endings."""
-    normalized = text.replace("\r\n", "\n").replace("\r", "\n").replace("\n", "\r\n")
+    """Encode text as UTF-8 with BOM prefix and LF line endings."""
+    normalized = text.replace("\r\n", "\n").replace("\r", "\n")
     return BOM + normalized.encode("utf-8")
 
 
 def encode_json(text: str) -> bytes:
-    """Encode JSON text as UTF-8 (no BOM) with CRLF line endings."""
-    normalized = text.replace("\r\n", "\n").replace("\r", "\n").replace("\n", "\r\n")
+    """Encode JSON text as UTF-8 (no BOM) with LF line endings."""
+    normalized = text.replace("\r\n", "\n").replace("\r", "\n")
     return normalized.encode("utf-8")
 
 
