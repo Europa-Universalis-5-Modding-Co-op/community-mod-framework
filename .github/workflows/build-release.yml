@@ -45,8 +45,34 @@ on:
           - 'false'
 
 jobs:
+  check:
+    name: "Check Version"
+    runs-on: ubuntu-latest
+    outputs:
+      should-release: ${{ steps.gate.outputs.should-release }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+        # Honor tools/config.toml upload_only_on_version_change
+      - name: Check Version Change
+        id: gate
+        run: |
+          VERSION=$(jq -r .version .metadata/metadata.json)
+          ONLY_ON_CHANGE=$(python3 -c "import tomllib; print('true' if tomllib.load(open('tools/config.toml','rb')).get('upload_only_on_version_change', False) else 'false')")
+          LAST_RELEASED=$(jq -r '.entries["main:release"] // ""' tools/dependencies/.upload_versions.json 2>/dev/null || echo "")
+          if [ "$ONLY_ON_CHANGE" = "true" ] && [ "$VERSION" = "$LAST_RELEASED" ]; then
+            echo "should-release=false" >> "$GITHUB_OUTPUT"
+            echo "# Release Skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "Version **$VERSION** was already released; skipping because upload_only_on_version_change is enabled." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "should-release=true" >> "$GITHUB_OUTPUT"
+          fi
+
   release:
     name: "Publish Release"
+    needs: check
+    if: ${{ needs.check.outputs.should-release == 'true' }}
     runs-on: ubuntu-latest
     
     steps:
