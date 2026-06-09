@@ -15,10 +15,10 @@ commit; the next ``apply`` (or ``merge``) run advances the bookmark.
 
 Commands:
     init      Set up tracking for this mod
-    check     Report which tracked definitions changed in vanilla
-    merge     Update vanilla branch and merge changes
+    check     Report vanilla drift and overrides added or removed in the mod
+    merge     Merge vanilla changes, track new overrides, prune removed ones
     apply     Write resolved tracking files back to mod GUI files
-    refresh   Re-extract mod definitions into tracking files
+    refresh   Rebuild tracking from scratch and re-baseline to current vanilla
     status    Show tracking status
 
 Pass ``--beta`` (``-b``) to any vanilla-reading command (init, check, merge,
@@ -671,6 +671,49 @@ def _link_constants(mod_defs, vanilla_defs, override_pairs):
                     pairs.append((mod_const, vd))
     return pairs
 
+
+def _discover_overrides(mod_defs, vanilla_defs):
+    """Return the current override set as ``{key: (mod_def, vanilla_def)}``.
+
+    Keys match the manifest scheme: ``_tracking_key`` for types/templates/
+    widgets and ``_constant_tracking_key`` for constants.
+    """
+    overrides = _find_overrides(mod_defs, vanilla_defs)
+    constants = _link_constants(mod_defs, vanilla_defs, overrides)
+    discovered = {}
+    for md, vd in overrides:
+        discovered[_tracking_key(md.kind, md.name)] = (md, vd)
+    for md, vd in constants:
+        discovered[_constant_tracking_key(
+            md.source_file, vd.source_file, md.name)] = (md, vd)
+    return discovered
+
+
+def _build_manifest_entry(md, vd):
+    """Return ``(key, entry, tracking_path)`` for an override pair, with
+    ``entry`` shaped like a manifest definition value."""
+    if md.kind == "constant":
+        tp = _constant_tracking_path(md.source_file, vd.source_file, md.name)
+        key = _constant_tracking_key(md.source_file, vd.source_file, md.name)
+        entry = {
+            "kind": "constant",
+            "name": md.name,
+            "mod_file": md.source_file,
+            "vanilla_file": vd.source_file,
+            "tracking_path": tp,
+        }
+    else:
+        tp = _tracking_path(md.kind, md.name)
+        key = _tracking_key(md.kind, md.name)
+        entry = {
+            "namespace": md.namespace,
+            "base_widget": md.base_widget,
+            "mod_file": md.source_file,
+            "vanilla_file": vd.source_file,
+            "tracking_path": tp,
+        }
+    return key, entry, tp
+
 # ─── Config ──────────────────────────────────────────────────────────────────
 
 def _load_config():
@@ -747,14 +790,13 @@ def _body_hash(content):
 
 
 def _write_tracking_file(rel_path, content):
-    """Write a tracking file under ROOT_DIR with UTF-8 BOM + CRLF."""
+    """Write a tracking file under ROOT_DIR with UTF-8 BOM + LF."""
     abs_path = os.path.join(ROOT_DIR, rel_path.replace("/", os.sep))
     os.makedirs(os.path.dirname(abs_path), exist_ok=True)
     if content.startswith("﻿"):
         content = content[1:]
     normalized = content.replace("\r\n", "\n").replace("\r", "\n")
-    new_bytes = (b"\xef\xbb\xbf"
-                 + normalized.replace("\n", "\r\n").encode("utf-8"))
+    new_bytes = b"\xef\xbb\xbf" + normalized.encode("utf-8")
     if os.path.exists(abs_path):
         with open(abs_path, "rb") as f:
             if f.read() == new_bytes:
@@ -1181,6 +1223,16 @@ def cmd_check(args):
         return 1
     _ensure_vanilla_merged_ref()
 
+    print("Scanning mod GUI files...")
+    mod_defs = _scan_definitions(ROOT_DIR, GUI_SOURCES)
+    mod_map = {}
+    mod_consts = {}
+    for d in mod_defs:
+        if d.kind == "constant":
+            mod_consts.setdefault((d.source_file, d.name), d)
+        else:
+            mod_map.setdefault(_tracking_key(d.kind, d.name), d)
+
     print("Scanning current vanilla GUI files...")
     vanilla_defs = _scan_definitions(game_dir, GUI_SOURCES)
     vanilla_map = {}
@@ -1191,13 +1243,24 @@ def cmd_check(args):
         else:
             vanilla_map.setdefault(_tracking_key(d.kind, d.name), d)
 
+    discovered = _discover_overrides(mod_defs, vanilla_defs)
+    added = sorted(set(discovered) - set(manifest["definitions"]))
+
     changed = []
     removed = []
+    deleted = []
 
     # Compare against the merged baseline so an aborted merge still surfaces pending changes.
     base_ref = MERGED_BRANCH if _vanilla_merged_ref_exists() else VANILLA_BRANCH
 
     for key, entry in sorted(manifest["definitions"].items()):
+        if key.startswith("constant:"):
+            mod_has = (entry["mod_file"], entry["name"]) in mod_consts
+        else:
+            mod_has = key in mod_map
+        if not mod_has:
+            deleted.append((key, entry))
+            continue
         old = _read_from_branch(base_ref, entry["tracking_path"])
         if old is None:
             continue
@@ -1218,7 +1281,7 @@ def cmd_check(args):
             != run_git(["rev-parse", MERGED_BRANCH])
     )
 
-    if not changed and not removed:
+    if not (changed or removed or added or deleted):
         if pending_merge:
             print("\nPrevious merge is unfinished "
                   f"({VANILLA_BRANCH} is ahead of {MERGED_BRANCH}).")
@@ -1232,14 +1295,28 @@ def cmd_check(args):
         for key, entry in changed:
             print(f"  {key}  (in {entry['vanilla_file']})")
     if removed:
-        print(f"\n{len(removed)} definition(s) removed from vanilla:")
+        print(f"\n{len(removed)} tracked definition(s) removed from vanilla "
+              "(overrides now orphaned):")
         for key, entry in removed:
-            print(f"  {key}  (was in {entry['vanilla_file']})")
+            print(f"  ! {key}  (overridden in {entry['mod_file']})")
+    if added:
+        print(f"\n{len(added)} new override(s) in the mod, not yet tracked:")
+        for key in added:
+            md, _vd = discovered[key]
+            print(f"  {key}  (in {md.source_file})")
+    if deleted:
+        print(f"\n{len(deleted)} tracked override(s) no longer in the mod:")
+        for key, entry in deleted:
+            print(f"  {key}  (was in {entry['mod_file']})")
 
     if pending_merge:
         print(f"\nNote: {VANILLA_BRANCH} is ahead of {MERGED_BRANCH} from a "
               "previous unfinished merge; running merge will resume it.")
-    print("\nRun 'gui_update.py merge' to incorporate these changes.")
+    if changed or removed:
+        print("\nRun 'gui_update.py merge' to incorporate these changes.")
+    elif added or deleted:
+        print("\nRun 'gui_update.py merge' to track new and prune removed "
+              "overrides.")
     return 0
 
 
@@ -1265,8 +1342,21 @@ def cmd_merge(args):
     # fresh scan that overwrites the pending commit instead.
     pending = vanilla_sha != merged_sha
     resuming = pending and not repull
+
+    added_keys = []
+    newly_added = set()
+    vanilla_defs = None
+    vanilla_map = {}
+    vanilla_consts = {}
     if not resuming:
         game_dir = _resolve_game_dir(args)
+        print("Scanning current vanilla GUI files...")
+        vanilla_defs = _scan_definitions(game_dir, GUI_SOURCES)
+        for d in vanilla_defs:
+            if d.kind == "constant":
+                vanilla_consts.setdefault((d.source_file, d.name), d)
+            else:
+                vanilla_map.setdefault(_tracking_key(d.kind, d.name), d)
 
     # Sync tracking from mod state. Skip if just advanced — tracking holds
     # the resolution and mod files may still be pre-apply.
@@ -1315,19 +1405,38 @@ def cmd_merge(args):
                 if os.path.isfile(abs_tp):
                     os.remove(abs_tp)
 
-        if synced or removed_keys:
+        # Track overrides added to the mod since the last sync.
+        if not resuming:
+            discovered = _discover_overrides(mod_defs, vanilla_defs)
+            added_keys = [k for k in sorted(discovered)
+                          if k not in new_definitions]
+            for key in added_keys:
+                md, vd = discovered[key]
+                _k, entry, tp = _build_manifest_entry(md, vd)
+                new_definitions[key] = entry
+                header = _make_tracking_header(vd.source_file, md.source_file)
+                _write_tracking_file(tp, header + md.text + "\n")
+            newly_added = set(added_keys)
+
+        if synced or removed_keys or added_keys:
             manifest["definitions"] = new_definitions
             _save_manifest(manifest)
             run_git(["add", "-A", TRACKING_DIR_NAME + "/"])
             parts = []
             if synced:
                 parts.append(f"{synced} updated")
+            if added_keys:
+                parts.append(f"{len(added_keys)} added")
             if removed_keys:
                 parts.append(f"{len(removed_keys)} removed")
             run_git(["commit", "-m",
                      "Sync tracking from mod state: " + ", ".join(parts)])
             if synced:
                 print(f"  {synced} tracking file(s) updated.")
+            if added_keys:
+                print(f"  {len(added_keys)} new override(s) now tracked:")
+                for k in added_keys:
+                    print(f"    + {k}")
             if removed_keys:
                 print(f"  {len(removed_keys)} stale entry(ies) removed:")
                 for k in removed_keys:
@@ -1342,18 +1451,10 @@ def cmd_merge(args):
         version = _last_vanilla_commit_version()
     else:
         # Build the new vanilla snapshot from current game files.
-        print("Scanning current vanilla GUI files...")
-        vanilla_defs = _scan_definitions(game_dir, GUI_SOURCES)
-        vanilla_map = {}
-        vanilla_consts = {}
-        for d in vanilla_defs:
-            if d.kind == "constant":
-                vanilla_consts.setdefault((d.source_file, d.name), d)
-            else:
-                vanilla_map.setdefault(_tracking_key(d.kind, d.name), d)
-
         tracking_files = {}
         updated = 0
+        pre_existing_updated = 0
+        removed_count = 0
         for key, entry in manifest["definitions"].items():
             tp = entry["tracking_path"]
             if key.startswith("constant:"):
@@ -1369,26 +1470,45 @@ def cmd_merge(args):
                 if (old_content is None
                         or _body_hash(old_content) != _body_hash(new_content)):
                     updated += 1
+                    if key not in newly_added:
+                        pre_existing_updated += 1
+            else:
+                removed_count += 1
 
-        if updated == 0 and not pending:
+        change_count = updated + removed_count
+        if change_count == 0 and not pending:
             print("Vanilla branch already up to date. Nothing to merge.")
             return 0
 
-        if updated == 0:
+        if change_count == 0:
             print(f"Re-pulled vanilla matches the pending {VANILLA_BRANCH} "
                   "commit; resuming it.")
             new_vanilla_sha = vanilla_sha
             version = _last_vanilla_commit_version()
+        elif pre_existing_updated == 0 and newly_added and removed_count == 0:
+            parent_override = merged_sha if pending else None
+            version = _last_vanilla_commit_version()
+            print(f"Recording {len(newly_added)} new override(s) in "
+                  f"{VANILLA_BRANCH}...")
+            new_vanilla_sha = _update_vanilla_branch(
+                tracking_files,
+                f"Track {len(newly_added)} new GUI override(s)",
+                version=version,
+                beta=getattr(args, "beta", False),
+                parent_override=parent_override)
         else:
             # Overwrite the pending commit to avoid a duplicate.
             parent_override = merged_sha if pending else None
             version = _resolve_game_version(args, is_init=False)
             verb = "Overwriting pending" if pending else "Updating"
-            print(f"{verb} {VANILLA_BRANCH} ({updated} definition(s) "
-                  "changed)...")
+            desc = ", ".join(p for p in (
+                f"{updated} changed" if updated else "",
+                f"{removed_count} removed" if removed_count else "",
+            ) if p)
+            print(f"{verb} {VANILLA_BRANCH} ({desc})...")
             new_vanilla_sha = _update_vanilla_branch(
                 tracking_files,
-                f"Update {updated} vanilla GUI definition(s)",
+                f"Update vanilla GUI definitions ({desc})",
                 version=version,
                 beta=getattr(args, "beta", False),
                 parent_override=parent_override)
@@ -1398,10 +1518,15 @@ def cmd_merge(args):
     print("Running three-way merge...")
     conflicts = []
     clean_paths = []
+    vanilla_removed = []
 
     for key, entry in manifest["definitions"].items():
         tp = entry["tracking_path"]
         abs_tp = os.path.join(ROOT_DIR, tp.replace("/", os.sep))
+
+        # Newly tracked overrides have no merge base yet.
+        if key in newly_added:
+            continue
 
         base = _read_from_branch(MERGED_BRANCH, tp)
         theirs = _read_from_branch(VANILLA_BRANCH, tp)
@@ -1422,15 +1547,11 @@ def cmd_merge(args):
             ours = ours.replace("\r\n", "\n")
 
         if theirs is None:
-            # Vanilla removed this definition.
-            if base is None or ours is None:
-                continue
-            if _body_hash(ours) == _body_hash(base):
-                if os.path.isfile(abs_tp):
-                    os.remove(abs_tp)
-                clean_paths.append(tp)
-            else:
-                conflicts.append((tp, base, ours, None))
+            # Vanilla no longer defines this tracked def.
+            if os.path.isfile(abs_tp):
+                os.remove(abs_tp)
+            vanilla_removed.append((key, entry))
+            clean_paths.append(tp)
             continue
 
         if base is None:
@@ -1448,6 +1569,18 @@ def cmd_merge(args):
             conflicts.append((tp, base, ours, theirs))
         elif merged != ours:
             clean_paths.append(tp)
+
+    if vanilla_removed:
+        for rkey, _rentry in vanilla_removed:
+            manifest["definitions"].pop(rkey, None)
+        _save_manifest(manifest)
+        run_git(["add", TRACKING_DIR_NAME + "/manifest.json"])
+        print(f"\n{len(vanilla_removed)} tracked definition(s) removed from "
+              "vanilla and untracked:")
+        for rkey, rentry in vanilla_removed:
+            print(f"  ! {rkey}  (still defined in {rentry['mod_file']})")
+        print("  Your mod files are unchanged; review whether to keep these "
+              "overrides.")
 
     if conflicts:
         # Stage the clean files normally.
@@ -1551,10 +1684,9 @@ def cmd_apply(args):
             errors += 1
             continue
 
-        # Read mod file (detect line endings; BOM is always restored on write).
+        # Read mod file; BOM is restored on write.
         with open(abs_mod, "rb") as f:
             raw = f.read()
-        has_crlf = b"\r\n" in raw
         mod_text = raw.decode("utf-8-sig").replace("\r\n", "\n")
         # Any U+FEFF past byte 0 is a corruption artifact.
         mod_text = mod_text.replace("\ufeff", "")
@@ -1585,9 +1717,6 @@ def cmd_apply(args):
         if not _assert_unique_top_level_defs(result, mod_file):
             errors += 1
             continue
-
-        if has_crlf:
-            result = result.replace("\n", "\r\n")
 
         new_raw = b"\xef\xbb\xbf" + result.encode("utf-8")
         if new_raw == raw:
@@ -1628,14 +1757,7 @@ def cmd_refresh(args):
     print("Scanning vanilla GUI files...")
     vanilla_defs = _scan_definitions(game_dir, GUI_SOURCES)
 
-    overrides = _find_overrides(mod_defs, vanilla_defs)
-    constants = _link_constants(mod_defs, vanilla_defs, overrides)
-    new_keys = {}
-    for md, vd in overrides:
-        new_keys[_tracking_key(md.kind, md.name)] = (md, vd)
-    for md, vd in constants:
-        new_keys[_constant_tracking_key(
-            md.source_file, vd.source_file, md.name)] = (md, vd)
+    new_keys = _discover_overrides(mod_defs, vanilla_defs)
 
     old_set = set(manifest["definitions"])
     new_set = set(new_keys)
@@ -1656,25 +1778,8 @@ def cmd_refresh(args):
 
     for key in sorted(new_set):
         md, vd = new_keys[key]
-        if md.kind == "constant":
-            tp = _constant_tracking_path(
-                md.source_file, vd.source_file, md.name)
-            new_manifest["definitions"][key] = {
-                "kind": "constant",
-                "name": md.name,
-                "mod_file": md.source_file,
-                "vanilla_file": vd.source_file,
-                "tracking_path": tp,
-            }
-        else:
-            tp = _tracking_path(md.kind, md.name)
-            new_manifest["definitions"][key] = {
-                "namespace": md.namespace,
-                "base_widget": md.base_widget,
-                "mod_file": md.source_file,
-                "vanilla_file": vd.source_file,
-                "tracking_path": tp,
-            }
+        _k, entry, tp = _build_manifest_entry(md, vd)
+        new_manifest["definitions"][key] = entry
         header = _make_tracking_header(vd.source_file, md.source_file)
         _write_tracking_file(tp, header + md.text + "\n")
 

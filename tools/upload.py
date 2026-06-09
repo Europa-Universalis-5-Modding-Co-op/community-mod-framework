@@ -225,7 +225,7 @@ def save_upload_versions(path, data):
     """Persist uploaded version cache atomically."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     temp_path = path + ".tmp"
-    with open(temp_path, "w", encoding="utf-8") as f:
+    with open(temp_path, "w", encoding="utf-8", newline="\n") as f:
         json.dump(data, f, indent=2)
         f.write("\n")
     os.replace(temp_path, path)
@@ -325,7 +325,7 @@ def update_config_value(config_path, key, value):
         lines.append(f"{key} = {value}")
 
     try:
-        with open(config_path, "w", encoding="utf-8") as f:
+        with open(config_path, "w", encoding="utf-8", newline="\n") as f:
             f.write("\n".join(lines) + "\n")
     except Exception as e:
         print(f"Error writing config file: {e}")
@@ -519,7 +519,7 @@ def update_submod_entry(config_path, mod_id, workshop_id):
         lines.append(f"workshop_id = {workshop_id}")
 
     try:
-        with open(config_path, "w", encoding="utf-8") as f:
+        with open(config_path, "w", encoding="utf-8", newline="\n") as f:
             f.write("\n".join(lines) + "\n")
     except Exception as e:
         print(f"Error writing config file: {e}")
@@ -762,7 +762,7 @@ def build_release(dev_mode=False, dev_name=None):
         data["name"] = data["name"].removesuffix(" Dev")
         data["id"] = data["id"].removesuffix(".dev")
 
-    with open(dest_meta_path, "w", encoding="utf-8-sig") as f:
+    with open(dest_meta_path, "w", encoding="utf-8-sig", newline="\n") as f:
         json.dump(data, f, indent=4)
 
     # 4. Handle Thumbnail

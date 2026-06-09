@@ -396,7 +396,7 @@ def save_hashes(path, data):
 	"""
 	os.makedirs(os.path.dirname(path), exist_ok=True)
 	tmp_path = path + ".tmp"
-	with open(tmp_path, "w", encoding="utf-8") as f:
+	with open(tmp_path, "w", encoding="utf-8", newline="\n") as f:
 		json.dump(data, f, indent=2, sort_keys=True)
 	os.replace(tmp_path, path)
 
@@ -985,7 +985,7 @@ def process_file(
 			gemini_localization_system_prompt,
 			gemini_additional_context
 		)
-		with open(target_filepath, 'w', encoding='utf-8-sig') as f:
+		with open(target_filepath, 'w', encoding='utf-8-sig', newline='\n') as f:
 			f.writelines(new_lines)
 		return
 
@@ -1030,7 +1030,7 @@ def process_file(
 	) or file_changed
 
 	if file_changed:
-		with open(target_filepath, 'w', encoding='utf-8-sig') as f:
+		with open(target_filepath, 'w', encoding='utf-8-sig', newline='\n') as f:
 			f.writelines(target_lines)
 	else:
 		print(f"{log_prefix}No output changes for {filename} -> {target_folder_name}.")
@@ -1539,7 +1539,7 @@ def translate_workshop_assets(
 					workshop_translations_dir,
 					CHANGE_NOTES_TRANSLATION_FILENAME.format(lang=folder_name)
 				)
-				with open(change_notes_translation_path, "w", encoding="utf-8") as f:
+				with open(change_notes_translation_path, "w", encoding="utf-8", newline="\n") as f:
 					f.write(cached_change_notes)
 
 		if translate_pages and (file_changed or template_changed or not os.path.exists(translation_path)):
@@ -1556,7 +1556,7 @@ def translate_workshop_assets(
 				translated_language,
 				original_language
 			)
-			with open(translation_path, "w", encoding="utf-8") as f:
+			with open(translation_path, "w", encoding="utf-8", newline="\n") as f:
 				f.write(output)
 
 	if description is not None and description_changed and description_success:
