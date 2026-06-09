@@ -2340,7 +2340,7 @@ template government_main_tabs {
 		}		
 
 		down = "[IsLateralViewOpened('government')]"
-		datacontext = "[GetAutomatedSystemItem4('estates', 'parliament', 'cabinet', 'laws')]"
+		datacontext = "[GetAutomatedSystemItem5('estates', 'parliament', 'cabinetmembers', 'cabinet', 'laws')]"
 		using = multi_automated_tab
 
 		blockoverride "on_action_left" { on_action = "[OpenLateralView('government')]" }

@@ -1642,7 +1642,7 @@ template institution_item_subheader {
 		using = bg_cabinet_card_frame
 		blockoverride "icon_obj" {
 			Icon = {
-				visible = "[And(Player.HasEmbracedInstitution(InstitutionItem.GetInstitution.Self), Or(Not(InstitutionItem.GetUIAction.IsRightClickEnabled), Not(InstitutionItem.GetUIAction.IsRightClickVisible)))]"
+				visible = "[And(Player.HasEmbracedInstitution(InstitutionItem.GetInstitution.Self), Or(Not(InstitutionItem.IsGotoBirthplaceEnabled), Not(InstitutionItem.IsGotoBirthplaceVisible)))]"
 				size = { 27 27}
 				# gfx\interface\icons\advance
 				texture = "[GetInstitutionIcon(InstitutionItem.GetInstitution.Self)]"
@@ -1676,10 +1676,9 @@ template institution_item_subheader {
 				}
 			}
 			button = {
-				visible = "[And3(Player.HasEmbracedInstitution(InstitutionItem.GetInstitution.Self), InstitutionItem.GetUIAction.IsRightClickEnabled, InstitutionItem.GetUIAction.IsRightClickVisible)]"
+				visible = "[And3(Player.HasEmbracedInstitution(InstitutionItem.GetInstitution.Self), InstitutionItem.IsGotoBirthplaceEnabled, InstitutionItem.IsGotoBirthplaceVisible)]"
 				size = { 32 32 }
-				datacontext = "[InstitutionItem.GetUIAction]"
-				using = button_action_provider
+				using = institution_item_action_provider
 				# gfx\interface\icons\advance
 				texture = "[GetInstitutionIcon(InstitutionItem.GetInstitution.Self)]"
 			}
@@ -1742,13 +1741,12 @@ template institution_item_subheader {
 						# 	TooltipTextBlock = {
 						# 		size = { -1 20 }
 						# 		blockoverride "text" {
-						# 			text = "[InstitutionItem.GetUIAction.GetDescription]"
+						# 			text = "[InstitutionItem.GetDescription]"
 						# 		}
 						# 	}
 						# }
 					}
-					datacontext = "[InstitutionItem.GetUIAction]"
-					using = button_action_provider
+					using = institution_item_action_provider
 					modify_texture = {
 						# gfx/interface/icons/institutions
 						texture = "[GetInstitutionIcon(InstitutionItem.GetInstitution.Self)]"
@@ -1822,8 +1820,7 @@ template institution_item_subheader {
 						# 	}
 						# }
 					}
-					datacontext = "[InstitutionItem.GetUIAction]"
-					using = button_action_provider
+					using = institution_item_action_provider
 					modify_texture = {
 						# gfx/interface/icons/institutions
 						texture = "[GetInstitutionIcon(InstitutionItem.GetInstitution.Self)]"
