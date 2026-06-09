@@ -3,7 +3,7 @@
     # Blocks:
     # - cmf_window_size
     # - cmf_window_header_text
-    # - cmf_window_header_close_onclick
+    # - cmf_window_header_close_on_action
     # - cmf_window_tab_visibility (default no)
     # - cmf_window_tabs
     # - cmf_window_content
@@ -84,8 +84,8 @@
             ui_direction_button_holder_right = {}
 
             button_close_alt = {
-                blockoverride "close_onclick" {
-                    block "cmf_window_header_close_onclick" {}
+                blockoverride "close_on_action" {
+                    block "cmf_window_header_close_on_action" {}
                 }
             }
         }
