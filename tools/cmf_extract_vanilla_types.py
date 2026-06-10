@@ -57,6 +57,7 @@ BETA_STEAM_GAME_PATHS = [
 VANILLA_FILES = [
 	"battle_lateralview.gui",
 	"country_dhe_lateralview.gui",
+	"expand_raw_goods_lateralview.gui",
 	"food_production_lateralview.gui",
 	"foreign_country_lateralview.gui",
 	"government_lateralview.gui",
@@ -66,6 +67,7 @@ VANILLA_FILES = [
 	"multiplayer_chat.gui",
 	"organization/catholic_church.gui",
 	"outliner_entries.gui",
+	"production_lateralview.gui",
 	"recruit_location_lateralview.gui",
 	"single_unit_window.gui",
 	"technology_lateralview.gui",

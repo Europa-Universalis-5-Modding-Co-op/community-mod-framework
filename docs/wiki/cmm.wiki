@@ -253,7 +253,7 @@ cmm_set_list_field_localization = {
 	root = your_mod__your_list__weight_alt
 }
 </syntaxhighlight>
-The column header localizes <code>name</code> directly; desc, prefix, and postfix localize from <code>root</code> plus <code>_desc</code> / <code>_prefix</code> / <code>_postfix</code>. Re-registering the field resets both keys (and the format flags) to the field_id defaults, so re-apply this and the format effect after every registration.
+The column header localizes <code>name</code> directly; desc, prefix, and postfix localize from <code>root</code> plus <code>_desc</code> / <code>_prefix</code> / <code>_postfix</code>.
 
 === Disabling Fields for Specific Items ===
 Disable a field column for specific items so the cell renders as empty space:
