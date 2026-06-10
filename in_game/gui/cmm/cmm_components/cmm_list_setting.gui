@@ -94,11 +94,12 @@
 			on_start = "[GetVariableSystem.Set('cmm_list_pofxl_5', Localize(Concatenate(CMMCachedFieldLocKey('5'), '_postfix_low')))]"
 		}
 
-		# Delays field cell re-caching by one frame after a click so that scripted GUI effects have committed before values are read.
+		# Delays cache refresh by one frame after a click so that scripted GUI effects have committed before values are read.
 		state = {
 			name = cmm_recache_delay
 			duration = 0.001
 			on_finish = "[PdxGuiTriggerAllAnimations('cmm_cache_field_cell')]"
+			on_finish = "[GetVariableSystem.Clear('cmm_list_sk')]"
 		}
 
 		widget = {

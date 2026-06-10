@@ -242,6 +242,19 @@ cmm_set_list_field_format = {
 </syntaxhighlight>
 Then define <code>_prefix</code> / <code>_postfix</code> localization keys. For sign-conditional formatting (<code>_prefix_high</code> / <code>_postfix_high</code> / <code>_prefix_low</code> / <code>_postfix_low</code>), use <code>cmm_set_list_field_conditional_format</code> instead.
 
+=== Repointing Field Localization ===
+Repoint a field's localization keys at runtime, for example to relabel a column when another setting changes its meaning:
+<syntaxhighlight lang="text">
+cmm_set_list_field_localization = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = weight
+	name = your_mod__your_list__weight_alt_name
+	root = your_mod__your_list__weight_alt
+}
+</syntaxhighlight>
+The column header localizes <code>name</code> directly; desc, prefix, and postfix localize from <code>root</code> plus <code>_desc</code> / <code>_prefix</code> / <code>_postfix</code>. Re-registering the field resets both keys (and the format flags) to the field_id defaults, so re-apply this and the format effect after every registration.
+
 === Disabling Fields for Specific Items ===
 Disable a field column for specific items so the cell renders as empty space:
 <syntaxhighlight lang="text">

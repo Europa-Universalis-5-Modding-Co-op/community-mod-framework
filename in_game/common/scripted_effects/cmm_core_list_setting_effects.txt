@@ -462,6 +462,54 @@ cmm_set_list_field_conditional_format = {
 	}
 }
 
+# Repoint one list field's localization keys. The column header localizes $name$
+# directly; desc, prefix, and postfix localize from `$root$_desc`, `$root$_prefix`,
+# and `$root$_postfix`. Registering the field resets both keys to the field_id
+# defaults (`<mod>__<setting>__<field>_name` and `<mod>__<setting>__<field>`), so
+# call after every registration of the field.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id whose localization keys to repoint.
+# - name (key): Localization key for the column header.
+# - root (key): Localization key root for desc, prefix, and postfix.
+cmm_set_list_field_localization = {
+	if = {
+		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = {
+				set_variable = { name = cmm_list_field_1_name_$mod_id$__$setting_id$ value = flag:$name$ }
+				set_variable = { name = cmm_list_field_1_key_$mod_id$__$setting_id$ value = flag:$root$ }
+			}
+			2 = {
+				set_variable = { name = cmm_list_field_2_name_$mod_id$__$setting_id$ value = flag:$name$ }
+				set_variable = { name = cmm_list_field_2_key_$mod_id$__$setting_id$ value = flag:$root$ }
+			}
+			3 = {
+				set_variable = { name = cmm_list_field_3_name_$mod_id$__$setting_id$ value = flag:$name$ }
+				set_variable = { name = cmm_list_field_3_key_$mod_id$__$setting_id$ value = flag:$root$ }
+			}
+			4 = {
+				set_variable = { name = cmm_list_field_4_name_$mod_id$__$setting_id$ value = flag:$name$ }
+				set_variable = { name = cmm_list_field_4_key_$mod_id$__$setting_id$ value = flag:$root$ }
+			}
+			5 = {
+				set_variable = { name = cmm_list_field_5_name_$mod_id$__$setting_id$ value = flag:$name$ }
+				set_variable = { name = cmm_list_field_5_key_$mod_id$__$setting_id$ value = flag:$root$ }
+			}
+		}
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $name$ }
+		cmf_suppress = { v = $root$ }
+	}
+}
+
 # Disable one field column for one specific item in a list setting.
 # The field cell will render as empty space, preserving column alignment.
 # Call after the field has been registered (e.g. cmm_register_list_bool_field).
