@@ -22,6 +22,7 @@ types cmf_dependency_check
 				size = { 451 230 }
 				align = left
 				datacontext = "[FrontEndMainView.AccessMarketingContainer.AccessSlotByName('main')]"
+
 				tooltip_enabled = no
 			}
 
@@ -30,11 +31,13 @@ types cmf_dependency_check
 				size = { 245 230 }
 				align = left
 				datacontext = "[FrontEndMainView.AccessMarketingContainer.AccessSlotByName('secondary-1')]"
+
 				tooltip_enabled = no
 
 				blockoverride "offset_x" {
 					position_x = -245
 				}
+
 				blockoverride "current_button_pos" {
 					size = { 245 230 }
 				}
@@ -49,6 +52,7 @@ types cmf_dependency_check
 				size = { 245 230 }
 				align = left
 				datacontext = "[FrontEndMainView.AccessMarketingContainer.AccessSlotByName('secondary-2')]"
+
 				tooltip_enabled = no
 
 				blockoverride "offset_x" {
@@ -61,6 +65,7 @@ types cmf_dependency_check
 					size = { 245 230 }
 					position = { 245 0 }
 				}
+
 			}
 		}
 
@@ -172,6 +177,7 @@ types cmf_dependency_auto_enable
 		### Original playset_create_button content
 		hbox = {
 			layoutpolicy_horizontal = expanding
+
 			spacing = 5
 			margin = {10 0}
 
@@ -179,13 +185,7 @@ types cmf_dependency_auto_enable
 				name = "create_playset_editbox"
 				layoutpolicy_horizontal = expanding
 				layoutpolicy_vertical = fixed
-				tooltipwidget = {
-					LeftClickButtonTooltip = {
-						blockoverride "onclick_text" {
-							text = "MODS_GUI_PLAYSET_LABEL_TOOLTIP"
-						}
-					}
-				}
+				tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "MODS_GUI_PLAYSET_LABEL_TOOLTIP" } } }
 
 				blockoverride "editbox_label" {
 					text = "MODS_GUI_PLAYSET_LABEL"
