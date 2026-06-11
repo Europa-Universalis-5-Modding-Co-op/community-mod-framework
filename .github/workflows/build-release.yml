@@ -322,6 +322,29 @@ jobs:
           vdf_escape() {
             printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/'\''/g'
           }
+          # Steam rejects titles over 128 bytes and descriptions over 8000 UTF-8 bytes.
+          MAX_TITLE_LENGTH=128
+          MAX_DESCRIPTION_LENGTH=8000
+          trim_description() {
+            local desc="$1" lang_label="$2"
+            if [ "$(printf '%s' "$desc" | wc -c)" -gt "$MAX_DESCRIPTION_LENGTH" ]; then
+              echo "::warning::Description for '${lang_label}' exceeds ${MAX_DESCRIPTION_LENGTH} bytes. Truncating." >&2
+              printf '%s' "$desc" | python3 -c "import sys; sys.stdout.buffer.write(sys.stdin.buffer.read()[:${MAX_DESCRIPTION_LENGTH}].decode('utf-8', 'ignore').encode('utf-8'))"
+            else
+              printf '%s' "$desc"
+            fi
+          }
+          enforce_title_length() {
+            local title="$1" lang_label="$2" fallback="${3:-}"
+            if [ "$(printf '%s' "$title" | wc -c)" -le "$MAX_TITLE_LENGTH" ]; then
+              printf '%s' "$title"
+            elif [ -n "$fallback" ]; then
+              echo "::warning::Title for '${lang_label}' exceeds ${MAX_TITLE_LENGTH} bytes. Using the source title instead." >&2
+              printf '%s' "$fallback"
+            else
+              echo "::warning::Title for '${lang_label}' exceeds ${MAX_TITLE_LENGTH} bytes. Skipping title for this language." >&2
+            fi
+          }
           write_page_vdf() {
             local vdf_path="$1" steam_lang="$2" title="$3" desc="$4"
             title=$(vdf_escape "$title")
@@ -341,6 +364,8 @@ jobs:
           # Source language page
           SOURCE_TITLE=$(jq -r '.name' ../mod-release/.metadata/metadata.json)
           SOURCE_DESC=$(sed '/--NO-TRANSLATE-BELOW--/d' assets/workshop/workshop-description.bbcode | sed "s/\\\$item-id\\\$/${WORKSHOP_ID}/g")
+          SOURCE_TITLE=$(enforce_title_length "$SOURCE_TITLE" "english")
+          SOURCE_DESC=$(trim_description "$SOURCE_DESC" "english")
           write_page_vdf "../steam-release/page-english.vdf" "english" "$SOURCE_TITLE" "$SOURCE_DESC"
           echo "Uploading Workshop page for english..."
           steamcmd +login ${{ secrets.WORKSHOP_USERNAME }} ${{ secrets.WORKSHOP_PASSWORD }} +workshop_build_item "$(realpath ../steam-release/page-english.vdf)" +quit
@@ -359,6 +384,8 @@ jobs:
             TRANS_DESC=$(awk '/^===WORKSHOP_DESCRIPTION===$/{f=1;next} f{print}' "$file")
             TRANS_DESC=$(echo "$TRANS_DESC" | sed "s/\\\$item-id\\\$/${WORKSHOP_ID}/g")
             [ -z "$TRANS_TITLE" ] && [ -z "$TRANS_DESC" ] && continue
+            TRANS_TITLE=$(enforce_title_length "$TRANS_TITLE" "$LANG" "$SOURCE_TITLE")
+            TRANS_DESC=$(trim_description "$TRANS_DESC" "$LANG")
             write_page_vdf "../steam-release/page-${LANG}.vdf" "$STEAM_LANG" "$TRANS_TITLE" "$TRANS_DESC"
             echo "Uploading Workshop page for ${LANG} (${STEAM_LANG})..."
             steamcmd +login ${{ secrets.WORKSHOP_USERNAME }} ${{ secrets.WORKSHOP_PASSWORD }} +workshop_build_item "$(realpath "../steam-release/page-${LANG}.vdf")" +quit

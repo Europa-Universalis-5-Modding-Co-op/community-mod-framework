@@ -1,5 +1,5 @@
 ===WORKSHOP_TITLE===
-Topluluk Mod Altyapısı ve Menüsü / Community Mod Framework - 1.3 Pavia
+Topluluk Mod Altyapısı - 1.3 Pavia / Community Mod Framework - 1.3 Pavia
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Turkish Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 

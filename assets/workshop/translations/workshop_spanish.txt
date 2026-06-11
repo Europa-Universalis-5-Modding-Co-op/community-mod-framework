@@ -1,5 +1,5 @@
 ===WORKSHOP_TITLE===
-Marco y Menú de Mods de la Comunidad / Community Mod Framework - 1.3 Pavia
+Marco de Trabajo para Mods de la Comunidad - 1.3 Pavia / Community Mod Framework - 1.3 Pavia
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Spanish Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
