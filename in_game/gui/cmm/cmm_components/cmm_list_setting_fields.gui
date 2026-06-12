@@ -1106,18 +1106,24 @@
 						value = "[CMMListFieldSliderNormalizedValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 
 						track = {
-							EconomySlider_TrackRange = {
-								# Value remaps to the thumb-center x in the 120px track.
-								progressbar = {
-									size = { 100% 100% }
-									noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
-									progresstexture = "gfx/interface/progressbars/progress_bar_blue_alt.dds"
-									texture_density = 2
-									spriteType = Corneredstretched
-									spriteborder = { 0 0 }
-									min = 0
-									max = 120
-									value = "[FixedPointToFloat(Add_CFixedPoint('(CFixedPoint)10', Multiply_CFixedPoint(Divide_CFixedPoint(CMMListFieldSliderNormalizedValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '(CFixedPoint)100')))]"
+							button = {
+								# Track inset matches the thumb-center travel.
+								EconomySlider_TrackRange = {
+									parentanchor = left|top
+									position = { 10 0 }
+									size = { 100 100% }
+
+									progressbar = {
+										size = { 100% 100% }
+										noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
+										progresstexture = "gfx/interface/progressbars/progress_bar_blue_alt.dds"
+										texture_density = 2
+										spriteType = Corneredstretched
+										spriteborder = { 0 0 }
+										min = 0
+										max = 1
+										value = "[FixedPointToFloat(Divide_CFixedPoint(CMMListFieldSliderNormalizedValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))))]"
+									}
 								}
 							}
 						}
