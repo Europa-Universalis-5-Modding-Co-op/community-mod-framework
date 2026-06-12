@@ -1117,14 +1117,14 @@
 									spriteborder = { 0 0 }
 									min = 0
 									max = 120
-									value = "[FixedPointToFloat(Add_CFixedPoint('(CFixedPoint)7', Multiply_CFixedPoint(Divide_CFixedPoint(CMMListFieldSliderNormalizedValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '(CFixedPoint)106')))]"
+									value = "[FixedPointToFloat(Add_CFixedPoint('(CFixedPoint)10', Multiply_CFixedPoint(Divide_CFixedPoint(CMMListFieldSliderNormalizedValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '(CFixedPoint)100')))]"
 								}
 							}
 						}
 
 						slider = {
 							EconomySlider_Slider = {
-								size = { 14 14 }
+								size = { 20 20 }
 								alpha = 0.7
 
 								state = {
@@ -1152,8 +1152,8 @@
 
 						# Left edge zone (half thumb width) — clamps to slider index 0.
 						widget = {
-							size = { 7 20 }
-							minimumsize = { 7 20 }
+							size = { 10 20 }
+							minimumsize = { 10 20 }
 							allow_outside = yes
 							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
 							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '0')]"
@@ -1180,8 +1180,8 @@
 
 						# Middle track zone — 21 overlay points mapping 0-20 to slider indices 0,5,10,...,100.
 						widget = {
-							size = { 106 20 }
-							minimumsize = { 106 20 }
+							size = { 100 20 }
+							minimumsize = { 100 20 }
 
 							hbox = {
 								size = { 100% 20 }
@@ -1231,8 +1231,8 @@
 
 						# Right edge zone (half thumb width) — clamps to slider index 100.
 						widget = {
-							size = { 7 20 }
-							minimumsize = { 7 20 }
+							size = { 10 20 }
+							minimumsize = { 10 20 }
 							allow_outside = yes
 							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
 							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '100')]"
