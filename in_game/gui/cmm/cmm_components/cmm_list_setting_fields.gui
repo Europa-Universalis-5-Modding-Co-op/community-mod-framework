@@ -1131,20 +1131,17 @@
 						slider = {
 							EconomySlider_Slider = {
 								size = { 20 20 }
-								alpha = 0.7
 
-								state = {
-									name = slider_hover_on
-									trigger_when = "[CMMSliderThumbHover(CMMListSliderThumbIndex(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), Scope.GetFlagName)]"
-									alpha = 1.0
-									duration = 0.1
-								}
+								icon = {
+									size = { 100% 100% }
+									texture = "gfx/interface/buttons/flats/slider.dds"
+									alpha = 0.15
+									visible = "[Not(CMMSliderThumbHover(CMMListSliderThumbIndex(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), Scope.GetFlagName))]"
 
-								state = {
-									name = slider_hover_off
-									trigger_when = "[Not(CMMSliderThumbHover(CMMListSliderThumbIndex(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), Scope.GetFlagName))]"
-									alpha = 0.7
-									duration = 0.1
+									modify_texture = {
+										using = color_black_texture
+										blend_mode = multiply
+									}
 								}
 							}
 						}
