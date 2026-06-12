@@ -36,7 +36,7 @@
                     scrollarea = {
                         alwaystransparent = yes
                         layoutpolicy_horizontal = expanding
-                        layoutpolicy_vertical = fixed
+                        layoutpolicy_vertical = expanding
                         focuspolicy = all
                         minimumsize = { 150 35 }
                         scrollbaralign_vertical = left

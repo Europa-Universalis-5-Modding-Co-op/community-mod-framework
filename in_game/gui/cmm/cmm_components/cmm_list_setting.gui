@@ -268,11 +268,14 @@
 
 							tooltipwidget = { BasicFunctionalTooltip = {} }
 
-							text_single = {
+							icon = {
 								parentanchor = center
 								widgetanchor = center
-								position = { 2 0 }
-								raw_text = "↑"
+								texture = "gfx/interface/icons/flat_icons/arrow_sortby.dds"
+								size = { 40% 40% }
+								modify_texture = {
+									using = color_bone_texture
+								}
 							}
 						}
 					}
@@ -309,11 +312,15 @@
 
 							tooltipwidget = { BasicFunctionalTooltip = {} }
 
-							text_single = {
+							icon = {
 								parentanchor = center
 								widgetanchor = center
-								position = { 2 0 }
-								raw_text = "↓"
+								texture = "gfx/interface/icons/flat_icons/arrow_sortby.dds"
+								size = { 40% 40% }
+								mirror = vertical
+								modify_texture = {
+									using = color_bone_texture
+								}
 							}
 						}
 					}

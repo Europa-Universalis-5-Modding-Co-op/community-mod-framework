@@ -15,62 +15,109 @@
 		max_width = 340
 		layoutpolicy_vertical = expanding
 		using = bg_main_inner_alt
-		spacing = 1
-		margin = { 12 12 }
-		margin_top = 6
+		margin = { 12 0 }
 
 		vbox = {
-			layoutpolicy_horizontal = expanding
 			using = bg_secondary_section
+			using = layoutpolicy_expanding
 
+			# Searchbox
 			hbox = {
 				layoutpolicy_horizontal = expanding
-				margin = { 6 4 }
+				margin = { 6 6 }
+				# using = bg_text_mask_container_dark_blue
 
-				editbox_single = {
-					name = "cmm_mod_search_editbox"
+				hbox = {
 					layoutpolicy_horizontal = expanding
-					focuspolicy = all
-					alwaystransparent = no
-					multiline = no
-					text = ""
-					blockoverride "editbox_properties" {
+					margin = { 8 0 }
+
+					minimumsize = { 306 30 }
+					maximumsize = { 306 30 }
+
+					using = editbox_background
+					using = searchbar_icon
+
+					editbox = {
+						name = "cmm_mod_search_editbox"
+
+						using = layoutpolicy_expanding
+
+						margin = { 12 0 }
+						align = nobaseline
+
+						filter_mouse = none
+						alwaystransparent = no
+						focuspolicy = all
+
+						default_format = "#high"
+						tooltip = "[GetTextFromSelfOrAnyChildEditbox(PdxGuiWidget.Self)]"
+
 						ontextchanged = "[GetVariableSystem.Set('cmm_mod_search_text', GetTextFromSelfOrAnyChildEditbox(PdxGuiWidget.Self))]"
 						ontextedited = "[GetVariableSystem.Set('cmm_mod_search_text', GetTextFromSelfOrAnyChildEditbox(PdxGuiWidget.Self))]"
-					}
-					blockoverride "editbox_label" {
-						text = "CMM_MOD_SEARCH_PLACEHOLDER"
+
+						text_single = {
+							visible = "[IsSelfOrAnyChildAnEmptyEditbox(PdxGuiWidget.AccessParent.Self)]"
+							size = { 100% 100% }
+							margin = { 12 0 }
+							parentanchor = vcenter
+							autoresize = no
+							alpha = 0.5
+							alwaystransparent = yes
+							align = left|nobaseline
+							text = "CMM_MOD_SEARCH_PLACEHOLDER"
+						}
+						ui_direction_button = {
+							visible = "[Not(IsSelfOrAnyChildAnEmptyEditbox(PdxGuiWidget.AccessParent.Self))]"
+							parentanchor = right
+							position = { 0 4 }
+							size = { 22 22 }
+
+							blockoverride "button_texture"  {
+								texture = "gfx/interface/buttons/flats/clean_text.dds"
+							}
+							action_tooltip = {
+								title = "SEARCHBAR_CLEAR_TEXT"
+								on_action = "[PdxClearEditBoxText(PdxGuiWidget.AccessParent.AccessParent.FindChild('cmm_mod_search_editbox'))]"
+							}
+							tooltipwidget = { BasicFunctionalTooltip = {} }
+						}
+
 					}
 				}
 			}
-		}
 
-		scrollbox = {
-			using = layoutpolicy_expanding
-			layoutpolicy_vertical = expanding
-			layoutpolicy_horizontal = expanding
-			minimumsize = { 0 420 }
+			scrollbox = {
+				using = layoutpolicy_expanding
+				layoutpolicy_vertical = expanding
+				layoutpolicy_horizontal = expanding
+				minimumsize = { 0 420 }
 
-			blockoverride "scrollbox_content" {
-				cmm_mod_list_rows = {}
+				blockoverride "scrollbox_content" {
+					cmm_mod_list_rows = {}
+				}
+				window_bottom_paper_template = { }
 			}
+
 		}
 
+		# Reset to Defaults
 		hbox = {
 			visible = "[CMMHasRegisteredMods]"
 			layoutpolicy_horizontal = expanding
-			margin = { 0 8 }
-
-			expand = {}
-
-			button_regular_diamond = {
-				minimumsize = { 168 32 }
+			margin = { 8 8 }
+			spacing = 2
+			button_regular = {
+				layoutpolicy_horizontal = expanding
 				onclick = "[CMMExecuteGui('CMM_ResetToDefaults')]"
-				text = "CMM_RESET_TO_DEFAULTS"
-				tooltip = "CMM_RESET_TO_DEFAULTS_TOOLTIP"
+				text = "CMM_RESET_ALL_TO_DEFAULTS"
+				tooltip = "CMM_RESET_ALL_TO_DEFAULTS_TOOLTIP"
 			}
-
-			expand = {}
+			button_regular = {
+				layoutpolicy_horizontal = expanding
+				onclick = "[CMMExecuteGui('CMM_ResetToDefaults')]"
+				text = "CMM_RESET_MOD_TO_DEFAULTS"
+				tooltip = "CMM_RESET_MOD_TO_DEFAULTS_TOOLTIP"
+			}
 		}
 	}
 
@@ -81,9 +128,9 @@
 	# Writes:
 	# - none [n/a]: no writes.
 	type cmm_mod_list_rows = vbox {
-		using = bg_secondary_section
-		layoutpolicy_horizontal = expanding
+		using = layoutpolicy_expanding
 		ignoreinvisible = yes
+		bottomtotop = yes
 		spacing = 4
 		margin = { 6 6 }
 		datamodel = "[Player.MakeScope.GetList('cmm_registered_mod_ids')]"
@@ -91,6 +138,7 @@
 		item = {
 			cmm_mod_list_row = {}
 		}
+		expand = {}
 	}
 
 	# Single mod row with select behavior.

@@ -176,12 +176,14 @@
 	# - GetScriptedGui('CMM_MarkListFieldSelectNumericAll').Execute(...) [effect]: marks bulk numeric apply.
 	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
 	type cmm_list_setting_numeric_field = hbox {
-		minimumsize = { 120 28 }
+		minimumsize = { 120 25 }
 		spacing = 0
 
-		button_regular = {
-			minimumsize = { 32 28 }
-			text = "-"
+		button_square_minus = {
+			size = { 25 25 }
+			blockoverride "square_icon_size" {
+				size = { 75% 75% }
+			}
 
 			action_tooltip = {
 				click_mode = single
@@ -228,92 +230,76 @@
 		}
 
 		widget = {
-			size = { 56 28 }
-			minimumsize = { 56 28 }
+			size = { -1 25 }
+			# margin = { 4 0 }
+			layoutpolicy_horizontal = expanding
 
-			widget = {
-				size = { 56 24 }
-				minimumsize = { 56 24 }
-				parentanchor = vcenter
-				widgetanchor = vcenter
-				using = bg_square_outline_tile
+			using = bg_text_mask_container_dark_blue
 
-				background = {
-					using = color_dark_brown_texture
-					margin = { 2 2 }
-					alpha = 0.55
+			button = {
+				size = { 100% 100% }
+				alpha = 0
+				effectname = "NoHighlight"
+				tooltip_enabled = yes
+
+				action_tooltip = {
+					click_mode = single
+					click_type = right
+					title = "CMM_LIST_APPLY_NUMBER_TO_ALL"
+					on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+					on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+					on_action = "[CMMExecuteGui('CMM_MarkListFieldSelectNumericAll')]"
+					on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+					on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 				}
 
-				background = {
-					using = overlay_window_texture
-					margin = { 2 2 }
-					blend_mode = overlay
-					alpha = 0.1
-				}
+				tooltipwidget = {
+					ContextualTooltipType = {
+						blockoverride "tooltip_title" {}
+						blockoverride "tooltip_content_margin" { margin = { 10 6 } }
+						blockoverride "tooltip_content" {
+							hbox = {
+								set_parent_size_to_minimum = yes
 
-				button = {
-					size = { 100% 100% }
-					alpha = 0
-					effectname = "NoHighlight"
-					tooltip_enabled = yes
-
-					action_tooltip = {
-						click_mode = single
-						click_type = right
-						title = "CMM_LIST_APPLY_NUMBER_TO_ALL"
-						on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
-						on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-						on_action = "[CMMExecuteGui('CMM_MarkListFieldSelectNumericAll')]"
-						on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
-						on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
-					}
-
-					tooltipwidget = {
-						ContextualTooltipType = {
-							blockoverride "tooltip_title" {}
-							blockoverride "tooltip_content_margin" { margin = { 10 6 } }
-							blockoverride "tooltip_content" {
-								hbox = {
-									set_parent_size_to_minimum = yes
-
-									textbox = {
-										using = text_single_template
-										align = left|nobaseline
-										raw_text = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_min_')] - [CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_max_')]"
-									}
+								textbox = {
+									using = text_single_template
+									align = left|nobaseline
+									raw_text = "[CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_min_')] - [CMMListFieldMetadataValue(CMMListItemOwnerSettingKey(Scope.GetFlagName), GetVariableSystem.Get('cmm_list_hover_field_slot'), '_max_')]"
 								}
 							}
 						}
 					}
 				}
+			}
 
-				text_single = {
-					size = { 100% 100% }
-					align = center|nobaseline
-					autoresize = no
-					visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_hf_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '0')]"
-					text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
-				}
-				text_single = {
-					size = { 100% 100% }
-					align = center|nobaseline
-					autoresize = no
-					visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_hf_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '1')]"
-					text = "[AddTextIf(CMMCachedFieldHasPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMCachedFieldHasPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
-				}
-				text_single = {
-					size = { 100% 100% }
-					align = center|nobaseline
-					autoresize = no
-					visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_hf_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '2')]"
-					text = "[CMMCachedConditionalPrefix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMCachedConditionalPostfix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
-				}
+			text_single = {
+				size = { 100% 100% }
+				align = center|nobaseline
+				autoresize = no
+				visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_hf_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '0')]"
+				text = "[CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			}
+			text_single = {
+				size = { 100% 100% }
+				align = center|nobaseline
+				autoresize = no
+				visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_hf_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '1')]"
+				text = "[AddTextIf(CMMCachedFieldHasPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPrefix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][AddTextIf(CMMCachedFieldHasPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMCachedFieldPostfix(ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+			}
+			text_single = {
+				size = { 100% 100% }
+				align = center|nobaseline
+				autoresize = no
+				visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_hf_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '2')]"
+				text = "[CMMCachedConditionalPrefix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMCachedConditionalPostfix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
 		}
 
-		button_regular = {
-			minimumsize = { 32 28 }
-			text = "+"
+		button_square_plus = {
+			size = { 25 25 }
+			blockoverride "square_icon_size" {
+				size = { 75% 75% }
+			}
 
 			action_tooltip = {
 				click_mode = single
