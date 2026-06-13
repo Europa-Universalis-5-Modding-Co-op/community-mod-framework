@@ -1,6 +1,9 @@
 ﻿on_game_start = {
 	on_actions = {
 		_cmf_on_init
+		_cmf_on_cmm_registration
+		cmf_on_mod_registration
+		_cmf_on_cmm_registration_late
 	}
 }
 
