@@ -77,17 +77,28 @@ _cmm_reset_setting_to_default = {
 			}
 		}
 
+		clear_variable_list = _cmm_tmp_reset_field_keys
 		every_key_in_variable_map = {
 			variable = cmm_list_field_default
-			limit = {
-				root = {
-					is_key_in_variable_map = {
-						name = cmm_list_field_owner
-						target = prev
+
+			save_scope_as = cmm_reset_field_key
+
+			root = {
+				if = {
+					limit = {
+						is_key_in_variable_map = {
+							name = cmm_list_field_owner
+							target = scope:cmm_reset_field_key
+						}
+						"variable_map(cmm_list_field_owner|scope:cmm_reset_field_key)" = scope:cmm_reset_key
 					}
-					"variable_map(cmm_list_field_owner|prev)" = scope:cmm_reset_key
+					add_to_variable_list = { name = _cmm_tmp_reset_field_keys target = scope:cmm_reset_field_key }
 				}
 			}
+		}
+
+		every_in_list = {
+			variable = _cmm_tmp_reset_field_keys
 
 			save_scope_as = cmm_reset_field_key
 
@@ -96,7 +107,15 @@ _cmm_reset_setting_to_default = {
 			}
 		}
 
+		clear_variable_list = _cmm_tmp_reset_field_keys
+
 		_cmm_fire_reset_callback = yes
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = _cmm_tmp_reset_field_keys }
 	}
 }
 
