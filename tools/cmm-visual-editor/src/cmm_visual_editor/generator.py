@@ -14,6 +14,7 @@ def generate_all(model: ModModel) -> dict:
     if mod_id:
         files[f"in_game/common/on_action/{prefix}_cmm_on_actions.txt"] = noinspect + _gen_on_action(prefix)
         files[f"in_game/common/scripted_effects/{prefix}_cmm_effects.txt"] = noinspect + _gen_effects(model)
+        files[f"in_game/common/game_concepts/{prefix}_mod_icons.txt"] = _gen_mod_icons(model)
         has_sgui = any(
             s.setting_type == "list" or s.scripted_gui
             for t in model.tabs for g in t.groups for s in g.settings
@@ -140,6 +141,14 @@ def _gen_effects(model: ModModel) -> str:
 
     return "\n".join(lines) + "\n"
 
+
+def _gen_mod_icons(model: ModModel) -> str:
+    mod_id = model.mod_id
+    lines = []
+    lines += [f"{mod_id} = {{", f"	texture = \"mods/{mod_id}\"", "}"]
+    lines += [f"{mod_id}_background = {{", f"	texture = \"mods/{mod_id}_background\"", "}"]
+
+    return "\n".join(lines) + "\n"
 
 def _emit_callback_handler(lines: list, model: ModModel):
     """Generate {prefix}_handle_cmf_callback effect with alias sync and custom effect cases."""
@@ -408,6 +417,12 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
         lines.append(f"\t\tsetting_id = {setting.setting_id}")
         lines.append(f"\t}}")
 
+    # Dropdown multiselector layout
+    if setting.multiselector:
+        lines.append(f"\tcmm_set_dropdown_multiselector = {{")
+        lines.append(f"\t\tsetting = {qid}")
+        lines.append(f"\t}}")
+
 
 def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField):
     ft = field.field_type
@@ -469,6 +484,15 @@ def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField
         lines.append(f"\t\tmod_id = {mod_id}")
         lines.append(f"\t\tsetting_id = {setting_id}")
         lines.append(f"\t\tfield_id = {field.field_id}")
+        lines.append(f"\t}}")
+    # List field localization override
+    if field.loc_name_key and field.loc_root_key:
+        lines.append(f"\tcmm_set_list_field_localization = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting_id}")
+        lines.append(f"\t\tfield_id = {field.field_id}")
+        lines.append(f"\t\tname = {field.loc_name_key}")
+        lines.append(f"\t\troot = {field.loc_root_key}")
         lines.append(f"\t}}")
     # Per-item field disables
     for item in (field.disabled_items or []):
@@ -703,27 +727,33 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
 
         for field in (setting.fields or []):
             fqid = f"{qid}__{field.field_id}"
-            lines.append(f' {fqid}_name: "{_esc(field.name or field.field_id)}"')
+            if field.loc_name_key and field.loc_root_key:
+                name_key = field.loc_name_key
+                root = field.loc_root_key
+            else:
+                name_key = f"{fqid}_name"
+                root = fqid
+            lines.append(f' {name_key}: "{_esc(field.name or field.field_id)}"')
             if field.desc:
-                lines.append(f' {fqid}_desc: "{_esc(field.desc)}"')
+                lines.append(f' {root}_desc: "{_esc(field.desc)}"')
             if field.display_format and "$VALUE$" in field.display_format:
                 parts = field.display_format.split("$VALUE$", 1)
                 if parts[0]:
-                    lines.append(f' {fqid}_prefix: "{_esc(parts[0])}"')
+                    lines.append(f' {root}_prefix: "{_esc(parts[0])}"')
                 if parts[1]:
-                    lines.append(f' {fqid}_postfix: "{_esc(parts[1])}"')
+                    lines.append(f' {root}_postfix: "{_esc(parts[1])}"')
             if field.display_format_high and "$VALUE$" in field.display_format_high:
                 parts = field.display_format_high.split("$VALUE$", 1)
                 if parts[0]:
-                    lines.append(f' {fqid}_prefix_high: "{_esc(parts[0])}"')
+                    lines.append(f' {root}_prefix_high: "{_esc(parts[0])}"')
                 if parts[1]:
-                    lines.append(f' {fqid}_postfix_high: "{_esc(parts[1])}"')
+                    lines.append(f' {root}_postfix_high: "{_esc(parts[1])}"')
             if field.display_format_low and "$VALUE$" in field.display_format_low:
                 parts = field.display_format_low.split("$VALUE$", 1)
                 if parts[0]:
-                    lines.append(f' {fqid}_prefix_low: "{_esc(parts[0])}"')
+                    lines.append(f' {root}_prefix_low: "{_esc(parts[0])}"')
                 if parts[1]:
-                    lines.append(f' {fqid}_postfix_low: "{_esc(parts[1])}"')
+                    lines.append(f' {root}_postfix_low: "{_esc(parts[1])}"')
             if field.field_type == "dropdown":
                 for opt in (field.options or []):
                     lines.append(f' {fqid}_option_{opt.index}_name: "{_esc(opt.name)}"')

@@ -1,6 +1,12 @@
 const ModEditorComponent = {
     props: ['state'],
     emits: ['update'],
+    data() {
+        return {
+            iconFileName: '',
+            backgroundFileName: '',
+        };
+    },
     template: `
     <div class="section">
         <div class="section-header"><h3>Mod Configuration</h3></div>
@@ -21,6 +27,16 @@ const ModEditorComponent = {
         <div class="field-row">
             <label>Mod Description</label>
             <input v-model="state.mod_desc" placeholder="A brief description of your mod.">
+        </div>
+        <div class="field-row">
+            <label>Mod Icon</label>
+            <input type="file" @change="onModIconChange" ref="modIconInput">
+            <span class="field-hint" v-if="state.mod_icon">{{ getIconFileName() }}</span>
+        </div>
+        <div class="field-row">
+            <label>Mod Background</label>
+            <input type="file" @change="onModBackgroundChange" ref="modBackgroundInput">
+            <span class="field-hint" v-if="state.mod_background">{{ getBackgroundFileName() }}</span>
         </div>
 
         <details class="metadata-section">
@@ -52,12 +68,80 @@ const ModEditorComponent = {
         </details>
     </div>
     `,
+    mounted() {
+        // Set initial filenames when component is loaded
+        this.updateFileNames();
+    },
+    watch: {
+        'state.mod_id'() {
+            this.updateFileNames();
+        },
+        'state.mod_icon'() {
+            if (!this.iconFileName) {
+                this.updateFileNames();
+            }
+        },
+        'state.mod_background'() {
+            if (!this.backgroundFileName) {
+                this.updateFileNames();
+            }
+        },
+    },
     methods: {
         onModIdChange() {
             this.state.mod_id = this.state.mod_id.replace(/[^a-zA-Z0-9_]/g, '');
         },
         onTagsChange(e) {
             this.state.metadata_tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+        },
+        async onModIconChange(e) {
+            const file = e.target.files[0];
+            if (file) {
+                this.iconFileName = file.name;
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    this.state.mod_icon = evt.target.result; // base64 data URL
+                };
+                reader.readAsDataURL(file);
+            }
+        },
+        async onModBackgroundChange(e) {
+            const file = e.target.files[0];
+            if (file) {
+                this.backgroundFileName = file.name;
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    this.state.mod_background = evt.target.result; // base64 data URL
+                };
+                reader.readAsDataURL(file);
+            }
+        },
+        getIconFileName() {
+            if (this.iconFileName) {
+                return this.iconFileName;
+            }
+            if (this.state.mod_id) {
+                return `${this.state.mod_id}.dds`;
+            }
+            return '✓ File selected';
+        },
+        getBackgroundFileName() {
+            if (this.backgroundFileName) {
+                return this.backgroundFileName;
+            }
+            if (this.state.mod_id) {
+                return `${this.state.mod_id}_background.dds`;
+            }
+            return '✓ File selected';
+        },
+        updateFileNames() {
+            // Reset filenames when mod_id changes or on initial load
+            if (this.state.mod_icon && !this.iconFileName && this.state.mod_id) {
+                this.iconFileName = `${this.state.mod_id}.dds`;
+            }
+            if (this.state.mod_background && !this.backgroundFileName && this.state.mod_id) {
+                this.backgroundFileName = `${this.state.mod_id}_background.dds`;
+            }
         },
     },
 };

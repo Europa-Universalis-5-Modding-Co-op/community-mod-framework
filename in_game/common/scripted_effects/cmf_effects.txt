@@ -17,6 +17,15 @@ cmf_register_scripted_gui = {
 # Scope: any
 # Args: mod_id (key)
 cmf_register_mod = {
+
+	if = {
+		limit = {
+			NOT = { has_global_variable = $mod_id$_name }
+		}
+		set_global_variable = { name = $mod_id$_name value = flag:$mod_id$_name }
+		set_global_variable = { name = $mod_id$_desc value = flag:$mod_id$_desc }
+	}
+
     if = {
         limit = { NOT = { is_target_in_global_variable_list = { name = cmf_active_mod_ids target = flag:$mod_id$ } } }
         add_to_global_variable_list = {

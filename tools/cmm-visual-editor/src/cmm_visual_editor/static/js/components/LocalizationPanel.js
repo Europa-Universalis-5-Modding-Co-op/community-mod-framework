@@ -40,7 +40,8 @@ const LocalizationPanelComponent = {
                             }
                             for (const f of (s.fields || [])) {
                                 const fqid = `${qid}__${f.field_id}`;
-                                keys.push({ key: `${fqid}_name`, value: f.name, category: 'List Fields' });
+                                const fieldNameKey = (f.loc_name_key && f.loc_root_key) ? f.loc_name_key : `${fqid}_name`;
+                                keys.push({ key: fieldNameKey, value: f.name, category: 'List Fields' });
                                 if (f.field_type === 'dropdown') {
                                     for (const opt of (f.options || [])) {
                                         keys.push({ key: `${fqid}_option_${opt.index}_name`, value: opt.name, category: 'List Field Options' });

@@ -74,3 +74,4 @@
  CMM_LOG_EMPTY: "No log entries recorded."
  CMM_LOG_CLEAR: "Clear Log"
  CMM_LOG_CLEAR_TOOLTIP: "Remove all entries from the log."
+ CMM_OPEN_MOD_SHOWCASE: "Open Mod Showcase"

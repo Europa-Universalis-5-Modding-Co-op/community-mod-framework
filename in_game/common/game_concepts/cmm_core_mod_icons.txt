@@ -1,0 +1,6 @@
+﻿cmm_core = {
+	texture = "mods/cmm_core"
+}
+cmm_core_background = {
+	texture = "mods/cmm_core_background"
+}

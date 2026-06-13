@@ -245,6 +245,27 @@ const ListEditorComponent = {
                             </div>
                         </div>
                     </div>
+
+                    <!-- Localization key override -->
+                    <div v-if="field.field_id" class="per-item-aliases">
+                        <h6 class="collapsible-header" @click="togglePerItemSection(fi, 'localization')">
+                            <span class="collapse-indicator">{{ isPerItemSectionOpen(fi, 'localization') ? '&#9660;' : '&#9654;' }}</span>
+                            Localization Key Override
+                        </h6>
+                        <div v-show="isPerItemSectionOpen(fi, 'localization')">
+                            <div class="field-grid">
+                                <div class="field-row">
+                                    <label>Header Key</label>
+                                    <input v-model="field.loc_name_key" placeholder="custom column-header loc key" @input="sanitizeLocKeys(field)">
+                                </div>
+                                <div class="field-row">
+                                    <label>Root Key</label>
+                                    <input v-model="field.loc_root_key" placeholder="root for _desc / _prefix / _postfix" @input="sanitizeLocKeys(field)">
+                                </div>
+                            </div>
+                            <p class="field-hint">Set both keys to repoint this field's localization. Leave blank to use the default keys.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -522,6 +543,8 @@ const ListEditorComponent = {
                 display_format: '',
                 display_format_high: '',
                 display_format_low: '',
+                loc_name_key: '',
+                loc_root_key: '',
             });
         },
         removeField(i) {
@@ -529,6 +552,10 @@ const ListEditorComponent = {
         },
         sanitizeFieldId(field) {
             field.field_id = field.field_id.replace(/[^a-zA-Z0-9_]/g, '');
+        },
+        sanitizeLocKeys(field) {
+            if (field.loc_name_key) field.loc_name_key = field.loc_name_key.replace(/[^a-zA-Z0-9_]/g, '');
+            if (field.loc_root_key) field.loc_root_key = field.loc_root_key.replace(/[^a-zA-Z0-9_]/g, '');
         },
         onFieldTypeChange(field) {
             // Reset defaults based on type

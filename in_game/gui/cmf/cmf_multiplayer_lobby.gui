@@ -1,0 +1,177 @@
+﻿types "cmf_mp_types" {
+
+	type mod_banner = button {
+		texture_density = 3
+		texture = "gfx/interface/alerts/mod_alert_background.dds"
+
+		# text_single = {
+		# 	layoutpolicy_horizontal = expanding
+		# 	align = left|nobaseline
+		# 	tagtooltip_enabled = no
+		# 	text = "[Concatenate(Concatenate('gfx/interface/icons/mods/', Scope.GetFlagName), '.dds')]"
+		# }
+
+		icon = {
+			parentanchor = center
+			size = "[PdxGuiWidget.KeepRatioFromWidthPercent('(float)1.0', '(float)0.75')]"
+			texture = "[GetConceptTexture(Scope.GetFlagName)]"
+			glow = {
+				name = "drop_shadow"
+				glow_radius = 5
+				color = { 0.0 0.0 0.0 1.0 }
+				alpha = 0
+			}
+		}
+
+		# onmousehierarchyenter = "[PdxGuiWidget.SetHighlightCountry(GameDLC.GetFirstRelatedCountry)]"
+
+		tooltipwidget = {
+			ModContentTooltipType = {
+				# blockoverride "title_header_color" { tintcolor = "[GetColorDLC(DlcEntry.Filename)]"}
+				blockoverride "title_text" { text = "[CMMLocalizedGlobalSuffix(Scope.GetFlagName, '_name')]" }
+				blockoverride "flavor_text" {
+					text = "[CMMLocalizedGlobalSuffixText(Scope.GetFlagName, '_desc')]"
+				}
+			}
+		}
+	}
+
+	type ModContentTooltipType = tooltip_widget {
+		alwaystransparent = no
+		filter_mouse = all
+
+		using = bg_square_tile_shadow
+		using = bg_square_shadow
+		using = bg_paper_card
+		using = snd_UI_tooltip_handling
+
+		vbox = {
+			set_parent_size_to_minimum = yes
+			minimumsize = { 380 200 }
+
+			ModContentTooltipHeader = { }
+			TooltipLockProgress = { }
+
+			vbox = {
+				using = layoutpolicy_expanding
+				margin = { 10 10 }
+				spacing = 10
+
+				background = {
+					texture = "[GetConceptTexture(Concatenate(Scope.GetFlagName, '_background'))]"
+					texture_density = 2
+					alpha = 0.2
+					blend_mode = overlay
+					fittype = centercrop
+				}
+
+				# expand = {}
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					using = bg_text_mask_container_dark_blue
+					margin = { 10 7 }
+
+					text_multi = {
+						layoutpolicy_horizontal = expanding
+						block "flavor_text" {
+							visible = no
+						}
+						align = left|nobaseline
+						default_format = "#color_light_gray"
+						fontsize = 14
+						autoresize = yes
+					}
+				}
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					background = {
+						using = color_black_texture
+						alpha = 0.3
+					}
+					spacing = 10
+					margin = { 18 18 }
+
+					icon = {
+						tooltipwidget = {
+							TooltipConditionListType = {
+								datacontext = "[StringToConditionList(Localize('CLICK_TOOLTIP'))]"
+							}
+						}
+						size = { 32 32 }
+						texture = "gfx/interface/icons/ui_controls/left_click.dds"
+					}
+					text_multi = {
+						layoutpolicy_horizontal = expanding
+						align = left|nobaseline
+						default_format = "#color_yellow"
+						text = "CMM_OPEN_MOD_SHOWCASE"
+						fontsize = 15
+						autoresize = yes
+					}
+				}
+			}
+		}
+	}
+
+	type ModContentTooltipHeader = widget {
+		layoutpolicy_horizontal = expanding
+		size = { @tooltip_title_wide -1 }
+
+		widget = {
+			size = { 100% 67}
+			ignore_layout = yes
+			alwaystransparent = yes
+			position = { 0 -1 }
+
+			background = {
+				texture = "gfx/interface/component_tiles/tooltip_header_banner.dds"
+				texture_density = 2
+				spriteType = corneredstretched
+				spriteborder = { 75 0 }
+				margin_right = 20
+				margin_left = 5
+				margin_top = 1
+				modify_texture = {
+					using = color_allied_blue_texture
+					blend_mode = multiply
+				}
+				modify_texture = {
+					texture = "[GetGraphicalCultureTexture('header_pattern')]"
+					texture_density = 2
+					spriteType = corneredtiled
+					# spriteBorder = {0 0}
+					blend_mode = overlay
+					alpha = 0.2
+				}
+
+				modify_texture = {
+					texture = "gfx/interface/component_overlay/cloth_texture.dds"
+					texture_density = 2
+					spriteType = Corneredtiled
+					spriteborder = { 0 0 }
+					blend_mode = overlay
+					alpha = 0.2
+				}
+			}
+		}
+
+		hbox = {
+			resizeparent = yes
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+			margin = { 15 10 }
+
+			text_single = {
+				block "title_text" {
+					visible = no
+				}
+				default_format = "#yellow_titles"
+				using = Font_Size_Big
+			}
+
+			expand = {}
+		}
+	}
+}

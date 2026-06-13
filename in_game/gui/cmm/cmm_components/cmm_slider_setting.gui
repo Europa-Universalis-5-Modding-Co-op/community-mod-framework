@@ -119,7 +119,7 @@
 
 							slider = {
 								EconomySlider_Slider = {
-									size = { 22 22 }
+									size = { 20 20 }
 
 									icon = {
 										size = { 100% 100% }

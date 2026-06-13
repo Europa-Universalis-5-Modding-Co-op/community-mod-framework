@@ -39,6 +39,9 @@ class ListField:
     display_format: str = ""
     display_format_high: str = ""  # format when value > 0
     display_format_low: str = ""   # format when value < 0
+    # when set, override the field's header and desc/prefix/postfix localization keys
+    loc_name_key: str = ""
+    loc_root_key: str = ""
 
 
 @dataclass
@@ -81,6 +84,8 @@ class Setting:
     no_reset: Optional[bool] = None
     # unrestricted tools gating — marks this setting as requiring the master "Enable Unrestricted Tools" setting to be on
     requires_unrestricted_tools: Optional[bool] = None
+    # dropdown rendered as side-by-side option buttons
+    multiselector: Optional[bool] = None
     # alias
     alias: str = ""
     alias_inverted: bool = False
@@ -111,6 +116,8 @@ class ModModel:
     file_prefix: str = ""
     mod_name: str = ""
     mod_desc: str = ""
+    mod_icon: str = ""
+    mod_background: str = ""
     metadata_name: str = ""
     metadata_id: str = ""
     metadata_version: str = "0.1"
@@ -174,6 +181,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["no_reset"] = s.no_reset
         if s.requires_unrestricted_tools:
             d["requires_unrestricted_tools"] = s.requires_unrestricted_tools
+        if s.multiselector:
+            d["multiselector"] = s.multiselector
         if s.alias:
             d["alias"] = s.alias
         if s.alias_inverted:
@@ -224,6 +233,10 @@ def model_to_dict(model: ModModel) -> dict:
             d["display_format_high"] = f.display_format_high
         if f.display_format_low:
             d["display_format_low"] = f.display_format_low
+        if f.loc_name_key:
+            d["loc_name_key"] = f.loc_name_key
+        if f.loc_root_key:
+            d["loc_root_key"] = f.loc_root_key
         return d
 
     return {
@@ -231,6 +244,8 @@ def model_to_dict(model: ModModel) -> dict:
         "file_prefix": model.file_prefix,
         "mod_name": model.mod_name,
         "mod_desc": model.mod_desc,
+        "mod_icon": model.mod_icon,
+        "mod_background": model.mod_background,
         "metadata_name": model.metadata_name,
         "metadata_id": model.metadata_id,
         "metadata_version": model.metadata_version,
@@ -284,6 +299,8 @@ def dict_to_model(data: dict) -> ModModel:
             display_format=f.get("display_format", ""),
             display_format_high=f.get("display_format_high", ""),
             display_format_low=f.get("display_format_low", ""),
+            loc_name_key=f.get("loc_name_key", ""),
+            loc_root_key=f.get("loc_root_key", ""),
         )
 
     def _parse_setting(s: dict) -> Setting:
@@ -317,6 +334,7 @@ def dict_to_model(data: dict) -> ModModel:
             no_pass_value=s.get("no_pass_value"),
             no_reset=s.get("no_reset"),
             requires_unrestricted_tools=s.get("requires_unrestricted_tools"),
+            multiselector=s.get("multiselector"),
             alias=s.get("alias", ""),
             alias_inverted=s.get("alias_inverted", False),
             scripted_gui=s.get("scripted_gui"),
@@ -329,6 +347,8 @@ def dict_to_model(data: dict) -> ModModel:
         file_prefix=data.get("file_prefix", ""),
         mod_name=data.get("mod_name", ""),
         mod_desc=data.get("mod_desc", ""),
+        mod_icon=data.get("mod_icon", ""),
+        mod_background=data.get("mod_background", ""),
         metadata_name=data.get("metadata_name", ""),
         metadata_id=data.get("metadata_id", ""),
         metadata_version=data.get("metadata_version", "0.1"),

@@ -8,6 +8,14 @@ macro = {
     replace_with = "Player.MakeScope.GetVariable(Name)"
 }
 
+# Args: Name (string)
+# Returns: variable
+macro = {
+	description = "Country variable accessor"
+	definition = "CMMGlobalVar(Name)"
+	replace_with = "GetGlobalVariable(Name)"
+}
+
 # Args: Prefix (string), Key (string)
 # Returns: variable
 macro = {
@@ -91,9 +99,25 @@ macro = {
 # Args: Key (string), Suffix (string)
 # Returns: string
 macro = {
+	description = "Localization lookup for one runtime global key plus suffix"
+	definition = "CMMLocalizedGlobalSuffix(Key,Suffix)"
+	replace_with = "CMMGlobalVar(Concatenate(Key, Suffix)).GetFlagName"
+}
+
+# Args: Key (string), Suffix (string)
+# Returns: string
+macro = {
     description = "Localized text for one runtime key plus suffix"
     definition = "CMMLocalizedSuffixText(Key,Suffix)"
     replace_with = "AddTextIf(CMMHasLocalizedSuffixText(Key, Suffix), CMMLocalizedSuffix(Key, Suffix))"
+}
+
+# Args: Key (string), Suffix (string)
+# Returns: string
+macro = {
+	description = "Localized text for one runtime key plus suffix"
+	definition = "CMMLocalizedGlobalSuffixText(Key,Suffix)"
+	replace_with = "AddTextIf(CMMHasLocalizedGlobalSuffixText(Key, Suffix), CMMLocalizedGlobalSuffix(Key, Suffix))"
 }
 
 # Args: Key (string), Suffix (string)
@@ -102,6 +126,15 @@ macro = {
     description = "True when localized text exists for one runtime key plus suffix"
     definition = "CMMHasLocalizedSuffixText(Key,Suffix)"
     replace_with = "And(CMMVar(Concatenate(Key, Suffix)).IsSet, Not(EqualTo_string(CMMLocalizedSuffix(Key, Suffix), Concatenate(Key, Suffix))))"
+}
+
+
+# Args: Key (string), Suffix (string)
+# Returns: boolean
+macro = {
+	description = "True when localized text exists for one runtime key plus suffix"
+	definition = "CMMHasLocalizedGlobalSuffixText(Key,Suffix)"
+	replace_with = "And(CMMGlobalVar(Concatenate(Key, Suffix)).IsSet, Not(EqualTo_string(CMMLocalizedGlobalSuffix(Key, Suffix), Concatenate(Key, Suffix))))"
 }
 
 # Args: Index (int32)

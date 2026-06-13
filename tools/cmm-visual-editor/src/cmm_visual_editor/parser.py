@@ -1,5 +1,6 @@
 """Parser: existing Paradox mod files -> ModModel."""
 
+import base64
 import json
 import re
 from pathlib import Path
@@ -72,6 +73,7 @@ def parse_mod_directory(directory: Path) -> Tuple[ModModel, list]:
         on_action_content, effects_content, gui_content,
         loc_content, metadata_content, warnings,
         noinspection=noinspection,
+        directory=directory,
     )
 
 
@@ -92,6 +94,7 @@ def _build_model(
     on_action: str, effects: str, gui: str,
     loc: str, metadata: str, warnings: list,
     noinspection: bool = False,
+    directory: Path = None,
 ) -> Tuple[ModModel, list]:
     # Parse prefix from on_action
     prefix = _parse_prefix(on_action)
@@ -120,6 +123,8 @@ def _build_model(
     option_aliases = _parse_option_aliases(effects)
     no_reset_settings = _parse_no_reset_settings(effects)
     requires_unrestricted_tools_settings = _parse_requires_unrestricted_tools_settings(effects)
+    multiselector_settings = _parse_dropdown_multiselector_settings(effects)
+    field_loc_overrides = _parse_field_localization_overrides(effects)
     sgui_settings = _parse_sgui_settings(effects)
     sgui_conditions = _parse_sgui_conditions(gui)
 
@@ -217,6 +222,7 @@ def _build_model(
             reg, mod_id, loc_map, list_fields, list_item_values,
             setting_aliases, inverted_aliases, field_aliases, option_aliases,
             list_field_disables, list_item_hides, list_data_values,
+            field_loc_overrides,
         )
         if setting:
             # Deduplicate: skip if same setting_id already exists in this group
@@ -241,6 +247,8 @@ def _build_model(
                 setting.no_reset = True
             if setting.setting_id in requires_unrestricted_tools_settings:
                 setting.requires_unrestricted_tools = True
+            if setting.setting_id in multiselector_settings:
+                setting.multiselector = True
             if setting.setting_id in sgui_settings:
                 setting.scripted_gui = True
             if qid in sgui_conditions:
@@ -254,11 +262,37 @@ def _build_model(
                 if not setting.scripted_gui and setting.setting_type != "list":
                     setting.scripted_gui = True
 
+    # Load mod icon and background if they exist
+    mod_icon = ""
+    mod_background = ""
+    if directory and mod_id:
+        icons_dir = directory / "main_menu" / "gfx" / "interface" / "icons" / "mods"
+        icon_path = icons_dir / f"{mod_id}.dds"
+        bg_path = icons_dir / f"{mod_id}_background.dds"
+
+        if icon_path.is_file():
+            try:
+                file_data = icon_path.read_bytes()
+                encoded = base64.b64encode(file_data).decode('ascii')
+                mod_icon = f"data:image/vnd.ms-dds;base64,{encoded}"
+            except Exception as e:
+                warnings.append(f"Could not read icon file: {e}")
+
+        if bg_path.is_file():
+            try:
+                file_data = bg_path.read_bytes()
+                encoded = base64.b64encode(file_data).decode('ascii')
+                mod_background = f"data:image/vnd.ms-dds;base64,{encoded}"
+            except Exception as e:
+                warnings.append(f"Could not read background file: {e}")
+
     model = ModModel(
         mod_id=mod_id,
         file_prefix=prefix or mod_id,
         mod_name=loc_map.get(f"{mod_id}_name", "") or meta.get("name", "") or mod_id,
         mod_desc=loc_map.get(f"{mod_id}_desc", "") or meta.get("short_description", ""),
+        mod_icon=mod_icon,
+        mod_background=mod_background,
         metadata_name=meta.get("name", ""),
         metadata_id=meta.get("id", ""),
         metadata_version=meta.get("version", "0.1"),
@@ -404,6 +438,42 @@ def _parse_requires_unrestricted_tools_settings(content: str) -> set:
         sid = params.get("setting_id", "")
         if sid:
             result.add(sid)
+    return result
+
+
+def _parse_dropdown_multiselector_settings(content: str) -> set:
+    """Extract cmm_set_dropdown_multiselector blocks -> set of setting_ids."""
+    result = set()
+    pattern = re.compile(r"cmm_set_dropdown_multiselector\s*=\s*\{", re.IGNORECASE)
+    for m in pattern.finditer(content):
+        block_end = _find_closing_brace(content, m.end())
+        if block_end < 0:
+            continue
+        block = content[m.end():block_end]
+        params = _parse_params(block)
+        composite = params.get("setting", "")
+        if "__" in composite:
+            result.add(composite.split("__", 1)[1])
+    return result
+
+
+def _parse_field_localization_overrides(content: str) -> dict:
+    """Extract cmm_set_list_field_localization blocks -> {(setting_id, field_id): {name, root}}."""
+    result = {}
+    pattern = re.compile(r"cmm_set_list_field_localization\s*=\s*\{", re.IGNORECASE)
+    for m in pattern.finditer(content):
+        block_end = _find_closing_brace(content, m.end())
+        if block_end < 0:
+            continue
+        block = content[m.end():block_end]
+        params = _parse_params(block)
+        sid = params.get("setting_id", "")
+        fid = params.get("field_id", "")
+        if sid and fid:
+            result[(sid, fid)] = {
+                "name": params.get("name", ""),
+                "root": params.get("root", ""),
+            }
     return result
 
 
@@ -739,6 +809,7 @@ def _reg_to_setting(
     list_field_disables: dict = None,
     list_item_hides: dict = None,
     list_data_values: dict = None,
+    loc_overrides: dict = None,
 ) -> Setting:
     """Convert a registration dict to a Setting."""
     reg_type = reg.get("_type", "")
@@ -833,7 +904,7 @@ def _reg_to_setting(
         for fi, freg in enumerate(list_fields.get(sid, [])):
             fld = _parse_list_field(
                 freg, mod_id, sid, loc_map, fi, field_aliases,
-                list_field_disables,
+                list_field_disables, loc_overrides,
             )
             if fld:
                 # Attach data values if this is a data field
@@ -851,7 +922,7 @@ def _reg_to_setting(
 def _parse_list_field(
     reg: dict, mod_id: str, setting_id: str, loc_map: dict,
     field_index: int = 0, field_aliases: dict = None,
-    list_field_disables: dict = None,
+    list_field_disables: dict = None, loc_overrides: dict = None,
 ) -> ListField:
     fid = reg.get("field_id", "")
     ftype_raw = reg.get("_type", "")
@@ -869,6 +940,11 @@ def _parse_list_field(
         return None
 
     fqid = f"{mod_id}__{setting_id}__{fid}"
+
+    # Localization key override from cmm_set_list_field_localization
+    override = (loc_overrides or {}).get((setting_id, fid))
+    name_key = (override.get("name") if override else "") or f"{fqid}_name"
+    root = (override.get("root") if override else "") or fqid
 
     # Look up field alias (template or per-item)
     slot = field_index + 1
@@ -895,11 +971,13 @@ def _parse_list_field(
     field = ListField(
         field_id=fid,
         field_type=ftype,
-        name=loc_map.get(f"{fqid}_name", fid),
-        desc=loc_map.get(f"{fqid}_desc", ""),
+        name=loc_map.get(name_key, fid),
+        desc=loc_map.get(f"{root}_desc", ""),
         alias=alias,
         item_aliases=item_aliases,
         disabled_items=disabled_items,
+        loc_name_key=override.get("name", "") if override else "",
+        loc_root_key=override.get("root", "") if override else "",
     )
 
     if ftype == "bool":
@@ -922,16 +1000,16 @@ def _parse_list_field(
         field.default_value = _to_float(reg.get("default_value", "0"))
 
     # Format display — reconstruct $VALUE$ format from prefix/postfix loc keys
-    pfx = loc_map.get(f"{fqid}_prefix", "")
-    sfx = loc_map.get(f"{fqid}_postfix", "")
+    pfx = loc_map.get(f"{root}_prefix", "")
+    sfx = loc_map.get(f"{root}_postfix", "")
     if pfx or sfx:
         field.display_format = f"{pfx}$VALUE${sfx}"
-    pfx_high = loc_map.get(f"{fqid}_prefix_high", "")
-    sfx_high = loc_map.get(f"{fqid}_postfix_high", "")
+    pfx_high = loc_map.get(f"{root}_prefix_high", "")
+    sfx_high = loc_map.get(f"{root}_postfix_high", "")
     if pfx_high or sfx_high:
         field.display_format_high = f"{pfx_high}$VALUE${sfx_high}"
-    pfx_low = loc_map.get(f"{fqid}_prefix_low", "")
-    sfx_low = loc_map.get(f"{fqid}_postfix_low", "")
+    pfx_low = loc_map.get(f"{root}_prefix_low", "")
+    sfx_low = loc_map.get(f"{root}_postfix_low", "")
     if pfx_low or sfx_low:
         field.display_format_low = f"{pfx_low}$VALUE${sfx_low}"
 
