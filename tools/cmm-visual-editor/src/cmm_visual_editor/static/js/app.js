@@ -72,6 +72,8 @@ const app = createApp({
             file_prefix: '',
             mod_name: '',
             mod_desc: '',
+            mod_icon: '',
+            mod_background: '',
             metadata_name: '',
             metadata_id: '',
             metadata_version: '0.1',
@@ -611,6 +613,7 @@ const app = createApp({
             // Reset state to defaults
             const defaults = {
                 mod_id: '', file_prefix: '', mod_name: '', mod_desc: '',
+                mod_icon: '', mod_background: '',
                 metadata_name: '', metadata_id: '', metadata_version: '0.1',
                 metadata_short_description: '', metadata_tags: ['Utilities'],
                 metadata_game_version: '1.1.*', metadata_relationships: [],

@@ -14,6 +14,7 @@ def generate_all(model: ModModel) -> dict:
     if mod_id:
         files[f"in_game/common/on_action/{prefix}_cmm_on_actions.txt"] = noinspect + _gen_on_action(prefix)
         files[f"in_game/common/scripted_effects/{prefix}_cmm_effects.txt"] = noinspect + _gen_effects(model)
+        files[f"in_game/common/game_concepts/{prefix}_mod_icons.txt"] = _gen_mod_icons(model)
         has_sgui = any(
             s.setting_type == "list" or s.scripted_gui
             for t in model.tabs for g in t.groups for s in g.settings
@@ -140,6 +141,14 @@ def _gen_effects(model: ModModel) -> str:
 
     return "\n".join(lines) + "\n"
 
+
+def _gen_mod_icons(model: ModModel) -> str:
+    mod_id = model.mod_id
+    lines = []
+    lines += [f"{mod_id} = {{", f"	texture = \"mods/{mod_id}\"", "}"]
+    lines += [f"{mod_id}_background = {{", f"	texture = \"mods/{mod_id}_background\"", "}"]
+
+    return "\n".join(lines) + "\n"
 
 def _emit_callback_handler(lines: list, model: ModModel):
     """Generate {prefix}_handle_cmf_callback effect with alias sync and custom effect cases."""

@@ -111,6 +111,8 @@ class ModModel:
     file_prefix: str = ""
     mod_name: str = ""
     mod_desc: str = ""
+    mod_icon: str = ""
+    mod_background: str = ""
     metadata_name: str = ""
     metadata_id: str = ""
     metadata_version: str = "0.1"
@@ -231,6 +233,8 @@ def model_to_dict(model: ModModel) -> dict:
         "file_prefix": model.file_prefix,
         "mod_name": model.mod_name,
         "mod_desc": model.mod_desc,
+        "mod_icon": model.mod_icon,
+        "mod_background": model.mod_background,
         "metadata_name": model.metadata_name,
         "metadata_id": model.metadata_id,
         "metadata_version": model.metadata_version,
@@ -329,6 +333,8 @@ def dict_to_model(data: dict) -> ModModel:
         file_prefix=data.get("file_prefix", ""),
         mod_name=data.get("mod_name", ""),
         mod_desc=data.get("mod_desc", ""),
+        mod_icon=data.get("mod_icon", ""),
+        mod_background=data.get("mod_background", ""),
         metadata_name=data.get("metadata_name", ""),
         metadata_id=data.get("metadata_id", ""),
         metadata_version=data.get("metadata_version", "0.1"),

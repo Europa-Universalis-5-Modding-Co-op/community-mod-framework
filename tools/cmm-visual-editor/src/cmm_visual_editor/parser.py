@@ -1,5 +1,6 @@
 """Parser: existing Paradox mod files -> ModModel."""
 
+import base64
 import json
 import re
 from pathlib import Path
@@ -72,6 +73,7 @@ def parse_mod_directory(directory: Path) -> Tuple[ModModel, list]:
         on_action_content, effects_content, gui_content,
         loc_content, metadata_content, warnings,
         noinspection=noinspection,
+        directory=directory,
     )
 
 
@@ -92,6 +94,7 @@ def _build_model(
     on_action: str, effects: str, gui: str,
     loc: str, metadata: str, warnings: list,
     noinspection: bool = False,
+    directory: Path = None,
 ) -> Tuple[ModModel, list]:
     # Parse prefix from on_action
     prefix = _parse_prefix(on_action)
@@ -254,11 +257,37 @@ def _build_model(
                 if not setting.scripted_gui and setting.setting_type != "list":
                     setting.scripted_gui = True
 
+    # Load mod icon and background if they exist
+    mod_icon = ""
+    mod_background = ""
+    if directory and mod_id:
+        icons_dir = directory / "main_menu" / "gfx" / "interface" / "icons" / "mods"
+        icon_path = icons_dir / f"{mod_id}.dds"
+        bg_path = icons_dir / f"{mod_id}_background.dds"
+
+        if icon_path.is_file():
+            try:
+                file_data = icon_path.read_bytes()
+                encoded = base64.b64encode(file_data).decode('ascii')
+                mod_icon = f"data:image/vnd.ms-dds;base64,{encoded}"
+            except Exception as e:
+                warnings.append(f"Could not read icon file: {e}")
+
+        if bg_path.is_file():
+            try:
+                file_data = bg_path.read_bytes()
+                encoded = base64.b64encode(file_data).decode('ascii')
+                mod_background = f"data:image/vnd.ms-dds;base64,{encoded}"
+            except Exception as e:
+                warnings.append(f"Could not read background file: {e}")
+
     model = ModModel(
         mod_id=mod_id,
         file_prefix=prefix or mod_id,
         mod_name=loc_map.get(f"{mod_id}_name", "") or meta.get("name", "") or mod_id,
         mod_desc=loc_map.get(f"{mod_id}_desc", "") or meta.get("short_description", ""),
+        mod_icon=mod_icon,
+        mod_background=mod_background,
         metadata_name=meta.get("name", ""),
         metadata_id=meta.get("id", ""),
         metadata_version=meta.get("version", "0.1"),

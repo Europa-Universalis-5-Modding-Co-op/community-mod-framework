@@ -1,8 +1,10 @@
 """HTTP server for CMM Visual Editor."""
 
+import base64
 import json
 import io
 import os
+import shutil
 import threading
 import zipfile
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -208,6 +210,52 @@ class RequestHandler(BaseHTTPRequestHandler):
             else:
                 full_path.write_bytes(encode_bom(content))
             written.append(str(full_path))
+
+        # Copy mod icon and background files
+        mod_id = model.mod_id
+        if mod_id:
+            icons_dir = output_path / "main_menu" / "gfx" / "interface" / "icons" / "mods"
+            icons_dir.mkdir(parents=True, exist_ok=True)
+
+            if model.mod_icon:
+                try:
+                    # Check if it's a base64 data URL
+                    if model.mod_icon.startswith('data:'):
+                        # Extract base64 data from data URL (format: data:image/...;base64,...)
+                        header, encoded = model.mod_icon.split(',', 1)
+                        file_data = base64.b64decode(encoded)
+                        icon_dest = icons_dir / f"{mod_id}.dds"
+                        icon_dest.write_bytes(file_data)
+                        written.append(str(icon_dest))
+                    else:
+                        # Legacy: treat as file path
+                        icon_source = Path(model.mod_icon)
+                        if icon_source.is_file():
+                            icon_dest = icons_dir / f"{mod_id}.dds"
+                            shutil.copy2(icon_source, icon_dest)
+                            written.append(str(icon_dest))
+                except Exception as e:
+                    print(f"[ERROR] Failed to save mod_icon: {e}")
+
+            if model.mod_background:
+                try:
+                    # Check if it's a base64 data URL
+                    if model.mod_background.startswith('data:'):
+                        # Extract base64 data from data URL (format: data:image/...;base64,...)
+                        header, encoded = model.mod_background.split(',', 1)
+                        file_data = base64.b64decode(encoded)
+                        bg_dest = icons_dir / f"{mod_id}_background.dds"
+                        bg_dest.write_bytes(file_data)
+                        written.append(str(bg_dest))
+                    else:
+                        # Legacy: treat as file path
+                        bg_source = Path(model.mod_background)
+                        if bg_source.is_file():
+                            bg_dest = icons_dir / f"{mod_id}_background.dds"
+                            shutil.copy2(bg_source, bg_dest)
+                            written.append(str(bg_dest))
+                except Exception as e:
+                    print(f"[ERROR] Failed to save mod_background: {e}")
 
         self._send_json({"written": written})
 
