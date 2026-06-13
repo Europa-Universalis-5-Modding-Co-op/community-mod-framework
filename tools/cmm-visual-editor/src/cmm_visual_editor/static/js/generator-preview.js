@@ -354,6 +354,13 @@ ${prefix}_on_cmf_callback = {
             lines.push(`\t\tsetting_id = ${setting.setting_id}`);
             lines.push(`\t}`);
         }
+
+        // Dropdown multiselector layout
+        if (setting.multiselector) {
+            lines.push(`\tcmm_set_dropdown_multiselector = {`);
+            lines.push(`\t\tsetting = ${qid}`);
+            lines.push(`\t}`);
+        }
     },
 
     _emitListField(lines, modId, settingId, field) {
@@ -419,6 +426,16 @@ ${prefix}_on_cmf_callback = {
             lines.push(`\t\tmod_id = ${modId}`);
             lines.push(`\t\tsetting_id = ${settingId}`);
             lines.push(`\t\tfield_id = ${field.field_id}`);
+            lines.push(`\t}`);
+        }
+        // List field localization override
+        if (field.loc_name_key && field.loc_root_key) {
+            lines.push(`\tcmm_set_list_field_localization = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${settingId}`);
+            lines.push(`\t\tfield_id = ${field.field_id}`);
+            lines.push(`\t\tname = ${field.loc_name_key}`);
+            lines.push(`\t\troot = ${field.loc_root_key}`);
             lines.push(`\t}`);
         }
         // Per-item field disables
@@ -770,35 +787,37 @@ ${prefix}_on_cmf_callback = {
             }
             for (const field of (setting.fields || [])) {
                 const fqid = `${qid}__${field.field_id}`;
-                lines.push(` ${fqid}_name: "${this._esc(field.name || field.field_id)}"`);
+                const nameKey = (field.loc_name_key && field.loc_root_key) ? field.loc_name_key : `${fqid}_name`;
+                const root = (field.loc_name_key && field.loc_root_key) ? field.loc_root_key : fqid;
+                lines.push(` ${nameKey}: "${this._esc(field.name || field.field_id)}"`);
                 if (field.desc) {
-                    lines.push(` ${fqid}_desc: "${this._esc(field.desc)}"`);
+                    lines.push(` ${root}_desc: "${this._esc(field.desc)}"`);
                 }
                 if (field.display_format && field.display_format.includes('$VALUE$')) {
                     const parts = field.display_format.split('$VALUE$');
                     if (parts[0]) {
-                        lines.push(` ${fqid}_prefix: "${this._esc(parts[0])}"`);
+                        lines.push(` ${root}_prefix: "${this._esc(parts[0])}"`);
                     }
                     if (parts[1]) {
-                        lines.push(` ${fqid}_postfix: "${this._esc(parts[1])}"`);
+                        lines.push(` ${root}_postfix: "${this._esc(parts[1])}"`);
                     }
                 }
                 if (field.display_format_high && field.display_format_high.includes('$VALUE$')) {
                     const parts = field.display_format_high.split('$VALUE$');
                     if (parts[0]) {
-                        lines.push(` ${fqid}_prefix_high: "${this._esc(parts[0])}"`);
+                        lines.push(` ${root}_prefix_high: "${this._esc(parts[0])}"`);
                     }
                     if (parts[1]) {
-                        lines.push(` ${fqid}_postfix_high: "${this._esc(parts[1])}"`);
+                        lines.push(` ${root}_postfix_high: "${this._esc(parts[1])}"`);
                     }
                 }
                 if (field.display_format_low && field.display_format_low.includes('$VALUE$')) {
                     const parts = field.display_format_low.split('$VALUE$');
                     if (parts[0]) {
-                        lines.push(` ${fqid}_prefix_low: "${this._esc(parts[0])}"`);
+                        lines.push(` ${root}_prefix_low: "${this._esc(parts[0])}"`);
                     }
                     if (parts[1]) {
-                        lines.push(` ${fqid}_postfix_low: "${this._esc(parts[1])}"`);
+                        lines.push(` ${root}_postfix_low: "${this._esc(parts[1])}"`);
                     }
                 }
                 if (field.field_type === 'dropdown') {
