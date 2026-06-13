@@ -109,6 +109,8 @@
 			button_regular = {
 				layoutpolicy_horizontal = expanding
 				onclick = "[CMMExecuteGui('CMM_ResetToDefaults')]"
+				# Reset rewrites list field values and metadata cached under cmm_list_sk.
+				onclick = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 				text = "CMM_RESET_ALL_TO_DEFAULTS"
 				tooltip = "CMM_RESET_ALL_TO_DEFAULTS_TOOLTIP"
 			}
@@ -116,6 +118,8 @@
 				layoutpolicy_horizontal = expanding
 				enabled = "[CMMSelectedModExists]"
 				onclick = "[CMMExecuteGuiWithSelectedMod('CMM_ResetModToDefaults')]"
+				# Reset rewrites list field values and metadata cached under cmm_list_sk.
+				onclick = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 				text = "CMM_RESET_MOD_TO_DEFAULTS"
 				tooltip = "CMM_RESET_MOD_TO_DEFAULTS_TOOLTIP"
 			}
@@ -130,15 +134,19 @@
 	# - none [n/a]: no writes.
 	type cmm_mod_list_rows = vbox {
 		using = layoutpolicy_expanding
-		ignoreinvisible = yes
-		bottomtotop = yes
-		spacing = 4
 		margin = { 6 6 }
-		datamodel = "[Player.MakeScope.GetList('cmm_registered_mod_ids')]"
 
-		item = {
-			cmm_mod_list_row = {}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			ignoreinvisible = yes
+			spacing = 4
+			datamodel = "[Player.MakeScope.GetList('cmm_registered_mod_ids')]"
+
+			item = {
+				cmm_mod_list_row = {}
+			}
 		}
+
 		expand = {}
 	}
 
