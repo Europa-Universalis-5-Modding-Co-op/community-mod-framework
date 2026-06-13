@@ -158,6 +158,45 @@ _cmm_sync_action_bar_button_active_from_list = {
 	}
 }
 
+# Per-item: update cmf_action_bar_active_elements membership to match the slot 1
+# bool field value for this row's element. Item 1 is the mod menu and is never
+# in the active list.
+# Called by cmm_for_each_list_item.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key (cmm_core__action_bar_buttons).
+# - i (number): Item ordinal (1-50).
+_cmm_sync_action_bar_active_from_field = {
+	if = {
+		limit = {
+			NOT = { $i$ = 1 }
+		}
+		if = {
+			limit = { "variable_map(cmm|flag:$setting$_i$i$_f1)" >= 1 }
+			if = {
+				limit = {
+					NOT = {
+						is_target_in_variable_list = {
+							name = cmf_action_bar_active_elements
+							target = scope:cmm_list_current_item_value
+						}
+					}
+				}
+				add_to_variable_list = {
+					name = cmf_action_bar_active_elements
+					target = scope:cmm_list_current_item_value
+				}
+			}
+		}
+		else = {
+			remove_list_variable = {
+				name = cmf_action_bar_active_elements
+				target = scope:cmm_list_current_item_value
+			}
+		}
+	}
+}
+
 # Per-item: set the row label to the element's name key from cmf_action_bar_element_name.
 # Item 1 (the mod menu) keeps its explicit name.
 # Called by cmm_for_each_list_item.
@@ -233,6 +272,13 @@ _cmm_handle_core_callback = {
 		}
 		else = {
 			set_variable = { name = cmf_log_view_open value = yes }
+		}
+	}
+	else_if = {
+		limit = { var:cmf_callback = flag:cmm_core__action_bar_buttons }
+		cmm_for_each_list_item = {
+			setting = cmm_core__action_bar_buttons
+			effect = _cmm_sync_action_bar_active_from_field
 		}
 	}
 

@@ -42,6 +42,16 @@ CMM_ResetToDefaults = {
 	}
 }
 
+# Reset all settings for the mod in scope:mod to their registered default values.
+# Scope: country
+CMM_ResetModToDefaults = {
+	scope = country
+	saved_scopes = { mod }
+	effect = {
+		_cmm_reset_mod_to_defaults = yes
+	}
+}
+
 # List _on_changed for the action-bar visible-buttons list.
 # Mirrors the toggled row to cmf_action_bar_active_elements before applying
 # the change to the bool field's stored value.

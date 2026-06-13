@@ -193,6 +193,14 @@ macro = {
 }
 
 # Args: Name (string)
+# Returns: none
+macro = {
+    description = "Execute one scripted GUI callback with the selected mod as mod scope"
+    definition = "CMMExecuteGuiWithSelectedMod(Name)"
+    replace_with = "GetScriptedGui(Name).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('mod', MakeScopeFlag(GetVariableSystem.Get('cmm_selected_mod'))).End)"
+}
+
+# Args: Name (string)
 # Returns: boolean
 macro = {
     description = "True when one scripted GUI callback is shown"

@@ -114,7 +114,8 @@
 			}
 			button_regular = {
 				layoutpolicy_horizontal = expanding
-				onclick = "[CMMExecuteGui('CMM_ResetToDefaults')]"
+				enabled = "[CMMSelectedModExists]"
+				onclick = "[CMMExecuteGuiWithSelectedMod('CMM_ResetModToDefaults')]"
 				text = "CMM_RESET_MOD_TO_DEFAULTS"
 				tooltip = "CMM_RESET_MOD_TO_DEFAULTS_TOOLTIP"
 			}

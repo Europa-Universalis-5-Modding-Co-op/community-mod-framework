@@ -177,6 +177,8 @@ _cmm_initialize_list_setting_item_list = {
 # - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 _cmm_initialize_list_bool_field_item = {
 	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $is_global$ }
+	add_to_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_value$ }
+	add_to_variable_map = { name = cmm_list_field_owner key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = flag:$mod_id$__$setting_id$ }
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_value$ }
@@ -311,6 +313,8 @@ _cmm_initialize_list_bool_field_slot = {
 # - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 _cmm_initialize_list_dropdown_field_item = {
 	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $is_global$ }
+	add_to_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_index$ }
+	add_to_variable_map = { name = cmm_list_field_owner key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = flag:$mod_id$__$setting_id$ }
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_index$ }
@@ -467,6 +471,8 @@ _cmm_initialize_list_dropdown_field_slot = {
 # - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 _cmm_initialize_list_numeric_field_item = {
 	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $is_global$ }
+	add_to_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_value$ }
+	add_to_variable_map = { name = cmm_list_field_owner key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = flag:$mod_id$__$setting_id$ }
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_value$ }
@@ -616,6 +622,8 @@ _cmm_initialize_list_numeric_field_slot = {
 # - is_global (1/0): `1` for global variable storage, `0` for country variable storage.
 _cmm_initialize_list_slider_field_item = {
 	add_to_variable_map = { name = cmm_is_global key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $is_global$ }
+	add_to_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_value$ }
+	add_to_variable_map = { name = cmm_list_field_owner key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = flag:$mod_id$__$setting_id$ }
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $default_value$ }
