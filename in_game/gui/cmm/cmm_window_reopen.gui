@@ -1,0 +1,14 @@
+# Triggered by the reset buttons to re-register and reopen the CMM window so its datamodels rebuild against the reset values.
+widget = {
+	name = "cmm_window_reopen"
+	size = { 0 0 }
+	datacontext = "[GetPlayer]"
+	visible = "[Country.IsValid]"
+
+	state = {
+		name = cmm_reopen_window
+		duration = 0.05
+		on_finish = "[GetScriptedGui('CMM_RegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		on_finish = "[GetVariableSystem.Set('cmm_window_open', '1')]"
+	}
+}

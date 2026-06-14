@@ -1,2 +1,3 @@
 ﻿gui/cmm/cmm_window.gui = cmm_window
 gui/cmm/cmm_keybind_handler.gui = cmm_keybind_handler
+gui/cmm/cmm_window_reopen.gui = cmm_window_reopen

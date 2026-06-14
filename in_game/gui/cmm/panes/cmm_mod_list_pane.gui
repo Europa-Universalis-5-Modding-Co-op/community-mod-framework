@@ -109,8 +109,8 @@
 			button_regular = {
 				layoutpolicy_horizontal = expanding
 				onclick = "[CMMExecuteGui('CMM_ResetToDefaults')]"
-				# Reset rewrites list field values and metadata cached under cmm_list_sk.
-				onclick = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
+				onclick = "[GetVariableSystem.Clear('cmm_window_open')]"
+				onclick = "[PdxGuiTriggerAllAnimations('cmm_reopen_window')]"
 				text = "CMM_RESET_ALL_TO_DEFAULTS"
 				tooltip = "CMM_RESET_ALL_TO_DEFAULTS_TOOLTIP"
 			}
@@ -118,8 +118,8 @@
 				layoutpolicy_horizontal = expanding
 				enabled = "[CMMSelectedModExists]"
 				onclick = "[CMMExecuteGuiWithSelectedMod('CMM_ResetModToDefaults')]"
-				# Reset rewrites list field values and metadata cached under cmm_list_sk.
-				onclick = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
+				onclick = "[GetVariableSystem.Clear('cmm_window_open')]"
+				onclick = "[PdxGuiTriggerAllAnimations('cmm_reopen_window')]"
 				text = "CMM_RESET_MOD_TO_DEFAULTS"
 				tooltip = "CMM_RESET_MOD_TO_DEFAULTS_TOOLTIP"
 			}
