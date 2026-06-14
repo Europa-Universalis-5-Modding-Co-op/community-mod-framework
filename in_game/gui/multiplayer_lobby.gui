@@ -2,6 +2,1679 @@
 @unique_content_height = 55
 @countryinfo_block_height = 47
 
+types MultiplayerLobby
+{
+	type LobbyMultiplayerPanel = widget {
+		size = { 430 -1 }
+		layoutpolicy_vertical = expanding
+		using = bg_main_inner_notabs_alt
+		alwaystransparent = no
+		filter_mouse = all
+
+		vbox = {
+			using = layoutpolicy_expanding
+			margin_bottom = 25
+
+			window_header_alt = {
+				using = bg_main_inner_alt
+				blockoverride "window_header_alt_color_texture"{
+					using = color_default_brown_texture
+				}
+
+				blockoverride "header_text" {
+					text = "LOBBY_MULTIPLAYER_SETTINGS"
+				}
+			}
+
+			# TOP BUTTONS
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = {-1 75}
+				background = {
+					using = color_black_texture
+					alpha = 0.93
+
+					using = color_dark_blue
+					using = overlay_window
+					using = overlay_leather
+				}
+
+				vbox = {
+					margin = { 15 5 }
+					spacing = 2
+
+					# GAME SETTINGS
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 5
+
+						widget = {
+							layoutpolicy_horizontal = expanding
+							size = {-1 30}
+							layoutstretchfactor_horizontal = 2
+							editbox_single = {
+								size = {100% 30}
+								blockoverride "editbox_label" {
+									text = "JOMINI_MULTIPLAYER_GUI_SERVER_NAME"
+								}
+								blockoverride "editbox_properties" {
+									text = "[LobbyView.GetServerInfo.GetServerName]"
+									tooltip_enabled = no
+									oneditingfinished = "[LobbyView.SetName]"
+									ontextedited = "[LobbyView.OnNameEdit]"
+									enabled = "[CanEditSettingsAfterHost]"
+								}
+							}
+
+							ui_direction_button = {
+								size = { 22 22 }
+								using = snd_UI_forward
+
+								parentanchor = right|vcenter
+								position = { -10 0 }
+
+								texture = "gfx/interface/buttons/flats/button_simple.dds"
+								mirror = horizontal
+								texture_density = 2
+								using = bg_circle
+
+								enabled = "[CanEditSettingsAfterHost]"
+								visible = "[CanEditSettingsAfterHost]"
+								tooltipwidget = {BasicFunctionalTooltip = {}}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "JOMINI_MULTIPLAYER_GUI_CHANGE_SERVER_NAME"
+									on_action = "[LobbyView.SetName]"
+									enabled = "[CanEditSettingsAfterHost]"
+								}
+							}
+						}
+
+						widget = {
+							visible = "[JominiIsHostOrLocal]"
+							layoutpolicy_horizontal = expanding
+							size = {-1 30}
+							layoutstretchfactor_horizontal = 1
+							editbox_single = {
+								size = {100% 30}
+								name = server_password # widget name is referenced in code, please no duplicates in this window
+								password = yes
+
+								blockoverride "editbox_label" {
+									text = "JOMINI_MULTIPLAYER_GUI_SERVER_PASSWORD"
+								}
+
+								blockoverride "editbox_properties" {
+									text = "[GameLobby.GetPassword]"
+									tooltip_enabled = no
+									oneditingfinished = "[GameLobby.SetPassword]"
+									enabled = "[CanEditSettingsAfterHost]"
+								}
+							}
+
+							ui_direction_button = {
+								size = { 22 22 }
+								using = snd_UI_forward
+
+								parentanchor = right|vcenter
+								position = { -10 0 }
+
+								texture = "gfx/interface/buttons/flats/button_simple.dds"
+								mirror = horizontal
+								texture_density = 2
+								using = bg_circle
+
+								enabled = "[CanEditSettingsAfterHost]"
+								visible = "[CanEditSettingsAfterHost]"
+								tooltipwidget = {BasicFunctionalTooltip = {}}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "JOMINI_MULTIPLAYER_GUI_CHANGE_SERVER_PASSWORD"
+									on_action = "[LobbyView.SetPassword]"
+									enabled = "[CanEditSettingsAfterHost]"
+								}
+							}
+						}
+					}
+
+					# GAME INFO
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						button_regular = {
+							layoutpolicy_horizontal = expanding
+							size = {-1 30}
+							layoutstretchfactor_horizontal = 2
+							visible = "[LobbyView.GetServerInfo.HasServerID]"
+							text = "JOMINI_MULTIPLAYER_GUI_SERVER_ID"
+							tooltipwidget = {BasicFunctionalTooltip = {}}
+
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								title = "COPY_SERVER_ID"
+								on_action = "[LobbyView.CopyServerID]"
+							}
+						}
+
+						widget = {
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 1
+							size = {-1 30}
+
+							using = bg_text_mask_container_brown
+
+							text_single = {
+								layoutpolicy_horizontal = expanding
+								align = center
+								parentanchor = center
+
+								text = "JOMINI_MULTIPLAYER_GUI_GAME_VERSION"
+							}
+						}
+					}
+				}
+			}
+
+			# TABS
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { -1 50 }
+
+				background = {
+					using = color_black_texture
+					alpha = 0.93
+
+					using = color_dark_blue
+				}
+
+				background = {
+					using = bg_fade_vertical_up_mask_texture
+					alpha = 0.3
+
+					modify_texture = {
+						using = color_black_texture
+						blend_mode = multiply
+					}
+				}
+
+				hbox = {
+					margin_left = 10
+					margin_right = 10
+					margin_top = 10
+					spacing = 5
+
+					button_main_tab_alt = {
+						layoutpolicy_horizontal = expanding
+						name = "show_players"
+						blockoverride "tab_text"{
+							text = "JOMINI_MULTIPLAYER_GUI_SHOW_PLAYERS"
+						}
+						enabled = "[GameIsMultiplayer]"
+						action_tooltip = {
+							title = "OPEN_TAB"
+							on_action = "[LobbyView.SetShowPlayerList('(bool)yes')]"
+						}
+						down = "[LobbyView.ShowPlayerList]"
+					}
+
+					button_main_tab_alt = {
+						using = layoutpolicy_expanding
+						name = "show_settings"
+						blockoverride "tab_text"{
+							text = "JOMINI_MULTIPLAYER_GUI_SHOW_SETTINGS"
+						}
+						enabled = "[GameIsMultiplayer]"
+						onclick = "[LobbyView.SetShowPlayerList( '(bool)no' )]"
+						action_tooltip = {
+							title = "OPEN_TAB"
+							on_action = "[RefreshModsView]"
+						}
+						down = "[Not(LobbyView.ShowPlayerList)]"
+					}
+				}
+			}
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = {-1 45}
+
+				hbox = {
+					margin = { 15 5 }
+
+					# VISIBILITY PRIVATE
+					widget = {
+						layoutpolicy_vertical = expanding
+						size = {100 -1}
+						visible = "[LobbyView.GetServerInfo.IsInvite]"
+
+						hbox = {
+							hbox = {
+								spacing = 10
+								header_button_left = {
+									size = {35 35}
+									blockoverride "button_icon_stretch_sprite" {}
+									blockoverride "header_button_frame_inner" {visible = no}
+									blockoverride "header_button_icon_size" { size = { 30 30 } }
+									blockoverride "header_button_text_layout" {}
+									blockoverride "header_button_icon_obj" {
+										icon = {
+											size = { 27 27 }
+											parentanchor = center
+											texture = "gfx/interface/icons/map_subdivisons/locked.dds"
+											glow = {
+												name = "drop_shadow"
+												glow_radius = 3
+												color = {0.0 0.0 0.0 1.0}
+												alpha = 0.3
+											}
+
+											modify_texture = {
+												using = color_black_texture
+												alpha = 0.4
+												blend_mode = multiply
+											}
+
+											modify_texture = {
+												using = color_new_gold_texture
+												alpha = 0.8
+											}
+										}
+									}
+
+									enabled = "[CanEditSettingsAfterHost]"
+									tooltipwidget = {BasicFunctionalTooltip = {}}
+
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										enabled = "[CanEditSettingsAfterHost]"
+										title = "LOBBY_MULTIPLAYER_SETTINGS_TOGGLE_PUBLIC"
+										on_action = "[LobbyView.ToggleVisibility]"
+									}
+								}
+
+								text_single = {
+									text = "JOMINI_MULTIPLAYER_GUI_PRIVATE"
+									maximumsize = {80 25}
+								}
+							}
+
+							expand = {}
+						}
+					}
+
+					# VISIBILITY PUBLIC
+					widget = {
+						layoutpolicy_vertical = expanding
+						size = {100 -1}
+						visible = "[LobbyView.GetServerInfo.IsPublic]"
+
+						hbox = {
+							hbox = {
+								spacing = 10
+								header_button_left = {
+									size = {35 35}
+									blockoverride "button_icon_stretch_sprite" {}
+									blockoverride "header_button_frame_inner" {visible = no}
+									blockoverride "header_button_icon_size" { size = { 30 30 } }
+									blockoverride "header_button_text_layout" {}
+									blockoverride "header_button_icon_obj" {
+
+										icon = {
+											size = { 27 27 }
+											parentanchor = center
+											texture = "gfx/interface/icons/map_subdivisons/unlocked.dds"
+											glow = {
+												name = "drop_shadow"
+												glow_radius = 3
+												color = {0.0 0.0 0.0 1.0}
+												alpha = 0.3
+											}
+
+											modify_texture = {
+												using = color_black_texture
+												alpha = 0.4
+												blend_mode = multiply
+											}
+
+											modify_texture = {
+												using = color_new_gold_texture
+												alpha = 0.8
+											}
+										}
+									}
+
+									enabled = "[CanEditSettingsAfterHost]"
+
+									tooltipwidget = {BasicFunctionalTooltip = {}}
+
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										enabled = "[CanEditSettingsAfterHost]"
+										title = "LOBBY_MULTIPLAYER_SETTINGS_TOGGLE_PRIVATE"
+										on_action = "[LobbyView.ToggleVisibility]"
+									}
+								}
+
+								text_single = {
+									text = "JOMINI_MULTIPLAYER_GUI_PUBLIC"
+									maximumsize = {80 25}
+								}
+							}
+
+							expand = {}
+						}
+					}
+
+					expand = {}
+
+					# HOT JOIN
+					widget = {
+						layoutpolicy_vertical = expanding
+						size = {165 -1}
+						visible = "[JominiIsHostOrLocal]"
+
+						hbox = {
+							hbox = {
+								spacing = 5
+
+								expand = {}
+								text_single = {
+									text = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+									maximumsize = {120 17}
+								}
+
+								button_checkbox = {
+									size = {35 35}
+									name = "hotjoin_autoaccept"
+									down = "[LobbyView.IsAutoAccept]"
+									action_tooltip = {
+										title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+										enabled = "[CanEditSettingsAfterHost]"
+										on_action = "[LobbyView.ToggleAutoAccept]"
+									}
+									tooltipwidget = { BasicFunctionalTooltip = {} }
+									enabled = "[CanEditSettingsAfterHost]"
+								}
+							}
+							tooltipwidget = {
+								SimpleContextualTooltipType = {
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/players.dds"
+										}
+									}
+									lowpriotextcontext = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT_TT"
+								}
+							}
+						}
+					}
+				}
+			}
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = {-1 45}
+
+				hbox = {
+					margin = { 15 5 }
+
+					widget = {
+						layoutpolicy_vertical = expanding
+						size = {90 -1}
+
+						text_single = {
+							parentanchor = center
+							text = "LOBBY_MULTIPLAYER_NUMBER_OF_PLAYERS"
+							maximumsize = {80 25}
+						}
+					}
+
+					expand = {}
+
+					widget = {
+						layoutpolicy_vertical = expanding
+						size = {100 -1}
+
+						text_single = {
+							parentanchor = center
+							text = "LOBBY_MULTIPLAYER_NUMBER_OF_PLAYERS_READY"
+							maximumsize = {80 25}
+						}
+					}
+				}
+			}
+
+			vbox = {
+				using = layoutpolicy_expanding
+				margin = {15 0}
+
+				LobbyViewMPInfo = {
+					using = layoutpolicy_expanding
+					visible = "[And(GameIsMultiplayer, Not(LobbyView.ShowPlayerList))]"
+				}
+
+				LobbyViewPlayerList = {
+					using = layoutpolicy_expanding
+					visible = "[And(GameIsMultiplayer, LobbyView.ShowPlayerList)]"
+				}
+
+				expand = {}
+			}
+
+			expand = {}
+		}
+
+		window_bottom_paper_template = {}
+	}
+
+	type LobbyMultiplayerPanelNoServer = widget {
+		size = { 430 -1 }
+		layoutpolicy_vertical = expanding
+		using = bg_main_inner_notabs_alt
+		alwaystransparent = no
+		filter_mouse = all
+
+		vbox = {
+			using = layoutpolicy_expanding
+			spacing = 15
+			margin_bottom = 25
+
+			window_header_alt = {
+				using = bg_main_inner_alt
+				blockoverride "window_header_alt_color_texture"{
+					using = color_default_brown_texture
+				}
+
+				blockoverride "header_text" {
+					text = "LOBBY_MULTIPLAYER_GAME_TITLE"
+				}
+			}
+
+			vbox = {
+				margin = { 25 0 }
+				layoutpolicy_horizontal = expanding
+
+				subheader = {
+					using = bg_name_banner
+					blockoverride "content" {
+						text_single = {
+							using = layoutpolicy_expanding
+							text = "JOMINI_MULTIPLAYER_GUI_GAME_SETTINGS"
+							autoresize = yes
+							align = nobaseline
+							parentanchor = center
+							using = Font_Type_Headers
+						}
+					}
+				}
+
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 15
+					margin = { 10 0 }
+					margin_top = 15
+
+					editbox_single = {
+						enabled = "[And(Not(GameIsMultiplayer), Not(HasHostError))]"
+						layoutpolicy_horizontal = expanding
+						blockoverride "editbox_label" {
+							text = "JOMINI_MULTIPLAYER_GUI_SERVER_NAME"
+						}
+						blockoverride "editbox_properties" {
+							name = "no_server_name" # widget name is referenced in code, please no duplicates in this window
+							text = "[GetDefaultServerName]"
+							tooltip_enabled = no
+							maxcharacters = 64
+							oneditingfinished = "[GameLobby.SetNameNoServer]"
+						}
+					}
+
+					editbox_single = {
+						layoutpolicy_horizontal = expanding
+						password = yes
+
+						blockoverride "editbox_label" {
+							text = "JOMINI_MULTIPLAYER_GUI_SERVER_PASSWORD"
+						}
+
+						blockoverride "editbox_properties" {
+							name = "no_server_password" # widget name is referenced in code, please no duplicates in this window
+							tooltip_enabled = no
+							maxcharacters = 64
+							oneditingfinished = "[GameLobby.SetPasswordNoServer]"
+						}
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						minimumsize = {-1 36}
+						spacing = 8
+						margin = { 15 10 }
+						using = bg_text_mask_container_dark_brown
+
+						# VISIBILITY PRIVATE
+						widget = {
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+							size = {-1 40}
+							visible = "[GameLobby.IsInvite]"
+
+							hbox = {
+								spacing = 8
+								header_button_left = {
+									size = {35 35}
+									blockoverride "button_icon_stretch_sprite" {}
+									blockoverride "header_button_frame_inner" {visible = no}
+									blockoverride "header_button_icon_size" { size = { 30 30 } }
+									blockoverride "header_button_text_layout" {}
+									blockoverride "header_button_icon_obj" {
+										icon = {
+											size = { 27 27 }
+											parentanchor = center
+											texture = "gfx/interface/icons/map_subdivisons/locked.dds"
+											glow = {
+												name = "drop_shadow"
+												glow_radius = 3
+												color = {0.0 0.0 0.0 1.0}
+												alpha = 0.3
+											}
+
+											modify_texture = {
+												using = color_black_texture
+												alpha = 0.4
+												blend_mode = multiply
+											}
+
+											modify_texture = {
+												using = color_new_gold_texture
+												alpha = 0.8
+											}
+										}
+									}
+
+									enabled = "[CanEditSettingsAfterHost]"
+									tooltipwidget = {BasicFunctionalTooltip = {}}
+
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										enabled = "[CanEditSettingsAfterHost]"
+										title = "LOBBY_MULTIPLAYER_SETTINGS_TOGGLE_PUBLIC"
+										on_action = "[GameLobby.ToggleVisibility]"
+									}
+								}
+
+								text_single = {
+									text = "JOMINI_MULTIPLAYER_GUI_PRIVATE"
+									using = layoutpolicy_expanding
+									autoresize = no
+									align = left|nobaseline
+								}
+							}
+						}
+
+						# VISIBILITY PUBLIC
+						widget = {
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+							size = {-1 40}
+							visible = "[Not(GameLobby.IsInvite)]"
+
+							hbox = {
+								spacing = 8
+								header_button_left = {
+									size = {35 35}
+									blockoverride "button_icon_stretch_sprite" {}
+									blockoverride "header_button_frame_inner" {visible = no}
+									blockoverride "header_button_icon_size" { size = { 30 30 } }
+									blockoverride "header_button_text_layout" {}
+									blockoverride "header_button_icon_obj" {
+
+										icon = {
+											size = { 27 27 }
+											parentanchor = center
+											texture = "gfx/interface/icons/map_subdivisons/unlocked.dds"
+											glow = {
+												name = "drop_shadow"
+												glow_radius = 3
+												color = {0.0 0.0 0.0 1.0}
+												alpha = 0.3
+											}
+
+											modify_texture = {
+												using = color_black_texture
+												alpha = 0.4
+												blend_mode = multiply
+											}
+
+											modify_texture = {
+												using = color_new_gold_texture
+												alpha = 0.8
+											}
+										}
+									}
+
+									enabled = "[CanEditSettingsAfterHost]"
+
+									tooltipwidget = {BasicFunctionalTooltip = {}}
+
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										enabled = "[CanEditSettingsAfterHost]"
+										title = "LOBBY_MULTIPLAYER_SETTINGS_TOGGLE_PRIVATE"
+										on_action = "[GameLobby.ToggleVisibility]"
+									}
+								}
+
+								text_single = {
+									text = "JOMINI_MULTIPLAYER_GUI_PUBLIC"
+									using = layoutpolicy_expanding
+									autoresize = no
+									align = left|nobaseline
+								}
+							}
+						}
+
+						button_checkbox = {
+							action_tooltip = {
+								title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+								on_action = "[GameLobby.ToggleAutoAccept]"
+							}
+							tooltipwidget = { BasicFunctionalTooltip = {} }
+							down = "[GameLobby.IsAutoAccept]"
+						}
+
+						text_multi = {
+							layoutstretchfactor_horizontal = 3
+							using = layoutpolicy_expanding
+							autoresize = no
+							align = left|nobaseline
+							maximumsize = { 160 -1 }
+							text = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+							tooltipwidget = {
+								SimpleContextualTooltipType = {
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/players.dds"
+										}
+									}
+									lowpriotextcontext = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT_TT"
+								}
+							}
+						}
+					}
+				}
+
+				expand = {}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 35 0 }
+				visible = "[And(Not(GameIsMultiplayer), Not(LobbyView.ShowHosting))]"
+				button_regular = {
+					layoutpolicy_horizontal = expanding
+					size = {-1 40}
+					visible = "[And(Not(GameIsMultiplayer), Not(LobbyView.ShowHosting))]"
+					enabled = "[And(GameLobby.CanOpenMultiplayer, Not(HasHostError))]"
+					text = "JOMINI_MULTIPLAYER_GUI_HOST_BUTTON"
+					tooltipwidget = {BasicFunctionalTooltip = {}}
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						enabled = "[GameLobby.CanOpenMultiplayer]"
+						on_action = "[GameLobby.OpenMultiplayer]"
+						title = "JOMINI_MULTIPLAYER_GUI_HOST_BUTTON"
+					}
+				}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 35 0 }
+				visible = "[LobbyView.ShowHosting]"
+				JominiLobbyViewHostingStatus = {
+					margin = { 30 0 }
+					minimumsize = { -1 50 }
+
+					blockoverride "window_background" {}
+					using = bg_text_mask_container_dark_brown
+
+					blockoverride "setup_textbox" {
+						using = text_multi_template
+						align = center
+					}
+				}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 35 0 }
+				JominiLobbyViewHostError = {
+					margin = { 30 0 }
+					minimumsize = { -1 100 }
+
+					blockoverride "window_background" {}
+					using = bg_text_mask_container_dark_brown
+
+					blockoverride "jomini_standard_textbox" {
+						using = text_single_template
+						align = center
+					}
+
+					blockoverride "lobbyview_button_size" {
+						layoutpolicy_horizontal = fixed
+						size = { 120 30 }
+					}
+				}
+			}
+
+			expand = {}
+		}
+
+		window_bottom_paper_template = {}
+	}
+
+	type LobbyCountryListWidget = widget {
+		size = { 430 -1 }
+		layoutpolicy_vertical = expanding
+		using = bg_main_inner_notabs_alt
+		alwaystransparent = no
+		filter_mouse = all
+
+		state = {
+			name = "jomini_preselected_changed"
+			# Can be used for showing a fancy animation when changing country selection in the lobby
+			duration = 0
+			alpha = 1
+		}
+
+		vbox = {
+			using = layoutpolicy_expanding
+			margin_bottom = 25
+
+			window_header_alt = {
+				using = bg_main_inner_alt
+				blockoverride "window_header_alt_color_texture"{
+					using = color_default_brown_texture
+				}
+			
+				blockoverride "header_text" {
+					text = "SELECT_TITLE_FRONTEND"
+				}
+			}
+
+			vbox = {
+				using = layoutpolicy_expanding
+				margin = {15 0}
+
+				widget = {
+					name = "lobby_country_list"
+					using = layoutpolicy_expanding
+
+					filtered_sorted_list = {
+						datacontext = "[AccessLobbyCountryList.GetCountriesSortSearch.WithFilterTags('no_filters')]"
+
+						blockoverride "sort_buttons_filtered_list" {
+							sort_by_key_button = {
+								name = "name"
+								using = layoutpolicy_expanding
+							}
+
+							sort_by_key_button = {
+								name = "difficulty"
+								using = layoutpolicy_expanding
+							}
+
+							sort_by_key_button = {
+								name = "country_type"
+								using = layoutpolicy_expanding
+							}
+
+							sort_by_key_button = {
+								name = "population"
+								using = layoutpolicy_expanding
+							}
+
+							sort_by_key_button = {
+								name = "unique_content"
+								using = layoutpolicy_expanding
+							}
+						}
+
+						blockoverride "scroll_list_layout" {
+							fixedgridbox = {
+								datamodel = "[AccessLobbyCountryList.GetCountries]"
+								addcolumn = 100%
+								addrow = 74
+								datamodel_wrap = 1
+								flipdirection = yes
+								setitemsizefromcell = yes
+
+								item = {
+									widget = {
+										size = { 100% 90% }
+										tooltipwidget = {
+											using = CountryTooltip
+										}
+
+										vbox = {
+											clickable_header_card = {
+												onmousehierarchyenter = "[PdxGuiWidget.SetHighlightCountry( Country.Self )]"
+												blockoverride "header_color" {
+													texture = "gfx/interface/colors/mid_blue.dds"
+												}
+												blockoverride "header_pattern" {
+													texture = "gfx/interface/cards/headers/header_pattern_07.dds"
+													alpha = 0.7
+												}
+												blockoverride "clickable_header_card_size"{
+													size = { -1 65 }
+												}
+												blockoverride "header_size" {
+													size = { -1 35 }
+												}
+												blockoverride "header_content" {
+													ondoubleclick = "[PanToCountry(Country.Self)]"
+
+													action_tooltip = {
+														click_type = left
+														click_mode = single
+
+														block "click_action" {
+															title = "LOBBYVIEW_SELECT_COUNTRY"
+															on_action = "[SetLobbyCountry(Country.Self)]"
+														}
+													}
+
+													background = {
+														texture = "gfx/interface/colors/mid_blue.dds"
+														margin = {0 0}
+														alpha = 0.8
+
+														modify_texture = {
+															texture = "gfx/interface/component_masks/mask_fade_horizontal.dds"
+															blend_mode = alphamultiply
+															mirror = horizontal
+														}
+													}
+
+													widget = {
+														size = {100% 100%}
+														hbox = {
+															margin_left = 90
+															margin_right = 5
+															text_single = {
+																using = layoutpolicy_expanding
+																autoresize = no
+																align = left|nobaseline
+																using = Font_Type_Headers
+																using = Font_Size_Small
+																alwaystransparent = yes
+																text = "[Country.GetLongNameWithNoTooltip]"
+
+																block "name_sort_highlight" {}
+															}
+
+															hbox = {
+																spacing = 0
+																ignoreinvisible = yes
+
+																# gov type
+																widget = {
+																	size = { 23 23 }
+																	icon = {
+																		size = { 20 20 }
+																		position = {0 -1}
+																		parentanchor = center
+																		texture = "[GetGovernmentTypeIcon(Country.GetGovernment.GetGovernmentType)]"
+																		texture_density = 2
+
+																		datacontext = "[Country.GetGovernment.GetGovernmentType]"
+																		tooltipwidget = {
+																			using = GovernmentType_tooltip
+
+																			blockoverride "title_icon_texture" {
+																				texture = "[GetGovernmentTypeIcon(Country.GetGovernment.GetGovernmentType)]"
+																			}
+																		}
+																	}
+																}
+
+																# country type
+																widget = {
+																	size = { 23 23 }
+
+																	icon = {
+																		size = { 20 20 }
+																		position = {0 1}
+																		parentanchor = center
+																		texture = "[GetCountryTypeIcon(Country.Self)]"
+																		texture_density = 2
+
+																		tooltipwidget = {
+																			using = CountryType_tooltip
+																		}
+
+																		glow = {
+																			name = "drop_shadow"
+																			glow_radius = 3
+																			color = {0.0 0.0 0.0 1.0}
+																			alpha = 0.5
+																		}
+
+																		block "country_type_sort_highlight" {}
+																	}
+																}
+
+																# country rank
+																widget = {
+																	size = { 23 23 }
+
+																	icon = {
+																		size = { 20 20 }
+																		parentanchor = left|vcenter
+																		texture = "[GetCountryRankIcon(Country.GetRank)]"
+																		texture_density = 2
+																		alpha = 1
+
+																		datacontext = "[Country.GetRank]"
+																		tooltipwidget = {
+																			using = CountryRank_tooltip
+																		}
+
+																		glow = {
+																			name = "drop_shadow"
+																			glow_radius = 3
+																			color = {0.0 0.0 0.0 1.0}
+																			alpha = 0.6
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+												blockoverride "bottom_content" {
+
+													widget = {
+														size = {100% 100%}
+														hbox = {
+															margin_left = 90
+															spacing = 2
+
+															# DIFFICULTY
+															text_single = {
+																using = layoutpolicy_expanding
+																autoresize = no
+																align = center|nobaseline
+																visible = "[Country.HasDifficultyLevel]"
+																text = "[Country.GetDifficultyLevelName]"
+																tooltipwidget = {
+																	SimpleContextualTooltipType = {
+																		blockoverride "title_icon" {
+																			icon = {
+																				using = tooltip_title_icon_size
+																				texture = "gfx/interface/icons/alerts_icons/welcome_to_caesar.dds"
+																			}
+																		}
+																		blockoverride "concept_link" {
+																			text = "[country|E]"
+																		}
+																		lowpriotextcontext = "[Country.GetDifficultyLevelDesc]"
+																	}
+																}
+
+																block "difficulty_sort_highlight" {}
+															}
+
+															divider_flavor_01 = {
+																visible = "[And(Country.HasCountryDescriptionCategory,Country.HasDifficultyLevel)]"
+																size = {9 -1}
+															}
+
+															# ARCHETYPES
+															text_single = {
+																visible = "[Country.HasCountryDescriptionCategory]"
+																using = layoutpolicy_expanding
+																autoresize = no
+																align = center|nobaseline
+																text = "[Country.GetCountryDescriptionCategoryName]"
+
+																tooltipwidget = {
+																	ContextualTooltipType = {
+																		blockoverride "title_icon" {
+
+																			country_flag_mid = {
+																				size = { 53 40 }
+																			}
+																		}
+
+																		blockoverride "title_text" {
+																			text = "[Country.GetCountryDescriptionCategoryName]"
+																		}
+
+																		blockoverride "concept_link" {
+																			text = "[country|e]"
+																		}
+
+																		blockoverride "tooltip_content" {
+																			TooltipTextBlock = {
+																				textcontext = "[Country.GetCountryDescriptionCategoryDesc]"																			}
+																		}
+																	}
+																}
+															}
+
+															divider_flavor_01 = {
+																visible = "[Country.HasCountryDescriptionCategory]"
+																size = {9 -1}
+															}
+
+															# POPULATION
+															text_single = {
+																using = layoutpolicy_expanding
+																autoresize = no
+																align = center|nobaseline
+																text = "[Country.GetTotalPopulation]"
+
+																block "population_sort_highlight" {}
+															}
+
+															expand = {}
+														}
+													}
+												}
+											}
+										}
+										country_flag_mid = {
+											size = { 82 62 }
+											parentanchor = left|vcenter
+											position = {0 0}
+
+											blockoverride "hover_leave" {}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			expand = {}
+		}
+
+		window_bottom_paper_template = {}
+	}
+
+	type LobbyViewButtons = hbox {
+		spacing = 0
+
+		# GO TO MAIN MENU BUTTON
+		button_regular = {
+			size = { 34 34 }
+
+			input_action = "close_window"
+			use_global_input_instance = yes
+			action_tooltip = {
+				click_mode = confirm
+				on_action = "[LobbyView.GoBack]"
+				on_action = "[HideGameRules]"
+				title = "GO_TO_MAIN_MENU"
+				enabled = "[LobbyView.CanGoBack]"
+			}
+			tooltipwidget = {
+				ContextualTooltipType = {
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
+						}
+					}
+
+					blockoverride "title_text" {
+						text = "GO_TO_MAIN_MENU"
+					}
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "GO_TO_MAIN_MENU_desc"
+							}
+						}
+					}
+				}
+			}
+			button = {
+				using = ui_direction_button_overlay
+				using = back_button_alt_texture
+				size = {80% 80%}
+				parentanchor = center
+
+				background = {
+					using = bg_button_light_round_texture
+					modify_texture = {
+						using = color_dark_blue_texture
+					}
+				}
+
+				input_action = "close_window"
+				use_global_input_instance = yes
+				action_tooltip = {
+					click_mode = confirm
+					on_action = "[LobbyView.GoBack]"
+					on_action = "[HideGameRules]"
+					title = "GO_TO_MAIN_MENU"
+					enabled = "[LobbyView.CanGoBack]"
+				}
+
+				tooltipwidget = {
+					ContextualTooltipType = {
+						blockoverride "title_icon" {
+							icon = {
+								using = tooltip_title_icon_size
+								texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
+							}
+						}
+
+						blockoverride "title_text" {
+							text = "GO_TO_MAIN_MENU"
+						}
+						blockoverride "tooltip_content" {
+							TooltipTextBlock = {
+								blockoverride "text" {
+									text = "GO_TO_MAIN_MENU_desc"
+								}
+							}
+						}
+					}
+				}
+
+				using = snd_UI_backward
+			}
+			# button = {
+			# 	parentanchor = center
+			# 	size = {80% 80%}
+			# 	texture = "gfx/interface/buttons/flats/back_button.dds"
+			# 	texture_density = 2
+
+			# 	modify_texture = {
+			# 		using = overlay_window_texture
+			# 		blend_mode = overlay
+			# 		alpha = 0.7
+			# 	}
+			# 	modify_texture = {
+			# 		using = overlay_stone_texture
+			# 		blend_mode = overlay
+			# 		alpha = 0.8
+			# 	}
+
+			# 	modify_texture = {
+			# 		using = color_new_gold_texture
+			# 	}
+
+			# 	glow = {
+			# 		glow_radius = 5
+			# 		color = { 1.0 0.85 0.55 1.0 }
+			# 		alpha = 0.6
+
+			# 		block "glow_visible" {
+			# 			visible = no
+			# 		}
+			# 	}
+
+			# 	background = {
+			# 		using = bg_circle_texture
+			# 		margin = {3 3}
+			# 		modify_texture = {
+			# 			using = color_dark_blue_texture
+			# 			blend_mode = multiply
+			# 		}
+			# 	}
+			# }
+		}
+
+		# random country
+		button_regular = {
+			using = layoutpolicy_expanding
+
+			text_single = {
+				parentanchor = center
+				maximumsize = {200 -1}
+				text = "MULTIPLAYER_LOBBY_CHOOSE_RANDOM_CHARACTER"
+			}
+
+			action_tooltip = {
+				title = "MULTIPLAYER_LOBBY_CHOOSE_RANDOM_CHARACTER"
+				on_action = "[GameLobby.SetRandomPlayableObserverCharacter]"
+			}
+
+			tooltipwidget = {
+				ConceptTooltipType = {
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "[GetConceptTexture('dice')]"
+						}
+					}
+
+					blockoverride "title_text" {
+						text = "MULTIPLAYER_LOBBY_CHOOSE_RANDOM_CHARACTER"
+					}
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "MULTIPLAYER_LOBBY_CHOOSE_RANDOM_CHARACTER_desc"
+							}
+						}
+					}
+				}
+			}
+		}
+
+		# observe
+		button_regular = {
+			using = layoutpolicy_expanding
+			enabled = "[GameLobby.CanToggleObserve]"
+			button_checkbox_visibility = {
+				size = { 30 30 }
+				position = { 5 1 }
+				down = "[LobbyView.IsObserver]"
+				onclick = "[GameLobby.ToggleObserve]"
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+			}
+
+			text_single = {
+				parentanchor = center
+				maximumsize = {200 -1}
+				text = "[SelectLocalization(LobbyView.IsObserver, 'JOMINI_MULTIPLAYER_GUI_DISABLE_OBSERVE', 'JOMINI_MULTIPLAYER_GUI_OBSERVE')]"
+			}
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				title = "[SelectLocalization(LobbyView.IsObserver, 'JOMINI_MULTIPLAYER_GUI_DISABLE_OBSERVE', 'JOMINI_MULTIPLAYER_GUI_OBSERVE')]"
+				enabled = "[GameLobby.CanToggleObserve]"
+				on_action = "[GameLobby.ToggleObserve]"
+			}
+
+			tooltipwidget = {
+				ConceptTooltipType = {
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
+						}
+					}
+
+					blockoverride "title_text" {
+						text = "OBSERVER"
+					}
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "[GameLobby.ToggleObserveTT]"
+							}
+						}
+					}
+				}
+			}
+		}
+
+		# Clear country observed
+		header_button_left = {
+			visible = "[And3(LobbyView.IsObserver, LobbyView.HasSelectedPlayable, Not(IsPreparationLobby))]"
+			size = { 30 30 }
+			onclick = "[LobbyView.ClearPreSelected]"
+			blockoverride "button_icon_stretch_sprite" {}
+			blockoverride "header_button_frame_inner" {visible = no}
+			blockoverride "header_button_icon_size" { size = { 28 28 } }
+			blockoverride "header_button_text_layout" {}
+			blockoverride "icon_texture" {
+				texture = "gfx/interface/icons/unit_view/army_visible_icon.dds"
+			}
+			blockoverride "icon_overlay" {}
+
+			tooltipwidget = {
+				ConceptTooltipType = {
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/icons/unit_view/army_visible_icon.dds"
+						}
+					}
+
+					blockoverride "title_text" {
+						text = "LOBBY_CLEAR_OBSERVING_COUNTRY"
+					}
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "LOBBY_CLEAR_OBSERVING_COUNTRY"
+							}
+						}
+					}
+				}
+			}
+		}
+
+		header_button_left = {
+			visible = "[And(GameLobby.Vars.HasValue('subtab', 'selected_country'), LobbyView.HasSelectedPlayable)]"
+			size = { 30 30 }
+			blockoverride "button_icon_stretch_sprite" {}
+			blockoverride "header_button_frame_inner" {visible = no}
+			blockoverride "header_button_icon_size" { size = { 26 26 } }
+			blockoverride "header_button_text_layout" {}
+			blockoverride "icon_overlay" {}
+			blockoverride "icon_texture" {
+				texture = "gfx/interface/icons/alerts_icons/form_new_country.dds"
+				texture_density = 2
+			}
+			
+			action_tooltip = {
+				title = "LOBBY_OPEN_SELECTED_COUNTRY_TT"
+				on_action = "[GameLobby.Vars.SetOrToggle('subtab','not_selected_country')]"
+			}
+			tooltipwidget = {
+				ConceptTooltipType = {
+					blockoverride "title_text" {
+						text = "LOBBY_OPEN_SELECTED_COUNTRY_TT"
+					}
+
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/buttons/flats/release_country.dds"
+
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.5
+								blend_mode = add
+							}
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.6
+							}
+						}
+					}
+
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "LOBBY_OPEN_SELECTED_COUNTRY_TT_des"
+							}
+						}
+					}
+				}
+			}
+		}
+		header_button_left = {
+			visible = "[And(Not(GameLobby.Vars.HasValue('subtab', 'selected_country')), LobbyView.HasSelectedPlayable)]"
+			size = { 30 30 }
+			blockoverride "button_icon_stretch_sprite" {}
+			blockoverride "header_button_frame_inner" {visible = no}
+			blockoverride "header_button_icon_size" { size = { 30 30 } }
+			blockoverride "header_button_text_layout" {}
+			blockoverride "icon_overlay" {}
+			blockoverride "header_button_template_push_properties"{
+				gfxtype = togglepushbuttongfx
+				effectname = "NoHighlight"
+				upframe = 2
+				uphoverframe = 2
+				uppressedframe = 3
+				downframe = 2
+				downhoverframe = 2
+				downpressedframe = 3
+				disableframe = 4
+			}
+			blockoverride "icon_texture" {
+				texture = "gfx/interface/icons/alerts_icons/form_new_country.dds"
+				texture_density = 2
+			}
+			background = {
+				texture = "gfx/interface/component_tiles/square_glow.dds"
+				margin = {5 5}
+				block "header_button_modify_visible" {}
+				modify_texture = {
+					using = color_bone_texture
+				}
+				alpha = 0.5
+				modify_texture = {
+					using = color_white_texture
+					blend_mode = overlay
+					alpha = 0.2
+				}
+			}
+			action_tooltip = {
+				on_action = "[GameLobby.Vars.Set('subtab','selected_country')]"
+				title = "LOBBY_CLOSE_SELECTED_COUNTRY_TT"
+			}
+			tooltipwidget = {
+				ConceptTooltipType = {
+					blockoverride "title_text" {
+						text = "LOBBY_CLOSE_SELECTED_COUNTRY_TT"
+					}
+
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/buttons/flats/release_country.dds"
+
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.5
+								blend_mode = add
+							}
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.6
+							}
+						}
+					}
+
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "LOBBY_CLOSE_SELECTED_COUNTRY_TT_des"
+							}
+						}
+					}
+				}
+			}
+		}
+		expand = {}
+	}
+
+	type LobbyViewMPInfo = vbox {
+		name = "mp_info"
+		layoutpolicy_horizontal = expanding
+
+		visible = "[LobbyView.HasServerInfo]"
+		alwaystransparent = no
+		filter_mouse = left|right
+
+		spacing = 10
+		margin = { 5 0 }
+
+		widget = {
+			using = layoutpolicy_expanding
+			vbox = {
+				button_default = {
+					layoutpolicy_horizontal = expanding
+
+					hbox = {
+						margin = { 15 0 }
+						spacing = 10
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							text = "JOMINI_MULTIPLAYER_GUI_ENABLED_DLCS"
+							align = nobaseline
+						}
+						icon = {
+							visible = "[Not(LobbyView.ShouldShowEnabledDLCs)]"
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+
+						icon = {
+							visible = "[LobbyView.ShouldShowEnabledDLCs]"
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+					}
+
+					enabled = "[LobbyView.HasEnabledDLCs]"
+					onclick = "[LobbyView.ToggleShowEnabledDLCs]"
+					tooltipwidget = { BasicFunctionalTooltip = {} }
+				}
+
+				scrollbox = {
+					using = layoutpolicy_expanding
+
+					blockoverride "scrollbox_content" {
+						fixedgridbox = {
+							datamodel = "[LobbyView.GetEnabledDLCs]"
+							visible = "[And3(LobbyView.ShouldShowEnabledDLCs, DataModelHasItems( LobbyView.GetEnabledDLCs ), HasModsView)]"
+							addcolumn = 100%
+							addrow = 48
+							datamodel_wrap = 1
+							flipdirection = yes
+							setitemsizefromcell = yes
+		
+							item = {
+								widget = {
+									size = { 99% 48 }
+									visible = "[HasActiveDLC(CString.GetString)]"
+									datacontext = "[AccessActiveDLC(CString.GetString)]"
+									dlc_ingame_card = {}
+								}
+							}
+						}
+					}
+
+					blockoverride "scrollbox_empty" {
+						visible = "[IsDataModelEmpty( LobbyView.GetEnabledDLCs )]"
+						text = "JOMINI_MULTIPLAYER_GUI_NO_DLCS"
+					}
+
+					blockoverride "scrollbox_expand" {
+						expand = {
+							layoutpolicy_vertical = growing
+							visible = "[DataModelHasItems( LobbyView.GetEnabledDLCs )]"
+						}
+					}
+				}
+			}
+		}
+
+		widget = {
+			using = layoutpolicy_expanding
+			vbox = {
+
+				button_default = {
+					layoutpolicy_horizontal = expanding
+
+					hbox = {
+						margin = { 15 0 }
+						spacing = 10
+
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							text = "JOMINI_MULTIPLAYER_GUI_ENABLED_MODS"
+							align = nobaseline
+						}
+						icon = {
+							visible = "[Not(LobbyView.ShouldShowEnabledMods)]"
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+
+						icon = {
+							visible = "[LobbyView.ShouldShowEnabledMods]"
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+					}
+
+					enabled = "[LobbyView.HasEnabledMods]"
+					onclick = "[LobbyView.ToggleShowEnabledMods]"
+					tooltipwidget = { BasicFunctionalTooltip = {} }
+				}
+
+				scrollbox = {
+					using = layoutpolicy_expanding
+
+					blockoverride "scrollbox_content" {
+						fixedgridbox = {
+							datamodel = "[LobbyView.GetEnabledMods]"
+							visible = "[And3(LobbyView.ShouldShowEnabledMods, DataModelHasItems( LobbyView.GetEnabledMods ), HasModsView)]"
+							addcolumn = 100%
+							addrow = 48
+							datamodel_wrap = 1
+							flipdirection = yes
+							setitemsizefromcell = yes
+							item = {
+								widget = {
+									size = { 99% 48 }
+									visible = "[HasActiveMod(CString.GetString)]"
+									datacontext = "[AccessActiveMod(CString.GetString)]"
+									mod_ingame_card = {}
+								}
+							}
+						}
+					}
+
+					blockoverride "scrollbox_empty" {
+						visible = "[IsDataModelEmpty( LobbyView.GetEnabledMods )]"
+						text = "JOMINI_MULTIPLAYER_GUI_NO_MODS"
+					}
+
+					blockoverride "scrollbox_expand" {
+						expand = {
+							layoutpolicy_vertical = growing
+							visible = "[DataModelHasItems( LobbyView.GetEnabledMods )]"
+						}
+					}
+				}
+			}
+		}
+	}
+
+}
+
 JominiMultiplayerLobby = {
 
 	# CLOUD SAVE INDICATOR
