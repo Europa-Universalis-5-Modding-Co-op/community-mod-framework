@@ -135,6 +135,7 @@ _cmm_init_list_bool_field_at_slot = {
 	else = {
 		_cmm_initialize_list_bool_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ vt = variable is_global = 0 }
 	}
+
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
@@ -192,6 +193,7 @@ _cmm_init_list_dropdown_field_at_slot = {
 	else = {
 		_cmm_initialize_list_dropdown_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_index = $default_index$ option_count = $option_count$ vt = variable is_global = 0 }
 	}
+
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
@@ -250,6 +252,7 @@ _cmm_init_list_numeric_field_at_slot = {
 	else = {
 		_cmm_initialize_list_numeric_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ vt = variable is_global = 0 }
 	}
+
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
@@ -310,6 +313,7 @@ _cmm_init_list_slider_field_at_slot = {
 	else = {
 		_cmm_initialize_list_slider_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ default_value = $default_value$ min_value = $min_value$ max_value = $max_value$ step_value = $step_value$ vt = variable is_global = 0 }
 	}
+
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
@@ -510,16 +514,20 @@ cmm_set_list_field_localization = {
 	}
 }
 
-# Set the default value reset restores for one item's field in a list setting.
-# Call after the field has been registered (e.g. cmm_register_list_numeric_field).
+# Set one item's default value for a field in a list setting.
+# Safe to call before or after the field is registered.
+# Called before registration, it also drives the item's initial value; called after, it sets only the reset value.
 # Scope: country
 # Args:
 # - mod_id (key): Owner mod id.
 # - setting_id (key): Target list setting id within the mod.
 # - field_id (key): Field id whose per-item default to set.
 # - item (number): Item ordinal (`1..item_count`).
-# - value (number): Default value reset restores for this item.
+# - value (number): Default value for this item.
 cmm_set_list_field_default_for_item = {
+	# Field registration reads this to seed the item's initial value and reset default.
+	cmf_change_variable_map = { name = cmm_list_field_default_pending key = flag:$mod_id$__$setting_id$__$field_id$_i$item$ value = $value$ }
+
 	if = {
 		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
 		switch = {

@@ -363,6 +363,18 @@ cmm_register_settings_list_from_list = {
 # Register fields after this
 </syntaxhighlight>
 
+== Per-Item Defaults ==
+Set one item's default value in a settings list field. Called before the field is registered, it also sets the item's starting value:
+<syntaxhighlight lang="text">
+cmm_set_list_field_default_for_item = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = enabled
+	item = 1
+	value = 1
+}
+</syntaxhighlight>
+
 == Non-Resettable Settings ==
 Exclude a setting from the Reset to Defaults button:
 <syntaxhighlight lang="text">
