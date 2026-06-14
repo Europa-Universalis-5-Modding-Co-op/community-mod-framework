@@ -1,19 +1,28 @@
-﻿# Restore one key's value in the cmm value map from a defaults map.
+﻿# Restore one key's value in the cmm value map from its registered default.
 # Scope: country
 # Args:
 # - key_scope (key): Saved scope name holding the map key.
-# - map (key): Country variable map holding the key's default value.
 _cmm_restore_default_for_key = {
-	set_local_variable = { name = cmm_reset_default value = "variable_map($map$|scope:$key_scope$)" }
+	# Macros do not resolve inside quoted variable_map lookups.
+	scope:$key_scope$ = { save_scope_as = _cmm_reset_active_key }
 
+	# List-field keys store their default in cmm_list_field_default, plain settings in cmm_default.
 	if = {
-		limit = { "variable_map(cmm_is_global|scope:$key_scope$)" >= 1 }
-		remove_from_global_variable_map = { name = cmm key = scope:$key_scope$ }
-		add_to_global_variable_map = { name = cmm key = scope:$key_scope$ value = local_var:cmm_reset_default }
+		limit = { is_key_in_variable_map = { name = cmm_list_field_default target = scope:_cmm_reset_active_key } }
+		set_local_variable = { name = cmm_reset_default value = "variable_map(cmm_list_field_default|scope:_cmm_reset_active_key)" }
 	}
 	else = {
-		remove_from_variable_map = { name = cmm key = scope:$key_scope$ }
-		add_to_variable_map = { name = cmm key = scope:$key_scope$ value = local_var:cmm_reset_default }
+		set_local_variable = { name = cmm_reset_default value = "variable_map(cmm_default|scope:_cmm_reset_active_key)" }
+	}
+
+	if = {
+		limit = { "variable_map(cmm_is_global|scope:_cmm_reset_active_key)" >= 1 }
+		remove_from_global_variable_map = { name = cmm key = scope:_cmm_reset_active_key }
+		add_to_global_variable_map = { name = cmm key = scope:_cmm_reset_active_key value = local_var:cmm_reset_default }
+	}
+	else = {
+		remove_from_variable_map = { name = cmm key = scope:_cmm_reset_active_key }
+		add_to_variable_map = { name = cmm key = scope:_cmm_reset_active_key value = local_var:cmm_reset_default }
 	}
 
 	# Benign warning suppression
@@ -59,7 +68,7 @@ _cmm_reset_setting_to_default = {
 			}
 		}
 
-		_cmm_restore_default_for_key = { key_scope = cmm_reset_key map = cmm_default }
+		_cmm_restore_default_for_key = { key_scope = cmm_reset_key }
 		_cmm_fire_reset_callback = yes
 	}
 	else_if = {
@@ -103,7 +112,7 @@ _cmm_reset_setting_to_default = {
 			save_scope_as = cmm_reset_field_key
 
 			root = {
-				_cmm_restore_default_for_key = { key_scope = cmm_reset_field_key map = cmm_list_field_default }
+				_cmm_restore_default_for_key = { key_scope = cmm_reset_field_key }
 			}
 		}
 
