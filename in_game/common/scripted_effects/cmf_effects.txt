@@ -17,15 +17,6 @@ cmf_register_scripted_gui = {
 # Scope: any
 # Args: mod_id (key)
 cmf_register_mod = {
-
-	if = {
-		limit = {
-			NOT = { has_global_variable = $mod_id$_name }
-		}
-		set_global_variable = { name = $mod_id$_name value = flag:$mod_id$_name }
-		set_global_variable = { name = $mod_id$_desc value = flag:$mod_id$_desc }
-	}
-
     if = {
         limit = { NOT = { is_target_in_global_variable_list = { name = cmf_active_mod_ids target = flag:$mod_id$ } } }
         add_to_global_variable_list = {
@@ -41,6 +32,34 @@ cmf_register_mod = {
             has_global_variable_list = cmf_active_mod_ids
         }
         cmf_suppress = { v = cmf_active_mod_ids }
+        cmf_suppress = { v = $mod_id$ }
+    }
+}
+
+# Register a mod for the pre-game lobby banner. Idempotent by mod_id.
+# Scope: any
+# Args: mod_id (key)
+cmf_register_lobby_banner = {
+    cmf_register_mod = { mod_id = $mod_id$ }
+    if = {
+        limit = { NOT = { has_global_variable = $mod_id$_name } }
+        set_global_variable = { name = $mod_id$_name value = flag:$mod_id$_name }
+        set_global_variable = { name = $mod_id$_desc value = flag:$mod_id$_desc }
+    }
+    if = {
+        limit = { NOT = { is_target_in_global_variable_list = { name = cmf_lobby_banner_mod_ids target = flag:$mod_id$ } } }
+        add_to_global_variable_list = {
+            name = cmf_lobby_banner_mod_ids
+            target = flag:$mod_id$
+        }
+    }
+    # Benign warning suppression
+    if = {
+        limit = {
+            always = no
+            has_global_variable_list = cmf_lobby_banner_mod_ids
+        }
+        cmf_suppress = { v = cmf_lobby_banner_mod_ids }
         cmf_suppress = { v = $mod_id$ }
     }
 }

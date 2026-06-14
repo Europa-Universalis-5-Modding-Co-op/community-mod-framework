@@ -1,9 +1,7 @@
 ﻿on_game_start = {
 	on_actions = {
 		_cmf_on_init
-		_cmf_on_cmm_registration
-		cmf_on_mod_registration
-		_cmf_on_cmm_registration_late
+		cmf_on_banner_registration
 	}
 }
 
@@ -17,6 +15,24 @@ _cmf_on_init = {
 			limit = { NOT = { has_global_variable = cmf_log_count } }
 			set_global_variable = { name = cmf_log_count value = 0 }
 		}
+	}
+}
+
+# Lobby banner opt-in extension point. Fires at on_game_start before the
+# lobby renders its banners. A mod opts in by appending a leaf
+# on_action that calls cmf_register_lobby_banner.
+# Scope: none
+cmf_on_banner_registration = {
+	on_actions = {
+		_cmf_on_banner_registration
+	}
+}
+
+# Register CMF core's own lobby banner.
+# Scope: none
+_cmf_on_banner_registration = {
+	effect = {
+		cmf_register_lobby_banner = { mod_id = cmm_core }
 	}
 }
 
