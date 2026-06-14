@@ -1,5 +1,5 @@
 ﻿# Pre-initialize all CMM variable maps so quoted scope links never access a nonexistent map.
-# Idempotent: add_to_variable_map is a no-op for existing keys.
+# Idempotent: re-running leaves the maps in the same seeded state.
 # Scope: country
 # Args: none
 _cmm_init_variable_maps = {

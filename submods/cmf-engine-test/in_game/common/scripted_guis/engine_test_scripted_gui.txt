@@ -248,7 +248,7 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_12_passed value = 1 }
 		}
 
-		# Result: FAIL
+		# Result: PASS
 		# ── Test 13 ─────────────────────────────────────────────
 		# Does add_to_variable_map update an existing entry when
 		# both the original and the new write use the same flag:
@@ -272,7 +272,7 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_13_passed value = 1 }
 		}
 
-		# Result: FAIL
+		# Result: PASS
 		# ── Test 14 ─────────────────────────────────────────────
 		# Same as test 13 but for global variable maps.
 		# Does add_to_global_variable_map update an existing
@@ -294,7 +294,7 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_14_passed value = 1 }
 		}
 
-		# Result: FAIL
+		# Result: PASS
 		# ── Test 15 ─────────────────────────────────────────────
 		# scope:setting -> scope:setting direct overwrite attempt.
 		# Write with scope:setting (value 10), then write again
@@ -318,7 +318,7 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_15_passed value = 1 }
 		}
 
-		# Result: FAIL
+		# Result: PASS
 		# ── Test 16 ─────────────────────────────────────────────
 		# Update global map entry: engine_test_run seeded
 		# engine_test_gmap_update[flag:engine_test_key_a] = 10.
@@ -338,7 +338,7 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_16_passed value = 1 }
 		}
 
-		# Result: FAIL
+		# Result: PASS
 		# ── Test 17 ─────────────────────────────────────────────
 		# Update country map entry: engine_test_run seeded
 		# engine_test_cmap_update[flag:engine_test_key_a] = 10.
@@ -355,7 +355,7 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_17_passed value = 1 }
 		}
 
-		# Result: FAIL
+		# Result: PASS
 		# ── Test 18 ─────────────────────────────────────────────
 		# After test 16 wrote with scope:setting, read back with
 		# scope:setting. If pass, the write did create an entry
@@ -485,7 +485,7 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_22_passed value = 1 }
 		}
 
-		# Result: FAIL
+		# Result: PASS
 		# ── Test 23 ─────────────────────────────────────────────
 		# Workaround: store scope:setting in a variable, then use
 		# var: as the map key. Does this match the flag: key?

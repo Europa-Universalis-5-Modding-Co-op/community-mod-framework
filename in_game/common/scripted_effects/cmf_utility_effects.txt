@@ -14,7 +14,8 @@ cmf_suppress = {
 	}
 }
 
-# Change variable map value (adding does not overwrite a existing value)
+# DEPRECATED: add_to_variable_map now overwrites an existing key; call it directly instead.
+# Set a variable map entry, replacing any existing value
 # Scope: any
 # Args: name (key), key (scope), value (scope)
 cmf_change_variable_map = {
@@ -29,6 +30,7 @@ cmf_change_variable_map = {
 	}
 }
 
+# DEPRECATED: add_to_local_variable_map now overwrites an existing key; call it directly instead.
 # Change local variable map value
 # Scope: any
 # Args: name (key), key (scope), value (scope)
@@ -44,6 +46,7 @@ cmf_change_local_variable_map = {
 	}
 }
 
+# DEPRECATED: add_to_global_variable_map now overwrites an existing key; call it directly instead.
 # Change global variable map value
 # Scope: any
 # Args: name (key), key (scope), value (scope)
