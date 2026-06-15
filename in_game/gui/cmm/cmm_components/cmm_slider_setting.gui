@@ -15,16 +15,16 @@
 	# - cmm_slider_index_to_apply [value]: pending visual slot index for `cmm_apply_slider_change`.
 	# - GetScriptedGui('cmm_auto_apply_slider').Execute(...) [effect]: applies setting changes via auto-apply scripted GUI.
 	type cmm_slider_setting = widget {
-		size = { 320 34 }
-		minimumsize = { 320 34 }
+		size = { 332 34 }
+		minimumsize = { 332 34 }
 
 		hbox = {
 			margin = { 2 0 }
 			spacing = 10
 
 			widget = {
-				size = { 248 20 }
-				minimumsize = { 248 20 }
+				size = { 260 20 }
+				minimumsize = { 260 20 }
 				allow_outside = yes
 
 				hbox = {
@@ -75,8 +75,8 @@
 					}
 
 					widget = {
-						size = { 208 20 }
-						minimumsize = { 208 20 }
+						size = { 220 20 }
+						minimumsize = { 220 20 }
 						allow_outside = yes
 						onmousehierarchyleave = "[CMMExecuteGui('CMM_StopSliderDrag')]"
 						onmousehierarchyleave = "[GetVariableSystem.Clear('cmm_slider_hover_idx')]"
@@ -159,8 +159,8 @@
 							}
 
 							widget = {
-								size = { 190 20 }
-								minimumsize = { 190 20 }
+								size = { 202 20 }
+								minimumsize = { 202 20 }
 
 								hbox = {
 									size = { 100% 20 }
