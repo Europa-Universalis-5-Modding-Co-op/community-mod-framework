@@ -27,54 +27,12 @@
 				minimumsize = { 260 20 }
 				allow_outside = yes
 
-				hbox = {
+				widget = {
 					size = { 100% 20 }
+					allow_outside = yes
 
 					widget = {
-						size = { 20 20 }
-						minimumsize = { 20 20 }
-
-						EconomySlider_DecButton = {
-							size = { 20 20 }
-							enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
-
-							action_tooltip = {
-								click_mode = single
-								click_type = left
-								click_modifier = default
-								title = "CMM_NUMERIC_DECREASE"
-							}
-
-							action_tooltip = {
-								click_mode = single
-								click_type = left
-								click_modifier = ctrl
-								title = "CMM_NUMERIC_DECREASE_5X"
-							}
-
-							action_tooltip = {
-								click_mode = single
-								click_type = left
-								click_modifier = shift
-								title = "CMM_NUMERIC_DECREASE_MIN"
-							}
-
-							click_modifiers = {
-								ondefault = "[CMMExecuteGui('CMM_MarkNumericDecrease')]"
-								ondefault = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
-								onctrl = "[CMMExecuteGui('CMM_MarkNumericDecrease5x')]"
-								onctrl = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
-								onshift = "[CMMExecuteGui('CMM_MarkNumericDecreaseToMin')]"
-								onshift = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
-							}
-
-							tooltipwidget = {
-								BasicFunctionalTooltip = {}
-							}
-						}
-					}
-
-					widget = {
+						position = { 20 0 }
 						size = { 220 20 }
 						minimumsize = { 220 20 }
 						allow_outside = yes
@@ -85,7 +43,8 @@
 						scrollbar = {
 							name = "cmm_slider_visual"
 							direction = horizontal
-							size = { 100% 20 }
+							size = { 240 20 }
+							position = { -10 0 }
 							minimumsize = { -1 14 }
 							min = 0
 							max = "[CMMSliderNormalizedMax(Scope.GetFlagName)]"
@@ -96,7 +55,7 @@
 
 							track = {
 								EconomySlider_TrackRange = {
-									# Value remaps to the thumb-center x in the 220px track.
+									# Fill right edge follows the thumb center.
 									progressbar = {
 										size = { 100% 100% }
 										noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
@@ -105,8 +64,8 @@
 										spriteType = Corneredstretched
 										spriteborder = { 0 0 }
 										min = 0
-										max = 220
-										value = "[FixedPointToFloat(Add_CFixedPoint('(CFixedPoint)10', Multiply_CFixedPoint(Divide_CFixedPoint(CMMSliderNormalizedValue(Scope.GetFlagName), CMMSliderNormalizedMax(Scope.GetFlagName)), '(CFixedPoint)200')))]"
+										max = 240
+										value = "[FixedPointToFloat(Add_CFixedPoint('(CFixedPoint)10', Multiply_CFixedPoint(Divide_CFixedPoint(CMMSliderNormalizedValue(Scope.GetFlagName), CMMSliderNormalizedMax(Scope.GetFlagName)), '(CFixedPoint)220')))]"
 									}
 								}
 							}
@@ -221,6 +180,52 @@
 					}
 
 					widget = {
+						position = { 0 0 }
+						size = { 20 20 }
+						minimumsize = { 20 20 }
+
+						EconomySlider_DecButton = {
+							size = { 20 20 }
+							enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+
+							action_tooltip = {
+								click_mode = single
+								click_type = left
+								click_modifier = default
+								title = "CMM_NUMERIC_DECREASE"
+							}
+
+							action_tooltip = {
+								click_mode = single
+								click_type = left
+								click_modifier = ctrl
+								title = "CMM_NUMERIC_DECREASE_5X"
+							}
+
+							action_tooltip = {
+								click_mode = single
+								click_type = left
+								click_modifier = shift
+								title = "CMM_NUMERIC_DECREASE_MIN"
+							}
+
+							click_modifiers = {
+								ondefault = "[CMMExecuteGui('CMM_MarkNumericDecrease')]"
+								ondefault = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
+								onctrl = "[CMMExecuteGui('CMM_MarkNumericDecrease5x')]"
+								onctrl = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
+								onshift = "[CMMExecuteGui('CMM_MarkNumericDecreaseToMin')]"
+								onshift = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
+							}
+
+							tooltipwidget = {
+								BasicFunctionalTooltip = {}
+							}
+						}
+					}
+
+					widget = {
+						position = { 240 0 }
 						size = { 20 20 }
 						minimumsize = { 20 20 }
 
