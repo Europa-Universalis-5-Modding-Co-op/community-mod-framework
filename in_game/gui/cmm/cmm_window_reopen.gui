@@ -10,5 +10,13 @@ widget = {
 		duration = 0.05
 		on_finish = "[GetScriptedGui('CMM_RegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 		on_finish = "[GetVariableSystem.Set('cmm_window_open', '1')]"
+		next = cmm_reopen_recache
+	}
+
+	# List cells are reused across the window visibility toggle, so their create-time field cache stays stale.
+	state = {
+		name = cmm_reopen_recache
+		duration = 0.05
+		on_finish = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 	}
 }
