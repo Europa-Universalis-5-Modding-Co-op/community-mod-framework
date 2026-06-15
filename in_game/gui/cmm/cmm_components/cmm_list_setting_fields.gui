@@ -1080,10 +1080,9 @@
 					hbox = {
 						size = { 100% 20 }
 
-						# Left edge zone (half thumb width) - clamps to slider index 0.
 						widget = {
-							size = { 10 20 }
-							minimumsize = { 10 20 }
+							size = { 3 20 }
+							minimumsize = { 3 20 }
 							allow_outside = yes
 							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
 							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '0')]"
@@ -1108,14 +1107,13 @@
 							}
 						}
 
-						# Middle track zone - 21 overlay points mapping 0-20 to slider indices 0,5,10,...,100.
 						widget = {
-							size = { 100 20 }
-							minimumsize = { 100 20 }
+							size = { 114 20 }
+							minimumsize = { 114 20 }
 
 							hbox = {
 								size = { 100% 20 }
-								datamodel = "[DataModelRepeatedItem('(int32)21')]"
+								datamodel = "[DataModelRepeatedItem('(int32)19')]"
 								datamodel_reuse_widgets = yes
 
 								item = {
@@ -1124,10 +1122,10 @@
 										size = { 0 20 }
 										allow_outside = yes
 										onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
-										onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+										onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', ToString_int32(Multiply_int32(Add_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)1'), '(int32)5')))]"
 										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_SliderDragHover_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+										onmousehierarchyenter = "[CMMExecuteGuiSuffix('CMM_SliderDragHover_', ToString_int32(Multiply_int32(Add_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)1'), '(int32)5')))]"
 										onmousehierarchyenter = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 										onmousehierarchyenter = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 
@@ -1139,7 +1137,7 @@
 											onreleased = "[CMMExecuteGui('CMM_StopSliderDrag')]"
 											onrightclick = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 											onrightclick = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-											onrightclick = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+											onrightclick = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(Add_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)1'), '(int32)5')))]"
 											onrightclick = "[CMMExecuteGui('CMM_MarkListFieldSliderAll')]"
 											onrightclick = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 											onrightclick = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
@@ -1147,7 +1145,7 @@
 											click_modifiers = {
 												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
-												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)5')))]"
+												ondefault = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(Add_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)1'), '(int32)5')))]"
 												ondefault = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 												ondefault = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 											}
@@ -1159,10 +1157,9 @@
 							}
 						}
 
-						# Right edge zone (half thumb width) - clamps to slider index 100.
 						widget = {
-							size = { 10 20 }
-							minimumsize = { 10 20 }
+							size = { 3 20 }
+							minimumsize = { 3 20 }
 							allow_outside = yes
 							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
 							onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '100')]"
