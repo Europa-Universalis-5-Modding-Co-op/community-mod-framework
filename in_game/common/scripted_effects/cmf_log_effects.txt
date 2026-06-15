@@ -1,6 +1,6 @@
 ﻿# Log an action to the global mod log.
 # Scope: country (the actor performing the action)
-# Args: action (flag) — localization key for the action text
+# Args: action (flag) - localization key for the action text
 cmf_log = {
 	_cmf_log_core_flag = { action = $action$ arg1 = _cmf_log_no_arg arg2 = _cmf_log_no_arg arg_mode = 0 }
 }
@@ -20,7 +20,7 @@ cmf_log_with_args = {
 # Entry text renders as: [action] [arg2 name]
 # Scope: country (the actor performing the action)
 # Requires: scope:cmf_log_arg2 saved before calling.
-# Args: action (flag) — localization key for the action text
+# Args: action (flag) - localization key for the action text
 cmf_log_with_scope_arg = {
 	_cmf_log_core_scope_single = { action = $action$ arg_mode = 1 }
 }
@@ -29,14 +29,13 @@ cmf_log_with_scope_arg = {
 # Entry text renders as: [arg1 name] [action] [arg2 name]
 # Scope: country (the actor performing the action)
 # Requires: scope:cmf_log_arg1 and scope:cmf_log_arg2 saved before calling.
-# Args: action (flag) — localization key for the action/connecting text
+# Args: action (flag) - localization key for the action/connecting text
 cmf_log_with_scope_args = {
 	_cmf_log_core_scope = { action = $action$ arg_mode = 1 }
 }
 
 # Clear all log entries.
 # Scope: country
-# Args: none
 cmf_clear_log = {
 	_cmf_log_clear_maps = yes
 	set_global_variable = { name = cmf_log_count value = 0 }
@@ -131,7 +130,7 @@ _cmf_log_core_scope = {
 }
 
 # Benign warning suppression for log flags and maps.
-# This is a dedicated unused effect — the engine scans it at parse time.
+# This is a dedicated unused effect - the engine scans it at parse time.
 _cmf_log_suppress = {
 	if = {
 		limit = { always = no }
@@ -353,7 +352,6 @@ _cmf_log_suppress = {
 # Internal: select flag key based on current count and save as scope.
 # Sets scope:_cmf_log_key to flag:cmf_log_N where N = cmf_log_count.
 # Scope: country
-# Args: none
 _cmf_log_select_key = {
 	if = { limit = { global_var:cmf_log_count < 10 } _cmf_log_key_0x = yes }
 	else_if = { limit = { global_var:cmf_log_count < 20 } _cmf_log_key_1x = yes }
@@ -640,7 +638,6 @@ _cmf_log_key_19x = {
 # Internal: clear all variable map entries using flag keys.
 # Uses a while loop + the same dispatch chain to resolve flag keys for removal.
 # Scope: country
-# Args: none
 _cmf_log_clear_maps = {
 	while = {
 		limit = { global_var:cmf_log_count > 0 }

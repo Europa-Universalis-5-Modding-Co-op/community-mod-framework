@@ -353,7 +353,6 @@ macro = {
 }
 
 # Cached setting key from cmm_list_setting container state
-# Args: none
 # Returns: string
 macro = {
     description = "Cached list setting key from VariableSystem"

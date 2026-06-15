@@ -168,7 +168,6 @@ macro = {
     replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_dropdown_multiselector', SettingKey))"
 }
 
-# Args: none
 # Returns: boolean
 macro = {
     description = "True when text settings may be edited in the current session"

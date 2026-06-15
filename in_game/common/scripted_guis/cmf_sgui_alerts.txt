@@ -15,7 +15,7 @@
 
 # Auto-apply: handle alert left-click. Removes the alert and fires cmf_on_callback.
 # Scope: country
-# Args: scope:alert (flag) — the alert root key.
+# Args: scope:alert (flag) - the alert root key.
 cmf_auto_alert_clicked = {
     scope = country
     saved_scopes = { alert }

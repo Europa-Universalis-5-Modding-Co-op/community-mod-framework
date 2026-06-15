@@ -329,7 +329,6 @@ macro = {
     replace_with = "Concatenate(AddTextIf(CMFLogHasArg1(Index), Concatenate(CMFLogArg1Name(Index), ' ')), Concatenate(CMFLogAction(Index), AddTextIf(CMFLogHasArg2(Index), Concatenate(' ', CMFLogArg2Name(Index)))))"
 }
 
-# Args: none
 # Returns: boolean
 macro = {
     description = "True when at least one log entry exists"
@@ -337,7 +336,6 @@ macro = {
     replace_with = "GreaterThan_CFixedPoint(GetGlobalVariable('cmf_log_count').GetValue, '(CFixedPoint)0')"
 }
 
-# Args: none
 # Returns: int32
 macro = {
     description = "Number of log entries for DataModelRepeatedItem"

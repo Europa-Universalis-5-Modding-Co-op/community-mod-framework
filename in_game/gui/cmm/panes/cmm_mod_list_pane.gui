@@ -130,8 +130,6 @@
 	# Reads:
 	# - Player.MakeScope.GetList('cmm_registered_mod_ids') [list<flag>]: mod ids rendered as rows.
 	# - Scope.GetFlagName [string]: current row mod id.
-	# Writes:
-	# - none [n/a]: no writes.
 	type cmm_mod_list_rows = vbox {
 		using = layoutpolicy_expanding
 		margin = { 6 6 }

@@ -1,7 +1,5 @@
 ﻿types = CMMGenericTypes {
 	# Window-level close control for CMM.
-	# Reads:
-	# - none [n/a]: no reads.
 	# Writes:
 	# - GetVariableSystem.Clear('cmm_mod_search_text') [void]: clears transient search text on close.
 	# - GetVariableSystem.Clear('cmm_window_open') [void]: closes the window.

@@ -1,7 +1,6 @@
 ﻿#noinspection ALL
 # True when this country is controlled by the host player, or in singleplayer.
 # Scope: country
-# Args: none
 is_host = {
 	OR = {
 		AND = {
@@ -19,7 +18,6 @@ is_host = {
 # True when this country can use unrestricted tools: the unrestricted-tools setting is on and this country is the host (or in singleplayer).
 # Gate for restricted features not meant for normal play.
 # Scope: country
-# Args: none
 cmf_can_use_unrestricted_tools = {
 	AND = {
 		has_global_variable_map = cmm

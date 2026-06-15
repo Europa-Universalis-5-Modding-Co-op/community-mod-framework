@@ -5,8 +5,6 @@
 	# - Scope.GetFlagName [string]: current list setting key (`<mod_id>__<setting_id>`).
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated header datamodel.
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_name_', Scope.GetFlagName)) [flag]: localized field header key.
-	# Writes:
-	# - none [n/a]: no writes.
 	type cmm_list_setting_header_fields = hbox {
 		ignoreinvisible = yes
 		spacing = 8
@@ -41,8 +39,6 @@
 	# - Scope.GetFlagName [string]: current ordered list item key (`<mod_id>__<setting_id>_item_<index>`).
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for the row item.
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_count_', <setting_key>)) [value]: registered field count.
-	# Writes:
-	# - none [n/a]: no writes.
 	type cmm_list_setting_row_fields = hbox {
 		ignoreinvisible = yes
 		spacing = 8
@@ -1139,7 +1135,7 @@
 					hbox = {
 						size = { 100% 20 }
 
-						# Left edge zone (half thumb width) — clamps to slider index 0.
+						# Left edge zone (half thumb width) - clamps to slider index 0.
 						widget = {
 							size = { 10 20 }
 							minimumsize = { 10 20 }
@@ -1167,7 +1163,7 @@
 							}
 						}
 
-						# Middle track zone — 21 overlay points mapping 0-20 to slider indices 0,5,10,...,100.
+						# Middle track zone - 21 overlay points mapping 0-20 to slider indices 0,5,10,...,100.
 						widget = {
 							size = { 100 20 }
 							minimumsize = { 100 20 }
@@ -1218,7 +1214,7 @@
 							}
 						}
 
-						# Right edge zone (half thumb width) — clamps to slider index 100.
+						# Right edge zone (half thumb width) - clamps to slider index 100.
 						widget = {
 							size = { 10 20 }
 							minimumsize = { 10 20 }
@@ -1367,12 +1363,10 @@
 		}
 	}
 
-	# Ordered list data field — read-only numeric display with optional prefix/postfix.
+	# Ordered list data field - read-only numeric display with optional prefix/postfix.
 	# Reads:
 	# - Scope.GetFlagName [string]: current ordered list item key.
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel.
-	# Writes:
-	# - none [n/a]: no writes.
 	type cmm_list_setting_data_field = widget {
 		size = { 132 28 }
 		minimumsize = { 120 28 }

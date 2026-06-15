@@ -34,7 +34,6 @@ _cmm_restore_default_for_key = {
 
 # Fire cmf_on_callback for the setting key in scope:cmm_reset_key.
 # Scope: country
-# Args: none
 _cmm_fire_reset_callback = {
 	set_variable = { name = cmf_callback value = scope:cmm_reset_key }
 	trigger_event_silently = {
@@ -48,7 +47,6 @@ _cmm_fire_reset_callback = {
 # item-field key from cmm_list_field_default. Settings marked cmm_no_reset and
 # global settings of a non-host country are skipped.
 # Scope: country
-# Args: none
 _cmm_reset_setting_to_default = {
 	if = {
 		limit = {
@@ -130,7 +128,6 @@ _cmm_reset_setting_to_default = {
 
 # Reset all registered settings to their registered default values.
 # Scope: country
-# Args: none
 _cmm_reset_to_defaults = {
 	every_in_list = {
 		variable = cmm_registered_setting_keys
@@ -145,7 +142,6 @@ _cmm_reset_to_defaults = {
 
 # Reset all registered settings owned by the mod in scope:mod to their registered default values.
 # Scope: country
-# Args: none
 _cmm_reset_mod_to_defaults = {
 	every_in_list = {
 		variable = cmm_registered_setting_keys

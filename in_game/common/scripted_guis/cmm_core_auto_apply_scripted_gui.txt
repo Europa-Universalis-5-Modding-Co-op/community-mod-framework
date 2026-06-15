@@ -1,6 +1,6 @@
 ﻿# Auto-apply: toggle a bool setting via scope:setting.
 # Scope: country
-# Args: scope:setting (flag) — the setting key to toggle.
+# Args: scope:setting (flag) - the setting key to toggle.
 cmm_auto_toggle_bool = {
 	scope = country
 	saved_scopes = { setting }
@@ -39,7 +39,7 @@ cmm_auto_toggle_bool = {
 
 # Auto-apply: apply pending dropdown selection via scope:setting.
 # Scope: country
-# Args: scope:setting (flag) — the setting key to update.
+# Args: scope:setting (flag) - the setting key to update.
 cmm_auto_apply_dropdown = {
 	scope = country
 	saved_scopes = { setting }
@@ -92,7 +92,7 @@ cmm_auto_apply_dropdown = {
 
 # Auto-apply: apply pending numeric change via scope:setting.
 # Scope: country
-# Args: scope:setting (flag) — the setting key to update.
+# Args: scope:setting (flag) - the setting key to update.
 cmm_auto_apply_numeric = {
 	scope = country
 	saved_scopes = { setting }
@@ -109,7 +109,7 @@ cmm_auto_apply_numeric = {
 
 # Auto-apply: apply pending slider change via scope:setting.
 # Scope: country
-# Args: scope:setting (flag) — the setting key to update.
+# Args: scope:setting (flag) - the setting key to update.
 cmm_auto_apply_slider = {
 	scope = country
 	saved_scopes = { setting }
@@ -193,7 +193,7 @@ cmm_auto_apply_slider = {
 
 # Auto-apply: fire callback for button press via scope:setting.
 # Scope: country
-# Args: scope:setting (flag) — the setting key pressed.
+# Args: scope:setting (flag) - the setting key pressed.
 cmm_auto_apply_button = {
 	scope = country
 	saved_scopes = { setting }

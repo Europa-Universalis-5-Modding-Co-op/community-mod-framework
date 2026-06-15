@@ -1,6 +1,5 @@
 ﻿# Mark the next dropdown interaction as a 0-based widget index while storing a 1-based public ordinal.
 # Scope: country
-# Args: none
 # Note: fixed index markers map 0-based widget positions to 1-based public ordinals and avoid AddScope/MakeScopeValue null promotions in dropdown item callbacks.
 CMM_MarkDropdownSelection_0 = {
     effect = {

@@ -1,6 +1,5 @@
 ﻿# Begin a slider drag interaction.
 # Scope: country
-# Args: none
 CMM_StartSliderDrag = {
 	effect = {
 		set_variable = { name = cmm_slider_dragging value = 1 }
@@ -9,7 +8,6 @@ CMM_StartSliderDrag = {
 
 # End a slider drag interaction.
 # Scope: country
-# Args: none
 CMM_StopSliderDrag = {
 	effect = {
 		if = {
@@ -21,7 +19,6 @@ CMM_StopSliderDrag = {
 
 # Mark the next slider interaction as visual slot `0`.
 # Scope: country
-# Args: none
 CMM_MarkSliderSelection_0 = {
 	effect = {
 		set_variable = { name = cmm_slider_index_to_apply value = 0 }
@@ -630,7 +627,6 @@ CMM_MarkSliderSelection_100 = {
 
 # Conditionally mark visual slot `0` during a slider drag.
 # Scope: country
-# Args: none
 CMM_SliderDragHover_0 = {
 	effect = {
 		if = {

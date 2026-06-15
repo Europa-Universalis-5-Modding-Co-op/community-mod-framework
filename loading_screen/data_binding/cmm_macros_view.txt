@@ -1,6 +1,5 @@
 ﻿# CMM GUI Macros: View State And Selection
 
-# Args: none
 # Returns: boolean
 macro = {
     description = "True when selected mod variable-system key exists"
@@ -8,7 +7,6 @@ macro = {
     replace_with = "CMMSelectedValueExists('cmm_selected_mod')"
 }
 
-# Args: none
 # Returns: boolean
 macro = {
     description = "True when selected tab variable-system key exists"
@@ -24,7 +22,6 @@ macro = {
     replace_with = "CMMMatchesSelectedModAndTab(CMMMetadataFlag('cmm_group_owner_mod_id_', GroupKey), CMMMetadataFlag('cmm_group_owner_tab_key_', GroupKey))"
 }
 
-# Args: none
 # Returns: boolean
 macro = {
     description = "True when no mods are registered yet"
@@ -32,7 +29,6 @@ macro = {
     replace_with = "IsDataModelEmpty(Player.MakeScope.GetList('cmm_registered_mod_ids'))"
 }
 
-# Args: none
 # Returns: boolean
 macro = {
     description = "True when at least one mod is registered"
@@ -48,7 +44,6 @@ macro = {
     replace_with = "Or4(Not(CMMSelectedValueExists('cmm_mod_search_text')), StringIsEmpty(GetVariableSystem.Get('cmm_mod_search_text')), StringContains(CMMLocalizedSuffix(ModId, '_name'), GetVariableSystem.Get('cmm_mod_search_text')), StringContains(ModId, GetVariableSystem.Get('cmm_mod_search_text')))"
 }
 
-# Args: none
 # Returns: boolean
 macro = {
     description = "Show empty-state text when selected tab has zero visible settings"

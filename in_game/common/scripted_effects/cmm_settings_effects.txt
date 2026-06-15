@@ -1,6 +1,5 @@
 ﻿# Register built-in CMM settings.
 # Scope: country
-# Args: none
 _cmm_register_menu_settings = {
 	cmm_register_global_bool_setting = {
 		mod_id = cmm_core
@@ -44,7 +43,6 @@ _cmm_register_menu_settings = {
 # completed their registration (so cmf_action_bar_elements is fully populated).
 # Called after cmf_on_mod_registration.
 # Scope: country
-# Args: none
 _cmm_register_menu_settings_late = {
 	# Mirror the global cmf_action_bar_elements list into a per-country list so
 	# CMM list bool fields can be stored per-country (per-player preference).
@@ -262,7 +260,6 @@ _cmm_handle_action_bar_button_change = {
 
 # Handle CMM core button callbacks.
 # Scope: country
-# Args: none
 _cmm_handle_core_callback = {
 	if = {
 		limit = { var:cmf_callback = flag:cmm_core__open_log }
@@ -291,7 +288,6 @@ _cmm_handle_core_callback = {
 
 # Store the current country as the CMM host country.
 # Scope: country
-# Args: none
 _cmm_mark_host_country = {
 	set_global_variable = { name = cmm_core_host_country value = this }
 

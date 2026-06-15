@@ -1,5 +1,5 @@
 ﻿# Register an action bar element globally and for all current countries.
-# Idempotent — safe to call multiple times (e.g. from per-country registration hooks).
+# Idempotent - safe to call multiple times (e.g. from per-country registration hooks).
 # Scope: country
 # Args: element (flag)
 cmf_add_action_bar_element = {

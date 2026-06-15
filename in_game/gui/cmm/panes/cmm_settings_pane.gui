@@ -99,8 +99,6 @@
 	# Reads:
 	# - Player.MakeScope.GetList('cmm_registered_group_keys') [list<flag>]: group keys rendered as group sections.
 	# - Scope.GetFlagName [string]: current group key (`<mod_id>__<tab_id>__<group_id>`).
-	# Writes:
-	# - none [n/a]: no writes.
 	type cmm_setting_groups = vbox {
 		layoutpolicy_horizontal = expanding
 		ignoreinvisible = yes
@@ -118,8 +116,6 @@
 	# Reads:
 	# - Scope.GetFlagName [string]: current group key (`<mod_id>__<tab_id>__<group_id>`).
 	# - Player.MakeScope.GetList(Concatenate('cmm_group_setting_keys_', Scope.GetFlagName)) [list<flag>]: settings in this group.
-	# Writes:
-	# - none [n/a]: no writes.
 	type cmm_setting_group = vbox {
 		layoutpolicy_horizontal = expanding
 		visible = "[CMMGroupRowVisible(Scope.GetFlagName)]"

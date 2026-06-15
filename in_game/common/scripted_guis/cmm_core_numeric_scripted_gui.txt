@@ -1,6 +1,5 @@
 ﻿# Queue a one-step numeric decrease.
 # Scope: country
-# Args: none
 CMM_MarkNumericDecrease = {
     effect = {
         if = {
@@ -20,7 +19,6 @@ CMM_MarkNumericDecrease = {
 
 # Queue a five-step numeric decrease.
 # Scope: country
-# Args: none
 CMM_MarkNumericDecrease5x = {
     effect = {
         if = {
@@ -40,7 +38,6 @@ CMM_MarkNumericDecrease5x = {
 
 # Queue a jump-to-min numeric change.
 # Scope: country
-# Args: none
 CMM_MarkNumericDecreaseToMin = {
     effect = {
         set_variable = { name = cmm_numeric_change_to_apply value = -3 }
@@ -54,7 +51,6 @@ CMM_MarkNumericDecreaseToMin = {
 
 # Queue a one-step numeric increase.
 # Scope: country
-# Args: none
 CMM_MarkNumericIncrease = {
     effect = {
         if = {
@@ -74,7 +70,6 @@ CMM_MarkNumericIncrease = {
 
 # Queue a five-step numeric increase.
 # Scope: country
-# Args: none
 CMM_MarkNumericIncrease5x = {
     effect = {
         if = {
@@ -94,7 +89,6 @@ CMM_MarkNumericIncrease5x = {
 
 # Queue a jump-to-max numeric change.
 # Scope: country
-# Args: none
 CMM_MarkNumericIncreaseToMax = {
     effect = {
         set_variable = { name = cmm_numeric_change_to_apply value = 3 }

@@ -1,6 +1,6 @@
 ﻿# Auto-apply: handle action bar button left-click. Fires cmf_on_callback.
 # Scope: country
-# Args: scope:element (flag) — the action bar element root key.
+# Args: scope:element (flag) - the action bar element root key.
 cmf_auto_action_bar_clicked = {
 	scope = country
 	saved_scopes = { element }

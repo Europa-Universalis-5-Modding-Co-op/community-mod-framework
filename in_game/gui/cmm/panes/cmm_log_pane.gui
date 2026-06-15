@@ -94,8 +94,6 @@
 	# Reads:
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: entry index for flag key construction.
 	# - GetVariableFromGlobalVariableMap('cmf_log_*', MakeScopeFlag(Concatenate('cmf_log_', ...))) [variable]: per-entry data.
-	# Writes:
-	# - none [n/a]: no writes.
 	type cmm_log_entry_row = hbox {
 		layoutpolicy_horizontal = expanding
 		minimumsize = { 0 36 }
