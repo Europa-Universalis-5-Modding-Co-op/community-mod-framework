@@ -15,8 +15,8 @@
 	# - cmm_slider_index_to_apply [value]: pending visual slot index for `cmm_apply_slider_change`.
 	# - GetScriptedGui('cmm_auto_apply_slider').Execute(...) [effect]: applies setting changes via auto-apply scripted GUI.
 	type cmm_slider_setting = widget {
-		size = { 332 34 }
-		minimumsize = { 332 34 }
+		size = { 320 34 }
+		minimumsize = { 320 34 }
 
 		hbox = {
 			margin = { 2 0 }
@@ -96,7 +96,7 @@
 
 							track = {
 								EconomySlider_TrackRange = {
-									# Value remaps to the thumb-center x in the 208px track.
+									# Value remaps to the thumb-center x in the 220px track.
 									progressbar = {
 										size = { 100% 100% }
 										noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds"
@@ -105,8 +105,8 @@
 										spriteType = Corneredstretched
 										spriteborder = { 0 0 }
 										min = 0
-										max = 208
-										value = "[FixedPointToFloat(Add_CFixedPoint('(CFixedPoint)10', Multiply_CFixedPoint(Divide_CFixedPoint(CMMSliderNormalizedValue(Scope.GetFlagName), CMMSliderNormalizedMax(Scope.GetFlagName)), '(CFixedPoint)188')))]"
+										max = 220
+										value = "[FixedPointToFloat(Add_CFixedPoint('(CFixedPoint)10', Multiply_CFixedPoint(Divide_CFixedPoint(CMMSliderNormalizedValue(Scope.GetFlagName), CMMSliderNormalizedMax(Scope.GetFlagName)), '(CFixedPoint)200')))]"
 									}
 								}
 							}
@@ -136,8 +136,8 @@
 						hbox = {
 							size = { 100% 20 }
 							widget = {
-								size = { 9 20 }
-								minimumsize = { 9 20 }
+								size = { 5 20 }
+								minimumsize = { 5 20 }
 								allow_outside = yes
 								onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
 								onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '0')]"
@@ -159,8 +159,8 @@
 							}
 
 							widget = {
-								size = { 202 20 }
-								minimumsize = { 202 20 }
+								size = { 210 20 }
+								minimumsize = { 210 20 }
 
 								hbox = {
 									size = { 100% 20 }
@@ -195,8 +195,8 @@
 							}
 
 							widget = {
-								size = { 9 20 }
-								minimumsize = { 9 20 }
+								size = { 5 20 }
+								minimumsize = { 5 20 }
 								allow_outside = yes
 								onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_key', Scope.GetFlagName)]"
 								onmousehierarchyenter = "[GetVariableSystem.Set('cmm_slider_hover_idx', '100')]"
