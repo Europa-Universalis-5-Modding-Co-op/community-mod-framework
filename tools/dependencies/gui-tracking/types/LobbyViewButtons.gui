@@ -1,0 +1,378 @@
+# vanilla: in_game/gui/multiplayer_lobby.gui
+# mod: in_game/gui/multiplayer_lobby.gui
+
+	type LobbyViewButtons = hbox {
+		spacing = 0
+
+		# GO TO MAIN MENU BUTTON
+		button_regular = {
+			size = { 34 34 }
+
+			input_action = "close_window"
+			use_global_input_instance = yes
+			action_tooltip = {
+				click_mode = confirm
+				on_action = "[LobbyView.GoBack]"
+				on_action = "[HideGameRules]"
+				title = "GO_TO_MAIN_MENU"
+				enabled = "[LobbyView.CanGoBack]"
+			}
+			tooltipwidget = {
+				ContextualTooltipType = {
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
+						}
+					}
+
+					blockoverride "title_text" {
+						text = "GO_TO_MAIN_MENU"
+					}
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "GO_TO_MAIN_MENU_desc"
+							}
+						}
+					}
+				}
+			}
+			button = {
+				using = ui_direction_button_overlay
+				using = back_button_alt_texture
+				size = {80% 80%}
+				parentanchor = center
+
+				background = {
+					using = bg_button_light_round_texture
+					modify_texture = {
+						using = color_dark_blue_texture
+					}
+				}
+
+				input_action = "close_window"
+				use_global_input_instance = yes
+				action_tooltip = {
+					click_mode = confirm
+					on_action = "[LobbyView.GoBack]"
+					on_action = "[HideGameRules]"
+					title = "GO_TO_MAIN_MENU"
+					enabled = "[LobbyView.CanGoBack]"
+				}
+
+				tooltipwidget = {
+					ContextualTooltipType = {
+						blockoverride "title_icon" {
+							icon = {
+								using = tooltip_title_icon_size
+								texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
+							}
+						}
+
+						blockoverride "title_text" {
+							text = "GO_TO_MAIN_MENU"
+						}
+						blockoverride "tooltip_content" {
+							TooltipTextBlock = {
+								blockoverride "text" {
+									text = "GO_TO_MAIN_MENU_desc"
+								}
+							}
+						}
+					}
+				}
+
+				using = snd_UI_backward
+			}
+			# button = {
+			# 	parentanchor = center
+			# 	size = {80% 80%}
+			# 	texture = "gfx/interface/buttons/flats/back_button.dds"
+			# 	texture_density = 2
+
+			# 	modify_texture = {
+			# 		using = overlay_window_texture
+			# 		blend_mode = overlay
+			# 		alpha = 0.7
+			# 	}
+			# 	modify_texture = {
+			# 		using = overlay_stone_texture
+			# 		blend_mode = overlay
+			# 		alpha = 0.8
+			# 	}
+
+			# 	modify_texture = {
+			# 		using = color_new_gold_texture
+			# 	}
+
+			# 	glow = {
+			# 		glow_radius = 5
+			# 		color = { 1.0 0.85 0.55 1.0 }
+			# 		alpha = 0.6
+
+			# 		block "glow_visible" {
+			# 			visible = no
+			# 		}
+			# 	}
+
+			# 	background = {
+			# 		using = bg_circle_texture
+			# 		margin = {3 3}
+			# 		modify_texture = {
+			# 			using = color_dark_blue_texture
+			# 			blend_mode = multiply
+			# 		}
+			# 	}
+			# }
+		}
+
+		# random country
+		button_regular = {
+			using = layoutpolicy_expanding
+
+			text_single = {
+				parentanchor = center
+				maximumsize = {200 -1}
+				text = "MULTIPLAYER_LOBBY_CHOOSE_RANDOM_CHARACTER"
+			}
+
+			action_tooltip = {
+				title = "MULTIPLAYER_LOBBY_CHOOSE_RANDOM_CHARACTER"
+				on_action = "[GameLobby.SetRandomPlayableObserverCharacter]"
+			}
+
+			tooltipwidget = {
+				ConceptTooltipType = {
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "[GetConceptTexture('dice')]"
+						}
+					}
+
+					blockoverride "title_text" {
+						text = "MULTIPLAYER_LOBBY_CHOOSE_RANDOM_CHARACTER"
+					}
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "MULTIPLAYER_LOBBY_CHOOSE_RANDOM_CHARACTER_desc"
+							}
+						}
+					}
+				}
+			}
+		}
+
+		# observe
+		button_regular = {
+			using = layoutpolicy_expanding
+			enabled = "[GameLobby.CanToggleObserve]"
+			button_checkbox_visibility = {
+				size = { 30 30 }
+				position = { 5 1 }
+				down = "[LobbyView.IsObserver]"
+				onclick = "[GameLobby.ToggleObserve]"
+			}
+
+			text_single = {
+				parentanchor = center
+				maximumsize = {200 -1}
+				text = "[SelectLocalization(LobbyView.IsObserver, 'JOMINI_MULTIPLAYER_GUI_DISABLE_OBSERVE', 'JOMINI_MULTIPLAYER_GUI_OBSERVE')]"
+			}
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				title = "[SelectLocalization(LobbyView.IsObserver, 'JOMINI_MULTIPLAYER_GUI_DISABLE_OBSERVE', 'JOMINI_MULTIPLAYER_GUI_OBSERVE')]"
+				enabled = "[GameLobby.CanToggleObserve]"
+				on_action = "[GameLobby.ToggleObserve]"
+			}
+
+			tooltipwidget = {
+				ConceptTooltipType = {
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
+						}
+					}
+
+					blockoverride "title_text" {
+						text = "OBSERVER"
+					}
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "[GameLobby.ToggleObserveTT]"
+							}
+						}
+					}
+				}
+			}
+		}
+
+		# Clear country observed
+		header_button_left = {
+			visible = "[And3(LobbyView.IsObserver, LobbyView.HasSelectedPlayable, Not(IsPreparationLobby))]"
+			size = { 30 30 }
+			onclick = "[LobbyView.ClearPreSelected]"
+			blockoverride "button_icon_stretch_sprite" {}
+			blockoverride "header_button_frame_inner" {visible = no}
+			blockoverride "header_button_icon_size" { size = { 28 28 } }
+			blockoverride "header_button_text_layout" {}
+			blockoverride "icon_texture" {
+				texture = "gfx/interface/icons/unit_view/army_visible_icon.dds"
+			}
+			blockoverride "icon_overlay" {}
+
+			tooltipwidget = {
+				ConceptTooltipType = {
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/icons/unit_view/army_visible_icon.dds"
+						}
+					}
+
+					blockoverride "title_text" {
+						text = "LOBBY_CLEAR_OBSERVING_COUNTRY"
+					}
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "LOBBY_CLEAR_OBSERVING_COUNTRY"
+							}
+						}
+					}
+				}
+			}
+		}
+
+		header_button_left = {
+			visible = "[And(GameLobby.Vars.HasValue('subtab', 'selected_country'), LobbyView.HasSelectedPlayable)]"
+			size = { 30 30 }
+			blockoverride "button_icon_stretch_sprite" {}
+			blockoverride "header_button_frame_inner" {visible = no}
+			blockoverride "header_button_icon_size" { size = { 26 26 } }
+			blockoverride "header_button_text_layout" {}
+			blockoverride "icon_overlay" {}
+			blockoverride "icon_texture" {
+				texture = "gfx/interface/icons/alerts_icons/form_new_country.dds"
+				texture_density = 2
+			}
+			
+			action_tooltip = {
+				title = "LOBBY_OPEN_SELECTED_COUNTRY_TT"
+				on_action = "[GameLobby.Vars.SetOrToggle('subtab','not_selected_country')]"
+			}
+			tooltipwidget = {
+				ConceptTooltipType = {
+					blockoverride "title_text" {
+						text = "LOBBY_OPEN_SELECTED_COUNTRY_TT"
+					}
+
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/buttons/flats/release_country.dds"
+
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.5
+								blend_mode = add
+							}
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.6
+							}
+						}
+					}
+
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "LOBBY_OPEN_SELECTED_COUNTRY_TT_des"
+							}
+						}
+					}
+				}
+			}
+		}
+		header_button_left = {
+			visible = "[And(Not(GameLobby.Vars.HasValue('subtab', 'selected_country')), LobbyView.HasSelectedPlayable)]"
+			size = { 30 30 }
+			blockoverride "button_icon_stretch_sprite" {}
+			blockoverride "header_button_frame_inner" {visible = no}
+			blockoverride "header_button_icon_size" { size = { 30 30 } }
+			blockoverride "header_button_text_layout" {}
+			blockoverride "icon_overlay" {}
+			blockoverride "header_button_template_push_properties"{
+				gfxtype = togglepushbuttongfx
+				effectname = "NoHighlight"
+				upframe = 2
+				uphoverframe = 2
+				uppressedframe = 3
+				downframe = 2
+				downhoverframe = 2
+				downpressedframe = 3
+				disableframe = 4
+			}
+			blockoverride "icon_texture" {
+				texture = "gfx/interface/icons/alerts_icons/form_new_country.dds"
+				texture_density = 2
+			}
+			background = {
+				texture = "gfx/interface/component_tiles/square_glow.dds"
+				margin = {5 5}
+				block "header_button_modify_visible" {}
+				modify_texture = {
+					using = color_bone_texture
+				}
+				alpha = 0.5
+				modify_texture = {
+					using = color_white_texture
+					blend_mode = overlay
+					alpha = 0.2
+				}
+			}
+			action_tooltip = {
+				on_action = "[GameLobby.Vars.Set('subtab','selected_country')]"
+				title = "LOBBY_CLOSE_SELECTED_COUNTRY_TT"
+			}
+			tooltipwidget = {
+				ConceptTooltipType = {
+					blockoverride "title_text" {
+						text = "LOBBY_CLOSE_SELECTED_COUNTRY_TT"
+					}
+
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "gfx/interface/buttons/flats/release_country.dds"
+
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.5
+								blend_mode = add
+							}
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.6
+							}
+						}
+					}
+
+					blockoverride "tooltip_content" {
+						TooltipTextBlock = {
+							blockoverride "text" {
+								text = "LOBBY_CLOSE_SELECTED_COUNTRY_TT_des"
+							}
+						}
+					}
+				}
+			}
+		}
+		expand = {}
+	}

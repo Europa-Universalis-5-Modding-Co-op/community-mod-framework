@@ -1,0 +1,312 @@
+# vanilla: in_game/gui/multiplayer_lobby.gui
+# mod: in_game/gui/multiplayer_lobby.gui
+
+	type LobbyMultiplayerPanelNoServer = widget {
+		size = { 430 -1 }
+		layoutpolicy_vertical = expanding
+		using = bg_main_inner_notabs_alt
+		alwaystransparent = no
+		filter_mouse = all
+
+		vbox = {
+			using = layoutpolicy_expanding
+			spacing = 15
+			margin_bottom = 25
+
+			window_header_alt = {
+				using = bg_main_inner_alt
+				blockoverride "window_header_alt_color_texture"{
+					using = color_default_brown_texture
+				}
+
+				blockoverride "header_text" {
+					text = "LOBBY_MULTIPLAYER_GAME_TITLE"
+				}
+			}
+
+			vbox = {
+				margin = { 25 0 }
+				layoutpolicy_horizontal = expanding
+
+				subheader = {
+					using = bg_name_banner
+					blockoverride "content" {
+						text_single = {
+							using = layoutpolicy_expanding
+							text = "JOMINI_MULTIPLAYER_GUI_GAME_SETTINGS"
+							autoresize = yes
+							align = nobaseline
+							parentanchor = center
+							using = Font_Type_Headers
+						}
+					}
+				}
+
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 15
+					margin = { 10 0 }
+					margin_top = 15
+
+					editbox_single = {
+						enabled = "[And(Not(GameIsMultiplayer), Not(HasHostError))]"
+						layoutpolicy_horizontal = expanding
+						blockoverride "editbox_label" {
+							text = "JOMINI_MULTIPLAYER_GUI_SERVER_NAME"
+						}
+						blockoverride "editbox_properties" {
+							name = "no_server_name" # widget name is referenced in code, please no duplicates in this window
+							text = "[GetDefaultServerName]"
+							tooltip_enabled = no
+							maxcharacters = 64
+							oneditingfinished = "[GameLobby.SetNameNoServer]"
+						}
+					}
+
+					editbox_single = {
+						layoutpolicy_horizontal = expanding
+						password = yes
+
+						blockoverride "editbox_label" {
+							text = "JOMINI_MULTIPLAYER_GUI_SERVER_PASSWORD"
+						}
+
+						blockoverride "editbox_properties" {
+							name = "no_server_password" # widget name is referenced in code, please no duplicates in this window
+							tooltip_enabled = no
+							maxcharacters = 64
+							oneditingfinished = "[GameLobby.SetPasswordNoServer]"
+						}
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						minimumsize = {-1 36}
+						spacing = 8
+						margin = { 15 10 }
+						using = bg_text_mask_container_dark_brown
+
+						# VISIBILITY PRIVATE
+						widget = {
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+							size = {-1 40}
+							visible = "[GameLobby.IsInvite]"
+
+							hbox = {
+								spacing = 8
+								header_button_left = {
+									size = {35 35}
+									blockoverride "button_icon_stretch_sprite" {}
+									blockoverride "header_button_frame_inner" {visible = no}
+									blockoverride "header_button_icon_size" { size = { 30 30 } }
+									blockoverride "header_button_text_layout" {}
+									blockoverride "header_button_icon_obj" {
+										icon = {
+											size = { 27 27 }
+											parentanchor = center
+											texture = "gfx/interface/icons/map_subdivisons/locked.dds"
+											glow = {
+												name = "drop_shadow"
+												glow_radius = 3
+												color = {0.0 0.0 0.0 1.0}
+												alpha = 0.3
+											}
+
+											modify_texture = {
+												using = color_black_texture
+												alpha = 0.4
+												blend_mode = multiply
+											}
+
+											modify_texture = {
+												using = color_new_gold_texture
+												alpha = 0.8
+											}
+										}
+									}
+
+									enabled = "[CanEditSettingsAfterHost]"
+									tooltipwidget = {BasicFunctionalTooltip = {}}
+
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										enabled = "[CanEditSettingsAfterHost]"
+										title = "LOBBY_MULTIPLAYER_SETTINGS_TOGGLE_PUBLIC"
+										on_action = "[GameLobby.ToggleVisibility]"
+									}
+								}
+
+								text_single = {
+									text = "JOMINI_MULTIPLAYER_GUI_PRIVATE"
+									using = layoutpolicy_expanding
+									autoresize = no
+									align = left|nobaseline
+								}
+							}
+						}
+
+						# VISIBILITY PUBLIC
+						widget = {
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+							size = {-1 40}
+							visible = "[Not(GameLobby.IsInvite)]"
+
+							hbox = {
+								spacing = 8
+								header_button_left = {
+									size = {35 35}
+									blockoverride "button_icon_stretch_sprite" {}
+									blockoverride "header_button_frame_inner" {visible = no}
+									blockoverride "header_button_icon_size" { size = { 30 30 } }
+									blockoverride "header_button_text_layout" {}
+									blockoverride "header_button_icon_obj" {
+
+										icon = {
+											size = { 27 27 }
+											parentanchor = center
+											texture = "gfx/interface/icons/map_subdivisons/unlocked.dds"
+											glow = {
+												name = "drop_shadow"
+												glow_radius = 3
+												color = {0.0 0.0 0.0 1.0}
+												alpha = 0.3
+											}
+
+											modify_texture = {
+												using = color_black_texture
+												alpha = 0.4
+												blend_mode = multiply
+											}
+
+											modify_texture = {
+												using = color_new_gold_texture
+												alpha = 0.8
+											}
+										}
+									}
+
+									enabled = "[CanEditSettingsAfterHost]"
+
+									tooltipwidget = {BasicFunctionalTooltip = {}}
+
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										enabled = "[CanEditSettingsAfterHost]"
+										title = "LOBBY_MULTIPLAYER_SETTINGS_TOGGLE_PRIVATE"
+										on_action = "[GameLobby.ToggleVisibility]"
+									}
+								}
+
+								text_single = {
+									text = "JOMINI_MULTIPLAYER_GUI_PUBLIC"
+									using = layoutpolicy_expanding
+									autoresize = no
+									align = left|nobaseline
+								}
+							}
+						}
+
+						button_checkbox = {
+							action_tooltip = {
+								title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+								on_action = "[GameLobby.ToggleAutoAccept]"
+							}
+							tooltipwidget = { BasicFunctionalTooltip = {} }
+							down = "[GameLobby.IsAutoAccept]"
+						}
+
+						text_multi = {
+							layoutstretchfactor_horizontal = 3
+							using = layoutpolicy_expanding
+							autoresize = no
+							align = left|nobaseline
+							maximumsize = { 160 -1 }
+							text = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+							tooltipwidget = {
+								SimpleContextualTooltipType = {
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/players.dds"
+										}
+									}
+									textcontext = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT_TT"
+								}
+							}
+						}
+					}
+				}
+
+				expand = {}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 35 0 }
+				visible = "[And(Not(GameIsMultiplayer), Not(LobbyView.ShowHosting))]"
+				button_regular = {
+					layoutpolicy_horizontal = expanding
+					size = {-1 40}
+					visible = "[And(Not(GameIsMultiplayer), Not(LobbyView.ShowHosting))]"
+					enabled = "[And(GameLobby.CanOpenMultiplayer, Not(HasHostError))]"
+					text = "JOMINI_MULTIPLAYER_GUI_HOST_BUTTON"
+					tooltipwidget = {BasicFunctionalTooltip = {}}
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						enabled = "[GameLobby.CanOpenMultiplayer]"
+						on_action = "[GameLobby.OpenMultiplayer]"
+						title = "JOMINI_MULTIPLAYER_GUI_HOST_BUTTON"
+					}
+				}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 35 0 }
+				visible = "[LobbyView.ShowHosting]"
+				JominiLobbyViewHostingStatus = {
+					margin = { 30 0 }
+					minimumsize = { -1 50 }
+
+					blockoverride "window_background" {}
+					using = bg_text_mask_container_dark_brown
+
+					blockoverride "setup_textbox" {
+						using = text_multi_template
+						align = center
+					}
+				}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 35 0 }
+				JominiLobbyViewHostError = {
+					margin = { 30 0 }
+					minimumsize = { -1 100 }
+
+					blockoverride "window_background" {}
+					using = bg_text_mask_container_dark_brown
+
+					blockoverride "jomini_standard_textbox" {
+						using = text_single_template
+						align = center
+					}
+
+					blockoverride "lobbyview_button_size" {
+						layoutpolicy_horizontal = fixed
+						size = { 120 30 }
+					}
+				}
+			}
+
+			expand = {}
+		}
+
+		window_bottom_paper_template = {}
+	}

@@ -1,0 +1,472 @@
+# vanilla: in_game/gui/multiplayer_lobby.gui
+# mod: in_game/gui/multiplayer_lobby.gui
+
+	type LobbyMultiplayerPanel = widget {
+		size = { 430 -1 }
+		layoutpolicy_vertical = expanding
+		using = bg_main_inner_notabs_alt
+		alwaystransparent = no
+		filter_mouse = all
+
+		vbox = {
+			using = layoutpolicy_expanding
+			margin_bottom = 25
+
+			window_header_alt = {
+				using = bg_main_inner_alt
+				blockoverride "window_header_alt_color_texture"{
+					using = color_default_brown_texture
+				}
+
+				blockoverride "header_text" {
+					text = "LOBBY_MULTIPLAYER_SETTINGS"
+				}
+			}
+
+			# TOP BUTTONS
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = {-1 75}
+				background = {
+					using = color_black_texture
+					alpha = 0.93
+
+					using = color_dark_blue
+					using = overlay_window
+					using = overlay_leather
+				}
+
+				vbox = {
+					margin = { 15 5 }
+					spacing = 2
+
+					# GAME SETTINGS
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 5
+
+						widget = {
+							layoutpolicy_horizontal = expanding
+							size = {-1 30}
+							layoutstretchfactor_horizontal = 2
+							editbox_single = {
+								size = {100% 30}
+								blockoverride "editbox_label" {
+									text = "JOMINI_MULTIPLAYER_GUI_SERVER_NAME"
+								}
+								blockoverride "editbox_properties" {
+									text = "[LobbyView.GetServerInfo.GetServerName]"
+									tooltip_enabled = no
+									oneditingfinished = "[LobbyView.SetName]"
+									ontextedited = "[LobbyView.OnNameEdit]"
+									enabled = "[CanEditSettingsAfterHost]"
+								}
+							}
+
+							ui_direction_button = {
+								size = { 22 22 }
+								using = snd_UI_forward
+
+								parentanchor = right|vcenter
+								position = { -10 0 }
+
+								texture = "gfx/interface/buttons/flats/button_simple.dds"
+								mirror = horizontal
+								texture_density = 2
+								using = bg_circle
+
+								enabled = "[CanEditSettingsAfterHost]"
+								visible = "[CanEditSettingsAfterHost]"
+								tooltipwidget = {BasicFunctionalTooltip = {}}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "JOMINI_MULTIPLAYER_GUI_CHANGE_SERVER_NAME"
+									on_action = "[LobbyView.SetName]"
+									enabled = "[CanEditSettingsAfterHost]"
+								}
+							}
+						}
+
+						widget = {
+							visible = "[JominiIsHostOrLocal]"
+							layoutpolicy_horizontal = expanding
+							size = {-1 30}
+							layoutstretchfactor_horizontal = 1
+							editbox_single = {
+								size = {100% 30}
+								name = server_password # widget name is referenced in code, please no duplicates in this window
+								password = yes
+
+								blockoverride "editbox_label" {
+									text = "JOMINI_MULTIPLAYER_GUI_SERVER_PASSWORD"
+								}
+
+								blockoverride "editbox_properties" {
+									text = "[GameLobby.GetPassword]"
+									tooltip_enabled = no
+									oneditingfinished = "[GameLobby.SetPassword]"
+									enabled = "[CanEditSettingsAfterHost]"
+								}
+							}
+
+							ui_direction_button = {
+								size = { 22 22 }
+								using = snd_UI_forward
+
+								parentanchor = right|vcenter
+								position = { -10 0 }
+
+								texture = "gfx/interface/buttons/flats/button_simple.dds"
+								mirror = horizontal
+								texture_density = 2
+								using = bg_circle
+
+								enabled = "[CanEditSettingsAfterHost]"
+								visible = "[CanEditSettingsAfterHost]"
+								tooltipwidget = {BasicFunctionalTooltip = {}}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "JOMINI_MULTIPLAYER_GUI_CHANGE_SERVER_PASSWORD"
+									on_action = "[LobbyView.SetPassword]"
+									enabled = "[CanEditSettingsAfterHost]"
+								}
+							}
+						}
+					}
+
+					# GAME INFO
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						button_regular = {
+							layoutpolicy_horizontal = expanding
+							size = {-1 30}
+							layoutstretchfactor_horizontal = 2
+							visible = "[LobbyView.GetServerInfo.HasServerID]"
+							text = "JOMINI_MULTIPLAYER_GUI_SERVER_ID"
+							tooltipwidget = {BasicFunctionalTooltip = {}}
+
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								title = "COPY_SERVER_ID"
+								on_action = "[LobbyView.CopyServerID]"
+							}
+						}
+
+						widget = {
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 1
+							size = {-1 30}
+
+							using = bg_text_mask_container_brown
+
+							text_single = {
+								layoutpolicy_horizontal = expanding
+								align = center
+								parentanchor = center
+
+								text = "JOMINI_MULTIPLAYER_GUI_GAME_VERSION"
+							}
+						}
+					}
+				}
+			}
+
+			# TABS
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { -1 50 }
+
+				background = {
+					using = color_black_texture
+					alpha = 0.93
+
+					using = color_dark_blue
+				}
+
+				background = {
+					using = bg_fade_vertical_up_mask_texture
+					alpha = 0.3
+
+					modify_texture = {
+						using = color_black_texture
+						blend_mode = multiply
+					}
+				}
+
+				hbox = {
+					margin_left = 10
+					margin_right = 10
+					margin_top = 10
+					spacing = 5
+
+					button_main_tab_alt = {
+						layoutpolicy_horizontal = expanding
+						name = "show_players"
+						blockoverride "tab_text"{
+							text = "JOMINI_MULTIPLAYER_GUI_SHOW_PLAYERS"
+						}
+						enabled = "[GameIsMultiplayer]"
+						action_tooltip = {
+							title = "OPEN_TAB"
+							on_action = "[LobbyView.SetShowPlayerList('(bool)yes')]"
+						}
+						down = "[LobbyView.ShowPlayerList]"
+					}
+
+					button_main_tab_alt = {
+						using = layoutpolicy_expanding
+						name = "show_settings"
+						blockoverride "tab_text"{
+							text = "JOMINI_MULTIPLAYER_GUI_SHOW_SETTINGS"
+						}
+						enabled = "[GameIsMultiplayer]"
+						onclick = "[LobbyView.SetShowPlayerList( '(bool)no' )]"
+						action_tooltip = {
+							title = "OPEN_TAB"
+							on_action = "[RefreshModsView]"
+						}
+						down = "[Not(LobbyView.ShowPlayerList)]"
+					}
+				}
+			}
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = {-1 45}
+
+				hbox = {
+					margin = { 15 5 }
+
+					# VISIBILITY PRIVATE
+					widget = {
+						layoutpolicy_vertical = expanding
+						size = {100 -1}
+						visible = "[LobbyView.GetServerInfo.IsInvite]"
+
+						hbox = {
+							hbox = {
+								spacing = 10
+								header_button_left = {
+									size = {35 35}
+									blockoverride "button_icon_stretch_sprite" {}
+									blockoverride "header_button_frame_inner" {visible = no}
+									blockoverride "header_button_icon_size" { size = { 30 30 } }
+									blockoverride "header_button_text_layout" {}
+									blockoverride "header_button_icon_obj" {
+										icon = {
+											size = { 27 27 }
+											parentanchor = center
+											texture = "gfx/interface/icons/map_subdivisons/locked.dds"
+											glow = {
+												name = "drop_shadow"
+												glow_radius = 3
+												color = {0.0 0.0 0.0 1.0}
+												alpha = 0.3
+											}
+
+											modify_texture = {
+												using = color_black_texture
+												alpha = 0.4
+												blend_mode = multiply
+											}
+
+											modify_texture = {
+												using = color_new_gold_texture
+												alpha = 0.8
+											}
+										}
+									}
+
+									enabled = "[CanEditSettingsAfterHost]"
+									tooltipwidget = {BasicFunctionalTooltip = {}}
+
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										enabled = "[CanEditSettingsAfterHost]"
+										title = "LOBBY_MULTIPLAYER_SETTINGS_TOGGLE_PUBLIC"
+										on_action = "[LobbyView.ToggleVisibility]"
+									}
+								}
+
+								text_single = {
+									text = "JOMINI_MULTIPLAYER_GUI_PRIVATE"
+									maximumsize = {80 25}
+								}
+							}
+
+							expand = {}
+						}
+					}
+
+					# VISIBILITY PUBLIC
+					widget = {
+						layoutpolicy_vertical = expanding
+						size = {100 -1}
+						visible = "[LobbyView.GetServerInfo.IsPublic]"
+
+						hbox = {
+							hbox = {
+								spacing = 10
+								header_button_left = {
+									size = {35 35}
+									blockoverride "button_icon_stretch_sprite" {}
+									blockoverride "header_button_frame_inner" {visible = no}
+									blockoverride "header_button_icon_size" { size = { 30 30 } }
+									blockoverride "header_button_text_layout" {}
+									blockoverride "header_button_icon_obj" {
+
+										icon = {
+											size = { 27 27 }
+											parentanchor = center
+											texture = "gfx/interface/icons/map_subdivisons/unlocked.dds"
+											glow = {
+												name = "drop_shadow"
+												glow_radius = 3
+												color = {0.0 0.0 0.0 1.0}
+												alpha = 0.3
+											}
+
+											modify_texture = {
+												using = color_black_texture
+												alpha = 0.4
+												blend_mode = multiply
+											}
+
+											modify_texture = {
+												using = color_new_gold_texture
+												alpha = 0.8
+											}
+										}
+									}
+
+									enabled = "[CanEditSettingsAfterHost]"
+
+									tooltipwidget = {BasicFunctionalTooltip = {}}
+
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										enabled = "[CanEditSettingsAfterHost]"
+										title = "LOBBY_MULTIPLAYER_SETTINGS_TOGGLE_PRIVATE"
+										on_action = "[LobbyView.ToggleVisibility]"
+									}
+								}
+
+								text_single = {
+									text = "JOMINI_MULTIPLAYER_GUI_PUBLIC"
+									maximumsize = {80 25}
+								}
+							}
+
+							expand = {}
+						}
+					}
+
+					expand = {}
+
+					# HOT JOIN
+					widget = {
+						layoutpolicy_vertical = expanding
+						size = {165 -1}
+						visible = "[JominiIsHostOrLocal]"
+
+						hbox = {
+							hbox = {
+								spacing = 5
+
+								expand = {}
+								text_single = {
+									text = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+									maximumsize = {120 17}
+								}
+
+								button_checkbox = {
+									size = {35 35}
+									name = "hotjoin_autoaccept"
+									down = "[LobbyView.IsAutoAccept]"
+									action_tooltip = {
+										title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+										enabled = "[CanEditSettingsAfterHost]"
+										on_action = "[LobbyView.ToggleAutoAccept]"
+									}
+									tooltipwidget = { BasicFunctionalTooltip = {} }
+									enabled = "[CanEditSettingsAfterHost]"
+								}
+							}
+							tooltipwidget = {
+								SimpleContextualTooltipType = {
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/players.dds"
+										}
+									}
+									textcontext = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT_TT"
+								}
+							}
+						}
+					}
+				}
+			}
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = {-1 45}
+
+				hbox = {
+					margin = { 15 5 }
+
+					widget = {
+						layoutpolicy_vertical = expanding
+						size = {90 -1}
+
+						text_single = {
+							parentanchor = center
+							text = "LOBBY_MULTIPLAYER_NUMBER_OF_PLAYERS"
+							maximumsize = {80 25}
+						}
+					}
+
+					expand = {}
+
+					widget = {
+						layoutpolicy_vertical = expanding
+						size = {100 -1}
+
+						text_single = {
+							parentanchor = center
+							text = "LOBBY_MULTIPLAYER_NUMBER_OF_PLAYERS_READY"
+							maximumsize = {80 25}
+						}
+					}
+				}
+			}
+
+			vbox = {
+				using = layoutpolicy_expanding
+				margin = {15 0}
+
+				LobbyViewMPInfo = {
+					using = layoutpolicy_expanding
+					visible = "[And(GameIsMultiplayer, Not(LobbyView.ShowPlayerList))]"
+				}
+
+				LobbyViewPlayerList = {
+					using = layoutpolicy_expanding
+					visible = "[And(GameIsMultiplayer, LobbyView.ShowPlayerList)]"
+				}
+
+				expand = {}
+			}
+
+			expand = {}
+		}
+
+		window_bottom_paper_template = {}
+	}

@@ -1,0 +1,1151 @@
+# vanilla: in_game/gui/multiplayer_lobby.gui
+# mod: in_game/gui/multiplayer_lobby.gui
+
+JominiMultiplayerLobby = {
+
+	# CLOUD SAVE INDICATOR
+	icon = {
+		name = "cloud_save_indicator"
+		position = { -330 2 }
+		parentanchor = top|right
+		texture = "gfx/interface/settings/on_save.dds"
+		shaderfile = "gfx/FX/pdxgui_glow_game.shader"
+		tooltipwidget = {
+			ContextualTooltipType = {
+				blockoverride "title_icon" {
+					icon = {
+						size = { 50 50 }
+						texture = "gfx/interface/icons/flat_icons/cloud_save_flat.dds"
+					}
+				}
+
+				blockoverride "title_text" {
+					text = "LOAD_CLOUDSAVE_TOOLTIP"
+				}
+
+				blockoverride "tooltip_content" {
+					TooltipTextBlock = {
+						blockoverride "text" {
+							text = "CLOUD_SAVE_IN_PROGRESS_TOOLTIP"
+						}
+					}
+				}
+			}
+		}
+		visible_at_creation = no
+		visible = "[GameIsCloudStorageOperationInProgress]"
+	}
+
+	# VERSION INFO BOX
+	widget = {
+		visible_at_creation = no
+		visible = "[Not(GameLobby.Vars.Exists('tab'))]"
+		parentanchor = bottom|right
+		position = { -10 -10 }
+		using = custom_version_label
+		using = Animation_Show_Hide_UI_Lobby
+	}
+
+	# ERROR PLATYPUS
+	error_platypus = {
+		visible_at_creation = no
+		visible = "[HasErrors]"
+		parentanchor = bottom|right
+		position = { -500 0 }
+	}
+
+	# READY BUTTON
+	lobby_mp_ready_button = {}
+	lobby_mp_ready_button = {
+		blockoverride "lobby_mp_ready_button_visible_position" {
+			position = { 0 -207 }
+			visible = "[And(And3(GameIsMultiplayer, IsPreparationLobby, Not(LobbyView.ShowHosting)), 
+				Or3(MapModeSelectorVars.Exists('hover'), MapModeSelectorVars.Exists('action'), IsMapModeMenuPinned))]"
+		}
+	}
+
+	# Country Flavour Info
+	vbox = {
+		visible_at_creation = no
+		visible = "[LobbyView.HasSelectedPlayable]"
+		parentanchor = top|hcenter
+		margin = {520 40}
+
+		layoutpolicy_horizontal = expanding
+	}
+
+	# PLAY BUTTON
+	lobby_play_single_player_button = {}
+	lobby_play_single_player_button = {
+		blockoverride "lobby_play_single_player_button_visible_position" {
+			visible = "[And3(Not(GameLobby.IsStarting), Not(IsDelayStartLobbyGame), Or3(MapModeSelectorVars.Exists('hover'), MapModeSelectorVars.Exists('action'), IsMapModeMenuPinned))]"
+			position = { 0 -140 }
+		}
+	}
+
+	# MAPMODES
+	mapmodes_collapsed_window = {
+		allow_outside = yes
+	}
+
+	mapmode_current_button = {
+		allow_outside = yes
+		parentanchor = hcenter|bottom
+		position = { 0 -50 }
+		visible_at_creation = no
+		visible = "[Not(Or3(MapModeSelectorVars.Exists('hover'), MapModeSelectorVars.Exists('action'), IsMapModeMenuPinned))]"
+		state = {
+			name = _show
+			alpha = 0
+			next = show_wait
+		}
+
+		state = {
+			name = show_wait
+			duration = 0.2
+			alpha = 0
+			next = show_final
+		}
+
+		state = {
+			name = show_final
+			duration = 0.2
+			bezier = { 0.0 1.0 0.0 1.0 }
+			alpha = 1
+		}						
+	
+		state = {
+			name = _hide
+			alpha = 0
+		}
+
+
+		mapmodes_color_ledger = {
+			visible_at_creation = no
+			visible = "[And(HasMapColorLedger, And(MapModeSelectorVars.Exists('color_ledger'), Not(Or3(MapModeSelectorVars.Exists('hover'), MapModeSelectorVars.Exists('action'), IsMapModeMenuPinned))))]"
+			parentanchor = right|bottom
+			widgetanchor = left|bottom
+			position = { 10 0 }
+		}
+	}
+
+	mapmodes_button_color_ledger = {
+		allow_outside = yes
+		blockoverride "button_ledger_position_visible" {
+			position = { 140 0 }
+			parentanchor = hcenter|bottom
+			visible_at_creation = no
+			visible = "[Not(Or3(MapModeSelectorVars.Exists('hover'), MapModeSelectorVars.Exists('action'), IsMapModeMenuPinned))]"
+		}
+
+		mapmodes_color_ledger = {
+			visible_at_creation = no
+			visible = "[And(HasMapColorLedger, And(MapModeSelectorVars.Exists('color_ledger_bottom'),
+				Not(Or3(MapModeSelectorVars.Exists('hover'), MapModeSelectorVars.Exists('action'), IsMapModeMenuPinned))))]"
+			parentanchor = left|top
+			widgetanchor = left|bottom
+			position = { 0 -10 }
+		}
+	}
+
+	# mapmodes_button_color_ledger = {
+	# 	allow_outside = yes
+	# 	blockoverride "button_ledger_position_visible" {
+	# 		position = { 340 0 }
+	# 		parentanchor = hcenter|bottom
+	# 		visible_at_creation = no
+	# 		visible = "[Or3(MapModeSelectorVars.Exists('hover'), MapModeSelectorVars.Exists('action'), IsMapModeMenuPinned)]"
+	# 	}
+
+	# 	mapmodes_color_ledger = {
+	# 		visible_at_creation = no
+	# 		visible = "[And(HasMapColorLedger, And(MapModeSelectorVars.Exists('color_ledger_bottom'),
+	# 			Or3(MapModeSelectorVars.Exists('hover'), MapModeSelectorVars.Exists('action'), IsMapModeMenuPinned)))]"
+	# 		parentanchor = left|top
+	# 		widgetanchor = left|bottom
+	# 		position = { 0 -10 }
+	# 	}
+	# }
+
+	mapmodes_window = {
+		blockoverride "mapmodes_window_extra" {
+			parentanchor = hcenter|bottom
+
+			mapmodes_color_ledger = {
+				visible_at_creation = no
+				visible = "[And(HasMapColorLedger, And(MapModeSelectorVars.Exists('color_ledger'),
+					Not(MapModeSelectorVars.Exists('action'))))]"
+				parentanchor = hcenter|bottom
+				position = { 270 -105 }
+			}
+
+			mapmode_current_button = {
+				visible_at_creation = no
+				visible = "[Not(MapModeSelectorVars.Exists('tab'))]"
+				parentanchor = hcenter|top
+				widgetanchor = hcenter|bottom
+				position = { 0 -10 }
+			}
+		}
+	}
+
+	# TOP BAR
+	widget = {
+		size = { 100% 40 }
+		parentanchor = top|hcenter
+		alwaystransparent = no
+		filter_mouse = right|left
+		using = LobbyTopbarBg
+
+		using = Animation_Show_Hide_UI_Lobby
+
+		hbox = {
+			margin_top = 2
+
+			# LEFT BUTTONS
+			widget = {
+				size = { 570 34 }
+				LobbyViewButtons = {}
+			}
+
+			# divider_solid_gold = {
+			# 	layoutpolicy_vertical = fixed
+			# 	layoutpolicy_horizontal = fixed
+			# 	size = { 2 34 }
+			# }
+
+			expand = {}
+
+			# DATE
+			widget = {
+				using = layoutpolicy_expanding
+
+				# BACK TO SINGLE PLAYER BUTTON
+				button_regular = {
+					size = { 210 100% }
+					position = { 15 0 }
+					visible_at_creation = no
+					visible = "[Or(GameIsMultiplayer, LobbyView.HasServerInfo)]"
+
+					fontsize = 15
+					text = "BECOME_SINGLE_PLAYER"
+
+					tooltipwidget = {BasicFunctionalTooltip = {}}
+
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						title = "BECOME_SINGLE_PLAYER_TT"
+						on_action = "[BecomeSinglePlayer]"
+						on_action = "[UnselectLobbyCountry]"
+					}
+				}
+
+				hbox = {
+					parentanchor = center
+					using = layoutpolicy_expanding
+					spacing = 20
+
+					expand = {}
+
+					text_single = {
+						maximumsize = { 510 -1 }
+						align = left|nobaseline
+
+						using = Font_Type_Headers
+						using = Font_Size_Medium
+						default_format = "#color_white"
+
+						text = "THE_WORLD_CATCHING_UP"
+						visible_at_creation = no
+						visible = "[IsLocalPlayerReplayingCommands]"
+					}
+
+					text_single = {
+						maximumsize = { 510 -1 }
+						align = left|nobaseline
+
+						using = Font_Type_Headers
+						using = Font_Size_Medium
+						default_format = "#color_white"
+
+						text = "CURRENT_DATE_STRING"
+						visible_at_creation = no
+						visible = "[Not(IsLocalPlayerReplayingCommands)]"
+					}
+
+					expand = {}
+				}
+
+				hbox = {
+					visible_at_creation = no
+					visible = "[GameIsMultiplayer]"
+					spacing = 10
+					margin = {10 0}
+
+					expand = {}
+
+					text_single = {
+						layoutpolicy_vertical = expanding
+						maximumsize = {200 -1}
+
+						using = Font_Type_Headers
+						using = Font_Size_Medium
+						default_format = "#color_white"
+						text = "LOBBY_MULTIPLAYER_GAME"
+
+					}
+
+					# header_button_left = {
+					# 	size = { 25 25 }
+
+					# 	enabled = "[TransferUnit.CanTransfer]"
+					# 	action_tooltip = {
+					# 		click_type = left
+					# 		click_mode = single
+					# 		enabled = "[TransferUnit.CanTransfer]"
+					# 		title = "[TransferUnit.GetTransferInfo]"	
+					# 		on_action = "[TransferUnit.Transfer]"
+					# 	}
+
+					# 	tooltipwidget = {
+					# 		BasicFunctionalTooltip = {}
+					# 	}	
+
+					# 	onclick = "[ToggleMultiplayerChat]"
+					# 	tooltipwidget = {
+					# 		LeftClickButtonTooltip = {
+					# 			blockoverride "onclick_text" { text = "[GetMultiplayerChat.GetTooltip]" }
+					# 		}
+					# 	}
+
+					# 	blockoverride "button_icon_stretch_sprite" {}
+					# 	blockoverride "header_button_frame_inner" {visible = no}
+					# 	blockoverride "header_button_icon_size" { size = { 24 24 } }
+					# 	blockoverride "header_button_text_layout" {}
+					# 	blockoverride "icon_texture" {
+					# 		texture = "gfx/interface/icons/flat_icons/dialect.dds"
+					# 		using = button_panel_tab_icon_effect
+					# 		blockoverride "icon_effect_visible" {visible = "[IsMultiplayerChatShown]"}
+					# 	}
+					# 	piechart = {
+					# 		using = bg_circle
+					# 		parentanchor = top|right
+					# 		visible = "[MPChatNewMessage]"
+					# 		size = { 10 10 }
+
+					# 		pieslice_no_highlight = {
+					# 			alwaystransparent = yes
+					# 			texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+					# 			value = 100
+					# 			color = { 1 1 1 1 }
+					# 		}
+					# 	}
+					# }
+
+					widget = {
+						size = { 30 30 }
+
+						header_button_left = {
+							size = { 100% 100% }
+							parentanchor = center
+							position = { 0 -1 }
+
+							action_tooltip = {
+								title = "[GetMultiplayerChat.GetTooltip]"
+								on_action = "[ToggleMultiplayerChat]"
+							}
+							tooltipwidget = { BasicFunctionalTooltip = {} }
+
+							blockoverride "icon_overlay" {
+								modify_texture = {
+									visible = "[IsMultiplayerChatShown]"
+									using = color_bone_texture
+									alpha = 0.3
+								}
+
+								glow = {
+									visible = "[IsMultiplayerChatShown]"
+									glow_radius = 3
+									color = { 0.80 0.68 0.39 1.0 }
+									alpha = 0.6
+								}
+								
+							}
+							blockoverride "button_icon_stretch_sprite" {}
+							blockoverride "header_button_frame_inner" {visible = no}
+							blockoverride "header_button_icon_size" { size = { 24 24 } }
+							blockoverride "header_button_text_layout" {
+
+							}
+							blockoverride "icon_texture" {
+								texture = "gfx/interface/icons/flat_icons/dialect.dds"
+							}
+							blockoverride "header_button_widget_extra" {
+								piechart = {
+									ignore_layout = yes
+									using = bg_circle
+									parentanchor = top|right
+									visible = "[MPChatNewMessage]"
+									size = { 10 10 }
+		
+									pieslice_no_highlight = {
+										alwaystransparent = yes
+										texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+										value = 100
+										color = { 1 1 1 1 }
+									}
+								}
+							}
+						}
+						# card_header_button_01 = {
+						# 	size = { 100% 100% }
+						# 	parentanchor = center
+						# 	position = { 0 -1 }
+	
+						# 	using = bg_card_header_01
+						# 	blockoverride "bg_card_header_01_bg" {
+						# 		background = {
+						# 			texture = "gfx/interface/component_tiles/square_tile.dds"
+						# 			texture_density = 2
+						# 			spriteType = corneredtiled
+						# 			spriteborder = { 10 10 }
+	
+						# 			modify_texture = {
+						# 				using = color_greyish_texture
+						# 				blend_mode = multiply
+						# 			}
+	
+						# 			modify_texture = {
+						# 				texture = "gfx/interface/cards/headers/header_pattern_07.dds"
+						# 				alpha = 0.7
+						# 				texture_density = 2
+						# 				spriteType = corneredtiled
+						# 				blend_mode = overlay
+						# 			}
+						# 		}
+						# 	}
+	
+						# 	onclick = "[ToggleMultiplayerChat]"
+						# 	tooltipwidget = {
+						# 		LeftClickButtonTooltip = {
+						# 			blockoverride "onclick_text" { text = "[GetMultiplayerChat.GetTooltip]" }
+						# 		}
+						# 	}
+						# 	icon = {
+						# 		parentanchor = center
+						# 		size = { 60% 60% }
+						# 		texture = "gfx/interface/icons/flat_icons/dialect.dds"
+	
+						# 		modify_texture = {
+						# 			using = color_new_gold_texture
+						# 			blend_mode = multiply
+						# 			alpha = 0.1
+						# 		}
+						# 		using = button_panel_tab_icon_effect
+						# 		blockoverride "icon_effect_visible" {visible = "[IsMultiplayerChatShown]"}
+						# 	}
+						# 	piechart = {
+						# 		using = bg_circle
+						# 		parentanchor = top|right
+						# 		visible = "[MPChatNewMessage]"
+						# 		size = { 10 10 }
+	
+						# 		pieslice_no_highlight = {
+						# 			alwaystransparent = yes
+						# 			texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+						# 			value = 100
+						# 			color = { 1 1 1 1 }
+						# 		}
+						# 	}
+						# }
+					}
+				}
+			}
+
+			expand = {}
+
+			# divider_solid_gold = {
+			# 	layoutpolicy_vertical = expanding
+			# 	layoutpolicy_horizontal = fixed
+			# 	size = { 2 34 }
+			# }
+
+			# RIGHT BUTTONS
+
+			widget = {
+				layoutpolicy_vertical = expanding
+				size = { 430 -1 }
+
+				LobbyViewTabs = {}
+			}
+		}
+	}
+	
+	widget = {
+		size = { 100% 90 }
+		position = { 0 36 }
+		vbox = {
+			margin_left = 580
+			margin_right = 440
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				hbox = {
+					spacing = 5
+					datamodel = "[GetGameContentDLCs]"
+					item = {
+						dlc_banner = { visible = "[GameDLC.IsActivated]" }
+					}
+				}
+
+				expand = {}
+
+				hbox = {
+					spacing = 5
+					datamodel = "[GetGameContentDLCs]"
+					item = {
+						dlc_banner = { visible = "[And(Not(GameDLC.IsActivated), Not(GameDLC.IsOwned))]" }
+					}
+				}
+			}
+
+			expand = {}
+		}
+	}
+
+	container = {
+		parentanchor = top|hcenter
+		position = { 0 60 }
+
+		paused_indicator = {
+			parentanchor = center
+			visible_at_creation = no
+			visible = "[And8(GameIsMultiplayer, Not(IsPreparationLobby), Not(HasGameStartedForTheFirstTime), Not(IsSaving), Not(IsWritingDumps), Not(IsRecalculatingCacheData), Not(IsPlayerHotjoining), Not(IsDisconnecting))]"
+		}
+
+		saving_indicator = {
+			parentanchor = center
+			visible_at_creation = no
+			visible = "[IsSaving]"
+		}
+
+		oos_indicator = {
+			parentanchor = center
+			visible_at_creation = no
+			visible = "[IsWritingDumps]"
+		}
+
+		recalculate_indicator = {
+			parentanchor = center
+			visible_at_creation = no
+			visible = "[And(IsRecalculatingCacheData, GameIsMultiplayer)]"
+		}
+
+		delayed_game_start_indicator = {
+			parentanchor = center
+			visible_at_creation = no
+			visible = "[And5(IsDelayStartLobbyGame, GameIsMultiplayer, IsPreparationLobby, Not(IsSaving), Not(IsPlayerHotjoining))]"
+		}
+
+		player_joining_indicator = {
+			parentanchor = center
+			visible_at_creation = no
+			visible = "[And5(IsPlayerHotjoining, Not(IsRecalculatingCacheData), Not(IsWritingDumps), Not(IsSaving), Not(IsDisconnecting))]"
+		}
+
+		disconnecting_indicator = {
+			parentanchor = center
+			visible_at_creation = no
+			visible = "[And4(IsDisconnecting, Not(IsSaving), Not(IsWritingDumps), Not(IsRecalculatingCacheData))]"
+		}
+	}
+
+	widget = {
+		visible = "[GameLobby.Vars.Exists('tab')]"
+		parentanchor = top|right
+		position = { 0 42 }
+		size = { 40 40 }
+
+		ui_direction_button_holder_right = {}
+
+		close_right_tabs = {
+			visible = "[GameLobby.Vars.HasValue('tab', 'GameRules')]"
+			blockoverride "close_on_action" {
+				on_action = "[HideGameRules]"
+				on_action = "[GameLobby.Vars.SetOrToggle('tab','GameRules')]"
+			}
+		}
+		close_right_tabs = {
+			visible = "[GameLobby.Vars.HasValue('tab', 'country_list')]"
+			blockoverride "close_on_action" {
+				on_action = "[HideModsView]"
+				on_action = "[GameLobby.Vars.SetOrToggle('tab','country_list')]"
+			}
+		}
+		close_right_tabs = {
+			visible = "[GameLobby.Vars.HasValue('tab', 'DLC')]"
+			blockoverride "close_on_action" {
+				on_action = "[HideModsView]"
+				on_action = "[GameLobby.Vars.SetOrToggle('tab','DLC')]"
+			}
+		}
+		close_right_tabs = {
+			visible = "[GameLobby.Vars.HasValue('tab', 'multiplayer')]"
+			blockoverride "close_on_action" {
+				on_action = "[GameLobby.Vars.SetOrToggle('tab','multiplayer')]"
+			}
+		}
+	}
+	blockoverride "left_panel_content" {
+		using = layoutpolicy_expanding
+		margin_top = 40
+		filter_mouse = all
+
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_lateralview
+			visible_at_creation = no
+			visible = "[And(LobbyView.HasSelectedPlayable, Not(GameLobby.Vars.HasValue('subtab', 'selected_country')))]"
+			LobbySelectedCountryPanel = {}
+			name = "lobby_left_panel"
+		}
+	}
+
+	blockoverride "right_panel" {
+		widget = {
+			parentanchor = right
+			widgetanchor = right
+			filter_mouse = all
+
+			@right_panel_width = 430
+			@right_panel_x = 0
+
+			size = { @right_panel_width 100% }
+			position = { @right_panel_x 0 }
+
+			state = {
+				name = hide_ui_lobby
+				using = Animation_Show_Hide_Properties
+
+				position_x = @right_panel_width
+				alpha = 0
+			}
+
+			state = {
+				name = show_ui_lobby
+				using = Animation_Show_Hide_Properties
+
+				position_x = @right_panel_x
+				alpha = 1
+			}
+
+			vbox = {
+				margin_top = 40
+				LobbyViewGameInfoPanel = {}
+
+				vbox = {
+					using = layoutpolicy_expanding
+					using = bg_lateralview
+					visible_at_creation = no
+					visible = "[And(GameLobby.Vars.HasValue( 'tab', 'multiplayer' ), Not(LobbyView.HasServerInfo))]"
+					LobbyMultiplayerPanelNoServer = {}
+				}
+
+				vbox = {
+					using = layoutpolicy_expanding
+					using = bg_lateralview
+					visible_at_creation = no
+					visible = "[And(GameLobby.Vars.HasValue( 'tab', 'multiplayer' ), LobbyView.HasServerInfo)]"
+					LobbyMultiplayerPanel = {}
+				}
+
+				vbox = {
+					using = layoutpolicy_expanding
+					using = bg_lateralview
+					visible_at_creation = no
+					visible = "[GameLobby.Vars.HasValue( 'tab', 'country_list' )]"
+					LobbyCountryListWidget = {
+						blockoverride "difficulty_sort_highlight" {
+							sort_by_highlight = {
+								name = "difficulty"
+							}
+						}
+
+						blockoverride "name_sort_highlight" {
+							sort_by_highlight = {
+								name = "name"
+							}
+						}
+
+						blockoverride "population_sort_highlight" {
+							sort_by_highlight = {
+								name = "population"
+							}
+						}
+
+						blockoverride "country_type_sort_highlight" {
+							sort_by_highlight = {
+								name = "country_type"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# [SD] CASEAR-55844 assets cleanup - commenting unused(?) gui script
+	# blockoverride "window_background" {
+	# 	texture = "gfx/interface_old/from_sulla/small_window_frame_corners_copy.dds"
+	# 	spriteType = Corneredtiled
+	# 	spriteborder = { 32 24 }
+	# 	margin = { 0 0 }
+	# 	shaderfile = "gfx/FX/pdxgui_default.shader"
+	# }
+
+	# using this to set priority to the cw type
+	blockoverride "observer_button"  {}
+
+	blockoverride "collapse_button_properties" {
+		using = button_default_template
+	}
+
+	blockoverride "expand_button_properties" {
+		using = button_default_template
+	}
+
+	blockoverride "text_edit_button" {
+		using = button_default_template
+	}
+
+	blockoverride "buttonstyle" {
+		using = button_default_template
+	}
+
+	blockoverride "host_modify_button" {}
+
+	# [SD] CASEAR-55844 assets cleanup - commenting unused(?) gui script
+	# blockoverride "remove_player_button_style" {
+	# 	texture = "gfx/interface_old/from_sulla/font_icon_paper_cross.dds"
+	# 	gfxtype = framedbuttongfx
+	# 	effectname = "NoHighlight"
+	# 	framesize = { 16 16 }
+	# 	upframe = 1
+	# 	downframe = 2
+	# 	overframe = 2
+	# }
+
+	blockoverride "jomini_standard_textbox" {
+		using = Font_Type_Standard
+	}
+
+	blockoverride "host_button" {
+		using = button_default_template
+		text = "JOMINI_MULTIPLAYER_GUI_HOST_BUTTON"
+	}
+
+	blockoverride "player_item_styling" {
+		background = {
+			using = bg_container_framed_texture
+		}
+	}
+
+	blockoverride "playable_icon" {
+		hbox = {
+			visible_at_creation = no
+			visible = "[LobbyPlayer.HasPlayable]"
+
+			country_flag_mid = {
+				visible = "[LobbyPlayer.HasPlayable]"
+				datacontext = "[LobbyPlayer.GetPlayable.GetCountry]"
+
+				blockoverride "click" {
+					onclick = "[PanToCountry(GetCountry( LobbyPlayer.GetPlayable.GetCountry.GetTag ).Self)]"
+				}
+
+				contextmenu_enabled = no
+				blockoverride "hover" {}
+			}
+
+			text_single = {
+				text = "[LobbyPlayer.GetPlayable.GetCountry.GetName]"
+				align = center
+			}
+		}
+	}
+
+	blockoverride "player_item_styling" {}
+	blockoverride "playerlist_playable" {
+		visible = no
+	}
+
+	blockoverride "playerlist_item_content" {
+
+		using = bg_paper_card
+		using = bg_cabinet_card_frame
+		margin = { 5 0 }
+		maximumsize = { -1 45 }
+		widget = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			hbox = {
+				margin = { 0 5 }
+				hbox = {
+					using = layoutpolicy_expanding
+					margin = { 5 0 }
+					spacing = 5
+					margin_left = 37
+	
+					using = bg_card_header_01
+					blockoverride "bg_card_header_01_bg" {
+						background = {
+							visible = "[And(Not(LobbyPlayer.IsHost), Not(LobbyPlayer.IsReady))]"
+							using = bg_card_header_01_default
+							alpha = 0.3
+						}
+						background = {
+							visible = "[And(Not(LobbyPlayer.IsHost), LobbyPlayer.IsReady)]"
+							using = bg_card_header_01_default
+							blockoverride "header_color" {
+								using = color_mid_green_texture
+							}
+							alpha = 0.4
+						}
+						background = {
+							visible = "[LobbyPlayer.IsHost]"
+							using = bg_card_header_01_default
+							blockoverride "header_color" {
+								using = color_yellow_texture
+							}
+							alpha = 0.3
+						}
+					}
+					widget = {
+						visible = "[LobbyPlayer.IsObserver]"
+						size = { 85 30 }
+						icon = {
+							parentanchor = center
+							size = { 24 24 }
+							texture = "gfx/interface/icons/unit_view/army_visible_icon.dds"
+						}
+					}
+					widget = {
+						visible = "[Not(LobbyPlayer.IsObserver)]"
+						size = { 85 30 }
+						text_single = {
+							visible = "[LobbyPlayer.GetPlayable.GetCountry.IsValid]"
+							layoutpolicy_horizontal = expanding
+							autoresize = yes
+							maximumsize = { 85 -1 }
+							parentanchor = center
+							text = "[LobbyPlayer.GetPlayable.GetCountry.GetName]"
+							align = nobaseline
+						}
+						text_single = {
+							visible = "[Not(LobbyPlayer.GetPlayable.GetCountry.IsValid)]"
+							parentanchor = center
+							raw_text = "-"
+							autoresize = yes
+							align = nobaseline
+						}
+					}
+					divider_flavor_01 = { size = {8 -1} }
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						minimumsize = { -1 30 }
+						align = nobaseline
+						text = "[LobbyPlayer.GetName]"
+					}
+					divider_flavor_01 = { size = {8 -1} }
+					
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						minimumsize = { -1 30 }
+						maximumsize = { 38 30 }
+						visible = "[LobbyPlayer.IsHost]"
+						align = center
+						text = "HOST"
+					}
+					divider_flavor_01 = { 
+						size = {8 -1}
+						visible = "[LobbyPlayer.IsHost]"
+					}
+
+					hbox = {
+						using = bg_text_mask_container_brown
+						minimumsize = {-1 30}
+	
+						hbox = {
+							margin = {10 0}
+							# Readyness
+							text_single = {
+								text = "JOMINI_MULTIPLAYER_GUI_READY"
+								visible = "[And4(LobbyPlayer.IsReady, LobbyPlayer.IsDoneReplayingCommands, Not(LobbyPlayer.IsObserver), Not(LobbyPlayer.IsHotjoining))]"
+								align = nobaseline|right
+							}
+	
+							text_single = {
+								text = "JOMINI_MULTIPLAYER_GUI_NOT_READY"
+								visible = "[And4(Not(LobbyPlayer.IsReady), LobbyPlayer.IsDoneReplayingCommands, Not(LobbyPlayer.IsObserver), Not(LobbyPlayer.IsHotjoining))]"
+								align = nobaseline|right
+							}
+	
+							text_single = {
+								visible = "[And(Not(LobbyPlayer.IsHotjoining), Not(LobbyPlayer.IsDoneReplayingCommands))]"
+								text = "MULTIPLAYER_LOADING"
+								align = nobaseline|right
+							}
+	
+							text_single = {
+								text = "JOMINI_MULTIPLAYER_GUI_OBSERVER"
+								visible = "[And3(LobbyPlayer.IsObserver, LobbyPlayer.IsDoneReplayingCommands, Not(LobbyPlayer.IsHotjoining))]"
+								align = nobaseline|right
+							}
+	
+							text_single = {
+								visible = "[And(LobbyPlayer.IsHotjoining, IsHost)]"
+								text = "JOMINI_MULTIPLAYER_GUI_HOTJOIN_PROGRESS"
+								align = nobaseline|right
+							}
+	
+							text_single = {
+								visible = "[And(LobbyPlayer.IsHotjoining, Not(IsHost))]"
+								text = "MULTIPLAYER_JOINING_CLIENT"
+								align = nobaseline|right
+							}
+						}
+						
+						header_button_left = {
+							size = {30 30}
+							blockoverride "button_icon_stretch_sprite" {}
+							blockoverride "header_button_frame_inner" {visible = no}
+							blockoverride "header_button_icon_size" { size = { 30 30 } }
+							blockoverride "header_button_text_layout" {}
+							blockoverride "header_button_icon_obj" {
+								icon = {
+									parentanchor = center
+									size = { 20 20 }
+									texture = "gfx/interface/icons/diplomatic_status/ai_accept_decline_icon.dds"
+									frame_grid = {3 1}
+									frame = 1
+								}
+							}
+	
+							enabled = "[LobbyPlayer.CanRemovePlayer]"
+							visible = "[LobbyPlayer.CanRemovePlayer]"
+							tooltipwidget = {BasicFunctionalTooltip = {}}
+							action_tooltip = {
+								click_type = left
+								click_mode = confirm
+								visible = "[LobbyPlayer.CanRemovePlayer]"
+								title = "JOMINI_MULTIPLAYER_GUI_PLAYER_KICK_BUTTON_LABEL_TT"
+								on_action = "[LobbyPlayer.RemovePlayer]"
+							}
+						}
+	
+						header_button_left = {
+							size = {30 30}
+							blockoverride "button_icon_stretch_sprite" {}
+							blockoverride "header_button_frame_inner" {visible = no}
+							blockoverride "header_button_icon_size" { size = { 30 30 } }
+							blockoverride "header_button_text_layout" {}
+							blockoverride "header_button_icon_obj" {
+								icon = {
+									parentanchor = center
+									size = { 20 20 }
+									texture = "gfx/interface/buttons/flats/clean_text.dds"
+									modify_texture = {
+										using = color_new_gold_texture
+										blend_mode = add
+									}
+									modify_texture = {
+										using = overlay_window_texture
+										blend_mode = overlay
+										alpha = 0.5
+									}
+								}
+							}
+	
+							visible = "[And( LobbyPlayer.IsLocalPlayer, LobbyPlayer.IsReady )]"
+							tooltipwidget = {BasicFunctionalTooltip = {}}
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								visible = "[And( LobbyPlayer.IsLocalPlayer, LobbyPlayer.IsReady )]"
+								title = "JOMINI_MULTIPLAYER_GUI_CLEAR_SELECTION"
+								on_action = "[LobbyView.ClearSelection]"
+							}
+						}
+					}
+				}
+			}
+
+			widget = {
+				size = {36 24}
+				blockoverride "text_mask_extra" {
+					alpha = 0.5
+					margin = {-5 -4}
+				}
+				widget = {
+					visible = "[Or(And(Not(LobbyPlayer.HasPlayable), Not(LobbyPlayer.IsObserver)), And(Not(LobbyPlayer.HasObservedPlayable), LobbyPlayer.IsObserver))]"
+					size = { 36 24 }
+					ignore_layout = yes
+					parentanchor = center
+					using = bg_paper_card
+					using = bg_text_mask_container_dark_brown
+					blockoverride "text_mask_extra" {
+						margin = {0 0}
+					}
+					using = bg_cabinet_card_frame
+				}
+				country_flag_small = {
+					visible = "[And(LobbyPlayer.HasPlayable, Not(LobbyPlayer.IsObserver))]"
+
+					datacontext = "[LobbyPlayer.GetPlayable.GetCountry]"
+
+					blockoverride "click_action" {
+						visible = yes
+						title = "COUNTRY_CLICK_TOOLTIP_LEFT_CLICK"
+						on_action = "[PanToCountry(GetCountry( LobbyPlayer.GetPlayable.GetCountry.GetTag ).Self)]"
+					}
+
+					contextmenu_enabled = no
+					blockoverride "double_click" {}
+					blockoverride "hover" {}
+				}
+				country_flag_small = {
+					visible = "[And(LobbyPlayer.HasObservedPlayable, LobbyPlayer.IsObserver)]"
+
+					datacontext = "[LobbyPlayer.GetObservedPlayable.GetCountry]"
+
+					blockoverride "click_action" {
+						visible = yes
+						title = "COUNTRY_CLICK_TOOLTIP_LEFT_CLICK"
+						on_action = "[PanToCountry(GetCountry( LobbyPlayer.GetObservedPlayable.GetCountry.GetTag ).Self)]"
+					}
+
+					contextmenu_enabled = no
+					blockoverride "double_click" {}
+					blockoverride "hover" {}
+				}
+				ignore_layout = yes
+				parentanchor = left|vcenter
+			}
+		}
+	}
+
+	# [SD] CASEAR-55844 assets cleanup - commenting unused(?) gui script
+	# blockoverride "server_info_entry_styling" {
+	# 	alwaystransparent = no
+	# 	using = Font_Type_Standard
+	# 	margin_bottom = 2
+	# 	margin_left = 10
+	# 	margin_right = 4
+	# 	align = left
+	# 	elide = right
+
+	# 	icon = {
+	# 		name = "frame"
+	# 		texture = "gfx/interface_old/from_sulla/list_slot_corner_tiles.dds"
+	# 		spriteType = Corneredtiled
+	# 		spriteborder = { 12 12 }
+	# 		size = { 296 28 }
+	# 	}
+	# }
+
+	blockoverride "server_info_entry_size" {
+		size = { 296 28 }
+	}
+
+	# block "servermode_text" {
+		text = "JOMINI_MULTIPLAYER_GUI_SESSION_SERVER_MODE"
+	# }
+
+	blockoverride "mp_info_margin" {
+		# margin_left = 18
+	}
+
+	blockoverride "mp_info_item_spacing" {
+		spacing = 3
+		margin_top = 8
+	}
+
+	# [SD] CASEAR-55844 assets cleanup - commenting unused(?) gui script
+	# blockoverride "mp_info_item_background" {
+	# 	using = Font_Type_Standard
+	# 	margin_top = 4
+	# 	margin_bottom = 5
+	# 	margin_left = 10
+
+	# 	icon = {
+	# 		texture = "gfx/interface_old/from_sulla/list_slot_corner_tiles.dds"
+	# 		spriteType = Corneredtiled
+	# 		spriteborder = { 12 12 }
+	# 		size = { 296 28 }
+	# 	}
+	# }
+
+	blockoverride "left_panel_properties" {
+		@left_panel_width = 570
+		@left_panel_x = 0
+
+		size = { @left_panel_width 100% }
+		position = { @left_panel_x 0 }
+		@left_panel_width_inverse = @[-left_panel_width]
+
+		state = {
+			name = hide_ui_lobby
+			using = Animation_Show_Hide_Properties
+
+			position_x = @left_panel_width_inverse
+			alpha = 0
+		}
+
+		state = {
+			name = show_ui_lobby
+			using = Animation_Show_Hide_Properties
+
+			position_x = @left_panel_x
+			alpha = 1
+		}
+	}
+
+	blockoverride "setup_textbox" {
+		using = text_single_template
+	}
+
+	# blockoverride "player_loading_progress" {
+	# 	textbox = {
+	# 		text = "[LobbyPlayer.GetLoadingString]"
+	# 		size = { 80 56 }
+	# 		parentanchor = top|right
+	# 		visible = "[LobbyPlayer.IsHotjoining]"
+	# 		using = Font_Type_Standard
+	# 		align = right
+	# 	}
+	# }
+
+	blockoverride "setup_editbox" {
+		using = Font_Type_Standard
+		fontsize = 15
+		fontcolor = { 1 1 1 1 }
+		cursorcolor = { 1 1 0.5 1 }
+
+		background = {
+			margin_left = 5
+			margin_top = 0
+			texture = "gfx/editor_gui/editor_field.dds"
+			spriteType = CorneredStretched
+			spriteborder = { 4 4 }
+			shaderfile = "gfx/FX/pdxgui_default.shader"
+		}
+	}
+
+	# [SD] CASEAR-55844 assets cleanup - commenting unused(?) gui script
+	# blockoverride "setup_checkbutton" {
+	# 	texture = "gfx/interface_old/buttons/checkbox.dds"
+	# 	framesize = { 36 36 }
+	# }
+}

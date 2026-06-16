@@ -1,0 +1,179 @@
+# vanilla: in_game/gui/multiplayer_lobby.gui
+# mod: in_game/gui/multiplayer_lobby.gui
+
+	type LobbyViewMPInfo = vbox {
+		name = "mp_info"
+		layoutpolicy_horizontal = expanding
+
+		visible = "[LobbyView.HasServerInfo]"
+		alwaystransparent = no
+		filter_mouse = left|right
+
+		spacing = 10
+		margin = { 5 0 }
+
+		widget = {
+			using = layoutpolicy_expanding
+			vbox = {
+				button_default = {
+					layoutpolicy_horizontal = expanding
+
+					hbox = {
+						margin = { 15 0 }
+						spacing = 10
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							text = "JOMINI_MULTIPLAYER_GUI_ENABLED_DLCS"
+							align = nobaseline
+						}
+						icon = {
+							visible = "[Not(LobbyView.ShouldShowEnabledDLCs)]"
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+
+						icon = {
+							visible = "[LobbyView.ShouldShowEnabledDLCs]"
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+					}
+
+					enabled = "[LobbyView.HasEnabledDLCs]"
+					onclick = "[LobbyView.ToggleShowEnabledDLCs]"
+				}
+
+				scrollbox = {
+					using = layoutpolicy_expanding
+
+					blockoverride "scrollbox_content" {
+						fixedgridbox = {
+							datamodel = "[LobbyView.GetEnabledDLCs]"
+							visible = "[And3(LobbyView.ShouldShowEnabledDLCs, DataModelHasItems( LobbyView.GetEnabledDLCs ), HasModsView)]"
+							addcolumn = 100%
+							addrow = 48
+							datamodel_wrap = 1
+							flipdirection = yes
+							setitemsizefromcell = yes
+		
+							item = {
+								widget = {
+									size = { 99% 48 }
+									visible = "[HasActiveDLC(CString.GetString)]"
+									datacontext = "[AccessActiveDLC(CString.GetString)]"
+									dlc_ingame_card = {}
+								}
+							}
+						}
+					}
+
+					blockoverride "scrollbox_empty" {
+						visible = "[IsDataModelEmpty( LobbyView.GetEnabledDLCs )]"
+						text = "JOMINI_MULTIPLAYER_GUI_NO_DLCS"
+					}
+
+					blockoverride "scrollbox_expand" {
+						expand = {
+							layoutpolicy_vertical = growing
+							visible = "[DataModelHasItems( LobbyView.GetEnabledDLCs )]"
+						}
+					}
+				}
+			}
+		}
+
+		widget = {
+			using = layoutpolicy_expanding
+			vbox = {
+
+				button_default = {
+					layoutpolicy_horizontal = expanding
+
+					hbox = {
+						margin = { 15 0 }
+						spacing = 10
+
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							text = "JOMINI_MULTIPLAYER_GUI_ENABLED_MODS"
+							align = nobaseline
+						}
+						icon = {
+							visible = "[Not(LobbyView.ShouldShowEnabledMods)]"
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+
+						icon = {
+							visible = "[LobbyView.ShouldShowEnabledMods]"
+							size = { 22 22 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+						}
+					}
+
+					enabled = "[LobbyView.HasEnabledMods]"
+					onclick = "[LobbyView.ToggleShowEnabledMods]"
+				}
+
+				scrollbox = {
+					using = layoutpolicy_expanding
+
+					blockoverride "scrollbox_content" {
+						fixedgridbox = {
+							datamodel = "[LobbyView.GetEnabledMods]"
+							visible = "[And3(LobbyView.ShouldShowEnabledMods, DataModelHasItems( LobbyView.GetEnabledMods ), HasModsView)]"
+							addcolumn = 100%
+							addrow = 48
+							datamodel_wrap = 1
+							flipdirection = yes
+							setitemsizefromcell = yes
+							item = {
+								widget = {
+									size = { 99% 48 }
+									visible = "[HasActiveMod(CString.GetString)]"
+									datacontext = "[AccessActiveMod(CString.GetString)]"
+									mod_ingame_card = {}
+								}
+							}
+						}
+					}
+
+					blockoverride "scrollbox_empty" {
+						visible = "[IsDataModelEmpty( LobbyView.GetEnabledMods )]"
+						text = "JOMINI_MULTIPLAYER_GUI_NO_MODS"
+					}
+
+					blockoverride "scrollbox_expand" {
+						expand = {
+							layoutpolicy_vertical = growing
+							visible = "[DataModelHasItems( LobbyView.GetEnabledMods )]"
+						}
+					}
+				}
+			}
+		}
+	}
