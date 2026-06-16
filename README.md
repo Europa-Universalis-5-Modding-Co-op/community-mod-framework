@@ -14,18 +14,18 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3692202776
 
 ## Features
 
-- **[Community Mod Menu (CMM)](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Community-Mod-Menu)** — Shared in-game settings UI for mods (toggles, sliders, dropdowns, buttons, text inputs, settings lists).
+- **[Community Mod Menu (CMM)](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Community-Mod-Menu)** - Shared in-game settings UI for mods (toggles, sliders, dropdowns, buttons, text inputs, settings lists).
 - **[CMM Visual Editor](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor)** - Allows creating your mod menu from a interactive GUI application which generate all required files.
-- **[Custom Alerts](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Custom-Alerts)** — Dynamic, dismissable notifications in the in-game alert bar.
-- **[Action Bar](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar)** — Custom action bar with configurable buttons.
+- **[Custom Alerts](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Custom-Alerts)** - Dynamic, dismissable notifications in the in-game alert bar.
+- **[Action Bar](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar)** - Custom action bar with configurable buttons.
 - **[Mod Action Log](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Action-Log)**: Global in-game log for recording mod actions with actor and arguments.
-- **[is_host Trigger](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger)** — Check if the current country is controlled by the host player.
-- **[On-Action Hooks](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks)** — Post-lobby game start/load hooks and recurring yearly/monthly pulses for human players.
-- **[Dependency Check Popup](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Dependency-Check-Popup)** — Main menu popup that auto-enables CMF when missing.
-- **[cmf_suppress Effect](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Warning-Suppression)** — Suppress "used but never set" and "set but never used" engine warnings.
+- **[is_host Trigger](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger)** - Check if the current country is controlled by the host player.
+- **[On-Action Hooks](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks)** - Post-lobby game start/load hooks and recurring yearly/monthly pulses for human players.
+- **[Dependency Check Popup](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Dependency-Check-Popup)** - Main menu popup that auto-enables CMF when missing.
+- **[cmf_suppress Effect](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Warning-Suppression)** - Suppress "used but never set" and "set but never used" engine warnings.
 - **[GUI Macros](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/GUI-Macros)**: NAND, NOR, XOR logical operators.
 - **[Improved Vanilla Top-Level Widget Overrides](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Improved-Vanilla-Top-Level-Widget-Overrides)**: Extracted vanilla type and template definitions so your override only needs the top-level widget itself (lateralviews, topbar, outliner entries, etc.).
-- **[Community Mod Toolkit (CMT)](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit)** — A companion set of development tools, such as a mod template, workshop uploader and mod translator.
+- **[Community Mod Toolkit (CMT)](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit)** - A companion set of development tools, such as a mod template, workshop uploader and mod translator.
 
 ## Getting Started
 

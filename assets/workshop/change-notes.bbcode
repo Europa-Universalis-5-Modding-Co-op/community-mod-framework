@@ -1,3 +1,19 @@
+# v2.3.0:
+- [b]Mod Showcase:[/b] Mods can appear as banners on the pre-game lobby screen, with an icon, name, and description. Opt in with cmf_register_lobby_banner.
+- [b]Reset Mod to Defaults:[/b] New button to reset just the selected mod's settings. The existing button is now Reset All to Defaults.
+- [b]CMM Visual Editor:[/b] Pick a Mod Icon and Background for your lobby banner, and configure multi-selector dropdowns and list field localization.
+- [b]Visual Improvements:[/b] Updated the look of the mod menu's sliders, the mod list, and list settings.
+- [b]Per-Item Field Defaults:[/b] Set a default value for an individual list item's field with cmm_set_list_field_default_for_item.
+- [b]Deprecated cmf_change_variable_map:[/b] No longer needed now that add_to_variable_map overwrites existing keys.
+
+[b]Previously released in 2.2.x patches:[/b]
+- [b]Multi-Selector Setting:[/b] New side-by-side selector setting type.
+- [b]Mod Menu Keybind:[/b] Open the mod menu with a keybind (default 'm', rebindable).
+- [b]Action Bar Toggle:[/b] Open the mod menu from the action bar.
+- [b]Runtime List Field Localization:[/b] Change a list field's header, description, prefix, and postfix localization keys while the menu is open with cmm_set_list_field_localization.
+- [b]Mod Detection:[/b] New cmf_is_mod_active trigger to check whether another mod is active.
+- [b]GUI Marker Compatibility:[/b] New way to set the CMF GUI marker for improved compatibility.
+
 # v2.2.13:
 - Add cmm_set_list_field_localization which allows you to change the localization key of the header, description, prefix, and postfix with the menu open
 - Refresh settings list display caches after dropdown changes so runtime localization and formatting changes show immediately

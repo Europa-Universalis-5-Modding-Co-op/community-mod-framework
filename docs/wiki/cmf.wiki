@@ -84,9 +84,9 @@ Hide the entire action bar from GUI code with <code>GetVariableSystem.Set('cmf_h
 == Custom Alerts ==
 [[File:CMF_Custom_Alerts.png|thumb|300px|Custom alerts in the alert bar.]]
 
-The Custom Alerts system allows mods to display dynamic, dismissable notifications in the in-game alert bar. Alerts are color-coded and interactive — players can click them to trigger an effect, or right-click to dismiss.
+The Custom Alerts system allows mods to display dynamic, dismissable notifications in the in-game alert bar. Alerts are color-coded and interactive: players can click them to trigger an effect, or right-click to dismiss.
 
-Each alert requires localization keys. No Scripted GUI is needed:
+Each alert requires localization keys:
 <syntaxhighlight lang="yaml">
 l_english:
  cmf_alert_example_color: "orange"
@@ -125,10 +125,10 @@ Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback
 The Mod Action Log provides a shared, global in-game log where mods can record actions. Each entry stores the actor country and localized action text, with optional named arguments for richer messages.
 
 <syntaxhighlight lang="text">
-# Simple entry — actor is the current country scope
+# Simple entry - actor is the current country scope
 cmf_log = { action = my_mod_action_key }
 
-# Entry with arguments — renders as: [arg1] [action] [arg2]
+# Entry with arguments - renders as: [arg1] [action] [arg2]
 cmf_log_with_args = { action = transferred_to arg1 = paris arg2 = FRA }
 
 # Clear all entries (disabled in multiplayer)
@@ -174,12 +174,12 @@ All fire once in no scope (like vanilla <code>on_game_start</code>). Each has a 
 |}
 
 <syntaxhighlight lang="text">
-# No scope — for global effects
+# No scope - for global effects
 on_game_start_after_lobby = {
 	on_actions = { your_mod_on_new_game }
 }
 
-# Country scope — for human country effects
+# Country scope - for human country effects
 on_game_start_after_lobby_human_country = {
 	on_actions = { your_mod_on_new_game_country }
 }
@@ -232,7 +232,7 @@ if = {
 </syntaxhighlight>
 
 == cmf_can_use_unrestricted_tools Trigger ==
-True when the "Enable Unrestricted Tools" setting (labelled "Enable Host-Only Tools" in multiplayer) is on and this country is the host (or in singleplayer). Use to gate restricted features not meant for normal play — e.g. unrestricted state transfer.
+True when the "Enable Unrestricted Tools" setting (labelled "Enable Host-Only Tools" in multiplayer) is on and this country is the host (or in singleplayer). Use to gate restricted features not meant for normal play, e.g. unrestricted land transfer.
 
 <syntaxhighlight lang="text">
 if = {
@@ -243,7 +243,7 @@ if = {
 }
 </syntaxhighlight>
 
-Mark individual CMM settings as requiring Unrestricted Tools with <code>cmm_set_requires_unrestricted_tools_enabled</code> (call after registration) — the CMM menu will disable editing of marked settings unless the "Enable Unrestricted Tools" setting is on.
+Mark individual CMM settings as requiring Unrestricted Tools with <code>cmm_set_requires_unrestricted_tools_enabled</code> (call after registration). The CMM menu will disable editing of marked settings unless the "Enable Unrestricted Tools" setting is on.
 
 == Mod Detection ==
 <code>cmf_is_mod_active</code> checks whether another mod is active in the current game. Mods that register CMM settings are detected automatically; other mods call <code>cmf_register_mod</code> in their <code>cmf_on_mod_registration</code> hook.
@@ -302,9 +302,9 @@ Covered files: <code>foreign_country_lateralview.gui</code>, <code>government_la
 == Community Mod Toolkit (CMT) ==
 The [[Community Mod Toolkit]] is a companion set of development tools for EU5 mod authors. It provides a structured mod template and automation tools that work together through shared configuration:
 
-* '''[https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor CMM Visual Editor]''' — Browser-based interface for designing CMM settings without manual coding. The easiest way to get started with CMM.
-* '''Upload Tool''' — Automated Steam Workshop deployment with submod support.
-* '''Translation Tool''' — Automated localization via DeepL or Gemini AI for all EU5-supported languages.
+* '''[https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor CMM Visual Editor]''' - Browser-based interface for designing CMM settings without scripting it by hand. The easiest way to get started with CMM.
+* '''Upload Tool''' - Automated Steam Workshop deployment with submod support.
+* '''Translation Tool''' - Automated localization via DeepL or Gemini AI for all EU5-supported languages.
 
 See the [[Community Mod Toolkit|CMT page]] for details.
 

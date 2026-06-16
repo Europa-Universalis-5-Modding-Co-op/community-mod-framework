@@ -18,7 +18,7 @@ The Community Mod Menu (CMM) is part of the [[Community Mod Framework]] and allo
 
 = CMM Visual Editor =
 [[File:CMM_Visual_Editor.png|thumb|600px|The CMM Visual Editor.]]
-The easiest way to create CMM settings is the '''[https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor CMM Visual Editor]''' — a browser-based tool that generates all required files (effects, scripted GUIs, localization, on_action) with no manual scripting. It supports every setting type, provides a live preview, and can import existing mods for editing.
+The easiest way to create CMM settings is the '''[https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor CMM Visual Editor]''', a browser-based tool that generates all required files (effects, scripted GUIs, localization, on_action) with no manual scripting. It supports every setting type, provides a live preview, and can import existing mods for editing.
 
 Run in a terminal to launch:
 <syntaxhighlight lang="powershell">
@@ -29,9 +29,9 @@ curl.exe -sL https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-o
 If you prefer to set up settings manually (instead of using the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor Visual Editor] above), follow the [[Community Mod Framework#Basic Setup|CMF Basic Setup]] to create your registration effect and <code>cmf_on_mod_registration</code> on_action hook. Then create a localization file for your settings.
 
 = Settings =
-Most settings work automatically — just register them and CMM handles the UI and value storage. Only text and settings list require callbacks. All other types use auto-apply and work out of the box.
+Most settings work automatically: just register them and CMM handles the UI and value storage. Only text and settings list require callbacks. All other types use auto-apply and work out of the box.
 
-All types except text have global variants (<code>cmm_register_global_*</code>) that store values in global variable maps and are host-editable in multiplayer.
+All types except text have global variants (<code>cmm_register_global_*</code>); these store values globally and apply to all players rather than per country, and in multiplayer only the host can edit them.
 
 == Toggle ==
 [[File:CMM_Toggle.png|thumb|right|A CMM toggle.]]
@@ -44,7 +44,7 @@ cmm_register_bool_setting = {
 	default_value = 0           # 0 = Disabled, 1 = Enabled
 }
 </syntaxhighlight>
-Value: <code>"variable_map(cmm|flag:your_mod__your_toggle)"</code> — <code>0</code> (disabled) or <code>1</code> (enabled).
+Value: <code>"variable_map(cmm|flag:your_mod__your_toggle)"</code> - <code>0</code> (disabled) or <code>1</code> (enabled).
 
 == Dropdown ==
 [[File:CMM_Dropdown.png|thumb|right|A CMM dropdown.]]
@@ -58,7 +58,7 @@ cmm_register_dropdown_setting = {
 	option_count = 3   # Total number of options
 }
 </syntaxhighlight>
-Value: <code>"variable_map(cmm|flag:your_mod__your_dropdown)"</code> — selected option ordinal (starting from 1). Options support optional <code>_option_[N]_desc</code> tooltip localization keys.
+Value: <code>"variable_map(cmm|flag:your_mod__your_dropdown)"</code> - selected option ordinal (starting from 1). Options support optional <code>_option_[N]_desc</code> tooltip localization keys.
 
 == Button ==
 [[File:CMM_Button.png|thumb|right|A CMM button.]]
@@ -70,7 +70,7 @@ cmm_register_button_setting = {
 	group_id = general_toggles
 }
 </syntaxhighlight>
-No stored value — hook into <code>cmf_on_callback</code> to run an effect when clicked.
+No stored value. Hook into <code>cmf_on_callback</code> to run an effect when clicked.
 
 == Numeric ==
 [[File:CMM_Numeric.png|thumb|right|A CMM numeric stepper.]]
@@ -86,7 +86,7 @@ cmm_register_numeric_setting = {
 	step_value = 1    # Ctrl+click = 5x step, Shift+click = jump to min/max
 }
 </syntaxhighlight>
-Value: <code>"variable_map(cmm|flag:your_mod__your_numeric)"</code> — current numeric value.
+Value: <code>"variable_map(cmm|flag:your_mod__your_numeric)"</code> - current numeric value.
 
 == Slider ==
 [[File:CMM_Slider.png|thumb|right|A CMM slider.]]
@@ -102,7 +102,7 @@ cmm_register_slider_setting = {
 	step_value = 1
 }
 </syntaxhighlight>
-Value: <code>"variable_map(cmm|flag:your_mod__your_slider)"</code> — current slider value. Players can click to jump, double click to drag, or use the <code>-</code>/<code>+</code> buttons.
+Value: <code>"variable_map(cmm|flag:your_mod__your_slider)"</code> - current slider value. Players can click to jump, double click to drag, or use the <code>-</code>/<code>+</code> buttons.
 
 = Reading Setting Values =
 
@@ -292,7 +292,7 @@ your_mod__your_list_on_changed = {
 </syntaxhighlight>
 
 === How Ordering Works ===
-Each item has a stable identity number (1 through <code>item_count</code>) that never changes. Reordering only changes a separate display order list — field values stay in place. <code>cmm_for_each_list_item</code> visits items in display order, but <code>$i$</code> resolves to the stable item number.
+Each item has a stable identity number (1 through <code>item_count</code>) that never changes. Reordering only changes a separate display order list. <code>cmm_for_each_list_item</code> visits items in display order, but <code>$i$</code> resolves to the stable item number.
 
 === Reading List Values ===
 Field values are stored in the <code>cmm</code> variable map as: <code>"variable_map(cmm|flag:[mod_id]__[setting_id]_i[N]_f[slot])"</code>
@@ -395,7 +395,7 @@ cmm_sync_setting_alias = {
 	alias = your_mod_toggle
 }
 </syntaxhighlight>
-Access: <code>var:your_mod_toggle</code>. Also works for list fields — pass the field map key (e.g. <code>your_mod__your_list_i1_f1</code>) as <code>setting</code>.
+Access: <code>var:your_mod_toggle</code>. Also works for list fields: pass the field map key (e.g. <code>your_mod__your_list_i1_f1</code>) as <code>setting</code>.
 
 === Bool Alias ===
 Sets the alias variable when the toggle is on, removes it when off. <code>cmm_sync_setting_alias</code> also works for bools (copies the numeric value), but this variant supports the <code>has_variable</code> pattern:
