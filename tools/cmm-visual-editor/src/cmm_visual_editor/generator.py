@@ -12,7 +12,7 @@ def generate_all(model: ModModel) -> dict:
 
     files = {}
     if mod_id:
-        files[f"in_game/common/on_action/{prefix}_cmm_on_actions.txt"] = noinspect + _gen_on_action(prefix)
+        files[f"in_game/common/on_action/{prefix}_cmm_on_actions.txt"] = noinspect + _gen_on_action(model)
         files[f"in_game/common/scripted_effects/{prefix}_cmm_effects.txt"] = noinspect + _gen_effects(model)
         files[f"in_game/common/game_concepts/{prefix}_mod_icons.txt"] = _gen_mod_icons(model)
         has_sgui = any(
@@ -27,8 +27,10 @@ def generate_all(model: ModModel) -> dict:
     return files
 
 
-def _gen_on_action(prefix: str) -> str:
-    return (
+def _gen_on_action(model: ModModel) -> str:
+    prefix = model.file_prefix or model.mod_id
+    mod_id = model.mod_id
+    content = (
         f"# Hook this mod into CMF shared registration on_action.\n"
         f"cmf_on_mod_registration = {{\n"
         f"\ton_actions = {{\n"
@@ -55,6 +57,22 @@ def _gen_on_action(prefix: str) -> str:
         f"\t}}\n"
         f"}}\n"
     )
+    if model.lobby_banner:
+        content += (
+            f"\n"
+            f"cmf_on_banner_registration = {{\n"
+            f"\ton_actions = {{\n"
+            f"\t\t{prefix}_register_lobby_banner\n"
+            f"\t}}\n"
+            f"}}\n"
+            f"\n"
+            f"{prefix}_register_lobby_banner = {{\n"
+            f"\teffect = {{\n"
+            f"\t\tcmf_register_lobby_banner = {{ mod_id = {mod_id} }}\n"
+            f"\t}}\n"
+            f"}}\n"
+        )
+    return content
 
 
 def _gen_effects(model: ModModel) -> str:
@@ -426,6 +444,12 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
 
 def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField):
     ft = field.field_type
+    # Per-item field defaults
+    if ft in ("bool", "dropdown", "numeric", "slider"):
+        for i, val in enumerate(field.item_default_values or [], start=1):
+            if val is None or val == "":
+                continue
+            lines.append(f"\tcmm_set_list_field_default_for_item = {{ mod_id = {mod_id} setting_id = {setting_id} field_id = {field.field_id} item = {i} value = {_num(val, 0)} }}")
     if ft == "bool":
         lines.append(f"\tcmm_register_list_bool_field = {{")
         lines.append(f"\t\tmod_id = {mod_id}")
@@ -665,6 +689,12 @@ def _gen_localization(model: ModModel) -> str:
     lines.append(" # Mod")
     lines.append(f' {mod_id}_name: "{_esc(model.mod_name)}"')
     lines.append(f' {mod_id}_desc: "{_esc(model.mod_desc)}"')
+
+    if model.lobby_banner:
+        lines.append(f' game_concept_{mod_id}: ""')
+        lines.append(f' game_concept_{mod_id}_desc: ""')
+        lines.append(f' game_concept_{mod_id}_background: ""')
+        lines.append(f' game_concept_{mod_id}_background_desc: ""')
 
     # Tabs, groups, and settings
     seen_groups = set()

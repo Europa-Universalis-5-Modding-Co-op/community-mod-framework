@@ -213,6 +213,21 @@ const ListEditorComponent = {
                         </div>
                     </div>
 
+                    <!-- Per-item defaults: interactive fields, static lists only -->
+                    <div v-if="field.field_type !== 'data' && listMode === 'static' && field.field_id" class="per-item-aliases">
+                        <h6 class="collapsible-header" @click="togglePerItemSection(fi, 'defaults')">
+                            <span class="collapse-indicator">{{ isPerItemSectionOpen(fi, 'defaults') ? '&#9660;' : '&#9654;' }}</span>
+                            Per-Item Defaults
+                        </h6>
+                        <div v-show="isPerItemSectionOpen(fi, 'defaults')">
+                            <div v-for="(name, ii) in (setting.item_names || [])" :key="'def-'+ii" class="field-row compact list-item-row">
+                                <label class="compact-label">{{ ii + 1 }}</label>
+                                <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
+                                <input type="number" :value="(field.item_default_values||[])[ii] ?? ''" @input="setItemDefaultValue(fi, ii, $event.target.value)" placeholder="value">
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Per-item field visibility (static lists only) -->
                     <div v-if="listMode === 'static' && field.field_id && (setting.item_count || 1) > 1" class="per-item-aliases">
                         <h6 class="collapsible-header" @click="togglePerItemSection(fi, 'visibility')">
@@ -423,6 +438,14 @@ const ListEditorComponent = {
                         field.item_data_values.pop();
                     }
                 }
+                if (field.item_default_values) {
+                    while (field.item_default_values.length < count) {
+                        field.item_default_values.push('');
+                    }
+                    while (field.item_default_values.length > count) {
+                        field.item_default_values.pop();
+                    }
+                }
             }
         },
         isItemVisible(itemIndex) {
@@ -513,6 +536,17 @@ const ListEditorComponent = {
             }
             field.item_data_values[itemIndex] = value === '' ? '' : Number(value);
             field.item_data_values = [...field.item_data_values];
+        },
+        setItemDefaultValue(fi, itemIndex, value) {
+            const field = (this.setting.fields || [])[fi];
+            if (!field) return;
+            if (!field.item_default_values) field.item_default_values = [];
+            const count = this.setting.item_count || 1;
+            while (field.item_default_values.length < count) {
+                field.item_default_values.push('');
+            }
+            field.item_default_values[itemIndex] = value === '' ? '' : Number(value);
+            field.item_default_values = [...field.item_default_values];
         },
         onListModeChange() {
             if (this.listMode === 'from_list') {

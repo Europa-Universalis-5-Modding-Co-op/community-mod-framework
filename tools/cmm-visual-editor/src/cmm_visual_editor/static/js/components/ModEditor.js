@@ -38,6 +38,11 @@ const ModEditorComponent = {
             <input type="file" @change="onModBackgroundChange" ref="modBackgroundInput">
             <span class="field-hint" v-if="state.mod_background">{{ getBackgroundFileName() }}</span>
         </div>
+        <div class="field-row">
+            <label>Lobby Banner</label>
+            <input type="checkbox" v-model="state.lobby_banner">
+            <span class="field-hint">Show this mod's icon as a banner in the pre-game lobby.</span>
+        </div>
 
         <details class="metadata-section">
             <summary>Metadata (metadata.json)</summary>

@@ -14,7 +14,7 @@ const CMMGenerator = {
             )
         );
         const files = {
-            [`in_game/common/on_action/${prefix}_cmm_on_actions.txt`]: noinspect + this.genOnAction(prefix),
+            [`in_game/common/on_action/${prefix}_cmm_on_actions.txt`]: noinspect + this.genOnAction(state),
             [`in_game/common/scripted_effects/${prefix}_cmm_effects.txt`]: noinspect + this.genEffects(state),
             [`main_menu/localization/english/${prefix}_cmm_l_english.yml`]: noinspect + this.genLocalization(state),
             ['.metadata/metadata.json']: this.genMetadata(state),
@@ -25,8 +25,10 @@ const CMMGenerator = {
         return files;
     },
 
-    genOnAction(prefix) {
-        return `# Hook this mod into CMF shared registration on_action.
+    genOnAction(state) {
+        const prefix = state.file_prefix || state.mod_id;
+        const modId = state.mod_id;
+        let content = `# Hook this mod into CMF shared registration on_action.
 cmf_on_mod_registration = {
 \ton_actions = {
 \t\t${prefix}_on_register_cmf_mod
@@ -52,6 +54,22 @@ ${prefix}_on_cmf_callback = {
 \t}
 }
 `;
+        if (state.lobby_banner) {
+            content += `
+cmf_on_banner_registration = {
+\ton_actions = {
+\t\t${prefix}_register_lobby_banner
+\t}
+}
+
+${prefix}_register_lobby_banner = {
+\teffect = {
+\t\tcmf_register_lobby_banner = { mod_id = ${modId} }
+\t}
+}
+`;
+        }
+        return content;
     },
 
     genEffects(state) {
@@ -365,6 +383,15 @@ ${prefix}_on_cmf_callback = {
 
     _emitListField(lines, modId, settingId, field) {
         const ft = field.field_type;
+        // Per-item field defaults
+        if (['bool', 'dropdown', 'numeric', 'slider'].includes(ft)) {
+            const defs = field.item_default_values || [];
+            for (let i = 0; i < defs.length; i++) {
+                const v = defs[i];
+                if (v === null || v === undefined || v === '') continue;
+                lines.push(`\tcmm_set_list_field_default_for_item = { mod_id = ${modId} setting_id = ${settingId} field_id = ${field.field_id} item = ${i + 1} value = ${this._num(v, 0)} }`);
+            }
+        }
         if (ft === 'bool') {
             lines.push(`\tcmm_register_list_bool_field = {`);
             lines.push(`\t\tmod_id = ${modId}`);
@@ -710,6 +737,13 @@ ${prefix}_on_cmf_callback = {
         lines.push(' # Mod');
         lines.push(` ${modId}_name: "${this._esc(state.mod_name)}"`);
         lines.push(` ${modId}_desc: "${this._esc(state.mod_desc)}"`);
+
+        if (state.lobby_banner) {
+            lines.push(` game_concept_${modId}: ""`);
+            lines.push(` game_concept_${modId}_desc: ""`);
+            lines.push(` game_concept_${modId}_background: ""`);
+            lines.push(` game_concept_${modId}_background_desc: ""`);
+        }
 
         // Tabs, groups, and settings
         const seenGroups = new Set();

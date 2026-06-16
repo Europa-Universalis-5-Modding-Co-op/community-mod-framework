@@ -140,6 +140,7 @@ def _build_model(
     list_field_disables = {}  # (setting_id, field_id) -> [item_number]
     list_item_hides = {}  # setting_id -> [item_number]
     list_data_values = {}  # (setting_id, field_id) -> {item_number: value}
+    list_field_defaults = {}  # (setting_id, field_id) -> {item_number: value}
     for reg in registrations:
         reg_type = reg.get("_type", "")
         if reg_type == "list_item_hide":
@@ -158,6 +159,16 @@ def _build_model(
                 if key not in list_field_disables:
                     list_field_disables[key] = []
                 list_field_disables[key].append(item)
+        elif reg_type == "list_field_default":
+            sid = reg.get("setting_id", "")
+            fid = reg.get("field_id", "")
+            item = _to_int(reg.get("item", "0"))
+            value = reg.get("value", "")
+            if sid and fid and item > 0 and value != "":
+                key = (sid, fid)
+                if key not in list_field_defaults:
+                    list_field_defaults[key] = {}
+                list_field_defaults[key][item] = _to_float(value)
         elif reg_type.startswith("list_") and "_field" in reg_type:
             sid = reg.get("setting_id", "")
             if sid not in list_fields:
@@ -222,7 +233,7 @@ def _build_model(
             reg, mod_id, loc_map, list_fields, list_item_values,
             setting_aliases, inverted_aliases, field_aliases, option_aliases,
             list_field_disables, list_item_hides, list_data_values,
-            field_loc_overrides,
+            list_field_defaults, field_loc_overrides,
         )
         if setting:
             # Deduplicate: skip if same setting_id already exists in this group
@@ -286,6 +297,8 @@ def _build_model(
             except Exception as e:
                 warnings.append(f"Could not read background file: {e}")
 
+    lobby_banner = "cmf_register_lobby_banner" in on_action
+
     model = ModModel(
         mod_id=mod_id,
         file_prefix=prefix or mod_id,
@@ -293,6 +306,7 @@ def _build_model(
         mod_desc=loc_map.get(f"{mod_id}_desc", "") or meta.get("short_description", ""),
         mod_icon=mod_icon,
         mod_background=mod_background,
+        lobby_banner=lobby_banner,
         metadata_name=meta.get("name", ""),
         metadata_id=meta.get("id", ""),
         metadata_version=meta.get("version", "0.1"),
@@ -689,7 +703,7 @@ def _parse_registrations(content: str, warnings: list) -> list:
         r"slider_setting|dropdown_setting|text_setting|settings_list|"
         r"settings_list_from_list|"
         r"list_bool_field|list_dropdown_field|list_numeric_field|list_slider_field|list_data_field)|"
-        r"cmm_set_list_item_value|cmm_set_list_data_value|cmm_disable_list_field_for_item|cmm_hide_list_item)\s*=\s*\{",
+        r"cmm_set_list_item_value|cmm_set_list_data_value|cmm_set_list_field_default_for_item|cmm_disable_list_field_for_item|cmm_hide_list_item)\s*=\s*\{",
         re.IGNORECASE,
     )
 
@@ -747,6 +761,8 @@ def _func_to_type(func_name: str) -> str:
         return "list_item_value"
     if "set_list_data_value" in fn:
         return "list_data_value"
+    if "set_list_field_default_for_item" in fn:
+        return "list_field_default"
     if "disable_list_field_for_item" in fn:
         return "list_field_disable"
     if "hide_list_item" in fn:
@@ -809,6 +825,7 @@ def _reg_to_setting(
     list_field_disables: dict = None,
     list_item_hides: dict = None,
     list_data_values: dict = None,
+    list_field_defaults: dict = None,
     loc_overrides: dict = None,
 ) -> Setting:
     """Convert a registration dict to a Setting."""
@@ -913,6 +930,12 @@ def _reg_to_setting(
                     if dv_map:
                         count = setting.item_count or 1
                         fld.item_data_values = [dv_map.get(i, "") for i in range(1, count + 1)]
+                # Attach per-item defaults for interactive fields
+                elif fld.field_type in ("bool", "dropdown", "numeric", "slider"):
+                    def_map = (list_field_defaults or {}).get((sid, fld.field_id))
+                    if def_map:
+                        count = setting.item_count or 1
+                        fld.item_default_values = [def_map.get(i, "") for i in range(1, count + 1)]
                 fields.append(fld)
         setting.fields = fields
 

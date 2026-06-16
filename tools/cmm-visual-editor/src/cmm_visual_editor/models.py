@@ -30,6 +30,8 @@ class ListField:
     step_value: Optional[float] = None
     # data field per-item values (1-based; aligned with item_count)
     item_data_values: Optional[list] = None
+    # per-item defaults for interactive fields; 1-based, aligned with item_count
+    item_default_values: Optional[list] = None
     # alias
     alias: str = ""
     item_aliases: Optional[list] = None  # per-item aliases (list of str, one per item)
@@ -118,6 +120,7 @@ class ModModel:
     mod_desc: str = ""
     mod_icon: str = ""
     mod_background: str = ""
+    lobby_banner: bool = False
     metadata_name: str = ""
     metadata_id: str = ""
     metadata_version: str = "0.1"
@@ -209,6 +212,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["item_aliases"] = f.item_aliases
         if f.disabled_items:
             d["disabled_items"] = f.disabled_items
+        if f.item_default_values and any(v is not None and v != "" for v in f.item_default_values):
+            d["item_default_values"] = f.item_default_values
         if f.field_type == "bool":
             d["default_value"] = f.default_value
         elif f.field_type == "dropdown":
@@ -246,6 +251,7 @@ def model_to_dict(model: ModModel) -> dict:
         "mod_desc": model.mod_desc,
         "mod_icon": model.mod_icon,
         "mod_background": model.mod_background,
+        "lobby_banner": model.lobby_banner,
         "metadata_name": model.metadata_name,
         "metadata_id": model.metadata_id,
         "metadata_version": model.metadata_version,
@@ -293,6 +299,7 @@ def dict_to_model(data: dict) -> ModModel:
             max_value=f.get("max_value"),
             step_value=f.get("step_value"),
             item_data_values=f.get("item_data_values"),
+            item_default_values=f.get("item_default_values"),
             alias=f.get("alias", ""),
             item_aliases=f.get("item_aliases"),
             disabled_items=f.get("disabled_items"),
@@ -349,6 +356,7 @@ def dict_to_model(data: dict) -> ModModel:
         mod_desc=data.get("mod_desc", ""),
         mod_icon=data.get("mod_icon", ""),
         mod_background=data.get("mod_background", ""),
+        lobby_banner=data.get("lobby_banner", False),
         metadata_name=data.get("metadata_name", ""),
         metadata_id=data.get("metadata_id", ""),
         metadata_version=data.get("metadata_version", "0.1"),
