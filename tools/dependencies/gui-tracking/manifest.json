@@ -1,5 +1,19 @@
 {
   "definitions": {
+    "constant:in_game/gui/multiplayer_lobby.gui:in_game/gui/multiplayer_lobby.gui:unique_content_height": {
+      "kind": "constant",
+      "mod_file": "in_game/gui/multiplayer_lobby.gui",
+      "name": "unique_content_height",
+      "tracking_path": "tools/dependencies/gui-tracking/constants/in_game__gui__multiplayer_lobby/in_game__gui__multiplayer_lobby/unique_content_height.gui",
+      "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
+    },
+    "constant:in_game/gui/multiplayer_lobby.gui:in_game/gui/multiplayer_lobby.gui:unique_content_width": {
+      "kind": "constant",
+      "mod_file": "in_game/gui/multiplayer_lobby.gui",
+      "name": "unique_content_width",
+      "tracking_path": "tools/dependencies/gui-tracking/constants/in_game__gui__multiplayer_lobby/in_game__gui__multiplayer_lobby/unique_content_width.gui",
+      "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
+    },
     "template:frontend_menu_middle_template": {
       "base_widget": null,
       "mod_file": "in_game/gui/cmm/cmm_ingame_menu.gui",
@@ -14,6 +28,41 @@
       "tracking_path": "tools/dependencies/gui-tracking/templates/sdk_button_style_template.gui",
       "vanilla_file": "main_menu/gui/pdx_account/pdx_custom_types.gui"
     },
+    "type:LobbyCountryListWidget": {
+      "base_widget": "widget",
+      "mod_file": "in_game/gui/multiplayer_lobby.gui",
+      "namespace": "MultiplayerLobby",
+      "tracking_path": "tools/dependencies/gui-tracking/types/LobbyCountryListWidget.gui",
+      "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
+    },
+    "type:LobbyMultiplayerPanel": {
+      "base_widget": "widget",
+      "mod_file": "in_game/gui/multiplayer_lobby.gui",
+      "namespace": "MultiplayerLobby",
+      "tracking_path": "tools/dependencies/gui-tracking/types/LobbyMultiplayerPanel.gui",
+      "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
+    },
+    "type:LobbyMultiplayerPanelNoServer": {
+      "base_widget": "widget",
+      "mod_file": "in_game/gui/multiplayer_lobby.gui",
+      "namespace": "MultiplayerLobby",
+      "tracking_path": "tools/dependencies/gui-tracking/types/LobbyMultiplayerPanelNoServer.gui",
+      "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
+    },
+    "type:LobbyViewButtons": {
+      "base_widget": "hbox",
+      "mod_file": "in_game/gui/multiplayer_lobby.gui",
+      "namespace": "MultiplayerLobby",
+      "tracking_path": "tools/dependencies/gui-tracking/types/LobbyViewButtons.gui",
+      "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
+    },
+    "type:LobbyViewMPInfo": {
+      "base_widget": "vbox",
+      "mod_file": "in_game/gui/multiplayer_lobby.gui",
+      "namespace": "MultiplayerLobby",
+      "tracking_path": "tools/dependencies/gui-tracking/types/LobbyViewMPInfo.gui",
+      "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
+    },
     "type:selected_mod_item": {
       "base_widget": "mod_card",
       "mod_file": "main_menu/gui/TEMP_cmf_mods_playset_checkbox_fix.gui",
@@ -27,6 +76,34 @@
       "namespace": "cmf_main_menu_marker",
       "tracking_path": "tools/dependencies/gui-tracking/types/steam_logo_button.gui",
       "vanilla_file": "main_menu/gui/frontend_mainview.gui"
+    },
+    "widget:cloud_save_indicator": {
+      "base_widget": null,
+      "mod_file": "in_game/gui/multiplayer_lobby.gui",
+      "namespace": "JominiMultiplayerLobby",
+      "tracking_path": "tools/dependencies/gui-tracking/widgets/cloud_save_indicator.gui",
+      "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
+    },
+    "widget:game_lobby_dlc_window": {
+      "base_widget": null,
+      "mod_file": "in_game/gui/multiplayer_lobby.gui",
+      "namespace": "basic_dialog_phoenix",
+      "tracking_path": "tools/dependencies/gui-tracking/widgets/game_lobby_dlc_window.gui",
+      "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
+    },
+    "widget:info": {
+      "base_widget": null,
+      "mod_file": "in_game/gui/multiplayer_lobby.gui",
+      "namespace": "JominiLobbyViewEndPreparationConfirmation",
+      "tracking_path": "tools/dependencies/gui-tracking/widgets/info.gui",
+      "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
+    },
+    "widget:multiplayer_oos_message": {
+      "base_widget": null,
+      "mod_file": "in_game/gui/multiplayer_lobby.gui",
+      "namespace": "window",
+      "tracking_path": "tools/dependencies/gui-tracking/widgets/multiplayer_oos_message.gui",
+      "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
     }
   },
   "version": 1

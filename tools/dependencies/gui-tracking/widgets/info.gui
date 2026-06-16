@@ -1,0 +1,41 @@
+﻿# vanilla: in_game/gui/multiplayer_lobby.gui
+# mod: in_game/gui/multiplayer_lobby.gui
+
+JominiLobbyViewEndPreparationConfirmation = {
+	blockoverride "properties" {
+		modal = yes
+		modality = all
+
+		size = { 300 200 }
+		parentanchor = center
+		widgetanchor = center
+	}
+
+	blockoverride "content" {
+		textbox = {
+			name = "info"
+			size = { 100% 50% }
+			multiline = yes
+			align = center|center
+			text = "JOMINI_MULTIPLAYER_GUI_CONFIRMATION"
+		}
+
+		JominiLobbyViewButton = {
+			onclick = "[EndPrepConfirm.Cancel]"
+			text = "JOMINI_MULTIPLAYER_GUI_CANCEL"
+
+			blockoverride "buttonstyle" {
+				using = button_default_template
+			}
+		}
+
+		JominiLobbyViewButton = {
+			onclick = "[EndPrepConfirm.Confirm]"
+			text = "JOMINI_MULTIPLAYER_GUI_CONFIRM"
+
+			blockoverride "buttonstyle" {
+				using = button_default_template
+			}
+		}
+	}
+}

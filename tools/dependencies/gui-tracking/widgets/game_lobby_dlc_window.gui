@@ -1,0 +1,313 @@
+﻿# vanilla: in_game/gui/multiplayer_lobby.gui
+# mod: in_game/gui/multiplayer_lobby.gui
+
+basic_dialog_phoenix = {
+	name = "game_lobby_dlc_window"
+	datacontext = "[GameLobbyDLCView.GetDLC]"
+	position = { 0 -40 }
+
+	blockoverride "dialog_content_bckg" { }
+	blockoverride "header_obj" {}
+	blockoverride "window_outside_margin" { margin = { 5 10 } }
+	blockoverride "bottom_space" {}
+	blockoverride "content_inside" {}
+	blockoverride "content_outside"  {
+		vbox = {
+			margin = { 10 15 }
+			spacing = 10
+
+			widget = {
+				size = { 596 235 }
+				using = bg_age_event_frame
+
+				background = {
+					texture = "[GameDLC.GetTooltipBackground]"
+					texture_density = 2
+					fittype = centercrop
+				}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				using = bg_text_mask_container_dark_blue
+				margin = { 10 7 }
+
+				text_multi = {
+					layoutpolicy_horizontal = expanding
+					text = "[GameDLC.GetTooltipDesc]"
+					align = left|nobaseline
+					default_format = "#color_light_gray"
+					fontsize = 14
+					autoresize = yes
+				}
+			}
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 4 4 }
+				hbox = {
+					using = layoutpolicy_expanding
+					margin = { 12 0}
+					margin_top = -15
+
+					using = bg_corner_flavor
+					blockoverride "corner_flavor_texture" {
+					}
+					blockoverride "corner_flavor_color" {
+						modify_texture = {
+							using = color_bg_blue_texture
+							blend_mode = multiply
+						}
+					}
+					widget = {
+						size = { 43 53  }
+						background = {
+							texture = "gfx/interface/component_decoration/fate_of_the_phoenix/banner_arrow.dds"
+							texture_density = 2
+						}
+
+						hbox = {
+							margin_bottom = 12
+							datamodel = "[GameLobbyDLCView.GetRelatedCountries]"
+							item = {
+								country_flag_small = {}
+							}
+						}
+					}
+					expand = {}
+				}
+			}
+
+			fixedgridbox = {
+				datamodel = "[DataModelFirst(GameLobbyDLCView.GetUniqueContentItemShowcase, '(int32)8')]"
+				addcolumn = 72
+				addrow = 90
+				datamodel_wrap = 9
+				maxhorizontalslots = 9
+				setitemsizefromcell = yes
+				flipdirection = yes
+				item = {
+					unique_content_item_specific = {
+						tagtooltip_enabled = yes
+						tooltip = "[UniqueContentItem.GetName]"
+
+						blockoverride "country_culture_datacontext" {
+							datacontext = "[GameLobbyDLCView.GetFirstRelatedCountry]"
+						}
+						blockoverride "subunit_illustration" {
+							using = unit_type_illustration_playable_preview
+						}
+					}
+				}
+			}
+
+			container = {
+				using = bg_paper_card
+				using = bg_cabinet_card_frame
+
+				# Background
+				flowcontainer = {
+					direction = vertical
+					datamodel = "[DataModelRepeatedItem(
+					Add_int32(Divide_int32(GetDataModelSize(GameLobbyDLCView.GetUniqueContentTypeCategories),'(int32)5'), '(int32)1')
+					)]"
+
+					item = {
+						flowcontainer = {
+							datamodel = "[DataModelRepeatedItem('(int32)5')]"
+							item = {
+								widget = {
+									size = { @[unique_content_width + 10] @unique_content_height }
+									widget = {
+										size = { 100% 100% }
+										visible = "[IsOdd_int32(Add_int32(PdxGuiWidget.GetIndexInDataModel, PdxGuiWidget.AccessParent.AccessParent.GetIndexInDataModel))]"
+										using = bg_text_mask_container_brown
+									}
+								}
+							}
+						}
+					}
+				}
+
+				flowcontainer = {
+					wrap_count = 5
+					ignoreinvisible = yes
+
+					unique_content_type_category_item = {
+						datacontext = "[GameLobbyDLCView.GetUniqueContentDescription]"
+
+						blockoverride "unique_content_type_category_icon" {
+							texture = "gfx/interface/icons/events/history.dds"
+						}
+						blockoverride "unique_content_type_category_text" {
+							text = "[UniqueContentDescription.GetEventsAmountUniqueContent]"
+						}
+						blockoverride "unique_content_type_category_tooltip" {
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_text" {
+										text = "COUNTRY_EVENTS_SPECIFIC_LOBBY_DESCRIPTION_TT"
+									}
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/events/history.dds"
+										}
+									}
+									blockoverride "concept_link" {
+										text = "[country|E]"
+									}
+									blockoverride "tooltip_content" {
+										TooltipTextBlock = {
+											blockoverride "text" {
+												text = "[UniqueContentDescription.GetEventsUniqueContentDesc]"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					datamodel = "[GameLobbyDLCView.GetUniqueContentTypeCategories]"
+					item = {
+						unique_content_type_category_item = {
+							blockoverride "unique_content_type_category_tooltip" {
+								tooltipwidget = {
+									using = unique_content_type_category_tooltip_template
+									blockoverride "country_culture_datacontext" {
+										datacontext = "[GameLobbyDLCView.GetFirstRelatedCountry]"
+									}
+								}
+							}
+						}
+					}
+
+					blockoverride "unique_content_type_category_size" {
+						size = { @[unique_content_width + 10] @unique_content_height }
+					}
+				}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 40
+				margin_right = 40
+				button_regular = {
+					visible = "[IsLobbyOpen]"
+					action_tooltip = {
+						title = "GAME_DLC_VISIT_STORE"
+						on_action = "[GameDLC.OpenURL]"
+					}
+
+					hbox = {
+						resizeparent = yes
+						margin = { 25 5 }
+						minimumsize = { 80 30 }
+						spacing = 10
+
+						icon = {
+							texture = "gfx/interface/buttons/button_small_round.dds"
+							framesize = { 42 42 }
+							frame = 1
+							size = { 30 30 }
+
+							icon = {
+								size = {20 20}
+								parentanchor = center
+								texture =  "gfx/interface/logos/steam_logo.dds"
+							}
+						}
+
+						text_single = {
+							autoresize = yes
+							text = "GAME_DLC_VISIT_STORE"
+						}
+					}
+
+					tooltipwidget = { BasicFunctionalTooltip = {}}
+				}
+
+				expand = {}
+
+				button_regular = {
+					using = button_resize_to_fit_text
+					margin = { 25 10 }
+					text = "CLOSE"
+
+					action_tooltip = {
+						title = "CLOSE"
+						on_action = "[GameLobbyDLCView.Close]"
+					}
+
+					tooltipwidget = { BasicFunctionalTooltip = {}}
+				}
+			}
+		}
+	}
+	widget = {
+		size = { 710 100% }
+		parentanchor = top|hcenter
+		position = { 0 8 }
+
+		background = {
+			texture = "gfx/interface/component_decoration/fate_of_the_phoenix/rise_of_the_phoenix_flavor.dds"
+			spriteborder_top = 200
+			spriteborder_bottom = 400
+			spriteType = corneredstretched
+			texture_density = 2
+			margin_bottom = 30
+		}
+
+		icon = {
+			parentanchor = top|hcenter
+			position = { 0 -3 }
+			size = { 570 115 }
+			texture = "gfx/interface/component_decoration/fate_of_the_phoenix/top_banner.dds"
+		}
+
+		widget = {
+			parentanchor = top|hcenter
+			position = {0 6}
+
+			size = { 475 77 }
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 30 10 }
+				spacing = 3
+
+				text_single = {
+					autoresize = yes
+					using = Font_Size_Big
+					default_format = "#yellow_titles"
+					maximumsize = { 510 -1 }
+					multiline = no
+					align = center
+					text = "[GameDLC.GetName]"
+					using = Font_Type_Headers
+				}
+
+				text_single = {
+					autoresize = yes
+					using = Font_Size_Medium
+					default_format = "#yellow_titles"
+					maximumsize = { 510 -1 }
+					multiline = no
+					align = center
+					text = "[GameDLC.GetCategoryKey]"
+					using = Font_Type_Headers
+				}
+			}
+		}
+	}
+
+
+	widget = {
+		parentanchor = top|right
+		position = { -30 0 }
+		size = { 57 57 }
+
+		button_close_alt = {
+			blockoverride "close_on_action" { on_action = "[GameLobbyDLCView.Close]" }
+		}
+	}
+}

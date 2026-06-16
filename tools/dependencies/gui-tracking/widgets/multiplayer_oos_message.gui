@@ -1,0 +1,255 @@
+﻿# vanilla: in_game/gui/multiplayer_lobby.gui
+# mod: in_game/gui/multiplayer_lobby.gui
+
+window = {
+	name = "multiplayer_oos_message"
+	size = { 600 700 }
+	parentanchor = center
+	visible_at_creation = no
+	visible = "[DataModelHasItems( OosWindow.GetOosData )]"
+	using = bg_window_default_alt
+
+	vbox = {
+		using = window_margin
+		spacing = 5
+
+		window_header_alt = {
+			blockoverride "header_text" {
+				text = "JOMINI_MULTIPLAYER_GUI_OOS_MESSAGE_HEADER"
+			}
+		}
+
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_main_inner_notabs_alt
+
+			text_multi = {
+				visible = "[OosWindow.IsLocalOos]"
+				margin = { 20 20 }
+				autoresize = yes
+				min_width = 560
+				max_width = 560
+
+				text = "JOMINI_MULTIPLAYER_GUI_OOS_MESSAGE_MY"
+			}
+
+			text_multi = {
+				visible = "[Not( OosWindow.IsLocalOos )]"
+				margin = { 20 20 }
+				autoresize = yes
+				min_width = 560
+				max_width = 560
+
+				text = "JOMINI_MULTIPLAYER_GUI_OOS_MESSAGE_DESC"
+			}
+
+			text_single = {
+				visible = "[OosWindow.IsLocalOos]"
+				margin = { 20 0 }
+				autoresize = yes
+				min_width = 560
+				max_width = 560
+
+				text = "JOMINI_MULTIPLAYER_GUI_OOS_MESSAGE_DESC_LOCAL"
+			}
+
+			scrollarea = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				scrollbarpolicy_horizontal = always_off
+
+				scrollbar_vertical = {
+					using = Scrollbar_Vertical
+				}
+
+				scrollwidget = {
+					vbox = {
+						vbox = {
+							margin = { 20 10 }
+							layoutpolicy_horizontal = expanding
+							datamodel = "[OosWindow.GetOosData]"
+							spacing = 5
+
+							item = {
+								vbox = {
+									layoutpolicy_horizontal = expanding
+									margin = { 5 5 }
+									spacing = 5
+
+									using = bg_paper_card
+									using = bg_cabinet_card_frame
+
+									widget = {
+										layoutpolicy_horizontal = expanding
+										size = { -1 30 }
+
+										using = bg_card_header_01
+
+										hbox = {
+											margin = { 10 0 }
+											margin_left = 106
+
+											text_single = {
+												text = "JOMINI_MULTIPLAYER_GUI_OOS_MESSAGE_PLAYER_NAME"
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+											}
+										}
+									}
+
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										margin = { 5 0 }
+										margin_left = 106
+										spacing = 5
+
+										datacontext = "[OosData.GetPlayable.GetCountry]"
+
+										vbox = {
+											layoutpolicy_horizontal = expanding
+											spacing = 10
+											margin_bottom = 5
+
+											text_single = {
+												visible = "[And( Not( OosData.IsObserver ), Country.IsValid )]"
+												text = "[Country.GetName]"
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+											}
+
+											text_multi = {
+												text = "JOMINI_MULTIPLAYER_GUI_OBSERVER"
+												visible = "[OosData.IsObserver]"
+												min_width = 425
+												max_width = 425
+												autoresize = yes
+												using = Font_Type_Standard
+											}
+
+											text_multi = {
+												text = "JOMINI_MULTIPLAYER_GUI_OOS_MESSAGE_TYPE"
+												min_width = 425
+												max_width = 425
+												autoresize = yes
+												layoutpolicy_horizontal = expanding
+											}
+
+											button_default = {
+												layoutpolicy_horizontal = expanding
+												visible = "[Or(OosWindow.IsLocalOos, OosWindow.IsMultiplayerHost)]"
+												raw_text = "[Localize('MULTIPLAYER_GUI_OOS_MESSAGE_FOLDER')]: [RemoveDirectoryPath(OosData.GetFolder)]"
+
+												action_tooltip = {
+													title = "MULTIPLAYER_GUI_OOS_MESSAGE_FOLDER_TT"
+													on_action = "[OosData.OpenFileDirectory]"
+												}
+												tooltipwidget = { BasicFunctionalTooltip = {} }
+											}
+										}
+									}
+
+									widget = {
+										ignore_layout = yes
+										size = { 100% 100% }
+										datacontext = "[OosData.GetPlayable.GetCountry]"
+
+										country_flag_big = {
+											position = { 10 10 }
+											ignore_layout = yes
+											visible = "[Not( OosData.IsObserver )]"
+										}
+									}
+								}
+							}
+						}
+
+						expand = {}
+					}
+				}
+			}
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 10 10 }
+				spacing = 5
+
+				flowcontainer = {
+					wrap_length = 560
+					ignoreinvisible = yes
+					spacing = 5
+
+					# Ignore oos and continue
+					button_default = {
+						using = button_resize_to_fit_text
+						text = "MULTIPLAYER_GUI_OOS_CLOSE"
+						action_tooltip = {
+							title = "MULTIPLAYER_GUI_OOS_CLOSE_TT"
+							on_action = "[OosWindow.Close]"
+						}
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+					}
+
+					# Host: Resync all clients
+					button_default = {
+						visible = "[IsHost]"
+						using = button_resize_to_fit_text
+						text = "JOMINI_MULTIPLAYER_GUI_OOS_MESSAGE_RESYNC"
+						action_tooltip = {
+							title = "MULTIPLAYER_GUI_OOS_SYNCH_CLIENT_TT"
+							on_action = "[OosWindow.Resync]"
+						}
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+					}
+
+					# Client: Resync, just so they know this oiption exists.
+					button_default = {
+						visible = "[Not(IsHost)]"
+						using = button_resize_to_fit_text
+						text = "JOMINI_MULTIPLAYER_GUI_OOS_MESSAGE_RESYNC"
+						enabled = no
+					}
+				}
+
+				flowcontainer = {
+					wrap_length = 560
+					ignoreinvisible = yes
+					spacing = 5
+
+					# Host: continue without desynched players
+					button_default = {
+						using = button_resize_to_fit_text
+						visible = "[IsHost]"
+						text = "JOMINI_MULTIPLAYER_GUI_OOS_MESSAGE_CONTINUE"
+						action_tooltip = {
+							title = "MULTIPLAYER_GUI_OOS_KICK_TT"
+							on_action = "[KickPlayerOOS]"
+							on_action = "[OosWindow.Close]"
+						}
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+					}
+
+					# Clients: continue in SP
+					button_default = {
+						visible = "[Not(IsHost)]"
+						using = button_resize_to_fit_text
+						text = "MULTIPLAYER_GUI_OOS_SP"
+						onclick = "[BecomeSinglePlayer]"
+					}
+
+					# Go to main menu
+					button_default = {
+						using = button_resize_to_fit_text
+						text = "JOMINI_MULTIPLAYER_GUI_OOS_MESSAGE_EXIT_BUTTON"
+						action_tooltip = {
+							title = "MULTIPLAYER_GUI_OOS_END_GAME"
+							on_action = "[OosWindow.GoToMenu]"
+						}
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+					}
+				}
+			}
+		}
+	}
+
+	window_bottom_paper_template = {}
+}

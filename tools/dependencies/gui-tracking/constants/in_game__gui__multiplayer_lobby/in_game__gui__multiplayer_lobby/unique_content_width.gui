@@ -1,0 +1,4 @@
+﻿# vanilla: in_game/gui/multiplayer_lobby.gui
+# mod: in_game/gui/multiplayer_lobby.gui
+
+@unique_content_width = 105
