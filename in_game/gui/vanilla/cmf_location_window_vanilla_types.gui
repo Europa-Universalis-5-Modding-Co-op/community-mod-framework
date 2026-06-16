@@ -3,6 +3,67 @@
 
 types LocationWindowTypes
 {
+	type location_building_levels_piechart = widget {
+		size = { 30 30 }
+
+		piechart = {
+			visible = "[Not(Location.HasTooManyBuildingLevel)]"
+			size = { 100% 100% }
+			parentanchor = center
+			
+			tooltipwidget = {
+				using = LocationBuildingLevels_tooltip
+			}
+			using = piechart_angles
+			using = bg_circle
+			using = bg_circle_piechart
+
+			pieslice_no_highlight = {
+				texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+				value = "[Location.GetBuildingLevelsPercentage]"
+				color = { 1 1 1 1 }
+			}
+
+			pieslice_no_highlight = {
+				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+				value = "[Subtract_float('(float)100.0', Location.GetBuildingLevelsPercentage)]"
+				color = { 1 1 1 1 }
+			}
+			
+			icon = {
+				size = { 59% 59% }
+				parentanchor = center
+				texture = "[GetConceptTexture('supported_building_levels')]"
+			}
+		}
+		
+		piechart = {
+			visible = "[Location.HasTooManyBuildingLevel]"
+			size = { 100% 100% }
+			parentanchor = center
+			
+			tooltipwidget = {
+				using = LocationBuildingLevels_tooltip
+			}
+
+			using = piechart_angles
+			using = bg_circle
+			using = bg_circle_piechart
+
+			pieslice_no_highlight = {
+				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+				value = 100
+				color = { 1 1 1 1 }
+			}
+			
+			icon = {
+				size = { 59% 59% }
+				parentanchor = center
+				texture = "[GetConceptTexture('supported_building_levels')]"
+			}
+		}
+	}
+
 	type demography_chart = widget {
 
 		using = bg_paper_card
