@@ -21,6 +21,11 @@ Commands:
     refresh   Rebuild tracking from scratch and re-baseline to current vanilla
     status    Show tracking status
 
+Full-file overrides (a mod ``.gui`` file at a vanilla file's relative path)
+are checked for completeness: vanilla top-level widgets and file-scope
+constants missing from the mod copy are reported by ``check``, queued for
+tracking by ``merge``, and inserted into the mod file by ``apply``.
+
 Pass ``--beta`` (``-b``) to any vanilla-reading command (init, check, merge,
 refresh) to target the EU5 closed-beta install (Project Caesar Review) instead
 of the live game. Beta-sourced gui/vanilla commits are tagged ``(beta)`` in
@@ -518,12 +523,13 @@ def _update_vanilla_branch(tracking_files,
                      f"100644,{blob},{rel}"], env=plumbing)
             all_paths.add(rel)
 
-        # Remove entries no longer tracked
+        # Remove entries no longer tracked. Plain --remove re-adds a path
+        # whose file still exists on disk.
         existing = run_git(["ls-files", "--cached"], env=plumbing)
         if existing:
             for path in existing.splitlines():
                 if path not in all_paths:
-                    run_git(["update-index", "--remove", path],
+                    run_git(["update-index", "--force-remove", path],
                             env=plumbing)
 
         tree_sha = run_git(["write-tree"], env=plumbing)
@@ -583,13 +589,8 @@ def _constant_tracking_key(mod_file, vanilla_file, name):
 
 # ─── Scanner ─────────────────────────────────────────────────────────────────
 
-def _scan_definitions(base_dir, source_dirs, assert_unique=False):
-    """Recursively parse all ``.gui`` files and return ``[GuiDefinition, …]``.
-
-    With *assert_unique*, a file containing a duplicated top-level definition
-    aborts the run before its definitions are collected.
-    """
-    all_defs = []
+def _iter_gui_files(base_dir, source_dirs):
+    """Yield ``(abs_path, rel_path)`` for every ``.gui`` file under *source_dirs*."""
     for source in source_dirs:
         gui_dir = os.path.join(base_dir, source, "gui")
         if not os.path.isdir(gui_dir):
@@ -601,18 +602,28 @@ def _scan_definitions(base_dir, source_dirs, assert_unique=False):
                     continue
                 full = os.path.join(dirpath, fname)
                 rel = os.path.relpath(full, base_dir).replace("\\", "/")
-                try:
-                    with open(full, "r", encoding="utf-8-sig") as f:
-                        text = f.read()
-                except (OSError, UnicodeDecodeError) as e:
-                    print(f"  Warning: Could not read {rel}: {e}")
-                    continue
-                if assert_unique and not _assert_unique_top_level_defs(
-                        text, rel):
-                    print("Aborting: refusing to sync tracking from a "
-                          "corrupted mod file.")
-                    sys.exit(1)
-                all_defs.extend(parse_gui_file(text, rel))
+                yield full, rel
+
+
+def _scan_definitions(base_dir, source_dirs, assert_unique=False):
+    """Recursively parse all ``.gui`` files and return ``[GuiDefinition, …]``.
+
+    With *assert_unique*, a file containing a duplicated top-level definition
+    aborts the run before its definitions are collected.
+    """
+    all_defs = []
+    for full, rel in _iter_gui_files(base_dir, source_dirs):
+        try:
+            with open(full, "r", encoding="utf-8-sig") as f:
+                text = f.read()
+        except (OSError, UnicodeDecodeError) as e:
+            print(f"  Warning: Could not read {rel}: {e}")
+            continue
+        if assert_unique and not _assert_unique_top_level_defs(text, rel):
+            print("Aborting: refusing to sync tracking from a "
+                  "corrupted mod file.")
+            sys.exit(1)
+        all_defs.extend(parse_gui_file(text, rel))
     return all_defs
 
 
@@ -714,6 +725,65 @@ def _build_manifest_entry(md, vd):
         }
     return key, entry, tp
 
+
+def _find_missing_defs(mod_defs, vanilla_defs, mod_files):
+    """Return vanilla widgets and constants absent from same-path overrides.
+
+    A mod ``.gui`` file at a vanilla file's relative path replaces that
+    vanilla file wholesale, so the mod copy must carry every vanilla
+    top-level widget and file-scope constant. Returns ``[(key, vanilla_def,
+    insert_index, insert_after), ...]`` ordered by file and position.
+    *insert_index* is the def's position among the file's widgets and
+    constants; *insert_after* is ``(kind, name)`` of the nearest preceding
+    widget or constant, or ``None`` when the def is the file's first.
+    """
+    mod_present = {}
+    for d in mod_defs:
+        if d.kind in ("widget", "constant"):
+            mod_present.setdefault(d.source_file, set()).add((d.kind, d.name))
+
+    vanilla_by_file = {}
+    for d in vanilla_defs:
+        if d.kind in ("widget", "constant") and d.source_file in mod_files:
+            vanilla_by_file.setdefault(d.source_file, []).append(d)
+
+    missing = []
+    for vfile in sorted(vanilla_by_file):
+        present = mod_present.get(vfile, set())
+        prev = None
+        for idx, vd in enumerate(vanilla_by_file[vfile]):
+            if (vd.kind, vd.name) not in present:
+                if vd.kind == "constant":
+                    key = _constant_tracking_key(vfile, vfile, vd.name)
+                else:
+                    key = _tracking_key(vd.kind, vd.name)
+                missing.append((key, vd, idx, prev))
+            prev = (vd.kind, vd.name)
+    return missing
+
+
+def _build_pending_entry(vd, insert_index, insert_after):
+    """Return a manifest entry for a vanilla def queued for insertion."""
+    key, entry, tp = _build_manifest_entry(vd, vd)
+    entry["pending_insert"] = True
+    entry["insert_index"] = insert_index
+    entry["insert_after"] = list(insert_after) if insert_after else None
+    return key, entry, tp
+
+
+def _report_missing_defs(missing, hint=None):
+    """Print the report section for ``_find_missing_defs`` results."""
+    if not missing:
+        return
+    print(f"\n{len(missing)} vanilla definition(s) missing from "
+          "full-file override(s):")
+    for key, vd, _idx, _anchor in missing:
+        print(f"  ! {key}  (missing from {vd.source_file})")
+    print("  A mod file at a vanilla path replaces the whole file; "
+          "definitions it lacks do not exist in-game.")
+    if hint:
+        print(f"  Run 'gui_update.py {hint}' to queue them for insertion.")
+
 # ─── Config ──────────────────────────────────────────────────────────────────
 
 def _load_config():
@@ -803,6 +873,53 @@ def _write_tracking_file(rel_path, content):
                 return
     with open(abs_path, "wb") as f:
         f.write(new_bytes)
+
+
+def _insert_definition(mod_text, def_text, insert_after, compact=False):
+    """Insert *def_text* into *mod_text* as a new top-level block.
+
+    *insert_after* is ``(kind, name)`` of the definition to insert after,
+    or ``None`` to insert above the file's first definition. With *compact*,
+    no blank line is added around the block. Returns ``(new_text, warning)``;
+    *warning* is ``None`` unless the block had to be appended at the end of
+    the file instead.
+    """
+    lines = mod_text.split("\n")
+    def_lines = def_text.split("\n")
+    warning = None
+
+    at = None
+    if insert_after is not None:
+        kind, name = insert_after
+        span = find_definition_in_file(mod_text, name, kind)
+        if span is not None:
+            at = span[1] + 1
+        else:
+            warning = f"anchor {kind} '{name}' not found"
+    else:
+        defs = parse_gui_file(mod_text, "")
+        if defs:
+            at = defs[0].start_line
+
+    if at is None:
+        while lines and not lines[-1].strip():
+            lines.pop()
+        if lines:
+            lines.append("")
+        lines.extend(def_lines)
+        lines.append("")
+        return "\n".join(lines), warning
+
+    before = lines[:at]
+    after = lines[at:]
+    segment = list(def_lines)
+    if not compact and before and before[-1].strip():
+        segment.insert(0, "")
+    if not after:
+        segment.append("")
+    elif not compact and after[0].strip():
+        segment.append("")
+    return "\n".join(before + segment + after), warning
 
 
 def _force_rmtree(path):
@@ -1125,12 +1242,19 @@ def cmd_init(args):
     vanilla_defs = _scan_definitions(game_dir, GUI_SOURCES)
     print(f"  Found {len(vanilla_defs)} definition(s) in vanilla.")
 
+    mod_files = {rel for _full, rel in _iter_gui_files(ROOT_DIR, GUI_SOURCES)}
+    missing = _find_missing_defs(mod_defs, vanilla_defs, mod_files)
+
     overrides = _find_overrides(mod_defs, vanilla_defs)
     constants = _link_constants(mod_defs, vanilla_defs, overrides)
     total = len(overrides) + len(constants)
     if not total:
         print("\nNo overrides detected. Your mod does not override "
               "any vanilla GUI types, templates, widgets, or constants.")
+        if missing:
+            _report_missing_defs(missing)
+            print("  Add them to the mod file(s), then re-run init to "
+                  "track them.")
         return 0
 
     n_types = sum(1 for m, _ in overrides if m.kind == "type")
@@ -1144,6 +1268,8 @@ def cmd_init(args):
     for md, vd in constants:
         print(f"  constant: @{md.name}  "
               f"({md.source_file} <- {vd.source_file})")
+
+    _report_missing_defs(missing, hint="merge")
 
     # Build manifest + vanilla tracking files
     manifest = {"version": MANIFEST_VERSION, "definitions": {}}
@@ -1212,6 +1338,14 @@ def cmd_init(args):
     return 0
 
 
+def _paths_suffix(key, mod_file, vanilla_file):
+    """Return the path suffix for a check report line. Constant keys
+    already embed both paths."""
+    if key.startswith("constant:"):
+        return ""
+    return f"  (mod: {mod_file}, vanilla: {vanilla_file})"
+
+
 def cmd_check(args):
     game_dir = _resolve_game_dir(args)
     manifest = _load_manifest()
@@ -1246,14 +1380,23 @@ def cmd_check(args):
     discovered = _discover_overrides(mod_defs, vanilla_defs)
     added = sorted(set(discovered) - set(manifest["definitions"]))
 
+    mod_files = {rel for _full, rel in _iter_gui_files(ROOT_DIR, GUI_SOURCES)}
+    missing = [m for m in _find_missing_defs(mod_defs, vanilla_defs, mod_files)
+               if not manifest["definitions"].get(
+                   m[0], {}).get("pending_insert")]
+
     changed = []
     removed = []
     deleted = []
+    pending = []
 
     # Compare against the merged baseline so an aborted merge still surfaces pending changes.
     base_ref = MERGED_BRANCH if _vanilla_merged_ref_exists() else VANILLA_BRANCH
 
     for key, entry in sorted(manifest["definitions"].items()):
+        if entry.get("pending_insert"):
+            pending.append((key, entry))
+            continue
         if key.startswith("constant:"):
             mod_has = (entry["mod_file"], entry["name"]) in mod_consts
         else:
@@ -1281,7 +1424,7 @@ def cmd_check(args):
             != run_git(["rev-parse", MERGED_BRANCH])
     )
 
-    if not (changed or removed or added or deleted):
+    if not (changed or removed or added or deleted or pending or missing):
         if pending_merge:
             print("\nPrevious merge is unfinished "
                   f"({VANILLA_BRANCH} is ahead of {MERGED_BRANCH}).")
@@ -1293,30 +1436,52 @@ def cmd_check(args):
     if changed:
         print(f"\n{len(changed)} definition(s) changed in vanilla:")
         for key, entry in changed:
-            print(f"  {key}  (in {entry['vanilla_file']})")
+            paths = _paths_suffix(key, entry["mod_file"],
+                                  entry["vanilla_file"])
+            print(f"  {key}{paths}")
     if removed:
         print(f"\n{len(removed)} tracked definition(s) removed from vanilla "
               "(overrides now orphaned):")
         for key, entry in removed:
-            print(f"  ! {key}  (overridden in {entry['mod_file']})")
+            paths = _paths_suffix(key, entry["mod_file"],
+                                  entry["vanilla_file"])
+            print(f"  ! {key}{paths}")
     if added:
         print(f"\n{len(added)} new override(s) in the mod, not yet tracked:")
         for key in added:
-            md, _vd = discovered[key]
-            print(f"  {key}  (in {md.source_file})")
+            md, vd = discovered[key]
+            paths = _paths_suffix(key, md.source_file, vd.source_file)
+            print(f"  {key}{paths}")
     if deleted:
         print(f"\n{len(deleted)} tracked override(s) no longer in the mod:")
         for key, entry in deleted:
-            print(f"  {key}  (was in {entry['mod_file']})")
+            paths = _paths_suffix(key, entry["mod_file"],
+                                  entry["vanilla_file"])
+            print(f"  {key}{paths}")
+    if pending:
+        print(f"\n{len(pending)} tracked definition(s) pending insertion "
+              "into the mod:")
+        for key, entry in pending:
+            print(f"  {key}  (-> {entry['mod_file']})")
+    _report_missing_defs(missing)
 
     if pending_merge:
         print(f"\nNote: {VANILLA_BRANCH} is ahead of {MERGED_BRANCH} from a "
               "previous unfinished merge; running merge will resume it.")
-    if changed or removed:
-        print("\nRun 'gui_update.py merge' to incorporate these changes.")
+    hints = []
+    if changed or removed or missing:
+        hints.append("Run 'gui_update.py merge' to incorporate these "
+                     "changes.")
     elif added or deleted:
-        print("\nRun 'gui_update.py merge' to track new and prune removed "
-              "overrides.")
+        hints.append("Run 'gui_update.py merge' to track new and prune "
+                     "removed overrides.")
+    if pending:
+        hints.append("Run 'gui_update.py apply' to insert pending "
+                     "definitions.")
+    if hints:
+        print()
+        for h in hints:
+            print(h)
     return 0
 
 
@@ -1344,10 +1509,12 @@ def cmd_merge(args):
     resuming = pending and not repull
 
     added_keys = []
+    pending_new_keys = []
     newly_added = set()
     vanilla_defs = None
     vanilla_map = {}
     vanilla_consts = {}
+    vanilla_widgets_by_file = {}
     if not resuming:
         game_dir = _resolve_game_dir(args)
         print("Scanning current vanilla GUI files...")
@@ -1357,6 +1524,9 @@ def cmd_merge(args):
                 vanilla_consts.setdefault((d.source_file, d.name), d)
             else:
                 vanilla_map.setdefault(_tracking_key(d.kind, d.name), d)
+                if d.kind == "widget":
+                    vanilla_widgets_by_file.setdefault(
+                        (d.source_file, d.name), d)
 
     # Sync tracking from mod state. Skip if just advanced — tracking holds
     # the resolution and mod files may still be pre-apply.
@@ -1374,6 +1544,7 @@ def cmd_merge(args):
                 mod_map.setdefault(_tracking_key(d.kind, d.name), d)
 
         synced = 0
+        graduated = 0
         removed_keys = []
         new_definitions = {}
         for key, entry in manifest["definitions"].items():
@@ -1381,6 +1552,14 @@ def cmd_merge(args):
                 md = mod_consts.get((entry["mod_file"], entry["name"]))
             else:
                 md = mod_map.get(key)
+            if entry.get("pending_insert"):
+                if md is None:
+                    # Pending defs are absent from the mod until apply runs.
+                    new_definitions[key] = entry
+                    continue
+                for k in ("pending_insert", "insert_index", "insert_after"):
+                    entry.pop(k, None)
+                graduated += 1
             if md is not None:
                 if (not key.startswith("constant:")
                         and entry["mod_file"] != md.source_file):
@@ -1416,9 +1595,30 @@ def cmd_merge(args):
                 new_definitions[key] = entry
                 header = _make_tracking_header(vd.source_file, md.source_file)
                 _write_tracking_file(tp, header + md.text + "\n")
-            newly_added = set(added_keys)
 
-        if synced or removed_keys or added_keys:
+            # Queue vanilla defs missing from full-file overrides.
+            mod_files = {rel for _full, rel
+                         in _iter_gui_files(ROOT_DIR, GUI_SOURCES)}
+            for key, vd, idx, anchor in _find_missing_defs(
+                    mod_defs, vanilla_defs, mod_files):
+                if key in new_definitions:
+                    existing = new_definitions[key]
+                    if not existing.get("pending_insert"):
+                        print(f"  Warning: {key} is missing from "
+                              f"{vd.source_file} but tracked in "
+                              f"{existing['mod_file']}. Add it to the "
+                              "overriding mod file manually.")
+                    continue
+                _k, entry, tp = _build_pending_entry(vd, idx, anchor)
+                new_definitions[key] = entry
+                header = _make_tracking_header(vd.source_file,
+                                               vd.source_file)
+                _write_tracking_file(tp, header + vd.text + "\n")
+                pending_new_keys.append(key)
+            newly_added = set(added_keys) | set(pending_new_keys)
+
+        if (synced or graduated or removed_keys or added_keys
+                or pending_new_keys):
             manifest["definitions"] = new_definitions
             _save_manifest(manifest)
             run_git(["add", "-A", TRACKING_DIR_NAME + "/"])
@@ -1427,6 +1627,10 @@ def cmd_merge(args):
                 parts.append(f"{synced} updated")
             if added_keys:
                 parts.append(f"{len(added_keys)} added")
+            if pending_new_keys:
+                parts.append(f"{len(pending_new_keys)} queued for insertion")
+            if graduated:
+                parts.append(f"{graduated} pending resolved")
             if removed_keys:
                 parts.append(f"{len(removed_keys)} removed")
             run_git(["commit", "-m",
@@ -1437,6 +1641,14 @@ def cmd_merge(args):
                 print(f"  {len(added_keys)} new override(s) now tracked:")
                 for k in added_keys:
                     print(f"    + {k}")
+            if pending_new_keys:
+                print(f"  {len(pending_new_keys)} vanilla definition(s) "
+                      "missing from the mod, queued for insertion:")
+                for k in pending_new_keys:
+                    print(f"    + {k}")
+            if graduated:
+                print(f"  {graduated} pending definition(s) already added "
+                      "to the mod.")
             if removed_keys:
                 print(f"  {len(removed_keys)} stale entry(ies) removed:")
                 for k in removed_keys:
@@ -1454,11 +1666,16 @@ def cmd_merge(args):
         tracking_files = {}
         updated = 0
         pre_existing_updated = 0
+        pending_added = 0
         removed_count = 0
         for key, entry in manifest["definitions"].items():
             tp = entry["tracking_path"]
             if key.startswith("constant:"):
                 vd = vanilla_consts.get((entry["vanilla_file"], entry["name"]))
+            elif entry.get("pending_insert"):
+                # The flat vanilla_map is first-wins across files.
+                vd = vanilla_widgets_by_file.get(
+                    (entry["vanilla_file"], key.split(":", 1)[1]))
             else:
                 vd = vanilla_map.get(key)
             if vd is not None:
@@ -1472,12 +1689,20 @@ def cmd_merge(args):
                     updated += 1
                     if key not in newly_added:
                         pre_existing_updated += 1
+                    elif entry.get("pending_insert"):
+                        pending_added += 1
             else:
                 removed_count += 1
 
         change_count = updated + removed_count
         if change_count == 0 and not pending:
             print("Vanilla branch already up to date. Nothing to merge.")
+            still_pending = sum(
+                1 for e in manifest["definitions"].values()
+                if e.get("pending_insert"))
+            if still_pending:
+                print(f"{still_pending} definition(s) pending insertion. "
+                      "Run 'gui_update.py apply' to insert them.")
             return 0
 
         if change_count == 0:
@@ -1485,7 +1710,8 @@ def cmd_merge(args):
                   "commit; resuming it.")
             new_vanilla_sha = vanilla_sha
             version = _last_vanilla_commit_version()
-        elif pre_existing_updated == 0 and newly_added and removed_count == 0:
+        elif (pre_existing_updated == 0 and newly_added
+                and removed_count == 0 and not pending_new_keys):
             parent_override = merged_sha if pending else None
             version = _last_vanilla_commit_version()
             print(f"Recording {len(newly_added)} new override(s) in "
@@ -1501,8 +1727,10 @@ def cmd_merge(args):
             parent_override = merged_sha if pending else None
             version = _resolve_game_version(args, is_init=False)
             verb = "Overwriting pending" if pending else "Updating"
+            changed_count = updated - pending_added
             desc = ", ".join(p for p in (
-                f"{updated} changed" if updated else "",
+                f"{changed_count} changed" if changed_count else "",
+                f"{pending_added} added in vanilla" if pending_added else "",
                 f"{removed_count} removed" if removed_count else "",
             ) if p)
             print(f"{verb} {VANILLA_BRANCH} ({desc})...")
@@ -1546,6 +1774,18 @@ def cmd_merge(args):
         if ours is not None:
             ours = ours.replace("\r\n", "\n")
 
+        if entry.get("pending_insert"):
+            # No merge base or mod-side edits exist before the insertion.
+            if theirs is None:
+                if os.path.isfile(abs_tp):
+                    os.remove(abs_tp)
+                vanilla_removed.append((key, entry))
+                clean_paths.append(tp)
+            elif ours != theirs:
+                _write_tracking_file(tp, theirs)
+                clean_paths.append(tp)
+            continue
+
         if theirs is None:
             # Vanilla no longer defines this tracked def.
             if os.path.isfile(abs_tp):
@@ -1578,9 +1818,14 @@ def cmd_merge(args):
         print(f"\n{len(vanilla_removed)} tracked definition(s) removed from "
               "vanilla and untracked:")
         for rkey, rentry in vanilla_removed:
-            print(f"  ! {rkey}  (still defined in {rentry['mod_file']})")
-        print("  Your mod files are unchanged; review whether to keep these "
-              "overrides.")
+            if rentry.get("pending_insert"):
+                print(f"  ! {rkey}  (was pending insertion into "
+                      f"{rentry['mod_file']}; no longer in vanilla)")
+            else:
+                print(f"  ! {rkey}  (still defined in {rentry['mod_file']})")
+        if any(not e.get("pending_insert") for _k, e in vanilla_removed):
+            print("  Your mod files are unchanged; review whether to keep "
+                  "these overrides.")
 
     if conflicts:
         # Stage the clean files normally.
@@ -1624,6 +1869,10 @@ def cmd_merge(args):
         print(f"\nMerge completed cleanly ({len(clean_paths)} definition(s) updated).")
     else:
         print("\nMerge completed (no file-level changes).")
+    still_pending = sum(1 for e in manifest["definitions"].values()
+                        if e.get("pending_insert"))
+    if still_pending:
+        print(f"{still_pending} definition(s) pending insertion.")
     print("Run 'gui_update.py apply' to sync changes to mod GUI files.")
     return 0
 
@@ -1640,11 +1889,13 @@ def cmd_apply(args):
     _advance_merged_ref_if_absorbed()
 
     applied = 0
+    inserted = 0
     errors = 0
 
     # Read all tracking files first so divergent constants get reported before any mod file is touched.
     const_groups = {}
     to_apply = []
+    pending_by_file = {}
 
     for key, entry in sorted(manifest["definitions"].items()):
         tp = entry["tracking_path"]
@@ -1656,6 +1907,11 @@ def cmd_apply(args):
 
         with open(abs_tp, "r", encoding="utf-8-sig") as f:
             new_text = _strip_tracking_header(f.read()).rstrip("\n")
+
+        if entry.get("pending_insert"):
+            pending_by_file.setdefault(entry["mod_file"], []).append(
+                (key, entry, new_text))
+            continue
 
         if key.startswith("constant:"):
             const_groups.setdefault(
@@ -1728,10 +1984,80 @@ def cmd_apply(args):
         applied += 1
         print(f"  Applied: {key} -> {mod_file}")
 
+    # Anchors resolve against post-replacement text.
+    flags_cleared = False
+    for mod_file in sorted(pending_by_file):
+        items = sorted(pending_by_file[mod_file],
+                       key=lambda it: it[1].get("insert_index", 0))
+        abs_mod = os.path.join(ROOT_DIR, mod_file.replace("/", os.sep))
+
+        if not os.path.isfile(abs_mod):
+            print(f"  Warning: Mod file not found: {mod_file}")
+            errors += 1
+            continue
+
+        with open(abs_mod, "rb") as f:
+            raw = f.read()
+        mod_text = raw.decode("utf-8-sig").replace("\r\n", "\n")
+        mod_text = mod_text.replace("\ufeff", "")
+
+        if not _assert_unique_top_level_defs(mod_text, mod_file):
+            errors += 1
+            continue
+
+        cleared = []
+        file_inserts = []
+        for key, entry, new_text in items:
+            if key.startswith("constant:"):
+                kind = "constant"
+                name = entry["name"]
+            else:
+                kind, name = key.split(":", 1)
+
+            if find_definition_in_file(mod_text, name, kind) is not None:
+                print(f"  Already present: {key} in {mod_file}")
+                cleared.append(entry)
+                continue
+
+            anchor = entry.get("insert_after")
+            anchor = tuple(anchor) if anchor else None
+            compact = (kind == "constant"
+                       and anchor is not None and anchor[0] == "constant")
+            mod_text, warn = _insert_definition(
+                mod_text, new_text, anchor, compact=compact)
+            if warn:
+                print(f"  Warning: {warn} for {key} in {mod_file}; "
+                      "appended at end.")
+            file_inserts.append(key)
+            cleared.append(entry)
+
+        if file_inserts:
+            if not _assert_unique_top_level_defs(mod_text, mod_file):
+                errors += 1
+                continue
+            new_raw = b"\xef\xbb\xbf" + mod_text.encode("utf-8")
+            if new_raw != raw:
+                with open(abs_mod, "wb") as f:
+                    f.write(new_raw)
+            for key in file_inserts:
+                print(f"  Inserted: {key} -> {mod_file}")
+            inserted += len(file_inserts)
+
+        for entry in cleared:
+            for k in ("pending_insert", "insert_index", "insert_after"):
+                entry.pop(k, None)
+            flags_cleared = True
+
+    if flags_cleared:
+        _save_manifest(manifest)
+
     if errors:
         print(f"\n{errors} error(s) encountered.")
     if applied:
         print(f"\n{applied} definition(s) applied to mod files.")
+    if inserted:
+        print(f"\n{inserted} definition(s) inserted into mod files.")
+    if applied or inserted:
         print("Review the changes and commit when ready.")
     elif not errors:
         print("\nAll mod files already up to date.")
@@ -1771,7 +2097,9 @@ def cmd_refresh(args):
     if removed:
         print(f"\n{len(removed)} removed override(s):")
         for k in removed:
-            print(f"  - {k}")
+            was_pending = manifest["definitions"][k].get("pending_insert")
+            print(f"  - {k}" + ("  (was pending insertion)"
+                                if was_pending else ""))
 
     # Rebuild manifest + tracking files
     new_manifest = {"version": MANIFEST_VERSION, "definitions": {}}
@@ -1825,6 +2153,10 @@ def cmd_refresh(args):
     print(f"\nRefreshed: {len(new_set)} definition(s) tracked.")
     if added or removed:
         print(f"Stage and commit {TRACKING_DIR_NAME}/ changes when ready.")
+
+    mod_files = {rel for _full, rel in _iter_gui_files(ROOT_DIR, GUI_SOURCES)}
+    _report_missing_defs(
+        _find_missing_defs(mod_defs, vanilla_defs, mod_files), hint="merge")
     return 0
 
 
@@ -1853,6 +2185,7 @@ def cmd_status(args):
 
     types = sorted(k for k in defs if k.startswith("type:"))
     templates = sorted(k for k in defs if k.startswith("template:"))
+    widgets = sorted(k for k in defs if k.startswith("widget:"))
     constants = sorted(k for k in defs if k.startswith("constant:"))
 
     if types:
@@ -1872,11 +2205,21 @@ def cmd_status(args):
             print(f"      mod: {e['mod_file']}")
             print(f"      vanilla: {e['vanilla_file']}")
 
+    if widgets:
+        print(f"\n  Widgets ({len(widgets)}):")
+        for key in widgets:
+            e = defs[key]
+            marker = "  (pending insert)" if e.get("pending_insert") else ""
+            print(f"    {key}{marker}")
+            print(f"      mod: {e['mod_file']}")
+            print(f"      vanilla: {e['vanilla_file']}")
+
     if constants:
         print(f"\n  Constants ({len(constants)}):")
         for key in constants:
             e = defs[key]
-            print(f"    @{e['name']}")
+            marker = "  (pending insert)" if e.get("pending_insert") else ""
+            print(f"    @{e['name']}{marker}")
             print(f"      mod: {e['mod_file']}")
             print(f"      vanilla: {e['vanilla_file']}")
 
