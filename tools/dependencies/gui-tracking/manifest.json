@@ -63,13 +63,6 @@
       "tracking_path": "tools/dependencies/gui-tracking/types/LobbyViewMPInfo.gui",
       "vanilla_file": "in_game/gui/multiplayer_lobby.gui"
     },
-    "type:selected_mod_item": {
-      "base_widget": "mod_card",
-      "mod_file": "main_menu/gui/TEMP_cmf_mods_playset_checkbox_fix.gui",
-      "namespace": "cmf_mods_playset_checkbox_fix",
-      "tracking_path": "tools/dependencies/gui-tracking/types/selected_mod_item.gui",
-      "vanilla_file": "main_menu/gui/mods_gui/mods_gui.gui"
-    },
     "type:steam_logo_button": {
       "base_widget": "button",
       "mod_file": "main_menu/gui/cmf_main_menu_marker.gui",
