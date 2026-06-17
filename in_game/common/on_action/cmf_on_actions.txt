@@ -75,8 +75,8 @@ _cmf_on_monthly = {
 # Scope: country
 cmf_yearly_human_country_pulse = {
 	on_actions = {
-		cmf_on_mod_registration
 		_cmf_on_cmm_registration
+		cmf_on_mod_registration
 		_cmf_on_cmm_registration_late
 	}
 }
@@ -139,8 +139,8 @@ on_game_start_after_lobby = {
 # Scope: country
 on_game_start_after_lobby_human_country = {
 	on_actions = {
-		cmf_on_mod_registration
 		_cmf_on_cmm_registration
+		cmf_on_mod_registration
 		_cmf_on_cmm_registration_late
 	}
 }
@@ -190,8 +190,8 @@ on_game_load_after_lobby = {
 # Scope: country
 on_game_load_after_lobby_human_country = {
 	on_actions = {
-		cmf_on_mod_registration
 		_cmf_on_cmm_registration
+		cmf_on_mod_registration
 		_cmf_on_cmm_registration_late
 	}
 }
