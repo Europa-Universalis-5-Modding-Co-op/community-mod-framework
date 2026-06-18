@@ -1473,8 +1473,13 @@ def cmd_check(args):
         hints.append("Run 'gui_update.py merge' to incorporate these "
                      "changes.")
     elif added or deleted:
-        hints.append("Run 'gui_update.py merge' to track new and prune "
+        hints.append("Run 'gui_update.py refresh' to track new and prune "
                      "removed overrides.")
+        if added:
+            hints.append("If the new override(s) above were written against "
+                         "an earlier game version, it is highly recommended "
+                         "to downgrade to that version before refreshing, "
+                         "then update and merge.")
     if pending:
         hints.append("Run 'gui_update.py apply' to insert pending "
                      "definitions.")
@@ -2065,6 +2070,76 @@ def cmd_apply(args):
     return 1 if errors else 0
 
 
+def _confirm(prompt):
+    """Prompt for a yes/no answer. Returns True only on an explicit yes;
+    a no answer or a missing terminal aborts to False."""
+    try:
+        return input(prompt).strip().lower() in ("y", "yes")
+    except EOFError:
+        return False
+
+
+def _confirm_refresh_safe(manifest, vanilla_map, vanilla_consts):
+    """Guard refresh against discarding un-merged vanilla changes.
+
+    Refresh re-baselines every tracked definition to the installed vanilla
+    without a three-way merge, so any vanilla change made since the last merge
+    is dropped from tracking instead of folded into the override. This compares
+    the installed vanilla against the merged baseline and, when they differ,
+    warns and prompts. Returns True to proceed, False to abort.
+    """
+    base_ref = MERGED_BRANCH if _vanilla_merged_ref_exists() else VANILLA_BRANCH
+    drifted = []
+    vanished = []
+    for key, entry in sorted(manifest["definitions"].items()):
+        if entry.get("pending_insert"):
+            continue
+        old = _read_from_branch(base_ref, entry["tracking_path"])
+        if old is None:
+            continue
+        if key.startswith("constant:"):
+            vd = vanilla_consts.get((entry["vanilla_file"], entry["name"]))
+        else:
+            vd = vanilla_map.get(key)
+        if vd is None:
+            vanished.append(key)
+        elif _body_hash(old) != _body_hash(vd.text + "\n"):
+            drifted.append(key)
+
+    pending = (
+        _vanilla_merged_ref_exists()
+        and run_git(["rev-parse", VANILLA_BRANCH])
+            != run_git(["rev-parse", MERGED_BRANCH])
+    )
+
+    if not (drifted or vanished or pending):
+        return True
+
+    print("\nWARNING: installed vanilla has changed since the last merge.")
+    if drifted:
+        print(f"  {len(drifted)} tracked definition(s) differ from the "
+              "merged baseline:")
+        for k in drifted:
+            print(f"    ~ {k}")
+    if vanished:
+        print(f"  {len(vanished)} tracked definition(s) are gone from "
+              "vanilla:")
+        for k in vanished:
+            print(f"    ! {k}")
+    if pending:
+        print(f"  A previous merge is unfinished ({VANILLA_BRANCH} is ahead "
+              f"of {MERGED_BRANCH}).")
+    print("\nRefresh re-baselines to the installed vanilla without merging, "
+          "so these changes will be dropped from tracking instead of merged "
+          "into your overrides.")
+    print("To fold these vanilla changes into your overrides instead, run "
+          "'gui_update.py merge'.")
+    print("If you are re-baselining or tracking new definitions written "
+          "against an earlier game version, downgrade to that version "
+          "before refreshing.")
+    return _confirm("\nProceed with refresh anyway? [y/N]: ")
+
+
 def cmd_refresh(args):
     game_dir = _resolve_game_dir(args)
     manifest = _load_manifest()
@@ -2083,6 +2158,14 @@ def cmd_refresh(args):
     print("Scanning vanilla GUI files...")
     vanilla_defs = _scan_definitions(game_dir, GUI_SOURCES)
 
+    vanilla_map = {}
+    vanilla_consts = {}
+    for d in vanilla_defs:
+        if d.kind == "constant":
+            vanilla_consts.setdefault((d.source_file, d.name), d)
+        else:
+            vanilla_map.setdefault(_tracking_key(d.kind, d.name), d)
+
     new_keys = _discover_overrides(mod_defs, vanilla_defs)
 
     old_set = set(manifest["definitions"])
@@ -2100,6 +2183,10 @@ def cmd_refresh(args):
             was_pending = manifest["definitions"][k].get("pending_insert")
             print(f"  - {k}" + ("  (was pending insertion)"
                                 if was_pending else ""))
+
+    if not _confirm_refresh_safe(manifest, vanilla_map, vanilla_consts):
+        print("Refresh aborted.")
+        return 1
 
     # Rebuild manifest + tracking files
     new_manifest = {"version": MANIFEST_VERSION, "definitions": {}}
@@ -2122,13 +2209,6 @@ def cmd_refresh(args):
     _save_manifest(new_manifest)
 
     # Update vanilla branch
-    vanilla_map = {}
-    vanilla_consts = {}
-    for d in vanilla_defs:
-        if d.kind == "constant":
-            vanilla_consts.setdefault((d.source_file, d.name), d)
-        else:
-            vanilla_map.setdefault(_tracking_key(d.kind, d.name), d)
     vanilla_files = {}
     for key, entry in new_manifest["definitions"].items():
         if key.startswith("constant:"):
