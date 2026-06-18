@@ -32,7 +32,7 @@
  CMM_NO_SETTINGS_FOR_MOD: "Ce mod n'a pas encore enregistré de paramètres."
  CMM_NO_SETTINGS_FOR_TAB: "Aucun paramètre n'est enregistré dans cet onglet."
  cmm_core_name: "Framework de modding communautaire"
- cmm_core_desc: "Paramètres utilitaires de base du CMM."
+ cmm_core_desc: "Un framework partagé sur lequel s'appuient d'autres mods."
  cmm_core__general_name: "Général"
  cmm_core__general__session_name: "Session"
  cmm_core__enable_debug_mode_name: "Activer le mode débogage"

@@ -32,7 +32,7 @@
  CMM_NO_SETTINGS_FOR_MOD: "Este mod ainda não registrou nenhuma configuração."
  CMM_NO_SETTINGS_FOR_TAB: "Não há configurações registradas nesta aba."
  cmm_core_name: "Framework de Mods da Comunidade"
- cmm_core_desc: "Configurações principais de utilitários do CMM."
+ cmm_core_desc: "Uma estrutura compartilhada na qual outros mods se baseiam."
  cmm_core__general_name: "Geral"
  cmm_core__general__session_name: "Sessão"
  cmm_core__enable_debug_mode_name: "Ativar Modo de Depuração"

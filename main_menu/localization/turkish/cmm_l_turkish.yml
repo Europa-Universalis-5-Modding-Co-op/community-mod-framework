@@ -32,7 +32,7 @@
  CMM_NO_SETTINGS_FOR_MOD: "Bu mod henüz herhangi bir ayar kaydetmedi."
  CMM_NO_SETTINGS_FOR_TAB: "Bu sekmede kayıtlı bir ayar bulunmuyor."
  cmm_core_name: "Topluluk Mod Altyapısı"
- cmm_core_desc: "Temel CMM araç ayarları."
+ cmm_core_desc: "Diğer modların üzerine inşa edildiği paylaşılan bir altyapı."
  cmm_core__general_name: "Genel"
  cmm_core__general__session_name: "Oturum"
  cmm_core__enable_debug_mode_name: "Hata Ayıklama Modunu Etkinleştir"

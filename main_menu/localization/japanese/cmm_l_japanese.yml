@@ -32,7 +32,7 @@
  CMM_NO_SETTINGS_FOR_MOD: "このMODにはまだ設定が登録されていません。"
  CMM_NO_SETTINGS_FOR_TAB: "このタブには設定が登録されていません。"
  cmm_core_name: "コミュニティMODフレームワーク"
- cmm_core_desc: "CMMのコア・ユーティリティ設定。"
+ cmm_core_desc: "他のMODの基盤となる共有フレームワーク。"
  cmm_core__general_name: "全般"
  cmm_core__general__session_name: "セッション"
  cmm_core__enable_debug_mode_name: "デバッグモードを有効にする"

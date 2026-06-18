@@ -32,7 +32,7 @@
  CMM_NO_SETTINGS_FOR_MOD: "Ten mod nie zarejestrował jeszcze żadnych ustawień."
  CMM_NO_SETTINGS_FOR_TAB: "W tej zakładce nie zarejestrowano żadnych ustawień."
  cmm_core_name: "Framework Modów Społeczności"
- cmm_core_desc: "Podstawowe ustawienia narzędziowe CMM."
+ cmm_core_desc: "Wspólny szkielet, na którym opierają się inne mody."
  cmm_core__general_name: "Ogólne"
  cmm_core__general__session_name: "Sesja"
  cmm_core__enable_debug_mode_name: "Włącz tryb debugowania"

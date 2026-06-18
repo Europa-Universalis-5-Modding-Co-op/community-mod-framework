@@ -1,47 +1,48 @@
 ===WORKSHOP_TITLE===
-커뮤니티 모드 프레임워크 - 1.3 Pavia / Community Mod Framework - 1.3 Pavia
+커뮤니티 모드 프레임워크 - 1.3 파비아 / Community Mod Framework - 1.3 Pavia
 ===WORKSHOP_DESCRIPTION===
 [i]You are on the DeepL-Generated Korean Page. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=$item-id$&l=english]Click here for the Native English Page.[/url][/i]
 
-[b]Community Mod Framework (CMF)[/b]는 모더에게 새로운 기능을 개발할 수 있는 도구를 제공하는 동시에 모드 간의 상호 호환성을 개선하는 것을 목표로 하는 유틸리티 모드입니다.
+[b]Community Mod Framework (CMF)[/b]는 모더들에게 새로운 기능을 제작할 수 있는 도구를 제공함과 동시에 모드 간의 호환성을 개선하는 것을 목표로 하는 유틸리티 모드입니다.
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Banner.png[/img]
 
-[b]CMF는 모드 불러오기 순서에서 가장 먼저 로드되어야 합니다.[/b]
+[b]CMF는 모드 불러오기 순서에서 가장 먼저 배치되어야 합니다.[/b]
 
-질문이 있으시면 EU5 Mod Coop Discord를 통해 언제든지 문의해 주세요: https://discord.gg/aqAAcCZsY7
+질문이 있으시면 EU5 Mod Coop 디스코드에서 언제든지 문의해 주세요: https://discord.gg/aqAAcCZsY7
 
 [h1]주요 기능[/h1]
 [list]
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Community-Mod-Menu]Community Mod Menu (CMM):[/url][/b] 공용 인게임 모드 메뉴입니다. 모드 제작자는 간단한 API를 통해 설정을 동적으로 등록할 수 있으며, 별도의 설정 UI를 구축할 필요가 없습니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Community-Mod-Menu]Community Mod Menu (CMM):[/url][/b] 공용 인게임 모드 메뉴입니다. 모드 제작자는 간단한 API를 통해 설정을 동적으로 등록할 수 있습니다.
   [list]
-   [*]토글, 버튼, 숫자, 슬라이더 (더블 클릭하여 드래그), 드롭다운, 텍스트 (싱글 플레이 전용), 리스트 설정 지원
-   [*]모드별 탭, 그룹화 및 검색 기능
-   [*]멀티플레이어에서 호스트만 편집 가능한 전역 설정
-   [*]기본값으로 재설정 기능
+   [*]토글, 버튼, 숫자, 슬라이더(더블 클릭 후 드래그), 드롭다운, 텍스트(싱글플레이 전용), 리스트 설정 지원
+   [*]모드별 탭, 그룹 및 검색 기능
+   [*]멀티플레이어에서 호스트만 편집 가능한 글로벌 설정
+   [*]기본값으로 초기화 (모든 모드 혹은 선택된 모드만)
    [*]드래그 가능한 창
-   [*]인게임 메뉴(ESC) 또는 키바인드(기본값 'm', 변경 가능)를 통해 열 수 있습니다.
+   [*]인게임 ESC 메뉴 또는 단축키(기본값 'm', 변경 가능)로 열 수 있습니다.
    [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor]CMM Visual Editor[/url]: 모드 메뉴 제작을 위한 브라우저 기반 도구
   [/list]
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Custom-Alerts]Custom Alerts:[/url][/b] 로컬라이제이션 키를 통해 알림 표시줄에 커스텀 알림을 생성하고 표시합니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar]Action Bar:[/url][/b] 로컬라이제이션 키를 사용하여 커스텀 액션 바 버튼을 추가합니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks#country-transfer]Country Transfer:[/url][/b] 국가를 변경할 때(태그 변경, 상속 등) CMM 설정이 자동으로 이전됩니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger]is_host Trigger:[/url][/b] 현재 국가가 호스트 플레이어에 의해 제어되는지 확인합니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger#cmf_can_use_unrestricted_tools]Unrestricted Tools Toggle:[/url][/b] 제한된 기능들을 "제한 없는 도구 활성화" 설정(cmf_can_use_unrestricted_tools 트리거, 설정당 cmm_set_requires_unrestricted_tools_enabled 플래그) 뒤로 배치하여 제어할 수 있습니다. 멀티플레이어에서는 호스트만 사용할 수 있습니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Detection]Mod Detection:[/url][/b] cmf_is_mod_active 트리거를 통해 다른 모드가 활성화되어 있는지 확인합니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Warning-Suppression]cmf_suppress Effect:[/url][/b] 단 한 번의 효과(Effect) 호출로 엔진의 "사용되었으나 설정되지 않음(used but never set)" 및 "설정되었으나 사용되지 않음(set but never used)" 경고를 억제합니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/GUI-Macros]GUI Macros:[/url][/b] Nand, Nor, Xor 논리 연산자 매크로를 제공합니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks]On-Action Hooks:[/url][/b] 플레이어 국가 변형이 포함된 로비 이후 게임 시작 및 세이브 로드 훅(on_game_start_after_lobby, on_game_load, on_game_load_after_lobby)을 제공합니다. 또한 인간 플레이어를 위한 공용 연간 및 월간 펄스(Pulse)를 포함합니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/cmf_change_variable_map-Effect]Variable Map Utilities:[/url][/b] '제거 후 추가' 과정을 원자적으로 처리하는 안전한 변수 맵(Variable Map) 변경 헬퍼(cmf_change_variable_map 및 로컬/전역 변형)를 제공합니다.
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Action-Log]Mod Action Log:[/url][/b] 모드의 동작을 기록하기 위한 전역 인게임 로그입니다 (예: 멀티플레이어에서 호스트 도구 사용 기록. 멀티플레이어에서는 로그를 지울 수 없으므로 유용합니다).
- [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] 모드 템플릿, 워크샵 업로더, 모드 번역기 등 개발을 돕는 도구 모음입니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Custom-Alerts]커스텀 알림 (Custom Alerts):[/url][/b] 로컬라이제이션 키를 통해 알림바에 커스텀 알림을 생성하고 표시합니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Action-Bar]액션 바 (Action Bar):[/url][/b] 로컬라이제이션 키로 커스텀 액션 바 버튼을 추가합니다.
+ [*][b]모드 쇼케이스 (Mod Showcase):[/b] 게임 시작 전 로비 화면에 아이콘, 이름, 설명과 함께 모드를 배너 형식으로 표시합니다. cmf_register_lobby_banner를 통해 활성화할 수 있습니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks#country-transfer]국가 이전 (Country Transfer):[/url][/b] 국가 교체(태그 변경, 상속 등) 시 CMM 설정이 자동으로 이전됩니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger]is_host 트리거:[/url][/b] 현재 국가가 호스트 플레이어에 의해 제어되는지 확인합니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger#cmf_can_use_unrestricted_tools]제한 없는 도구 토글:[/url][/b] 제한된 기능을 "제한 없는 도구 활성화(Enable Unrestricted Tools)" 설정 뒤로 격리합니다. (cmf_can_use_unrestricted_tools 트리거, 설정별 cmm_set_requires_unrestricted_tools_enabled 플래그 사용) 멀티플레이어에서는 호스트만 사용할 수 있습니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Detection]모드 감지 (Mod Detection):[/url][/b] cmf_is_mod_active 트리거를 통해 다른 모드의 활성화 여부를 확인합니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Warning-Suppression]cmf_suppress 효과:[/url][/b] 단일 효과 호출로 "사용되었으나 설정되지 않음(used but never set)" 및 "설정되었으나 사용되지 않음(set but never used)" 엔진 경고를 억제합니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/GUI-Macros]GUI 매크로:[/url][/b] Nand, Nor, Xor 논리 연산자 매크로입니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks]온-액션 훅 (On-Action Hooks):[/url][/b] 로비 이후 게임 시작 및 세이브 로드 훅(on_game_start_after_lobby, on_game_load, on_game_load_after_lobby)을 플레이어 국가 변체와 함께 제공합니다. 또한 인간 플레이어를 위한 공용 연간/월간 펄스를 포함합니다.
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/cmf_change_variable_map-Effect]변수 맵 유틸리티 (Variable Map Utilities):[/url][/b] 안전한 변수 맵 변조 헬퍼 (cmf_change_variable_map 및 로컬/글로벌 변체).
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Action-Log]모드 액션 로그 (Mod Action Log):[/url][/b] 모드 작업을 기록하기 위한 글로벌 인게임 로그입니다. (예: 멀티플레이어에서 삭제 불가능한 호스트 도구 작업 기록)
+ [*][b][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-toolkit]Community Mod Toolkit (CMT):[/url][/b] 모드 템플릿, 워크숍 업로더, 모드 번역기와 같은 개발 지원 도구 모음입니다.
 [/list]
 
 [h1]문서[/h1]
 [list]
  [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki]GitHub Wiki[/url]: 전체 문서
  [*][url=https://eu5.paradoxwikis.com/Community_Mod_Framework]EU5 Paradox Wiki[/url]: 빠른 참조
- [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub Repository[/url]
+ [*][url=https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework]GitHub 저장소[/url]
 [/list]
 
 [h1]기여자[/h1]
@@ -56,17 +57,17 @@
 
 [h1]CMF를 사용하는 모드들[/h1]
 [list]
- [*][url=https://steamcommunity.com/workshop/filedetails/?id=3691456335]Community Mod Framework 사용 모드 컬렉션[/url]을 확인하세요.
+ [*][url=https://steamcommunity.com/workshop/filedetails/?id=3691456335]Community Mod Framework를 사용하는 모드 컬렉션[/url]을 확인하세요.
 [/list]
 
-[h1]변경 로그:[/h1]
-[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]워크샵 페이지의 변경 사항(Change Notes)[/url]을 확인하세요.
+[h1]변경 이력:[/h1]
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3692202776]워크숍 페이지의 변경 내역[/url]을 확인하세요.
 
 [quote]
  [h1]문제를 보고하기 전에 읽어주세요:[/h1]
- 1.3 오픈 베타를 사용 중이라면, 모드를 비활성화하고 모드 없이도 문제가 발생하는지 확인해 주세요. 베타 버전에는 수많은 문제가 있으며, 이는 CMF가 아닌 Paradox에 보고해야 합니다.
+ 만약 1.3 오픈 베타를 사용 중이라면, 모드를 비활성화하고 모드 없이도 문제가 발생하는지 확인하십시오. 베타 버전에는 수많은 문제가 있으며, 이는 CMF가 아닌 역설사(Paradox)에 보고해야 합니다.
 
- 또한 1.2 또는 1.3 버전에서 문제를 보고할 때, 반드시 사용 중인 게임 버전을 포함해 주세요. CMF는 두 버전 모두와 호환되지만, 관련 문제를 해결하기 위해서는 어떤 버전을 사용 중인지 알아야 합니다.
+ 또한 1.2 또는 1.3 버전에 대해 보고할 때 사용 중인 게임 버전을 반드시 포함해 주십시오. CMF는 두 버전 모두와 호환되지만, 관련 문제를 해결하기 위해서는 어떤 버전을 사용 중인지 알아야 합니다.
 [/quote]
 
 [img]https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/main/assets/images/cmf/CMF_Bottom_Banner.png[/img]

@@ -32,7 +32,7 @@
  CMM_NO_SETTINGS_FOR_MOD: "이 모드는 아직 어떠한 설정도 등록하지 않았습니다."
  CMM_NO_SETTINGS_FOR_TAB: "이 탭에 등록된 설정이 없습니다."
  cmm_core_name: "커뮤니티 모드 프레임워크"
- cmm_core_desc: "핵심 CMM 유틸리티 설정."
+ cmm_core_desc: "다른 모드들이 기반으로 하는 공유 프레임워크입니다."
  cmm_core__general_name: "일반"
  cmm_core__general__session_name: "세션"
  cmm_core__enable_debug_mode_name: "디버그 모드 활성화"

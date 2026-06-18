@@ -32,7 +32,7 @@
  CMM_NO_SETTINGS_FOR_MOD: "Este mod aún no ha registrado ningún ajuste."
  CMM_NO_SETTINGS_FOR_TAB: "No hay ajustes registrados en esta pestaña."
  cmm_core_name: "Marco de trabajo de mods de la comunidad"
- cmm_core_desc: "Ajustes de utilidad principales de CMM."
+ cmm_core_desc: "Un marco de trabajo compartido sobre el cual se basan otros mods."
  cmm_core__general_name: "General"
  cmm_core__general__session_name: "Sesión"
  cmm_core__enable_debug_mode_name: "Activar modo de depuración"

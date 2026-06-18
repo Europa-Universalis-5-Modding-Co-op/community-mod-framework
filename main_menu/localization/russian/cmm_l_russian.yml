@@ -32,7 +32,7 @@
  CMM_NO_SETTINGS_FOR_MOD: "Этот мод еще не зарегистрировал никаких настроек."
  CMM_NO_SETTINGS_FOR_TAB: "В этой вкладке не зарегистрировано никаких настроек."
  cmm_core_name: "Фреймворк сообщества для модов"
- cmm_core_desc: "Основные служебные настройки CMM."
+ cmm_core_desc: "Общий фреймворк, на основе которого строятся другие моды."
  cmm_core__general_name: "Общее"
  cmm_core__general__session_name: "Сессия"
  cmm_core__enable_debug_mode_name: "Включить режим отладки"

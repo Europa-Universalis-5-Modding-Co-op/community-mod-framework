@@ -32,7 +32,7 @@
  CMM_NO_SETTINGS_FOR_MOD: "Dieser Mod hat noch keine Einstellungen registriert."
  CMM_NO_SETTINGS_FOR_TAB: "In diesem Reiter sind keine Einstellungen registriert."
  cmm_core_name: "Community Mod Framework"
- cmm_core_desc: "CMM Kern-Utility-Einstellungen"
+ cmm_core_desc: "Ein gemeinsames Framework, auf dem andere Mods aufbauen."
  cmm_core__general_name: "Allgemein"
  cmm_core__general__session_name: "Sitzung"
  cmm_core__enable_debug_mode_name: "Debug-Modus aktivieren"
