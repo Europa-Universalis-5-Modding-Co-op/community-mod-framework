@@ -49,10 +49,13 @@ jobs:
     name: "Check Version"
     runs-on: ubuntu-latest
     outputs:
-      should-release: ${{ steps.gate.outputs.should-release }}
+      should-release-github: ${{ steps.gate.outputs.should-release-github }}
+      should-release-steam: ${{ steps.gate.outputs.should-release-steam }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
 
         # Honor tools/config.toml upload_only_on_version_change
       - name: Check Version Change
@@ -60,19 +63,26 @@ jobs:
         run: |
           VERSION=$(jq -r .version .metadata/metadata.json)
           ONLY_ON_CHANGE=$(python3 -c "import tomllib; print('true' if tomllib.load(open('tools/config.toml','rb')).get('upload_only_on_version_change', False) else 'false')")
+          if [ "$ONLY_ON_CHANGE" = "true" ] && [ -n "$(git tag -l "$VERSION")" ]; then
+            echo "should-release-github=false" >> "$GITHUB_OUTPUT"
+            echo "# GitHub Release Skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "Version **$VERSION** is already tagged; skipping the GitHub release because upload_only_on_version_change is enabled." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "should-release-github=true" >> "$GITHUB_OUTPUT"
+          fi
           LAST_RELEASED=$(jq -r '.entries["main:release"] // ""' tools/dependencies/.upload_versions.json 2>/dev/null || echo "")
           if [ "$ONLY_ON_CHANGE" = "true" ] && [ "$VERSION" = "$LAST_RELEASED" ]; then
-            echo "should-release=false" >> "$GITHUB_OUTPUT"
-            echo "# Release Skipped" >> "$GITHUB_STEP_SUMMARY"
-            echo "Version **$VERSION** was already released; skipping because upload_only_on_version_change is enabled." >> "$GITHUB_STEP_SUMMARY"
+            echo "should-release-steam=false" >> "$GITHUB_OUTPUT"
+            echo "# Steam Release Skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "Version **$VERSION** was already uploaded to the Workshop; skipping the Steam release because upload_only_on_version_change is enabled." >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "should-release=true" >> "$GITHUB_OUTPUT"
+            echo "should-release-steam=true" >> "$GITHUB_OUTPUT"
           fi
 
   release:
     name: "Publish Release"
     needs: check
-    if: ${{ needs.check.outputs.should-release == 'true' }}
+    if: ${{ needs.check.outputs.should-release-github == 'true' || needs.check.outputs.should-release-steam == 'true' }}
     runs-on: ubuntu-latest
     
     steps:
@@ -99,6 +109,7 @@ jobs:
 
         # Collect commits since the last tag
       - name: Collect Changes
+        if: ${{ needs.check.outputs.should-release-github == 'true' }}
         run: |
           echo "# Commits" >> $GITHUB_STEP_SUMMARY
           echo "$(git log ${{ steps.project.outputs.last-tag }}..HEAD --no-merges --pretty=format:' - %s')" >> $GITHUB_STEP_SUMMARY
@@ -107,6 +118,7 @@ jobs:
         # Convert bbcode to markdown for the GitHub release body
       - name: Collect Change Notes
         id: changenotes
+        if: ${{ needs.check.outputs.should-release-github == 'true' }}
         run: |
           VERSION="${{ steps.project.outputs.version }}"
           NOTES=""
@@ -154,6 +166,7 @@ jobs:
 
         # Tag the current commit with the version from metadata.json
       - name: Create Tag
+        if: ${{ needs.check.outputs.should-release-github == 'true' }}
         run: |
           git tag ${{ steps.project.outputs.version }}
           git push origin ${{ steps.project.outputs.version }}
@@ -177,6 +190,7 @@ jobs:
 
         # Package clean mod folder into a zip file
       - name: Create Release Artifact
+        if: ${{ needs.check.outputs.should-release-github == 'true' }}
         run: |
           cd ../mod-release
           zip -r ${{ github.workspace }}/community-mod-framework-${{ steps.project.outputs.version }}.zip .
@@ -184,6 +198,7 @@ jobs:
         # Package the dependency check template as a separate zip
         # Mod authors unzip this into their mod folder to get the CMF dependency popup
       - name: Create Dependency Check Artifact
+        if: ${{ needs.check.outputs.should-release-github == 'true' }}
         run: |
           mkdir -p ../dep-check/main_menu/gui
           cp submods/cmf-example-mod/main_menu/gui/cmf_dependency_check.gui ../dep-check/main_menu/gui/
@@ -192,6 +207,7 @@ jobs:
 
         # Attach mod package to the workflow run
       - name: Upload Release Artifact
+        if: ${{ needs.check.outputs.should-release-github == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: Release
@@ -201,6 +217,7 @@ jobs:
         # Includes the mod package and visual editor tool
       - name: Publish GitHub Release
         id: create_release
+        if: ${{ needs.check.outputs.should-release-github == 'true' }}
         uses: softprops/action-gh-release@v2.2.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -221,7 +238,7 @@ jobs:
         # Generate VDF inline for SteamCMD workshop upload
         # Report: Generated metadata
       - name: Create Workshop Metadata
-        if: ${{ inputs.publish == 'true' }}
+        if: ${{ inputs.publish == 'true' && needs.check.outputs.should-release-steam == 'true' }}
         id: metadata
         shell: bash
         run: |
@@ -294,13 +311,13 @@ jobs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Setup SteamCMD
-        if: ${{ inputs.publish == 'true' }}
+        if: ${{ inputs.publish == 'true' && needs.check.outputs.should-release-steam == 'true' }}
         uses: CyberAndrii/setup-steamcmd@v1
 
         # Publish to steam workshop
         # Uses generated metadata and configured workshop user
       - name: Publish to Workshop
-        if: ${{ inputs.publish == 'true' }}
+        if: ${{ inputs.publish == 'true' && needs.check.outputs.should-release-steam == 'true' }}
         shell: bash
         run: |
           steamcmd +login ${{ secrets.WORKSHOP_USERNAME }} ${{ secrets.WORKSHOP_PASSWORD }} +workshop_build_item ${{ steps.metadata.outputs.vdf }} +quit
@@ -308,7 +325,7 @@ jobs:
         # Upload translated Workshop titles and descriptions per language
         # Uses VDF 'language' field for per-language metadata updates
       - name: Upload Workshop Pages
-        if: ${{ inputs.publish == 'true' && inputs.upload-workshop-pages == 'true' }}
+        if: ${{ inputs.publish == 'true' && inputs.upload-workshop-pages == 'true' && needs.check.outputs.should-release-steam == 'true' }}
         shell: bash
         run: |
           WORKSHOP_ID="${{ inputs.workshop-id }}"
@@ -396,7 +413,7 @@ jobs:
 
         # Upload submods with Workshop IDs configured in tools/config.toml
       - name: Upload Submods
-        if: ${{ inputs.publish == 'true' && inputs.upload-submods == 'true' }}
+        if: ${{ inputs.publish == 'true' && inputs.upload-submods == 'true' && needs.check.outputs.should-release-steam == 'true' }}
         shell: bash
         run: |
           # Escape backslashes for VDF; substitute " with ' since SteamCMD's
@@ -515,7 +532,7 @@ jobs:
 
         # Update .upload_versions.json so local upload.py knows this version was published
       - name: Update Upload Versions
-        if: ${{ inputs.publish == 'true' }}
+        if: ${{ inputs.publish == 'true' && needs.check.outputs.should-release-steam == 'true' }}
         run: |
           VERSION="${{ steps.project.outputs.version }}"
           BRANCH="${{ github.ref_name }}"
