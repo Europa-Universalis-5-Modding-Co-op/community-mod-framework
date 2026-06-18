@@ -116,6 +116,13 @@ _cmm_register_list_setting_internal = {
 
 		set_variable = { name = cmm_list_initialized_$mod_id$__$setting_id$ value = 1 }
 	}
+	else = {
+		_cmm_reconcile_list_setting_item_growth = {
+			mod_id = $mod_id$
+			setting_id = $setting_id$
+			vt = $vt$
+		}
+	}
 
 	_cmm_suppress_list_setting_warnings = {
 		mod_id = $mod_id$
