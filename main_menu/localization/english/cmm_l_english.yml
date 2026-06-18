@@ -44,7 +44,7 @@
  CMM_RESET_MOD_TO_DEFAULTS: "Reset Mod to Defaults"
  CMM_RESET_MOD_TO_DEFAULTS_TOOLTIP: "Reset all settings for current mod to its registered default values."
  cmm_core_name: "Community Mod Framework"
- cmm_core_desc: "Core CMM utility settings."
+ cmm_core_desc: "A shared framework other mods build on."
  game_concept_cmm_core: ""
  game_concept_cmm_core_desc: ""
  game_concept_cmm_core_background: ""
