@@ -1,0 +1,28 @@
+# Reveals the CMM window a beat after it is requested open, so its list rows first
+# instantiate after the deferred per-open registration has set dependent mods' hide flags.
+# datamodel_reuse_widgets leaves already-shown rows unfiltered until a manual reopen.
+widget = {
+	name = "cmm_window_open_gate"
+	size = { 0 0 }
+	datacontext = "[GetPlayer]"
+	visible = "[Country.IsValid]"
+
+	state = {
+		name = cmm_window_open_arm
+		trigger_when = "[And(GetVariableSystem.Exists('cmm_window_open'), Not(GetVariableSystem.Exists('cmm_window_ready')))]"
+		on_start = "[GetScriptedGui('CMM_RegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		on_start = "[PdxGuiTriggerAllAnimations('cmm_window_open_settle')]"
+	}
+
+	state = {
+		name = cmm_window_open_settle
+		duration = 0.1
+		on_finish = "[GetVariableSystem.Set('cmm_window_ready', '1')]"
+	}
+
+	state = {
+		name = cmm_window_open_disarm
+		trigger_when = "[And(Not(GetVariableSystem.Exists('cmm_window_open')), GetVariableSystem.Exists('cmm_window_ready'))]"
+		on_start = "[GetVariableSystem.Clear('cmm_window_ready')]"
+	}
+}

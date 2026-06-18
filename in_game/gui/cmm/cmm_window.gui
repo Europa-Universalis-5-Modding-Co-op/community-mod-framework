@@ -9,7 +9,7 @@
 	size = { 1140 760 }
 	using = bg_window_default_alt
 	allow_outside = yes
-	visible = "[GetVariableSystem.Exists('cmm_window_open')]"
+	visible = "[And(GetVariableSystem.Exists('cmm_window_open'), GetVariableSystem.Exists('cmm_window_ready'))]"
 
 	vbox = {
 		using = window_margin_alt
