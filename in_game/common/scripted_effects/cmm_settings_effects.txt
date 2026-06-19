@@ -2,7 +2,7 @@
 # Scope: country
 _cmm_register_menu_settings = {
 	cmm_register_global_bool_setting = {
-		mod_id = cmm_core
+		mod_id = cmf_core
 		setting_id = enable_unrestricted_tools
 		tab_id = general
 		group_id = session
@@ -13,7 +13,7 @@ _cmm_register_menu_settings = {
 	if = {
 		limit = { has_multiple_players = no }
 		cmm_register_global_bool_setting = {
-			mod_id = cmm_core
+			mod_id = cmf_core
 			setting_id = enable_debug_mode
 			tab_id = general
 			group_id = session
@@ -22,21 +22,21 @@ _cmm_register_menu_settings = {
 	}
 
 	cmm_register_button_setting = {
-		mod_id = cmm_core
+		mod_id = cmf_core
 		setting_id = open_log
 		tab_id = general
 		group_id = session
 	}
 
 	cmm_register_dropdown_setting = {
-		mod_id = cmm_core
+		mod_id = cmf_core
 		setting_id = action_bar_position
 		tab_id = action_bar
 		group_id = layout
 		default_index = 3
 		option_count = 3
 	}
-	cmm_set_dropdown_multiselector = { setting = cmm_core__action_bar_position }
+	cmm_set_dropdown_multiselector = { setting = cmf_core__action_bar_position }
 }
 
 # Register built-in CMM settings whose contents depend on other mods having
@@ -61,12 +61,12 @@ _cmm_register_menu_settings_late = {
 	# Force the action-bar buttons list to rebuild every registration so newly
 	# added or removed mod elements stay in sync with cmf_action_bar_elements.
 	if = {
-		limit = { has_variable = cmm_list_initialized_cmm_core__action_bar_buttons }
-		remove_variable = cmm_list_initialized_cmm_core__action_bar_buttons
+		limit = { has_variable = cmm_list_initialized_cmf_core__action_bar_buttons }
+		remove_variable = cmm_list_initialized_cmf_core__action_bar_buttons
 	}
 
 	cmm_begin_settings_list = {
-		mod_id = cmm_core
+		mod_id = cmf_core
 		setting_id = action_bar_buttons
 		tab_id = action_bar
 		is_ordered = 0
@@ -74,21 +74,21 @@ _cmm_register_menu_settings_late = {
 
 	# Item 1: the mod menu button.
 	cmm_add_settings_list_item = {
-		mod_id = cmm_core
+		mod_id = cmf_core
 		setting_id = action_bar_buttons
-		value = flag:cmm_core_mod_menu_button
-		name = cmm_core__action_bar_buttons_mod_menu_item_name
+		value = flag:cmf_core_mod_menu_button
+		name = cmf_core__action_bar_buttons_mod_menu_item_name
 	}
 
 	# Mod menu name-map entry, and cmf_action_bar_element_name's setter on a path the engine treats as reached; the per-element writes in cmf_add_action_bar_element are not.
-	add_to_global_variable_map = { name = cmf_action_bar_element_name key = flag:cmm_core_mod_menu_button value = flag:cmm_core__action_bar_buttons_mod_menu_item_name }
+	add_to_global_variable_map = { name = cmf_action_bar_element_name key = flag:cmf_core_mod_menu_button value = flag:cmf_core__action_bar_buttons_mod_menu_item_name }
 
 	every_in_list = {
 		variable = cmf_action_bar_elements_local
 		save_scope_as = cmm_list_staged_item_value
 		root = {
 			_cmm_add_staged_settings_list_item_internal = {
-				mod_id = cmm_core
+				mod_id = cmf_core
 				setting_id = action_bar_buttons
 				vt = variable
 			}
@@ -96,24 +96,24 @@ _cmm_register_menu_settings_late = {
 	}
 
 	cmm_finish_settings_list = {
-		mod_id = cmm_core
+		mod_id = cmf_core
 		setting_id = action_bar_buttons
 	}
 
 	cmm_register_list_bool_field = {
-		mod_id = cmm_core
+		mod_id = cmf_core
 		setting_id = action_bar_buttons
 		field_id = active
 		default_value = 1
 	}
 
 	cmm_for_each_list_item = {
-		setting = cmm_core__action_bar_buttons
+		setting = cmf_core__action_bar_buttons
 		effect = _cmm_sync_action_bar_button_active_from_list
 	}
 
 	cmm_for_each_list_item = {
-		setting = cmm_core__action_bar_buttons
+		setting = cmf_core__action_bar_buttons
 		effect = _cmm_sync_action_bar_button_name_from_element
 	}
 
@@ -121,9 +121,9 @@ _cmm_register_menu_settings_late = {
 	if = {
 		limit = { always = no }
 		cmf_suppress = { v = cmf_action_bar_elements_local }
-		cmf_suppress = { v = cmm_core_mod_menu_button }
-		cmf_suppress = { v = cmm_core__action_bar_buttons_mod_menu_item_name }
-		add_to_global_variable_list = { name = cmf_action_bar_elements target = flag:cmm_core_mod_menu_button }
+		cmf_suppress = { v = cmf_core_mod_menu_button }
+		cmf_suppress = { v = cmf_core__action_bar_buttons_mod_menu_item_name }
+		add_to_global_variable_list = { name = cmf_action_bar_elements target = flag:cmf_core_mod_menu_button }
 	}
 }
 
@@ -132,7 +132,7 @@ _cmm_register_menu_settings_late = {
 # Called by cmm_for_each_list_item.
 # Scope: country
 # Args:
-# - setting (key): Composite setting key (cmm_core__action_bar_buttons).
+# - setting (key): Composite setting key (cmf_core__action_bar_buttons).
 # - i (number): Item ordinal (1-50).
 _cmm_sync_action_bar_button_active_from_list = {
 	if = {
@@ -162,7 +162,7 @@ _cmm_sync_action_bar_button_active_from_list = {
 # Called by cmm_for_each_list_item.
 # Scope: country
 # Args:
-# - setting (key): Composite setting key (cmm_core__action_bar_buttons).
+# - setting (key): Composite setting key (cmf_core__action_bar_buttons).
 # - i (number): Item ordinal (1-50).
 _cmm_sync_action_bar_active_from_field = {
 	if = {
@@ -207,7 +207,7 @@ _cmm_sync_action_bar_active_from_field = {
 # Called by cmm_for_each_list_item.
 # Scope: country
 # Args:
-# - setting (key): Composite setting key (cmm_core__action_bar_buttons).
+# - setting (key): Composite setting key (cmf_core__action_bar_buttons).
 # - i (number): Item ordinal (1-50).
 _cmm_sync_action_bar_button_name_from_element = {
 	if = {
@@ -225,7 +225,7 @@ _cmm_sync_action_bar_button_name_from_element = {
 # _cmm_action_bar_change_val.
 # Scope: country
 # Args:
-# - setting (key): Composite setting key (cmm_core__action_bar_buttons).
+# - setting (key): Composite setting key (cmf_core__action_bar_buttons).
 # - i (number): Item ordinal (1-50).
 _cmm_handle_action_bar_button_change = {
 	if = {
@@ -269,7 +269,7 @@ _cmm_handle_action_bar_button_change = {
 # Scope: country
 _cmm_handle_core_callback = {
 	if = {
-		limit = { var:cmf_callback = flag:cmm_core__open_log }
+		limit = { var:cmf_callback = flag:cmf_core__open_log }
 		if = {
 			limit = { has_variable = cmf_log_view_open }
 			remove_variable = cmf_log_view_open
@@ -279,9 +279,9 @@ _cmm_handle_core_callback = {
 		}
 	}
 	else_if = {
-		limit = { var:cmf_callback = flag:cmm_core__action_bar_buttons }
+		limit = { var:cmf_callback = flag:cmf_core__action_bar_buttons }
 		cmm_for_each_list_item = {
-			setting = cmm_core__action_bar_buttons
+			setting = cmf_core__action_bar_buttons
 			effect = _cmm_sync_action_bar_active_from_field
 		}
 	}
@@ -296,11 +296,11 @@ _cmm_handle_core_callback = {
 # Store the current country as the CMM host country.
 # Scope: country
 _cmm_mark_host_country = {
-	set_global_variable = { name = cmm_core_host_country value = this }
+	set_global_variable = { name = cmf_core_host_country value = this }
 
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { v = cmm_core_host_country }
+		cmf_suppress = { v = cmf_core_host_country }
 	}
 }

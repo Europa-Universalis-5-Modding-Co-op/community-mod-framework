@@ -1,0 +1,6 @@
+﻿cmf_core_banner_icon = {
+	texture = "mods/cmf_core_banner_icon"
+}
+cmf_core_banner_background = {
+	texture = "mods/cmf_core_banner_background"
+}

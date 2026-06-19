@@ -10,8 +10,8 @@
 		input_action = "cmm_open_menu"
 		on_input_action_shortcut = "[GetScriptedGui('CMM_SetHostAndRegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 		on_input_action_shortcut = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
-		on_input_action_shortcut = "[GetVariableSystem.Set('cmm_selected_mod', Select_CString(CMMSelectedModExists, GetVariableSystem.Get('cmm_selected_mod'), 'cmm_core'))]"
-		on_input_action_shortcut = "[GetVariableSystem.Set('cmm_selected_tab', Select_CString(CMMSelectedTabExists, GetVariableSystem.Get('cmm_selected_tab'), CMMMetadataFlag('cmm_mod_default_tab_', 'cmm_core')))]"
+		on_input_action_shortcut = "[GetVariableSystem.Set('cmm_selected_mod', Select_CString(CMMSelectedModExists, GetVariableSystem.Get('cmm_selected_mod'), 'cmf_core'))]"
+		on_input_action_shortcut = "[GetVariableSystem.Set('cmm_selected_tab', Select_CString(CMMSelectedTabExists, GetVariableSystem.Get('cmm_selected_tab'), CMMMetadataFlag('cmm_mod_default_tab_', 'cmf_core')))]"
 		on_input_action_shortcut = "[GetVariableSystem.Toggle('cmm_window_open')]"
 		tooltip_enabled = no
 	}
@@ -22,8 +22,8 @@
 		input_action = "cmm_open_menu"
 		on_input_action_shortcut = "[GetScriptedGui('CMM_RegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 		on_input_action_shortcut = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
-		on_input_action_shortcut = "[GetVariableSystem.Set('cmm_selected_mod', Select_CString(CMMSelectedModExists, GetVariableSystem.Get('cmm_selected_mod'), 'cmm_core'))]"
-		on_input_action_shortcut = "[GetVariableSystem.Set('cmm_selected_tab', Select_CString(CMMSelectedTabExists, GetVariableSystem.Get('cmm_selected_tab'), CMMMetadataFlag('cmm_mod_default_tab_', 'cmm_core')))]"
+		on_input_action_shortcut = "[GetVariableSystem.Set('cmm_selected_mod', Select_CString(CMMSelectedModExists, GetVariableSystem.Get('cmm_selected_mod'), 'cmf_core'))]"
+		on_input_action_shortcut = "[GetVariableSystem.Set('cmm_selected_tab', Select_CString(CMMSelectedTabExists, GetVariableSystem.Get('cmm_selected_tab'), CMMMetadataFlag('cmm_mod_default_tab_', 'cmf_core')))]"
 		on_input_action_shortcut = "[GetVariableSystem.Toggle('cmm_window_open')]"
 		tooltip_enabled = no
 	}

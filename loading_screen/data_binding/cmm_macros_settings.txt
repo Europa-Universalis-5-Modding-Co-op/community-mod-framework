@@ -85,7 +85,7 @@ macro = {
 macro = {
     description = "True when local player can edit this setting"
     definition = "CMMCanEditSetting(SettingKey)"
-    replace_with = "And(Or(Not(CMMSettingIsGlobal(SettingKey)), Or(Not(GameIsMultiplayer), IsHost)), Or(Not(CMMSettingRequiresUnrestrictedToolsEnabled(SettingKey)), Or(EqualTo_string(SettingKey, 'cmm_core__enable_unrestricted_tools'), And(CMMSettingIsRegistered('cmm_core__enable_unrestricted_tools'), CMMValueEqualsOne(CMMSettingValue('cmm_core__enable_unrestricted_tools'))))))"
+    replace_with = "And(Or(Not(CMMSettingIsGlobal(SettingKey)), Or(Not(GameIsMultiplayer), IsHost)), Or(Not(CMMSettingRequiresUnrestrictedToolsEnabled(SettingKey)), Or(EqualTo_string(SettingKey, 'cmf_core__enable_unrestricted_tools'), And(CMMSettingIsRegistered('cmf_core__enable_unrestricted_tools'), CMMValueEqualsOne(CMMSettingValue('cmf_core__enable_unrestricted_tools'))))))"
 }
 
 # Args: SettingKey (string)
@@ -260,7 +260,7 @@ macro = {
 macro = {
     description = "True when a setting has an associated console command to fire on toggle"
     definition = "CMMSettingHasConsoleCommand(SettingKey)"
-    replace_with = "EqualTo_string(SettingKey, 'cmm_core__enable_debug_mode')"
+    replace_with = "EqualTo_string(SettingKey, 'cmf_core__enable_debug_mode')"
 }
 
 # Args: SettingKey (string)
@@ -268,7 +268,7 @@ macro = {
 macro = {
     description = "Console command string for a setting with an associated console command"
     definition = "CMMSettingConsoleCommand(SettingKey)"
-    replace_with = "Select_CString(EqualTo_string(SettingKey, 'cmm_core__enable_debug_mode'), 'debug_mode', '')"
+    replace_with = "Select_CString(EqualTo_string(SettingKey, 'cmf_core__enable_debug_mode'), 'debug_mode', '')"
 }
 
 # Args: SettingKey (string)

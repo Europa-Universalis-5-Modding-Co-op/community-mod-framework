@@ -32,7 +32,7 @@ cmf_on_banner_registration = {
 # Scope: none
 _cmf_on_banner_registration = {
 	effect = {
-		cmf_register_lobby_banner = { mod_id = cmm_core }
+		cmf_register_lobby_banner = { mod_id = cmf_core }
 	}
 }
 

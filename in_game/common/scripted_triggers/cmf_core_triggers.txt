@@ -9,8 +9,8 @@ is_host = {
 		}
 		AND = {
 			has_multiple_players = yes
-			has_global_variable = cmm_core_host_country
-			this ?= global_var:cmm_core_host_country
+			has_global_variable = cmf_core_host_country
+			this ?= global_var:cmf_core_host_country
 		}
 	}
 }
@@ -21,8 +21,8 @@ is_host = {
 cmf_can_use_unrestricted_tools = {
 	AND = {
 		has_global_variable_map = cmm
-		is_key_in_global_variable_map = { name = cmm target = flag:cmm_core__enable_unrestricted_tools }
-		"global_variable_map(cmm|flag:cmm_core__enable_unrestricted_tools)" >= 1
+		is_key_in_global_variable_map = { name = cmm target = flag:cmf_core__enable_unrestricted_tools }
+		"global_variable_map(cmm|flag:cmf_core__enable_unrestricted_tools)" >= 1
 		is_host = yes
 	}
 }

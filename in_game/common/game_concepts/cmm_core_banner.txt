@@ -1,6 +1,0 @@
-﻿cmm_core_banner_icon = {
-	texture = "mods/cmm_core_banner_icon"
-}
-cmm_core_banner_background = {
-	texture = "mods/cmm_core_banner_background"
-}

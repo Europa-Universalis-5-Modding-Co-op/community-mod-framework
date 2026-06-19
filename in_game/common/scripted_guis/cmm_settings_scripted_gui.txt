@@ -58,7 +58,7 @@ CMM_ResetModToDefaults = {
 # Mirrors the toggled row to cmf_action_bar_active_elements before applying
 # the change to the bool field's stored value.
 # Scope: country
-cmm_core__action_bar_buttons_on_changed = {
+cmf_core__action_bar_buttons_on_changed = {
 	scope = country
 
 	effect = {
@@ -73,7 +73,7 @@ cmm_core__action_bar_buttons_on_changed = {
 			set_variable = { name = _cmm_action_bar_change_val value = var:cmm_list_field_value_to_apply }
 
 			cmm_for_each_list_item = {
-				setting = cmm_core__action_bar_buttons
+				setting = cmf_core__action_bar_buttons
 				effect = _cmm_handle_action_bar_button_change
 			}
 
@@ -82,7 +82,7 @@ cmm_core__action_bar_buttons_on_changed = {
 		}
 
 		cmm_apply_list_change = {
-			setting = cmm_core__action_bar_buttons
+			setting = cmf_core__action_bar_buttons
 		}
 
 		# Benign warning suppression
