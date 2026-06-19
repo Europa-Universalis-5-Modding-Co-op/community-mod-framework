@@ -1,6 +1,8 @@
 ﻿window = {
 	name = "cmm_window"
 	alwaystransparent = no
+	filter_mouse = all
+	layer = top
 	reorder_on_mouse = never
 	resizable = no
 	movable = yes
