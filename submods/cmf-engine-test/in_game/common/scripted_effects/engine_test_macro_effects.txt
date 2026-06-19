@@ -1,0 +1,36 @@
+﻿# Macro-parameter substitution tests for quoted variable map accessors.
+# EU5 $PARAM$ macro args are text substitution that does not occur inside
+# quotes: a $PARAM$ between "..." stays literal, so a quoted variable_map
+# lookup using one reads nothing. Each effect takes the slot via a macro arg
+# and reads engine_test_macro_map (seeded with flag:engine_test_key_a = 55 by
+# engine_test_run_global). Used by tests 36-38; expected result: FAIL.
+
+# Args: KEY (flag name)
+engine_test_macro_key = {
+	if = {
+		limit = {
+			"variable_map(engine_test_macro_map|flag:$KEY$)" >= 55
+		}
+		set_variable = { name = engine_test_36_passed value = 1 }
+	}
+}
+
+# Args: MAP (variable map name)
+engine_test_macro_map_name = {
+	if = {
+		limit = {
+			"variable_map($MAP$|flag:engine_test_key_a)" >= 55
+		}
+		set_variable = { name = engine_test_37_passed value = 1 }
+	}
+}
+
+# Args: MAP (variable map name), KEY (flag name)
+engine_test_macro_both = {
+	if = {
+		limit = {
+			"variable_map($MAP$|flag:$KEY$)" >= 55
+		}
+		set_variable = { name = engine_test_38_passed value = 1 }
+	}
+}

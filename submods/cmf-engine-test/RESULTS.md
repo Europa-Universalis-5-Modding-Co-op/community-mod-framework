@@ -51,9 +51,36 @@ Date: 2026-06-14
 
 **29/32 passed**
 
+## Macro Param Tests (engine_test_run_global)
+
+Run 2026-06-19.
+
+| # | Test | Result |
+|---|------|--------|
+| 36 | macro param as key in variable_map() quoted string | FAIL |
+| 37 | macro param in map name position of quoted string | PASS |
+| 38 | macro param as both map name and key | PASS |
+
+Anomalous and unexplained. Each test reads the same dedicated map seeded with
+flag:engine_test_key_a = 55, passing the slot via a $PARAM$ macro arg:
+
+- 36 (macro in key slot, literal map name) FAILS: $KEY$ did not substitute.
+- 37 (macro in map-name slot, literal key) PASSES: $MAP$ did substitute.
+- 38 (macro in both slots) PASSES: both substituted, including the same key-slot
+  macro that failed in 36.
+
+So the key-slot macro substitutes when a map-name macro is also present in the
+string (38) but not when the map name is literal (36). This contradicts the
+documented rule that $PARAM$ never substitutes inside quoted accessors. The rule
+should be revisited once the behavior is understood; do not rely on either outcome
+until then.
+
 ## Summary
 
 **Total: 32/35 passed (3 failed)**
+
+Tests 36-38 (macro params in quoted accessors) ran 2026-06-19 with an anomalous,
+unexplained result (36 FAIL, 37 PASS, 38 PASS); see the Macro Param Tests section.
 
 ### Key Findings
 
@@ -73,6 +100,6 @@ Date: 2026-06-14
 - With max = 3, all entries are visited (test 32).
 - every_key_in_variable_map iterates all entries without needing max (test 28).
 
-### GUI Map Read Tests (var: numeric keys)
+### GUI Map Read Tests (var: numeric keys) - removed 2026-06-19
 
-The in-game window's bottom section probes GUI-side reads of var: numeric-keyed global maps. On the 2026-06-14 run those probes returned `default` / `ERROR_FLAG_INDEX` instead of the written values, so GUI-side reads of var: numeric-keyed map entries did not resolve. These probes are display-only and are not scored in the totals above; they need closer review.
+A bottom section of the test window probed GUI-side reads of var: numeric-keyed global maps via `GetVariableFromGlobalVariableMap` with `Scope` and `Scope.Self`. The reads never resolved (the window showed `default` / `ERROR_FLAG_INDEX`), and the `Scope.Self` form logged a `FetchData` nullptr error every frame, spamming the console. The probes were display-only and unscored, so they were removed along with the `engine_test_gui_action` map and the second `engine_test_gui_map` entry that fed only them. Finding: GUI-side reads of var: numeric-keyed global-map entries do not resolve; CMF's mod action log keys entries with flag scopes via `MakeScopeFlag`, which does resolve in GUI.

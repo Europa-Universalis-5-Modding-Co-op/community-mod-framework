@@ -718,32 +718,32 @@ engine_test_run_global = {
 			key = var:_et_idx
 			value = 42
 		}
-		# Also store a flag value in a parallel map (for GUI read test)
-		add_to_global_variable_map = {
-			name = engine_test_gui_action
-			key = var:_et_idx
-			value = flag:engine_test_key_a
-		}
 		if = {
 			limit = {
 				"global_variable_map(engine_test_gui_map|var:_et_idx)" >= 42
 			}
 			set_variable = { name = engine_test_35_passed value = 1 }
 		}
-
-		# Add a second entry at index 1
-		change_variable = { name = _et_idx add = 1 }
-		add_to_global_variable_map = {
-			name = engine_test_gui_map
-			key = var:_et_idx
-			value = 99
-		}
-		add_to_global_variable_map = {
-			name = engine_test_gui_action
-			key = var:_et_idx
-			value = flag:engine_test_hardcoded
-		}
 		remove_variable = _et_idx
+
+		# -- Tests 36-38: macro params in quoted accessors -------
+		# Seed a dedicated map with a literal write so a FAIL is
+		# attributable only to the macro substitution, then probe
+		# the key slot, the map-name slot, and both.
+		set_variable = { name = engine_test_36_passed value = 0 }
+		set_variable = { name = engine_test_37_passed value = 0 }
+		set_variable = { name = engine_test_38_passed value = 0 }
+		add_to_variable_map = {
+			name = engine_test_macro_map
+			key = flag:engine_test_key_a
+			value = 55
+		}
+		# Test 36. Expected: FAIL.
+		engine_test_macro_key = { KEY = engine_test_key_a }
+		# Test 37. Expected: FAIL.
+		engine_test_macro_map_name = { MAP = engine_test_macro_map }
+		# Test 38. Expected: FAIL.
+		engine_test_macro_both = { MAP = engine_test_macro_map KEY = engine_test_key_a }
 
 		# Mark that the global test suite has been executed
 		set_variable = { name = engine_test_global_has_run value = 1 }

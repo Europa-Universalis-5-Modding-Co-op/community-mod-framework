@@ -1139,89 +1139,109 @@ window = {
 		}
 
 		# =======================================================
-		# Section 4: GUI Map Read Tests (var: numeric keys)
-		# Run global tests first to seed engine_test_gui_map.
-		# Each row tries a different approach to read the value.
-		# Working approaches show "42" / "99"; broken show "default".
+		# Section 3b: Macro Param Tests (quoted accessors)
 		# =======================================================
 
 		text_single = {
 			fontsize = 14
-			text = "ENGINE_TEST_GUI_SECTION"
+			text = "ENGINE_TEST_MACRO_SECTION"
 		}
 
 		vbox = {
 			layoutpolicy_horizontal = expanding
 			spacing = 1
-			visible = "[DataModelHasItems(GetGlobalMapKeys('engine_test_gui_map'))]"
 
-			datamodel = "[GetGlobalMapKeys('engine_test_gui_map')]"
+			# Expected: FAIL
+			# -- Test 36 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
 
-			item = {
-				vbox = {
+				text_single = {
 					layoutpolicy_horizontal = expanding
-					spacing = 1
+					fontsize = 14
+					text = "ENGINE_TEST_36_LABEL"
+				}
 
-					# Approach A: GetVariableFromGlobalVariableMap with Scope
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 8
-						text_single = { fontsize = 12 raw_text = "A: GetVarFromGlobalMap(name, Scope) =" }
-						text_single = { fontsize = 12 text = "[GetVariableFromGlobalVariableMap('engine_test_gui_map', Scope).GetValue]" }
-					}
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet)]"
+					text = "ENGINE_TEST_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_36_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ENGINE_TEST_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_36_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ENGINE_TEST_FAIL"
+				}
+			}
 
-					# Approach B: GetVariableFromGlobalVariableMap with Scope.Self
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 8
-						text_single = { fontsize = 12 raw_text = "B: GetVarFromGlobalMap(name, Scope.Self) =" }
-						text_single = { fontsize = 12 text = "[GetVariableFromGlobalVariableMap('engine_test_gui_map', Scope.Self).GetValue]" }
-					}
+			# Expected: FAIL
+			# -- Test 37 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
 
-					# Approach C: Read action map (flag value) with Scope
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 8
-						text_single = { fontsize = 12 raw_text = "C: action flag via Scope =" }
-						text_single = { fontsize = 12 text = "[GetVariableFromGlobalVariableMap('engine_test_gui_action', Scope).GetFlagName]" }
-					}
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ENGINE_TEST_37_LABEL"
+				}
 
-					# Approach D: Read action map (flag value) with Scope.Self
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 8
-						text_single = { fontsize = 12 raw_text = "D: action flag via Scope.Self =" }
-						text_single = { fontsize = 12 text = "[GetVariableFromGlobalVariableMap('engine_test_gui_action', Scope.Self).GetFlagName]" }
-					}
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet)]"
+					text = "ENGINE_TEST_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_37_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ENGINE_TEST_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_37_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ENGINE_TEST_FAIL"
+				}
+			}
 
-					# Show raw scope info
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 8
-						text_single = { fontsize = 12 raw_text = "Key GetValue =" }
-						text_single = { fontsize = 12 text = "[Scope.GetValue]" }
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 8
-						text_single = { fontsize = 12 raw_text = "Key GetFlagName =" }
-						text_single = { fontsize = 12 text = "[Scope.GetFlagName]" }
-					}
+			# Expected: FAIL
+			# -- Test 38 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
 
-					# Separator between entries
-					widget = {
-						layoutpolicy_horizontal = expanding
-						size = { 0 4 }
-					}
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ENGINE_TEST_38_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet)]"
+					text = "ENGINE_TEST_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_38_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ENGINE_TEST_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('engine_test_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('engine_test_38_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ENGINE_TEST_FAIL"
 				}
 			}
 		}
 
-		text_single = {
-			visible = "[Not(DataModelHasItems(GetGlobalMapKeys('engine_test_gui_map')))]"
-			fontsize = 12
-			raw_text = "(Run global tests first to seed the GUI map)"
-		}
 			} # end blockoverride "scrollbox_content"
 		} # end scrollbox
 	}

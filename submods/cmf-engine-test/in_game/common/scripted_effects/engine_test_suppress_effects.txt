@@ -42,6 +42,9 @@ engine_test_suppress_warnings = {
 			exists = var:engine_test_33_passed
 			exists = var:engine_test_34_passed
 			exists = var:engine_test_35_passed
+			exists = var:engine_test_36_passed
+			exists = var:engine_test_37_passed
+			exists = var:engine_test_38_passed
 			exists = var:engine_test_has_run
 			exists = var:engine_test_global_has_run
 			# Suppress "set but never used" for local variables
