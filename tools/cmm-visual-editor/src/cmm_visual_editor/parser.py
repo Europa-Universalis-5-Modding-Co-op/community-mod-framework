@@ -273,19 +273,19 @@ def _build_model(
                 if not setting.scripted_gui and setting.setting_type != "list":
                     setting.scripted_gui = True
 
-    # Load mod icon and background if they exist
-    mod_icon = ""
-    mod_background = ""
+    # Load banner icon and background if they exist
+    banner_icon = ""
+    banner_background = ""
     if directory and mod_id:
         icons_dir = directory / "main_menu" / "gfx" / "interface" / "icons" / "mods"
-        icon_path = icons_dir / f"{mod_id}.dds"
-        bg_path = icons_dir / f"{mod_id}_background.dds"
+        icon_path = icons_dir / f"{mod_id}_banner_icon.dds"
+        bg_path = icons_dir / f"{mod_id}_banner_background.dds"
 
         if icon_path.is_file():
             try:
                 file_data = icon_path.read_bytes()
                 encoded = base64.b64encode(file_data).decode('ascii')
-                mod_icon = f"data:image/vnd.ms-dds;base64,{encoded}"
+                banner_icon = f"data:image/vnd.ms-dds;base64,{encoded}"
             except Exception as e:
                 warnings.append(f"Could not read icon file: {e}")
 
@@ -293,22 +293,22 @@ def _build_model(
             try:
                 file_data = bg_path.read_bytes()
                 encoded = base64.b64encode(file_data).decode('ascii')
-                mod_background = f"data:image/vnd.ms-dds;base64,{encoded}"
+                banner_background = f"data:image/vnd.ms-dds;base64,{encoded}"
             except Exception as e:
                 warnings.append(f"Could not read background file: {e}")
 
     lobby_banner = "cmf_register_lobby_banner" in on_action
-    post_registration = bool(prefix) and f"{prefix}_cmm_post_registration" in on_action
+    register_hook_extra = _parse_register_hook_extra(on_action, prefix)
 
     model = ModModel(
         mod_id=mod_id,
         file_prefix=prefix or mod_id,
         mod_name=loc_map.get(f"{mod_id}_name", "") or meta.get("name", "") or mod_id,
         mod_desc=loc_map.get(f"{mod_id}_desc", "") or meta.get("short_description", ""),
-        mod_icon=mod_icon,
-        mod_background=mod_background,
+        banner_icon=banner_icon,
+        banner_background=banner_background,
         lobby_banner=lobby_banner,
-        post_registration=post_registration,
+        register_hook_extra=register_hook_extra,
         metadata_name=meta.get("name", ""),
         metadata_id=meta.get("id", ""),
         metadata_version=meta.get("version", "0.1"),
@@ -335,6 +335,33 @@ def _parse_prefix(on_action: str) -> str:
     if m:
         return m.group(1)
     return ""
+
+
+def _parse_register_hook_extra(on_action: str, prefix: str) -> str:
+    """Capture modder-added effects in the <prefix>_on_register_cmf_mod leaf, preserving everything but the editor-owned <prefix>_register_cmf_mod call."""
+    if not prefix:
+        return ""
+    leaf = re.search(re.escape(prefix) + r"_on_register_cmf_mod\s*=\s*\{", on_action)
+    if not leaf:
+        return ""
+    leaf_end = _find_closing_brace(on_action, leaf.end())
+    if leaf_end < 0:
+        return ""
+    body = on_action[leaf.end():leaf_end]
+    eff = re.search(r"\beffect\s*=\s*\{", body)
+    if not eff:
+        return ""
+    eff_end = _find_closing_brace(body, eff.end())
+    if eff_end < 0:
+        return ""
+    inner = body[eff.end():eff_end]
+    own = f"{prefix}_register_cmf_mod = yes"
+    kept = [ln for ln in inner.splitlines() if ln.strip() != own]
+    while kept and not kept[0].strip():
+        kept.pop(0)
+    while kept and not kept[-1].strip():
+        kept.pop()
+    return "\n".join(kept)
 
 
 def _parse_localization(content: str) -> dict:

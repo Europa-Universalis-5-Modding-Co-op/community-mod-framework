@@ -118,10 +118,10 @@ class ModModel:
     file_prefix: str = ""
     mod_name: str = ""
     mod_desc: str = ""
-    mod_icon: str = ""
-    mod_background: str = ""
+    banner_icon: str = ""
+    banner_background: str = ""
     lobby_banner: bool = False
-    post_registration: bool = False
+    register_hook_extra: str = ""
     metadata_name: str = ""
     metadata_id: str = ""
     metadata_version: str = "0.1"
@@ -250,10 +250,10 @@ def model_to_dict(model: ModModel) -> dict:
         "file_prefix": model.file_prefix,
         "mod_name": model.mod_name,
         "mod_desc": model.mod_desc,
-        "mod_icon": model.mod_icon,
-        "mod_background": model.mod_background,
+        "banner_icon": model.banner_icon,
+        "banner_background": model.banner_background,
         "lobby_banner": model.lobby_banner,
-        "post_registration": model.post_registration,
+        "register_hook_extra": model.register_hook_extra,
         "metadata_name": model.metadata_name,
         "metadata_id": model.metadata_id,
         "metadata_version": model.metadata_version,
@@ -356,10 +356,10 @@ def dict_to_model(data: dict) -> ModModel:
         file_prefix=data.get("file_prefix", ""),
         mod_name=data.get("mod_name", ""),
         mod_desc=data.get("mod_desc", ""),
-        mod_icon=data.get("mod_icon", ""),
-        mod_background=data.get("mod_background", ""),
+        banner_icon=data.get("banner_icon", ""),
+        banner_background=data.get("banner_background", ""),
         lobby_banner=data.get("lobby_banner", False),
-        post_registration=data.get("post_registration", False),
+        register_hook_extra=data.get("register_hook_extra", ""),
         metadata_name=data.get("metadata_name", ""),
         metadata_id=data.get("metadata_id", ""),
         metadata_version=data.get("metadata_version", "0.1"),

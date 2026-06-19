@@ -29,24 +29,21 @@ const ModEditorComponent = {
             <input v-model="state.mod_desc" placeholder="A brief description of your mod.">
         </div>
         <div class="field-row">
-            <label>Mod Icon</label>
-            <input type="file" @change="onModIconChange" ref="modIconInput">
-            <span class="field-hint" v-if="state.mod_icon">{{ getIconFileName() }}</span>
-        </div>
-        <div class="field-row">
-            <label>Mod Background</label>
-            <input type="file" @change="onModBackgroundChange" ref="modBackgroundInput">
-            <span class="field-hint" v-if="state.mod_background">{{ getBackgroundFileName() }}</span>
-        </div>
-        <div class="field-row">
-            <label>Lobby Banner</label>
-            <input type="checkbox" v-model="state.lobby_banner">
+            <label class="checkbox-label">
+                <input type="checkbox" v-model="state.lobby_banner">
+                Lobby Banner
+            </label>
             <span class="field-hint">Show this mod's icon as a banner in the pre-game lobby.</span>
         </div>
-        <div class="field-row">
-            <label>Post-Registration Effect</label>
-            <input type="checkbox" v-model="state.post_registration">
-            <span class="field-hint">Calls {{ (state.file_prefix || state.mod_id || 'my_mod') }}_cmm_post_registration right after registration, on every menu open. You write that effect yourself in a separate file; the editor only emits the call.</span>
+        <div class="field-row" v-if="state.lobby_banner">
+            <label>Banner Icon</label>
+            <input type="file" @change="onBannerIconChange" ref="bannerIconInput">
+            <span class="field-hint" v-if="state.banner_icon">{{ getBannerIconFileName() }}</span>
+        </div>
+        <div class="field-row" v-if="state.lobby_banner">
+            <label>Banner Background</label>
+            <input type="file" @change="onBannerBackgroundChange" ref="bannerBackgroundInput">
+            <span class="field-hint" v-if="state.banner_background">{{ getBannerBackgroundFileName() }}</span>
         </div>
 
         <details class="metadata-section">
@@ -86,12 +83,12 @@ const ModEditorComponent = {
         'state.mod_id'() {
             this.updateFileNames();
         },
-        'state.mod_icon'() {
+        'state.banner_icon'() {
             if (!this.iconFileName) {
                 this.updateFileNames();
             }
         },
-        'state.mod_background'() {
+        'state.banner_background'() {
             if (!this.backgroundFileName) {
                 this.updateFileNames();
             }
@@ -104,53 +101,53 @@ const ModEditorComponent = {
         onTagsChange(e) {
             this.state.metadata_tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
         },
-        async onModIconChange(e) {
+        async onBannerIconChange(e) {
             const file = e.target.files[0];
             if (file) {
                 this.iconFileName = file.name;
                 const reader = new FileReader();
                 reader.onload = (evt) => {
-                    this.state.mod_icon = evt.target.result; // base64 data URL
+                    this.state.banner_icon = evt.target.result; // base64 data URL
                 };
                 reader.readAsDataURL(file);
             }
         },
-        async onModBackgroundChange(e) {
+        async onBannerBackgroundChange(e) {
             const file = e.target.files[0];
             if (file) {
                 this.backgroundFileName = file.name;
                 const reader = new FileReader();
                 reader.onload = (evt) => {
-                    this.state.mod_background = evt.target.result; // base64 data URL
+                    this.state.banner_background = evt.target.result; // base64 data URL
                 };
                 reader.readAsDataURL(file);
             }
         },
-        getIconFileName() {
+        getBannerIconFileName() {
             if (this.iconFileName) {
                 return this.iconFileName;
             }
             if (this.state.mod_id) {
-                return `${this.state.mod_id}.dds`;
+                return `${this.state.mod_id}_banner_icon.dds`;
             }
-            return '✓ File selected';
+            return 'File selected';
         },
-        getBackgroundFileName() {
+        getBannerBackgroundFileName() {
             if (this.backgroundFileName) {
                 return this.backgroundFileName;
             }
             if (this.state.mod_id) {
-                return `${this.state.mod_id}_background.dds`;
+                return `${this.state.mod_id}_banner_background.dds`;
             }
-            return '✓ File selected';
+            return 'File selected';
         },
         updateFileNames() {
             // Reset filenames when mod_id changes or on initial load
-            if (this.state.mod_icon && !this.iconFileName && this.state.mod_id) {
-                this.iconFileName = `${this.state.mod_id}.dds`;
+            if (this.state.banner_icon && !this.iconFileName && this.state.mod_id) {
+                this.iconFileName = `${this.state.mod_id}_banner_icon.dds`;
             }
-            if (this.state.mod_background && !this.backgroundFileName && this.state.mod_id) {
-                this.backgroundFileName = `${this.state.mod_id}_background.dds`;
+            if (this.state.banner_background && !this.backgroundFileName && this.state.mod_id) {
+                this.backgroundFileName = `${this.state.mod_id}_banner_background.dds`;
             }
         },
     },

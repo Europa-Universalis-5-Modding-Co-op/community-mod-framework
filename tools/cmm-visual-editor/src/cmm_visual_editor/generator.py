@@ -14,7 +14,8 @@ def generate_all(model: ModModel) -> dict:
     if mod_id:
         files[f"in_game/common/on_action/{prefix}_cmm_on_actions.txt"] = noinspect + _gen_on_action(model)
         files[f"in_game/common/scripted_effects/{prefix}_cmm_effects.txt"] = noinspect + _gen_effects(model)
-        files[f"in_game/common/game_concepts/{prefix}_mod_icons.txt"] = _gen_mod_icons(model)
+        if model.lobby_banner:
+            files[f"in_game/common/game_concepts/{prefix}_banner.txt"] = _gen_banner_concepts(model)
         has_sgui = any(
             s.setting_type == "list" or s.scripted_gui
             for t in model.tabs for g in t.groups for s in g.settings
@@ -30,10 +31,8 @@ def generate_all(model: ModModel) -> dict:
 def _gen_on_action(model: ModModel) -> str:
     prefix = model.file_prefix or model.mod_id
     mod_id = model.mod_id
-    post_reg_line = (
-        f"\t\t{prefix}_cmm_post_registration = yes\n"
-        if model.post_registration else ""
-    )
+    extra = (model.register_hook_extra or "").strip("\n")
+    extra_block = "".join(f"{line}\n" for line in extra.splitlines()) if extra else ""
     content = (
         f"# Hook this mod into CMF shared registration on_action.\n"
         f"cmf_on_mod_registration = {{\n"
@@ -45,7 +44,7 @@ def _gen_on_action(model: ModModel) -> str:
         f"{prefix}_on_register_cmf_mod = {{\n"
         f"\teffect = {{\n"
         f"\t\t{prefix}_register_cmf_mod = yes\n"
-        f"{post_reg_line}"
+        f"{extra_block}"
         f"\t}}\n"
         f"}}\n"
         f"\n"
@@ -165,11 +164,11 @@ def _gen_effects(model: ModModel) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _gen_mod_icons(model: ModModel) -> str:
+def _gen_banner_concepts(model: ModModel) -> str:
     mod_id = model.mod_id
     lines = []
-    lines += [f"{mod_id} = {{", f"	texture = \"mods/{mod_id}\"", "}"]
-    lines += [f"{mod_id}_background = {{", f"	texture = \"mods/{mod_id}_background\"", "}"]
+    lines += [f"{mod_id}_banner_icon = {{", f"	texture = \"mods/{mod_id}_banner_icon\"", "}"]
+    lines += [f"{mod_id}_banner_background = {{", f"	texture = \"mods/{mod_id}_banner_background\"", "}"]
 
     return "\n".join(lines) + "\n"
 
@@ -696,10 +695,10 @@ def _gen_localization(model: ModModel) -> str:
     lines.append(f' {mod_id}_desc: "{_esc(model.mod_desc)}"')
 
     if model.lobby_banner:
-        lines.append(f' game_concept_{mod_id}: ""')
-        lines.append(f' game_concept_{mod_id}_desc: ""')
-        lines.append(f' game_concept_{mod_id}_background: ""')
-        lines.append(f' game_concept_{mod_id}_background_desc: ""')
+        lines.append(f' game_concept_{mod_id}_banner_icon: ""')
+        lines.append(f' game_concept_{mod_id}_banner_icon_desc: ""')
+        lines.append(f' game_concept_{mod_id}_banner_background: ""')
+        lines.append(f' game_concept_{mod_id}_banner_background_desc: ""')
 
     # Tabs, groups, and settings
     seen_groups = set()

@@ -28,7 +28,8 @@ const CMMGenerator = {
     genOnAction(state) {
         const prefix = state.file_prefix || state.mod_id;
         const modId = state.mod_id;
-        const postReg = state.post_registration ? `\t\t${prefix}_cmm_post_registration = yes\n` : '';
+        const extra = (state.register_hook_extra || '').replace(/^\n+|\n+$/g, '');
+        const extraBlock = extra ? extra.split('\n').map(l => `${l}\n`).join('') : '';
         let content = `# Hook this mod into CMF shared registration on_action.
 cmf_on_mod_registration = {
 \ton_actions = {
@@ -39,7 +40,7 @@ cmf_on_mod_registration = {
 ${prefix}_on_register_cmf_mod = {
 \teffect = {
 \t\t${prefix}_register_cmf_mod = yes
-${postReg}\t}
+${extraBlock}\t}
 }
 
 # Unified callback hook for setting changes, alert clicks, action bar clicks.
@@ -740,10 +741,10 @@ ${prefix}_register_lobby_banner = {
         lines.push(` ${modId}_desc: "${this._esc(state.mod_desc)}"`);
 
         if (state.lobby_banner) {
-            lines.push(` game_concept_${modId}: ""`);
-            lines.push(` game_concept_${modId}_desc: ""`);
-            lines.push(` game_concept_${modId}_background: ""`);
-            lines.push(` game_concept_${modId}_background_desc: ""`);
+            lines.push(` game_concept_${modId}_banner_icon: ""`);
+            lines.push(` game_concept_${modId}_banner_icon_desc: ""`);
+            lines.push(` game_concept_${modId}_banner_background: ""`);
+            lines.push(` game_concept_${modId}_banner_background_desc: ""`);
         }
 
         // Tabs, groups, and settings
