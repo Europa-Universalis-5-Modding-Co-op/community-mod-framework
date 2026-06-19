@@ -1,4 +1,4 @@
-﻿# List _on_changed callbacks — required for all list settings.
+﻿# List _on_changed callbacks - required for all list settings.
 # Each must call cmm_apply_list_change with the correct composite setting key.
 
 cmf_feature_test__ordered_list_on_changed = {
@@ -71,7 +71,7 @@ cmf_feature_test__global_from_list_on_changed = {
 	}
 }
 
-# Conditional visibility — only shown when the toggle is enabled.
+# Conditional visibility - only shown when the toggle is enabled.
 cmf_feature_test__conditional_numeric_on_changed = {
 	scope = country
 	is_shown = {

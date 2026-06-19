@@ -28,9 +28,9 @@ window = {
 				spacing = 4
 				margin_right = 20
 
-		# ═══════════════════════════════════════════════════════
+		# =======================================================
 		# Section 1: Country-Scope Variable Map Tests
-		# ═══════════════════════════════════════════════════════
+		# =======================================================
 
 		hbox = {
 			button_regular = {
@@ -47,7 +47,7 @@ window = {
 			spacing = 1
 
 			# Result: PASS
-			# ── Test 1 ──────────────────────────────────────
+			# -- Test 1 --------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -77,7 +77,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 2 ──────────────────────────────────────
+			# -- Test 2 --------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -107,7 +107,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 3 ──────────────────────────────────────
+			# -- Test 3 --------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -137,15 +137,15 @@ window = {
 			}
 		}
 
-		# ── Separator ───────────────────────────────────────
+		# -- Separator ---------------------------------------
 		widget = {
 			layoutpolicy_horizontal = expanding
 			size = { 0 2 }
 		}
 
-		# ═══════════════════════════════════════════════════════
+		# =======================================================
 		# Section 2: Global Variable Map Tests
-		# ═══════════════════════════════════════════════════════
+		# =======================================================
 
 		hbox = {
 			button_regular = {
@@ -162,7 +162,7 @@ window = {
 			spacing = 1
 
 			# Result: PASS
-			# ── Test 4 ──────────────────────────────────────
+			# -- Test 4 --------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -192,7 +192,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 5 ──────────────────────────────────────
+			# -- Test 5 --------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -222,7 +222,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 6 ──────────────────────────────────────
+			# -- Test 6 --------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -252,7 +252,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 7 ──────────────────────────────────────
+			# -- Test 7 --------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -282,7 +282,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 8 ──────────────────────────────────────
+			# -- Test 8 --------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -312,7 +312,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 9 ──────────────────────────────────────
+			# -- Test 9 --------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -342,7 +342,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 10 ─────────────────────────────────────
+			# -- Test 10 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -372,7 +372,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 11 ─────────────────────────────────────
+			# -- Test 11 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -401,7 +401,7 @@ window = {
 				}
 			}
 			# Result: PASS
-			# ── Test 12 ─────────────────────────────────────
+			# -- Test 12 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -431,7 +431,7 @@ window = {
 			}
 
 			# Result: FAIL
-			# ── Test 13 ────────────────────────────────────
+			# -- Test 13 ------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -461,7 +461,7 @@ window = {
 			}
 
 			# Result: FAIL
-			# ── Test 14 ─────────────────────────────────────
+			# -- Test 14 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -491,7 +491,7 @@ window = {
 			}
 
 			# Result: FAIL
-			# ── Test 15 ─────────────────────────────────────
+			# -- Test 15 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -521,7 +521,7 @@ window = {
 			}
 
 			# Result: FAIL
-			# ── Test 16 ─────────────────────────────────────
+			# -- Test 16 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -551,7 +551,7 @@ window = {
 			}
 
 			# Result: FAIL
-			# ── Test 17 ─────────────────────────────────────
+			# -- Test 17 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -580,7 +580,7 @@ window = {
 				}
 			}
 			# Result: FAIL
-			# ── Test 18 ─────────────────────────────────────
+			# -- Test 18 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -610,7 +610,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 19 ─────────────────────────────────────
+			# -- Test 19 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -640,7 +640,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 20 ─────────────────────────────────────
+			# -- Test 20 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -670,7 +670,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 21 ─────────────────────────────────────
+			# -- Test 21 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -700,7 +700,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 22 ─────────────────────────────────────
+			# -- Test 22 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -730,7 +730,7 @@ window = {
 			}
 
 			# Result: FAIL
-			# ── Test 23 ─────────────────────────────────────
+			# -- Test 23 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -760,7 +760,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 24 ─────────────────────────────────────
+			# -- Test 24 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -790,7 +790,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 25 ─────────────────────────────────────
+			# -- Test 25 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -819,7 +819,7 @@ window = {
 				}
 			}
 			# Result: FAIL
-			# ── Test 26 ─────────────────────────────────────
+			# -- Test 26 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -849,7 +849,7 @@ window = {
 			}
 
 			# Result: FAIL
-			# ── Test 27 ─────────────────────────────────────
+			# -- Test 27 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -879,22 +879,22 @@ window = {
 			}
 		}
 
-		# ── Separator ───────────────────────────────────────
+		# -- Separator ---------------------------------------
 		widget = {
 			layoutpolicy_horizontal = expanding
 			size = { 0 2 }
 		}
 
-		# ═══════════════════════════════════════════════════════
+		# =======================================================
 		# Section 3: Variable Map Iteration Tests
-		# ═══════════════════════════════════════════════════════
+		# =======================================================
 
 		vbox = {
 			layoutpolicy_horizontal = expanding
 			spacing = 1
 
 			# Result: PASS
-			# ── Test 28 ─────────────────────────────────────
+			# -- Test 28 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -924,7 +924,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 29 ─────────────────────────────────────
+			# -- Test 29 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -954,7 +954,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 30 ─────────────────────────────────────
+			# -- Test 30 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -984,7 +984,7 @@ window = {
 			}
 
 			# Result: FAIL
-			# ── Test 31 ─────────────────────────────────────
+			# -- Test 31 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -1014,7 +1014,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 32 ─────────────────────────────────────
+			# -- Test 32 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -1044,7 +1044,7 @@ window = {
 			}
 
 			# Result: PASS
-			# ── Test 33 ─────────────────────────────────────
+			# -- Test 33 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -1073,7 +1073,7 @@ window = {
 				}
 			}
 
-			# ── Test 34 ─────────────────────────────────────
+			# -- Test 34 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -1102,7 +1102,7 @@ window = {
 				}
 			}
 
-			# ── Test 35 ─────────────────────────────────────
+			# -- Test 35 -------------------------------------
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				ignoreinvisible = yes
@@ -1132,18 +1132,18 @@ window = {
 			}
 		}
 
-		# ── Separator ───────────────────────────────────────
+		# -- Separator ---------------------------------------
 		widget = {
 			layoutpolicy_horizontal = expanding
 			size = { 0 2 }
 		}
 
-		# ═══════════════════════════════════════════════════════
+		# =======================================================
 		# Section 4: GUI Map Read Tests (var: numeric keys)
 		# Run global tests first to seed engine_test_gui_map.
 		# Each row tries a different approach to read the value.
 		# Working approaches show "42" / "99"; broken show "default".
-		# ═══════════════════════════════════════════════════════
+		# =======================================================
 
 		text_single = {
 			fontsize = 14

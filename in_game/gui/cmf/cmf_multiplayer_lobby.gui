@@ -106,7 +106,7 @@
 						layoutpolicy_horizontal = expanding
 						align = left|nobaseline
 						default_format = "#color_yellow"
-						text = "CMM_OPEN_MOD_SHOWCASE"
+						text = "CMM_OPEN_MOD_BANNERS"
 						fontsize = 15
 						autoresize = yes
 					}

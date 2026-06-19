@@ -1,5 +1,4 @@
-﻿# Copied from base game
-@alert_height = 90
+﻿@alert_height = 90
 @alert_wide = 40
 
 types "cmf_types" {
@@ -216,7 +215,7 @@ types "cmf_types" {
             using = snd_UI_alert_openAndCycle
             on_action = "[GetScriptedGui('cmf_auto_alert_clicked').Execute(GuiScope
                     .SetRoot(GetPlayer.MakeScope)
-                    .AddScope('alert', MakeScopeFlag(Scope.GetFlagName))
+                    .AddScope('cmf_alert', MakeScopeFlag(Scope.GetFlagName))
                     .End
                 )]"
             on_action = "[GetVariableSystem.Set('cmf_active_alert', Scope.GetFlagName)]"
@@ -226,9 +225,9 @@ types "cmf_types" {
             click_type = right
             title = "ALERT_CTA_RIGHT_CLICK"
             clicksound = "UI_alert_discard"
-            on_action = "[GetScriptedGui('sgui_cmf_dismiss_alert').Execute(GuiScope
+            on_action = "[GetScriptedGui('cmf_sgui_dismiss_alert').Execute(GuiScope
                     .SetRoot(GetPlayer.MakeScope)
-                    .AddScope('flag', MakeScopeFlag(Scope.GetFlagName))
+                    .AddScope('cmf_flag', MakeScopeFlag(Scope.GetFlagName))
                     .End
                 )]"
             on_action = "[GetVariableSystem.Clear(Concatenate(Scope.GetFlagName, '_seen'))]"

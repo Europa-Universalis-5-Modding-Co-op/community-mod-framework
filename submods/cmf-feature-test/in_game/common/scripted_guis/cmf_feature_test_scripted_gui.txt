@@ -1,4 +1,4 @@
-﻿# Action bar element scripted GUI — tests is_shown and is_valid.
+﻿# Action bar element scripted GUI - tests is_shown and is_valid.
 cmf_action_bar_ft_primary = {
 	scope = country
 	is_shown = {

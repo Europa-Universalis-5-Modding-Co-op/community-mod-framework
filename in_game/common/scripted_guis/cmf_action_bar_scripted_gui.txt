@@ -1,12 +1,12 @@
 ﻿# Auto-apply: handle action bar button left-click. Fires cmf_on_callback.
 # Scope: country
-# Args: scope:element (flag) - the action bar element root key.
+# Args: scope:cmf_element (flag) - the action bar element root key.
 cmf_auto_action_bar_clicked = {
 	scope = country
-	saved_scopes = { element }
+	saved_scopes = { cmf_element }
 
 	effect = {
-		set_variable = { name = cmf_callback value = scope:element }
+		set_variable = { name = cmf_callback value = scope:cmf_element }
 		trigger_event_silently = {
 			on_action = cmf_on_callback
 		}

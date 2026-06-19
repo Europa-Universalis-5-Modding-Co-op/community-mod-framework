@@ -581,7 +581,7 @@ cmf_feature_test_process_list_item = {
 		save_scope_as = cft_test_item_value
 	}
 
-	# Benign warning suppression — references $i$ and $setting$ so the engine
+	# Benign warning suppression - references $i$ and $setting$ so the engine
 	# recognizes this as a parameterized effect (required by cmm_for_each_list_item).
 	if = {
 		limit = { always = no }

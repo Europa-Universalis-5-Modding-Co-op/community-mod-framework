@@ -121,6 +121,25 @@ All effects require '''country scope'''.
 
 Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
 
+== Mod Banners ==
+Display your mod as a banner on the pre-game lobby screen, with an icon, name, and description. Opt in by calling <code>cmf_register_lobby_banner</code> from a leaf on_action under <code>cmf_on_banner_registration</code>.
+
+<syntaxhighlight lang="text">
+cmf_on_banner_registration = {
+	on_actions = {
+		your_mod_register_lobby_banner
+	}
+}
+
+your_mod_register_lobby_banner = {
+	effect = {
+		cmf_register_lobby_banner = { mod_id = your_mod }
+	}
+}
+</syntaxhighlight>
+
+The banner icon and background are game concepts (<code><mod_id>_banner_icon</code>, <code><mod_id>_banner_background</code>); the title and description come from the <code><mod_id>_name</code> and <code><mod_id>_desc</code> localization keys.
+
 == Mod Action Log ==
 The Mod Action Log provides a shared, global in-game log where mods can record actions. Each entry stores the actor country and localized action text, with optional named arguments for richer messages.
 
@@ -273,9 +292,7 @@ Group multiple calls in one <code>if</code> block so the engine evaluates <code>
 
 == cmf_change_variable_map Effect (Deprecated) ==
 
-NOTE: Previously in vanilla <code>add_to_variable_map</code> did not overwrite an existing key, you needed to remove the key first, then add the new value. These were helpers that did this for you.
-
-However this is no longer the case so you can now just call add_to_variable_map on the same key to overwrite its value, thus its not recommended to use these deprecated effects.
+Deprecated because <code>add_to_variable_map</code> now overwrites an existing key directly.
 
 {| class="wikitable"
 ! Effect !! Description

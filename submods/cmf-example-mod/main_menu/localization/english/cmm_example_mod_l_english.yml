@@ -70,18 +70,18 @@
 
  # Global Tab - Toggles
  cmm_example__global_example_toggle_name: "Global Toggle"
- cmm_example__global_example_toggle_desc: "Example global toggle setting. In multiplayer, only the host can change this setting."
+ cmm_example__global_example_toggle_desc: "Example global toggle setting."
  cmm_example__global_example_button_name: "Global Action Button"
  cmm_example__global_example_button_text: "Run"
- cmm_example__global_example_button_desc: "Example global action button. In multiplayer, only the host can change this setting."
+ cmm_example__global_example_button_desc: "Example global action button."
 
  # Global Tab - Values
  cmm_example__global_example_numeric_name: "Global Numeric"
- cmm_example__global_example_numeric_desc: "Example global numeric setting. In multiplayer, only the host can change this setting."
+ cmm_example__global_example_numeric_desc: "Example global numeric setting."
  cmm_example__global_example_slider_name: "Global Slider"
- cmm_example__global_example_slider_desc: "Example global slider setting. In multiplayer, only the host can change this setting."
+ cmm_example__global_example_slider_desc: "Example global slider setting."
  cmm_example__global_example_dropdown_name: "Global Dropdown"
- cmm_example__global_example_dropdown_desc: "Example global dropdown setting. In multiplayer, only the host can change this setting."
+ cmm_example__global_example_dropdown_desc: "Example global dropdown setting."
  cmm_example__global_example_dropdown_option_1_name: "Option 1"
  cmm_example__global_example_dropdown_option_2_name: "Option 2"
  cmm_example__global_example_dropdown_option_3_name: "Option 3"

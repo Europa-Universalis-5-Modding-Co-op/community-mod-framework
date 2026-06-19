@@ -8,7 +8,7 @@ cmf_feature_test_register_cmf = {
 	# Register scripted GUI for primary button (enables is_shown/is_valid)
 	cmf_register_scripted_gui = { element = cmf_action_bar_ft_primary }
 
-	# Alerts — all 8 colors
+	# Alerts - all 8 colors
 	cmf_show_alert = { alert = cmf_alert_ft_orange }
 	cmf_show_alert = { alert = cmf_alert_ft_blue }
 	cmf_show_alert = { alert = cmf_alert_ft_black }
@@ -26,7 +26,7 @@ cmf_feature_test_handle_callback = {
 	switch = {
 		trigger = var:cmf_callback
 
-		# ── Setting callbacks ─────────────────────────────────────────────
+		# -- Setting callbacks ---------------------------------------------
 
 		flag:cmf_feature_test__toggle = {
 			# Sync setting alias
@@ -69,7 +69,7 @@ cmf_feature_test_handle_callback = {
 			}
 		}
 
-		# ── Alert callbacks ───────────────────────────────────────────────
+		# -- Alert callbacks -----------------------------------------------
 		# Re-add alerts after they are clicked so they reappear for repeated testing.
 
 		flag:cmf_alert_ft_orange = {
@@ -97,7 +97,7 @@ cmf_feature_test_handle_callback = {
 			cmf_show_alert = { alert = cmf_alert_ft_purple }
 		}
 
-		# ── Action bar callbacks ──────────────────────────────────────────
+		# -- Action bar callbacks ------------------------------------------
 
 		flag:cmf_action_bar_ft_primary = {
 			# Toggle the blue alert to demonstrate action bar interaction

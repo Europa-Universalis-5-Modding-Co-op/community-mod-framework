@@ -1,7 +1,7 @@
 ﻿# Register action bar elements and alerts.
 # Scope: country
 cmf_example_register_mod = {
-	# Action bar elements (idempotent — safe from per-country hook)
+	# Action bar elements (idempotent - safe from per-country hook)
 	cmf_add_action_bar_element = { element = cmf_action_bar_element_example }
 	cmf_add_action_bar_element = { element = cmf_action_bar_element_example_second }
 

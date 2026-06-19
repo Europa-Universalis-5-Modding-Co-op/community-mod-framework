@@ -19,7 +19,7 @@ cmf_example_on_register_mod = {
 	}
 }
 
-# Unified callback hook — handles setting changes, alert clicks, and action bar clicks.
+# Unified callback hook - handles setting changes, alert clicks, and action bar clicks.
 cmf_on_callback = {
 	on_actions = {
 		cmf_example_on_callback
