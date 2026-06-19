@@ -224,14 +224,14 @@ class RequestHandler(BaseHTTPRequestHandler):
                         # Extract base64 data from data URL (format: data:image/...;base64,...)
                         header, encoded = model.banner_icon.split(',', 1)
                         file_data = base64.b64decode(encoded)
-                        icon_dest = icons_dir / f"{mod_id}_banner_icon.dds"
+                        icon_dest = icons_dir / f"{mod_id}_banner_logo.dds"
                         icon_dest.write_bytes(file_data)
                         written.append(str(icon_dest))
                     else:
                         # Legacy: treat as file path
                         icon_source = Path(model.banner_icon)
                         if icon_source.is_file():
-                            icon_dest = icons_dir / f"{mod_id}_banner_icon.dds"
+                            icon_dest = icons_dir / f"{mod_id}_banner_logo.dds"
                             shutil.copy2(icon_source, icon_dest)
                             written.append(str(icon_dest))
                 except Exception as e:

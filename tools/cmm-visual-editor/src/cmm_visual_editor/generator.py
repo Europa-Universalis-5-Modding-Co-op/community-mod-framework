@@ -167,7 +167,7 @@ def _gen_effects(model: ModModel) -> str:
 def _gen_banner_concepts(model: ModModel) -> str:
     mod_id = model.mod_id
     lines = []
-    lines += [f"{mod_id}_banner_icon = {{", f"	texture = \"mods/{mod_id}_banner_icon\"", "}"]
+    lines += [f"{mod_id}_banner_logo = {{", f"	texture = \"mods/{mod_id}_banner_logo\"", "}"]
     lines += [f"{mod_id}_banner_background = {{", f"	texture = \"mods/{mod_id}_banner_background\"", "}"]
 
     return "\n".join(lines) + "\n"
@@ -695,8 +695,8 @@ def _gen_localization(model: ModModel) -> str:
     lines.append(f' {mod_id}_desc: "{_esc(model.mod_desc)}"')
 
     if model.lobby_banner:
-        lines.append(f' game_concept_{mod_id}_banner_icon: ""')
-        lines.append(f' game_concept_{mod_id}_banner_icon_desc: ""')
+        lines.append(f' game_concept_{mod_id}_banner_logo: ""')
+        lines.append(f' game_concept_{mod_id}_banner_logo_desc: ""')
         lines.append(f' game_concept_{mod_id}_banner_background: ""')
         lines.append(f' game_concept_{mod_id}_banner_background_desc: ""')
 

@@ -256,6 +256,24 @@ body {
 
 .required { color: var(--danger); }
 
+.file-picker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.file-input-hidden {
+    display: none;
+}
+
+.file-picker-name {
+    font-size: 11px;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .field-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;

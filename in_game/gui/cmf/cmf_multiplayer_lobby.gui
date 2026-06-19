@@ -14,7 +14,7 @@
 		icon = {
 			parentanchor = center
 			size = "[PdxGuiWidget.KeepRatioFromWidthPercent('(float)1.0', '(float)0.75')]"
-			texture = "[GetConceptTexture(Concatenate(Scope.GetFlagName, '_banner_icon'))]"
+			texture = "[GetConceptTexture(Concatenate(Scope.GetFlagName, '_banner_logo'))]"
 			glow = {
 				name = "drop_shadow"
 				glow_radius = 5

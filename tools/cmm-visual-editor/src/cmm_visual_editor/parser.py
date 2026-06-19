@@ -278,7 +278,7 @@ def _build_model(
     banner_background = ""
     if directory and mod_id:
         icons_dir = directory / "main_menu" / "gfx" / "interface" / "icons" / "mods"
-        icon_path = icons_dir / f"{mod_id}_banner_icon.dds"
+        icon_path = icons_dir / f"{mod_id}_banner_logo.dds"
         bg_path = icons_dir / f"{mod_id}_banner_background.dds"
 
         if icon_path.is_file():

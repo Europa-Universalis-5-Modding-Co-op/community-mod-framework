@@ -37,13 +37,19 @@ const ModEditorComponent = {
         </div>
         <div class="field-row" v-if="state.lobby_banner">
             <label>Banner Icon</label>
-            <input type="file" @change="onBannerIconChange" ref="bannerIconInput">
-            <span class="field-hint" v-if="state.banner_icon">{{ getBannerIconFileName() }}</span>
+            <div class="file-picker">
+                <input type="file" @change="onBannerIconChange" ref="bannerIconInput" class="file-input-hidden">
+                <button type="button" class="btn btn-sm" @click="$refs.bannerIconInput.click()">Choose Image...</button>
+                <span class="file-picker-name">{{ state.banner_icon ? getBannerIconFileName() : 'No image chosen' }}</span>
+            </div>
         </div>
         <div class="field-row" v-if="state.lobby_banner">
             <label>Banner Background</label>
-            <input type="file" @change="onBannerBackgroundChange" ref="bannerBackgroundInput">
-            <span class="field-hint" v-if="state.banner_background">{{ getBannerBackgroundFileName() }}</span>
+            <div class="file-picker">
+                <input type="file" @change="onBannerBackgroundChange" ref="bannerBackgroundInput" class="file-input-hidden">
+                <button type="button" class="btn btn-sm" @click="$refs.bannerBackgroundInput.click()">Choose Image...</button>
+                <span class="file-picker-name">{{ state.banner_background ? getBannerBackgroundFileName() : 'No image chosen' }}</span>
+            </div>
         </div>
 
         <details class="metadata-section">
@@ -128,7 +134,7 @@ const ModEditorComponent = {
                 return this.iconFileName;
             }
             if (this.state.mod_id) {
-                return `${this.state.mod_id}_banner_icon.dds`;
+                return `${this.state.mod_id}_banner_logo.dds`;
             }
             return 'File selected';
         },
@@ -144,7 +150,7 @@ const ModEditorComponent = {
         updateFileNames() {
             // Reset filenames when mod_id changes or on initial load
             if (this.state.banner_icon && !this.iconFileName && this.state.mod_id) {
-                this.iconFileName = `${this.state.mod_id}_banner_icon.dds`;
+                this.iconFileName = `${this.state.mod_id}_banner_logo.dds`;
             }
             if (this.state.banner_background && !this.backgroundFileName && this.state.mod_id) {
                 this.backgroundFileName = `${this.state.mod_id}_banner_background.dds`;

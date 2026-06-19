@@ -741,8 +741,8 @@ ${prefix}_register_lobby_banner = {
         lines.push(` ${modId}_desc: "${this._esc(state.mod_desc)}"`);
 
         if (state.lobby_banner) {
-            lines.push(` game_concept_${modId}_banner_icon: ""`);
-            lines.push(` game_concept_${modId}_banner_icon_desc: ""`);
+            lines.push(` game_concept_${modId}_banner_logo: ""`);
+            lines.push(` game_concept_${modId}_banner_logo_desc: ""`);
             lines.push(` game_concept_${modId}_banner_background: ""`);
             lines.push(` game_concept_${modId}_banner_background_desc: ""`);
         }
