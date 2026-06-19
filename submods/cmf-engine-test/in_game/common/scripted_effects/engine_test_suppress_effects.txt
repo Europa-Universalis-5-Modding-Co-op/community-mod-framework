@@ -47,8 +47,10 @@ engine_test_suppress_warnings = {
 			exists = var:engine_test_38_passed
 			exists = var:engine_test_has_run
 			exists = var:engine_test_global_has_run
+			exists = var:engine_test_map_name_v
 			# Suppress "set but never used" for local variables
 			exists = local_var:engine_test_lv
+			exists = local_var:engine_test_map_name
 			# Suppress "set but never used" for flags
 			exists = flag:engine_test_cross
 			exists = flag:engine_test_hardcoded

@@ -532,15 +532,6 @@ engine_test_run_global = {
 			set_variable = { name = engine_test_25_passed value = 1 }
 		}
 
-		# Suppress "used but never set" for variables that the checker
-		# can't see inside quoted scope link strings. Must be in a
-		# used effect (the unused suppress effect no longer counts).
-		if = {
-			limit = { always = no }
-			set_variable = { name = engine_test_map_name_v value = 0 }
-			set_local_variable = { name = engine_test_map_name value = 0 }
-		}
-
 		# Result: FAIL
 		# -- Test 26 ---------------------------------------------
 		# Can local_var: be used in the map name position of a
