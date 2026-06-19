@@ -23,6 +23,54 @@ _cmm_register_list_field_slot = {
 	}
 }
 
+# Apply a list field slot's localization and format from the persistent override
+# stores, or the field-id defaults when none is recorded.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Owner setting id.
+# - field_id (key): Field id unique within the list setting.
+# - slot (number): Field slot index (`1..5`).
+_cmm_apply_list_field_loc_format = {
+	set_local_variable = { name = cmm_lff_key value = flag:$mod_id$__$setting_id$__$field_id$ }
+
+	if = {
+		limit = { is_key_in_variable_map = { name = cmm_list_field_format_pending target = local_var:cmm_lff_key } }
+		set_local_variable = { name = cmm_lff_format value = "variable_map(cmm_list_field_format_pending|local_var:cmm_lff_key)" }
+		set_variable = { name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$ value = local_var:cmm_lff_format }
+	}
+	else = {
+		set_variable = { name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$ value = 0 }
+	}
+
+	if = {
+		limit = { is_key_in_variable_map = { name = cmm_list_field_loc_name_pending target = local_var:cmm_lff_key } }
+		set_local_variable = { name = cmm_lff_name value = "variable_map(cmm_list_field_loc_name_pending|local_var:cmm_lff_key)" }
+		set_variable = { name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$ value = local_var:cmm_lff_name }
+	}
+	else = {
+		set_variable = { name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$__$field_id$_name }
+	}
+
+	if = {
+		limit = { is_key_in_variable_map = { name = cmm_list_field_loc_key_pending target = local_var:cmm_lff_key } }
+		set_local_variable = { name = cmm_lff_root value = "variable_map(cmm_list_field_loc_key_pending|local_var:cmm_lff_key)" }
+		set_variable = { name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$ value = local_var:cmm_lff_root }
+	}
+	else = {
+		set_variable = { name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$ value = flag:$mod_id$__$setting_id$__$field_id$ }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_lff_key }
+		cmf_suppress = { v = cmm_lff_format }
+		cmf_suppress = { v = cmm_lff_name }
+		cmf_suppress = { v = cmm_lff_root }
+	}
+}
+
 # Initialize one stable item identity metadata record for a list setting.
 # Scope: country
 # Args: mod_id (key), setting_id (key), item (number)
@@ -248,6 +296,7 @@ _cmm_initialize_list_bool_field_item = {
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = local_var:cmm_eff_default }
+		add_to_variable_list = { name = cmm_list_field_seeded_this_pass target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ }
 	}
 
 	set_local_variable = { name = cmm_tmp_fk value = flag:$mod_id$__$setting_id$_i$item$_f$slot$ }
@@ -303,17 +352,11 @@ _cmm_initialize_list_bool_field_slot = {
 		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
 		value = 48
 	}
-	set_variable = {
-		name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$
-		value = 0
-	}
-	set_variable = {
-		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$__$field_id$_name
-	}
-	set_variable = {
-		name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$__$field_id$
+	_cmm_apply_list_field_loc_format = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+		slot = $slot$
 	}
 
 	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 0 } _cmm_initialize_list_bool_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = $slot$ item = 1 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
@@ -393,6 +436,7 @@ _cmm_initialize_list_dropdown_field_item = {
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = local_var:cmm_eff_default }
+		add_to_variable_list = { name = cmm_list_field_seeded_this_pass target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ }
 	}
 
 	set_local_variable = { name = cmm_tmp_fk value = flag:$mod_id$__$setting_id$_i$item$_f$slot$ }
@@ -449,17 +493,11 @@ _cmm_initialize_list_dropdown_field_slot = {
 		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
 		value = 132
 	}
-	set_variable = {
-		name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$
-		value = 0
-	}
-	set_variable = {
-		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$__$field_id$_name
-	}
-	set_variable = {
-		name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$__$field_id$
+	_cmm_apply_list_field_loc_format = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+		slot = $slot$
 	}
 	set_variable = {
 		name = cmm_list_field_$slot$_option_root_$mod_id$__$setting_id$
@@ -560,6 +598,7 @@ _cmm_initialize_list_numeric_field_item = {
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = local_var:cmm_eff_default }
+		add_to_variable_list = { name = cmm_list_field_seeded_this_pass target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ }
 	}
 
 	set_local_variable = { name = cmm_tmp_fk value = flag:$mod_id$__$setting_id$_i$item$_f$slot$ }
@@ -618,17 +657,11 @@ _cmm_initialize_list_numeric_field_slot = {
 		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
 		value = 132
 	}
-	set_variable = {
-		name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$
-		value = 0
-	}
-	set_variable = {
-		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$__$field_id$_name
-	}
-	set_variable = {
-		name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$__$field_id$
+	_cmm_apply_list_field_loc_format = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+		slot = $slot$
 	}
 	set_variable = {
 		name = cmm_list_field_$slot$_min_$mod_id$__$setting_id$
@@ -720,6 +753,7 @@ _cmm_initialize_list_slider_field_item = {
 	if = {
 		limit = { NOT = { is_key_in_$vt$_map = { name = cmm target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } } }
 		add_to_$vt$_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = local_var:cmm_eff_default }
+		add_to_variable_list = { name = cmm_list_field_seeded_this_pass target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ }
 	}
 
 	set_local_variable = { name = cmm_tmp_fk value = flag:$mod_id$__$setting_id$_i$item$_f$slot$ }
@@ -778,17 +812,11 @@ _cmm_initialize_list_slider_field_slot = {
 		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
 		value = 160
 	}
-	set_variable = {
-		name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$
-		value = 0
-	}
-	set_variable = {
-		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$__$field_id$_name
-	}
-	set_variable = {
-		name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$__$field_id$
+	_cmm_apply_list_field_loc_format = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+		slot = $slot$
 	}
 	set_variable = {
 		name = cmm_list_field_$slot$_min_$mod_id$__$setting_id$
@@ -910,17 +938,11 @@ _cmm_initialize_list_data_field_slot = {
 		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
 		value = 132
 	}
-	set_variable = {
-		name = cmm_list_field_$slot$_has_format_$mod_id$__$setting_id$
-		value = 0
-	}
-	set_variable = {
-		name = cmm_list_field_$slot$_name_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$__$field_id$_name
-	}
-	set_variable = {
-		name = cmm_list_field_$slot$_key_$mod_id$__$setting_id$
-		value = flag:$mod_id$__$setting_id$__$field_id$
+	_cmm_apply_list_field_loc_format = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+		slot = $slot$
 	}
 
 	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 0 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 1 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }

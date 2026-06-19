@@ -376,6 +376,35 @@ cmf_feature_test_register_cmf_mod = {
 		step_value = 1
 	}
 
+	## Order Test (order_test_list) Group
+	# Two identical numeric fields whose per-item default, localization, and format
+	# are configured in opposite order relative to field registration. With the
+	# load-order fix both columns render identically (Value column reading [7]/[3]).
+	cmm_register_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = order_test_list
+		tab_id = lists
+		item_count = 2
+		is_ordered = 0
+	}
+
+	# Field "bef": default, localization, and format set BEFORE the field is registered.
+	cmm_set_list_field_default_for_item = { mod_id = cmf_feature_test setting_id = order_test_list field_id = bef item = 1 value = 7 }
+	cmm_set_list_field_default_for_item = { mod_id = cmf_feature_test setting_id = order_test_list field_id = bef item = 2 value = 3 }
+	cmm_set_list_field_localization = { mod_id = cmf_feature_test setting_id = order_test_list field_id = bef name = cmf_feature_test__order_test_list__shared_name root = cmf_feature_test__order_test_list__shared }
+	cmm_set_list_field_format = { mod_id = cmf_feature_test setting_id = order_test_list field_id = bef }
+	cmm_register_list_numeric_field = { mod_id = cmf_feature_test setting_id = order_test_list field_id = bef default_value = 0 min_value = 0 max_value = 10 step_value = 1 }
+
+	# Field "aft": the same config set AFTER the field is registered.
+	cmm_register_list_numeric_field = { mod_id = cmf_feature_test setting_id = order_test_list field_id = aft default_value = 0 min_value = 0 max_value = 10 step_value = 1 }
+	cmm_set_list_field_default_for_item = { mod_id = cmf_feature_test setting_id = order_test_list field_id = aft item = 1 value = 7 }
+	cmm_set_list_field_default_for_item = { mod_id = cmf_feature_test setting_id = order_test_list field_id = aft item = 2 value = 3 }
+	cmm_set_list_field_localization = { mod_id = cmf_feature_test setting_id = order_test_list field_id = aft name = cmf_feature_test__order_test_list__shared_name root = cmf_feature_test__order_test_list__shared }
+	cmm_set_list_field_format = { mod_id = cmf_feature_test setting_id = order_test_list field_id = aft }
+
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = order_test_list item = 1 value = root }
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = order_test_list item = 2 value = root }
+
 	# Global Lists (global_lists) Tab
 	## Global Ordered List (global_ordered_list) Group
 	cmm_register_global_settings_list = {

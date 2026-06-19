@@ -30,6 +30,7 @@ _cmf_on_country_transfer = {
 		if = {
 			limit = { exists = scope:new_country }
 			scope:new_country = {
+				_cmm_clear_registration_pass_state = yes
 				trigger_event_silently = {
 					on_action = cmf_on_mod_registration
 				}

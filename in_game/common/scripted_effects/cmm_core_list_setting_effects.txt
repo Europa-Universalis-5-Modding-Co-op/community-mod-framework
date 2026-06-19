@@ -430,13 +430,15 @@ cmm_register_list_data_field = {
 
 # Mark a list field as having prefix/postfix format localization keys.
 # Enables formatted value display (prefix + value + postfix) for numeric, slider, and data fields.
-# Call after the field has been registered (e.g. cmm_register_list_numeric_field).
+# Re-apply on each registration pass; may be called before or after field registration.
 # Scope: country
 # Args:
 # - mod_id (key): Owner mod id.
 # - setting_id (key): Target list setting id within the mod.
 # - field_id (key): Field id to mark as formatted.
 cmm_set_list_field_format = {
+	cmf_change_variable_map = { name = cmm_list_field_format_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = 1 }
+
 	if = {
 		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
 		switch = {
@@ -453,13 +455,15 @@ cmm_set_list_field_format = {
 # Mark a list field as having sign-conditional prefix/postfix format localization keys (_high/_low variants).
 # Enables conditional value display that selects between _prefix_high/_postfix_high (value > 0),
 # _prefix_low/_postfix_low (value < 0), and _prefix/_postfix (value == 0).
-# Call after the field has been registered (e.g. cmm_register_list_numeric_field).
+# Re-apply on each registration pass; may be called before or after field registration.
 # Scope: country
 # Args:
 # - mod_id (key): Owner mod id.
 # - setting_id (key): Target list setting id within the mod.
 # - field_id (key): Field id to mark as conditionally formatted.
 cmm_set_list_field_conditional_format = {
+	cmf_change_variable_map = { name = cmm_list_field_format_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = 2 }
+
 	if = {
 		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
 		switch = {
@@ -475,9 +479,8 @@ cmm_set_list_field_conditional_format = {
 
 # Repoint one list field's localization keys. The column header localizes $name$
 # directly; desc, prefix, and postfix localize from `$root$_desc`, `$root$_prefix`,
-# and `$root$_postfix`. Registering the field resets both keys to the field_id
-# defaults (`<mod>__<setting>__<field>_name` and `<mod>__<setting>__<field>`), so
-# call after every registration of the field.
+# and `$root$_postfix`. Registration resets the keys to the field-id defaults each
+# pass, so re-apply every pass; may be called before or after field registration.
 # Scope: country
 # Args:
 # - mod_id (key): Owner mod id.
@@ -486,6 +489,9 @@ cmm_set_list_field_conditional_format = {
 # - name (key): Localization key for the column header.
 # - root (key): Localization key root for desc, prefix, and postfix.
 cmm_set_list_field_localization = {
+	cmf_change_variable_map = { name = cmm_list_field_loc_name_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = flag:$name$ }
+	cmf_change_variable_map = { name = cmm_list_field_loc_key_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = flag:$root$ }
+
 	if = {
 		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
 		switch = {
@@ -521,9 +527,41 @@ cmm_set_list_field_localization = {
 	}
 }
 
+# Re-seed one list field item's live value to $value$ if it was newly seeded this
+# registration pass, so a default set after registration still drives the item's
+# initial value. User-customized and pre-existing values are left untouched.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Owner setting id.
+# - item (number): Item ordinal (`1..item_count`).
+# - slot (number): Field slot index (`1..5`).
+# - value (number): Default value to seed.
+_cmm_reseed_list_field_default_at_slot = {
+	if = {
+		limit = { is_target_in_variable_list = { name = cmm_list_field_seeded_this_pass target = flag:$mod_id$__$setting_id$_i$item$_f$slot$ } }
+		set_local_variable = { name = cmm_rsd_flag value = flag:$mod_id$__$setting_id$ }
+		if = {
+			limit = { "variable_map(cmm_is_global|local_var:cmm_rsd_flag)" >= 1 }
+			remove_from_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ }
+			add_to_global_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $value$ }
+		}
+		else = {
+			remove_from_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ }
+			add_to_variable_map = { name = cmm key = flag:$mod_id$__$setting_id$_i$item$_f$slot$ value = $value$ }
+		}
+
+		# Benign warning suppression
+		if = {
+			limit = { always = no }
+			cmf_suppress = { v = cmm_rsd_flag }
+		}
+	}
+}
+
 # Set one item's default value for a field in a list setting.
-# Safe to call before or after the field is registered.
-# Called before registration, it also drives the item's initial value; called after, it sets only the reset value.
+# Safe to call before or after the field is registered; either way it drives the
+# item's initial value on first registration and the reset default.
 # Scope: country
 # Args:
 # - mod_id (key): Owner mod id.
@@ -539,11 +577,26 @@ cmm_set_list_field_default_for_item = {
 		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
 		switch = {
 			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
-			1 = { cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f1 value = $value$ } }
-			2 = { cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f2 value = $value$ } }
-			3 = { cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f3 value = $value$ } }
-			4 = { cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f4 value = $value$ } }
-			5 = { cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f5 value = $value$ } }
+			1 = {
+				cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f1 value = $value$ }
+				_cmm_reseed_list_field_default_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ item = $item$ slot = 1 value = $value$ }
+			}
+			2 = {
+				cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f2 value = $value$ }
+				_cmm_reseed_list_field_default_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ item = $item$ slot = 2 value = $value$ }
+			}
+			3 = {
+				cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f3 value = $value$ }
+				_cmm_reseed_list_field_default_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ item = $item$ slot = 3 value = $value$ }
+			}
+			4 = {
+				cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f4 value = $value$ }
+				_cmm_reseed_list_field_default_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ item = $item$ slot = 4 value = $value$ }
+			}
+			5 = {
+				cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f5 value = $value$ }
+				_cmm_reseed_list_field_default_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ item = $item$ slot = 5 value = $value$ }
+			}
 		}
 	}
 }
