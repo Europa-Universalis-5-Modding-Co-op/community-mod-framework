@@ -921,8 +921,10 @@ cmm_apply_list_change = {
 
 # Iterate over every item in a list setting and call a user-provided effect for each.
 # The effect receives `$i$` as the resolved item number (1-50) and `$setting$` as the
-# composite key, so the caller can read field values from the cmm variable map like
-# `"variable_map(cmm|flag:$setting$_i$i$_f1)"`.
+# composite key. A macro param does not resolve inside a quoted variable_map lookup, so
+# build the field key into a local first to read a field value:
+#   set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$i$_f1 }
+#   "variable_map(cmm|local_var:cmm_tmp_fk)"
 # If the item has a value (set via cmm_set_list_item_value or cmm_add_settings_list_item),
 # it is available as `scope:cmm_list_current_item_value` inside the called effect.
 # Scope: country

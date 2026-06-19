@@ -169,8 +169,9 @@ _cmm_sync_action_bar_active_from_field = {
 		limit = {
 			NOT = { $i$ = 1 }
 		}
+		set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$i$_f1 }
 		if = {
-			limit = { "variable_map(cmm|flag:$setting$_i$i$_f1)" >= 1 }
+			limit = { "variable_map(cmm|local_var:cmm_tmp_fk)" >= 1 }
 			if = {
 				limit = {
 					NOT = {
@@ -192,6 +193,12 @@ _cmm_sync_action_bar_active_from_field = {
 				target = scope:cmm_list_current_item_value
 			}
 		}
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_fk }
 	}
 }
 
