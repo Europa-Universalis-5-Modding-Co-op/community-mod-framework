@@ -298,6 +298,7 @@ def _build_model(
                 warnings.append(f"Could not read background file: {e}")
 
     lobby_banner = "cmf_register_lobby_banner" in on_action
+    post_registration = bool(prefix) and f"{prefix}_cmm_post_registration" in on_action
 
     model = ModModel(
         mod_id=mod_id,
@@ -307,6 +308,7 @@ def _build_model(
         mod_icon=mod_icon,
         mod_background=mod_background,
         lobby_banner=lobby_banner,
+        post_registration=post_registration,
         metadata_name=meta.get("name", ""),
         metadata_id=meta.get("id", ""),
         metadata_version=meta.get("version", "0.1"),

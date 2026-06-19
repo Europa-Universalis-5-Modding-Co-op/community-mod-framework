@@ -28,6 +28,7 @@ const CMMGenerator = {
     genOnAction(state) {
         const prefix = state.file_prefix || state.mod_id;
         const modId = state.mod_id;
+        const postReg = state.post_registration ? `\t\t${prefix}_cmm_post_registration = yes\n` : '';
         let content = `# Hook this mod into CMF shared registration on_action.
 cmf_on_mod_registration = {
 \ton_actions = {
@@ -38,7 +39,7 @@ cmf_on_mod_registration = {
 ${prefix}_on_register_cmf_mod = {
 \teffect = {
 \t\t${prefix}_register_cmf_mod = yes
-\t}
+${postReg}\t}
 }
 
 # Unified callback hook for setting changes, alert clicks, action bar clicks.

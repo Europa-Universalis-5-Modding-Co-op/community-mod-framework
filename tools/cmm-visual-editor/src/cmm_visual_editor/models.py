@@ -121,6 +121,7 @@ class ModModel:
     mod_icon: str = ""
     mod_background: str = ""
     lobby_banner: bool = False
+    post_registration: bool = False
     metadata_name: str = ""
     metadata_id: str = ""
     metadata_version: str = "0.1"
@@ -252,6 +253,7 @@ def model_to_dict(model: ModModel) -> dict:
         "mod_icon": model.mod_icon,
         "mod_background": model.mod_background,
         "lobby_banner": model.lobby_banner,
+        "post_registration": model.post_registration,
         "metadata_name": model.metadata_name,
         "metadata_id": model.metadata_id,
         "metadata_version": model.metadata_version,
@@ -357,6 +359,7 @@ def dict_to_model(data: dict) -> ModModel:
         mod_icon=data.get("mod_icon", ""),
         mod_background=data.get("mod_background", ""),
         lobby_banner=data.get("lobby_banner", False),
+        post_registration=data.get("post_registration", False),
         metadata_name=data.get("metadata_name", ""),
         metadata_id=data.get("metadata_id", ""),
         metadata_version=data.get("metadata_version", "0.1"),

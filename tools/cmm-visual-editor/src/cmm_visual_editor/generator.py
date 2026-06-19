@@ -30,6 +30,10 @@ def generate_all(model: ModModel) -> dict:
 def _gen_on_action(model: ModModel) -> str:
     prefix = model.file_prefix or model.mod_id
     mod_id = model.mod_id
+    post_reg_line = (
+        f"\t\t{prefix}_cmm_post_registration = yes\n"
+        if model.post_registration else ""
+    )
     content = (
         f"# Hook this mod into CMF shared registration on_action.\n"
         f"cmf_on_mod_registration = {{\n"
@@ -41,6 +45,7 @@ def _gen_on_action(model: ModModel) -> str:
         f"{prefix}_on_register_cmf_mod = {{\n"
         f"\teffect = {{\n"
         f"\t\t{prefix}_register_cmf_mod = yes\n"
+        f"{post_reg_line}"
         f"\t}}\n"
         f"}}\n"
         f"\n"

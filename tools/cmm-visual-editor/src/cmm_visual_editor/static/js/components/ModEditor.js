@@ -43,6 +43,11 @@ const ModEditorComponent = {
             <input type="checkbox" v-model="state.lobby_banner">
             <span class="field-hint">Show this mod's icon as a banner in the pre-game lobby.</span>
         </div>
+        <div class="field-row">
+            <label>Post-Registration Effect</label>
+            <input type="checkbox" v-model="state.post_registration">
+            <span class="field-hint">Calls {{ (state.file_prefix || state.mod_id || 'my_mod') }}_cmm_post_registration right after registration, on every menu open. You write that effect yourself in a separate file; the editor only emits the call.</span>
+        </div>
 
         <details class="metadata-section">
             <summary>Metadata (metadata.json)</summary>
