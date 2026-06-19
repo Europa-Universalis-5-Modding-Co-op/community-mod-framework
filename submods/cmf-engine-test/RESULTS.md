@@ -53,34 +53,45 @@ Date: 2026-06-14
 
 ## Macro Param Tests (engine_test_run_global)
 
-Run 2026-06-19.
+Run 2026-06-19. The displayed PASS/FAIL is misleading; the engine log explains it.
 
-| # | Test | Result |
-|---|------|--------|
-| 36 | macro param as key in variable_map() quoted string | FAIL |
-| 37 | macro param in map name position of quoted string | PASS |
-| 38 | macro param as both map name and key | PASS |
+| # | Test | Displayed | Real outcome |
+|---|------|-----------|--------------|
+| 36 | macro param as key in variable_map() quoted string | FAIL | broken: runtime "key not set" |
+| 37 | macro param in map name position of quoted string | PASS | broken: load parse error, false-positive PASS |
+| 38 | macro param as both map name and key | PASS | broken: load parse error, false-positive PASS |
 
-Anomalous and unexplained. Each test reads the same dedicated map seeded with
-flag:engine_test_key_a = 55, passing the slot via a $PARAM$ macro arg:
+The macro IS substituted inside the quoted string, but it corrupts the
+variable_map(...) syntax. The load log shows the mangled triggers:
 
-- 36 (macro in key slot, literal map name) FAILS: $KEY$ did not substitute.
-- 37 (macro in map-name slot, literal key) PASSES: $MAP$ did substitute.
-- 38 (macro in both slots) PASSES: both substituted, including the same key-slot
-  macro that failed in 36.
+- 37 "variable_map($MAP$|flag:engine_test_key_a)" became
+  "variable_mapengine_test_macro_map$|flag:engine_test_key_a)" (Unknown trigger
+  type). The substituted value is there, but the "(" is gone and a stray "$" is left.
+- 38 "variable_map($MAP$|flag:$KEY$)" became
+  "variable_mapengine_test_macro_map$|flagengine_test_key_a$)" (same load error).
 
-So the key-slot macro substitutes when a map-name macro is also present in the
-string (38) but not when the map name is literal (36). This contradicts the
-documented rule that $PARAM$ never substitutes inside quoted accessors. The rule
-should be revisited once the behavior is understood; do not rely on either outcome
-until then.
+A $PARAM$ in the map-name slot (37, 38) destroys the "(" so the whole trigger fails
+to parse. An unparseable trigger leaves the if's limit with no valid condition, so
+the if fires and sets _passed = 1: the PASS is a parse-error artifact, not a working
+lookup. A $PARAM$ only in the key slot (36) keeps the trigger parseable but the key
+does not resolve, so at runtime the engine logs "Failed to fetch key for
+'engine_test_macro_map' map due to not being set" and the comparison is false: a
+genuine FAIL.
+
+Conclusion: $PARAM$ cannot be used inside a quoted variable_map accessor. All three
+forms are broken; map-name macros additionally throw a load parse error and read as
+a false-positive true. Use the set_local_variable round-trip with local_var:/scope:
+keys instead. Caveat: the key-slot case (36) mirrors CMM's documented
+"variable_map(cmm|flag:$setting$)" but logs a runtime error here rather than failing
+silently, which is worth reconciling with the global note's "fails silently" wording.
 
 ## Summary
 
 **Total: 32/35 passed (3 failed)**
 
-Tests 36-38 (macro params in quoted accessors) ran 2026-06-19 with an anomalous,
-unexplained result (36 FAIL, 37 PASS, 38 PASS); see the Macro Param Tests section.
+Tests 36-38 (macro params in quoted accessors) ran 2026-06-19. All three are broken;
+the 37/38 PASS are parse-error false positives (see the Macro Param Tests section).
+$PARAM$ cannot be used inside a quoted variable_map accessor.
 
 ### Key Findings
 
