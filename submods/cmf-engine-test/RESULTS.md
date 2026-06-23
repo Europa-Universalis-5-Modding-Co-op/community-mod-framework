@@ -2,39 +2,39 @@
 
 Date: 2026-06-14
 
-## Country Tests (engine_test_run)
+## Country Tests (et_run)
 
 | # | Test | Result |
 |---|------|--------|
-| 1 | scope:setting as variable map key | PASS |
-| 2 | variable_map(x \| scope:setting) read-back | PASS |
+| 1 | scope:et_setting as variable map key | PASS |
+| 2 | variable_map(x \| scope:et_setting) read-back | PASS |
 | 3 | Map value to local variable arithmetic | PASS |
 
 **3/3 passed**
 
-## Global Tests (engine_test_run_global)
+## Global Tests (et_run_global)
 
 | # | Test | Result |
 |---|------|--------|
 | 4 | set_global_variable (baseline) | PASS |
 | 5 | Global write + read (hardcoded flag) | PASS |
-| 6 | Global write + read (scope:setting) | PASS |
-| 7 | scope:setting == flag:engine_test_key_a ? | PASS |
-| 8 | Global write(scope:setting) read(hardcoded) | PASS |
+| 6 | Global write + read (scope:et_setting) | PASS |
+| 7 | scope:et_setting == flag:et_key_a ? | PASS |
+| 8 | Global write(scope:et_setting) read(hardcoded) | PASS |
 | 9 | Read on_action global map (hardcoded) | PASS |
-| 10 | Read on_action global map (scope:setting) | PASS |
-| 11 | Cross-context country map read (flag to scope:setting) | PASS |
+| 10 | Read on_action global map (scope:et_setting) | PASS |
+| 11 | Cross-context country map read (flag to scope:et_setting) | PASS |
 | 12 | Global write stays in global scope | PASS |
 | 13 | flag:->flag: same-key update (country map) | PASS |
 | 14 | flag:->flag: same-key update (global map) | PASS |
-| 15 | scope:setting->scope:setting direct overwrite (global) | PASS |
-| 16 | Update global map entry (flag: then scope:setting) | PASS |
-| 17 | Update country map entry (flag: then scope:setting) | PASS |
-| 18 | Read back update with scope:setting (two entries?) | PASS |
-| 19 | remove_from_map with scope:setting on flag: entry | PASS |
+| 15 | scope:et_setting->scope:et_setting direct overwrite (global) | PASS |
+| 16 | Update global map entry (flag: then scope:et_setting) | PASS |
+| 17 | Update country map entry (flag: then scope:et_setting) | PASS |
+| 18 | Read back update with scope:et_setting (two entries?) | PASS |
+| 19 | remove_from_map with scope:et_setting on flag: entry | PASS |
 | 20 | Workaround: remove + re-add global map | PASS |
 | 21 | Workaround: remove + re-add country map | PASS |
-| 22 | scope:setting remove + re-add (global) | PASS |
+| 22 | scope:et_setting remove + re-add (global) | PASS |
 | 23 | Workaround: var: intermediary for update | PASS |
 | 24 | local_var: as key in variable_map() quoted string | PASS |
 | 25 | local_var: as key in global_variable_map() quoted string | PASS |
@@ -51,7 +51,7 @@ Date: 2026-06-14
 
 **29/32 passed**
 
-## Macro Param Tests (engine_test_run_global)
+## Macro Param Tests (et_run_global)
 
 Run 2026-06-19. The displayed PASS/FAIL is misleading; the engine log explains it.
 
@@ -64,18 +64,18 @@ Run 2026-06-19. The displayed PASS/FAIL is misleading; the engine log explains i
 The macro IS substituted inside the quoted string, but it corrupts the
 variable_map(...) syntax. The load log shows the mangled triggers:
 
-- 37 "variable_map($MAP$|flag:engine_test_key_a)" became
-  "variable_mapengine_test_macro_map$|flag:engine_test_key_a)" (Unknown trigger
+- 37 "variable_map($MAP$|flag:et_key_a)" became
+  "variable_mapet_macro_map$|flag:et_key_a)" (Unknown trigger
   type). The substituted value is there, but the "(" is gone and a stray "$" is left.
 - 38 "variable_map($MAP$|flag:$KEY$)" became
-  "variable_mapengine_test_macro_map$|flagengine_test_key_a$)" (same load error).
+  "variable_mapet_macro_map$|flaget_key_a$)" (same load error).
 
 A $PARAM$ in the map-name slot (37, 38) destroys the "(" so the whole trigger fails
 to parse. An unparseable trigger leaves the if's limit with no valid condition, so
 the if fires and sets _passed = 1: the PASS is a parse-error artifact, not a working
 lookup. A $PARAM$ only in the key slot (36) keeps the trigger parseable but the key
 does not resolve, so at runtime the engine logs "Failed to fetch key for
-'engine_test_macro_map' map due to not being set" and the comparison is false: a
+'et_macro_map' map due to not being set" and the comparison is false: a
 genuine FAIL.
 
 Conclusion: $PARAM$ cannot be used inside a quoted variable_map accessor. All three
@@ -97,7 +97,7 @@ $PARAM$ cannot be used inside a quoted variable_map accessor.
 
 **add_to_variable_map NOW updates existing entries (tests 13-18, 23):**
 - Writing to the same key twice overwrites: `add_to` acts as "add or update", replacing the prior value.
-- Applies to both country and global maps, and regardless of key type (flag:, scope:setting).
+- Applies to both country and global maps, and regardless of key type (flag:, scope:et_setting).
 - Behavior change: on the 2026-03-28 run these tests FAILED (add was "add only", a silent no-op on an existing key), and the var: intermediary update (test 23) also failed. A game patch between 2026-03-28 and 2026-06-14 reversed this. Re-run this suite after any patch before relying on either behavior.
 - remove + re-add (tests 19-22) still works, so cmf_change_variable_map remains correct; it is just no longer required to update a value.
 
@@ -113,4 +113,4 @@ $PARAM$ cannot be used inside a quoted variable_map accessor.
 
 ### GUI Map Read Tests (var: numeric keys) - removed 2026-06-19
 
-A bottom section of the test window probed GUI-side reads of var: numeric-keyed global maps via `GetVariableFromGlobalVariableMap` with `Scope` and `Scope.Self`. The reads never resolved (the window showed `default` / `ERROR_FLAG_INDEX`), and the `Scope.Self` form logged a `FetchData` nullptr error every frame, spamming the console. The probes were display-only and unscored, so they were removed along with the `engine_test_gui_action` map and the second `engine_test_gui_map` entry that fed only them. Finding: GUI-side reads of var: numeric-keyed global-map entries do not resolve; CMF's mod action log keys entries with flag scopes via `MakeScopeFlag`, which does resolve in GUI.
+A bottom section of the test window probed GUI-side reads of var: numeric-keyed global maps via `GetVariableFromGlobalVariableMap` with `Scope` and `Scope.Self`. The reads never resolved (the window showed `default` / `ERROR_FLAG_INDEX`), and the `Scope.Self` form logged a `FetchData` nullptr error every frame, spamming the console. The probes were display-only and unscored, so they were removed along with the `et_gui_action` map and the second `et_gui_map` entry that fed only them. Finding: GUI-side reads of var: numeric-keyed global-map entries do not resolve; CMF's mod action log keys entries with flag scopes via `MakeScopeFlag`, which does resolve in GUI.

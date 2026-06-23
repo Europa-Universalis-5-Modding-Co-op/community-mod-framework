@@ -1,0 +1,1248 @@
+window = {
+	name = "et_window"
+	parentanchor = center
+	widgetanchor = center
+	size = { 700 800 }
+	movable = yes
+	using = bg_window_default_alt
+	allow_outside = yes
+	visible = "[Not(GetVariableSystem.Exists('et_closed'))]"
+
+	vbox = {
+		using = window_margin_alt
+		spacing = 0
+
+		window_header_alt = {
+			blockoverride "header_text_object" {
+				header_title = {
+					text = "ET_TITLE"
+				}
+			}
+		}
+
+		scrollbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			blockoverride "scrollbox_content" {
+				spacing = 4
+				margin_right = 20
+
+		# =======================================================
+		# Section 1: Country-Scope Variable Map Tests
+		# =======================================================
+
+		hbox = {
+			button_regular = {
+				text = "ET_RUN"
+				minimumsize = { 180 30 }
+				fontsize = 14
+				onclick = "[GetScriptedGui('et_run').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('et_setting', MakeScopeFlag('et_key_a')).End)]"
+				tooltip = "ET_RUN_TOOLTIP_COUNTRY"
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# Result: PASS
+			# -- Test 1 --------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_1_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_1_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_1_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 2 --------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_2_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_2_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_2_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 3 --------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_3_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_3_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_3_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+		}
+
+		# -- Separator ---------------------------------------
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 2 }
+		}
+
+		# =======================================================
+		# Section 2: Global Variable Map Tests
+		# =======================================================
+
+		hbox = {
+			button_regular = {
+				text = "ET_RUN_GLOBAL"
+				minimumsize = { 180 30 }
+				fontsize = 14
+				onclick = "[GetScriptedGui('et_run_global').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('et_setting', MakeScopeFlag('et_key_a')).End)]"
+				tooltip = "ET_RUN_TOOLTIP_GLOBAL"
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# Result: PASS
+			# -- Test 4 --------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_4_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_4_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_4_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 5 --------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_5_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_5_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_5_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 6 --------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_6_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_6_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_6_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 7 --------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_7_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_7_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_7_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 8 --------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_8_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_8_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_8_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 9 --------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_9_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_9_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_9_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 10 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_10_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_10_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_10_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 11 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_11_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_11_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_11_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+			# Result: PASS
+			# -- Test 12 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_12_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_12_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_12_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: FAIL
+			# -- Test 13 ------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_13_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_13_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_13_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: FAIL
+			# -- Test 14 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_14_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_14_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_14_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: FAIL
+			# -- Test 15 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_15_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_15_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_15_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: FAIL
+			# -- Test 16 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_16_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_16_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_16_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: FAIL
+			# -- Test 17 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_17_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_17_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_17_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+			# Result: FAIL
+			# -- Test 18 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_18_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_18_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_18_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 19 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_19_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_19_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_19_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 20 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_20_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_20_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_20_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 21 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_21_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_21_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_21_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 22 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_22_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_22_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_22_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: FAIL
+			# -- Test 23 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_23_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_23_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_23_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 24 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_24_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_24_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_24_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 25 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_25_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_25_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_25_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+			# Result: FAIL
+			# -- Test 26 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_26_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_26_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_26_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: FAIL
+			# -- Test 27 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_27_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_27_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_27_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+		}
+
+		# -- Separator ---------------------------------------
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 2 }
+		}
+
+		# =======================================================
+		# Section 3: Variable Map Iteration Tests
+		# =======================================================
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# Result: PASS
+			# -- Test 28 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_28_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_28_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_28_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 29 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_29_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_29_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_29_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 30 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_30_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_30_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_30_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: FAIL
+			# -- Test 31 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_31_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_31_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_31_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 32 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_32_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_32_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_32_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Result: PASS
+			# -- Test 33 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_33_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_33_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_33_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# -- Test 34 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_34_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_34_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_34_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# -- Test 35 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_35_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_35_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_35_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+		}
+
+		# -- Separator ---------------------------------------
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 2 }
+		}
+
+		# =======================================================
+		# Section 3b: Macro Param Tests (quoted accessors)
+		# =======================================================
+
+		text_single = {
+			fontsize = 14
+			text = "ET_MACRO_SECTION"
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# Expected: FAIL
+			# -- Test 36 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_36_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_36_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_36_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Expected: FAIL
+			# -- Test 37 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_37_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_37_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_37_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# Expected: FAIL
+			# -- Test 38 -------------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_38_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_global_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_38_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_global_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_38_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+		}
+
+			} # end blockoverride "scrollbox_content"
+		} # end scrollbox
+	}
+}

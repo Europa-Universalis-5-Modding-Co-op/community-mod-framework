@@ -1,0 +1,742 @@
+﻿# Engine validation scripted GUI.
+# Receives scope:et_setting via AddScope from the GUI button.
+# Tests three assumptions about variable maps + AddScope interaction.
+et_run = {
+	scope = country
+
+	saved_scopes = {
+		et_setting
+	}
+
+	effect = {
+		# Reset all results before running
+		set_variable = { name = et_1_passed value = 0 }
+		set_variable = { name = et_2_passed value = 0 }
+		set_variable = { name = et_3_passed value = 0 }
+
+		# Result: PASS
+		# -- Test 1 ----------------------------------------------
+		# Can scope:et_setting (a flag passed via AddScope) be used
+		# as a variable map key?
+		# If this line crashes, all three tests stay at 0 (fail).
+		add_to_variable_map = {
+			name = et_map
+			key = scope:et_setting
+			value = 42
+		}
+		set_variable = { name = et_1_passed value = 1 }
+
+		# Result: PASS
+		# -- Test 2 ----------------------------------------------
+		# Can "variable_map(name|scope:et_setting)" resolve the
+		# stored value back through the same scope reference?
+		if = {
+			limit = {
+				"variable_map(et_map|scope:et_setting)" >= 42
+			}
+			set_variable = { name = et_2_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 3 ----------------------------------------------
+		# Can the map value be stored in a local variable and
+		# used for arithmetic?
+		set_local_variable = {
+			name = temp
+			value = "variable_map(et_map|scope:et_setting)"
+		}
+		change_local_variable = {
+			name = temp
+			add = 1
+		}
+		if = {
+			limit = { local_var:temp >= 43 }
+			set_variable = { name = et_3_passed value = 1 }
+		}
+
+		# -- Seeds for cross-context tests (run by global suite) --
+		# Write with hardcoded flag: key. Global suite will try to
+		# update these entries using scope:et_setting.
+		add_to_variable_map = {
+			name = et_cross
+			key = flag:et_key_a
+			value = 55
+		}
+		add_to_global_variable_map = {
+			name = et_gmap_update
+			key = flag:et_key_a
+			value = 10
+		}
+		add_to_variable_map = {
+			name = et_cmap_update
+			key = flag:et_key_a
+			value = 10
+		}
+
+		# Mark that the test suite has been executed
+		set_variable = { name = et_has_run value = 1 }
+	}
+}
+
+# Global variable map engine validation scripted GUI.
+# Tests whether add_to_global_variable_map works from scripted GUI context.
+# Receives scope:et_setting via AddScope from the GUI button.
+et_run_global = {
+	scope = country
+
+	saved_scopes = {
+		et_setting
+	}
+
+	effect = {
+		# Reset all global test results
+		set_variable = { name = et_4_passed value = 0 }
+		set_variable = { name = et_5_passed value = 0 }
+		set_variable = { name = et_6_passed value = 0 }
+		set_variable = { name = et_7_passed value = 0 }
+		set_variable = { name = et_8_passed value = 0 }
+		set_variable = { name = et_9_passed value = 0 }
+		set_variable = { name = et_10_passed value = 0 }
+		set_variable = { name = et_11_passed value = 0 }
+		set_variable = { name = et_12_passed value = 0 }
+		set_variable = { name = et_13_passed value = 0 }
+		set_variable = { name = et_14_passed value = 0 }
+		set_variable = { name = et_15_passed value = 0 }
+		set_variable = { name = et_16_passed value = 0 }
+		set_variable = { name = et_17_passed value = 0 }
+		set_variable = { name = et_18_passed value = 0 }
+		set_variable = { name = et_19_passed value = 0 }
+		set_variable = { name = et_20_passed value = 0 }
+		set_variable = { name = et_21_passed value = 0 }
+		set_variable = { name = et_22_passed value = 0 }
+		set_variable = { name = et_23_passed value = 0 }
+		set_variable = { name = et_24_passed value = 0 }
+		set_variable = { name = et_25_passed value = 0 }
+		set_variable = { name = et_26_passed value = 0 }
+		set_variable = { name = et_27_passed value = 0 }
+		set_variable = { name = et_28_passed value = 0 }
+		set_variable = { name = et_29_passed value = 0 }
+		set_variable = { name = et_30_passed value = 0 }
+		set_variable = { name = et_31_passed value = 0 }
+		set_variable = { name = et_32_passed value = 0 }
+		set_variable = { name = et_33_passed value = 0 }
+		set_variable = { name = et_34_passed value = 0 }
+
+		# Result: PASS
+		# -- Test 4 ----------------------------------------------
+		# set_global_variable from scripted GUI context.
+		# Baseline: do any global writes work from scripted GUI?
+		set_global_variable = { name = et_gvar6 value = 42 }
+		if = {
+			limit = { global_var:et_gvar6 >= 42 }
+			set_variable = { name = et_4_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 5 ----------------------------------------------
+		# Global map write + read via hardcoded flag key.
+		# Isolates: is it scope:et_setting or global map writes in general?
+		add_to_global_variable_map = {
+			name = et_gmap5
+			key = flag:et_hardcoded
+			value = 42
+		}
+		if = {
+			limit = {
+				"global_variable_map(et_gmap5|flag:et_hardcoded)" >= 42
+			}
+			set_variable = { name = et_5_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 6 ----------------------------------------------
+		# Global map write + read via scope:et_setting key.
+		# This is the exact pattern used by CMM auto-apply for global settings.
+		add_to_global_variable_map = {
+			name = et_gmap4
+			key = scope:et_setting
+			value = 42
+		}
+		if = {
+			limit = {
+				"global_variable_map(et_gmap4|scope:et_setting)" >= 42
+			}
+			set_variable = { name = et_6_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 7 ----------------------------------------------
+		# Verify scope:et_setting actually resolves to the correct flag.
+		# Store it in a variable and compare to flag:et_key_a.
+		set_variable = { name = et_scope_val value = scope:et_setting }
+		if = {
+			limit = {
+				var:et_scope_val = flag:et_key_a
+			}
+			set_variable = { name = et_7_passed value = 1 }
+		}
+		remove_variable = et_scope_val
+
+		# Result: PASS
+		# -- Test 8 ----------------------------------------------
+		# Global map write with scope:et_setting, read with hardcoded flag.
+		# scope:et_setting = flag:et_key_a (set via MakeScopeFlag).
+		# If test 6 fails but this passes: reading via scope:et_setting is
+		# broken for global maps, but the write works.
+		add_to_global_variable_map = {
+			name = et_gmap7
+			key = scope:et_setting
+			value = 42
+		}
+		if = {
+			limit = {
+				"global_variable_map(et_gmap7|flag:et_key_a)" >= 42
+			}
+			set_variable = { name = et_8_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 9 ----------------------------------------------
+		# Read global map written by on_action (hardcoded flag key).
+		# on_action wrote: et_gmap8[flag:et_preseeded] = 10
+		# Tests: can scripted GUI read global maps at all?
+		if = {
+			limit = {
+				"global_variable_map(et_gmap8|flag:et_preseeded)" >= 10
+			}
+			set_variable = { name = et_9_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 10 ---------------------------------------------
+		# Read global map written by on_action via scope:et_setting key.
+		# on_action wrote: et_gmap9[flag:et_key_a] = 77
+		# scope:et_setting = flag:et_key_a
+		# Tests: does scope:et_setting work as a read key for global maps?
+		if = {
+			limit = {
+				"global_variable_map(et_gmap9|scope:et_setting)" >= 77
+			}
+			set_variable = { name = et_10_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 11 ---------------------------------------------
+		# Cross-context country map read: et_run wrote
+		# et_cross[flag:et_key_a] = 55 in a
+		# previous scripted GUI call. Can it be read here using
+		# scope:et_setting (= MakeScopeFlag('et_key_a'))?
+		# This is the exact pattern CMM uses: registration writes
+		# with flag:, auto-apply reads with scope:et_setting.
+		if = {
+			limit = {
+				has_variable_map = et_cross
+				"variable_map(et_cross|scope:et_setting)" >= 55
+			}
+			set_variable = { name = et_11_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 12 ---------------------------------------------
+		# Verify test 6's global write did NOT land in the country map.
+		# Pass = add_to_global_variable_map correctly targets global scope.
+		# Fail = global write leaked into country scope (engine bug).
+		if = {
+			limit = {
+				NOT = { has_variable_map = et_gmap4 }
+			}
+			set_variable = { name = et_12_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 13 ---------------------------------------------
+		# Does add_to_variable_map update an existing entry when
+		# both the original and the new write use the same flag:
+		# key? This determines whether add_to is "add or update"
+		# vs "add only, no-op if exists."
+		# Seed with value 10, then overwrite with value 99.
+		add_to_variable_map = {
+			name = et_ff_cmap
+			key = flag:et_key_a
+			value = 10
+		}
+		add_to_variable_map = {
+			name = et_ff_cmap
+			key = flag:et_key_a
+			value = 99
+		}
+		if = {
+			limit = {
+				"variable_map(et_ff_cmap|flag:et_key_a)" >= 99
+			}
+			set_variable = { name = et_13_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 14 ---------------------------------------------
+		# Same as test 13 but for global variable maps.
+		# Does add_to_global_variable_map update an existing
+		# global entry with the same flag: key?
+		add_to_global_variable_map = {
+			name = et_ff_gmap
+			key = flag:et_key_a
+			value = 10
+		}
+		add_to_global_variable_map = {
+			name = et_ff_gmap
+			key = flag:et_key_a
+			value = 99
+		}
+		if = {
+			limit = {
+				"global_variable_map(et_ff_gmap|flag:et_key_a)" >= 99
+			}
+			set_variable = { name = et_14_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 15 ---------------------------------------------
+		# scope:et_setting -> scope:et_setting direct overwrite attempt.
+		# Write with scope:et_setting (value 10), then write again
+		# with scope:et_setting (value 99). Read back with
+		# scope:et_setting. If pass, add_to updates in-place when
+		# the key reference type matches.
+		add_to_global_variable_map = {
+			name = et_gmap26
+			key = scope:et_setting
+			value = 10
+		}
+		add_to_global_variable_map = {
+			name = et_gmap26
+			key = scope:et_setting
+			value = 99
+		}
+		if = {
+			limit = {
+				"global_variable_map(et_gmap26|scope:et_setting)" >= 99
+			}
+			set_variable = { name = et_15_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 16 ---------------------------------------------
+		# Update global map entry: et_run seeded
+		# et_gmap_update[flag:et_key_a] = 10.
+		# Try to overwrite it using scope:et_setting, then read back
+		# with hardcoded flag: to see if the update took effect.
+		# This is the exact CMM pattern: registration writes with
+		# flag:, auto-apply updates with scope:et_setting.
+		add_to_global_variable_map = {
+			name = et_gmap_update
+			key = scope:et_setting
+			value = 99
+		}
+		if = {
+			limit = {
+				"global_variable_map(et_gmap_update|flag:et_key_a)" >= 99
+			}
+			set_variable = { name = et_16_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 17 ---------------------------------------------
+		# Update country map entry: et_run seeded
+		# et_cmap_update[flag:et_key_a] = 10.
+		# Same test but for country-scoped maps.
+		add_to_variable_map = {
+			name = et_cmap_update
+			key = scope:et_setting
+			value = 99
+		}
+		if = {
+			limit = {
+				"variable_map(et_cmap_update|flag:et_key_a)" >= 99
+			}
+			set_variable = { name = et_17_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 18 ---------------------------------------------
+		# After test 16 wrote with scope:et_setting, read back with
+		# scope:et_setting. If pass, the write did create an entry
+		# (just not one that flag: can find - two separate entries).
+		# If fail, the write silently did nothing at all.
+		if = {
+			limit = {
+				"global_variable_map(et_gmap_update|scope:et_setting)" >= 99
+			}
+			set_variable = { name = et_18_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 19 ---------------------------------------------
+		# Can remove_from_global_variable_map with scope:et_setting
+		# remove an entry created with flag:?
+		# Uses et_gmap8 (seeded by on_action with
+		# flag:et_preseeded = 10). A different
+		# scope:et_setting here - this test will only pass if scope
+		# keys match for removal. Note: scope:et_setting is
+		# flag:et_key_a, not flag:et_preseeded,
+		# so a separate map is needed. Re-seed a fresh map here.
+		add_to_global_variable_map = {
+			name = et_gmap_remove
+			key = flag:et_key_a
+			value = 50
+		}
+		# Dummy second entry keeps the map alive after removing the
+		# tested key (an empty map is deleted by the engine, which
+		# makes is_key_in_global_variable_map error on a missing map).
+		add_to_global_variable_map = {
+			name = et_gmap_remove
+			key = flag:et_iter_a
+			value = 1
+		}
+		remove_from_global_variable_map = {
+			name = et_gmap_remove
+			key = scope:et_setting
+		}
+		if = {
+			limit = {
+				NOT = {
+					is_key_in_global_variable_map = {
+						name = et_gmap_remove
+						target = flag:et_key_a
+					}
+				}
+			}
+			set_variable = { name = et_19_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 20 ---------------------------------------------
+		# Workaround: remove then re-add. Seed a fresh global map
+		# with flag:, then remove with scope:et_setting, then add with
+		# scope:et_setting, then read with flag: to verify.
+		add_to_global_variable_map = {
+			name = et_gmap18
+			key = flag:et_key_a
+			value = 10
+		}
+		remove_from_global_variable_map = {
+			name = et_gmap18
+			key = scope:et_setting
+		}
+		add_to_global_variable_map = {
+			name = et_gmap18
+			key = scope:et_setting
+			value = 99
+		}
+		if = {
+			limit = {
+				"global_variable_map(et_gmap18|flag:et_key_a)" >= 99
+			}
+			set_variable = { name = et_20_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 21 ---------------------------------------------
+		# Same workaround but for country-scoped maps.
+		add_to_variable_map = {
+			name = et_cmap19
+			key = flag:et_key_a
+			value = 10
+		}
+		remove_from_variable_map = {
+			name = et_cmap19
+			key = scope:et_setting
+		}
+		add_to_variable_map = {
+			name = et_cmap19
+			key = scope:et_setting
+			value = 99
+		}
+		if = {
+			limit = {
+				"variable_map(et_cmap19|flag:et_key_a)" >= 99
+			}
+			set_variable = { name = et_21_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 22 ---------------------------------------------
+		# scope:et_setting -> remove + re-add. Write with
+		# scope:et_setting (value 10), remove with scope:et_setting,
+		# then re-add with scope:et_setting (value 99). Read back
+		# with scope:et_setting. Verifies the remove+re-add pattern
+		# works when both operations use scope:et_setting.
+		add_to_global_variable_map = {
+			name = et_gmap27
+			key = scope:et_setting
+			value = 10
+		}
+		remove_from_global_variable_map = {
+			name = et_gmap27
+			key = scope:et_setting
+		}
+		add_to_global_variable_map = {
+			name = et_gmap27
+			key = scope:et_setting
+			value = 99
+		}
+		if = {
+			limit = {
+				"global_variable_map(et_gmap27|scope:et_setting)" >= 99
+			}
+			set_variable = { name = et_22_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 23 ---------------------------------------------
+		# Workaround: store scope:et_setting in a variable, then use
+		# var: as the map key. Does this match the flag: key?
+		set_variable = { name = et_tmp_fk value = scope:et_setting }
+		add_to_global_variable_map = {
+			name = et_gmap_update
+			key = var:et_tmp_fk
+			value = 77
+		}
+		if = {
+			limit = {
+				"global_variable_map(et_gmap_update|flag:et_key_a)" >= 77
+			}
+			set_variable = { name = et_23_passed value = 1 }
+		}
+		remove_variable = et_tmp_fk
+
+		# Result: PASS
+		# -- Test 24 ---------------------------------------------
+		# Can local_var: be used as a map key inside quoted scope
+		# link strings? Store scope:et_setting in a local variable,
+		# then use local_var: inside "variable_map(...)" to read
+		# a country-scoped map entry written with flag:.
+		# et_cross[flag:et_key_a] = 55 was
+		# seeded by et_run.
+		set_local_variable = { name = et_lv value = flag:et_key_a }
+		if = {
+			limit = {
+				has_variable_map = et_cross
+				"variable_map(et_cross|local_var:et_lv)" >= 55
+			}
+			set_variable = { name = et_24_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 25 ---------------------------------------------
+		# Same as test 24 but for global_variable_map.
+		# et_gmap9[flag:et_key_a] = 77 was
+		# seeded by on_game_start on_action.
+		if = {
+			limit = {
+				"global_variable_map(et_gmap9|local_var:et_lv)" >= 77
+			}
+			set_variable = { name = et_25_passed value = 1 }
+		}
+
+		# Result: FAIL
+		# -- Test 26 ---------------------------------------------
+		# Can local_var: be used in the map name position of a
+		# quoted scope link? i.e. "variable_map(local_var:X|...)"
+		# Uses et_cross (seeded by et_run).
+		set_local_variable = { name = et_map_name value = flag:et_cross }
+		if = {
+			limit = {
+				"variable_map(local_var:et_map_name|flag:et_key_a)" >= 55
+			}
+			set_variable = { name = et_26_passed value = 1 }
+		}
+
+		# Result: FAIL
+		# -- Test 27 ---------------------------------------------
+		# Can var: be used in the map name position of a
+		# quoted scope link? i.e. "variable_map(var:X|...)"
+		# Uses et_cross (seeded by et_run).
+		set_variable = { name = et_map_name_v value = flag:et_cross }
+		if = {
+			limit = {
+				"variable_map(var:et_map_name_v|flag:et_key_a)" >= 55
+			}
+			set_variable = { name = et_27_passed value = 1 }
+		}
+		remove_variable = et_map_name_v
+
+		# Result: PASS
+		# -- Test 28 ---------------------------------------------
+		# every_key_in_variable_map: iterate all entries in a
+		# country-scoped variable map. Seed 3 entries, iterate
+		# and count using a global counter variable.
+		# Pass if the counter reaches 3 (all entries visited).
+		add_to_variable_map = {
+			name = et_iter
+			key = flag:et_iter_a
+			value = 10
+		}
+		add_to_variable_map = {
+			name = et_iter
+			key = flag:et_iter_b
+			value = 20
+		}
+		add_to_variable_map = {
+			name = et_iter
+			key = flag:et_iter_c
+			value = 30
+		}
+		set_global_variable = { name = et_28_count value = 0 }
+		every_key_in_variable_map = {
+			limit = { always = yes }
+			variable = et_iter
+			change_global_variable = { name = et_28_count add = 1 }
+		}
+		if = {
+			limit = { global_var:et_28_count >= 3 }
+			set_variable = { name = et_28_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 29 ---------------------------------------------
+		# random_key_in_variable_map: pick a random entry from
+		# a country-scoped variable map.
+		# Pass if the effect block executes (an entry was picked).
+		set_global_variable = { name = et_29_picked value = 0 }
+		random_key_in_variable_map = {
+			variable = et_iter
+			limit = { always = yes }
+			set_global_variable = { name = et_29_picked value = 1 }
+		}
+		if = {
+			limit = { global_var:et_29_picked >= 1 }
+			set_variable = { name = et_29_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 30 ---------------------------------------------
+		# ordered_key_in_variable_map: iterate keys in order.
+		# Uses position = 0 and max = 1 to select exactly one
+		# entry from the map.
+		# Pass if the effect block executes.
+		# Note: order_by cannot use "variable_map(X|this)" because
+		# the iterator scope is the key (a flag), which has no
+		# variable maps. Use a constant instead.
+		set_global_variable = { name = et_30_picked value = 0 }
+		ordered_key_in_variable_map = {
+			variable = et_iter
+			order_by = 0
+			position = 0
+			# max = 1 # Causes errors if used with a position field.
+			check_range_bounds = no
+			set_global_variable = { name = et_30_picked value = 1 }
+		}
+		if = {
+			limit = { global_var:et_30_picked >= 1 }
+			set_variable = { name = et_30_passed value = 1 }
+		}
+
+		# Result: FAIL (default max is 1, not all entries)
+		# -- Test 31 ---------------------------------------------
+		# ordered_key_in_variable_map: iterate all keys without
+		# position/max constraints. Only order_by is specified.
+		# Pass if the counter reaches 3 (all entries visited).
+		set_global_variable = { name = et_31_count value = 0 }
+		ordered_key_in_variable_map = {
+			variable = et_iter
+			order_by = 0
+			# max = 3 # Without this line, the test fails
+			# check_range_bounds = no # Even having this on fails without the max
+			change_global_variable = { name = et_31_count add = 1 }
+		}
+		if = {
+			limit = { global_var:et_31_count >= 3 }
+			set_variable = { name = et_31_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 32 ---------------------------------------------
+		# ordered_key_in_variable_map: same as test 31 but with
+		# max specified. This succeeds while test 31 (without max)
+		# fails, suggesting max is required for iteration.
+		set_global_variable = { name = et_32_count value = 0 }
+		ordered_key_in_variable_map = {
+			variable = et_iter
+			order_by = 0
+			max = 3
+			change_global_variable = { name = et_32_count add = 1 }
+		}
+		if = {
+			limit = { global_var:et_32_count >= 3 }
+			set_variable = { name = et_32_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 33 ---------------------------------------------
+		# every_key_in_global_variable_map: iterate all entries
+		# in a global variable map using only the variable field.
+		# Uses et_gmap8 (seeded by on_game_start with
+		# one entry: flag:et_preseeded = 10).
+		# Pass if the counter reaches 1 (the entry was visited).
+		set_global_variable = { name = et_33_count value = 0 }
+		every_key_in_global_variable_map = {
+			variable = et_gmap8
+			change_global_variable = { name = et_33_count add = 1 }
+		}
+		if = {
+			limit = { global_var:et_33_count >= 1 }
+			set_variable = { name = et_33_passed value = 1 }
+		}
+
+		# -- Test 34 ---------------------------------------------
+		# ordered_key_in_variable_map: does omitting max default
+		# to picking exactly one element? Uses the same
+		# et_iter map (3 entries). Counts iterations.
+		# Pass if the counter reaches exactly 1.
+		set_global_variable = { name = et_34_count value = 0 }
+		ordered_key_in_variable_map = {
+			variable = et_iter
+			order_by = 0
+			change_global_variable = { name = et_34_count add = 1 }
+		}
+		if = {
+			limit = { global_var:et_34_count = 1 }
+			set_variable = { name = et_34_passed value = 1 }
+		}
+
+		# -- Test 35 ---------------------------------------------
+		# Write global map with var: (country variable holding
+		# numeric 0) as key, read back with var: in quoted string.
+		# Verifies the var: key is usable for script-side reads.
+		set_variable = { name = et_35_passed value = 0 }
+		set_variable = { name = _et_idx value = 0 }
+		add_to_global_variable_map = {
+			name = et_gui_map
+			key = var:_et_idx
+			value = 42
+		}
+		if = {
+			limit = {
+				"global_variable_map(et_gui_map|var:_et_idx)" >= 42
+			}
+			set_variable = { name = et_35_passed value = 1 }
+		}
+		remove_variable = _et_idx
+
+		# -- Tests 36-38: macro params in quoted accessors -------
+		# Seed a dedicated map with a literal write so a FAIL is
+		# attributable only to the macro substitution, then probe
+		# the key slot, the map-name slot, and both.
+		set_variable = { name = et_36_passed value = 0 }
+		set_variable = { name = et_37_passed value = 0 }
+		set_variable = { name = et_38_passed value = 0 }
+		add_to_variable_map = {
+			name = et_macro_map
+			key = flag:et_key_a
+			value = 55
+		}
+		# Test 36. Expected: FAIL.
+		et_macro_key = { KEY = et_key_a }
+		# Test 37. Expected: FAIL.
+		et_macro_map_name = { MAP = et_macro_map }
+		# Test 38. Expected: FAIL.
+		et_macro_both = { MAP = et_macro_map KEY = et_key_a }
+
+		# Mark that the global test suite has been executed
+		set_variable = { name = et_global_has_run value = 1 }
+	}
+}

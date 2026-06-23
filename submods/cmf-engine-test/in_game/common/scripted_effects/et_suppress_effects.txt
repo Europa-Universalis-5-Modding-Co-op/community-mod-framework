@@ -1,0 +1,63 @@
+﻿# Dead branch suppression for engine test warnings.
+# The script checker cannot see variable/flag usage in GUI expressions
+# or inside quoted scope link strings. This unused effect references
+# all flagged names so the checker considers them used/set.
+et_suppress_warnings = {
+	if = {
+		limit = {
+			always = no
+			# Suppress "set but never used" for country variables
+			exists = var:et_1_passed
+			exists = var:et_2_passed
+			exists = var:et_3_passed
+			exists = var:et_4_passed
+			exists = var:et_5_passed
+			exists = var:et_6_passed
+			exists = var:et_7_passed
+			exists = var:et_8_passed
+			exists = var:et_9_passed
+			exists = var:et_10_passed
+			exists = var:et_11_passed
+			exists = var:et_12_passed
+			exists = var:et_13_passed
+			exists = var:et_14_passed
+			exists = var:et_15_passed
+			exists = var:et_16_passed
+			exists = var:et_17_passed
+			exists = var:et_18_passed
+			exists = var:et_19_passed
+			exists = var:et_20_passed
+			exists = var:et_21_passed
+			exists = var:et_22_passed
+			exists = var:et_23_passed
+			exists = var:et_24_passed
+			exists = var:et_25_passed
+			exists = var:et_26_passed
+			exists = var:et_27_passed
+			exists = var:et_28_passed
+			exists = var:et_29_passed
+			exists = var:et_30_passed
+			exists = var:et_31_passed
+			exists = var:et_32_passed
+			exists = var:et_33_passed
+			exists = var:et_34_passed
+			exists = var:et_35_passed
+			exists = var:et_36_passed
+			exists = var:et_37_passed
+			exists = var:et_38_passed
+			exists = var:et_has_run
+			exists = var:et_global_has_run
+			exists = var:et_map_name_v
+			# Suppress "set but never used" for local variables
+			exists = local_var:et_lv
+			exists = local_var:et_map_name
+			# Suppress "set but never used" for flags
+			exists = flag:et_cross
+			exists = flag:et_hardcoded
+			exists = flag:et_iter_a
+			exists = flag:et_iter_b
+			exists = flag:et_iter_c
+			exists = flag:et_preseeded
+		}
+	}
+}
