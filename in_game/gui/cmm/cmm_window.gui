@@ -1,5 +1,8 @@
 ﻿window = {
 	name = "cmm_window"
+	max_update_rate = 9999
+	# reuse_widgets = yes
+	# datamodel_reuse_widgets = yes
 	alwaystransparent = no
 	filter_mouse = all
 	layer = top
