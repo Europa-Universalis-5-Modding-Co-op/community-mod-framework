@@ -18,6 +18,8 @@
 		selectedindex = "[CMMDropdownSelectedIndex(Scope.GetFlagName)]"
 		onselectionchanged = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', GetVariableSystem.Get('cmm_dropdown_hover_index'))]"
 		onselectionchanged = "[CMMExecuteAutoApply('cmm_auto_apply_dropdown', Scope.GetFlagName)]"
+		# Refresh list-field cell caches because a setting change can alter what a list displays.
+		onselectionchanged = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 
 		active_item = {
 			widget = {
@@ -139,6 +141,8 @@
 
 				onclick = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 				onclick = "[CMMExecuteAutoApply('cmm_auto_apply_dropdown', Scope.GetFlagName)]"
+				# Refresh list-field cell caches because a setting change can alter what a list displays.
+				onclick = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 
 				tooltipwidget = { BasicFunctionalTooltip = {} }
 				tooltip = "[CMMOptionDesc(Scope.GetFlagName, CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))]"

@@ -93,7 +93,7 @@ macro = {
 macro = {
     description = "List item field value accessor"
     definition = "CMMListItemFieldValue(ItemKey,SlotKey)"
-    replace_with = "Select_CFixedPoint(CMMSettingIsGlobal(CMMListItemOwnerSettingKey(ItemKey)), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey)))).GetValue, CMMListItemFieldVar(ItemKey, SlotKey).GetValue)"
+    replace_with = "Select_CFixedPoint(GetVariableSystem.HasValue(Concatenate(ItemKey, Concatenate('_isg_', SlotKey)), 'yes'), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey)))).GetValue, CMMListItemFieldVar(ItemKey, SlotKey).GetValue)"
 }
 
 # Args: ItemKey (string), SlotKey (string)
