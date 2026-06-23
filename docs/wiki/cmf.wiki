@@ -205,7 +205,7 @@ on_game_start_after_lobby_human_country = {
 </syntaxhighlight>
 
 === Country Transfer ===
-<code>cmf_on_country_transfer</code> fires when the player switches countries (tag switches, inheritance, etc.). CMF auto-copies CMM settings and re-runs registration before this fires. <code>scope:old_country</code> and <code>scope:new_country</code> are available.
+<code>cmf_on_country_transfer</code> fires when the player switches countries (tag switches, inheritance, etc.). CMF auto-copies CMM settings. <code>scope:old_country</code> and <code>scope:new_country</code> are available.
 <syntaxhighlight lang="text">
 cmf_on_country_transfer = {
 	on_actions = { your_mod_on_country_transfer }
