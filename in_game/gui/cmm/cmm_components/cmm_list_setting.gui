@@ -32,44 +32,11 @@
 			on_start = "[GetVariableSystem.Set('cmm_can_edit_list', 'no')]"
 		}
 
-		state = {
-			name = cmm_cache_list_metadata
-			trigger_when = "[Not(GetVariableSystem.HasValue('cmm_list_sk', Scope.GetFlagName))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_sk', Scope.GetFlagName)]"
-			on_start = "[GetVariableSystem.Set('cmm_list_is_global', Select_CString(CMMSettingIsGlobal(Scope.GetFlagName), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_lk_1', CMMListFieldLocKey(Scope.GetFlagName, '1'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_lk_2', CMMListFieldLocKey(Scope.GetFlagName, '2'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_lk_3', CMMListFieldLocKey(Scope.GetFlagName, '3'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_lk_4', CMMListFieldLocKey(Scope.GetFlagName, '4'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_lk_5', CMMListFieldLocKey(Scope.GetFlagName, '5'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_hp_1', Select_CString(CMMListFieldHasPrefix(Scope.GetFlagName, '1'), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_hp_2', Select_CString(CMMListFieldHasPrefix(Scope.GetFlagName, '2'), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_hp_3', Select_CString(CMMListFieldHasPrefix(Scope.GetFlagName, '3'), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_hp_4', Select_CString(CMMListFieldHasPrefix(Scope.GetFlagName, '4'), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_hp_5', Select_CString(CMMListFieldHasPrefix(Scope.GetFlagName, '5'), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_hpp_1', Select_CString(CMMListFieldHasPostfix(Scope.GetFlagName, '1'), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_hpp_2', Select_CString(CMMListFieldHasPostfix(Scope.GetFlagName, '2'), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_hpp_3', Select_CString(CMMListFieldHasPostfix(Scope.GetFlagName, '3'), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_hpp_4', Select_CString(CMMListFieldHasPostfix(Scope.GetFlagName, '4'), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_hpp_5', Select_CString(CMMListFieldHasPostfix(Scope.GetFlagName, '5'), 'yes', 'no'))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_pfx_1', Localize(Concatenate(CMMCachedFieldLocKey('1'), '_prefix')))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_pfx_2', Localize(Concatenate(CMMCachedFieldLocKey('2'), '_prefix')))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_pfx_3', Localize(Concatenate(CMMCachedFieldLocKey('3'), '_prefix')))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_pfx_4', Localize(Concatenate(CMMCachedFieldLocKey('4'), '_prefix')))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_pfx_5', Localize(Concatenate(CMMCachedFieldLocKey('5'), '_prefix')))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_pofx_1', Localize(Concatenate(CMMCachedFieldLocKey('1'), '_postfix')))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_pofx_2', Localize(Concatenate(CMMCachedFieldLocKey('2'), '_postfix')))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_pofx_3', Localize(Concatenate(CMMCachedFieldLocKey('3'), '_postfix')))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_pofx_4', Localize(Concatenate(CMMCachedFieldLocKey('4'), '_postfix')))]"
-			on_start = "[GetVariableSystem.Set('cmm_list_pofx_5', Localize(Concatenate(CMMCachedFieldLocKey('5'), '_postfix')))]"
-		}
-
 		# Delays cache refresh by one frame after a click so that scripted GUI effects have committed before values are read.
 		state = {
 			name = cmm_recache_delay
 			duration = 0.001
 			on_finish = "[PdxGuiTriggerAllAnimations('cmm_cache_field_cell')]"
-			on_finish = "[GetVariableSystem.Clear('cmm_list_sk')]"
 		}
 
 		widget = {

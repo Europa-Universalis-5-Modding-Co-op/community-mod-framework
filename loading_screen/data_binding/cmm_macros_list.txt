@@ -93,7 +93,7 @@ macro = {
 macro = {
     description = "List item field value accessor"
     definition = "CMMListItemFieldValue(ItemKey,SlotKey)"
-    replace_with = "Select_CFixedPoint(GetVariableSystem.HasValue('cmm_list_is_global', 'yes'), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey)))).GetValue, CMMListItemFieldVar(ItemKey, SlotKey).GetValue)"
+    replace_with = "Select_CFixedPoint(CMMSettingIsGlobal(CMMListItemOwnerSettingKey(ItemKey)), GetVariableFromGlobalVariableMap('cmm', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey)))).GetValue, CMMListItemFieldVar(ItemKey, SlotKey).GetValue)"
 }
 
 # Args: ItemKey (string), SlotKey (string)
@@ -190,6 +190,22 @@ macro = {
     description = "Sign-conditional postfix: selects _postfix_high (>0), _postfix_low (<0), or _postfix (==0) without existence checks"
     definition = "CMMListFieldConditionalPostfix(SettingKey,ItemKey,SlotKey)"
     replace_with = "Select_CString(GreaterThan_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotKey), '(CFixedPoint)0'), CMMListFieldPostfixHigh(SettingKey, SlotKey), Select_CString(LessThan_CFixedPoint(CMMListItemFieldValue(ItemKey, SlotKey), '(CFixedPoint)0'), CMMListFieldPostfixLow(SettingKey, SlotKey), AddTextIf(CMMListFieldHasPostfix(SettingKey, SlotKey), CMMListFieldPostfix(SettingKey, SlotKey))))"
+}
+
+# Args: SettingKey (string), ItemKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Resolved affix prefix: conditional when has_format >= 2, else plain prefix"
+    definition = "CMMListFieldResolvedPrefix(SettingKey,ItemKey,SlotKey)"
+    replace_with = "Select_CString(CMMListFieldHasConditionalFormat(SettingKey, SlotKey), CMMListFieldConditionalPrefix(SettingKey, ItemKey, SlotKey), AddTextIf(CMMListFieldHasPrefix(SettingKey, SlotKey), CMMListFieldPrefix(SettingKey, SlotKey)))"
+}
+
+# Args: SettingKey (string), ItemKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Resolved affix postfix: conditional when has_format >= 2, else plain postfix"
+    definition = "CMMListFieldResolvedPostfix(SettingKey,ItemKey,SlotKey)"
+    replace_with = "Select_CString(CMMListFieldHasConditionalFormat(SettingKey, SlotKey), CMMListFieldConditionalPostfix(SettingKey, ItemKey, SlotKey), AddTextIf(CMMListFieldHasPostfix(SettingKey, SlotKey), CMMListFieldPostfix(SettingKey, SlotKey)))"
 }
 
 # Args: SettingKey (string), SlotKey (string)
@@ -352,62 +368,19 @@ macro = {
     replace_with = "FixedPointToInt(Add_CFixedPoint(Multiply_CFixedPoint(Divide_CFixedPoint(CMMListFieldSliderNormalizedValue(ItemKey, SlotKey), CMMListFieldSliderNormalizedMax(CMMListItemOwnerSettingKey(ItemKey), SlotKey)), '(CFixedPoint)100'), '(CFixedPoint)0.500'))"
 }
 
-# Cached localization key per slot
-# Args: SlotStr (string)
-# Returns: string
-macro = {
-    description = "Cached: localization base key for one list field slot"
-    definition = "CMMCachedFieldLocKey(SlotStr)"
-    replace_with = "GetVariableSystem.Get(Concatenate('cmm_list_lk_', SlotStr))"
-}
-
-# Cached prefix/postfix existence per slot
-# Args: SlotStr (string)
-# Returns: boolean
-macro = {
-    description = "Cached: true when list field has a prefix localization key"
-    definition = "CMMCachedFieldHasPrefix(SlotStr)"
-    replace_with = "GetVariableSystem.HasValue(Concatenate('cmm_list_hp_', SlotStr), 'yes')"
-}
-
-# Args: SlotStr (string)
-# Returns: boolean
-macro = {
-    description = "Cached: true when list field has a postfix localization key"
-    definition = "CMMCachedFieldHasPostfix(SlotStr)"
-    replace_with = "GetVariableSystem.HasValue(Concatenate('cmm_list_hpp_', SlotStr), 'yes')"
-}
-
-# Cached localization text using cached loc key
-# Args: SlotStr (string)
-# Returns: string
-macro = {
-    description = "Cached: resolved prefix text for one list field slot"
-    definition = "CMMCachedFieldPrefix(SlotStr)"
-    replace_with = "GetVariableSystem.Get(Concatenate('cmm_list_pfx_', SlotStr))"
-}
-
-# Args: SlotStr (string)
-# Returns: string
-macro = {
-    description = "Cached: resolved postfix text for one list field slot"
-    definition = "CMMCachedFieldPostfix(SlotStr)"
-    replace_with = "GetVariableSystem.Get(Concatenate('cmm_list_pofx_', SlotStr))"
-}
-
-# Cached conditional affix resolved by cmm_cache_field_cell; per-item keys stop list settings sharing it.
+# Cached per-cell resolved affix written by cmm_cache_field_cell; per-item keys stop list settings sharing it.
 # Args: ItemKey (string), SlotStr (string)
 # Returns: string
 macro = {
-    description = "Cached: resolved sign-conditional prefix for one list item field cell"
-    definition = "CMMCachedConditionalPrefix(ItemKey,SlotStr)"
-    replace_with = "GetVariableSystem.Get(Concatenate(ItemKey, Concatenate('_cpfx_', SlotStr)))"
+    description = "Cached: resolved affix prefix for one list item field cell"
+    definition = "CMMCachedResolvedPrefix(ItemKey,SlotStr)"
+    replace_with = "GetVariableSystem.Get(Concatenate(ItemKey, Concatenate('_rpfx_', SlotStr)))"
 }
 
 # Args: ItemKey (string), SlotStr (string)
 # Returns: string
 macro = {
-    description = "Cached: resolved sign-conditional postfix for one list item field cell"
-    definition = "CMMCachedConditionalPostfix(ItemKey,SlotStr)"
-    replace_with = "GetVariableSystem.Get(Concatenate(ItemKey, Concatenate('_cpofx_', SlotStr)))"
+    description = "Cached: resolved affix postfix for one list item field cell"
+    definition = "CMMCachedResolvedPostfix(ItemKey,SlotStr)"
+    replace_with = "GetVariableSystem.Get(Concatenate(ItemKey, Concatenate('_rpofx_', SlotStr)))"
 }
