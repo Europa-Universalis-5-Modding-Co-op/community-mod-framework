@@ -38,7 +38,6 @@ cmf_log_with_scope_args = {
 # Scope: country
 cmf_clear_log = {
 	_cmf_log_clear_maps = yes
-	set_global_variable = { name = cmf_log_count value = 0 }
 }
 
 # Internal: log core for flag-based args.
