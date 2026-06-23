@@ -66,9 +66,10 @@
 		state = {
 			name = cmm_cache_field_cell
 			trigger_on_create = yes
-			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, Concatenate('_fs_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), Select_CString(GreaterThan_CFixedPoint(CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(CFixedPoint)0'), '1', Select_CString(LessThan_CFixedPoint(CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), '(CFixedPoint)0'), '-1', '0')))]"
 			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, Concatenate('_tp_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), ToString_int32(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)), '_type_')))]"
 			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, Concatenate('_hf_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), ToString_int32(CMMListFieldMetadataInt(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)), '_has_format_')))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, Concatenate('_cpfx_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), CMMListFieldConditionalPrefix(CMMListItemOwnerSettingKey(Scope.GetFlagName), Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, Concatenate('_cpofx_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), CMMListFieldConditionalPostfix(CMMListItemOwnerSettingKey(Scope.GetFlagName), Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 		}
 
 		# Inner container hides content for disabled fields while cell stays visible to preserve column alignment.
