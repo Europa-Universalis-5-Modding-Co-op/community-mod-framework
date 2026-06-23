@@ -2580,18 +2580,6 @@ types SingleUnitWindowTypes
 										allow_outside = yes
 										size = { 39 39 }
 
-										#Needed to perform single action when the keyboard shortcut is pressed
-										button = {
-											size = { 0 1 }
-											tooltip_enabled = no
-											alwaystransparent = yes
-											visible = "[Not(UnitActionItem.IsToggleAction)]"
-											enabled = "[And(UnitActionItem.HasSingleLeftAction, UnitActionItem.CanSingleLeftClick)]"
-											onclick = "[UnitActionItem.SingleLeftClick]"
-											input_action = "[UnitActionItem.GetShortcut]"
-											use_global_input_instance = yes
-										}
-
 										# navigational_button_alt = {
 										# 	visible = "[Not(UnitActionItem.IsToggleAction)]"
 										# 	parentanchor = bottom|left

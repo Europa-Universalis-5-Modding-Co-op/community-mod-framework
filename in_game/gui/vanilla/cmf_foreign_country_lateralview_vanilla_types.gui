@@ -6,6 +6,28 @@
 template countryinfo_block_margin { margin = { 20 0 } }
 
 
+types NotableStancesTypes {
+
+	type notable_stances_block = vbox {
+		datacontext = "[ForeignCountryView.GetCountry]"
+		# Only in the double-column ("both") layout, alongside the relations content; hidden in the
+		# relations-only and actions-only single-column variants.
+		visible = "[And4(ForeignCountryView.Vars.NotExistOrHasValue( 'diplomacy', 'both' ), Country.IsValid, Not(Country.HasHumanController), Not(StringIsEmpty(Country.GetNotableDispositionsText)))]"
+		layoutpolicy_horizontal = expanding
+		margin = { 5 5 }
+		background = {
+			using = tooltip_table_field_texture
+		}
+		text_multi = {
+			autoresize = yes
+			layoutpolicy_horizontal = expanding
+			maximumsize = { 280 -1 }
+			text = "[Country.GetNotableDispositionsText]"
+		}
+	}
+}
+
+
 types SubheaderTypes {
 	type subheader_culture_religion = vbox {
 		layoutpolicy_horizontal = expanding
