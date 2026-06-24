@@ -26,10 +26,27 @@
 		minimumsize = { 0 60 }
 		ignoreinvisible = yes
 		using = bg_window_default_alt
-		visible = "[CMMSettingRowVisible(Scope.GetFlagName)]"
+		visible = "[CMMCachedSettingRowVisible(Scope.GetFlagName)]"
+
+		state = {
+			name = cmm_cache_setting_row
+			trigger_on_create = yes
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srt'), ToString_int32(CMMMapInt('cmm_type', Scope.GetFlagName)))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srom'), CMMMetadataFlag('cmm_setting_owner_mod_id_', Scope.GetFlagName))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srot'), CMMMetadataFlag('cmm_setting_owner_tab_key_', Scope.GetFlagName))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srn'), CMMLocalizedSuffix(Scope.GetFlagName, '_name'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srd'), CMMLocalizedSuffixText(Scope.GetFlagName, '_desc'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srhd'), Select_CString(CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc'), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srisg'), Select_CString(CMMSettingIsGlobal(Scope.GetFlagName), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srrut'), Select_CString(CMMSettingRequiresUnrestrictedToolsEnabled(Scope.GetFlagName), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srsgui'), Select_CString(CMMHasScriptedGui(Scope.GetFlagName), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srmulti'), Select_CString(CMMDropdownIsMultiselector(Scope.GetFlagName), 'yes', 'no'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srbtn'), CMMLocalizedSuffix(Scope.GetFlagName, '_text'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_srhf'), Select_CString(CMMHasFormat(Scope.GetFlagName), 'yes', 'no'))]"
+		}
 
 		hbox = {
-			visible = "[Not(CMMSettingIsList(Scope.GetFlagName))]"
+			visible = "[Not(CMMCachedSettingTypeIs(Scope.GetFlagName, '7'))]"
 			layoutpolicy_horizontal = expanding
 			margin = { 12 4 }
 			spacing = 12
@@ -37,10 +54,10 @@
 			text_single = {
 				layoutpolicy_horizontal = expanding
 				tagtooltip_enabled = yes
-				tooltip = "[CMMLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
-				tooltip_enabled = "[CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltip = "[CMMCachedSettingDesc(Scope.GetFlagName)]"
+				tooltip_enabled = "[CMMCachedSettingHasDesc(Scope.GetFlagName)]"
 				tooltipwidget = { BasicFunctionalTooltip = {} }
-				text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
+				text = "[CMMCachedSettingName(Scope.GetFlagName)]"
 			}
 
 			hbox = {
@@ -48,16 +65,16 @@
 				ignoreinvisible = yes
 
 				checkbox_square_alt = {
-					visible = "[And(CMMSettingIsBool(Scope.GetFlagName), Not(CMMSettingHasConsoleCommand(Scope.GetFlagName)))]"
-					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+					visible = "[And(CMMCachedSettingTypeIs(Scope.GetFlagName, '1'), Not(CMMSettingHasConsoleCommand(Scope.GetFlagName)))]"
+					enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
 					onclick = "[CMMExecuteAutoApply('cmm_auto_toggle_bool', Scope.GetFlagName)]"
 					down = "[CMMIsSettingEnabled(Scope.GetFlagName)]"
 					tooltip_enabled = no
 				}
 
 				checkbox_square_alt = {
-					visible = "[And(CMMSettingIsBool(Scope.GetFlagName), CMMSettingHasConsoleCommand(Scope.GetFlagName))]"
-					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+					visible = "[And(CMMCachedSettingTypeIs(Scope.GetFlagName, '1'), CMMSettingHasConsoleCommand(Scope.GetFlagName))]"
+					enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
 					onclick = "[CMMExecuteAutoApply('cmm_auto_toggle_bool', Scope.GetFlagName)]"
 					onclick = "[ExecuteConsoleCommand(CMMSettingConsoleCommand(Scope.GetFlagName))]"
 					down = "[InDebugMode]"
@@ -65,32 +82,32 @@
 				}
 
 				button_regular = {
-					visible = "[CMMSettingIsButton(Scope.GetFlagName)]"
+					visible = "[CMMCachedSettingTypeIs(Scope.GetFlagName, '6')]"
 					minimumsize = { 168 32 }
-					enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
-					text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_text')]"
+					enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
+					text = "[CMMCachedSettingButtonText(Scope.GetFlagName)]"
 					onclick = "[CMMExecuteAutoApply('cmm_auto_apply_button', Scope.GetFlagName)]"
 					tooltip_enabled = no
 				}
 
 				cmm_dropdown_setting = {
-					visible = "[And(CMMSettingIsDropdown(Scope.GetFlagName), Not(CMMDropdownIsMultiselector(Scope.GetFlagName)))]"
+					visible = "[And(CMMCachedSettingTypeIs(Scope.GetFlagName, '2'), Not(CMMCachedDropdownIsMultiselector(Scope.GetFlagName)))]"
 				}
 
 				cmm_multiselector_setting = {
-					visible = "[And(CMMSettingIsDropdown(Scope.GetFlagName), CMMDropdownIsMultiselector(Scope.GetFlagName))]"
+					visible = "[And(CMMCachedSettingTypeIs(Scope.GetFlagName, '2'), CMMCachedDropdownIsMultiselector(Scope.GetFlagName))]"
 				}
 
 				cmm_text_setting = {
-					visible = "[CMMSettingIsText(Scope.GetFlagName)]"
+					visible = "[CMMCachedSettingTypeIs(Scope.GetFlagName, '5')]"
 				}
 
 				cmm_slider_setting = {
-					visible = "[CMMSettingIsSlider(Scope.GetFlagName)]"
+					visible = "[CMMCachedSettingTypeIs(Scope.GetFlagName, '4')]"
 				}
 
 				cmm_numeric_setting = {
-					visible = "[CMMSettingIsNumeric(Scope.GetFlagName)]"
+					visible = "[CMMCachedSettingTypeIs(Scope.GetFlagName, '3')]"
 				}
 
 				expand = {}
@@ -98,7 +115,7 @@
 		}
 
 		cmm_list_setting = {
-			visible = "[CMMSettingIsList(Scope.GetFlagName)]"
+			visible = "[CMMCachedSettingTypeIs(Scope.GetFlagName, '7')]"
 		}
 	}
 }

@@ -160,7 +160,15 @@
 	type cmm_mod_list_row = widget {
 		layoutpolicy_horizontal = expanding
 		minimumsize = { 0 44 }
-		visible = "[CMMModMatchesSearch(Scope.GetFlagName)]"
+		visible = "[CMMCachedModMatchesSearch(Scope.GetFlagName)]"
+
+		state = {
+			name = cmm_cache_mod_row
+			trigger_on_create = yes
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_mrn'), CMMLocalizedSuffix(Scope.GetFlagName, '_name'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_mrd'), CMMLocalizedSuffixText(Scope.GetFlagName, '_desc'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_mrhd'), Select_CString(CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc'), 'yes', 'no'))]"
+		}
 
 		hbox = {
 			margin = { 2 2 }
@@ -175,8 +183,8 @@
 				onclick = "[CMMExecuteGui('CMF_CloseLogView')]"
 				down = "[GetVariableSystem.HasValue('cmm_selected_mod', Scope.GetFlagName)]"
 				tagtooltip_enabled = yes
-				tooltip = "[CMMLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
-				tooltip_enabled = "[CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltip = "[CMMCachedModDesc(Scope.GetFlagName)]"
+				tooltip_enabled = "[CMMCachedModHasDesc(Scope.GetFlagName)]"
 				tooltipwidget = { BasicFunctionalTooltip = {} }
 
 				blockoverride "card_color" {
@@ -196,7 +204,7 @@
 						fontsize = 18
 						maximumsize = { 280 -1 }
 						align = center|nobaseline
-						text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
+						text = "[CMMCachedModName(Scope.GetFlagName)]"
 					}
 				}
 			}

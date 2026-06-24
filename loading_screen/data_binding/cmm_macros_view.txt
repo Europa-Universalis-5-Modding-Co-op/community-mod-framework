@@ -50,3 +50,71 @@ macro = {
     definition = "CMMShowNoSettingsForSelectedTab"
     replace_with = "And(CMMSelectedModExists, Or3(Not(CMMSelectedTabExists), Not(CMMMetadataIsSet('cmm_tab_setting_count_', GetVariableSystem.Get('cmm_selected_tab'))), EqualTo_CFixedPoint(CMMMetadataValue('cmm_tab_setting_count_', GetVariableSystem.Get('cmm_selected_tab')), '(CFixedPoint)0')))"
 }
+
+# Cached group-row metadata, written once per group by the cmm_cache_group_row state.
+
+# Args: GroupKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached visibility rule for one group row"
+    definition = "CMMCachedGroupRowVisible(GroupKey)"
+    replace_with = "CMMMatchesSelectedModAndTab(GetVariableSystem.Get(Concatenate(GroupKey, '_grom')), GetVariableSystem.Get(Concatenate(GroupKey, '_grot')))"
+}
+
+# Args: GroupKey (string)
+# Returns: string
+macro = {
+    description = "Cached: localized name for one group row"
+    definition = "CMMCachedGroupName(GroupKey)"
+    replace_with = "GetVariableSystem.Get(Concatenate(GroupKey, '_grn'))"
+}
+
+# Args: GroupKey (string)
+# Returns: string
+macro = {
+    description = "Cached: localized description for one group row"
+    definition = "CMMCachedGroupDesc(GroupKey)"
+    replace_with = "GetVariableSystem.Get(Concatenate(GroupKey, '_grd'))"
+}
+
+# Args: GroupKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when one group row has a description"
+    definition = "CMMCachedGroupHasDesc(GroupKey)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate(GroupKey, '_grhd'), 'yes')"
+}
+
+# Cached mod-row metadata, written once per mod row by the cmm_cache_mod_row state.
+
+# Args: ModId (string)
+# Returns: string
+macro = {
+    description = "Cached: localized name for one mod row"
+    definition = "CMMCachedModName(ModId)"
+    replace_with = "GetVariableSystem.Get(Concatenate(ModId, '_mrn'))"
+}
+
+# Args: ModId (string)
+# Returns: string
+macro = {
+    description = "Cached: localized description for one mod row"
+    definition = "CMMCachedModDesc(ModId)"
+    replace_with = "GetVariableSystem.Get(Concatenate(ModId, '_mrd'))"
+}
+
+# Args: ModId (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when one mod row has a description"
+    definition = "CMMCachedModHasDesc(ModId)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate(ModId, '_mrhd'), 'yes')"
+}
+
+# Args: ModId (string)
+# Returns: boolean
+macro = {
+    description = "Cached filter match for one mod row against current search text"
+    definition = "CMMCachedModMatchesSearch(ModId)"
+    replace_with = "Or4(Not(CMMSelectedValueExists('cmm_mod_search_text')), StringIsEmpty(GetVariableSystem.Get('cmm_mod_search_text')), StringContains(CMMCachedModName(ModId), GetVariableSystem.Get('cmm_mod_search_text')), StringContains(ModId, GetVariableSystem.Get('cmm_mod_search_text')))"
+}

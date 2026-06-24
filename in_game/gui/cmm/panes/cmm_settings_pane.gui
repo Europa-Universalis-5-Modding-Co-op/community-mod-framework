@@ -118,7 +118,17 @@
 	# - Player.MakeScope.GetList(Concatenate('cmm_group_setting_keys_', Scope.GetFlagName)) [list<flag>]: settings in this group.
 	type cmm_setting_group = vbox {
 		layoutpolicy_horizontal = expanding
-		visible = "[CMMGroupRowVisible(Scope.GetFlagName)]"
+		visible = "[CMMCachedGroupRowVisible(Scope.GetFlagName)]"
+
+		state = {
+			name = cmm_cache_group_row
+			trigger_on_create = yes
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_grom'), CMMMetadataFlag('cmm_group_owner_mod_id_', Scope.GetFlagName))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_grot'), CMMMetadataFlag('cmm_group_owner_tab_key_', Scope.GetFlagName))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_grn'), CMMLocalizedSuffix(Scope.GetFlagName, '_name'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_grd'), CMMLocalizedSuffixText(Scope.GetFlagName, '_desc'))]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_grhd'), Select_CString(CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc'), 'yes', 'no'))]"
+		}
 
 		icon = {
 			layoutpolicy_horizontal = expanding
@@ -145,10 +155,10 @@
 				margin_top = 10
 				autoresize = no
 				default_format = "#yellow_titles"
-				text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
+				text = "[CMMCachedGroupName(Scope.GetFlagName)]"
 				tagtooltip_enabled = yes
-				tooltip = "[CMMLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
-				tooltip_enabled = "[CMMHasLocalizedSuffixText(Scope.GetFlagName, '_desc')]"
+				tooltip = "[CMMCachedGroupDesc(Scope.GetFlagName)]"
+				tooltip_enabled = "[CMMCachedGroupHasDesc(Scope.GetFlagName)]"
 				tooltipwidget = { BasicFunctionalTooltip = {} }
 			}
 		}

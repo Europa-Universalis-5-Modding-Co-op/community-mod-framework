@@ -286,3 +286,78 @@ macro = {
     definition = "CMMDisplayValue(SettingKey)"
     replace_with = "Localize(Concatenate(SettingKey, '_format'))"
 }
+
+# Cached setting-row metadata, written once per row by the cmm_cache_setting_row state and read
+# cheaply per frame. Valid only inside a setting-row context (the row and its child controls).
+
+# Args: SettingKey (string), TypeStr (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when a setting row's type equals TypeStr (1 bool, 2 dropdown, 3 numeric, 4 slider, 5 text, 6 button, 7 list)"
+    definition = "CMMCachedSettingTypeIs(SettingKey,TypeStr)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate(SettingKey, '_srt'), TypeStr)"
+}
+
+# Args: SettingKey (string)
+# Returns: string
+macro = {
+    description = "Cached: localized name for one setting row"
+    definition = "CMMCachedSettingName(SettingKey)"
+    replace_with = "GetVariableSystem.Get(Concatenate(SettingKey, '_srn'))"
+}
+
+# Args: SettingKey (string)
+# Returns: string
+macro = {
+    description = "Cached: localized description for one setting row"
+    definition = "CMMCachedSettingDesc(SettingKey)"
+    replace_with = "GetVariableSystem.Get(Concatenate(SettingKey, '_srd'))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when one setting row has a description"
+    definition = "CMMCachedSettingHasDesc(SettingKey)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate(SettingKey, '_srhd'), 'yes')"
+}
+
+# Args: SettingKey (string)
+# Returns: string
+macro = {
+    description = "Cached: localized button caption for one setting row"
+    definition = "CMMCachedSettingButtonText(SettingKey)"
+    replace_with = "GetVariableSystem.Get(Concatenate(SettingKey, '_srbtn'))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when a dropdown setting renders with the multiselector layout"
+    definition = "CMMCachedDropdownIsMultiselector(SettingKey)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate(SettingKey, '_srmulti'), 'yes')"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached visibility rule for one setting row; the scripted-GUI is_shown stays live"
+    definition = "CMMCachedSettingRowVisible(SettingKey)"
+    replace_with = "And(CMMMatchesSelectedModAndTab(GetVariableSystem.Get(Concatenate(SettingKey, '_srom')), GetVariableSystem.Get(Concatenate(SettingKey, '_srot'))), Or(Not(GetVariableSystem.HasValue(Concatenate(SettingKey, '_srsgui'), 'yes')), CMMGuiIsShown(Concatenate(SettingKey, '_on_changed'))))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached edit-permission rule for one setting row; the unrestricted-tools-enabled state stays live"
+    definition = "CMMCachedCanEditSetting(SettingKey)"
+    replace_with = "And(Or(Not(GetVariableSystem.HasValue(Concatenate(SettingKey, '_srisg'), 'yes')), Or(Not(GameIsMultiplayer), IsHost)), Or(Not(GetVariableSystem.HasValue(Concatenate(SettingKey, '_srrut'), 'yes')), Or(EqualTo_string(SettingKey, 'cmf_core__enable_unrestricted_tools'), And(CMMSettingIsRegistered('cmf_core__enable_unrestricted_tools'), CMMValueEqualsOne(CMMSettingValue('cmf_core__enable_unrestricted_tools'))))))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when a _format localization key exists for a setting"
+    definition = "CMMCachedHasFormat(SettingKey)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate(SettingKey, '_srhf'), 'yes')"
+}

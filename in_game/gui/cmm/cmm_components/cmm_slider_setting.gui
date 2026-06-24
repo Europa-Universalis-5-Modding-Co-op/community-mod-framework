@@ -51,7 +51,7 @@
 							step = "[CMMMapValue('cmm_step', Scope.GetFlagName)]"
 							wheelstep = 0
 							value = "[CMMSliderNormalizedValue(Scope.GetFlagName)]"
-							enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+							enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
 
 							track = {
 								EconomySlider_TrackRange = {
@@ -107,7 +107,7 @@
 									size = { 100% 20 }
 									alpha = 0
 									effectname = "NoHighlight"
-									enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+									enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
 									onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
 									onpressed = "[CMMExecuteGui('CMM_MarkSliderSelection_0')]"
 									onpressed = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
@@ -140,7 +140,7 @@
 												size = { 100% 20 }
 												alpha = 0
 												effectname = "NoHighlight"
-												enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+												enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
 												onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
 												onpressed = "[CMMExecuteGuiSuffix('CMM_MarkSliderSelection_', ToString_int32(Multiply_int32(Add_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)1'), '(int32)5')))]"
 												onpressed = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
@@ -166,7 +166,7 @@
 									size = { 100% 20 }
 									alpha = 0
 									effectname = "NoHighlight"
-									enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+									enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
 									onpressed = "[CMMExecuteGui('CMM_StartSliderDrag')]"
 									onpressed = "[CMMExecuteGui('CMM_MarkSliderSelection_100')]"
 									onpressed = "[CMMExecuteAutoApply('cmm_auto_apply_slider', Scope.GetFlagName)]"
@@ -186,7 +186,7 @@
 
 						EconomySlider_DecButton = {
 							size = { 20 20 }
-							enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+							enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
 
 							action_tooltip = {
 								click_mode = single
@@ -231,7 +231,7 @@
 
 						EconomySlider_IncButton = {
 							size = { 20 20 }
-							enabled = "[CMMCanEditSetting(Scope.GetFlagName)]"
+							enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
 
 							action_tooltip = {
 								click_mode = single
@@ -275,14 +275,14 @@
 				layoutpolicy_horizontal = expanding
 				size = { -1 30 }
 				align = left|nobaseline
-				visible = "[CMMHasFormat(Scope.GetFlagName)]"
+				visible = "[CMMCachedHasFormat(Scope.GetFlagName)]"
 				text = "[CMMDisplayValue(Scope.GetFlagName)]"
 			}
 			text_single = {
 				layoutpolicy_horizontal = expanding
 				size = { -1 30 }
 				align = left|nobaseline
-				visible = "[Not(CMMHasFormat(Scope.GetFlagName))]"
+				visible = "[Not(CMMCachedHasFormat(Scope.GetFlagName))]"
 				text = "[CMMSettingValue(Scope.GetFlagName)]"
 			}
 		}
