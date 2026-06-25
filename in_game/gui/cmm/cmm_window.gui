@@ -1,7 +1,7 @@
 ﻿window = {
 	name = "cmm_window"
 	# This number is not arbitrary. For some reason below 5378 results in much lower performance, while above results in near identical.
-	max_update_rate = 5400
+	# max_update_rate = 5400
 	# reuse_widgets = yes
 	# datamodel_reuse_widgets = yes
 	alwaystransparent = no
