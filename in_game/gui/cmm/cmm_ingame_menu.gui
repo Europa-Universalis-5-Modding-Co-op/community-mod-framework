@@ -135,7 +135,7 @@
 		tooltipwidget = { BasicFunctionalTooltip = {} }
 	}
 
-	# CMM: Open Menu Button
+	# CMF: CMM open menu button
 	button_wax = {
 		blockoverride "button_texture" {
 			texture = "gfx/interface/buttons/button_wax_blue.dds"
