@@ -14,6 +14,7 @@ The goal is to provide mods that make use of it, new ways to show content or hoo
 * [Ground Rules](#ground-rules)
 * [File Naming](#file-naming)
 * [Variable Prefixing](#variable-prefixing)
+* [Marking Changes to Base Game Files](#marking-changes-to-base-game-files)
 * [Documentation](#documentation)
 * [Community Engagement](#community-engagement)
 
@@ -32,6 +33,10 @@ All CMF files should use the `cmf_` prefix. This prevents conflicts with base ga
 If you add a variable, list, effect, trigger, etc. for use in CMF, please prefix it using `cmf_`. This is to prevent conflicts with both base game and other mods.
 
 It should be noted that, for functions which effectively add new features, we prefer generalized solutions which can be used by many different mods for consistent outcomes.
+
+## Marking Changes to Base Game Files
+
+Mark each change with a `# CMF:` comment directly above it. This keeps every framework edit easy to find and preserve when the file is re-synced against a new game version.
 
 ## Documentation
 
