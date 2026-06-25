@@ -32,6 +32,7 @@ cmf_on_banner_registration = {
 # Scope: none
 _cmf_on_banner_registration = {
 	effect = {
+		clear_global_variable_list = cmf_lobby_banner_mod_ids
 		cmf_register_lobby_banner = { mod_id = cmf_core }
 	}
 }
@@ -159,7 +160,9 @@ on_game_load = {
 			}
 		}
 	}
-	on_actions = { }
+	on_actions = {
+		cmf_on_banner_registration
+	}
 }
 
 # Human country variant of on_game_load.
