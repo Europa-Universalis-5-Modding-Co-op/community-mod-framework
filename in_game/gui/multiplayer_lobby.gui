@@ -411,6 +411,7 @@ types MultiplayerLobby
 											texture = "gfx/interface/icons/players.dds"
 										}
 									}
+									# CMF: avoids a tooltip error
 									lowpriotextcontext = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT_TT"
 								}
 							}
@@ -707,6 +708,7 @@ types MultiplayerLobby
 											texture = "gfx/interface/icons/players.dds"
 										}
 									}
+									# CMF: avoids a tooltip error
 									lowpriotextcontext = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT_TT"
 								}
 							}
@@ -1030,6 +1032,7 @@ types MultiplayerLobby
 																		blockoverride "concept_link" {
 																			text = "[country|E]"
 																		}
+																		# CMF: avoids a tooltip error
 																		lowpriotextcontext = "[Country.GetDifficultyLevelDesc]"
 																	}
 																}
@@ -1290,6 +1293,7 @@ types MultiplayerLobby
 				position = { 5 1 }
 				down = "[LobbyView.IsObserver]"
 				onclick = "[GameLobby.ToggleObserve]"
+				# CMF: avoids a tooltip error
 				tooltipwidget = { BasicFunctionalTooltip = {} }
 			}
 
@@ -1546,6 +1550,7 @@ types MultiplayerLobby
 
 					enabled = "[LobbyView.HasEnabledDLCs]"
 					onclick = "[LobbyView.ToggleShowEnabledDLCs]"
+					# CMF: avoids a tooltip error
 					tooltipwidget = { BasicFunctionalTooltip = {} }
 				}
 
@@ -1631,6 +1636,7 @@ types MultiplayerLobby
 
 					enabled = "[LobbyView.HasEnabledMods]"
 					onclick = "[LobbyView.ToggleShowEnabledMods]"
+					# CMF: avoids a tooltip error
 					tooltipwidget = { BasicFunctionalTooltip = {} }
 				}
 
@@ -2185,7 +2191,7 @@ JominiMultiplayerLobby = {
 					}
 				}
 
-				# CMM: Mod Banners
+				# CMF: Mod Banners
 				expand = {}
 				hbox = {
 					spacing = 5
