@@ -148,6 +148,9 @@ your_mod_on_callback = {
 
 = Advanced =
 
+== Conditional Visibility ==
+Hide (<code>is_shown</code>) or grey out (<code>is_valid</code>) a setting based on a condition, through a Scripted GUI. See [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Conditional-Visibility Conditional Visibility] on the GitHub wiki.
+
 == Text ==
 [[File:CMM_Text.png|thumb|right|A CMM text input.]]
 {{ambox|text=Text settings are '''singleplayer only'''.|small=left}}

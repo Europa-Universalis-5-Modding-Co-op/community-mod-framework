@@ -25,7 +25,7 @@
 				focuspolicy = all
 				alwaystransparent = no
 				multiline = no
-				enabled = "[CMMCanEditTextSetting]"
+				enabled = "[And(CMMCanEditTextSetting, CMMCachedSettingIsValid(Scope.GetFlagName))]"
 				text = ""
 
 				blockoverride "editbox_properties" {
@@ -43,7 +43,7 @@
 			button_regular = {
 				visible = "[CMMTextSettingQuoteText(Scope.GetFlagName)]"
 				minimumsize = { 72 32 }
-				enabled = "[CMMCanEditTextSetting]"
+				enabled = "[And(CMMCanEditTextSetting, CMMCachedSettingIsValid(Scope.GetFlagName))]"
 				text = "CMM_TEXT_APPLY"
 				onclick = "[ExecuteConsoleCommand(Concatenate('effect c:', Concatenate(Player.GetTag, Concatenate(' = { ', Concatenate(CMMTextSettingCallbackKey(Scope.GetFlagName), Concatenate(' = { text = \"', Concatenate(Concatenate('\\\\', '\"'), Concatenate(GetVariableSystem.Get(CMMTextSettingInputCacheKey(Scope.GetFlagName)), Concatenate(Concatenate('\\\\', '\"'), '\" } }')))))))))]"
 				tooltip_enabled = no
@@ -56,7 +56,7 @@
 				focuspolicy = all
 				alwaystransparent = no
 				multiline = no
-				enabled = "[CMMCanEditTextSetting]"
+				enabled = "[And(CMMCanEditTextSetting, CMMCachedSettingIsValid(Scope.GetFlagName))]"
 				text = ""
 
 				blockoverride "editbox_properties" {
@@ -74,7 +74,7 @@
 			button_regular = {
 				visible = "[Not(CMMTextSettingQuoteText(Scope.GetFlagName))]"
 				minimumsize = { 72 32 }
-				enabled = "[CMMCanEditTextSetting]"
+				enabled = "[And(CMMCanEditTextSetting, CMMCachedSettingIsValid(Scope.GetFlagName))]"
 				text = "CMM_TEXT_APPLY"
 				onclick = "[ExecuteConsoleCommand(Concatenate('effect c:', Concatenate(Player.GetTag, Concatenate(' = { ', Concatenate(CMMTextSettingCallbackKey(Scope.GetFlagName), Concatenate(' = { text = \"', Concatenate(GetVariableSystem.Get(CMMTextSettingInputCacheKey(Scope.GetFlagName)), '\" } }')))))))]"
 				tooltip_enabled = no

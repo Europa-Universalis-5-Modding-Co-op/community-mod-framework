@@ -113,14 +113,6 @@ macro = {
 }
 
 # Args: SettingKey (string)
-# Returns: boolean
-macro = {
-    description = "Enabled rule for one setting row"
-    definition = "CMMSettingRowEnabled(SettingKey)"
-    replace_with = "Or(Not(CMMHasScriptedGui(SettingKey)), CMMGuiIsValid(Concatenate(SettingKey, '_on_changed')))"
-}
-
-# Args: SettingKey (string)
 # Returns: none
 macro = {
     description = "Execute setting on-changed scripted GUI callback"
@@ -352,6 +344,30 @@ macro = {
     description = "Cached edit-permission rule for one setting row; the unrestricted-tools-enabled state stays live"
     definition = "CMMCachedCanEditSetting(SettingKey)"
     replace_with = "And(Or(Not(GetVariableSystem.HasValue(Concatenate(SettingKey, '_srisg'), 'yes')), Or(Not(GameIsMultiplayer), IsHost)), Or(Not(GetVariableSystem.HasValue(Concatenate(SettingKey, '_srrut'), 'yes')), Or(EqualTo_string(SettingKey, 'cmf_core__enable_unrestricted_tools'), And(CMMSettingIsRegistered('cmf_core__enable_unrestricted_tools'), CMMValueEqualsOne(CMMSettingValue('cmf_core__enable_unrestricted_tools'))))))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when a setting has a callback scripted GUI (non-list settings register one; list settings always have one)"
+    definition = "CMMCachedSettingHasCallbackGui(SettingKey)"
+    replace_with = "Or(GetVariableSystem.HasValue(Concatenate(SettingKey, '_srsgui'), 'yes'), CMMCachedSettingTypeIs(SettingKey, '7'))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached is_valid rule for one setting control; the scripted-GUI is_valid stays live"
+    definition = "CMMCachedSettingIsValid(SettingKey)"
+    replace_with = "Or(Not(CMMCachedSettingHasCallbackGui(SettingKey)), CMMGuiIsValid(Concatenate(SettingKey, '_on_changed')))"
+}
+
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached: true when a setting control is interactive (edit permission and the scripted-GUI is_valid)"
+    definition = "CMMCachedSettingEnabled(SettingKey)"
+    replace_with = "And(CMMCachedCanEditSetting(SettingKey), CMMCachedSettingIsValid(SettingKey))"
 }
 
 # Args: SettingKey (string)

@@ -21,7 +21,7 @@
 
 			button_regular = {
 				minimumsize = { 32 32 }
-				enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
+				enabled = "[CMMCachedSettingEnabled(Scope.GetFlagName)]"
 				text = "-"
 
 				action_tooltip = {
@@ -128,7 +128,7 @@
 
 			button_regular = {
 				minimumsize = { 32 32 }
-				enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
+				enabled = "[CMMCachedSettingEnabled(Scope.GetFlagName)]"
 				text = "+"
 
 				action_tooltip = {

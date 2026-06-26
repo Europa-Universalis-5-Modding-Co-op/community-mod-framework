@@ -22,13 +22,13 @@
 
 		state = {
 			name = cmm_can_edit_list_on
-			trigger_when = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
+			trigger_when = "[CMMCachedSettingEnabled(Scope.GetFlagName)]"
 			on_start = "[GetVariableSystem.Set('cmm_can_edit_list', 'yes')]"
 		}
 
 		state = {
 			name = cmm_can_edit_list_off
-			trigger_when = "[Not(CMMCachedCanEditSetting(Scope.GetFlagName))]"
+			trigger_when = "[Not(CMMCachedSettingEnabled(Scope.GetFlagName))]"
 			on_start = "[GetVariableSystem.Set('cmm_can_edit_list', 'no')]"
 		}
 

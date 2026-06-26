@@ -66,7 +66,7 @@
 
 				checkbox_square_alt = {
 					visible = "[And(CMMCachedSettingTypeIs(Scope.GetFlagName, '1'), Not(CMMSettingHasConsoleCommand(Scope.GetFlagName)))]"
-					enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
+					enabled = "[CMMCachedSettingEnabled(Scope.GetFlagName)]"
 					onclick = "[CMMExecuteAutoApply('cmm_auto_toggle_bool', Scope.GetFlagName)]"
 					down = "[CMMIsSettingEnabled(Scope.GetFlagName)]"
 					tooltip_enabled = no
@@ -74,7 +74,7 @@
 
 				checkbox_square_alt = {
 					visible = "[And(CMMCachedSettingTypeIs(Scope.GetFlagName, '1'), CMMSettingHasConsoleCommand(Scope.GetFlagName))]"
-					enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
+					enabled = "[CMMCachedSettingEnabled(Scope.GetFlagName)]"
 					onclick = "[CMMExecuteAutoApply('cmm_auto_toggle_bool', Scope.GetFlagName)]"
 					onclick = "[ExecuteConsoleCommand(CMMSettingConsoleCommand(Scope.GetFlagName))]"
 					down = "[InDebugMode]"
@@ -84,7 +84,7 @@
 				button_regular = {
 					visible = "[CMMCachedSettingTypeIs(Scope.GetFlagName, '6')]"
 					minimumsize = { 168 32 }
-					enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
+					enabled = "[CMMCachedSettingEnabled(Scope.GetFlagName)]"
 					text = "[CMMCachedSettingButtonText(Scope.GetFlagName)]"
 					onclick = "[CMMExecuteAutoApply('cmm_auto_apply_button', Scope.GetFlagName)]"
 					tooltip_enabled = no

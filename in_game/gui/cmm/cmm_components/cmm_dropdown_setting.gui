@@ -26,7 +26,7 @@
 				size = { 100% 30 }
 
 				button_drop = {
-					enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
+					enabled = "[CMMCachedSettingEnabled(Scope.GetFlagName)]"
 					onclick = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(CMMDropdownSelectedIndex(Scope.GetFlagName)))]"
 					tooltip_enabled = no
 				}
@@ -63,7 +63,7 @@
 
 				button_dropdown = {
 					focuspolicy = all
-					enabled = "[CMMCachedCanEditSetting(Scope.GetFlagName)]"
+					enabled = "[CMMCachedSettingEnabled(Scope.GetFlagName)]"
 					onmousehierarchyenter = "[GetVariableSystem.Set('cmm_dropdown_hover_index', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 					action_tooltip = {
 						click_type = left
@@ -137,7 +137,7 @@
 				size = { 150 30 }
 				text = "[CMMOptionLabelFromWidgetIndex(Scope.GetFlagName, PdxGuiWidget.GetIndexInDataModel)]"
 
-				enabled = "[And(CMMCachedCanEditSetting(Scope.GetFlagName), Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, CMMDropdownSelectedIndex(Scope.GetFlagName))))]"
+				enabled = "[And(CMMCachedSettingEnabled(Scope.GetFlagName), Not(EqualTo_int32(PdxGuiWidget.GetIndexInDataModel, CMMDropdownSelectedIndex(Scope.GetFlagName))))]"
 
 				onclick = "[CMMExecuteGuiSuffix('CMM_MarkDropdownSelection_', ToString_int32(PdxGuiWidget.GetIndexInDataModel))]"
 				onclick = "[CMMExecuteAutoApply('cmm_auto_apply_dropdown', Scope.GetFlagName)]"
