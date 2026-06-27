@@ -160,7 +160,7 @@
 	type cmm_mod_list_row = widget {
 		layoutpolicy_horizontal = expanding
 		minimumsize = { 0 44 }
-		visible = "[CMMCachedModMatchesSearch(Scope.GetFlagName)]"
+		visible = "[And(CMMCachedModMatchesSearch(Scope.GetFlagName), CMMModNonEmpty(Scope.GetFlagName))]"
 
 		state = {
 			name = cmm_cache_mod_row

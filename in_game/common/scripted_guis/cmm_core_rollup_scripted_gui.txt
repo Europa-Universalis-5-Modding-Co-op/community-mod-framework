@@ -1,0 +1,24 @@
+﻿# Record that a conditional setting is currently shown, then rebuild the rollup.
+# Scope: country
+# Args: scope:setting (flag) - the conditional setting key.
+CMM_MarkSettingShown = {
+	scope = country
+	saved_scopes = { setting }
+	effect = {
+		add_to_variable_map = { name = cmm_setting_shown key = scope:setting value = 1 }
+		_cmm_recompute_rollup = yes
+	}
+}
+
+# Record that a conditional setting is currently hidden, then rebuild the rollup.
+# Stores 0 rather than removing so an unprobed setting (absent key) reads as visible.
+# Scope: country
+# Args: scope:setting (flag) - the conditional setting key.
+CMM_MarkSettingHidden = {
+	scope = country
+	saved_scopes = { setting }
+	effect = {
+		add_to_variable_map = { name = cmm_setting_shown key = scope:setting value = 0 }
+		_cmm_recompute_rollup = yes
+	}
+}

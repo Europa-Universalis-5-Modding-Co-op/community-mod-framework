@@ -154,6 +154,40 @@ cmf_feature_test_register_cmf_mod = {
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = conditional_enabled_list item = 1 value = root }
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = conditional_enabled_list item = 2 value = root }
 
+	## Cascade Group (cascade_group) Group
+	# Its only setting is is_shown-gated on Toggle, so Toggle off empties and hides this
+	# group while the Settings tab stays (its other groups remain).
+	cmm_register_numeric_setting = {
+		mod_id = cmf_feature_test
+		setting_id = cascade_group_demo
+		tab_id = settings
+		group_id = cascade_group
+		default_value = 10
+		min_value = 0
+		max_value = 100
+		step_value = 1
+	}
+	cmm_add_scripted_gui = {
+		mod_id = cmf_feature_test
+		setting_id = cascade_group_demo
+	}
+
+	# Cascade Tab (cascade_tab) Tab
+	## Cascade (cascade_tab_group) Group
+	# Its only setting is is_shown-gated on Toggle, so Toggle off empties and hides this
+	# whole tab while the mod stays (its other tabs remain).
+	cmm_register_bool_setting = {
+		mod_id = cmf_feature_test
+		setting_id = cascade_tab_demo
+		tab_id = cascade_tab
+		group_id = cascade_tab_group
+		default_value = 1
+	}
+	cmm_add_scripted_gui = {
+		mod_id = cmf_feature_test
+		setting_id = cascade_tab_demo
+	}
+
 	# Global (global) Tab
 	## Toggles (global_toggles) Group
 	cmm_register_global_bool_setting = {
@@ -553,6 +587,36 @@ cmf_feature_test_register_cmf_mod = {
 		min_value = 0
 		max_value = 10
 		step_value = 1
+	}
+
+	# Empty Demo (cmf_empty_demo) mod
+	# A separate mod whose every setting is is_shown-gated on Toggle, so Toggle off empties
+	# its group and tab and drops the whole mod from the list.
+	cmm_register_numeric_setting = {
+		mod_id = cmf_empty_demo
+		setting_id = demo_numeric
+		tab_id = options
+		group_id = general
+		default_value = 50
+		min_value = 0
+		max_value = 100
+		step_value = 5
+	}
+	cmm_add_scripted_gui = {
+		mod_id = cmf_empty_demo
+		setting_id = demo_numeric
+	}
+
+	cmm_register_bool_setting = {
+		mod_id = cmf_empty_demo
+		setting_id = demo_bool
+		tab_id = options
+		group_id = general
+		default_value = 1
+	}
+	cmm_add_scripted_gui = {
+		mod_id = cmf_empty_demo
+		setting_id = demo_bool
 	}
 
 	# Aliases

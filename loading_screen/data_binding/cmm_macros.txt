@@ -48,14 +48,6 @@ macro = {
     replace_with = "FixedPointToInt(CMMMetadataValue(Prefix, Key))"
 }
 
-# Args: Prefix (string), Key (string)
-# Returns: boolean
-macro = {
-    description = "True when one metadata key is set"
-    definition = "CMMMetadataIsSet(Prefix,Key)"
-    replace_with = "CMMMetadataVar(Prefix, Key).IsSet"
-}
-
 # Args: Value (value)
 # Returns: boolean
 macro = {

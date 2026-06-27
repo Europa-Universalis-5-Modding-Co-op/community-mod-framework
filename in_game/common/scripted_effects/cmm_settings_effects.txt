@@ -117,6 +117,9 @@ _cmm_register_menu_settings_late = {
 		effect = _cmm_sync_action_bar_button_name_from_element
 	}
 
+	# After all mods register, so containers with only static settings are marked.
+	_cmm_recompute_rollup = yes
+
 	# Benign warning suppression
 	if = {
 		limit = { always = no }

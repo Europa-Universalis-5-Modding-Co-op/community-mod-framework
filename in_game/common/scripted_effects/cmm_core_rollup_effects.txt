@@ -1,0 +1,35 @@
+﻿# Rebuild the per-container non-empty maps from current setting visibility so empty
+# groups, tabs, and mods hide. A setting is content-visible when it has no scripted
+# GUI (always shown) or its mirrored is_shown is on. Driven by cmm_rollup_driver.
+# Scope: country
+_cmm_recompute_rollup = {
+	clear_variable_map = cmm_group_nonempty
+	clear_variable_map = cmm_tab_nonempty
+	clear_variable_map = cmm_mod_nonempty
+	add_to_variable_map = { name = cmm_group_nonempty key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_tab_nonempty key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_mod_nonempty key = flag:cmm_init value = 0 }
+
+	every_in_list = {
+		variable = cmm_registered_setting_keys
+		save_scope_as = _cmm_ru_setting
+		root = {
+			if = {
+				# Content-visible: no scripted GUI (static), not yet probed, or probed and shown.
+				limit = {
+					OR = {
+						NOT = { is_key_in_variable_map = { name = cmm_has_sgui target = scope:_cmm_ru_setting } }
+						NOT = { is_key_in_variable_map = { name = cmm_setting_shown target = scope:_cmm_ru_setting } }
+						"variable_map(cmm_setting_shown|scope:_cmm_ru_setting)" >= 1
+					}
+				}
+				"variable_map(cmm_setting_owner_group|scope:_cmm_ru_setting)" = { save_scope_as = _cmm_ru_group }
+				"variable_map(cmm_setting_owner_tab|scope:_cmm_ru_setting)" = { save_scope_as = _cmm_ru_tab }
+				"variable_map(cmm_setting_owner_mod|scope:_cmm_ru_setting)" = { save_scope_as = _cmm_ru_mod }
+				add_to_variable_map = { name = cmm_group_nonempty key = scope:_cmm_ru_group value = 1 }
+				add_to_variable_map = { name = cmm_tab_nonempty key = scope:_cmm_ru_tab value = 1 }
+				add_to_variable_map = { name = cmm_mod_nonempty key = scope:_cmm_ru_mod value = 1 }
+			}
+		}
+	}
+}

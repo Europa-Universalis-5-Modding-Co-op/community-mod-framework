@@ -98,6 +98,7 @@ _cmf_on_cmm_registration = {
 		clear_variable_list = cmm_registered_tab_keys
 		clear_variable_list = cmm_registered_group_keys
 		clear_variable_list = cmm_registered_setting_keys
+		clear_variable_list = cmm_conditional_setting_keys
 		_cmm_clear_registration_pass_state = yes
 		clear_global_variable_list = cmf_active_mod_ids
 		_cmm_register_menu_settings = yes

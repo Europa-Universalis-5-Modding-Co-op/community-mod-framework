@@ -48,7 +48,7 @@ macro = {
 macro = {
     description = "Show empty-state text when selected tab has zero visible settings"
     definition = "CMMShowNoSettingsForSelectedTab"
-    replace_with = "And(CMMSelectedModExists, Or3(Not(CMMSelectedTabExists), Not(CMMMetadataIsSet('cmm_tab_setting_count_', GetVariableSystem.Get('cmm_selected_tab'))), EqualTo_CFixedPoint(CMMMetadataValue('cmm_tab_setting_count_', GetVariableSystem.Get('cmm_selected_tab')), '(CFixedPoint)0')))"
+    replace_with = "And(CMMSelectedModExists, Or(Not(CMMSelectedTabExists), Not(CMMTabNonEmpty(GetVariableSystem.Get('cmm_selected_tab')))))"
 }
 
 # Cached group-row metadata, written once per group by the cmm_cache_group_row state.
@@ -117,4 +117,46 @@ macro = {
     description = "Cached filter match for one mod row against current search text"
     definition = "CMMCachedModMatchesSearch(ModId)"
     replace_with = "Or4(Not(CMMSelectedValueExists('cmm_mod_search_text')), StringIsEmpty(GetVariableSystem.Get('cmm_mod_search_text')), StringContains(CMMCachedModName(ModId), GetVariableSystem.Get('cmm_mod_search_text')), StringContains(ModId, GetVariableSystem.Get('cmm_mod_search_text')))"
+}
+
+# Empty-container rollup, maintained by cmm_rollup_driver and _cmm_recompute_rollup.
+
+# Args: GroupKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one group has at least one currently-visible setting"
+    definition = "CMMGroupNonEmpty(GroupKey)"
+    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_group_nonempty', MakeScopeFlag(GroupKey)).IsSet"
+}
+
+# Args: TabKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one tab has at least one currently-visible setting"
+    definition = "CMMTabNonEmpty(TabKey)"
+    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_tab_nonempty', MakeScopeFlag(TabKey)).IsSet"
+}
+
+# Args: ModId (string)
+# Returns: boolean
+macro = {
+    description = "True when one mod has at least one currently-visible setting"
+    definition = "CMMModNonEmpty(ModId)"
+    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_mod_nonempty', MakeScopeFlag(ModId)).IsSet"
+}
+
+# Args: SettingKey (string)
+# Returns: string
+macro = {
+    description = "'yes'/'no' for one conditional setting's current is_shown"
+    definition = "CMMRollupShownString(SettingKey)"
+    replace_with = "Select_CString(CMMGuiIsShown(Concatenate(SettingKey, '_on_changed')), 'yes', 'no')"
+}
+
+# Args: SettingKey (string)
+# Returns: none
+macro = {
+    description = "Mirror one conditional setting's is_shown and rebuild the rollup"
+    definition = "CMMRollupMarkSetting(SettingKey)"
+    replace_with = "GetScriptedGui(Select_CString(CMMGuiIsShown(Concatenate(SettingKey, '_on_changed')), 'CMM_MarkSettingShown', 'CMM_MarkSettingHidden')).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('setting', MakeScopeFlag(SettingKey)).End)"
 }

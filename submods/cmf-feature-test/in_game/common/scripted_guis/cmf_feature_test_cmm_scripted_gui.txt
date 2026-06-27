@@ -118,3 +118,37 @@ cmf_feature_test__conditional_enabled_list_on_changed = {
 		}
 	}
 }
+
+# Cascade test - hidden when Toggle is off so the owning group and tab can empty and hide.
+cmf_feature_test__cascade_group_demo_on_changed = {
+	scope = country
+	is_shown = {
+		"variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1
+	}
+	effect = { }
+}
+
+cmf_feature_test__cascade_tab_demo_on_changed = {
+	scope = country
+	is_shown = {
+		"variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1
+	}
+	effect = { }
+}
+
+# Empty Demo mod - all settings hidden when Toggle is off, so the whole mod leaves the list.
+cmf_empty_demo__demo_numeric_on_changed = {
+	scope = country
+	is_shown = {
+		"variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1
+	}
+	effect = { }
+}
+
+cmf_empty_demo__demo_bool_on_changed = {
+	scope = country
+	is_shown = {
+		"variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1
+	}
+	effect = { }
+}

@@ -74,7 +74,7 @@
 				button_main_tab_alt = {
 					using = layoutpolicy_expanding
 					size = { -1 40 }
-					visible = "[CMMSelectedHasValue('cmm_selected_mod', CMMMetadataFlag('cmm_tab_owner_mod_id_', Scope.GetFlagName))]"
+					visible = "[And(CMMSelectedHasValue('cmm_selected_mod', CMMMetadataFlag('cmm_tab_owner_mod_id_', Scope.GetFlagName)), CMMTabNonEmpty(Scope.GetFlagName))]"
 					onclick = "[GetVariableSystem.Set('cmm_selected_tab', Scope.GetFlagName)]"
 					down = "[GetVariableSystem.HasValue('cmm_selected_tab', Scope.GetFlagName)]"
 					tooltip_enabled = no
@@ -118,7 +118,7 @@
 	# - Player.MakeScope.GetList(Concatenate('cmm_group_setting_keys_', Scope.GetFlagName)) [list<flag>]: settings in this group.
 	type cmm_setting_group = vbox {
 		layoutpolicy_horizontal = expanding
-		visible = "[CMMCachedGroupRowVisible(Scope.GetFlagName)]"
+		visible = "[And(CMMCachedGroupRowVisible(Scope.GetFlagName), CMMGroupNonEmpty(Scope.GetFlagName))]"
 
 		state = {
 			name = cmm_cache_group_row

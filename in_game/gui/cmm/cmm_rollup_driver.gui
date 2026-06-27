@@ -1,0 +1,37 @@
+﻿# Keeps the empty-container rollup current while the menu is open. One probe per
+# conditional setting mirrors its is_shown into cmm_setting_shown and rebuilds the
+# rollup whenever that visibility flips, so empty groups, tabs, and mods hide live.
+# The probes are gated on cmm_window_ready, which is set only after the open-gate has
+# finished rebuilding cmm_conditional_setting_keys, so the items instantiate cleanly.
+# See cmm_core_rollup_effects.txt and cmm_core_rollup_scripted_gui.txt.
+widget = {
+	name = "cmm_rollup_driver"
+	size = { 0 0 }
+	datacontext = "[GetPlayer]"
+	visible = "[Country.IsValid]"
+
+	vbox = {
+		visible = "[GetVariableSystem.Exists('cmm_window_ready')]"
+		datamodel = "[Player.MakeScope.GetList('cmm_conditional_setting_keys')]"
+
+		item = {
+			widget = {
+				size = { 0 0 }
+
+				state = {
+					name = cmm_rollup_probe_init
+					trigger_on_create = yes
+					on_start = "[CMMRollupMarkSetting(Scope.GetFlagName)]"
+					on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_rushown'), CMMRollupShownString(Scope.GetFlagName))]"
+				}
+
+				state = {
+					name = cmm_rollup_probe_changed
+					trigger_when = "[Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_rushown'), CMMRollupShownString(Scope.GetFlagName)))]"
+					on_start = "[CMMRollupMarkSetting(Scope.GetFlagName)]"
+					on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_rushown'), CMMRollupShownString(Scope.GetFlagName))]"
+				}
+			}
+		}
+	}
+}

@@ -71,6 +71,19 @@
  cmf_feature_test__conditional_enabled_list_i2_name: "Item Two"
  cmf_feature_test__conditional_enabled_list__enabled_name: "Enabled"
  cmf_feature_test__conditional_enabled_list__enabled_desc: "Greyed out and disabled when Toggle is off (is_valid)."
+ ## Cascade Group (cascade_group) Group
+ cmf_feature_test__settings__cascade_group_name: "Cascade Group"
+ cmf_feature_test__settings__cascade_group_desc: "Hides entirely when Toggle is off; the Settings tab stays because its other groups remain."
+ cmf_feature_test__cascade_group_demo_name: "Cascade Group Demo"
+ cmf_feature_test__cascade_group_demo_desc: "Hidden when Toggle is off."
+
+ # Cascade Tab (cascade_tab) Tab
+ cmf_feature_test__cascade_tab_name: "Cascade Tab"
+ ## Cascade (cascade_tab_group) Group
+ cmf_feature_test__cascade_tab__cascade_tab_group_name: "Cascade"
+ cmf_feature_test__cascade_tab__cascade_tab_group_desc: "The whole tab hides when Toggle is off; the mod stays because its other tabs remain."
+ cmf_feature_test__cascade_tab_demo_name: "Cascade Tab Demo"
+ cmf_feature_test__cascade_tab_demo_desc: "Hidden when Toggle is off."
 
  # Global (global) Tab
  cmf_feature_test__global_name: "Global"
@@ -204,6 +217,17 @@
  cmf_feature_test__global_from_list__active_name: "Active"
  cmf_feature_test__global_from_list__priority_name: "Priority"
 
+ # Empty Demo (cmf_empty_demo) mod
+ cmf_empty_demo_name: "Empty Demo"
+ cmf_empty_demo_desc: "A separate mod that drops out of this list when all its settings are hidden."
+ cmf_empty_demo__options_name: "Options"
+ cmf_empty_demo__options__general_name: "General"
+ cmf_empty_demo__options__general_desc: "Every setting here is hidden when Toggle is off."
+ cmf_empty_demo__demo_numeric_name: "Demo Numeric"
+ cmf_empty_demo__demo_numeric_desc: "Hidden when Toggle is off."
+ cmf_empty_demo__demo_bool_name: "Demo Bool"
+ cmf_empty_demo__demo_bool_desc: "Hidden when Toggle is off."
+
  # Optional: self-referencing flag keys to suppress IDE warnings (safe to remove if you want)
  cmf_feature_test: "cmf_feature_test"
  cmf_feature_test__settings: "cmf_feature_test__settings"
@@ -229,6 +253,11 @@
  cmf_feature_test__text_plain: "cmf_feature_test__text_plain"
  cmf_feature_test__text_quoted: "cmf_feature_test__text_quoted"
  cmf_feature_test__conditional_numeric: "cmf_feature_test__conditional_numeric"
+ cmf_feature_test__settings__cascade_group: "cmf_feature_test__settings__cascade_group"
+ cmf_feature_test__cascade_tab: "cmf_feature_test__cascade_tab"
+ cmf_feature_test__cascade_tab__cascade_tab_group: "cmf_feature_test__cascade_tab__cascade_tab_group"
+ cmf_feature_test__cascade_group_demo: "cmf_feature_test__cascade_group_demo"
+ cmf_feature_test__cascade_tab_demo: "cmf_feature_test__cascade_tab_demo"
  cmf_feature_test__global_toggle: "cmf_feature_test__global_toggle"
  cmf_feature_test__global_button: "cmf_feature_test__global_button"
  cmf_feature_test__global_numeric: "cmf_feature_test__global_numeric"
@@ -264,3 +293,8 @@
  cmf_feature_test__global_dynamic_list__active: "cmf_feature_test__global_dynamic_list__active"
  cmf_feature_test__global_dynamic_list__priority: "cmf_feature_test__global_dynamic_list__priority"
  cmf_feature_test__global_lists__global_dynamic_list: "cmf_feature_test__global_lists__global_dynamic_list"
+ cmf_empty_demo: "cmf_empty_demo"
+ cmf_empty_demo__options: "cmf_empty_demo__options"
+ cmf_empty_demo__options__general: "cmf_empty_demo__options__general"
+ cmf_empty_demo__demo_numeric: "cmf_empty_demo__demo_numeric"
+ cmf_empty_demo__demo_bool: "cmf_empty_demo__demo_bool"
