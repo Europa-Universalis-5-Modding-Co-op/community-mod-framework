@@ -8,6 +8,7 @@ cmf_on_mod_registration = {
 cmf_feature_test_on_register_cmf_mod = {
 	effect = {
 		cmf_feature_test_register_cmf_mod = yes
+		cmf_feature_test_register_cmf = yes
 	}
 }
 
