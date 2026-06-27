@@ -113,6 +113,47 @@ cmf_feature_test_register_cmf_mod = {
 		setting_id = conditional_numeric
 	}
 
+	cmm_register_bool_setting = {
+		mod_id = cmf_feature_test
+		setting_id = conditional_enabled
+		tab_id = settings
+		group_id = conditional
+		default_value = 1
+	}
+	cmm_add_scripted_gui = {
+		mod_id = cmf_feature_test
+		setting_id = conditional_enabled
+	}
+
+	cmm_register_text_setting = {
+		mod_id = cmf_feature_test
+		setting_id = conditional_enabled_text
+		tab_id = settings
+		group_id = conditional
+		character_limit = 32
+		quote_text = 0
+	}
+	cmm_add_scripted_gui = {
+		mod_id = cmf_feature_test
+		setting_id = conditional_enabled_text
+	}
+
+	cmm_register_settings_list = {
+		mod_id = cmf_feature_test
+		setting_id = conditional_enabled_list
+		tab_id = settings
+		item_count = 2
+		is_ordered = 0
+	}
+	cmm_register_list_bool_field = {
+		mod_id = cmf_feature_test
+		setting_id = conditional_enabled_list
+		field_id = enabled
+		default_value = 1
+	}
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = conditional_enabled_list item = 1 value = root }
+	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = conditional_enabled_list item = 2 value = root }
+
 	# Global (global) Tab
 	## Toggles (global_toggles) Group
 	cmm_register_global_bool_setting = {
@@ -568,6 +609,11 @@ cmf_feature_test__text_plain_on_changed = {
 }
 
 cmf_feature_test__text_quoted_on_changed = {
+	change_country_name = $text$
+}
+
+## Conditional (conditional) Group
+cmf_feature_test__conditional_enabled_text_on_changed = {
 	change_country_name = $text$
 }
 

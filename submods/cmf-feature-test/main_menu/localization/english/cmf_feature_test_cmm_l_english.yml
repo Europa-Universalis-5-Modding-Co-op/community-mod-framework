@@ -56,9 +56,21 @@
  cmf_feature_test__text_quoted_desc: "Text setting with quote wrapping. Changes country name."
  ## Conditional (conditional) Group
  cmf_feature_test__settings__conditional_name: "Conditional"
- cmf_feature_test__settings__conditional_desc: "Settings with conditional visibility."
+ cmf_feature_test__settings__conditional_desc: "Settings with conditional visibility and enabled state."
  cmf_feature_test__conditional_numeric_name: "Conditional Numeric"
  cmf_feature_test__conditional_numeric_desc: "Only visible when Toggle is enabled."
+ cmf_feature_test__conditional_enabled_name: "Conditional Enabled"
+ cmf_feature_test__conditional_enabled_desc: "Greyed out and disabled when Toggle is off (is_valid)."
+ cmf_feature_test__conditional_enabled_text_name: "Conditional Enabled Text"
+ cmf_feature_test__conditional_enabled_text_desc: "Greyed out and disabled when Toggle is off (is_valid)."
+ ## Conditional Enabled List (conditional_enabled_list) Group
+ cmf_feature_test__settings__conditional_enabled_list_name: "Conditional Enabled List"
+ cmf_feature_test__settings__conditional_enabled_list_desc: "Greyed out and disabled when Toggle is off (is_valid)."
+ cmf_feature_test__conditional_enabled_list_item_column_name: "Item"
+ cmf_feature_test__conditional_enabled_list_i1_name: "Item One"
+ cmf_feature_test__conditional_enabled_list_i2_name: "Item Two"
+ cmf_feature_test__conditional_enabled_list__enabled_name: "Enabled"
+ cmf_feature_test__conditional_enabled_list__enabled_desc: "Greyed out and disabled when Toggle is off (is_valid)."
 
  # Global (global) Tab
  cmf_feature_test__global_name: "Global"

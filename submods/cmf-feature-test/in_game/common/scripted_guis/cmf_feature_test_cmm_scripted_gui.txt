@@ -89,3 +89,32 @@ cmf_feature_test__conditional_numeric_on_changed = {
 	}
 	effect = { }
 }
+
+# Conditional enabled state - control is greyed out and disabled while the toggle is off.
+cmf_feature_test__conditional_enabled_on_changed = {
+	scope = country
+	is_valid = {
+		"variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1
+	}
+	effect = { }
+}
+
+cmf_feature_test__conditional_enabled_text_on_changed = {
+	scope = country
+	is_valid = {
+		"variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1
+	}
+	effect = { }
+}
+
+cmf_feature_test__conditional_enabled_list_on_changed = {
+	scope = country
+	is_valid = {
+		"variable_map(cmm|flag:cmf_feature_test__toggle)" >= 1
+	}
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__conditional_enabled_list
+		}
+	}
+}
