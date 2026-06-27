@@ -45,6 +45,7 @@ SUBMODS_DIR_NAME = "submods"
 WORKSHOP_TRANSLATION_FILENAME_RE = re.compile(r"^workshop_(.+)\.txt$")
 CHANGE_NOTES_TRANSLATION_FILENAME_RE = re.compile(r"^change-notes_(.+)\.txt$")
 WORKSHOP_VERSION_CARD_RE = re.compile(r"^(\d+(?:\.\d+)*)(?:\s*([&-])\s*(\d+(?:\.\d+)*))?$")
+WORKSHOP_VERSION_CARD_SUFFIX_RE = re.compile(r"^-\s*([vV]?\d+(?:\.\d+)*)(?:\s+(.+))?$")
 WORKSHOP_TITLE_MARKER = "===WORKSHOP_TITLE==="
 WORKSHOP_DESCRIPTION_MARKER = "===WORKSHOP_DESCRIPTION==="
 WORKSHOP_NO_TRANSLATE_BELOW = "--NO-TRANSLATE-BELOW--"
@@ -131,7 +132,7 @@ def load_name_override(config, key):
     return name if name else None
 
 def load_version_card(config):
-    """Load the optional workshop_version_card value and render it as a bracketed title prefix."""
+    """Load the optional workshop_version_card value and render it as a bracketed title prefix or an appended title suffix."""
     raw = config.get("workshop_version_card")
     if raw is None:
         return ""
@@ -139,10 +140,17 @@ def load_version_card(config):
     if not raw:
         return ""
 
+    suffix_match = WORKSHOP_VERSION_CARD_SUFFIX_RE.match(raw)
+    if suffix_match is not None:
+        version, name = suffix_match.groups()
+        if name:
+            return f"- {version} {name}"
+        return f"- {version}"
+
     match = WORKSHOP_VERSION_CARD_RE.match(raw)
     if match is None:
         print(f"Error: Invalid workshop_version_card '{raw}'.")
-        print('Supported formats: "1.x", "1.x & 1.y", "1.x-1.y"')
+        print('Supported formats: "1.x", "1.x & 1.y", "1.x-1.y", "- 1.x", "- v1.x", "- v1.x Name"')
         return None
 
     first, separator, second = match.groups()
@@ -153,9 +161,11 @@ def load_version_card(config):
     return f"[{first}-{second}]"
 
 def apply_version_card(title, version_card):
-    """Prepend the version card to a Workshop title."""
+    """Combine the version card with a Workshop title: suffix cards append, bracket cards prepend."""
     if not version_card or not title:
         return title
+    if version_card.startswith("-"):
+        return f"{title} {version_card}"
     return f"{version_card} {title}"
 
 def load_source_language(config):

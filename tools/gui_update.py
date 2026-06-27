@@ -2231,8 +2231,29 @@ def cmd_refresh(args):
     _push_refs([MERGED_BRANCH])
 
     print(f"\nRefreshed: {len(new_set)} definition(s) tracked.")
-    if added or removed:
-        print(f"Stage and commit {TRACKING_DIR_NAME}/ changes when ready.")
+
+    run_git(["add", "-A", "--", TRACKING_DIR_NAME])
+    has_tracking_changes = subprocess.run(
+        ["git", "diff", "--cached", "--quiet", "--", TRACKING_DIR_NAME],
+        cwd=ROOT_DIR).returncode != 0
+    if has_tracking_changes:
+        parts = [f"{len(new_set)} tracked"]
+        if added:
+            parts.append(f"{len(added)} added")
+        if removed:
+            parts.append(f"{len(removed)} removed")
+        run_git(["commit", "--only", "-m",
+                 _versioned_message(
+                     "Refresh GUI tracking (" + ", ".join(parts) + ")",
+                     version),
+                 "--", TRACKING_DIR_NAME])
+        branch = run_git(["rev-parse", "--abbrev-ref", "HEAD"], check=False)
+        if branch and branch != "HEAD":
+            _push_refs([branch])
+        else:
+            print("  Detached HEAD; skipped pushing the tracking commit.")
+    else:
+        print("No tracking file changes to commit.")
 
     mod_files = {rel for _full, rel in _iter_gui_files(ROOT_DIR, GUI_SOURCES)}
     _report_missing_defs(

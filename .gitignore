@@ -6,3 +6,12 @@ __pycache__/
 local/
 launch.json
 *.local.*
+*.iml
+
+# bug-reporter (Cloudflare Worker) instance files and deps
+/bug-reporter/wrangler.toml
+/bug-reporter/.dev.vars
+/bug-reporter/node_modules/
+/bug-reporter/worker/node_modules/
+/bug-reporter/.wrangler/
+/bug-reporter/dist/

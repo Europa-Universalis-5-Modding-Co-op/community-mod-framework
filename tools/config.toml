@@ -23,7 +23,7 @@ upload_change_notes_by_default = true # Should running upload.py upload change n
 upload_submods_by_default = false # Should running upload.py upload all submods from submods/? You can also use -s/--submods instead.
 workshop_name = "" # Optional: override the release Workshop title when it should differ from the metadata.json name
 workshop_dev_name = "" # Optional: override dev mod name for upload.py -d/--dev
-workshop_version_card = "" # Optional: untranslated version card shown in brackets before the Workshop title in every language. Formats: "1.x" for one version, "1.x & 1.y" for two versions, "1.x-1.y" for a version range
+workshop_version_card = "" # Optional: untranslated version card added to the Workshop title in every language. Bracket prefix formats: "1.x" for one version, "1.x & 1.y" for two versions, "1.x-1.y" for a version range. Suffix formats appended after the title: "- 1.x" or "- v1.x", optionally with a version name like "- v1.x Pavia"
 
 ### GUI Update ###
 game_directory = "" # Path to EU5 game directory (e.g. "C:/Steam/steamapps/common/Europa Universalis V/game"). Auto-detected if empty.
