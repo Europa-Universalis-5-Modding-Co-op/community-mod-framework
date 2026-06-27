@@ -148,7 +148,7 @@
  cmf_feature_test__from_list__priority_name: "Priority"
  ## Order Test (order_test_list) Group
  cmf_feature_test__lists__order_test_list_name: "Order Test"
- cmf_feature_test__lists__order_test_list_desc: "Per-item defaults and loc/format apply identically whether configured before (bef) or after (aft) field registration. Both Value columns should read [7] and [3]."
+ cmf_feature_test__lists__order_test_list_desc: "Per-item defaults and loc/format apply identically whether configured before (bef) or after (aft) field registration. Both Value columns should read 7 and 3, wrapped in brackets."
  cmf_feature_test__order_test_list_item_column_name: "Item"
  cmf_feature_test__order_test_list_i1_name: "Item One"
  cmf_feature_test__order_test_list_i2_name: "Item Two"

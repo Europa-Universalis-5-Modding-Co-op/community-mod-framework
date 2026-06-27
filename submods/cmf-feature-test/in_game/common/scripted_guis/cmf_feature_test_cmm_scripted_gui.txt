@@ -41,6 +41,16 @@ cmf_feature_test__from_list_on_changed = {
 	}
 }
 
+cmf_feature_test__order_test_list_on_changed = {
+	scope = country
+
+	effect = {
+		cmm_apply_list_change = {
+			setting = cmf_feature_test__order_test_list
+		}
+	}
+}
+
 cmf_feature_test__global_ordered_list_on_changed = {
 	scope = country
 
