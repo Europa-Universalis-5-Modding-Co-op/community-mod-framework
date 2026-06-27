@@ -1224,6 +1224,11 @@ _cmm_suppress_list_setting_warnings = {
 		cmf_suppress = { v = cmm_list_field_3_slider_actual_last_index_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_4_slider_actual_last_index_$mod_id$__$setting_id$ }
 		cmf_suppress = { v = cmm_list_field_5_slider_actual_last_index_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_type_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_type_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_type_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_type_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_type_$mod_id$__$setting_id$ }
 	}
 }
 
