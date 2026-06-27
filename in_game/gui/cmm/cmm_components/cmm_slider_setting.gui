@@ -1,6 +1,6 @@
 ﻿types CMMSliderSettingTypes
 {
-	# Vanilla-styled slider setting widget for one CMM setting row.
+	# Slider setting widget for one CMM setting row.
 	# Reads:
 	# - Scope.GetFlagName [string]: current setting key in root context (`<mod_id>__<setting_id>`).
 	# - GetGlobalVariable(Scope.GetFlagName).GetValue [value]: current slider value for global settings.

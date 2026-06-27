@@ -22,7 +22,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3692202776
 - **[Mod Action Log](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Action-Log)**: Global in-game log for recording mod actions with actor and arguments.
 - **[is_host Trigger](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/is_host-Trigger)** - Check if the current country is controlled by the host player.
 - **[Mod Detection](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Mod-Detection)** - Check whether another mod is active with the cmf_is_mod_active trigger.
-- **[On-Action Hooks](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks)** - Post-lobby game start/load hooks and recurring yearly/monthly pulses for human players.
+- **[On-Action Hooks](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/On-Action-Hooks)** - Post-lobby game start/load hooks, country transfer, and recurring yearly/monthly pulses for human players.
 - **[Dependency Check Popup](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Dependency-Check-Popup)** - Main menu popup that auto-enables CMF when missing.
 - **[cmf_suppress Effect](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Warning-Suppression)** - Suppress "used but never set" and "set but never used" engine warnings.
 - **[GUI Macros](https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/GUI-Macros)**: NAND, NOR, XOR logical operators.

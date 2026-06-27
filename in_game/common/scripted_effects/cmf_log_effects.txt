@@ -344,10 +344,6 @@ _cmf_log_suppress = {
 	}
 }
 
-# Internal: write entry data to maps using scope:_cmf_log_key.
-# Scope: country
-# Args: action (flag), arg1 (flag), arg2 (flag)
-
 # Internal: select flag key based on current count and save as scope.
 # Sets scope:_cmf_log_key to flag:cmf_log_N where N = cmf_log_count.
 # Scope: country
