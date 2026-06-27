@@ -19,8 +19,8 @@ on:
         required: false
         default: '3692202776'
         type: string
-      upload-workshop-pages:
-        description: 'Upload translated Workshop pages'
+      upload-workshop-description:
+        description: 'Upload the English Workshop description'
         required: false
         default: 'true'
         type: choice
@@ -322,18 +322,11 @@ jobs:
         run: |
           steamcmd +login ${{ secrets.WORKSHOP_USERNAME }} ${{ secrets.WORKSHOP_PASSWORD }} +workshop_build_item ${{ steps.metadata.outputs.vdf }} +quit
 
-        # Upload translated Workshop titles and descriptions per language
-        # Uses VDF 'language' field for per-language metadata updates
-      - name: Upload Workshop Pages
-        if: ${{ inputs.publish == 'true' && inputs.upload-workshop-pages == 'true' && needs.check.outputs.should-release-steam == 'true' }}
+      - name: Upload Workshop Description
+        if: ${{ inputs.publish == 'true' && inputs.upload-workshop-description == 'true' && needs.check.outputs.should-release-steam == 'true' }}
         shell: bash
         run: |
           WORKSHOP_ID="${{ inputs.workshop-id }}"
-          declare -A LANG_MAP=(
-            [english]=english [french]=french [german]=german [spanish]=spanish
-            [polish]=polish [russian]=russian [simp_chinese]=schinese
-            [turkish]=turkish [braz_por]=brazilian [japanese]=japanese [korean]=koreana
-          )
           # Escape backslashes for VDF; substitute " with ' since SteamCMD's
           # workshop_build_item VDF parser truncates at " even when escaped as \".
           vdf_escape() {
@@ -352,18 +345,16 @@ jobs:
             fi
           }
           enforce_title_length() {
-            local title="$1" lang_label="$2" fallback="${3:-}"
+            local title="$1" lang_label="$2"
             if [ "$(printf '%s' "$title" | wc -c)" -le "$MAX_TITLE_LENGTH" ]; then
               printf '%s' "$title"
-            elif [ -n "$fallback" ]; then
-              echo "::warning::Title for '${lang_label}' exceeds ${MAX_TITLE_LENGTH} bytes. Using the source title instead." >&2
-              printf '%s' "$fallback"
             else
-              echo "::warning::Title for '${lang_label}' exceeds ${MAX_TITLE_LENGTH} bytes. Skipping title for this language." >&2
+              echo "::warning::Title for '${lang_label}' exceeds ${MAX_TITLE_LENGTH} bytes. Skipping the title." >&2
             fi
           }
+          # steamcmd can only set the default-language description.
           write_page_vdf() {
-            local vdf_path="$1" steam_lang="$2" title="$3" desc="$4"
+            local vdf_path="$1" title="$2" desc="$3"
             title=$(vdf_escape "$title")
             desc=$(vdf_escape "$desc")
             {
@@ -373,43 +364,18 @@ jobs:
               printf '\t"publishedfileid" "%s"\n' "${WORKSHOP_ID}"
               [ -n "$title" ] && printf '\t"title" "%s"\n' "$title"
               [ -n "$desc" ] && printf '\t"description" "%s"\n' "$desc"
-              printf '\t"language" "%s"\n' "$steam_lang"
               echo '}'
             } > "$vdf_path"
           }
-          upload_count=0
-          # Source language page
           SOURCE_TITLE=$(jq -r '.name' ../mod-release/.metadata/metadata.json)
           SOURCE_DESC=$(sed '/--NO-TRANSLATE-BELOW--/d' assets/workshop/workshop-description.bbcode | sed "s/\\\$item-id\\\$/${WORKSHOP_ID}/g")
           SOURCE_TITLE=$(enforce_title_length "$SOURCE_TITLE" "english")
           SOURCE_DESC=$(trim_description "$SOURCE_DESC" "english")
-          write_page_vdf "../steam-release/page-english.vdf" "english" "$SOURCE_TITLE" "$SOURCE_DESC"
-          echo "Uploading Workshop page for english..."
+          write_page_vdf "../steam-release/page-english.vdf" "$SOURCE_TITLE" "$SOURCE_DESC"
+          echo "Uploading the English Workshop description..."
           steamcmd +login ${{ secrets.WORKSHOP_USERNAME }} ${{ secrets.WORKSHOP_PASSWORD }} +workshop_build_item "$(realpath ../steam-release/page-english.vdf)" +quit
-          upload_count=$((upload_count + 1))
-          # Translated pages
-          for file in assets/workshop/translations/workshop_*.txt; do
-            [ -f "$file" ] || continue
-            LANG=$(basename "$file" | sed 's/workshop_\(.*\)\.txt/\1/')
-            STEAM_LANG="${LANG_MAP[$LANG]:-}"
-            if [ -z "$STEAM_LANG" ]; then
-              echo "::warning::No Steam language mapping for '${LANG}', skipping."
-              continue
-            fi
-            TRANS_TITLE=$(awk '/^===WORKSHOP_TITLE===$/{f=1;next} /^===WORKSHOP_DESCRIPTION===$/{exit} f{print}' "$file" | sed '/^[[:space:]]*$/d' | head -1)
-            TRANS_TITLE=$(echo "$TRANS_TITLE" | sed "s/\\\$item-id\\\$/${WORKSHOP_ID}/g")
-            TRANS_DESC=$(awk '/^===WORKSHOP_DESCRIPTION===$/{f=1;next} f{print}' "$file")
-            TRANS_DESC=$(echo "$TRANS_DESC" | sed "s/\\\$item-id\\\$/${WORKSHOP_ID}/g")
-            [ -z "$TRANS_TITLE" ] && [ -z "$TRANS_DESC" ] && continue
-            TRANS_TITLE=$(enforce_title_length "$TRANS_TITLE" "$LANG" "$SOURCE_TITLE")
-            TRANS_DESC=$(trim_description "$TRANS_DESC" "$LANG")
-            write_page_vdf "../steam-release/page-${LANG}.vdf" "$STEAM_LANG" "$TRANS_TITLE" "$TRANS_DESC"
-            echo "Uploading Workshop page for ${LANG} (${STEAM_LANG})..."
-            steamcmd +login ${{ secrets.WORKSHOP_USERNAME }} ${{ secrets.WORKSHOP_PASSWORD }} +workshop_build_item "$(realpath "../steam-release/page-${LANG}.vdf")" +quit
-            upload_count=$((upload_count + 1))
-          done
-          echo "# Workshop Pages" >> $GITHUB_STEP_SUMMARY
-          echo "Uploaded **${upload_count}** Workshop page(s)." >> $GITHUB_STEP_SUMMARY
+          echo "# Workshop Description" >> $GITHUB_STEP_SUMMARY
+          echo "Uploaded the English Workshop description." >> $GITHUB_STEP_SUMMARY
 
         # Upload submods with Workshop IDs configured in tools/config.toml
       - name: Upload Submods
