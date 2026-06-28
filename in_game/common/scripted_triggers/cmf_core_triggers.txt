@@ -2,15 +2,17 @@
 # True when this country is controlled by the host player, or in singleplayer.
 # Scope: country
 is_host = {
-	OR = {
-		AND = {
-			has_multiple_players = no
-			is_human = yes
-		}
-		AND = {
-			has_multiple_players = yes
-			has_global_variable = cmf_core_host_country
+	trigger_if = {
+		limit = { has_multiple_players = no }
+		is_human = yes
+	}
+	trigger_else = {
+		trigger_if = {
+			limit = { has_global_variable = cmf_core_host_country }
 			this ?= global_var:cmf_core_host_country
+		}
+		trigger_else = {
+			always = no
 		}
 	}
 }
@@ -19,11 +21,16 @@ is_host = {
 # Gate for restricted features not meant for normal play.
 # Scope: country
 cmf_can_use_unrestricted_tools = {
-	AND = {
-		has_global_variable_map = cmm
-		is_key_in_global_variable_map = { name = cmm target = flag:cmf_core__enable_unrestricted_tools }
+	trigger_if = {
+		limit = {
+			has_global_variable_map = cmm
+			is_key_in_global_variable_map = { name = cmm target = flag:cmf_core__enable_unrestricted_tools }
+		}
 		"global_variable_map(cmm|flag:cmf_core__enable_unrestricted_tools)" >= 1
 		is_host = yes
+	}
+	trigger_else = {
+		always = no
 	}
 }
 
