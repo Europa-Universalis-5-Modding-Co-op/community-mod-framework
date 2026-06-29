@@ -83,34 +83,6 @@
 						autoresize = yes
 					}
 				}
-
-				hbox = {
-					layoutpolicy_horizontal = expanding
-					background = {
-						using = color_black_texture
-						alpha = 0.3
-					}
-					spacing = 10
-					margin = { 18 18 }
-
-					icon = {
-						tooltipwidget = {
-							TooltipConditionListType = {
-								datacontext = "[StringToConditionList(Localize('CLICK_TOOLTIP'))]"
-							}
-						}
-						size = { 32 32 }
-						texture = "gfx/interface/icons/ui_controls/left_click.dds"
-					}
-					text_multi = {
-						layoutpolicy_horizontal = expanding
-						align = left|nobaseline
-						default_format = "#color_yellow"
-						text = "CMM_OPEN_MOD_BANNERS"
-						fontsize = 15
-						autoresize = yes
-					}
-				}
 			}
 		}
 	}
