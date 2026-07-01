@@ -1242,6 +1242,314 @@ window = {
 			}
 		}
 
+		# -- Separator ---------------------------------------
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 2 }
+		}
+
+		# =======================================================
+		# Section 4: Variable Map Size Limits
+		# =======================================================
+
+		text_single = {
+			fontsize = 14
+			text = "ET_MAP_SIZE_SECTION"
+		}
+
+		hbox = {
+			spacing = 8
+			button_regular = {
+				text = "ET_RUN_MAP_SIZE"
+				minimumsize = { 180 30 }
+				fontsize = 14
+				onclick = "[GetScriptedGui('et_run_map_size').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				tooltip = "ET_RUN_MAP_SIZE_TOOLTIP"
+			}
+			button_regular = {
+				text = "ET_RUN_MAP_SIZE_EXTREME"
+				minimumsize = { 220 30 }
+				fontsize = 14
+				onclick = "[GetScriptedGui('et_run_map_size_extreme').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				tooltip = "ET_RUN_SIZE_EXTREME_TOOLTIP"
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# -- Map: 1,000 ----------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_MAP_1K_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_map_size_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_map_size_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_map_1k_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_map_size_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_map_1k_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# -- Map: 10,000 ---------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_MAP_10K_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_map_size_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_map_size_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_map_10k_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_map_size_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_map_10k_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# -- Map: 100,000 --------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_MAP_100K_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_map_size_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_map_size_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_map_100k_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_map_size_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_map_100k_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# -- Map: 1,000,000 ------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_MAP_1M_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_map_1m_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_map_1m_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_map_1m_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_map_1m_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_map_1m_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+		}
+
+		# -- Separator ---------------------------------------
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 2 }
+		}
+
+		# =======================================================
+		# Section 5: Variable List Size Limits
+		# =======================================================
+
+		text_single = {
+			fontsize = 14
+			text = "ET_LIST_SIZE_SECTION"
+		}
+
+		hbox = {
+			spacing = 8
+			button_regular = {
+				text = "ET_RUN_LIST_SIZE"
+				minimumsize = { 180 30 }
+				fontsize = 14
+				onclick = "[GetScriptedGui('et_run_list_size').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				tooltip = "ET_RUN_LIST_SIZE_TOOLTIP"
+			}
+			button_regular = {
+				text = "ET_RUN_LIST_SIZE_EXTREME"
+				minimumsize = { 220 30 }
+				fontsize = 14
+				onclick = "[GetScriptedGui('et_run_list_size_extreme').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				tooltip = "ET_RUN_SIZE_EXTREME_TOOLTIP"
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# -- List: 1,000 ---------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_LIST_1K_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_list_size_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_list_size_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_list_1k_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_list_size_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_list_1k_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# -- List: 10,000 --------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_LIST_10K_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_list_size_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_list_size_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_list_10k_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_list_size_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_list_10k_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# -- List: 100,000 -------------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_LIST_100K_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_list_size_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_list_size_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_list_100k_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_list_size_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_list_100k_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+
+			# -- List: 1,000,000 -----------------------------
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				ignoreinvisible = yes
+				spacing = 8
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					fontsize = 14
+					text = "ET_LIST_1M_LABEL"
+				}
+
+				text_single = {
+					fontsize = 14
+					visible = "[Not(Player.MakeScope.GetVariable('et_list_1m_has_run').IsSet)]"
+					text = "ET_NOT_RUN"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_list_1m_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_list_1m_passed').GetValue, '(CFixedPoint)1'))]"
+					fontsize = 14
+					text = "ET_PASS"
+				}
+				text_single = {
+					visible = "[And(Player.MakeScope.GetVariable('et_list_1m_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_list_1m_passed').GetValue, '(CFixedPoint)1')))]"
+					fontsize = 14
+					text = "ET_FAIL"
+				}
+			}
+		}
+
 			} # end blockoverride "scrollbox_content"
 		} # end scrollbox
 	}

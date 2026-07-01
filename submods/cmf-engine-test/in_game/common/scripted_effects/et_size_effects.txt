@@ -1,0 +1,33 @@
+﻿# Builders for the variable map/list size-limit probes.
+# A while defaults to a 1000-iteration cap (and warns on abort); max raises it
+# above the largest probe target (1,000,000) so one flat loop builds the whole
+# structure.
+
+# Grow a country variable map of numeric keys to TARGET entries.
+# Args: TARGET (number)
+et_grow_var_map_to = {
+	while = {
+		max = 1100000
+		limit = { var:et_size_idx < $TARGET$ }
+		add_to_variable_map = {
+			name = et_size_map
+			key = var:et_size_idx
+			value = 1
+		}
+		change_variable = { name = et_size_idx add = 1 }
+	}
+}
+
+# Grow a country variable list to TARGET entries.
+# Args: TARGET (number)
+et_grow_var_list_to = {
+	while = {
+		max = 1100000
+		limit = { var:et_size_idx < $TARGET$ }
+		add_to_variable_list = {
+			name = et_size_list
+			target = var:et_size_idx
+		}
+		change_variable = { name = et_size_idx add = 1 }
+	}
+}

@@ -1,0 +1,116 @@
+﻿# Variable map/list maximum size probes.
+# Each builds a structure at escalating sizes and records which sizes the engine
+# actually reaches, to bracket the practical limit. Results show in et_window.
+
+# Build a country variable map at 1k / 10k / 100k entries.
+et_run_map_size = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_map_1k_passed value = 0 }
+		set_variable = { name = et_map_10k_passed value = 0 }
+		set_variable = { name = et_map_100k_passed value = 0 }
+
+		# Reset so leftover entries from a prior run don't inflate the size check.
+		clear_variable_map = et_size_map
+		set_variable = { name = et_size_idx value = 0 }
+
+		et_grow_var_map_to = { TARGET = 1000 }
+		if = {
+			limit = { variable_map_size = { name = et_size_map value >= 1000 } }
+			set_variable = { name = et_map_1k_passed value = 1 }
+		}
+
+		et_grow_var_map_to = { TARGET = 10000 }
+		if = {
+			limit = { variable_map_size = { name = et_size_map value >= 10000 } }
+			set_variable = { name = et_map_10k_passed value = 1 }
+		}
+
+		et_grow_var_map_to = { TARGET = 100000 }
+		if = {
+			limit = { variable_map_size = { name = et_size_map value >= 100000 } }
+			set_variable = { name = et_map_100k_passed value = 1 }
+		}
+
+		remove_variable = et_size_idx
+		set_variable = { name = et_map_size_has_run value = 1 }
+	}
+}
+
+# Build a 1,000,000-entry country variable map. May freeze the game briefly.
+et_run_map_size_extreme = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_map_1m_passed value = 0 }
+
+		clear_variable_map = et_size_map
+		set_variable = { name = et_size_idx value = 0 }
+
+		et_grow_var_map_to = { TARGET = 1000000 }
+		if = {
+			limit = { variable_map_size = { name = et_size_map value >= 1000000 } }
+			set_variable = { name = et_map_1m_passed value = 1 }
+		}
+
+		remove_variable = et_size_idx
+		set_variable = { name = et_map_1m_has_run value = 1 }
+	}
+}
+
+# Build a country variable list at 1k / 10k / 100k entries.
+et_run_list_size = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_list_1k_passed value = 0 }
+		set_variable = { name = et_list_10k_passed value = 0 }
+		set_variable = { name = et_list_100k_passed value = 0 }
+
+		clear_variable_list = et_size_list
+		set_variable = { name = et_size_idx value = 0 }
+
+		et_grow_var_list_to = { TARGET = 1000 }
+		if = {
+			limit = { variable_list_size = { name = et_size_list value >= 1000 } }
+			set_variable = { name = et_list_1k_passed value = 1 }
+		}
+
+		et_grow_var_list_to = { TARGET = 10000 }
+		if = {
+			limit = { variable_list_size = { name = et_size_list value >= 10000 } }
+			set_variable = { name = et_list_10k_passed value = 1 }
+		}
+
+		et_grow_var_list_to = { TARGET = 100000 }
+		if = {
+			limit = { variable_list_size = { name = et_size_list value >= 100000 } }
+			set_variable = { name = et_list_100k_passed value = 1 }
+		}
+
+		remove_variable = et_size_idx
+		set_variable = { name = et_list_size_has_run value = 1 }
+	}
+}
+
+# Build a 1,000,000-entry country variable list. May freeze the game briefly.
+et_run_list_size_extreme = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_list_1m_passed value = 0 }
+
+		clear_variable_list = et_size_list
+		set_variable = { name = et_size_idx value = 0 }
+
+		et_grow_var_list_to = { TARGET = 1000000 }
+		if = {
+			limit = { variable_list_size = { name = et_size_list value >= 1000000 } }
+			set_variable = { name = et_list_1m_passed value = 1 }
+		}
+
+		remove_variable = et_size_idx
+		set_variable = { name = et_list_1m_has_run value = 1 }
+	}
+}

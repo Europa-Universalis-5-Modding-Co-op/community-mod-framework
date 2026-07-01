@@ -48,6 +48,19 @@ et_suppress_warnings = {
 			exists = var:et_has_run
 			exists = var:et_global_has_run
 			exists = var:et_map_name_v
+			# Size limit test results (read only in et_window GUI)
+			exists = var:et_map_1k_passed
+			exists = var:et_map_10k_passed
+			exists = var:et_map_100k_passed
+			exists = var:et_map_1m_passed
+			exists = var:et_list_1k_passed
+			exists = var:et_list_10k_passed
+			exists = var:et_list_100k_passed
+			exists = var:et_list_1m_passed
+			exists = var:et_map_size_has_run
+			exists = var:et_map_1m_has_run
+			exists = var:et_list_size_has_run
+			exists = var:et_list_1m_has_run
 			# Suppress "set but never used" for local variables
 			exists = local_var:et_lv
 			exists = local_var:et_map_name

@@ -114,3 +114,32 @@ $PARAM$ cannot be used inside a quoted variable_map accessor.
 ### GUI Map Read Tests (var: numeric keys) - removed 2026-06-19
 
 A bottom section of the test window probed GUI-side reads of var: numeric-keyed global maps via `GetVariableFromGlobalVariableMap` with `Scope` and `Scope.Self`. The reads never resolved (the window showed `default` / `ERROR_FLAG_INDEX`), and the `Scope.Self` form logged a `FetchData` nullptr error every frame, spamming the console. The probes were display-only and unscored, so they were removed along with the `et_gui_action` map and the second `et_gui_map` entry that fed only them. Finding: GUI-side reads of var: numeric-keyed global-map entries do not resolve; CMF's mod action log keys entries with flag scopes via `MakeScopeFlag`, which does resolve in GUI.
+
+## Size Limit Tests (et_run_map_size / et_run_list_size)
+
+Run 2026-06-30. Probes the maximum entry count of a country variable map and a country variable list. Each test clears its structure, builds numeric-keyed entries with a counter, and checks `variable_map_size` / `variable_list_size` against the target. The builder is a single `while` with `max = 1100000` raised above the largest target (the default while cap is 1000).
+
+Note: the first run used a nested 1000-batch while, which logged `while loop with no specified max aborted after executing 1000 times` on every batch. The builder now sets `max` to build in one loop instead; re-run to confirm the warning is gone and the sizes still pass.
+
+| Test | Structure | Target | Result |
+|------|-----------|--------|--------|
+| Map 1k | variable map | 1,000 | PASS |
+| Map 10k | variable map | 10,000 | PASS |
+| Map 100k | variable map | 100,000 | PASS |
+| Map 1M | variable map | 1,000,000 | PASS |
+| List 1k | variable list | 1,000 | PASS |
+| List 10k | variable list | 10,000 | PASS |
+| List 100k | variable list | 100,000 | PASS |
+| List 1M | variable list | 1,000,000 | PASS |
+
+**8/8 passed.** Both structures reached 1,000,000 entries; no hard capacity cap was hit at 1M. The practical constraint is performance, not capacity.
+
+### Findings
+
+- **No capacity limit found at 1,000,000 for either structure.** The variable map and the variable list both reached 1M entries and passed their size checks.
+- **Numeric `var:` counter values work as distinct variable map keys.** The map reaching 1M distinct entries confirms `key = var:et_size_idx` keys on the counter's value; had the keys collapsed, the map size would stay 1 and every map tier would FAIL.
+- **Variable maps are dramatically faster than variable lists at scale.** Maps were instant from 1k to 100k with only a small freeze at 1M (consistent with near-constant-time hash insertion). Lists had a small freeze at 10k-100k and a multi-minute freeze at 1M (consistent with a per-insert cost that grows with size, i.e. roughly quadratic total). For large per-country data, prefer a variable map over a variable list.
+
+## Re-run of Tests 1-38 (2026-06-30)
+
+Re-run alongside the size tests; every result matches the prior run (26, 27, 31 FAIL; 36 displayed FAIL; 37, 38 displayed PASS as parse-error false positives; all others PASS). No behavior changed.
