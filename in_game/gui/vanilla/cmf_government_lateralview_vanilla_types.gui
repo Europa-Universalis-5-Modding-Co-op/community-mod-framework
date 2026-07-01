@@ -2418,17 +2418,16 @@ template government_main_tabs {
 			name = "tab_bureaucracies"
 		}
 		using = layoutpolicy_expanding
-		blockoverride "tab_text"{
-			text = "BUREAUCRACIES_TEXT"
-		}
 		tooltipwidget = {
 			using = TabBureaucraciesTooltip
 		}
 		visible = "[PlayerHasBureaucracies]"
-		action_tooltip = {
-			title = "OPEN_TAB"
-			on_action = "[OpenLateralView('bureaucracies')]"
-		}
+
 		down = "[IsLateralViewOpened('bureaucracies')]"
+		datacontext = "[GetAutomatedSystemItem('bureaucracy')]"
+		using = automated_tab
+
+		blockoverride "on_action_left" { on_action = "[OpenLateralView('bureaucracies')]" }
+		blockoverride "text" { text = "BUREAUCRACIES_TEXT" }
 	}
 }

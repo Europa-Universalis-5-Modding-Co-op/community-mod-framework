@@ -578,6 +578,16 @@ types MultiplayerLobby
 				widget = {
 					parentanchor = center
 					size = { 100% 100% }
+					visible = "[Not(AdvanceDefinition.HasSubunitUnlocks)]"
+					datacontext = "[GetPlayer]"
+					using = advance_icon_base
+				}
+
+				# Unit illustrations need a smaller scale than flat icons to avoid bleeding past the card frame
+				widget = {
+					parentanchor = center
+					size = { 85% 85% }
+					visible = "[AdvanceDefinition.HasSubunitUnlocks]"
 					datacontext = "[GetPlayer]"
 					using = advance_icon_base
 				}

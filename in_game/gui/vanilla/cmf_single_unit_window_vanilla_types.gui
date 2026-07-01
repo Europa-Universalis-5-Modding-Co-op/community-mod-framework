@@ -1336,7 +1336,7 @@ types SingleUnitWindowTypes
 						}
 						
 						header_button_left = {
-							# visible = "[And(Not(IsInSameWarAsSiegeOwner(Siege.Self)), And(Not(ObjectsEqual(Siege.GetBesieger.GetCountry, Player.Self)), Not(ObjectsEqual(Siege.GetLocation.GetOwner, Player.Self))))]"
+							visible = "[And(Not(IsInSameWarAsSiegeOwner(Siege.Self)), And(Not(ObjectsEqual(Siege.GetBesieger.GetCountry, Player.Self)), Not(ObjectsEqual(Siege.GetLocation.GetOwner, Player.Self))))]"
 							size = { 25 25 }
 							enabled = "[CanTakeOverSiege(Siege.Self)]"
 							action_tooltip = {
