@@ -53,45 +53,46 @@ Date: 2026-06-14
 
 ## Macro Param Tests (et_run_global)
 
-Run 2026-06-19. The displayed PASS/FAIL is misleading; the engine log explains it.
+Redesigned 2026-06-30 to fail closed, and confirmed in-game: all three now report
+FAIL. The original 2026-06-19 run showed a false-positive PASS on 37/38 (explained
+below), which prompted the redesign.
 
-| # | Test | Displayed | Real outcome |
-|---|------|-----------|--------------|
-| 36 | macro param as key in variable_map() quoted string | FAIL | broken: runtime "key not set" |
-| 37 | macro param in map name position of quoted string | PASS | broken: load parse error, false-positive PASS |
-| 38 | macro param as both map name and key | PASS | broken: load parse error, false-positive PASS |
+| # | Test | Result |
+|---|------|--------|
+| 36 | macro param as key in variable_map() quoted string | FAIL |
+| 37 | macro param in map name position of quoted string | FAIL |
+| 38 | macro param as both map name and key | FAIL |
 
-The macro IS substituted inside the quoted string, but it corrupts the
-variable_map(...) syntax. The load log shows the mangled triggers:
+Engine finding (unchanged): a $PARAM$ macro arg IS substituted inside the quoted
+string, but it corrupts the variable_map(...) syntax. The 2026-06-19 load log showed
+the mangled triggers:
 
 - 37 "variable_map($MAP$|flag:et_key_a)" became
-  "variable_mapet_macro_map$|flag:et_key_a)" (Unknown trigger
-  type). The substituted value is there, but the "(" is gone and a stray "$" is left.
+  "variable_mapet_macro_map$|flag:et_key_a)" (Unknown trigger type): the substituted
+  value is there, but the "(" is gone and a stray "$" is left.
 - 38 "variable_map($MAP$|flag:$KEY$)" became
   "variable_mapet_macro_map$|flaget_key_a$)" (same load error).
 
-A $PARAM$ in the map-name slot (37, 38) destroys the "(" so the whole trigger fails
-to parse. An unparseable trigger leaves the if's limit with no valid condition, so
-the if fires and sets _passed = 1: the PASS is a parse-error artifact, not a working
-lookup. A $PARAM$ only in the key slot (36) keeps the trigger parseable but the key
-does not resolve, so at runtime the engine logs "Failed to fetch key for
-'et_macro_map' map due to not being set" and the comparison is false: a
-genuine FAIL.
+A $PARAM$ in the map-name slot destroys the "(" so the trigger fails to parse.
+Originally the read sat directly in the if's limit, so an unparseable trigger left
+the limit with no valid condition, read as vacuously true, and set _passed = 1: a
+false-positive PASS. The redesign captures the read into a local var (et_macro_result,
+init 0) and compares that separately, so a corrupted or unresolved read leaves the
+value at 0 and the test FAILs; only a genuine read of 55 passes.
 
-Conclusion: $PARAM$ cannot be used inside a quoted variable_map accessor. All three
-forms are broken; map-name macros additionally throw a load parse error and read as
-a false-positive true. Use the set_local_variable round-trip with local_var:/scope:
-keys instead. Caveat: the key-slot case (36) mirrors CMM's documented
-"variable_map(cmm|flag:$setting$)" but logs a runtime error here rather than failing
-silently, which is worth reconciling with the global note's "fails silently" wording.
+Conclusion: $PARAM$ cannot be used inside a quoted variable_map accessor. Use the
+set_local_variable round-trip with local_var:/scope: keys instead. Caveat: the
+key-slot case (36) mirrors CMM's documented "variable_map(cmm|flag:$setting$)" but
+logs a runtime error here rather than failing silently, worth reconciling with the
+global note's "fails silently" wording.
 
 ## Summary
 
 **Total: 32/35 passed (3 failed)**
 
-Tests 36-38 (macro params in quoted accessors) ran 2026-06-19. All three are broken;
-the 37/38 PASS are parse-error false positives (see the Macro Param Tests section).
-$PARAM$ cannot be used inside a quoted variable_map accessor.
+Tests 36-38 (macro params in quoted accessors): $PARAM$ cannot be used inside a quoted
+variable_map accessor (all three broken). Redesigned 2026-06-30 to fail closed so they
+report FAIL instead of the earlier false-positive PASS; see the Macro Param Tests section.
 
 ### Key Findings
 
@@ -142,4 +143,4 @@ Note: the first run used a nested 1000-batch while, which logged `while loop wit
 
 ## Re-run of Tests 1-38 (2026-06-30)
 
-Re-run alongside the size tests; every result matches the prior run (26, 27, 31 FAIL; 36 displayed FAIL; 37, 38 displayed PASS as parse-error false positives; all others PASS). No behavior changed.
+Re-run alongside the size tests; every result matches the prior run (26, 27, 31 FAIL; 36 displayed FAIL; 37, 38 displayed PASS as parse-error false positives; all others PASS). No behavior changed. (Macro tests 36-38 were redesigned to fail closed after this re-run; see the Macro Param Tests section.)

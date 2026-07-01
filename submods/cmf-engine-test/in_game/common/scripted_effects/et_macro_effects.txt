@@ -1,36 +1,35 @@
 ﻿# Macro-parameter substitution tests for quoted variable map accessors.
-# EU5 $PARAM$ macro args are text substitution that does not occur inside
-# quotes: a $PARAM$ between "..." stays literal, so a quoted variable_map
-# lookup using one reads nothing. Each effect takes the slot via a macro arg
-# and reads et_macro_map (seeded with flag:et_key_a = 55 by
-# et_run_global). Used by tests 36-38; expected result: FAIL.
+# Each effect reads et_macro_map (seeded with flag:et_key_a = 55 by
+# et_run_global) via a $PARAM$ macro arg, capturing the read into a local
+# var and comparing it separately so a corrupted or unresolved read fails
+# closed (a genuine 55 is the only pass). Used by tests 36-38.
 
 # Args: KEY (flag name)
 et_macro_key = {
+	set_local_variable = { name = et_macro_result value = 0 }
+	set_local_variable = { name = et_macro_result value = "variable_map(et_macro_map|flag:$KEY$)" }
 	if = {
-		limit = {
-			"variable_map(et_macro_map|flag:$KEY$)" >= 55
-		}
+		limit = { local_var:et_macro_result >= 55 }
 		set_variable = { name = et_36_passed value = 1 }
 	}
 }
 
 # Args: MAP (variable map name)
 et_macro_map_name = {
+	set_local_variable = { name = et_macro_result value = 0 }
+	set_local_variable = { name = et_macro_result value = "variable_map($MAP$|flag:et_key_a)" }
 	if = {
-		limit = {
-			"variable_map($MAP$|flag:et_key_a)" >= 55
-		}
+		limit = { local_var:et_macro_result >= 55 }
 		set_variable = { name = et_37_passed value = 1 }
 	}
 }
 
 # Args: MAP (variable map name), KEY (flag name)
 et_macro_both = {
+	set_local_variable = { name = et_macro_result value = 0 }
+	set_local_variable = { name = et_macro_result value = "variable_map($MAP$|flag:$KEY$)" }
 	if = {
-		limit = {
-			"variable_map($MAP$|flag:$KEY$)" >= 55
-		}
+		limit = { local_var:et_macro_result >= 55 }
 		set_variable = { name = et_38_passed value = 1 }
 	}
 }
