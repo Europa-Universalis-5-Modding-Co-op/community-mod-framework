@@ -1,6 +1,8 @@
 ﻿cmf_core_banner_logo = {
 	texture = "mods/cmf_core_banner_logo"
+	shown_in_encyclopedia = no
 }
 cmf_core_banner_background = {
 	texture = "mods/cmf_core_banner_background"
+	shown_in_encyclopedia = no
 }
