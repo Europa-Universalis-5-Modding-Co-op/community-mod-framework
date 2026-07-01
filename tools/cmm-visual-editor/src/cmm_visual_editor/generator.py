@@ -167,8 +167,8 @@ def _gen_effects(model: ModModel) -> str:
 def _gen_banner_concepts(model: ModModel) -> str:
     mod_id = model.mod_id
     lines = []
-    lines += [f"{mod_id}_banner_logo = {{", f"	texture = \"mods/{mod_id}_banner_logo\"", "}"]
-    lines += [f"{mod_id}_banner_background = {{", f"	texture = \"mods/{mod_id}_banner_background\"", "}"]
+    lines += [f"{mod_id}_banner_logo = {{", f"	texture = \"mods/{mod_id}_banner_logo\"", "	shown_in_encyclopedia = no", "}"]
+    lines += [f"{mod_id}_banner_background = {{", f"	texture = \"mods/{mod_id}_banner_background\"", "	shown_in_encyclopedia = no", "}"]
 
     return "\n".join(lines) + "\n"
 
