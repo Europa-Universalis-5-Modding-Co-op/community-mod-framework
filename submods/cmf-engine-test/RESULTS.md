@@ -107,6 +107,7 @@ report FAIL instead of the earlier false-positive PASS; see the Macro Param Test
 **Variable references cannot be used in map name position (tests 26-27):**
 - "variable_map(local_var:X|...)" and "variable_map(var:X|...)" do not resolve - the map name must be a literal.
 - Variable references DO work in the key position (tests 24-25, and test 35 for a var: numeric key).
+- These two also log an unsuppressable "used but never set" for the map-name-slot variable (a dead-branch set, a reached on_action set, and a full cmf_suppress replication all fail); it is left unsuppressed. The set side is a separate, normal "set but never used" because the map-name-slot use does not count as a use: et_map_name (test 26) is read-suppressed in et_suppress_warnings, while et_map_name_v (test 27) avoids it via its remove_variable. Key-slot references (tests 24-25) do not warn.
 
 **ordered_key_in_variable_map defaults to 1 without max (tests 31-32, 34):**
 - Without max, the iterator picks exactly one element (test 34 passes with count = 1).
