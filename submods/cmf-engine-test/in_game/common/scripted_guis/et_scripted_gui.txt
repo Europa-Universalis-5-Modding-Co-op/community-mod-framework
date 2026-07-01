@@ -736,6 +736,13 @@ et_run_global = {
 		# Test 38. Expected: FAIL.
 		et_macro_both = { MAP = et_macro_map KEY = et_key_a }
 
+		# Suppress "used but never set": et_map_name / et_map_name_v are read only as map names (tests 26-27).
+		if = {
+			limit = { always = no }
+			set_local_variable = { name = et_map_name value = flag:et_cross }
+			set_variable = { name = et_map_name_v value = flag:et_cross }
+		}
+
 		# Mark that the global test suite has been executed
 		set_variable = { name = et_global_has_run value = 1 }
 	}

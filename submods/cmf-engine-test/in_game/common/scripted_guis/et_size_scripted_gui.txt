@@ -48,6 +48,8 @@ et_run_map_size_extreme = {
 		clear_variable_map = et_size_map
 		set_variable = { name = et_size_idx value = 0 }
 
+		# Two 500k passes keep the builder's outer while under its 1000-iteration cap.
+		et_grow_var_map_to = { TARGET = 500000 }
 		et_grow_var_map_to = { TARGET = 1000000 }
 		if = {
 			limit = { variable_map_size = { name = et_size_map value >= 1000000 } }
@@ -104,6 +106,8 @@ et_run_list_size_extreme = {
 		clear_variable_list = et_size_list
 		set_variable = { name = et_size_idx value = 0 }
 
+		# Two 500k passes keep the builder's outer while under its 1000-iteration cap.
+		et_grow_var_list_to = { TARGET = 500000 }
 		et_grow_var_list_to = { TARGET = 1000000 }
 		if = {
 			limit = { variable_list_size = { name = et_size_list value >= 1000000 } }

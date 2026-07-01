@@ -1,33 +1,39 @@
 ﻿# Builders for the variable map/list size-limit probes.
-# A while defaults to a 1000-iteration cap (and warns on abort); max raises it
-# above the largest probe target (1,000,000) so one flat loop builds the whole
-# structure.
+# EU5 while hard-caps at 1000 iterations per invocation with no override keyword
+# (max is not a valid field), so this nests an outer limit-while over an inner
+# count = 1000 batch. The inner uses count (which completes) not a limit (which
+# aborts at 1000 and warns). Keep TARGET under 1,000,000 per call so the outer
+# stays under 1000 iterations; a build that needs 1M splits into passes.
 
 # Grow a country variable map of numeric keys to TARGET entries.
-# Args: TARGET (number)
+# Args: TARGET (number, multiple of 1000)
 et_grow_var_map_to = {
 	while = {
-		max = 1100000
 		limit = { var:et_size_idx < $TARGET$ }
-		add_to_variable_map = {
-			name = et_size_map
-			key = var:et_size_idx
-			value = 1
+		while = {
+			count = 1000
+			add_to_variable_map = {
+				name = et_size_map
+				key = var:et_size_idx
+				value = 1
+			}
+			change_variable = { name = et_size_idx add = 1 }
 		}
-		change_variable = { name = et_size_idx add = 1 }
 	}
 }
 
 # Grow a country variable list to TARGET entries.
-# Args: TARGET (number)
+# Args: TARGET (number, multiple of 1000)
 et_grow_var_list_to = {
 	while = {
-		max = 1100000
 		limit = { var:et_size_idx < $TARGET$ }
-		add_to_variable_list = {
-			name = et_size_list
-			target = var:et_size_idx
+		while = {
+			count = 1000
+			add_to_variable_list = {
+				name = et_size_list
+				target = var:et_size_idx
+			}
+			change_variable = { name = et_size_idx add = 1 }
 		}
-		change_variable = { name = et_size_idx add = 1 }
 	}
 }

@@ -8,9 +8,13 @@
 et_macro_key = {
 	set_local_variable = { name = et_macro_result value = 0 }
 	set_local_variable = { name = et_macro_result value = "variable_map(et_macro_map|flag:$KEY$)" }
+	# The broken read leaves et_macro_result unset.
 	if = {
-		limit = { local_var:et_macro_result >= 55 }
-		set_variable = { name = et_36_passed value = 1 }
+		limit = { has_local_variable = et_macro_result }
+		if = {
+			limit = { local_var:et_macro_result >= 55 }
+			set_variable = { name = et_36_passed value = 1 }
+		}
 	}
 }
 
@@ -19,8 +23,11 @@ et_macro_map_name = {
 	set_local_variable = { name = et_macro_result value = 0 }
 	set_local_variable = { name = et_macro_result value = "variable_map($MAP$|flag:et_key_a)" }
 	if = {
-		limit = { local_var:et_macro_result >= 55 }
-		set_variable = { name = et_37_passed value = 1 }
+		limit = { has_local_variable = et_macro_result }
+		if = {
+			limit = { local_var:et_macro_result >= 55 }
+			set_variable = { name = et_37_passed value = 1 }
+		}
 	}
 }
 
@@ -29,7 +36,10 @@ et_macro_both = {
 	set_local_variable = { name = et_macro_result value = 0 }
 	set_local_variable = { name = et_macro_result value = "variable_map($MAP$|flag:$KEY$)" }
 	if = {
-		limit = { local_var:et_macro_result >= 55 }
-		set_variable = { name = et_38_passed value = 1 }
+		limit = { has_local_variable = et_macro_result }
+		if = {
+			limit = { local_var:et_macro_result >= 55 }
+			set_variable = { name = et_38_passed value = 1 }
+		}
 	}
 }

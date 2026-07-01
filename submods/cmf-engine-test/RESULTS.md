@@ -77,13 +77,15 @@ A $PARAM$ in the map-name slot destroys the "(" so the trigger fails to parse.
 Originally the read sat directly in the if's limit, so an unparseable trigger left
 the limit with no valid condition, read as vacuously true, and set _passed = 1: a
 false-positive PASS. The redesign captures the read into a local var (et_macro_result,
-init 0) and compares that separately, so a corrupted or unresolved read leaves the
-value at 0 and the test FAILs; only a genuine read of 55 passes.
+init 0) and compares that separately, so only a genuine read of 55 passes. The mangled
+set leaves et_macro_result unset rather than 0, so the score check is guarded with
+has_local_variable to skip the read when the sentinel is unset (confirm on next run).
 
 Conclusion: $PARAM$ cannot be used inside a quoted variable_map accessor. Use the
-set_local_variable round-trip with local_var:/scope: keys instead. Caveat: the
-key-slot case (36) mirrors CMM's documented "variable_map(cmm|flag:$setting$)" but
-logs a runtime error here rather than failing silently, worth reconciling with the
+set_local_variable round-trip with local_var:/scope: keys instead. Note: it does not
+fail silently. The mangled accessor logs a load-time parse error (jomini_eventtarget.cpp);
+the "not being set" runtime errors came from the score check reading the cleared sentinel
+(now guarded), not from the accessor itself. Reconcile this load-time error with the
 global note's "fails silently" wording.
 
 ## Summary
@@ -118,9 +120,13 @@ A bottom section of the test window probed GUI-side reads of var: numeric-keyed 
 
 ## Size Limit Tests (et_run_map_size / et_run_list_size)
 
-Run 2026-06-30. Probes the maximum entry count of a country variable map and a country variable list. Each test clears its structure, builds numeric-keyed entries with a counter, and checks `variable_map_size` / `variable_list_size` against the target. The builder is a single `while` with `max = 1100000` raised above the largest target (the default while cap is 1000).
+Run 2026-06-30. Probes the maximum entry count of a country variable map and a country variable list. Each test clears its structure, builds numeric-keyed entries with a counter, and checks `variable_map_size` / `variable_list_size` against the target. The builder nests whiles: an outer `limit` while re-enters an inner `count = 1000` batch until idx reaches TARGET. EU5 `while` hard-caps at 1000 iterations per invocation with no override keyword, so nesting is required to build past 1000.
 
-Note: the first run used a nested 1000-batch while, which logged `while loop with no specified max aborted after executing 1000 times` on every batch. The builder now sets `max` to build in one loop instead; re-run to confirm the warning is gone and the sizes still pass.
+Three engine findings from getting the builder loop clean:
+
+- **EU5 `while` has no `max` field.** An attempt to flatten the loop with `max = 1100000` was rejected by the engine as `Unknown effect max`, so the loop silently defaulted to 1000 and built only 1000 entries (1k passed, all larger tiers failed). Unlike CK3/Vic3, EU5 `while` cannot raise its 1000 cap; nesting is the only way past it.
+- **The inner batch uses `count = 1000`, not a limit.** A limit-based inner aborts at the 1000 cap and logs `while loop with no specified max aborted after executing 1000 times` on every batch; a counted loop completes instead. Switching the inner to `count` cleared the per-batch spam.
+- **A limit-while warns the moment it reaches 1000 iterations, even at exactly 1000.** Tiers up to 100k are clean (outer does at most 100 batches), but a 1,000,000 build makes the outer do exactly 1000 batches and warns once. The 1M probes split the build into two 500,000 passes (500 batches each) so every loop stays under 1000 iterations.
 
 | Test | Structure | Target | Result |
 |------|-----------|--------|--------|
@@ -139,7 +145,7 @@ Note: the first run used a nested 1000-batch while, which logged `while loop wit
 
 - **No capacity limit found at 1,000,000 for either structure.** The variable map and the variable list both reached 1M entries and passed their size checks.
 - **Numeric `var:` counter values work as distinct variable map keys.** The map reaching 1M distinct entries confirms `key = var:et_size_idx` keys on the counter's value; had the keys collapsed, the map size would stay 1 and every map tier would FAIL.
-- **Variable maps are dramatically faster than variable lists at scale.** Maps were instant from 1k to 100k with only a small freeze at 1M (consistent with near-constant-time hash insertion). Lists had a small freeze at 10k-100k and a multi-minute freeze at 1M (consistent with a per-insert cost that grows with size, i.e. roughly quadratic total). For large per-country data, prefer a variable map over a variable list.
+- **Variable maps are dramatically faster than variable lists at scale (about 200x at 1M).** Building 1,000,000 entries took under 1 second for a map versus 3 minutes 20 seconds for a list. Building the 1k/10k/100k tiers was instant for a map and about 3 seconds for a list. Map insertion is near constant-time (hash map); list insertion cost grows with the list's current length (roughly quadratic total). For large per-country data, prefer a variable map over a variable list.
 
 ## Re-run of Tests 1-38 (2026-06-30)
 
