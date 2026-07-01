@@ -78,4 +78,3 @@
  cmf_core__open_log_name: "Modアクションログ"
  cmf_core__open_log_desc: "ログを表示、または非表示にします。"
  cmf_core__open_log_text: "開く"
- CMM_OPEN_MOD_BANNERS: "MODバナーを開く"

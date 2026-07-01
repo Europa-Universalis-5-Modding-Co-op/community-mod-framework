@@ -78,4 +78,3 @@
  cmf_core__open_log_name: "Journal des actions du mod"
  cmf_core__open_log_desc: "Afficher ou masquer le journal."
  cmf_core__open_log_text: "Ouvrir"
- CMM_OPEN_MOD_BANNERS: "Ouvrir les bannières des mods"

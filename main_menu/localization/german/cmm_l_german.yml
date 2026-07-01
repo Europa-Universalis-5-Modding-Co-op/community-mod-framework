@@ -78,4 +78,3 @@
  cmf_core__open_log_name: "Mod-Aktionsprotokoll"
  cmf_core__open_log_desc: "Protokoll anzeigen oder ausblenden."
  cmf_core__open_log_text: "Öffnen"
- CMM_OPEN_MOD_BANNERS: "Mod-Banner öffnen"

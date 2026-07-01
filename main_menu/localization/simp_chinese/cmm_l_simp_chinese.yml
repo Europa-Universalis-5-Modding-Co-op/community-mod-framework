@@ -1,4 +1,4 @@
-l_simp_chinese:
+﻿l_simp_chinese:
  CMM_PAUSE_MENU_BUTTON: "模组菜单"
  CMM_PAUSE_MENU_BUTTON_TOOLTIP: "打开模组菜单"
  CMM_INPUT_ACTION_OPEN_MENU: "打开模组菜单"
@@ -78,5 +78,4 @@ l_simp_chinese:
  CMM_LOG_EMPTY: "未记录任何日志条目。"
  CMM_LOG_CLEAR: "清除日志"
  CMM_LOG_CLEAR_TOOLTIP: "清除日志中的所有条目。"
- CMM_OPEN_MOD_BANNERS: "打开模组横幅"
 

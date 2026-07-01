@@ -78,4 +78,3 @@
  cmf_core__open_log_name: "모드 활동 로그"
  cmf_core__open_log_desc: "로그를 보거나 숨깁니다."
  cmf_core__open_log_text: "열기"
- CMM_OPEN_MOD_BANNERS: "모드 배너 열기"

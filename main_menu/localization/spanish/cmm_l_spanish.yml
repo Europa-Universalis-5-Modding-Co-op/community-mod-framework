@@ -78,4 +78,3 @@
  cmf_core__open_log_name: "Registro de acciones del mod"
  cmf_core__open_log_desc: "Ver u ocultar el registro."
  cmf_core__open_log_text: "Abrir"
- CMM_OPEN_MOD_BANNERS: "Abrir banners de mods"

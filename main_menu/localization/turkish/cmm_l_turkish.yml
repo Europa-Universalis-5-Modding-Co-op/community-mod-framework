@@ -78,4 +78,3 @@
  cmf_core__open_log_name: "Mod Eylem Kaydı"
  cmf_core__open_log_desc: "Günlüğü görüntüle veya gizle."
  cmf_core__open_log_text: "Aç"
- CMM_OPEN_MOD_BANNERS: "Mod Afişlerini Aç"
