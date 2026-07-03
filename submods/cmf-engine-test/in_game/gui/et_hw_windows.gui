@@ -1,0 +1,450 @@
+﻿# Hidden-window engine test rig (tests 39-67). Probes the registered
+# hidden/driver window patterns used by CMF, Construction Manager, Autonomous
+# Diplomats, and SmartTaxes. Four registered top-level widgets:
+# - et_hw_core: dynamic always-true top-level holding the boot-driven
+#   orchestration chain, the per-run host widgets, and the datamodel rigs.
+# - et_hw_static: the same gate shape under a static visible = yes top-level
+#   (test 43).
+# - et_hw_gated_window: a gated `window` whose children leave the live tree
+#   while hidden and are re-created per show (tests 46-48, the SmartTaxes
+#   shape).
+# - et_hw_remote: PdxGuiTriggerAllAnimations target in a separate tree
+#   (test 58).
+# Results are read in et_window.gui from the et_NN_passed country variables.
+
+widget = {
+	name = "et_hw_core"
+	widgetid = et_hw_core
+	layer = top
+	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
+	position = { -10000 1 }
+
+	# Boot driver: the Run button's et_hw_reset sets var:et_hw_boot, the
+	# hidden->shown flip fires _show, and the chain below steps every timed
+	# test with settle durations. et_hw_finish removes the boot variable at
+	# the end, closing the gate for the next run.
+	widget = {
+		size = { 0 0 }
+		visible = "[And(GetPlayer.Exists, Player.MakeScope.GetVariable('et_hw_boot').IsSet)]"
+
+		# 0.5s settle so the previous run's host items finish tearing down
+		# before the reseed.
+		state = {
+			name = _show
+			duration = 0.5
+			next = et_hw_s1
+		}
+
+		state = {
+			name = et_hw_s1
+			on_start = "[GetScriptedGui('et_hw_seed').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 0.8
+			next = et_hw_s2
+		}
+
+		state = {
+			name = et_hw_s2
+			on_start = "[GetScriptedGui('et_hw_check_seeded').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 0.1
+			next = et_hw_s3
+		}
+
+		state = {
+			name = et_hw_s3
+			on_start = "[GetScriptedGui('et_hw_arm_a').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 0.9
+			next = et_hw_s4
+		}
+
+		state = {
+			name = et_hw_s4
+			on_start = "[GetScriptedGui('et_hw_drop_a').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 0.5
+			next = et_hw_s5
+		}
+
+		state = {
+			name = et_hw_s5
+			on_start = "[GetScriptedGui('et_hw_arm_b').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 0.9
+			on_finish = "[GetScriptedGui('et_hw_check_refire').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_hw_s6
+		}
+
+		state = {
+			name = et_hw_s6
+			on_start = "[GetScriptedGui('et_hw_win_show').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 0.6
+			next = et_hw_s7
+		}
+
+		state = {
+			name = et_hw_s7
+			on_start = "[GetScriptedGui('et_hw_win_hide').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 0.5
+			next = et_hw_s8
+		}
+
+		state = {
+			name = et_hw_s8
+			on_start = "[GetScriptedGui('et_hw_win_show').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 0.6
+			on_finish = "[GetScriptedGui('et_hw_check_win').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_hw_s9
+		}
+
+		# Test 53: the reader Executes in the SAME on_finish list as the
+		# trigger call, so it runs before the item states play.
+		state = {
+			name = et_hw_s9
+			duration = 0.1
+			on_finish = "[PdxGuiTriggerAllAnimations('et_g52_item_state')]"
+			on_finish = "[GetScriptedGui('et_hw_check_same_state').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_hw_s10
+		}
+
+		state = {
+			name = et_hw_s10
+			duration = 0.6
+			on_finish = "[GetScriptedGui('et_hw_check_chained').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_hw_s11
+		}
+
+		state = {
+			name = et_hw_s11
+			on_start = "[GetScriptedGui('et_hw_append_lists').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 0.6
+			next = et_hw_s12
+		}
+
+		state = {
+			name = et_hw_s12
+			duration = 0.1
+			on_finish = "[PdxGuiTriggerAllAnimations('et_g56_item_state')]"
+			on_finish = "[PdxGuiTriggerAllAnimations('et_g57_item_state')]"
+			next = et_hw_s13
+		}
+
+		state = {
+			name = et_hw_s13
+			duration = 0.6
+			on_finish = "[GetScriptedGui('et_hw_check_midcycle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_hw_s14
+		}
+
+		state = {
+			name = et_hw_s14
+			duration = 0.1
+			on_finish = "[PdxGuiTriggerAllAnimations('et_g58_remote_state')]"
+			on_finish = "[GetScriptedGui(Concatenate('et_g59_', 'probe')).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			on_finish = "[GetScriptedGui('et_g60_probe').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			on_finish = "[GetScriptedGui('et_g61_probe').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			on_finish = "[GetScriptedGui('et_g62_probe').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('et_num', MakeScopeValue(Multiply_CFixedPoint('(CFixedPoint)3', '(CFixedPoint)4'))).AddScope('et_yes', MakeScopeBool(GetPlayer.Exists)).End)]"
+			next = et_hw_s15
+		}
+
+		state = {
+			name = et_hw_s15
+			duration = 0.6
+			on_finish = "[GetScriptedGui('et_hw_check_invoke').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_hw_s16
+		}
+
+		# 1.2s with the poll gate closed: test 65 compares the counter
+		# against the snapshot taken when the gate closed.
+		state = {
+			name = et_hw_s16
+			duration = 1.2
+			on_finish = "[GetScriptedGui('et_hw_check_poll').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_hw_s17
+		}
+
+		state = {
+			name = et_hw_s17
+			on_start = "[GetVariableSystem.Set('et_g66', '1')]"
+			duration = 1.0
+			on_finish = "[GetScriptedGui('et_hw_check_trigger_when').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_hw_s18
+		}
+
+		state = {
+			name = et_hw_s18
+			on_start = "[GetVariableSystem.Clear('et_g66')]"
+			duration = 0.1
+			on_finish = "[GetScriptedGui('et_hw_finish').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+
+	# Per-run hosts: et_hw_seed re-creates this item each run, so every probe
+	# widget below gets a fresh creation (clean trigger_on_create and
+	# creation-time visibility evaluation).
+	widget = {
+		datamodel = "[GetPlayer.MakeScope.GetList('et_hw_hosts')]"
+
+		item = {
+			widget = {
+				# Test 39: IsShown(scripted GUI) gate.
+				widget = {
+					size = { 0 0 }
+					visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g39_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+					state = {
+						name = _show
+						on_start = "[GetScriptedGui('et_hw_rec_39').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					}
+				}
+
+				# Test 40: GetVariable('x').IsSet gate.
+				widget = {
+					size = { 0 0 }
+					visible = "[And(GetPlayer.Exists, Player.MakeScope.GetVariable('et_g40_v').IsSet)]"
+					state = {
+						name = _show
+						on_start = "[GetScriptedGui('et_hw_rec_40').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					}
+				}
+
+				# Test 41: ScriptValue comparison gate, created while the
+				# value is unset; the chain then cycles it 7 -> unset -> 7.
+				widget = {
+					size = { 0 0 }
+					visible = "[EqualTo_CFixedPoint(GuiScope.AddScope('country', GetPlayer.MakeScope).ScriptValue('et_g41_sv'), '(CFixedPoint)7')]"
+					state = {
+						name = _show
+						on_start = "[GetScriptedGui('et_hw_rec_41').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					}
+				}
+
+				# Test 42: same comparison, but the value is already 7 when
+				# this widget is created; the pin turns that into a
+				# hidden->shown first-show.
+				widget = {
+					size = { 0 0 }
+					visible_at_creation = no
+					visible = "[EqualTo_CFixedPoint(GuiScope.AddScope('country', GetPlayer.MakeScope).ScriptValue('et_g42_sv'), '(CFixedPoint)7')]"
+					state = {
+						name = _show
+						on_start = "[GetScriptedGui('et_hw_rec_42').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					}
+				}
+
+				# Test 44: unpinned gate, cycled off->on twice by the chain.
+				widget = {
+					size = { 0 0 }
+					visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g44_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+					state = {
+						name = _show
+						on_start = "[GetScriptedGui('et_hw_rec_44').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					}
+				}
+
+				# Test 45: identical cycling with visible_at_creation = no.
+				widget = {
+					size = { 0 0 }
+					visible_at_creation = no
+					visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g45_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+					state = {
+						name = _show
+						on_start = "[GetScriptedGui('et_hw_rec_45').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					}
+				}
+
+				# Tests 49/50: gated plain-widget parent with a bare
+				# trigger_on_create child.
+				widget = {
+					size = { 0 0 }
+					visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g49_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+					widget = {
+						size = { 0 0 }
+						state = {
+							name = et_g49_created
+							trigger_on_create = yes
+							on_start = "[GetScriptedGui('et_hw_rec_49').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+					}
+				}
+
+				# Test 51: trigger_on_create on the gated widget itself.
+				widget = {
+					size = { 0 0 }
+					visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g51_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+					state = {
+						name = et_g51_created
+						trigger_on_create = yes
+						on_start = "[GetScriptedGui('et_hw_rec_51').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					}
+				}
+
+				# Test 63: gate whose is_shown uses save_temporary_scope_as.
+				widget = {
+					size = { 0 0 }
+					visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g63_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+					state = {
+						name = _show
+						on_start = "[GetScriptedGui('et_hw_rec_63').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					}
+				}
+
+				# Tests 64/65: self-loop poll state (the SmartTaxes / ATD
+				# reserve-poller shape). The loop keeps running while hidden;
+				# the check compares against the snapshot taken at gate close.
+				widget = {
+					size = { 0 0 }
+					visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g64_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+					state = {
+						name = et_g64_poll
+						trigger_on_create = yes
+						duration = 0.25
+						on_finish = "[GetScriptedGui('et_hw_rec_64').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						on_finish = "[PdxGuiWidget.TriggerAnimation('et_g64_poll')]"
+					}
+				}
+
+				# Tests 66/67: trigger_when watcher on a VariableSystem key.
+				widget = {
+					size = { 0 0 }
+					state = {
+						name = et_g66_watch
+						trigger_when = "[GetVariableSystem.Exists('et_g66')]"
+						on_start = "[GetScriptedGui('et_hw_rec_66').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					}
+				}
+			}
+		}
+	}
+
+	# Tests 52-55: items seeded at chain start. Each item counts its own
+	# creation (test 52) and carries the named state the chain fires (53-55).
+	widget = {
+		datamodel = "[GetPlayer.MakeScope.GetList('et_g52_list')]"
+
+		item = {
+			widget = {
+				size = { 0 0 }
+				state = {
+					name = et_g52_created
+					trigger_on_create = yes
+					on_start = "[GetScriptedGui('et_hw_rec_52').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				}
+				state = {
+					name = et_g52_item_state
+					on_finish = "[GetScriptedGui('et_hw_rec_53').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('et_item', MakeScopeFlag(Scope.GetFlagName)).End)]"
+				}
+			}
+		}
+	}
+
+	# Test 56: mid-cycle-appended items under a statically-visible parent
+	# (no visible attribute anywhere above the datamodel inside this window).
+	widget = {
+		datamodel = "[GetPlayer.MakeScope.GetList('et_g56_list')]"
+
+		item = {
+			widget = {
+				size = { 0 0 }
+				state = {
+					name = et_g56_item_state
+					on_finish = "[GetScriptedGui('et_hw_rec_56').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				}
+			}
+		}
+	}
+
+	# Test 57: the identical datamodel under a dynamic always-true visible
+	# wrapper.
+	widget = {
+		visible = "[GetPlayer.Exists]"
+
+		widget = {
+			datamodel = "[GetPlayer.MakeScope.GetList('et_g57_list')]"
+
+			item = {
+				widget = {
+					size = { 0 0 }
+					state = {
+						name = et_g57_item_state
+						on_finish = "[GetScriptedGui('et_hw_rec_57').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					}
+				}
+			}
+		}
+	}
+}
+
+# Test 43: the same IsShown-gated driver as test 39, under a top-level with
+# static visible = yes instead of the dynamic always-true expression.
+widget = {
+	name = "et_hw_static"
+	widgetid = et_hw_static
+	layer = top
+	visible = yes
+	position = { -10000 1 }
+
+	widget = {
+		size = { 0 0 }
+		visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g43_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+		state = {
+			name = _show
+			on_start = "[GetScriptedGui('et_hw_rec_43').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+}
+
+# Tests 46-48: gated `window` (the SmartTaxes hidden-window shape). Children
+# leave the live tree while the gate is false and are re-created on each show.
+# et_g46_gate is set before the first show, so both gated children are created
+# with their inner gate already true.
+window = {
+	name = "et_hw_gated_window"
+	widgetid = et_hw_gated_window
+	layer = top
+	visible = "[And(GetPlayer.Exists, GetScriptedGui('et_hw_win_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+	position = { -10000 1 }
+
+	# Test 46: pinned child.
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g46_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+		state = {
+			name = _show
+			on_start = "[GetScriptedGui('et_hw_rec_46').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+
+	# Test 47: unpinned child on the same gate.
+	widget = {
+		size = { 0 0 }
+		visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g46_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+		state = {
+			name = _show
+			on_start = "[GetScriptedGui('et_hw_rec_47').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+
+	# Test 48: bare trigger_on_create child counting re-creations.
+	widget = {
+		size = { 0 0 }
+		state = {
+			name = et_g48_created
+			trigger_on_create = yes
+			on_start = "[GetScriptedGui('et_hw_rec_48').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+}
+
+# Test 58: PdxGuiTriggerAllAnimations target in a separate registered tree.
+widget = {
+	name = "et_hw_remote"
+	widgetid = et_hw_remote
+	layer = top
+	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
+	position = { -10000 1 }
+
+	widget = {
+		size = { 0 0 }
+		state = {
+			name = et_g58_remote_state
+			on_finish = "[GetScriptedGui('et_hw_rec_58').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+}

@@ -1,0 +1,994 @@
+﻿# Hidden-window engine test scripted GUIs (tests 39-71).
+# The rig lives in gui/et_hw_windows.gui: the Run button Executes et_hw_reset,
+# which arms var:et_hw_boot; the boot driver widget's state chain then runs the
+# et_hw_* step effects below in order, with settle durations between steps.
+# Root is the player country for every entry unless noted.
+
+# =======================================================
+# Run control
+# =======================================================
+
+# Clears every result, counter, gate, and staging list from the previous run,
+# then arms the boot driver. et_g42_v is set here so the test-42 widget is
+# created (by et_hw_seed, next chain step) with its ScriptValue gate already 7.
+et_hw_reset = {
+	scope = country
+
+	effect = {
+		remove_variable = et_hw_has_run
+
+		set_variable = { name = et_39_passed value = 0 }
+		set_variable = { name = et_40_passed value = 0 }
+		set_variable = { name = et_41_passed value = 0 }
+		set_variable = { name = et_42_passed value = 0 }
+		set_variable = { name = et_43_passed value = 0 }
+		set_variable = { name = et_44_passed value = 0 }
+		set_variable = { name = et_45_passed value = 0 }
+		set_variable = { name = et_46_passed value = 0 }
+		set_variable = { name = et_47_passed value = 0 }
+		set_variable = { name = et_48_passed value = 0 }
+		set_variable = { name = et_49_passed value = 0 }
+		set_variable = { name = et_50_passed value = 0 }
+		set_variable = { name = et_51_passed value = 0 }
+		set_variable = { name = et_52_passed value = 0 }
+		set_variable = { name = et_53_passed value = 0 }
+		set_variable = { name = et_54_passed value = 0 }
+		set_variable = { name = et_55_passed value = 0 }
+		set_variable = { name = et_56_passed value = 0 }
+		set_variable = { name = et_57_passed value = 0 }
+		set_variable = { name = et_58_passed value = 0 }
+		set_variable = { name = et_59_passed value = 0 }
+		set_variable = { name = et_60_passed value = 0 }
+		set_variable = { name = et_61_passed value = 0 }
+		set_variable = { name = et_62_passed value = 0 }
+		set_variable = { name = et_63_passed value = 0 }
+		set_variable = { name = et_64_passed value = 0 }
+		set_variable = { name = et_65_passed value = 0 }
+		set_variable = { name = et_66_passed value = 0 }
+		set_variable = { name = et_67_passed value = 0 }
+		set_variable = { name = et_68_passed value = 0 }
+		set_variable = { name = et_69_passed value = 0 }
+		set_variable = { name = et_70_passed value = 0 }
+		set_variable = { name = et_71_passed value = 0 }
+
+		if = { limit = { has_variable = et_g39_c } remove_variable = et_g39_c }
+		if = { limit = { has_variable = et_g40_c } remove_variable = et_g40_c }
+		if = { limit = { has_variable = et_g41_c } remove_variable = et_g41_c }
+		if = { limit = { has_variable = et_g42_c } remove_variable = et_g42_c }
+		if = { limit = { has_variable = et_g43_c } remove_variable = et_g43_c }
+		if = { limit = { has_variable = et_g44_c } remove_variable = et_g44_c }
+		if = { limit = { has_variable = et_g45_c } remove_variable = et_g45_c }
+		if = { limit = { has_variable = et_g46_c } remove_variable = et_g46_c }
+		if = { limit = { has_variable = et_g47_c } remove_variable = et_g47_c }
+		if = { limit = { has_variable = et_g48_c } remove_variable = et_g48_c }
+		if = { limit = { has_variable = et_g49_c } remove_variable = et_g49_c }
+		if = { limit = { has_variable = et_g51_c } remove_variable = et_g51_c }
+		if = { limit = { has_variable = et_g52_c } remove_variable = et_g52_c }
+		if = { limit = { has_variable = et_g53_c } remove_variable = et_g53_c }
+		if = { limit = { has_variable = et_g56_c } remove_variable = et_g56_c }
+		if = { limit = { has_variable = et_g57_c } remove_variable = et_g57_c }
+		if = { limit = { has_variable = et_g58_c } remove_variable = et_g58_c }
+		if = { limit = { has_variable = et_g63_c } remove_variable = et_g63_c }
+		if = { limit = { has_variable = et_g64_c } remove_variable = et_g64_c }
+		if = { limit = { has_variable = et_g64_snap } remove_variable = et_g64_snap }
+		if = { limit = { has_variable = et_g66_c } remove_variable = et_g66_c }
+
+		if = { limit = { has_variable = et_g39_gate } remove_variable = et_g39_gate }
+		if = { limit = { has_variable = et_g40_v } remove_variable = et_g40_v }
+		if = { limit = { has_variable = et_g41_v } remove_variable = et_g41_v }
+		if = { limit = { has_variable = et_g43_gate } remove_variable = et_g43_gate }
+		if = { limit = { has_variable = et_g44_gate } remove_variable = et_g44_gate }
+		if = { limit = { has_variable = et_g45_gate } remove_variable = et_g45_gate }
+		if = { limit = { has_variable = et_g46_gate } remove_variable = et_g46_gate }
+		if = { limit = { has_variable = et_g49_gate } remove_variable = et_g49_gate }
+		if = { limit = { has_variable = et_g51_gate } remove_variable = et_g51_gate }
+		if = { limit = { has_variable = et_g63_gate } remove_variable = et_g63_gate }
+		if = { limit = { has_variable = et_g64_gate } remove_variable = et_g64_gate }
+		if = { limit = { has_variable = et_hw_win_gate } remove_variable = et_hw_win_gate }
+		if = { limit = { has_variable = et_g59_mark } remove_variable = et_g59_mark }
+		if = { limit = { has_variable = et_g60_mark } remove_variable = et_g60_mark }
+		if = { limit = { has_variable = et_g61_mark } remove_variable = et_g61_mark }
+
+		if = { limit = { has_variable_list = et_hw_hosts } clear_variable_list = et_hw_hosts }
+		if = { limit = { has_variable_list = et_g52_list } clear_variable_list = et_g52_list }
+		if = { limit = { has_variable_list = et_g55_seen } clear_variable_list = et_g55_seen }
+		if = { limit = { has_variable_list = et_g56_list } clear_variable_list = et_g56_list }
+		if = { limit = { has_variable_list = et_g57_list } clear_variable_list = et_g57_list }
+
+		set_variable = { name = et_g42_v value = 7 }
+
+		set_variable = { name = et_hw_boot value = 1 }
+	}
+}
+
+# =======================================================
+# Chain steps (Executed by the boot driver's states, in order)
+# =======================================================
+
+# Step 1: seeds the per-run host item (fresh widget instantiation each run)
+# and the pre-populated item list for tests 52-55.
+et_hw_seed = {
+	scope = country
+
+	effect = {
+		add_to_variable_list = { name = et_hw_hosts target = flag:et_hw_host }
+		add_to_variable_list = { name = et_g52_list target = flag:et_hw_i1 }
+		add_to_variable_list = { name = et_g52_list target = flag:et_hw_i2 }
+		add_to_variable_list = { name = et_g52_list target = flag:et_hw_i3 }
+	}
+}
+
+# Step 2: checks creation-time behavior before any gate is armed.
+et_hw_check_seeded = {
+	scope = country
+
+	effect = {
+		# Result: FAIL
+		# -- Test 50 ---------------------------------------------
+		# Asserts no fire before the first show; trigger_on_create actually
+		# fires at instantiation even under a hidden parent.
+		if = {
+			limit = { NOT = { has_variable = et_g49_c } }
+			set_variable = { name = et_50_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 52 ---------------------------------------------
+		# The 3 items appended to et_g52_list after window build all
+		# instantiated and fired their bare trigger_on_create states.
+		if = {
+			limit = {
+				has_variable = et_g52_c
+				var:et_g52_c >= 3
+			}
+			set_variable = { name = et_52_passed value = 1 }
+		}
+	}
+}
+
+# Step 3: arms every gate for the reactivity and re-fire tests. et_g46_gate is
+# set here, well before the gated window first shows, so its children are
+# created with that inner gate already true (tests 46/47).
+et_hw_arm_a = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_g39_gate value = 1 }
+		set_variable = { name = et_g40_v value = 1 }
+		set_variable = { name = et_g41_v value = 7 }
+		set_variable = { name = et_g43_gate value = 1 }
+		set_variable = { name = et_g44_gate value = 1 }
+		set_variable = { name = et_g45_gate value = 1 }
+		set_variable = { name = et_g46_gate value = 1 }
+		set_variable = { name = et_g49_gate value = 1 }
+		set_variable = { name = et_g51_gate value = 1 }
+		set_variable = { name = et_g63_gate value = 1 }
+		set_variable = { name = et_g64_gate value = 1 }
+	}
+}
+
+# Step 4: drops the cycled gates so their widgets go hidden again.
+et_hw_drop_a = {
+	scope = country
+
+	effect = {
+		remove_variable = et_g41_v
+		remove_variable = et_g44_gate
+		remove_variable = et_g45_gate
+		remove_variable = et_g49_gate
+		remove_variable = et_g51_gate
+	}
+}
+
+# Step 5: re-arms the cycled gates (second off->on flip).
+et_hw_arm_b = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_g41_v value = 7 }
+		set_variable = { name = et_g44_gate value = 1 }
+		set_variable = { name = et_g45_gate value = 1 }
+		set_variable = { name = et_g49_gate value = 1 }
+		set_variable = { name = et_g51_gate value = 1 }
+	}
+}
+
+# Step 5 check: scores the reactivity and re-fire tests.
+et_hw_check_refire = {
+	scope = country
+
+	effect = {
+		# Result: PASS
+		# -- Test 39 ---------------------------------------------
+		# IsShown(scripted GUI) visibility gate reacted to a script-set
+		# variable and the hidden->shown flip fired _show.
+		if = {
+			limit = {
+				has_variable = et_g39_c
+				var:et_g39_c >= 1
+			}
+			set_variable = { name = et_39_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 40 ---------------------------------------------
+		# GetVariable('x').IsSet visibility gate reacted the same way.
+		if = {
+			limit = {
+				has_variable = et_g40_c
+				var:et_g40_c >= 1
+			}
+			set_variable = { name = et_40_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 41 ---------------------------------------------
+		# The ScriptValue comparison re-evaluated on both value cycles here;
+		# the ATD stickiness is a longer-horizon degradation.
+		if = {
+			limit = {
+				has_variable = et_g41_c
+				var:et_g41_c >= 2
+			}
+			set_variable = { name = et_41_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 42 ---------------------------------------------
+		# The same ScriptValue comparison IS evaluated at widget creation:
+		# the pinned widget created with the value already 7 showed and
+		# fired _show.
+		if = {
+			limit = {
+				has_variable = et_g42_c
+				var:et_g42_c >= 1
+			}
+			set_variable = { name = et_42_passed value = 1 }
+		}
+
+		# Result: FAIL (frozen subtree)
+		# -- Test 43 ---------------------------------------------
+		# The identical IsShown-gated widget under a static visible = yes
+		# top-level never re-evaluates its gate, so _show never fires.
+		if = {
+			limit = {
+				has_variable = et_g43_c
+				var:et_g43_c >= 1
+			}
+			set_variable = { name = et_43_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 44 ---------------------------------------------
+		# Unpinned gated widget: both off->on gate flips fired _show
+		# (the recurring driver contract used by ATD and CM).
+		if = {
+			limit = {
+				has_variable = et_g44_c
+				var:et_g44_c >= 2
+			}
+			set_variable = { name = et_44_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 45 ---------------------------------------------
+		# Same cycling on a visible_at_creation = no widget: the pin does
+		# not freeze _show; it re-fired on each off->on flip.
+		if = {
+			limit = {
+				has_variable = et_g45_c
+				var:et_g45_c >= 2
+			}
+			set_variable = { name = et_45_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 49 ---------------------------------------------
+		# A gated plain widget does not re-create its children: the child
+		# trigger_on_create fired exactly once across two parent shows.
+		if = {
+			limit = {
+				has_variable = et_g49_c
+				var:et_g49_c = 1
+			}
+			set_variable = { name = et_49_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 51 ---------------------------------------------
+		# Self-gated widget with trigger_on_create: fired once on first
+		# show, no re-fire on later gate cycles.
+		if = {
+			limit = {
+				has_variable = et_g51_c
+				var:et_g51_c = 1
+			}
+			set_variable = { name = et_51_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 63 ---------------------------------------------
+		# save_temporary_scope_as inside the gate's is_shown evaluated
+		# without breaking the trigger, so the gate opened and _show fired.
+		if = {
+			limit = {
+				has_variable = et_g63_c
+				var:et_g63_c >= 1
+			}
+			set_variable = { name = et_63_passed value = 1 }
+		}
+	}
+}
+
+# Step 6: shows the gated window for the first time. Its children are created
+# with et_g46_gate already true (set back in et_hw_arm_a).
+et_hw_win_show = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_hw_win_gate value = 1 }
+	}
+}
+
+# Step 7: hides the gated window (children leave the live tree).
+et_hw_win_hide = {
+	scope = country
+
+	effect = {
+		remove_variable = et_hw_win_gate
+	}
+}
+
+# Step 8 check: scores the gated-window creation tests and closes its gates.
+et_hw_check_win = {
+	scope = country
+
+	effect = {
+		# Result: PASS
+		# -- Test 46 ---------------------------------------------
+		# Pinned child created with its gate already true: the pin forces
+		# a hidden->shown first-show, so _show fired (the loaded-save fix).
+		if = {
+			limit = {
+				has_variable = et_g46_c
+				var:et_g46_c >= 1
+			}
+			set_variable = { name = et_46_passed value = 1 }
+		}
+
+		# Result: FAIL (the loaded-save bug shape)
+		# -- Test 47 ---------------------------------------------
+		# Unpinned child created with its gate already true is created
+		# shown: no hidden->shown edge, so _show never fires.
+		if = {
+			limit = {
+				has_variable = et_g47_c
+				var:et_g47_c >= 1
+			}
+			set_variable = { name = et_47_passed value = 1 }
+		}
+
+		# Result: FAIL
+		# -- Test 48 ---------------------------------------------
+		# Asserts one child creation per show; a gated `window` actually
+		# creates its children once, at its first show, and keeps them.
+		if = {
+			limit = {
+				has_variable = et_g48_c
+				var:et_g48_c = 2
+			}
+			set_variable = { name = et_48_passed value = 1 }
+		}
+
+		remove_variable = et_hw_win_gate
+		remove_variable = et_g46_gate
+	}
+}
+
+# Step 9 immediate check: runs in the SAME on_finish list as the
+# PdxGuiTriggerAllAnimations('et_g52_item_state') call.
+et_hw_check_same_state = {
+	scope = country
+
+	effect = {
+		# Result: FAIL (triggered states play on later frames)
+		# -- Test 53 ---------------------------------------------
+		# A reader in the same on_finish list as the TriggerAllAnimations
+		# call sees none of the per-item work.
+		if = {
+			limit = {
+				has_variable = et_g53_c
+				var:et_g53_c >= 3
+			}
+			set_variable = { name = et_53_passed value = 1 }
+		}
+	}
+}
+
+# Step 10 check: the same read one chained state (0.6s) later.
+et_hw_check_chained = {
+	scope = country
+
+	effect = {
+		# Result: PASS
+		# -- Test 54 ---------------------------------------------
+		# After the settle state, every per-item state has played.
+		if = {
+			limit = {
+				has_variable = et_g53_c
+				var:et_g53_c >= 3
+			}
+			set_variable = { name = et_54_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 55 ---------------------------------------------
+		# Each fired item passed its own Scope flag through AddScope:
+		# all three list flags were recorded.
+		if = {
+			limit = {
+				has_variable_list = et_g55_seen
+				is_target_in_variable_list = { name = et_g55_seen target = flag:et_hw_i1 }
+				is_target_in_variable_list = { name = et_g55_seen target = flag:et_hw_i2 }
+				is_target_in_variable_list = { name = et_g55_seen target = flag:et_hw_i3 }
+			}
+			set_variable = { name = et_55_passed value = 1 }
+		}
+	}
+}
+
+# Step 11: appends items mid-cycle to two lists that did not exist at window
+# build, one datamodel under a statically-visible parent (test 56) and one
+# under a dynamic always-true visible wrapper (test 57).
+et_hw_append_lists = {
+	scope = country
+
+	effect = {
+		add_to_variable_list = { name = et_g56_list target = flag:et_hw_i1 }
+		add_to_variable_list = { name = et_g56_list target = flag:et_hw_i2 }
+		add_to_variable_list = { name = et_g56_list target = flag:et_hw_i3 }
+		add_to_variable_list = { name = et_g57_list target = flag:et_hw_i1 }
+		add_to_variable_list = { name = et_g57_list target = flag:et_hw_i2 }
+		add_to_variable_list = { name = et_g57_list target = flag:et_hw_i3 }
+	}
+}
+
+# Step 13 check: scores the mid-cycle instantiation pair.
+et_hw_check_midcycle = {
+	scope = country
+
+	effect = {
+		# Result: PASS
+		# -- Test 56 ---------------------------------------------
+		# Items appended mid-cycle under a statically-visible parent
+		# instantiated and their triggered states fired.
+		if = {
+			limit = {
+				has_variable = et_g56_c
+				var:et_g56_c >= 3
+			}
+			set_variable = { name = et_56_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 57 ---------------------------------------------
+		# The identical datamodel under a visible = "[GetPlayer.Exists]"
+		# wrapper instantiated and fired its mid-cycle items here; the
+		# eu5_auto_expand_forked failure did not reproduce in this shape.
+		if = {
+			limit = {
+				has_variable = et_g57_c
+				var:et_g57_c >= 3
+			}
+			set_variable = { name = et_57_passed value = 1 }
+		}
+	}
+}
+
+# Step 15 check: scores the invocation-semantics batch fired by step 14, then
+# snapshots the poll counter and closes the poll gate for tests 64/65.
+et_hw_check_invoke = {
+	scope = country
+
+	effect = {
+		# Result: PASS
+		# -- Test 58 ---------------------------------------------
+		# PdxGuiTriggerAllAnimations reached a named state inside a
+		# different registered top-level window.
+		if = {
+			limit = {
+				has_variable = et_g58_c
+				var:et_g58_c >= 1
+			}
+			set_variable = { name = et_58_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 59 ---------------------------------------------
+		# GetScriptedGui(Concatenate('et_g59_', 'probe')) resolved and
+		# Executed a scripted GUI by a runtime-built name.
+		if = {
+			limit = { has_variable = et_g59_mark }
+			set_variable = { name = et_59_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 60 ---------------------------------------------
+		# Execute runs the effect even though is_shown is always = no.
+		if = {
+			limit = { has_variable = et_g60_mark }
+			set_variable = { name = et_60_passed value = 1 }
+		}
+
+		# Result: FAIL
+		# -- Test 61 ---------------------------------------------
+		# is_valid = { always = no } BLOCKS Execute; the effect never ran.
+		if = {
+			limit = { has_variable = et_g61_mark }
+			set_variable = { name = et_61_passed value = 1 }
+		}
+
+		if = {
+			limit = { has_variable = et_g64_c }
+			set_variable = { name = et_g64_snap value = var:et_g64_c }
+		} else = {
+			set_variable = { name = et_g64_snap value = 0 }
+		}
+		remove_variable = et_g64_gate
+	}
+}
+
+# Step 16 check: scores the poll loop and the hidden-advance probe.
+et_hw_check_poll = {
+	scope = country
+
+	effect = {
+		# Result: PASS
+		# -- Test 64 ---------------------------------------------
+		# The trigger_on_create + duration + self-TriggerAnimation loop
+		# kept firing while its widget was shown.
+		if = {
+			limit = {
+				has_variable = et_g64_c
+				var:et_g64_c >= 3
+			}
+			set_variable = { name = et_64_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 65 ---------------------------------------------
+		# The loop kept advancing after the widget went hidden; stop-guards
+		# belong in the effect, not in visibility.
+		if = {
+			limit = {
+				has_variable = et_g64_c
+				var:et_g64_c > var:et_g64_snap
+			}
+			set_variable = { name = et_65_passed value = 1 }
+		}
+	}
+}
+
+# Step 17 check: scores the trigger_when pair after 1.0s of steady-true.
+et_hw_check_trigger_when = {
+	scope = country
+
+	effect = {
+		# Result: PASS
+		# -- Test 66 ---------------------------------------------
+		# The trigger_when state fired when its condition flipped true.
+		if = {
+			limit = {
+				has_variable = et_g66_c
+				var:et_g66_c >= 1
+			}
+			set_variable = { name = et_66_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 67 ---------------------------------------------
+		# Fired exactly once for the flip: trigger_when is edge-triggered.
+		if = {
+			limit = {
+				has_variable = et_g66_c
+				var:et_g66_c = 1
+			}
+			set_variable = { name = et_67_passed value = 1 }
+		}
+	}
+}
+
+# Final step: script-side scope and map-value tests, then publishes the run.
+et_hw_finish = {
+	scope = country
+
+	effect = {
+		# Result: PASS
+		# -- Test 68 ---------------------------------------------
+		# A variable map value can hold a flag target and be read back
+		# through the quoted accessor into a comparison.
+		add_to_variable_map = {
+			name = et_g68_map
+			key = flag:et_hw_i1
+			value = flag:et_hw_i2
+		}
+		set_local_variable = {
+			name = et_g68_read
+			value = "variable_map(et_g68_map|flag:et_hw_i1)"
+		}
+		if = {
+			limit = { local_var:et_g68_read = flag:et_hw_i2 }
+			set_variable = { name = et_68_passed value = 1 }
+		}
+
+		# -- Tests 69-71 -----------------------------------------
+		# Saved-scope propagation into sub-effects from every_* loops.
+		# is_ai = no keeps the iteration to human countries; the probes
+		# write their results to root, so extra iterations are harmless.
+		every_country = {
+			limit = { is_ai = no }
+			save_scope_as = et_g69_outer
+			et_hw_probe_outer = yes
+			every_country = {
+				limit = { is_ai = no }
+				save_scope_as = et_g70_nested
+				set_local_variable = { name = et_g71_lv value = this }
+				et_hw_probe_nested = yes
+			}
+		}
+
+		remove_variable = et_hw_boot
+		set_variable = { name = et_hw_has_run value = 1 }
+	}
+}
+
+# =======================================================
+# Visibility gates (is_shown only)
+# =======================================================
+
+# Gate for the test-39 widget; the driver-window gate mechanism itself.
+et_g39_should = {
+	scope = country
+
+	is_shown = {
+		has_variable = et_g39_gate
+	}
+}
+
+et_g43_should = {
+	scope = country
+
+	is_shown = {
+		has_variable = et_g43_gate
+	}
+}
+
+et_g44_should = {
+	scope = country
+
+	is_shown = {
+		has_variable = et_g44_gate
+	}
+}
+
+et_g45_should = {
+	scope = country
+
+	is_shown = {
+		has_variable = et_g45_gate
+	}
+}
+
+et_g46_should = {
+	scope = country
+
+	is_shown = {
+		has_variable = et_g46_gate
+	}
+}
+
+et_g49_should = {
+	scope = country
+
+	is_shown = {
+		has_variable = et_g49_gate
+	}
+}
+
+et_g51_should = {
+	scope = country
+
+	is_shown = {
+		has_variable = et_g51_gate
+	}
+}
+
+# Test 63's gate: saves a temporary scope inside trigger context and reads it
+# back. save_scope_as would fail to parse here; save_temporary_scope_as works.
+et_g63_should = {
+	scope = country
+
+	is_shown = {
+		save_temporary_scope_as = et_g63_tmp
+		exists = scope:et_g63_tmp
+		has_variable = et_g63_gate
+	}
+}
+
+et_g64_should = {
+	scope = country
+
+	is_shown = {
+		has_variable = et_g64_gate
+	}
+}
+
+et_hw_win_should = {
+	scope = country
+
+	is_shown = {
+		has_variable = et_hw_win_gate
+	}
+}
+
+# =======================================================
+# Recorders (one counter per probe widget)
+# =======================================================
+
+# Counts _show fires for the test-39 widget.
+et_hw_rec_39 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g39_c } } set_variable = { name = et_g39_c value = 0 } }
+		change_variable = { name = et_g39_c add = 1 }
+	}
+}
+
+et_hw_rec_40 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g40_c } } set_variable = { name = et_g40_c value = 0 } }
+		change_variable = { name = et_g40_c add = 1 }
+	}
+}
+
+et_hw_rec_41 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g41_c } } set_variable = { name = et_g41_c value = 0 } }
+		change_variable = { name = et_g41_c add = 1 }
+	}
+}
+
+et_hw_rec_42 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g42_c } } set_variable = { name = et_g42_c value = 0 } }
+		change_variable = { name = et_g42_c add = 1 }
+	}
+}
+
+et_hw_rec_43 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g43_c } } set_variable = { name = et_g43_c value = 0 } }
+		change_variable = { name = et_g43_c add = 1 }
+	}
+}
+
+et_hw_rec_44 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g44_c } } set_variable = { name = et_g44_c value = 0 } }
+		change_variable = { name = et_g44_c add = 1 }
+	}
+}
+
+et_hw_rec_45 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g45_c } } set_variable = { name = et_g45_c value = 0 } }
+		change_variable = { name = et_g45_c add = 1 }
+	}
+}
+
+et_hw_rec_46 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g46_c } } set_variable = { name = et_g46_c value = 0 } }
+		change_variable = { name = et_g46_c add = 1 }
+	}
+}
+
+et_hw_rec_47 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g47_c } } set_variable = { name = et_g47_c value = 0 } }
+		change_variable = { name = et_g47_c add = 1 }
+	}
+}
+
+et_hw_rec_48 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g48_c } } set_variable = { name = et_g48_c value = 0 } }
+		change_variable = { name = et_g48_c add = 1 }
+	}
+}
+
+et_hw_rec_49 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g49_c } } set_variable = { name = et_g49_c value = 0 } }
+		change_variable = { name = et_g49_c add = 1 }
+	}
+}
+
+et_hw_rec_51 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g51_c } } set_variable = { name = et_g51_c value = 0 } }
+		change_variable = { name = et_g51_c add = 1 }
+	}
+}
+
+et_hw_rec_52 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g52_c } } set_variable = { name = et_g52_c value = 0 } }
+		change_variable = { name = et_g52_c add = 1 }
+	}
+}
+
+# Per-item recorder for tests 53-55: counts the fire and records which item
+# fired via the flag passed through AddScope.
+et_hw_rec_53 = {
+	scope = country
+
+	saved_scopes = { et_item }
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g53_c } } set_variable = { name = et_g53_c value = 0 } }
+		change_variable = { name = et_g53_c add = 1 }
+		if = {
+			limit = {
+				NOT = {
+					is_target_in_variable_list = { name = et_g55_seen target = scope:et_item }
+				}
+			}
+			add_to_variable_list = { name = et_g55_seen target = scope:et_item }
+		}
+	}
+}
+
+et_hw_rec_56 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g56_c } } set_variable = { name = et_g56_c value = 0 } }
+		change_variable = { name = et_g56_c add = 1 }
+	}
+}
+
+et_hw_rec_57 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g57_c } } set_variable = { name = et_g57_c value = 0 } }
+		change_variable = { name = et_g57_c add = 1 }
+	}
+}
+
+et_hw_rec_58 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g58_c } } set_variable = { name = et_g58_c value = 0 } }
+		change_variable = { name = et_g58_c add = 1 }
+	}
+}
+
+et_hw_rec_63 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g63_c } } set_variable = { name = et_g63_c value = 0 } }
+		change_variable = { name = et_g63_c add = 1 }
+	}
+}
+
+# Poll-loop recorder: deliberately unguarded so test 65 can compare the
+# counter against the snapshot taken when the gate closed.
+et_hw_rec_64 = {
+	scope = country
+
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = et_g64_c } }
+			set_variable = { name = et_g64_c value = 0 }
+		}
+		change_variable = { name = et_g64_c add = 1 }
+	}
+}
+
+et_hw_rec_66 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g66_c } } set_variable = { name = et_g66_c value = 0 } }
+		change_variable = { name = et_g66_c add = 1 }
+	}
+}
+
+# =======================================================
+# Invocation-semantics receivers (tests 59-62)
+# =======================================================
+
+# Dispatched by runtime-built name: GetScriptedGui(Concatenate('et_g59_', 'probe')).
+et_g59_probe = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_g59_mark value = 1 }
+	}
+}
+
+# Executed while is_shown evaluates false (test 60 probes whether the effect
+# still runs).
+et_g60_probe = {
+	scope = country
+
+	is_shown = {
+		always = no
+	}
+
+	effect = {
+		set_variable = { name = et_g60_mark value = 1 }
+	}
+}
+
+# Executed while is_valid evaluates false (test 61 probes whether the effect
+# still runs).
+et_g61_probe = {
+	scope = country
+
+	is_valid = {
+		always = no
+	}
+
+	effect = {
+		set_variable = { name = et_g61_mark value = 1 }
+	}
+}
+
+# Receives a computed MakeScopeValue (3 * 4) and a MakeScopeBool through
+# AddScope and scores test 62 on both matching.
+et_g62_probe = {
+	scope = country
+
+	saved_scopes = { et_num et_yes }
+
+	effect = {
+		set_local_variable = { name = et_g62_n value = scope:et_num }
+		if = {
+			limit = {
+				local_var:et_g62_n = 12
+				scope:et_yes = yes
+			}
+			set_variable = { name = et_62_passed value = 1 }
+		}
+	}
+}

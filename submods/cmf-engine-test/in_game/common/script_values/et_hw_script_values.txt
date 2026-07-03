@@ -1,0 +1,22 @@
+﻿# Script values read from GUI visible expressions via
+# GuiScope.AddScope('country', ...).ScriptValue(...) for tests 41/42.
+
+et_g41_sv = {
+	value = 0
+	if = {
+		limit = {
+			scope:country = { has_variable = et_g41_v }
+		}
+		add = scope:country.var:et_g41_v
+	}
+}
+
+et_g42_sv = {
+	value = 0
+	if = {
+		limit = {
+			scope:country = { has_variable = et_g42_v }
+		}
+		add = scope:country.var:et_g42_v
+	}
+}

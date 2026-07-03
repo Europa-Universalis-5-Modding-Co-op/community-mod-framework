@@ -1,0 +1,82 @@
+﻿# Scripted effects for the hidden-window engine tests (tests 69-71 probes)
+# plus warning suppression for the new test variables.
+
+# Sub-effect called from the OUTERMOST every_country loop in et_hw_finish.
+# Scores test 69: a scope saved in the outermost loop is visible here.
+et_hw_probe_outer = {
+	if = {
+		limit = { exists = scope:et_g69_outer }
+		root = {
+			set_variable = { name = et_69_passed value = 1 }
+		}
+	}
+}
+
+# Sub-effect called from the NESTED every_country loop in et_hw_finish.
+# Test 70 (PASS 2026-07-02): the nested loop's saved scope WAS set here in
+# this minimal shape; the known CMM failure came from an every_in_list +
+# macro-param shape (see RESULTS.md). Test 71 (PASS): the local_var captured
+# in the same loop body also survives into this sub-effect.
+et_hw_probe_nested = {
+	if = {
+		limit = { exists = scope:et_g70_nested }
+		root = {
+			set_variable = { name = et_70_passed value = 1 }
+		}
+	}
+	if = {
+		limit = { exists = local_var:et_g71_lv }
+		root = {
+			set_variable = { name = et_71_passed value = 1 }
+		}
+	}
+}
+
+# Dead branch suppression for the hidden-window test warnings, same pattern as
+# et_suppress_warnings: result variables are read only in GUI expressions,
+# et_g40_v / et_hw_boot only in GUI visibility expressions, and the
+# et_hw_host flag only by a GUI datamodel.
+et_hw_suppress_warnings = {
+	if = {
+		limit = {
+			always = no
+			exists = var:et_39_passed
+			exists = var:et_40_passed
+			exists = var:et_41_passed
+			exists = var:et_42_passed
+			exists = var:et_43_passed
+			exists = var:et_44_passed
+			exists = var:et_45_passed
+			exists = var:et_46_passed
+			exists = var:et_47_passed
+			exists = var:et_48_passed
+			exists = var:et_49_passed
+			exists = var:et_50_passed
+			exists = var:et_51_passed
+			exists = var:et_52_passed
+			exists = var:et_53_passed
+			exists = var:et_54_passed
+			exists = var:et_55_passed
+			exists = var:et_56_passed
+			exists = var:et_57_passed
+			exists = var:et_58_passed
+			exists = var:et_59_passed
+			exists = var:et_60_passed
+			exists = var:et_61_passed
+			exists = var:et_62_passed
+			exists = var:et_63_passed
+			exists = var:et_64_passed
+			exists = var:et_65_passed
+			exists = var:et_66_passed
+			exists = var:et_67_passed
+			exists = var:et_68_passed
+			exists = var:et_69_passed
+			exists = var:et_70_passed
+			exists = var:et_71_passed
+			exists = var:et_hw_has_run
+			exists = var:et_hw_boot
+			exists = var:et_g40_v
+			exists = flag:et_hw_host
+		}
+	}
+}
