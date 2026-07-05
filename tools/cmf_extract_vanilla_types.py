@@ -72,6 +72,7 @@ VANILLA_FILES = [
 	"recruit_location_lateralview.gui",
 	"single_unit_window.gui",
 	"technology_lateralview.gui",
+	"town_rights.gui",
 ]
 
 BOM = "\ufeff"
