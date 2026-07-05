@@ -740,3 +740,59 @@ et_run_global = {
 		set_variable = { name = et_global_has_run value = 1 }
 	}
 }
+
+# Variable list duplicate-target semantics (tests 72-74).
+# Answers whether add_to_variable_list appends the same target twice, whether
+# iteration visits both entries, and how much one remove_list_variable takes.
+et_run_dups = {
+	scope = country
+
+	effect = {
+		# Reset all duplicate test results
+		set_variable = { name = et_72_passed value = 0 }
+		set_variable = { name = et_73_passed value = 0 }
+		set_variable = { name = et_74_passed value = 0 }
+		if = { limit = { has_variable_list = et_dups_list } clear_variable_list = et_dups_list }
+
+		# Result: FAIL
+		# -- Test 72 ---------------------------------------------
+		# Does add_to_variable_list append the SAME target twice?
+		add_to_variable_list = { name = et_dups_list target = flag:et_dup_a }
+		add_to_variable_list = { name = et_dups_list target = flag:et_dup_a }
+		if = {
+			limit = {
+				variable_list_size = { name = et_dups_list value = 2 }
+			}
+			set_variable = { name = et_72_passed value = 1 }
+		}
+
+		# Result: FAIL
+		# -- Test 73 ---------------------------------------------
+		# Does every_in_list visit a duplicated entry twice? The counter is
+		# global because the iterator scope is the flag target.
+		set_global_variable = { name = et_73_count value = 0 }
+		every_in_list = {
+			variable = et_dups_list
+			change_global_variable = { name = et_73_count add = 1 }
+		}
+		if = {
+			limit = { global_var:et_73_count = 2 }
+			set_variable = { name = et_73_passed value = 1 }
+		}
+
+		# Result: FAIL
+		# -- Test 74 ---------------------------------------------
+		# Does remove_list_variable take one instance of the target or all?
+		remove_list_variable = { name = et_dups_list target = flag:et_dup_a }
+		if = {
+			limit = {
+				has_variable_list = et_dups_list
+				variable_list_size = { name = et_dups_list value = 1 }
+			}
+			set_variable = { name = et_74_passed value = 1 }
+		}
+
+		# Mark that the duplicate test suite has been executed
+		set_variable = { name = et_dups_has_run value = 1 }
+	}
+}

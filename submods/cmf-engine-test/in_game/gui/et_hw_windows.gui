@@ -333,6 +333,22 @@ widget = {
 		}
 	}
 
+	# Test 75: one flag seeded twice into the list; counts instantiations.
+	widget = {
+		datamodel = "[GetPlayer.MakeScope.GetList('et_g75_list')]"
+
+		item = {
+			widget = {
+				size = { 0 0 }
+				state = {
+					name = et_g75_created
+					trigger_on_create = yes
+					on_start = "[GetScriptedGui('et_hw_rec_75').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				}
+			}
+		}
+	}
+
 	# Test 56: mid-cycle-appended items under a statically-visible parent
 	# (no visible attribute anywhere above the datamodel inside this window).
 	widget = {

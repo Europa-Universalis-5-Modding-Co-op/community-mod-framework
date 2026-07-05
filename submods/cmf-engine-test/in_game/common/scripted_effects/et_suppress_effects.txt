@@ -45,8 +45,12 @@ et_suppress_warnings = {
 			exists = var:et_36_passed
 			exists = var:et_37_passed
 			exists = var:et_38_passed
+			exists = var:et_72_passed
+			exists = var:et_73_passed
+			exists = var:et_74_passed
 			exists = var:et_has_run
 			exists = var:et_global_has_run
+			exists = var:et_dups_has_run
 			# Size limit test results (read only in et_window GUI)
 			exists = var:et_map_1k_passed
 			exists = var:et_map_10k_passed

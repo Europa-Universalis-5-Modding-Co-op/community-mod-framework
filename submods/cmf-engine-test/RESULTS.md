@@ -218,3 +218,34 @@ Expected-FAIL rows assert a pattern previously recorded as broken, so FAIL is th
 - **70: a scope saved in a nested every_country and read literally in a called sub-effect WAS set.** The known CMM failure (nested every_in_list with the scope name passed to the helper as a macro param) did not reproduce with plain nested every_country loops and a literal scope: read, so that failure is tied to the more complex shape, not to nested loops in general.
 
 Tests 39-67 run inside the GUI rig; 68-71 are script-side and run inside et_hw_finish at the end of the chain. Test 50's finding means the after-lobby caller pattern's timing rests on when registered widgets are instantiated rather than on trigger_on_create deferring; the callers demonstrably work in production, but that instantiation timing is untested here.
+
+## Variable List Duplicate Tests (et_run_dups + hidden-window test 75)
+
+Run 2026-07-05. Probes whether a country variable list can hold the same target twice:
+two unguarded add_to_variable_list calls with one flag, then size, iteration, and
+removal checks (72-74, the Run List Duplicate Tests button), plus a GetList datamodel
+seeded with the same flag twice in the hidden-window rig (75, runs with the HW chain).
+
+| # | Test | Result |
+|---|------|--------|
+| 72 | add_to_variable_list appends a duplicate target (size 2) | FAIL |
+| 73 | every_in_list visits the duplicated entry twice | FAIL |
+| 74 | remove_list_variable removes one instance, not all | FAIL |
+| 75 | GetList datamodel instantiates a duplicated entry twice | FAIL |
+
+**0/4 passed.**
+
+### Findings
+
+- **A variable list holds each target at most once.** Adding an already-present target
+  is a silent no-op: the size stays 1 (72), iteration visits one entry (73), and a GUI
+  GetList datamodel instantiates one item widget (75). Lists behave as target sets.
+  `is_target_in_variable_list` guards before adds therefore do not change the list
+  contents; they only matter for skipping side effects paired with the add (counters,
+  first-add setup).
+- 74's failure is a consequence of 72, not a separate finding: only one entry ever
+  existed, so the single remove_list_variable emptied the list and the size-1 assertion
+  could not hold. Per-instance removal semantics are moot - duplicates cannot exist.
+- Consequence for mods: multiplicity cannot be represented by repeated list entries
+  (e.g. firing an engine GUI action N times per target via N datamodel items). Use
+  distinct targets, per-rank lists, or a count stored elsewhere.

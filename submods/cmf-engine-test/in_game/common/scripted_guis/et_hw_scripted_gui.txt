@@ -50,6 +50,7 @@ et_hw_reset = {
 		set_variable = { name = et_69_passed value = 0 }
 		set_variable = { name = et_70_passed value = 0 }
 		set_variable = { name = et_71_passed value = 0 }
+		set_variable = { name = et_75_passed value = 0 }
 
 		if = { limit = { has_variable = et_g39_c } remove_variable = et_g39_c }
 		if = { limit = { has_variable = et_g40_c } remove_variable = et_g40_c }
@@ -72,6 +73,7 @@ et_hw_reset = {
 		if = { limit = { has_variable = et_g64_c } remove_variable = et_g64_c }
 		if = { limit = { has_variable = et_g64_snap } remove_variable = et_g64_snap }
 		if = { limit = { has_variable = et_g66_c } remove_variable = et_g66_c }
+		if = { limit = { has_variable = et_g75_c } remove_variable = et_g75_c }
 
 		if = { limit = { has_variable = et_g39_gate } remove_variable = et_g39_gate }
 		if = { limit = { has_variable = et_g40_v } remove_variable = et_g40_v }
@@ -94,6 +96,7 @@ et_hw_reset = {
 		if = { limit = { has_variable_list = et_g55_seen } clear_variable_list = et_g55_seen }
 		if = { limit = { has_variable_list = et_g56_list } clear_variable_list = et_g56_list }
 		if = { limit = { has_variable_list = et_g57_list } clear_variable_list = et_g57_list }
+		if = { limit = { has_variable_list = et_g75_list } clear_variable_list = et_g75_list }
 
 		set_variable = { name = et_g42_v value = 7 }
 
@@ -115,6 +118,9 @@ et_hw_seed = {
 		add_to_variable_list = { name = et_g52_list target = flag:et_hw_i1 }
 		add_to_variable_list = { name = et_g52_list target = flag:et_hw_i2 }
 		add_to_variable_list = { name = et_g52_list target = flag:et_hw_i3 }
+		# Test 75: one flag seeded twice.
+		add_to_variable_list = { name = et_g75_list target = flag:et_dup_b }
+		add_to_variable_list = { name = et_g75_list target = flag:et_dup_b }
 	}
 }
 
@@ -142,6 +148,18 @@ et_hw_check_seeded = {
 				var:et_g52_c >= 3
 			}
 			set_variable = { name = et_52_passed value = 1 }
+		}
+
+		# Result: FAIL
+		# -- Test 75 ---------------------------------------------
+		# One flag seeded twice into et_g75_list: did the datamodel
+		# instantiate two item widgets for it?
+		if = {
+			limit = {
+				has_variable = et_g75_c
+				var:et_g75_c >= 2
+			}
+			set_variable = { name = et_75_passed value = 1 }
 		}
 	}
 }
@@ -850,6 +868,15 @@ et_hw_rec_52 = {
 	effect = {
 		if = { limit = { NOT = { has_variable = et_g52_c } } set_variable = { name = et_g52_c value = 0 } }
 		change_variable = { name = et_g52_c add = 1 }
+	}
+}
+
+et_hw_rec_75 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g75_c } } set_variable = { name = et_g75_c value = 0 } }
+		change_variable = { name = et_g75_c add = 1 }
 	}
 }
 

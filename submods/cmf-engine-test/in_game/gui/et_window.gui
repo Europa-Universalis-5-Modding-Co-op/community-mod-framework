@@ -1881,6 +1881,125 @@ window = {
 					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_71_passed').GetValue, '(CFixedPoint)1'))]" }
 					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_71_passed').GetValue, '(CFixedPoint)1')))]" }
 				}
+
+				# Result: FAIL
+				# -- Test 75 -------------------------------------
+				et_hw_row = {
+					blockoverride "et_hw_row_label" { text = "ET_75_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_75_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_75_passed').GetValue, '(CFixedPoint)1')))]" }
+				}
+			}
+
+			# =======================================================
+			# Section 7: Variable List Duplicates
+			# =======================================================
+
+			text_single = {
+				fontsize = 14
+				text = "ET_DUPS_SECTION"
+			}
+
+			hbox = {
+				button_regular = {
+					text = "ET_RUN_DUPS"
+					minimumsize = { 180 30 }
+					fontsize = 14
+					onclick = "[GetScriptedGui('et_run_dups').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					tooltip = "ET_RUN_DUPS_TOOLTIP"
+				}
+			}
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 1
+
+				# -- Test 72 -------------------------------------
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					ignoreinvisible = yes
+					spacing = 8
+
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						fontsize = 14
+						text = "ET_72_LABEL"
+					}
+
+					text_single = {
+						fontsize = 14
+						visible = "[Not(Player.MakeScope.GetVariable('et_dups_has_run').IsSet)]"
+						text = "ET_NOT_RUN"
+					}
+					text_single = {
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_72_passed').GetValue, '(CFixedPoint)1'))]"
+						fontsize = 14
+						text = "ET_PASS"
+					}
+					text_single = {
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_72_passed').GetValue, '(CFixedPoint)1')))]"
+						fontsize = 14
+						text = "ET_FAIL"
+					}
+				}
+
+				# -- Test 73 -------------------------------------
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					ignoreinvisible = yes
+					spacing = 8
+
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						fontsize = 14
+						text = "ET_73_LABEL"
+					}
+
+					text_single = {
+						fontsize = 14
+						visible = "[Not(Player.MakeScope.GetVariable('et_dups_has_run').IsSet)]"
+						text = "ET_NOT_RUN"
+					}
+					text_single = {
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_73_passed').GetValue, '(CFixedPoint)1'))]"
+						fontsize = 14
+						text = "ET_PASS"
+					}
+					text_single = {
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_73_passed').GetValue, '(CFixedPoint)1')))]"
+						fontsize = 14
+						text = "ET_FAIL"
+					}
+				}
+
+				# -- Test 74 -------------------------------------
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					ignoreinvisible = yes
+					spacing = 8
+
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						fontsize = 14
+						text = "ET_74_LABEL"
+					}
+
+					text_single = {
+						fontsize = 14
+						visible = "[Not(Player.MakeScope.GetVariable('et_dups_has_run').IsSet)]"
+						text = "ET_NOT_RUN"
+					}
+					text_single = {
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_74_passed').GetValue, '(CFixedPoint)1'))]"
+						fontsize = 14
+						text = "ET_PASS"
+					}
+					text_single = {
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_74_passed').GetValue, '(CFixedPoint)1')))]"
+						fontsize = 14
+						text = "ET_FAIL"
+					}
+				}
 			}
 
 			} # end blockoverride "scrollbox_content"
