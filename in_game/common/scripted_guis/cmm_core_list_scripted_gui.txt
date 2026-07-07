@@ -210,6 +210,14 @@ CMM_MarkListFieldSliderAll = {
 	}
 }
 
+# Mark the next ordered list interaction as applying a column's first-row value to all rows.
+# Scope: country
+CMM_MarkListColumnApplyAll = {
+	effect = {
+		set_variable = { name = cmm_list_action_to_apply value = 13 }
+	}
+}
+
 # Mark the next ordered list interaction as a dropdown-field next cycle.
 # Scope: country
 CMM_MarkListFieldCycleNext = {

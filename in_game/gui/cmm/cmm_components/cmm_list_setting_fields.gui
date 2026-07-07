@@ -1,10 +1,14 @@
 ﻿types CMMListSettingFieldTypes
 {
-	# Ordered list header field labels rendered from registered field count.
+	# Ordered list header field labels with a per-column right-click apply-to-all control.
 	# Reads:
 	# - Scope.GetFlagName [string]: current list setting key (`<mod_id>__<setting_id>`).
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated header datamodel.
 	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_field_<slot>_name_', Scope.GetFlagName)) [flag]: localized field header key.
+	# Writes:
+	# - GetVariableSystem.Set('cmm_list_hover_field_slot', ...) [effect]: caches the hovered header field slot.
+	# - GetScriptedGui('CMM_MarkListColumnApplyAll').Execute(...) [effect]: marks the column apply-to-all action.
+	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
 	type cmm_list_setting_header_fields = hbox {
 		ignoreinvisible = yes
 		spacing = 8
@@ -15,6 +19,7 @@
 			widget = {
 				min_width = "[CMMListFieldWidth(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				minimumsize = { 0 20 }
+				onmousehierarchyenter = "[GetVariableSystem.Set('cmm_list_hover_field_slot', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				tagtooltip_enabled = yes
 				tooltip = "[CMMListFieldDescText(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 				tooltip_enabled = "[CMMListFieldHasDesc(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
@@ -29,6 +34,30 @@
 					default_format = "#medium"
 					align = center|nobaseline
 					text = "[CMMListFieldMetadataFlag(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)), '_name_')]"
+				}
+
+				button = {
+					size = { 100% 100% }
+					alpha = 0
+					effectname = "NoHighlight"
+					enabled = "[GetVariableSystem.HasValue('cmm_can_edit_list', 'yes')]"
+					visible = "[Not(CMMListFieldIsData(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+					tagtooltip_enabled = yes
+					tooltip = "[CMMListFieldDescText(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+					tooltip_enabled = "[CMMListFieldHasDesc(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+
+					action_tooltip = {
+						click_mode = single
+						click_type = right
+						title = "CMM_LIST_APPLY_COLUMN_TO_ALL"
+						on_action = "[CMMExecuteGui('CMM_MarkListPosition_0')]"
+						on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+						on_action = "[CMMExecuteGui('CMM_MarkListColumnApplyAll')]"
+						on_action = "[CMMExecuteSettingChanged(Scope.GetFlagName)]"
+						on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
+					}
+
+					tooltipwidget = { BasicFunctionalTooltip = {} }
 				}
 			}
 		}

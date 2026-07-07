@@ -166,6 +166,58 @@ _cmm_list_prepare_numeric_field_value_from_item = {
 	}
 }
 
+# Prepare the bulk field target value from one item field slot for a column-header apply-to-all.
+# Bool slots invert the source value; dropdown, numeric, and slider slots copy it.
+# Scope: country
+# Args: setting (key), item (number), slot (number)
+_cmm_list_prepare_header_field_value_from_slot_item = {
+	set_local_variable = { name = cmm_tmp_fk value = flag:$setting$_i$item$_f$slot$ }
+	if = {
+		limit = { var:cmm_tmp_is_global_list >= 1 }
+		set_local_variable = { name = cmm_field_val value = "global_variable_map(cmm|local_var:cmm_tmp_fk)" }
+	}
+	else = {
+		set_local_variable = { name = cmm_field_val value = "variable_map(cmm|local_var:cmm_tmp_fk)" }
+	}
+
+	if = {
+		limit = { var:cmm_list_field_$slot$_type_$setting$ = 1 }
+		if = {
+			limit = { local_var:cmm_field_val = 1 }
+			set_variable = { name = cmm_list_field_value_to_apply value = 0 }
+		}
+		else = {
+			set_variable = { name = cmm_list_field_value_to_apply value = 1 }
+		}
+	}
+	else = {
+		set_variable = { name = cmm_list_field_value_to_apply value = local_var:cmm_field_val }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_fk }
+		cmf_suppress = { v = cmm_field_val }
+	}
+}
+
+# Prepare the bulk field target value from one clicked item identity for a column-header apply-to-all.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - item (number): Stable item identity ordinal (`1..50`).
+_cmm_list_prepare_header_field_value_from_item = {
+	switch = {
+		trigger = var:cmm_list_field_slot_to_apply
+		1 = { _cmm_list_prepare_header_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 1 } }
+		2 = { _cmm_list_prepare_header_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 2 } }
+		3 = { _cmm_list_prepare_header_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 3 } }
+		4 = { _cmm_list_prepare_header_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 4 } }
+		5 = { _cmm_list_prepare_header_field_value_from_slot_item = { setting = $setting$ item = $item$ slot = 5 } }
+	}
+}
+
 # Apply the queued numeric markers to one ordered list numeric field slot for one item identity.
 # Scope: country
 # Args:
@@ -397,7 +449,7 @@ _cmm_list_apply_field_slot_at_item = {
 			remove_variable = cmm_tmp_field_new
 		}
 		else_if = {
-			limit = { AND = { OR = { var:cmm_list_action_to_apply = 9 var:cmm_list_action_to_apply = 10 var:cmm_list_action_to_apply = 11 } has_variable = cmm_list_field_value_to_apply } }
+			limit = { AND = { OR = { var:cmm_list_action_to_apply = 9 var:cmm_list_action_to_apply = 10 var:cmm_list_action_to_apply = 11 var:cmm_list_action_to_apply = 13 } has_variable = cmm_list_field_value_to_apply } }
 			set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_value_to_apply }
 			if = {
 				limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 1 var:cmm_tmp_field_new < 0 } }
@@ -469,6 +521,7 @@ _cmm_list_dispatch_item_action = {
 		3 = { _cmm_list_apply_numeric_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
 		4 = { _cmm_list_apply_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
 		5 = { _cmm_list_apply_slider_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
+		6 = { _cmm_list_prepare_header_field_value_from_item = { setting = $setting$ item = $item$ } }
 	}
 }
 
@@ -801,6 +854,16 @@ _cmm_apply_list_change_internal = {
 		else_if = {
 			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_list_action_to_apply = 12 has_variable = cmm_list_field_slot_to_apply } }
 			set_variable = { name = cmm_list_dispatch_action value = 2 }
+			_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+
+			if = {
+				limit = { has_variable = cmm_list_field_value_to_apply }
+				_cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
+			}
+		}
+		else_if = {
+			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_list_action_to_apply = 13 has_variable = cmm_list_field_slot_to_apply } }
+			set_variable = { name = cmm_list_dispatch_action value = 6 }
 			_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
 
 			if = {

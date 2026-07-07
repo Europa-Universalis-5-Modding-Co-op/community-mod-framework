@@ -29,6 +29,7 @@
  CMM_LIST_SELECT_OPTION: "Select Option"
  CMM_LIST_APPLY_OPTION_TO_ALL: "Apply This Option to All Rows"
  CMM_LIST_APPLY_NUMBER_TO_ALL: "Apply This Number to All Rows"
+ CMM_LIST_APPLY_COLUMN_TO_ALL: "Apply to All Rows"
  CMM_DROPDOWN_PREVIOUS: "Previous Option"
  CMM_DROPDOWN_FIRST: "First Option"
  CMM_DROPDOWN_NEXT: "Next Option"
