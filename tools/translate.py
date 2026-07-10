@@ -998,6 +998,12 @@ def translate_source_lines(
 
 	return new_lines
 
+def derive_target_filename(source_filename, source_lang_id, new_lang_id):
+	"""Map a source localization filename to its target-language filename."""
+	if source_lang_id in source_filename:
+		return source_filename.replace(source_lang_id, new_lang_id)
+	return source_filename
+
 def process_file(
 	translator,
 	source_lines,
@@ -1018,10 +1024,7 @@ def process_file(
 	"""Translate/update one localization file for a single target language."""
 	filename = os.path.basename(source_filepath)
 	new_lang_id = f"l_{target_folder_name}"
-	if source_lang_id in filename:
-		new_filename = filename.replace(source_lang_id, new_lang_id)
-	else:
-		new_filename = filename
+	new_filename = derive_target_filename(filename, source_lang_id, new_lang_id)
 
 	target_dir = os.path.join(loc_base_path, target_folder_name)
 	os.makedirs(target_dir, exist_ok=True)
@@ -1092,6 +1095,30 @@ def process_file(
 			f.writelines(target_lines)
 	else:
 		print(f"{log_prefix}No output changes for {filename} -> {target_folder_name}.")
+
+def remove_orphan_translations(loc_base_path, source_basenames, source_lang_id, source_language, log_prefix):
+	"""Delete translated files whose source no longer exists."""
+	for folder_name in TARGET_LANGUAGES:
+		if folder_name == source_language:
+			continue
+		new_lang_id = f"l_{folder_name}"
+		expected = {
+			derive_target_filename(basename, source_lang_id, new_lang_id)
+			for basename in source_basenames
+		}
+		target_dir = os.path.join(loc_base_path, folder_name)
+		if not os.path.isdir(target_dir):
+			continue
+		for entry in os.scandir(target_dir):
+			if not (entry.is_file() and entry.name.endswith(".yml")):
+				continue
+			if entry.name in expected:
+				continue
+			try:
+				os.remove(entry.path)
+				print(f"{log_prefix}Removed orphaned translation: {folder_name}/{entry.name}")
+			except OSError as e:
+				print(f"{log_prefix}  [Warning] Could not remove {folder_name}/{entry.name}: {e}")
 
 def _remove_dev_suffix(name):
 	"""Strip a trailing ' Dev' suffix from a mod name."""
@@ -1777,6 +1804,14 @@ def main():
 					if rel_path not in processed_files:
 						del file_hashes[rel_path]
 						hashes_modified = True
+
+				remove_orphan_translations(
+					loc_base_path,
+					{os.path.basename(p) for p in processed_files},
+					source_lang_id,
+					source_language,
+					log_prefix
+				)
 			else:
 				print(f"{log_prefix}Localization source directory not found: {source_dir}; skipping localization translation.")
 				if file_hashes:
