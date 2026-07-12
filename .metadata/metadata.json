@@ -4,7 +4,7 @@
     "version": "2.3.3",
     "game_id": "eu5",
     "supported_game_version": "1.3.*",
-    "cmf_last_updated_game_version": "1.3.8",
+    "cmf_last_updated_game_version": "1.3.10",
     "short_description": "A shared mod framework to improve compatibility between different mods.",
     "tags": [
         "Utilities",
