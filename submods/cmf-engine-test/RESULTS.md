@@ -249,3 +249,31 @@ seeded with the same flag twice in the hidden-window rig (75, runs with the HW c
 - Consequence for mods: multiplicity cannot be represented by repeated list entries
   (e.g. firing an engine GUI action N times per target via N datamodel items). Use
   distinct targets, per-rank lists, or a count stored elsewhere.
+
+## on_game_start Save-Load Firing Test
+
+Added 2026-07-12. Probes whether vanilla `on_game_start` fires when LOADING an
+existing save, or only when starting a NEW game. CMF added its own `on_game_load`
+hook because vanilla has no load hook; this test confirms that directly instead of
+inferring it.
+
+`et_on_game_start_load_probe` (in `et_on_actions.txt`, hooked under `on_game_start`)
+runs `c:FRA = { change_culture = culture:greek_culture }`, flipping France's primary
+culture to Greek. `on_game_start` fires in empty scope, so the probe navigates to
+`c:FRA` explicitly behind a `country_exists` guard.
+
+Protocol (both steps are required - step 1 is the control that proves the hook works
+at all, so that a negative in step 2 means "did not fire on load" and not "hook broken"):
+
+1. Enable the engine test. Start a NEW game, then select France and open its country
+   panel. Its primary culture should read Greek. This confirms the on_action runs.
+2. Take an existing save where France is still French (any normal save made without
+   this probe). With the engine test enabled, load it and open France's country panel.
+   - France shows Greek -> `on_game_start` DID fire on load.
+   - France still French -> `on_game_start` did NOT fire on load.
+
+Expected: France flips in step 1 and stays French in step 2, i.e. `on_game_start` is
+a new-game-only hook and does not run on save load.
+
+Result: CONFIRMED 2026-07-12. New game -> France Greek; loaded save -> France French.
+Vanilla `on_game_start` does not fire on save load, only on a new game.

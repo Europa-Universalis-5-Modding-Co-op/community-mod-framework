@@ -79,3 +79,4 @@
  CMM_LOG_CLEAR: "清除日志"
  CMM_LOG_CLEAR_TOOLTIP: "清除日志中的所有条目。"
 
+ CMM_LIST_APPLY_COLUMN_TO_ALL: "应用到所有行"

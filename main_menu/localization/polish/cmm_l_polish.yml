@@ -78,3 +78,4 @@
  cmf_core__open_log_name: "Rejestr akcji modów"
  cmf_core__open_log_desc: "Pokaż lub ukryj dziennik."
  cmf_core__open_log_text: "Otwórz"
+ CMM_LIST_APPLY_COLUMN_TO_ALL: "Zastosuj do wszystkich wierszy"

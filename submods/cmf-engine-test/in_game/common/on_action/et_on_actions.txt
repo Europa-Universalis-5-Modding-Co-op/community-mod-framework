@@ -1,6 +1,7 @@
 ﻿on_game_start = {
 	on_actions = {
 		et_on_game_start
+		et_on_game_start_load_probe
 	}
 }
 
@@ -21,6 +22,18 @@ et_on_game_start = {
 			name = et_gmap9
 			key = flag:et_key_a
 			value = 77
+		}
+	}
+}
+
+# Probe: does vanilla on_game_start fire on save load, or only on a new game? (see RESULTS.md)
+et_on_game_start_load_probe = {
+	effect = {
+		if = {
+			limit = { country_exists = c:FRA }
+			c:FRA = {
+				change_culture = culture:greek_culture
+			}
 		}
 	}
 }

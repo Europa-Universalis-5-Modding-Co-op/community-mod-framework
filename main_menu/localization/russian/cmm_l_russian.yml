@@ -78,3 +78,4 @@
  cmf_core__open_log_name: "Журнал действий мода"
  cmf_core__open_log_desc: "Показать или скрыть журнал."
  cmf_core__open_log_text: "Открыть"
+ CMM_LIST_APPLY_COLUMN_TO_ALL: "Применить ко всем строкам"
