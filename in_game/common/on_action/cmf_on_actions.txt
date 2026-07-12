@@ -78,6 +78,7 @@ cmf_yearly_human_country_pulse = {
 	on_actions = {
 		_cmf_on_cmm_registration
 		cmf_on_mod_registration
+		_cmf_on_action_bar_prune
 		_cmf_on_cmm_registration_late
 	}
 }
@@ -109,6 +110,15 @@ _cmf_on_cmm_registration = {
 # Scope: country
 cmf_on_mod_registration = {
 	on_actions = { }
+}
+
+# Stale action bar cleanup that depends on other mods having completed their
+# own registration first. Runs after cmf_on_mod_registration.
+# Scope: country
+_cmf_on_action_bar_prune = {
+	effect = {
+		_cmf_prune_stale_action_bar_elements = yes
+	}
 }
 
 # CMM menu settings registration that depends on other mods having completed
@@ -145,6 +155,7 @@ on_game_start_after_lobby_human_country = {
 	on_actions = {
 		_cmf_on_cmm_registration
 		cmf_on_mod_registration
+		_cmf_on_action_bar_prune
 		_cmf_on_cmm_registration_late
 	}
 }
@@ -198,6 +209,7 @@ on_game_load_after_lobby_human_country = {
 	on_actions = {
 		_cmf_on_cmm_registration
 		cmf_on_mod_registration
+		_cmf_on_action_bar_prune
 		_cmf_on_cmm_registration_late
 	}
 }

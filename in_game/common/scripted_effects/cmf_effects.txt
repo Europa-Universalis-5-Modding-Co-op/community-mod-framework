@@ -5,6 +5,11 @@
 # Args: element (flag)
 cmf_register_scripted_gui = {
     hidden_effect = {
+        # Record the scripted GUI as registered this pass so _cmf_prune_stale_action_bar_elements keeps cmf_has_sgui set.
+        add_to_global_variable_list = {
+            name = _cmf_action_bar_live_sguis
+            target = flag:$element$
+        }
         every_country = {
             remove_from_variable_map = { name = cmf_has_sgui key = flag:$element$ }
             add_to_variable_map = { name = cmf_has_sgui key = flag:$element$ value = 1 }

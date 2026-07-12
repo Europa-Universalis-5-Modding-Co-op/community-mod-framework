@@ -4,6 +4,11 @@
 # Args: element (flag)
 cmf_add_action_bar_element = {
     hidden_effect = {
+        # Record the element as registered this pass so _cmf_prune_stale_action_bar_elements keeps it.
+        add_to_global_variable_list = {
+            name = _cmf_action_bar_live_elements
+            target = flag:$element$
+        }
         if = {
             limit = {
                 NOT = {
@@ -60,4 +65,66 @@ cmf_remove_action_bar_element = {
             remove_from_variable_map = { name = cmf_has_sgui key = flag:$element$ }
         }
     }
+}
+
+# Remove action bar elements whose mod did not re-register them this pass
+# (the mod is no longer loaded), and zero cmf_has_sgui for elements whose
+# scripted GUI was not re-registered.
+# Called after cmf_on_mod_registration.
+# Scope: none
+_cmf_prune_stale_action_bar_elements = {
+    every_in_global_list = {
+        variable = cmf_action_bar_elements
+        save_scope_as = _cmf_ab_element
+        if = {
+            limit = {
+                NOT = {
+                    is_target_in_global_variable_list = {
+                        name = _cmf_action_bar_live_elements
+                        target = scope:_cmf_ab_element
+                    }
+                }
+            }
+            add_to_global_variable_list = {
+                name = _cmf_action_bar_stale_elements
+                target = scope:_cmf_ab_element
+            }
+        }
+    }
+    every_in_global_list = {
+        variable = _cmf_action_bar_stale_elements
+        save_scope_as = _cmf_ab_element
+        remove_list_global_variable = {
+            name = cmf_action_bar_elements
+            target = scope:_cmf_ab_element
+        }
+        remove_from_global_variable_map = { name = cmf_action_bar_element_name key = scope:_cmf_ab_element }
+        every_country = {
+            remove_list_variable = {
+                name = cmf_action_bar_active_elements
+                target = scope:_cmf_ab_element
+            }
+            remove_from_variable_map = { name = cmf_has_sgui key = scope:_cmf_ab_element }
+        }
+    }
+    every_in_global_list = {
+        variable = cmf_action_bar_elements
+        save_scope_as = _cmf_ab_element
+        if = {
+            limit = {
+                NOT = {
+                    is_target_in_global_variable_list = {
+                        name = _cmf_action_bar_live_sguis
+                        target = scope:_cmf_ab_element
+                    }
+                }
+            }
+            every_country = {
+                add_to_variable_map = { name = cmf_has_sgui key = scope:_cmf_ab_element value = 0 }
+            }
+        }
+    }
+    clear_global_variable_list = _cmf_action_bar_stale_elements
+    clear_global_variable_list = _cmf_action_bar_live_elements
+    clear_global_variable_list = _cmf_action_bar_live_sguis
 }

@@ -13,6 +13,7 @@ CMM_RegisterCoreMod = {
 		trigger_event_silently = {
 			on_action = cmf_on_mod_registration
 		}
+		_cmf_prune_stale_action_bar_elements = yes
 		_cmm_register_menu_settings_late = yes
 	}
 }
@@ -33,6 +34,7 @@ CMM_SetHostAndRegisterCoreMod = {
 		trigger_event_silently = {
 			on_action = cmf_on_mod_registration
 		}
+		_cmf_prune_stale_action_bar_elements = yes
 		_cmm_register_menu_settings_late = yes
 	}
 }
