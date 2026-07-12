@@ -1410,6 +1410,9 @@ def main():
                                   workshop_title, change_note=change_note, tags=main_tags):
                 return 1
             uploaded_main = True
+            if upload_only_on_version_change:
+                set_uploaded_version(version_cache, main_cache_key, main_version)
+                save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
 
         if upload_workshop_pages:
             page_updates = build_workshop_page_updates(
@@ -1425,9 +1428,6 @@ def main():
             page_tags = [] if uploaded_main else main_tags
             if not upload_workshop_pages_for_item(steam, page_updates, item_id, tags=page_tags):
                 return 1
-            if upload_only_on_version_change:
-                set_uploaded_version(version_cache, main_cache_key, main_version)
-                save_upload_versions(UPLOAD_VERSIONS_PATH, version_cache)
 
         if upload_submods_selected:
             submods_ok, submod_cache_changed = upload_submods(
