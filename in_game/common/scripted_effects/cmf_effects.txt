@@ -26,14 +26,8 @@ cmf_register_mod = {
     }
 
     # Benign warning suppression
-    if = {
-        limit = {
-            always = no
-            has_global_variable_list = cmf_active_mod_ids
-        }
-        cmf_suppress = { v = cmf_active_mod_ids }
-        cmf_suppress = { v = $mod_id$ }
-    }
+    cmf_suppress = { v = cmf_active_mod_ids }
+    cmf_suppress = { v = $mod_id$ }
 }
 
 # Freeze the game-start active-mod set for later-load checks.
@@ -50,13 +44,8 @@ _cmf_capture_game_start_mods = {
     set_global_variable = { name = cmf_game_start_recorded value = yes }
 
     # Benign warning suppression
-    if = {
-        limit = {
-            always = no
-            has_global_variable_list = cmf_game_start_mod_ids
-        }
-        cmf_suppress = { v = cmf_game_start_mod_ids }
-    }
+    cmf_suppress = { v = cmf_game_start_mod_ids }
+    cmf_suppress = { v = cmf_game_start_recorded }
 }
 
 # Register a mod for the pre-game lobby banner. Idempotent by mod_id.
@@ -77,12 +66,6 @@ cmf_register_lobby_banner = {
         }
     }
     # Benign warning suppression
-    if = {
-        limit = {
-            always = no
-            has_global_variable_list = cmf_lobby_banner_mod_ids
-        }
-        cmf_suppress = { v = cmf_lobby_banner_mod_ids }
-        cmf_suppress = { v = $mod_id$ }
-    }
+    cmf_suppress = { v = cmf_lobby_banner_mod_ids }
+    cmf_suppress = { v = $mod_id$ }
 }

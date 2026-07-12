@@ -8,9 +8,15 @@ cmf_suppress = {
 			exists = var:$v$
 			exists = flag:$v$
 			exists = scope:$v$
+			exists = global_var:$v$
+			has_variable_list = $v$
+			has_global_variable_list = $v$
 		}
 		set_variable = { name = $v$ value = flag:$v$ }
 		save_scope_as = $v$
+		set_global_variable = { name = $v$ value = flag:$v$ }
+		add_to_variable_list = { name = $v$ target = flag:$v$ }
+		add_to_global_variable_list = { name = $v$ target = flag:$v$ }
 	}
 }
 
