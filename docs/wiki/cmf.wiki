@@ -277,6 +277,15 @@ if = {
 cmf_register_mod = { mod_id = your_mod }
 </syntaxhighlight>
 
+<code>cmf_was_mod_active_at_game_start</code> returns true when a mod was active when the game was first started as a new game. <code>cmf_game_start_mods_recorded</code> is false for saves created before this feature, where the game-start mod list isn't set.
+
+<syntaxhighlight lang="text">
+if = {
+	limit = { cmf_was_mod_active_at_game_start = { mod_id = some_other_mod } }
+	# Runs only when the game was started with some_other_mod
+}
+</syntaxhighlight>
+
 == cmf_suppress Effect ==
 CMF provides a <code>cmf_suppress</code> effect to silence "used but never set" and "set but never used" engine warnings. Call inside an <code>always = no</code> dead branch:
 

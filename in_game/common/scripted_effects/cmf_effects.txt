@@ -36,6 +36,29 @@ cmf_register_mod = {
     }
 }
 
+# Freeze the game-start active-mod set for later-load checks.
+# Scope: none
+_cmf_capture_game_start_mods = {
+    every_in_global_list = {
+        variable = cmf_active_mod_ids
+        save_scope_as = _cmf_gsm_mod
+        add_to_global_variable_list = {
+            name = cmf_game_start_mod_ids
+            target = scope:_cmf_gsm_mod
+        }
+    }
+    set_global_variable = { name = cmf_game_start_recorded value = yes }
+
+    # Benign warning suppression
+    if = {
+        limit = {
+            always = no
+            has_global_variable_list = cmf_game_start_mod_ids
+        }
+        cmf_suppress = { v = cmf_game_start_mod_ids }
+    }
+}
+
 # Register a mod for the pre-game lobby banner. Idempotent by mod_id.
 # Scope: any
 # Args: mod_id (key)

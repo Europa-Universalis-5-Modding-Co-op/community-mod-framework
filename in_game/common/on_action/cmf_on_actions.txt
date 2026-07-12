@@ -134,6 +134,7 @@ on_game_start_after_lobby = {
 				on_action = on_game_start_after_lobby_human_country
 			}
 		}
+		_cmf_capture_game_start_mods = yes
 	}
 	on_actions = { }
 }

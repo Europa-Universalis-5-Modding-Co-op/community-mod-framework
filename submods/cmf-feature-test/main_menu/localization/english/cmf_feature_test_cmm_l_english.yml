@@ -26,6 +26,9 @@
  cft_log_transferred_to: "transferred to"
  cft_log_test_location: "Paris"
  cft_log_test_country: "France"
+ cft_log_game_start_active: "game-start check: Feature Test was active at game start"
+ cft_log_game_start_inactive: "game-start check: Feature Test was not active at game start"
+ cft_log_game_start_unrecorded: "game-start check: no game-start record (older save)"
  ## Values (values) Group
  cmf_feature_test__settings__values_name: "Values"
  cmf_feature_test__settings__values_desc: "Numeric, slider, and dropdown settings."

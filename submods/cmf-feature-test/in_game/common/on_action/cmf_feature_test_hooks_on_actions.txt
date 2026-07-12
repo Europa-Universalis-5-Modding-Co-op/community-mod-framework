@@ -100,6 +100,7 @@ cmf_feature_test_on_game_load_human_country = {
 on_game_load_after_lobby_human_country = {
 	on_actions = {
 		cmf_feature_test_on_game_load_after_lobby_human_country
+		cmf_feature_test_log_game_start_mods
 	}
 }
 
@@ -110,6 +111,23 @@ cmf_feature_test_on_game_load_after_lobby_human_country = {
 				change_pop_culture = culture:french
 			}
 			force_refresh_culture_and_religion = this
+		}
+	}
+}
+
+# Logs whether Feature Test was in the game-start snapshot, to confirm it survives a save/reload.
+cmf_feature_test_log_game_start_mods = {
+	effect = {
+		if = {
+			limit = { NOT = { cmf_game_start_mods_recorded = yes } }
+			cmf_log = { action = cft_log_game_start_unrecorded }
+		}
+		else_if = {
+			limit = { cmf_was_mod_active_at_game_start = { mod_id = cmf_feature_test } }
+			cmf_log = { action = cft_log_game_start_active }
+		}
+		else = {
+			cmf_log = { action = cft_log_game_start_inactive }
 		}
 	}
 }

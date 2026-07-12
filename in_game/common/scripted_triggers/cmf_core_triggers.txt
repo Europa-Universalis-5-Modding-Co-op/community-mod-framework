@@ -45,3 +45,24 @@ cmf_is_mod_active = {
 		}
 	}
 }
+
+# True when a mod with the given id was active when this game was started as a new game.
+# Older saves predating this feature have no record and read false.
+# Scope: any
+# Args: mod_id (key)
+cmf_was_mod_active_at_game_start = {
+	hidden_trigger = {
+		is_target_in_global_variable_list = {
+			name = cmf_game_start_mod_ids
+			target = flag:$mod_id$
+		}
+	}
+}
+
+# True when the game-start mod set was recorded (game created after this feature shipped).
+# Scope: any
+cmf_game_start_mods_recorded = {
+	hidden_trigger = {
+		has_global_variable = cmf_game_start_recorded
+	}
+}
