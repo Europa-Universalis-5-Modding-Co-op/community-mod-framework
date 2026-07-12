@@ -166,6 +166,9 @@ on_game_start_after_lobby_human_country = {
 on_game_load = {
 	effect = {
 		set_global_variable = { name = cmf_active value = yes }
+		# Close the saved dispatch gate so stale element names wait for this
+		# load's registration pass.
+		remove_from_global_variable_map = { name = cmf_action_bar_synced key = flag:cmf_action_bar_synced }
 		every_country = {
 			limit = { is_ai = no }
 			trigger_event_silently = {

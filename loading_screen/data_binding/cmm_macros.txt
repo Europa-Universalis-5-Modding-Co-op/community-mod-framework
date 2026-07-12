@@ -249,6 +249,13 @@ macro = {
     replace_with = "And(CMMSelectedHasValue('cmm_selected_mod', ModId), CMMSelectedHasValue('cmm_selected_tab', TabKey))"
 }
 
+# Returns: boolean
+macro = {
+    description = "True once the action bar registration pass has reconciled saved elements this session"
+    definition = "CMFActionBarSynced"
+    replace_with = "GetVariableFromGlobalVariableMap('cmf_action_bar_synced', MakeScopeFlag('cmf_action_bar_synced')).IsSet"
+}
+
 # Args: Index (int32)
 # Returns: scope
 macro = {

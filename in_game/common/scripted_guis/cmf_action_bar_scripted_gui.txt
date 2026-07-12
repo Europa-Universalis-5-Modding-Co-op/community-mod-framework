@@ -1,4 +1,19 @@
-﻿# Auto-apply: handle action bar button left-click. Fires cmf_on_callback.
+﻿# GetScriptedGui dispatch stand-in while CMFActionBarSynced is false; behaves
+# like an element with no scripted GUI.
+# Scope: country
+cmf_action_bar_fallback = {
+	scope = country
+
+	is_shown = {
+		always = yes
+	}
+
+	is_valid = {
+		always = yes
+	}
+}
+
+# Auto-apply: handle action bar button left-click. Fires cmf_on_callback.
 # Scope: country
 # Args: scope:cmf_element (flag) - the action bar element root key.
 cmf_auto_action_bar_clicked = {

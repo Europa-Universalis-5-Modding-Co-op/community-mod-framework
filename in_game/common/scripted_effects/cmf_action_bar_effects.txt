@@ -127,4 +127,11 @@ _cmf_prune_stale_action_bar_elements = {
     clear_global_variable_list = _cmf_action_bar_stale_elements
     clear_global_variable_list = _cmf_action_bar_live_elements
     clear_global_variable_list = _cmf_action_bar_live_sguis
+
+    # Open the GUI's scripted GUI dispatch gate (CMFActionBarSynced) now that
+    # saved element names are reconciled.
+    add_to_global_variable_map = { name = cmf_action_bar_synced key = flag:cmf_action_bar_synced value = 1 }
+
+    # Benign warning suppression
+    cmf_suppress = { v = cmf_action_bar_synced }
 }
