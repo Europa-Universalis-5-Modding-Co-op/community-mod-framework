@@ -36,15 +36,9 @@ cmf_add_action_bar_element = {
     }
 
     # Benign warning suppression
-    if = {
-        limit = {
-            always = no
-            has_variable_map = cmf_has_sgui
-        }
-        cmf_suppress = { v = $element$ }
-        cmf_suppress = { v = $element$_name }
-        cmf_suppress = { v = cmf_action_bar_elements }
-    }
+    cmf_suppress = { v = $element$ }
+    cmf_suppress = { v = $element$_name }
+    cmf_suppress = { v = cmf_action_bar_elements }
 }
 
 # Remove an action bar element globally and from all countries.
@@ -134,4 +128,7 @@ _cmf_prune_stale_action_bar_elements = {
 
     # Benign warning suppression
     cmf_suppress = { v = cmf_action_bar_synced }
+    cmf_suppress = { v = cmf_has_sgui }
+    cmf_suppress = { v = _cmf_action_bar_live_elements }
+    cmf_suppress = { v = _cmf_action_bar_live_sguis }
 }
