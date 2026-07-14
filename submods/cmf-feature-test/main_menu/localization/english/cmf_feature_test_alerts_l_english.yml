@@ -46,3 +46,11 @@
  cmf_alert_ft_purple_icon: "@prestige!"
  cmf_alert_ft_purple_name: "Test Alert (Purple)"
  cmf_alert_ft_purple_tooltip: "Purple alert."
+
+ # Alerts (alerts) Group
+ cmf_feature_test__settings__alerts_name: "Alerts"
+ cmf_feature_test__settings__alerts_desc: "Test alert controls."
+ cmf_feature_test__alerts_enabled_name: "Test Alerts"
+ cmf_feature_test__alerts_enabled_desc: "Shows the eight test alerts."
+ cmf_feature_test__settings__alerts: "cmf_feature_test__settings__alerts"
+ cmf_feature_test__alerts_enabled: "cmf_feature_test__alerts_enabled"

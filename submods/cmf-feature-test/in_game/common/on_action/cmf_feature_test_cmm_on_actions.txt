@@ -22,5 +22,6 @@ cmf_on_callback = {
 cmf_feature_test_on_cmf_callback = {
 	effect = {
 		cmf_feature_test_handle_cmf_callback = yes
+		cmf_feature_test_handle_callback = yes
 	}
 }
