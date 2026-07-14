@@ -9,14 +9,14 @@ cmf_feature_test_register_cmf = {
 	cmf_register_scripted_gui = { element = cmf_action_bar_ft_primary }
 
 	# Alerts - all 8 colors
-	cmf_show_alert = { alert = cmf_alert_ft_orange }
-	cmf_show_alert = { alert = cmf_alert_ft_blue }
-	cmf_show_alert = { alert = cmf_alert_ft_black }
-	cmf_show_alert = { alert = cmf_alert_ft_red_war }
-	cmf_show_alert = { alert = cmf_alert_ft_red }
-	cmf_show_alert = { alert = cmf_alert_ft_yellow }
-	cmf_show_alert = { alert = cmf_alert_ft_green }
-	cmf_show_alert = { alert = cmf_alert_ft_purple }
+	# cmf_show_alert = { alert = cmf_alert_ft_orange }
+	# cmf_show_alert = { alert = cmf_alert_ft_blue }
+	# cmf_show_alert = { alert = cmf_alert_ft_black }
+	# cmf_show_alert = { alert = cmf_alert_ft_red_war }
+	# cmf_show_alert = { alert = cmf_alert_ft_red }
+	# cmf_show_alert = { alert = cmf_alert_ft_yellow }
+	# cmf_show_alert = { alert = cmf_alert_ft_green }
+	# cmf_show_alert = { alert = cmf_alert_ft_purple }
 }
 
 # Unified callback handler for cmf_on_callback.
