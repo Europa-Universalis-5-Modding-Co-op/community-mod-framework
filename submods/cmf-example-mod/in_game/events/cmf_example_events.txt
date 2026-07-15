@@ -1,0 +1,15 @@
+﻿namespace = cmf_example
+
+# Opened by left-clicking the Event Alert.
+cmf_example.1 = {
+	type = country_event
+	title = cmf_example.1.title
+	desc = cmf_example.1.desc
+	outcome = neutral
+
+	image = "gfx/interface/illustrations/institutions/scientific_revolution.dds"
+
+	option = {
+		name = cmf_example.1.a
+	}
+}

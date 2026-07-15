@@ -57,3 +57,15 @@
  cmf_alert_example_purple_icon: "@advance!"
  cmf_alert_example_purple_name: "Some Alert"
  cmf_alert_example_purple_tooltip: "This is a dynamic custom alert."
+
+ cmf_alert_example_open: "cmf_alert_example_open"
+ cmf_alert_example_open_color: "blue"
+ cmf_alert_example_open_icon: "@advance!"
+ cmf_alert_example_open_name: "Event Alert"
+ cmf_alert_example_open_tooltip: "Left-click opens an example event."
+
+ cmf_alert_example_advances: "cmf_alert_example_advances"
+ cmf_alert_example_advances_color: "green"
+ cmf_alert_example_advances_icon: "@advance!"
+ cmf_alert_example_advances_name: "Advances Alert"
+ cmf_alert_example_advances_tooltip: "Left-click opens the Advances screen."

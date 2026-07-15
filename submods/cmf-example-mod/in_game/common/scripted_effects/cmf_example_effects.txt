@@ -6,15 +6,50 @@ cmf_example_register_mod = {
 	cmf_add_action_bar_element = { element = cmf_action_bar_element_example_second }
 
 	# Alerts
-	cmf_show_alert = { alert = cmf_alert_example }
-	cmf_show_alert = { alert = cmf_alert_example_blue }
-	cmf_show_alert = { alert = cmf_alert_example_black }
-	cmf_show_alert = { alert = cmf_alert_example_red_war }
-	cmf_show_alert = { alert = cmf_alert_example_red }
-	cmf_show_alert = { alert = cmf_alert_example_orange }
-	cmf_show_alert = { alert = cmf_alert_example_yellow }
-	cmf_show_alert = { alert = cmf_alert_example_green }
-	cmf_show_alert = { alert = cmf_alert_example_purple }
+	cmm_register_bool_setting = {
+		mod_id = cmm_example
+		setting_id = example_alerts_enabled
+		tab_id = general
+		group_id = general_alerts
+		default_value = 1
+	}
+	cmf_example_sync_alerts = yes
+}
+
+# Sync all example alerts to the Example Alerts setting.
+# Scope: country
+cmf_example_sync_alerts = {
+	if = {
+		limit = { "variable_map(cmm|flag:cmm_example__example_alerts_enabled)" >= 1 }
+		# cmf_show_alert = { alert = cmf_alert_example_blue }
+		cmf_show_alert = { alert = cmf_alert_example_black }
+		# cmf_show_alert = { alert = cmf_alert_example_red_war }
+		cmf_show_alert = { alert = cmf_alert_example_red }
+		# cmf_show_alert = { alert = cmf_alert_example_orange }
+		cmf_show_alert = { alert = cmf_alert_example_yellow }
+		# cmf_show_alert = { alert = cmf_alert_example_green }
+		# cmf_show_alert = { alert = cmf_alert_example_purple }
+		cmf_show_alert = { alert = cmf_alert_example_open }
+		cmf_show_alert = { alert = cmf_alert_example_advances }
+
+		if = {
+			limit = { "variable_map(cmm|flag:cmm_example__example_toggle)" >= 1 }
+			cmf_show_alert = { alert = cmf_alert_example }
+		}
+	}
+	else = {
+		cmf_remove_alert = { alert = cmf_alert_example }
+		# cmf_remove_alert = { alert = cmf_alert_example_blue }
+		cmf_remove_alert = { alert = cmf_alert_example_black }
+		# cmf_remove_alert = { alert = cmf_alert_example_red_war }
+		cmf_remove_alert = { alert = cmf_alert_example_red }
+		# cmf_remove_alert = { alert = cmf_alert_example_orange }
+		cmf_remove_alert = { alert = cmf_alert_example_yellow }
+		# cmf_remove_alert = { alert = cmf_alert_example_green }
+		# cmf_remove_alert = { alert = cmf_alert_example_purple }
+		cmf_remove_alert = { alert = cmf_alert_example_open }
+		cmf_remove_alert = { alert = cmf_alert_example_advances }
+	}
 }
 
 # Callback handler for cmf_on_callback.
@@ -26,12 +61,22 @@ cmf_example_handle_callback = {
 		flag:cmm_example__example_toggle = {
 			# Toggle the example alert when the example toggle is changed.
 			if = {
-				limit = { "variable_map(cmm|flag:cmm_example__example_toggle)" >= 1 }
+				limit = {
+					"variable_map(cmm|flag:cmm_example__example_toggle)" >= 1
+					"variable_map(cmm|flag:cmm_example__example_alerts_enabled)" >= 1
+				}
 				cmf_show_alert = { alert = cmf_alert_example }
 			}
 			else = {
 				cmf_remove_alert = { alert = cmf_alert_example }
 			}
+		}
+		flag:cmm_example__example_alerts_enabled = {
+			cmf_example_sync_alerts = yes
+		}
+		flag:cmf_alert_example_open = {
+			# Open an example event when the alert is clicked.
+			trigger_event_non_silently = cmf_example.1
 		}
 		# flag:cmm_example__example_button = {
 		# 	# A CMM button was clicked

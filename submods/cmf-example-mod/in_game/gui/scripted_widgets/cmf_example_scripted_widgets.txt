@@ -1,0 +1,1 @@
+﻿gui/cmf_example/cmf_example_alert_watcher.gui = cmf_example_alert_watcher

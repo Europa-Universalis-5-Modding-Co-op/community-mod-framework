@@ -1,0 +1,4 @@
+﻿l_english:
+ cmf_example.1.title: "Some Event"
+ cmf_example.1.desc: "This event was opened by left-clicking the Event Alert."
+ cmf_example.1.a: "Close"

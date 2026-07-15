@@ -10,6 +10,7 @@
  # Groups
  cmm_example__general__general_toggles_name: "Toggles"
  cmm_example__general__general_values_name: "Values"
+ cmm_example__general__general_alerts_name: "Alerts"
  cmm_example__global__global_toggles_name: "Toggles"
  cmm_example__global__global_values_name: "Values"
 
@@ -67,6 +68,10 @@
  cmm_example__example_unordered_list__mode_option_1_name: "Low"
  cmm_example__example_unordered_list__mode_option_2_name: "Standard"
  cmm_example__example_unordered_list__mode_option_3_name: "High"
+
+ # General Tab - Alerts
+ cmm_example__example_alerts_enabled_name: "Example Alerts"
+ cmm_example__example_alerts_enabled_desc: "Shows the example alerts."
 
  # Global Tab - Toggles
  cmm_example__global_example_toggle_name: "Global Toggle"
