@@ -184,7 +184,7 @@
  cmf_feature_test__order_test_list__aft_name: "Aft (broken)"
  cmf_feature_test__order_test_list__shared_name: "Value"
  cmf_feature_test__order_test_list__shared_desc: "Per-item default shown through the override localization and format."
- cmf_feature_test__order_test_list__shared_prefix: "["
+ cmf_feature_test__order_test_list__shared_prefix: "[["
  cmf_feature_test__order_test_list__shared_postfix: "]"
 
  # Global Lists (global_lists) Tab
