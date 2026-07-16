@@ -5,7 +5,9 @@ import json
 import io
 import os
 import shutil
+import socket
 import threading
+import time
 import zipfile
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
@@ -17,6 +19,9 @@ from .models import dict_to_model, model_to_dict
 from .parser import parse_mod_directory, parse_uploaded_files
 
 STATIC_DIR = Path(__file__).parent / "static"
+
+HEARTBEAT_CHECK_SECONDS = 2
+HEARTBEAT_MISS_LIMIT = 6
 
 
 def _get_version():
@@ -72,6 +77,12 @@ class RequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/health":
+            self._send_json({"status": "ok"})
+            return
+
+        if path == "/api/heartbeat":
+            self.server.heartbeat_seen = True
+            self.server.missed_checks = 0
             self._send_json({"status": "ok"})
             return
 
@@ -306,11 +317,46 @@ class RequestHandler(BaseHTTPRequestHandler):
         self._send_json(result)
 
 
-def run_server(host: str, port: int, auto_open_dir: str = None):
-    server = HTTPServer((host, port), RequestHandler)
+class EditorHTTPServer(HTTPServer):
+    # On Windows SO_REUSEADDR lets a second process silently bind over an active listener.
+    allow_reuse_address = not hasattr(socket, "SO_EXCLUSIVEADDRUSE")
+
+    def server_bind(self):
+        if hasattr(socket, "SO_EXCLUSIVEADDRUSE"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        HTTPServer.server_bind(self)
+
+
+def create_server(host: str, port: int, auto_open_dir: str = None):
+    server = EditorHTTPServer((host, port), RequestHandler)
     server.auto_open_dir = auto_open_dir
+    return server
+
+
+def _watchdog(server):
+    # Counts checks instead of wall time so a system sleep cannot expire the window.
+    while not getattr(server, "watchdog_stop", False):
+        time.sleep(HEARTBEAT_CHECK_SECONDS)
+        if not getattr(server, "heartbeat_seen", False):
+            continue
+        server.missed_checks = getattr(server, "missed_checks", 0) + 1
+        if server.missed_checks >= HEARTBEAT_MISS_LIMIT:
+            print("\nBrowser tab closed; shutting down.")
+            server.shutdown()
+            return
+
+
+def serve(server):
+    threading.Thread(target=_watchdog, args=(server,), daemon=True).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:
         print("\nShutting down.")
         server.shutdown()
+    finally:
+        server.watchdog_stop = True
+        server.server_close()
+
+
+def run_server(host: str, port: int, auto_open_dir: str = None):
+    serve(create_server(host, port, auto_open_dir))

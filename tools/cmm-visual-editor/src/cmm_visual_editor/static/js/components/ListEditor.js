@@ -296,6 +296,11 @@ const ListEditorComponent = {
             perItemSections: {},       // "fi:type" -> true if open
         };
     },
+    computed: {
+        effectiveSettingId() {
+            return CMMGenerator.effectiveSettingId(this.setting);
+        },
+    },
     methods: {
         isFieldCollapsed(fi) {
             return !!this.collapsedFields[fi];
@@ -311,16 +316,16 @@ const ListEditorComponent = {
             this.perItemSections = { ...this.perItemSections, [key]: !this.perItemSections[key] };
         },
         defaultFieldAccessorKey(fi) {
-            if (!this.modId || !this.setting.setting_id) return '';
+            if (!this.modId || !this.effectiveSettingId) return '';
             const slot = fi + 1;
-            return `${this.modId}__${this.setting.setting_id}_i$i$_f${slot}`;
+            return `${this.modId}__${this.effectiveSettingId}_i$i$_f${slot}`;
         },
         hasItemAliases(fi) {
             const field = (this.setting.fields || [])[fi];
             return field && field.item_aliases && field.item_aliases.some(a => a);
         },
         fieldAccessor(fi) {
-            if (!this.modId || !this.setting.setting_id) return '';
+            if (!this.modId || !this.effectiveSettingId) return '';
             const field = (this.setting.fields || [])[fi];
             if (this.hasItemAliases(fi)) {
                 return 'per-item';

@@ -50,18 +50,18 @@ const PreviewPanelComponent = {
                         <button v-for="(tab, ti) in previewTabs" :key="ti"
                             class="cmm-tab" :class="{active: previewTabIdx === ti}"
                             @click="previewTabIdx = ti">
-                            {{ tab.name || tab.tab_id || 'Tab' }}
+                            {{ tab.name || tab.tab_id || 'General' }}
                         </button>
                     </div>
 
                     <div class="cmm-settings-area" v-if="currentTab">
                         <div v-for="(group, gi) in (currentTab.groups || [])" :key="group.group_id" class="cmm-group">
                             <div class="cmm-group-header" @click="toggleGroup(gi)" style="cursor:pointer">
-                                <span>{{ group.name || group.group_id }}</span>
+                                <span>{{ group.name || group.group_id || 'General' }}</span>
                                 <span class="cmm-group-collapse">{{ isGroupCollapsed(gi) ? '&#9654;' : '&#9660;' }}</span>
                             </div>
                             <div class="cmm-group-body" v-show="!isGroupCollapsed(gi)">
-                                <div v-for="setting in (group.settings || [])" :key="setting.setting_id" class="cmm-setting-row">
+                                <div v-for="(setting, si) in (group.settings || [])" :key="si" class="cmm-setting-row">
                                     <!-- Bool -->
                                     <template v-if="setting.setting_type === 'bool'">
                                         <span class="cmm-setting-name">{{ setting.name || setting.setting_id }}</span>

@@ -1,13 +1,16 @@
 """Test that the .bat launcher starts the server successfully."""
 
+import json
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.request
 from pathlib import Path
 
 BAT_PATH = Path(__file__).parent.parent.parent / "cmm-visual-editor.bat"
 TEST_PORT = 15560
+ANCHOR_PORT = 15576
 
 
 def test_bat_launches_server():
@@ -75,7 +78,57 @@ def test_bat_launches_server():
             proc.wait(timeout=5)
 
 
+def test_bat_outside_cwd_detects_mod():
+    """A bat run from an unrelated cwd still opens the mod the bat lives in."""
+    with tempfile.TemporaryDirectory() as tmp:
+        proc = subprocess.Popen(
+            ["cmd", "/c", str(BAT_PATH), "--no-open", "--port", str(ANCHOR_PORT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            cwd=tmp,
+        )
+        try:
+            started = False
+            for _ in range(30):
+                time.sleep(0.5)
+                if proc.poll() is not None:
+                    stdout = proc.stdout.read().decode(errors="replace")
+                    stderr = proc.stderr.read().decode(errors="replace")
+                    print(f"  Process exited early with code {proc.returncode}")
+                    print(f"  stdout: {stdout[:500]}")
+                    print(f"  stderr: {stderr[:500]}")
+                    assert False, "Bat process exited before server started"
+                try:
+                    resp = urllib.request.urlopen(f"http://127.0.0.1:{ANCHOR_PORT}/api/health", timeout=2)
+                    if "ok" in resp.read().decode():
+                        started = True
+                        break
+                except Exception:
+                    continue
+            assert started, "Server did not start within 15 seconds"
+
+            resp = urllib.request.urlopen(f"http://127.0.0.1:{ANCHOR_PORT}/api/auto-open", timeout=2)
+            data = json.loads(resp.read())
+            assert data["directory"], "No mod directory detected from a neutral cwd"
+            assert Path(data["directory"]).samefile(BAT_PATH.parent.parent), \
+                f"Expected {BAT_PATH.parent.parent}, got {data['directory']}"
+            print("  PASS: test_bat_outside_cwd_detects_mod")
+
+            req = urllib.request.Request(f"http://127.0.0.1:{ANCHOR_PORT}/api/shutdown", method="POST")
+            try:
+                urllib.request.urlopen(req, timeout=2)
+            except Exception:
+                pass  # connection drops on shutdown
+
+            proc.wait(timeout=10)
+        finally:
+            if proc.poll() is None:
+                proc.terminate()
+                proc.wait(timeout=5)
+
+
 if __name__ == "__main__":
     print("Testing bat launcher:")
     test_bat_launches_server()
+    test_bat_outside_cwd_detects_mod()
     print("\nAll bat launcher tests passed!")

@@ -82,7 +82,7 @@
 
                     <div v-if="selectedTab" class="tab-content">
                         <div class="field-row">
-                            <label>Tab ID <span class="required">*</span></label>
+                            <label>Tab ID</label>
                             <input v-model="selectedTab.tab_id" placeholder="general" @input="sanitizeId(selectedTab, 'tab_id')">
                         </div>
                         <div class="field-row">
@@ -119,7 +119,7 @@
 
                         <div v-if="selectedGroup" class="group-content">
                             <div class="field-row">
-                                <label>Group ID <span class="required">*</span></label>
+                                <label>Group ID</label>
                                 <input v-model="selectedGroup.group_id" placeholder="general" @input="sanitizeId(selectedGroup, 'group_id')">
                             </div>
                             <div class="field-row">
