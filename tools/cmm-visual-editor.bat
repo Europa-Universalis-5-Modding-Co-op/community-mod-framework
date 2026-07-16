@@ -6,11 +6,15 @@ REM Installs all dependencies automatically and launches the tool.
 REM Flags:
 REM   --update   Force reinstall to latest version
 REM   --dev      Use the dev branch instead of main
-set BAT_VERSION=1
+set BAT_VERSION=2
 
 set CMM_BRANCH=main
 set FORCE_UPDATE=0
 set EXTRA_ARGS=
+
+REM Capture before the parse loop: shift also shifts %0
+set "BAT_SELF=%~f0"
+set "BAT_DIR=%~dp0"
 
 REM Parse flags
 :parse_args
@@ -35,7 +39,7 @@ set CMM_VERSION_URL=https://raw.githubusercontent.com/Europa-Universalis-5-Moddi
 set CMM_BAT_URL=https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/!CMM_BRANCH!/tools/cmm-visual-editor.bat
 
 REM Self-update check (skip for temp downloads)
-echo "%~f0" | findstr /i /c:"%TEMP%" >nul 2>&1
+echo "!BAT_SELF!" | findstr /i /c:"%TEMP%" >nul 2>&1
 if !errorlevel! neq 0 (
     set REMOTE_BAT_VER=
     for /f "delims=" %%v in ('curl.exe -sL --max-time 3 "!CMM_BAT_URL!" 2^>nul ^| findstr /b /c:"set BAT_VERSION"') do (
@@ -44,13 +48,13 @@ if !errorlevel! neq 0 (
         )
     )
     if defined REMOTE_BAT_VER (
-        if not "!BAT_VERSION!"=="!REMOTE_BAT_VER!" (
+        if !REMOTE_BAT_VER! gtr !BAT_VERSION! (
             echo Updating launcher v!BAT_VERSION! -^> v!REMOTE_BAT_VER!...
-            curl.exe -sL --max-time 10 "!CMM_BAT_URL!" -o "%~f0.tmp" 2>nul
-            if exist "%~f0.tmp" (
-                move /y "%~f0.tmp" "%~f0" >nul 2>&1
+            curl.exe -sL --max-time 10 "!CMM_BAT_URL!" -o "!BAT_SELF!.tmp" 2>nul
+            if exist "!BAT_SELF!.tmp" (
+                move /y "!BAT_SELF!.tmp" "!BAT_SELF!" >nul 2>&1
                 echo Launcher updated. Restarting...
-                call "%~f0" %*
+                call "!BAT_SELF!" %*
                 exit /b
             )
         )
@@ -114,12 +118,12 @@ if !errorlevel! neq 0 (
 set "PATH=%USERPROFILE%\.local\bin;%PATH%"
 
 REM Check if this is a local (persistent) launcher or a temp download
-echo "%~f0" | findstr /i /c:"%TEMP%" >nul 2>&1
+echo "!BAT_SELF!" | findstr /i /c:"%TEMP%" >nul 2>&1
 if !errorlevel! equ 0 (
     REM Temp download - run directly via pipx run, then clean up
     echo Starting CMM Visual Editor...
     "%PYTHON%" -m pipx run --spec "!CMM_SPEC!" cmm-visual-editor !EXTRA_ARGS!
-    del "%~f0" >nul 2>&1
+    del "!BAT_SELF!" >nul 2>&1
     goto :eof
 )
 
@@ -164,5 +168,8 @@ if defined LOCAL_VER if defined REMOTE_VER (
 )
 
 :run
+REM Anchor the editor to this launcher's mod
+if exist "!BAT_DIR!..\.metadata\metadata.json" pushd "!BAT_DIR!.."
 echo Starting CMM Visual Editor...
 cmm-visual-editor.exe !EXTRA_ARGS!
+if exist "!BAT_DIR!..\.metadata\metadata.json" popd

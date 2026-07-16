@@ -300,10 +300,13 @@ def _build_model(
     lobby_banner = "cmf_register_lobby_banner" in on_action
     register_hook_extra = _parse_register_hook_extra(on_action, prefix)
 
+    # Keep the toolkit's trailing " Dev" install marker out of the in-game menu name.
+    meta_name = (meta.get("name") or "").removesuffix(" Dev")
+
     model = ModModel(
         mod_id=mod_id,
         file_prefix=prefix or mod_id,
-        mod_name=loc_map.get(f"{mod_id}_name", "") or meta.get("name", "") or mod_id,
+        mod_name=loc_map.get(f"{mod_id}_name", "") or meta_name or mod_id,
         mod_desc=loc_map.get(f"{mod_id}_desc", "") or meta.get("short_description", ""),
         banner_icon=banner_icon,
         banner_background=banner_background,

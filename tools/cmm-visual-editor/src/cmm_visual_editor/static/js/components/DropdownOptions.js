@@ -9,7 +9,7 @@ const DropdownOptionsComponent = {
                 <input v-model="opt.name" :placeholder="'Option ' + (i + 1)">
                 <input v-model="opt.desc" placeholder="description (optional)">
             </div>
-            <div v-if="modId && setting.setting_id" class="option-alias-area">
+            <div v-if="modId && effectiveSettingId" class="option-alias-area">
                 <template v-if="editingOption !== i">
                     <span class="setting-accessor" @click="copyAccessor(i)" :title="'Click to copy: ' + optionAccessor(i)">
                         <code>{{ optionAccessor(i) }}</code>
@@ -34,8 +34,11 @@ const DropdownOptionsComponent = {
         return { editingOption: -1, aliasInput: '', copiedOption: -1 };
     },
     computed: {
+        effectiveSettingId() {
+            return CMMGenerator.effectiveSettingId(this.setting);
+        },
         qid() {
-            return `${this.modId}__${this.setting.setting_id}`;
+            return `${this.modId}__${this.effectiveSettingId}`;
         },
         mapFunc() {
             return this.setting.is_global ? 'global_variable_map' : 'variable_map';

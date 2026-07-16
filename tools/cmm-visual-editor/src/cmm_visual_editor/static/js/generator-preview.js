@@ -3,7 +3,37 @@
  * Mirrors the Python generator.py logic.
  */
 const CMMGenerator = {
+    deriveSettingId(name) {
+        return (name || '')
+            .toLowerCase()
+            .replace(/'/g, '')
+            .replace(/[^a-z0-9_]+/g, '_')
+            .replace(/^_+|_+$/g, '');
+    },
+
+    effectiveSettingId(setting) {
+        return setting.setting_id || this.deriveSettingId(setting.name);
+    },
+
+    resolveDefaults(state) {
+        const tabs = (state.tabs || []).map(t => ({
+            ...t,
+            tab_id: t.tab_id || 'general',
+            name: t.name || (t.tab_id ? '' : 'General'),
+            groups: (t.groups || []).map(g => ({
+                ...g,
+                group_id: g.group_id || 'general',
+                name: g.name || (g.group_id ? '' : 'General'),
+                settings: (g.settings || []).map(s =>
+                    s.setting_id ? s : { ...s, setting_id: this.deriveSettingId(s.name) }
+                ),
+            })),
+        }));
+        return { ...state, tabs };
+    },
+
     generateAll(state) {
+        state = this.resolveDefaults(state);
         const prefix = state.file_prefix || state.mod_id;
         const modId = state.mod_id;
         if (!modId) return {};
@@ -802,7 +832,7 @@ ${prefix}_register_lobby_banner = {
         }
 
         lines.push('');
-        lines.push(' # Optional: self-referencing flag keys to suppress IDE warnings (safe to remove)');
+        lines.push(' # Optional: self-referencing flag keys to suppress IDE warnings (safe to remove if you want)');
         for (const key of flagKeys) {
             lines.push(` ${key}: "${key}"`);
         }

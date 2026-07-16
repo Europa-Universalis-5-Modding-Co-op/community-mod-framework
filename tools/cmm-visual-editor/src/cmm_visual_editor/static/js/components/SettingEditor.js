@@ -28,7 +28,7 @@ const SettingEditorComponent = {
                 </template>
             </span>
             <div class="setting-actions">
-                <button v-if="setting.setting_type === 'list' && modId && setting.setting_id && (setting.fields||[]).length" class="btn btn-sm btn-copy-template" @click="copyLoopTemplate" title="Copy iteration template to clipboard">
+                <button v-if="setting.setting_type === 'list' && modId && effectiveSettingId && (setting.fields||[]).length" class="btn btn-sm btn-copy-template" @click="copyLoopTemplate" title="Copy iteration template to clipboard">
                     {{ copiedTemplate ? 'Copied!' : 'Copy Loop Template' }}
                 </button>
                 <button class="btn-icon" @click="$emit('move-up')" :disabled="index === 0" title="Move up">&#9650;</button>
@@ -41,7 +41,7 @@ const SettingEditorComponent = {
             <div class="field-grid">
                 <div class="field-row">
                     <label>Setting ID <span class="required">*</span></label>
-                    <input v-model="setting.setting_id" placeholder="my_setting" @input="sanitizeId">
+                    <input v-model="setting.setting_id" :placeholder="derivedSettingId || 'my_setting'" @input="sanitizeId">
                 </div>
                 <div class="field-row">
                     <label>Type</label>
@@ -210,15 +210,21 @@ const SettingEditorComponent = {
         showSguiConditions() {
             return this.setting.scripted_gui || this.setting.setting_type === 'list';
         },
+        derivedSettingId() {
+            return CMMGenerator.deriveSettingId(this.setting.name);
+        },
+        effectiveSettingId() {
+            return CMMGenerator.effectiveSettingId(this.setting);
+        },
         defaultAccessorKey() {
-            if (!this.modId || !this.setting.setting_id) return '';
-            return `${this.modId}__${this.setting.setting_id}`;
+            if (!this.modId || !this.effectiveSettingId) return '';
+            return `${this.modId}__${this.effectiveSettingId}`;
         },
         hasAlias() {
             return !!this.setting.alias;
         },
         accessor() {
-            if (!this.modId || !this.setting.setting_id) return '';
+            if (!this.modId || !this.effectiveSettingId) return '';
             if (['button', 'list'].includes(this.setting.setting_type)) return '';
             if (this.hasAlias) {
                 if (this.setting.setting_type === 'bool') {
@@ -267,7 +273,7 @@ const SettingEditorComponent = {
             this.collapsed = !this.collapsed;
         },
         copyLoopTemplate() {
-            const qid = `${this.modId}__${this.setting.setting_id}`;
+            const qid = `${this.modId}__${this.effectiveSettingId}`;
             const fields = this.setting.fields || [];
             const itemCount = this.setting.list_source ? 'N' : (this.setting.item_count || 1);
             const hasValues = (this.setting.item_values || []).some(v => v) || !!this.setting.list_source;

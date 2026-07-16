@@ -1,5 +1,6 @@
 """Data models for CMM Visual Editor."""
 
+import re
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
@@ -281,6 +282,13 @@ def model_to_dict(model: ModModel) -> dict:
     }
 
 
+def derive_setting_id(name: str) -> str:
+    """Snake-case a display name into a setting id ("My Toggle" -> "my_toggle")."""
+    s = (name or "").lower().replace("'", "")
+    s = re.sub(r"[^a-z0-9_]+", "_", s)
+    return s.strip("_")
+
+
 def dict_to_model(data: dict) -> ModModel:
     """Convert a JSON dict back to a ModModel."""
 
@@ -314,7 +322,7 @@ def dict_to_model(data: dict) -> ModModel:
 
     def _parse_setting(s: dict) -> Setting:
         return Setting(
-            setting_id=s["setting_id"],
+            setting_id=s.get("setting_id", "") or derive_setting_id(s.get("name", "")),
             setting_type=s["setting_type"],
             is_global=s.get("is_global", False),
             name=s.get("name", ""),
@@ -370,12 +378,12 @@ def dict_to_model(data: dict) -> ModModel:
         noinspection=data.get("noinspection", False),
         tabs=[
             Tab(
-                tab_id=t["tab_id"],
-                name=t.get("name", ""),
+                tab_id=t["tab_id"] or "general",
+                name=t.get("name", "") or ("" if t["tab_id"] else "General"),
                 groups=[
                     Group(
-                        group_id=g["group_id"],
-                        name=g.get("name", ""),
+                        group_id=g["group_id"] or "general",
+                        name=g.get("name", "") or ("" if g["group_id"] else "General"),
                         desc=g.get("desc", ""),
                         settings=[_parse_setting(s) for s in g.get("settings", [])],
                     )
