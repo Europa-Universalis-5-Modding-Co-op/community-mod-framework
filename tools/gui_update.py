@@ -1107,7 +1107,7 @@ def _ask(prompt):
     except EOFError:
         print("\nError: A game version is required but no terminal is "
               "available to prompt for one.")
-        print("Pass it explicitly, e.g. --gv 1.2.5.")
+        print("Pass it explicitly, e.g. --gv 1.3.5.")
         sys.exit(1)
 
 
@@ -1138,11 +1138,11 @@ def _prompt_version_value(default):
             if not resp:
                 return default
         else:
-            resp = _ask("Enter game version (e.g. 1.2.5): ").strip()
+            resp = _ask("Enter game version (e.g. 1.3.5): ").strip()
             if not resp:
                 continue
         if _version_key(resp) is None:
-            print("  Not a valid version. Use a numeric form like 1.2.5.")
+            print("  Not a valid version. Use a numeric form like 1.3.5.")
             continue
         return _normalize_version(resp)
 
@@ -2356,7 +2356,7 @@ def main():
             "--game-version", "--gv", "-gv", dest="game_version",
             metavar="VERSION", default=None,
             help="Game version for the gui/vanilla commit subject "
-                 "(e.g. 1.2.5). Overrides auto-detection and prompting.",
+                 "(e.g. 1.3.5). Overrides auto-detection and prompting.",
         )
 
     def add_beta_arg(p):
