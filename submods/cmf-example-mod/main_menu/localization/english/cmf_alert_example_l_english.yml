@@ -44,7 +44,7 @@
  cmf_alert_example_yellow_color: "yellow"
  cmf_alert_example_yellow_icon: "@advance!"
  cmf_alert_example_yellow_name: "Some Alert"
- cmf_alert_example_yellow_tooltip: "This is a dynamic custom alert."
+ cmf_alert_example_yellow_tooltip: "This alert is removed when left-clicked."
 
  cmf_alert_example_green: "cmf_alert_example_green"
  cmf_alert_example_green_color: "green"
@@ -62,10 +62,20 @@
  cmf_alert_example_open_color: "blue"
  cmf_alert_example_open_icon: "@advance!"
  cmf_alert_example_open_name: "Event Alert"
+ # <root_loc_key>_left_click = Optional. Left-click button text; defaults to the vanilla Open text
+ cmf_alert_example_open_left_click: "Open Event"
  cmf_alert_example_open_tooltip: "Left-click opens an example event."
 
  cmf_alert_example_advances: "cmf_alert_example_advances"
  cmf_alert_example_advances_color: "green"
  cmf_alert_example_advances_icon: "@advance!"
  cmf_alert_example_advances_name: "Advances Alert"
+ cmf_alert_example_advances_left_click: "Open Advances"
  cmf_alert_example_advances_tooltip: "Left-click opens the Advances screen."
+
+ cmf_alert_example_window: "cmf_alert_example_window"
+ cmf_alert_example_window_color: "purple"
+ cmf_alert_example_window_icon: "@advance!"
+ cmf_alert_example_window_name: "Window Alert"
+ cmf_alert_example_window_left_click: "Open Window"
+ cmf_alert_example_window_tooltip: "Left-click opens a custom example window."

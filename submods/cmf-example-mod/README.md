@@ -15,7 +15,9 @@ This is a reference integration mod for `community_mod_framework`.
 ### CMF (Framework Features)
 - Registering custom alerts with localization keys, shown or removed based on a CMM toggle.
 - Opening an event from an alert left-click through the `cmf_on_callback` on_action.
-- Opening the Advances screen from an alert left-click through the `cmf_active_alert` GUI variable.
+- Opening the Advances screen from an alert left-click through `cmf_set_alert_open_group`.
+- Opening your own window from an alert left-click through `cmf_set_alert_open_window`.
+- Removing an alert on left-click through `cmf_set_alert_remove_on_click`.
 - Registering custom action bar buttons with localization keys.
 
 ## Files
@@ -29,11 +31,12 @@ This is a reference integration mod for `community_mod_framework`.
 ### CMF
 - `in_game/common/scripted_effects/cmf_example_effects.txt`
 - `in_game/events/cmf_example_events.txt`
-- `in_game/gui/cmf_example/cmf_example_alert_watcher.gui`
+- `in_game/gui/cmf_example/cmf_example_window.gui`
 - `in_game/gui/scripted_widgets/cmf_example_scripted_widgets.txt`
 - `main_menu/localization/english/cmf_action_bar_example_l_english.yml`
 - `main_menu/localization/english/cmf_alert_example_l_english.yml`
 - `main_menu/localization/english/cmf_event_example_l_english.yml`
+- `main_menu/localization/english/cmf_window_example_l_english.yml`
 
 ## How to use
 

@@ -233,3 +233,11 @@ CMM_MarkListFieldCyclePrev = {
 		set_variable = { name = cmm_list_action_to_apply value = 7 }
 	}
 }
+
+# Mark the next ordered list interaction as a button-field press.
+# Scope: country
+CMM_MarkListButtonPress = {
+	effect = {
+		set_variable = { name = cmm_list_action_to_apply value = 14 }
+	}
+}

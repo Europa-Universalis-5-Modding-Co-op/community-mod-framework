@@ -13,6 +13,12 @@ cmf_example_register_mod = {
 		group_id = general_alerts
 		default_value = 1
 	}
+
+	# Alert click behavior (idempotent)
+	cmf_set_alert_open_group = { alert = cmf_alert_example_advances group = advances_group }
+	cmf_set_alert_open_window = { alert = cmf_alert_example_window window = cmf_example_window_open }
+	cmf_set_alert_remove_on_click = { alert = cmf_alert_example_yellow }
+
 	cmf_example_sync_alerts = yes
 }
 
@@ -31,6 +37,7 @@ cmf_example_sync_alerts = {
 		# cmf_show_alert = { alert = cmf_alert_example_purple }
 		cmf_show_alert = { alert = cmf_alert_example_open }
 		cmf_show_alert = { alert = cmf_alert_example_advances }
+		cmf_show_alert = { alert = cmf_alert_example_window }
 
 		if = {
 			limit = { "variable_map(cmm|flag:cmm_example__example_toggle)" >= 1 }
@@ -49,6 +56,7 @@ cmf_example_sync_alerts = {
 		# cmf_remove_alert = { alert = cmf_alert_example_purple }
 		cmf_remove_alert = { alert = cmf_alert_example_open }
 		cmf_remove_alert = { alert = cmf_alert_example_advances }
+		cmf_remove_alert = { alert = cmf_alert_example_window }
 	}
 }
 

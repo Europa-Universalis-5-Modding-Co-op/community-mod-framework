@@ -428,6 +428,85 @@ cmm_register_list_data_field = {
 	}
 }
 
+# Register a button field shared by every item in one list setting.
+# Buttons store no per-item value; a press records the item for the list's
+# `_on_changed` scripted GUI to read via `cmm_list_button_item` and
+# `cmm_list_button_slot` after calling cmm_apply_list_change.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id unique within the list setting.
+cmm_register_list_button_field = {
+	_cmm_register_list_field_slot = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+	}
+
+	if = {
+		limit = {
+			AND = {
+				has_variable = cmm_setting_list_count_$mod_id$__$setting_id$
+				has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			}
+		}
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = { _cmm_initialize_list_button_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 } }
+			2 = { _cmm_initialize_list_button_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 } }
+			3 = { _cmm_initialize_list_button_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 } }
+			4 = { _cmm_initialize_list_button_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 } }
+			5 = { _cmm_initialize_list_button_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 } }
+		}
+	}
+
+	_cmm_suppress_list_button_field_warnings = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+	}
+}
+
+# Register a display-only text field shared by every item in one list setting.
+# Each cell localizes the per-item key set via cmm_set_list_text_value; items
+# with no key set render empty.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id unique within the list setting.
+cmm_register_list_text_field = {
+	_cmm_register_list_field_slot = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+	}
+
+	if = {
+		limit = {
+			AND = {
+				has_variable = cmm_setting_list_count_$mod_id$__$setting_id$
+				has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			}
+		}
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = { _cmm_initialize_list_text_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 1 } }
+			2 = { _cmm_initialize_list_text_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 2 } }
+			3 = { _cmm_initialize_list_text_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 3 } }
+			4 = { _cmm_initialize_list_text_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 4 } }
+			5 = { _cmm_initialize_list_text_field_slot = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ slot = 5 } }
+		}
+	}
+
+	_cmm_suppress_list_text_field_warnings = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+	}
+}
+
 # Mark a list field as having prefix/postfix format localization keys.
 # Enables formatted value display (prefix + value + postfix) for numeric, slider, and data fields.
 # Re-apply on each registration pass; may be called before or after field registration.
@@ -723,6 +802,39 @@ cmm_set_list_data_value = {
 			limit = { always = no }
 			cmf_suppress = { v = cmm_tmp_flag }
 		}
+	}
+}
+
+# Set the localization key shown by a text field for one item in a list setting.
+# Call after the text field has been registered (cmm_register_list_text_field).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Text field id to update.
+# - item (number): Item ordinal to update (`1..item_count`).
+# - value (flag): Flag whose name is the localization key to display.
+cmm_set_list_text_value = {
+	if = {
+		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = { set_variable = { name = $mod_id$__$setting_id$_i$item$_tf1 value = $value$ } }
+			2 = { set_variable = { name = $mod_id$__$setting_id$_i$item$_tf2 value = $value$ } }
+			3 = { set_variable = { name = $mod_id$__$setting_id$_i$item$_tf3 value = $value$ } }
+			4 = { set_variable = { name = $mod_id$__$setting_id$_i$item$_tf4 value = $value$ } }
+			5 = { set_variable = { name = $mod_id$__$setting_id$_i$item$_tf5 value = $value$ } }
+		}
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i$item$_tf1 }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i$item$_tf2 }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i$item$_tf3 }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i$item$_tf4 }
+		cmf_suppress = { v = $mod_id$__$setting_id$_i$item$_tf5 }
 	}
 }
 

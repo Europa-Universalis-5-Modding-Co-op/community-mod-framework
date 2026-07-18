@@ -16,6 +16,13 @@ cmf_feature_test_register_cmf = {
 		group_id = alerts
 		default_value = 0
 	}
+
+	# Alert click behavior (idempotent)
+	cmf_set_alert_remove_on_click = { alert = cmf_alert_ft_oneshot }
+	cmf_set_alert_open_view = { alert = cmf_alert_ft_open_view view = economy }
+	cmf_set_alert_open_group = { alert = cmf_alert_ft_open_group group = advances_group }
+	cmf_set_alert_open_window = { alert = cmf_alert_ft_open_window window = cmf_ft_window_open }
+
 	cmf_feature_test_sync_alerts = yes
 }
 
@@ -32,6 +39,11 @@ cmf_feature_test_sync_alerts = {
 		cmf_show_alert = { alert = cmf_alert_ft_yellow }
 		cmf_show_alert = { alert = cmf_alert_ft_green }
 		cmf_show_alert = { alert = cmf_alert_ft_purple }
+		cmf_show_alert = { alert = cmf_alert_ft_oneshot }
+		cmf_show_alert = { alert = cmf_alert_ft_open_view }
+		cmf_show_alert = { alert = cmf_alert_ft_open_group }
+		cmf_show_alert = { alert = cmf_alert_ft_open_window }
+		cmf_show_alert = { alert = cmf_alert_ft_event }
 	}
 	else = {
 		cmf_remove_alert = { alert = cmf_alert_ft_orange }
@@ -42,6 +54,11 @@ cmf_feature_test_sync_alerts = {
 		cmf_remove_alert = { alert = cmf_alert_ft_yellow }
 		cmf_remove_alert = { alert = cmf_alert_ft_green }
 		cmf_remove_alert = { alert = cmf_alert_ft_purple }
+		cmf_remove_alert = { alert = cmf_alert_ft_oneshot }
+		cmf_remove_alert = { alert = cmf_alert_ft_open_view }
+		cmf_remove_alert = { alert = cmf_alert_ft_open_group }
+		cmf_remove_alert = { alert = cmf_alert_ft_open_window }
+		cmf_remove_alert = { alert = cmf_alert_ft_event }
 	}
 }
 
@@ -67,31 +84,24 @@ cmf_feature_test_handle_callback = {
 		}
 
 		# -- Alert callbacks -----------------------------------------------
-		# Re-add alerts after they are clicked so they reappear for repeated testing.
 
 		flag:cmf_alert_ft_orange = {
-			cmf_show_alert = { alert = cmf_alert_ft_orange }
+			cmf_log = { action = cft_log_alert_orange }
 		}
-		flag:cmf_alert_ft_blue = {
-			cmf_show_alert = { alert = cmf_alert_ft_blue }
+		flag:cmf_alert_ft_oneshot = {
+			cmf_log = { action = cft_log_alert_oneshot }
 		}
-		flag:cmf_alert_ft_black = {
-			cmf_show_alert = { alert = cmf_alert_ft_black }
+		flag:cmf_alert_ft_open_view = {
+			cmf_log = { action = cft_log_alert_open_view }
 		}
-		flag:cmf_alert_ft_red_war = {
-			cmf_show_alert = { alert = cmf_alert_ft_red_war }
+		flag:cmf_alert_ft_open_group = {
+			cmf_log = { action = cft_log_alert_open_group }
 		}
-		flag:cmf_alert_ft_red = {
-			cmf_show_alert = { alert = cmf_alert_ft_red }
+		flag:cmf_alert_ft_open_window = {
+			cmf_log = { action = cft_log_alert_open_window }
 		}
-		flag:cmf_alert_ft_yellow = {
-			cmf_show_alert = { alert = cmf_alert_ft_yellow }
-		}
-		flag:cmf_alert_ft_green = {
-			cmf_show_alert = { alert = cmf_alert_ft_green }
-		}
-		flag:cmf_alert_ft_purple = {
-			cmf_show_alert = { alert = cmf_alert_ft_purple }
+		flag:cmf_alert_ft_event = {
+			trigger_event_non_silently = cmf_feature_test.1
 		}
 
 		# -- Action bar callbacks ------------------------------------------

@@ -1,0 +1,4 @@
+﻿l_english:
+ cmf_feature_test.1.title: "Some Event"
+ cmf_feature_test.1.desc: "This event was opened by left-clicking the Event Test Alert."
+ cmf_feature_test.1.a: "Close"

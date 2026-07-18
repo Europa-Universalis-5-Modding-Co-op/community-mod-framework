@@ -507,6 +507,21 @@ _cmm_list_apply_field_at_item = {
 	}
 }
 
+# Record a button-field press on one item identity for the list's `_on_changed` to read.
+# Scope: country
+# Args:
+# - item (number): Stable item identity ordinal (`1..50`).
+_cmm_list_record_button_press = {
+	set_variable = { name = cmm_list_button_item value = $item$ }
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_list_button_item }
+		cmf_suppress = { v = cmm_list_button_slot }
+	}
+}
+
 # Run the queued list-item action for one stable item identity.
 # Scope: country
 # Args:
@@ -522,6 +537,7 @@ _cmm_list_dispatch_item_action = {
 		4 = { _cmm_list_apply_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
 		5 = { _cmm_list_apply_slider_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
 		6 = { _cmm_list_prepare_header_field_value_from_item = { setting = $setting$ item = $item$ } }
+		7 = { _cmm_list_record_button_press = { item = $item$ } }
 	}
 }
 
@@ -872,6 +888,12 @@ _cmm_apply_list_change_internal = {
 			}
 		}
 		else_if = {
+			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_list_action_to_apply = 14 has_variable = cmm_list_field_slot_to_apply } }
+			set_variable = { name = cmm_list_button_slot value = var:cmm_list_field_slot_to_apply }
+			set_variable = { name = cmm_list_dispatch_action value = 7 }
+			_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+		}
+		else_if = {
 			limit = {
 				AND = {
 					has_variable = cmm_list_field_slot_to_apply
@@ -909,6 +931,8 @@ _cmm_apply_list_change_internal = {
 }
 
 # Apply the pending list reorder (ordered lists only) or field action and clear its markers.
+# A button-field press sets `cmm_list_button_item` (stable item ordinal) and
+# `cmm_list_button_slot` (field slot); the calling `_on_changed` reads and removes both.
 # Scope: country
 # Args:
 # - setting (key): Composite setting key `<mod_id>__<setting_id>`.
@@ -1187,6 +1211,122 @@ _cmm_build_list_bool_list_item = {
 			limit = { "variable_map(cmm|local_var:cmm_tmp_key)" >= 1 }
 			add_to_variable_list = { name = _cmm_tmp_bool_list target = scope:cmm_list_current_item_value }
 		}
+	}
+}
+
+# Move one item to a display position in a list setting. The position is a 0-based
+# display index, clamped to the list bounds; a `var:` reference works as the value.
+# No-op when the item is not in the list.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - item (number): Stable item identity ordinal (`1..50`).
+# - position (number): Target display index (`0..item_count-1`).
+cmm_move_list_item = {
+	set_local_variable = { name = cmm_tmp_flag value = flag:$setting$ }
+	if = {
+		limit = { "variable_map(cmm_is_global|local_var:cmm_tmp_flag)" >= 1 }
+		_cmm_move_list_item_internal = { setting = $setting$ item = $item$ position = $position$ vt = global_variable lt = in_global }
+	}
+	else = {
+		_cmm_move_list_item_internal = { setting = $setting$ item = $item$ position = $position$ vt = variable lt = in }
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_flag }
+	}
+}
+
+# Internal: move one item flag to a clamped display index via a two-pass rebuild.
+# Scope: country
+# Args: setting (key), item (number), position (number), vt (variable/global_variable), lt (in/in_global)
+_cmm_move_list_item_internal = {
+	set_local_variable = { name = cmm_mv_found value = 0 }
+
+	every_$lt$_list = {
+		variable = cmm_list_items_$setting$
+		save_scope_as = cmm_mv_current_item
+
+		if = {
+			limit = { scope:cmm_mv_current_item = flag:$setting$_i$item$ }
+			set_local_variable = { name = cmm_mv_found value = 1 }
+		}
+	}
+
+	if = {
+		limit = { local_var:cmm_mv_found = 1 }
+
+		set_local_variable = { name = cmm_mv_target value = $position$ }
+		if = {
+			limit = { local_var:cmm_mv_target < 0 }
+			set_local_variable = { name = cmm_mv_target value = 0 }
+		}
+		if = {
+			limit = { local_var:cmm_mv_target > var:cmm_setting_list_last_index_$setting$ }
+			set_local_variable = { name = cmm_mv_target value = var:cmm_setting_list_last_index_$setting$ }
+		}
+
+		clear_variable_list = cmm_list_rebuild_temp
+		every_$lt$_list = {
+			variable = cmm_list_items_$setting$
+			save_scope_as = cmm_mv_current_item
+
+			root = {
+				add_to_variable_list = {
+					name = cmm_list_rebuild_temp
+					target = scope:cmm_mv_current_item
+				}
+			}
+		}
+
+		clear_$vt$_list = cmm_list_items_$setting$
+
+		set_local_variable = { name = cmm_mv_reinsert_index value = 0 }
+		set_local_variable = { name = cmm_mv_inserted value = 0 }
+
+		every_in_list = {
+			variable = cmm_list_rebuild_temp
+			save_scope_as = cmm_mv_current_item
+
+			if = {
+				limit = { NOT = { scope:cmm_mv_current_item = flag:$setting$_i$item$ } }
+				if = {
+					limit = {
+						AND = {
+							local_var:cmm_mv_reinsert_index = local_var:cmm_mv_target
+							local_var:cmm_mv_inserted = 0
+						}
+					}
+					root = {
+						add_to_$vt$_list = {
+							name = cmm_list_items_$setting$
+							target = flag:$setting$_i$item$
+						}
+					}
+					set_local_variable = { name = cmm_mv_inserted value = 1 }
+				}
+
+				root = {
+					add_to_$vt$_list = {
+						name = cmm_list_items_$setting$
+						target = scope:cmm_mv_current_item
+					}
+				}
+				change_local_variable = { name = cmm_mv_reinsert_index add = 1 }
+			}
+		}
+
+		if = {
+			limit = { local_var:cmm_mv_inserted = 0 }
+			add_to_$vt$_list = {
+				name = cmm_list_items_$setting$
+				target = flag:$setting$_i$item$
+			}
+		}
+
+		clear_variable_list = cmm_list_rebuild_temp
 	}
 }
 

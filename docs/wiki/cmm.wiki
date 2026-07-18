@@ -232,6 +232,22 @@ cmm_register_list_data_field = {
 	default_value = 0
 }
 # Data fields are read-only; update at runtime with cmm_set_list_data_value
+
+cmm_register_list_button_field = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = remove
+}
+# Button fields store no value; a press is delivered through the list callback
+# The caption localizes <mod_id>__<setting_id>__<field_id>_text
+
+cmm_register_list_text_field = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = status
+}
+# Text fields are display-only; set each item's cell to a localization key with
+# cmm_set_list_text_value = { mod_id setting_id field_id item value = flag:<loc key> }
 </syntaxhighlight>
 
 === List Field Display Formatting ===
@@ -294,8 +310,37 @@ your_mod__your_list_on_changed = {
 }
 </syntaxhighlight>
 
+=== Button Field Presses ===
+A button-field press runs the list callback with <code>cmm_list_button_item</code> (the pressed item's stable number) and <code>cmm_list_button_slot</code> (the field slot) set once <code>cmm_apply_list_change</code> returns. Read and remove both in the callback:
+<syntaxhighlight lang="text">
+your_mod__your_list_on_changed = {
+	scope = country
+	effect = {
+		cmm_apply_list_change = {
+			setting = your_mod__your_list
+		}
+		if = {
+			limit = { has_variable = cmm_list_button_item }
+			# React to the press here
+			remove_variable = cmm_list_button_item
+			remove_variable = cmm_list_button_slot
+		}
+	}
+}
+</syntaxhighlight>
+
 === How Ordering Works ===
 Each item has a stable identity number (1 through <code>item_count</code>) that never changes. Reordering only changes a separate display order list. <code>cmm_for_each_list_item</code> visits items in display order, but <code>$i$</code> resolves to the stable item number.
+
+=== Moving Items ===
+Move one item to a display position (0-based, clamped to the list bounds):
+<syntaxhighlight lang="text">
+cmm_move_list_item = {
+	setting = your_mod__your_list
+	item = 3
+	position = 0
+}
+</syntaxhighlight>
 
 === Reading List Values ===
 Field values are stored in the <code>cmm</code> variable map as: <code>"variable_map(cmm|flag:[mod_id]__[setting_id]_i[N]_f[slot])"</code>

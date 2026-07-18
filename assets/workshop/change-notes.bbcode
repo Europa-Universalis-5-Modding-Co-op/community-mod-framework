@@ -9,6 +9,13 @@
 - Add cmf_was_mod_active_at_game_start trigger to check whether a mod was active when the game was started
 - Extend cmf_suppress to cover global variables and variable lists
 - Add bom to some loc files missing it
+- Custom alerts now stay when left-clicked; use cmf_set_alert_remove_on_click for one-shot alerts
+- Add cmf_set_alert_open_view and cmf_set_alert_open_group to open a view on alert left-click
+- Add optional <root_key>_left_click localization key for the alert left-click button text
+- Right-click now hides a custom alert and shift+right-click mutes it, like vanilla alerts
+- Hidden and muted custom alerts can be restored from the vanilla alerts menu
+- Add cmf_is_alert_hidden and cmf_is_alert_muted triggers
+- Add cmf_set_alert_open_window to open your own window on alert left-click
 - Update for v1.3.10
 
 # v2.3.2:

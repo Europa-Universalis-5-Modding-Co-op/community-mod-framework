@@ -997,6 +997,64 @@ _cmm_initialize_list_data_field_slot = {
 	if = { limit = { var:cmm_setting_list_count_$mod_id$__$setting_id$ > 49 } _cmm_initialize_list_data_field_item = { mod_id = $mod_id$ setting_id = $setting_id$ slot = $slot$ item = 50 default_value = $default_value$ vt = $vt$ is_global = $is_global$ } }
 }
 
+# Initialize one list button field slot's metadata. Buttons store no per-item
+# value, so there is no item seeding.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Owner setting id.
+# - field_id (key): Field id unique within the list setting.
+# - slot (number): Field slot index (`1..5`).
+_cmm_initialize_list_button_field_slot = {
+	set_variable = {
+		name = cmm_list_field_$slot$_type_$mod_id$__$setting_id$
+		value = 6
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_width_$mod_id$__$setting_id$
+		value = 100
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
+		value = 100
+	}
+	_cmm_apply_list_field_loc_format = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+		slot = $slot$
+	}
+}
+
+# Initialize one list text field slot's metadata. Text fields are display-only;
+# per-item keys are set at runtime, so there is no item seeding.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Owner setting id.
+# - field_id (key): Field id unique within the list setting.
+# - slot (number): Field slot index (`1..5`).
+_cmm_initialize_list_text_field_slot = {
+	set_variable = {
+		name = cmm_list_field_$slot$_type_$mod_id$__$setting_id$
+		value = 7
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_width_$mod_id$__$setting_id$
+		value = 150
+	}
+	set_variable = {
+		name = cmm_list_field_$slot$_header_max_width_$mod_id$__$setting_id$
+		value = 150
+	}
+	_cmm_apply_list_field_loc_format = {
+		mod_id = $mod_id$
+		setting_id = $setting_id$
+		field_id = $field_id$
+		slot = $slot$
+	}
+}
+
 # Reference ordered list metadata in a dead branch to suppress false-positive warnings.
 # Scope: country
 # Args:
@@ -1473,6 +1531,88 @@ _cmm_suppress_list_slider_field_warnings = {
 # - setting_id (key): Target list setting id within the mod.
 # - field_id (key): Field id unique within the list setting.
 _cmm_suppress_list_data_field_warnings = {
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_registered_list_field_$mod_id$__$setting_id$__$field_id$ }
+		cmf_suppress = { v = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
+		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$_name }
+		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$ }
+		cmf_suppress = { v = cmm_list_field_1_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_has_format_$mod_id$__$setting_id$ }
+	}
+}
+
+# Reference ordered list text field metadata in a dead branch to suppress false-positive warnings.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id unique within the list setting.
+_cmm_suppress_list_text_field_warnings = {
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_registered_list_field_$mod_id$__$setting_id$__$field_id$ }
+		cmf_suppress = { v = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
+		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$_name }
+		cmf_suppress = { v = $mod_id$__$setting_id$__$field_id$ }
+		cmf_suppress = { v = cmm_list_field_1_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_name_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_key_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_header_max_width_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_1_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_2_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_3_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_4_has_format_$mod_id$__$setting_id$ }
+		cmf_suppress = { v = cmm_list_field_5_has_format_$mod_id$__$setting_id$ }
+	}
+}
+
+# Reference ordered list button field metadata in a dead branch to suppress false-positive warnings.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id unique within the list setting.
+_cmm_suppress_list_button_field_warnings = {
 	if = {
 		limit = { always = no }
 		cmf_suppress = { v = cmm_registered_list_field_$mod_id$__$setting_id$__$field_id$ }

@@ -41,7 +41,7 @@
 					alpha = 0
 					effectname = "NoHighlight"
 					enabled = "[GetVariableSystem.HasValue('cmm_can_edit_list', 'yes')]"
-					visible = "[Not(CMMListFieldIsData(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+					visible = "[Not(Or3(CMMListFieldIsData(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldIsButton(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListFieldIsText(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))))]"
 					tagtooltip_enabled = yes
 					tooltip = "[CMMListFieldDescText(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 					tooltip_enabled = "[CMMListFieldHasDesc(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
@@ -126,6 +126,14 @@
 
 			cmm_list_setting_data_field = {
 				visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_tp_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '5')]"
+			}
+
+			cmm_list_setting_button_field = {
+				visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_tp_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '6')]"
+			}
+
+			cmm_list_setting_text_field = {
+				visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_tp_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '7')]"
 			}
 		}
 	}
@@ -1412,6 +1420,57 @@
 				visible = "[Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, Concatenate('_hf_', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))), '0'))]"
 				text = "[CMMCachedResolvedPrefix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMListItemFieldValue(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))][CMMCachedResolvedPostfix(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
 			}
+		}
+	}
+
+	# Ordered list button field control firing a single per-row press.
+	# Reads:
+	# - Scope.GetFlagName [string]: current ordered list item key.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel.
+	# - GetVariableSystem.Get('cmm_list_hover_field_slot') [string]: cached hovered field slot for nested button actions.
+	# Writes:
+	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: marks the hovered row position.
+	# - GetScriptedGui('CMM_MarkListFieldSlot_<slot>').Execute(...) [effect]: marks the clicked field slot.
+	# - GetScriptedGui('CMM_MarkListButtonPress').Execute(...) [effect]: marks a button-field press.
+	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
+	type cmm_list_setting_button_field = widget {
+		size = { 100 28 }
+		minimumsize = { 100 28 }
+
+		button_regular = {
+			size = { -1 24 }
+			parentanchor = center
+			widgetanchor = center
+			text = "[CMMListFieldButtonText(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			tagtooltip_enabled = yes
+			tooltip = "[CMMListFieldDescText(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			tooltip_enabled = "[CMMListFieldHasDesc(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			tooltipwidget = {
+				BasicFunctionalTooltip = {}
+			}
+			onclick = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+			onclick = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+			onclick = "[CMMExecuteGui('CMM_MarkListButtonPress')]"
+			onclick = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+			onclick = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
+		}
+	}
+
+	# Ordered list display-only text field localizing a per-item key.
+	# Reads:
+	# - Scope.GetFlagName [string]: current ordered list item key.
+	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel.
+	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_tf<slot>')) [flag]: localization key for this row's cell.
+	type cmm_list_setting_text_field = widget {
+		size = { 150 28 }
+		minimumsize = { 120 28 }
+
+		text_single = {
+			size = { 100% 100% }
+			align = center|nobaseline
+			autoresize = no
+			default_format = "#medium"
+			text = "[AddTextIf(CMMVar(Concatenate(Scope.GetFlagName, Concatenate('_tf', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))).IsSet, CMMLocalizedSuffix(Scope.GetFlagName, Concatenate('_tf', ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))))]"
 		}
 	}
 }

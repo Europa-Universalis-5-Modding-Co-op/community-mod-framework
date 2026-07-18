@@ -21,7 +21,7 @@ types "cmf_types" {
             # Fallback = blue
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[And8(
+                    visible = "[And(And8(
                         Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue')),
                         Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')),
                         Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')),
@@ -30,7 +30,7 @@ types "cmf_types" {
                         Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')),
                         Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')),
                         Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple'))
-                    )]"
+                    ), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = blue_alert
@@ -39,7 +39,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue')]"
+                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = blue_alert
@@ -48,7 +48,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')]"
+                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = green_alert
@@ -57,7 +57,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')]"
+                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = yellow_alert
@@ -66,7 +66,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')]"
+                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = orange_alert
@@ -75,7 +75,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')]"
+                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = red_alert
@@ -84,7 +84,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war')]"
+                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = red_war_alert
@@ -93,7 +93,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple')]"
+                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = purple_alert
@@ -102,7 +102,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'black')]"
+                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'black'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = black_alert
@@ -211,25 +211,57 @@ types "cmf_types" {
 
         action_tooltip = {
             click_type = left
-            title = "ALERT_CTA_LEFT_CLICK"
+            visible = "[And3(Not(CMFAlertOpenViewVar(Scope.GetFlagName).IsSet), Not(CMFAlertOpenGroupVar(Scope.GetFlagName).IsSet), Not(CMFAlertOpenWindowVar(Scope.GetFlagName).IsSet))]"
+            title = "[CMFAlertLeftClickTitle(Scope.GetFlagName)]"
             using = snd_UI_alert_openAndCycle
-            on_action = "[GetScriptedGui('cmf_auto_alert_clicked').Execute(GuiScope
-                    .SetRoot(GetPlayer.MakeScope)
-                    .AddScope('cmf_alert', MakeScopeFlag(Scope.GetFlagName))
-                    .End
-                )]"
+            on_action = "[CMFAlertExecute('cmf_auto_alert_clicked', Scope.GetFlagName)]"
             on_action = "[GetVariableSystem.Set('cmf_active_alert', Scope.GetFlagName)]"
         }
 
         action_tooltip = {
+            click_type = left
+            visible = "[CMFAlertOpenViewVar(Scope.GetFlagName).IsSet]"
+            title = "[CMFAlertLeftClickTitle(Scope.GetFlagName)]"
+            using = snd_UI_alert_openAndCycle
+            on_action = "[CMFAlertExecute('cmf_auto_alert_clicked', Scope.GetFlagName)]"
+            on_action = "[GetVariableSystem.Set('cmf_active_alert', Scope.GetFlagName)]"
+            on_action = "[OpenLateralView(CMFAlertOpenViewVar(Scope.GetFlagName).GetFlagName)]"
+        }
+
+        action_tooltip = {
+            click_type = left
+            visible = "[And(CMFAlertOpenGroupVar(Scope.GetFlagName).IsSet, Not(CMFAlertOpenViewVar(Scope.GetFlagName).IsSet))]"
+            title = "[CMFAlertLeftClickTitle(Scope.GetFlagName)]"
+            using = snd_UI_alert_openAndCycle
+            on_action = "[CMFAlertExecute('cmf_auto_alert_clicked', Scope.GetFlagName)]"
+            on_action = "[GetVariableSystem.Set('cmf_active_alert', Scope.GetFlagName)]"
+            on_action = "[OpenLateralGroup(CMFAlertOpenGroupVar(Scope.GetFlagName).GetFlagName)]"
+        }
+
+        action_tooltip = {
+            click_type = left
+            visible = "[And3(CMFAlertOpenWindowVar(Scope.GetFlagName).IsSet, Not(CMFAlertOpenViewVar(Scope.GetFlagName).IsSet), Not(CMFAlertOpenGroupVar(Scope.GetFlagName).IsSet))]"
+            title = "[CMFAlertLeftClickTitle(Scope.GetFlagName)]"
+            using = snd_UI_alert_openAndCycle
+            on_action = "[CMFAlertExecute('cmf_auto_alert_clicked', Scope.GetFlagName)]"
+            on_action = "[GetVariableSystem.Set('cmf_active_alert', Scope.GetFlagName)]"
+            on_action = "[GetVariableSystem.Set(CMFAlertOpenWindowVar(Scope.GetFlagName).GetFlagName, 'yes')]"
+        }
+
+        action_tooltip = {
             click_type = right
-            title = "ALERT_CTA_RIGHT_CLICK"
+            title = "ALERT_HIDE"
             clicksound = "UI_alert_discard"
-            on_action = "[GetScriptedGui('cmf_sgui_dismiss_alert').Execute(GuiScope
-                    .SetRoot(GetPlayer.MakeScope)
-                    .AddScope('cmf_flag', MakeScopeFlag(Scope.GetFlagName))
-                    .End
-                )]"
+            on_action = "[CMFAlertExecute('cmf_sgui_hide_alert', Scope.GetFlagName)]"
+            on_action = "[GetVariableSystem.Clear(Concatenate(Scope.GetFlagName, '_seen'))]"
+        }
+
+        action_tooltip = {
+            click_type = right
+            click_modifier = shift
+            title = "ALERT_HIDE_AND_MUTE"
+            clicksound = "UI_alert_discard"
+            on_action = "[CMFAlertExecute('cmf_sgui_mute_alert', Scope.GetFlagName)]"
             on_action = "[GetVariableSystem.Clear(Concatenate(Scope.GetFlagName, '_seen'))]"
         }
 

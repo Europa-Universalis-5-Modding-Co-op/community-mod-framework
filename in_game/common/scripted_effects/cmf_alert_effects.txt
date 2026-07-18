@@ -1,4 +1,7 @@
-﻿cmf_show_alert = {
+﻿# Show an alert in the alert bar. Player-hidden and muted alerts stay off the bar.
+# Scope: country
+# Args: alert (key) - the alert root localization key
+cmf_show_alert = {
     hidden_effect = {
         add_to_variable_list = {
             name = cmf_active_alerts
@@ -7,17 +10,107 @@
     }
 
     # Benign warning suppression
-    if = {
-        limit = { always = no }
-        cmf_suppress = { v = $alert$ }
-    }
+    cmf_suppress = { v = $alert$ }
 }
 
+# Remove an alert from the alert bar.
+# Scope: country
+# Args: alert (key) - the alert root localization key
 cmf_remove_alert = {
     hidden_effect = {
         remove_list_variable = {
             name = cmf_active_alerts
             target = flag:$alert$
         }
+        _cmf_alert_clear_hidden = { target = flag:$alert$ }
     }
+}
+
+# Remove the alert from the bar when it is left-clicked.
+# Scope: country
+# Args: alert (key) - the alert root localization key
+cmf_set_alert_remove_on_click = {
+    hidden_effect = {
+        add_to_variable_map = { name = cmf_alert_remove_on_click key = flag:$alert$ value = 1 }
+    }
+
+    # Benign warning suppression
+    cmf_suppress = { v = $alert$ }
+}
+
+# Open a lateral view when the alert is left-clicked.
+# Scope: country
+# Args:
+# - alert (key): the alert root localization key
+# - view (key): lateral view name passed to OpenLateralView
+cmf_set_alert_open_view = {
+    hidden_effect = {
+        add_to_variable_map = { name = cmf_alert_open_view key = flag:$alert$ value = flag:$view$ }
+    }
+
+    # Benign warning suppression
+    cmf_suppress = { v = $alert$ }
+    cmf_suppress = { v = $view$ }
+}
+
+# Open a lateral view group when the alert is left-clicked.
+# Scope: country
+# Args:
+# - alert (key): the alert root localization key
+# - group (key): lateral group name passed to OpenLateralGroup
+cmf_set_alert_open_group = {
+    hidden_effect = {
+        add_to_variable_map = { name = cmf_alert_open_group key = flag:$alert$ value = flag:$group$ }
+    }
+
+    # Benign warning suppression
+    cmf_suppress = { v = $alert$ }
+    cmf_suppress = { v = $group$ }
+}
+
+# Open a mod window when the alert is left-clicked.
+# Scope: country
+# Args:
+# - alert (key): the alert root localization key
+# - window (key): GUI VariableSystem key set on left-click; gate the window's visible on it
+cmf_set_alert_open_window = {
+    hidden_effect = {
+        add_to_variable_map = { name = cmf_alert_open_window key = flag:$alert$ value = flag:$window$ }
+    }
+
+    # Benign warning suppression
+    cmf_suppress = { v = $alert$ }
+    cmf_suppress = { v = $window$ }
+}
+
+# Mark an alert player-hidden (map for GUI gates, list for panel datamodels).
+# Scope: country
+# Args: target (target ref) - the alert flag
+_cmf_alert_set_hidden = {
+    add_to_variable_map = { name = cmf_alert_hidden key = $target$ value = 1 }
+    add_to_variable_list = { name = cmf_hidden_alerts target = $target$ }
+}
+
+# Clear an alert's player-hidden state.
+# Scope: country
+# Args: target (target ref) - the alert flag
+_cmf_alert_clear_hidden = {
+    remove_from_variable_map = { name = cmf_alert_hidden key = $target$ }
+    remove_list_variable = { name = cmf_hidden_alerts target = $target$ }
+}
+
+# Mark an alert player-muted.
+# Scope: country
+# Args: target (target ref) - the alert flag
+_cmf_alert_set_muted = {
+    add_to_variable_map = { name = cmf_alert_muted key = $target$ value = 1 }
+    add_to_variable_list = { name = cmf_muted_alerts target = $target$ }
+}
+
+# Clear an alert's player-muted state.
+# Scope: country
+# Args: target (target ref) - the alert flag
+_cmf_alert_clear_muted = {
+    remove_from_variable_map = { name = cmf_alert_muted key = $target$ }
+    remove_list_variable = { name = cmf_muted_alerts target = $target$ }
 }

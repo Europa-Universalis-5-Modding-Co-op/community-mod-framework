@@ -1,0 +1,33 @@
+﻿# Test window opened by left-clicking the Open Window test alert.
+window = {
+	name = "cmf_ft_window"
+	parentanchor = center
+	using = bg_small_menu
+	movable = yes
+	visible = "[GetVariableSystem.Exists('cmf_ft_window_open')]"
+
+	vbox = {
+		set_parent_size_to_minimum = yes
+		margin = { 15 15 }
+		spacing = 10
+		minimumsize = { 320 -1 }
+
+		text_single = {
+			align = center
+			using = Font_Size_Big
+			text = "cmf_ft_window_title"
+		}
+
+		text_multi = {
+			autoresize = yes
+			max_width = 300
+			text = "cmf_ft_window_text"
+		}
+	}
+
+	button_close_alt = {
+		parentanchor = right|top
+		position = { -10 10 }
+		blockoverride "close_on_action" { on_action = "[GetVariableSystem.Clear('cmf_ft_window_open')]" }
+	}
+}

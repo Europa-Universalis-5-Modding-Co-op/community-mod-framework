@@ -1,19 +1,5 @@
-﻿cmf_sgui_dismiss_alert = {
-    scope = country
-
-    saved_scopes = {
-        cmf_flag
-    }
-
-    effect = {
-        remove_list_variable = {
-            name = cmf_active_alerts
-            target = scope:cmf_flag
-        }
-    }
-}
-
-# Auto-apply: handle alert left-click. Removes the alert and fires cmf_on_callback.
+﻿# Auto-apply: handle alert left-click. Fires cmf_on_callback; removes the alert
+# first when remove-on-click is configured for it.
 # Scope: country
 # Args: scope:cmf_alert (flag) - the alert root key.
 cmf_auto_alert_clicked = {
@@ -21,9 +7,15 @@ cmf_auto_alert_clicked = {
     saved_scopes = { cmf_alert }
 
     effect = {
-        remove_list_variable = {
-            name = cmf_active_alerts
-            target = scope:cmf_alert
+        if = {
+            limit = {
+                has_variable_map = cmf_alert_remove_on_click
+                is_key_in_variable_map = { name = cmf_alert_remove_on_click target = scope:cmf_alert }
+            }
+            remove_list_variable = {
+                name = cmf_active_alerts
+                target = scope:cmf_alert
+            }
         }
         set_variable = { name = cmf_callback value = scope:cmf_alert }
         trigger_event_silently = {
@@ -32,10 +24,63 @@ cmf_auto_alert_clicked = {
         remove_variable = cmf_callback
 
         # Benign warning suppression
-        if = {
-            limit = { always = no }
-            cmf_suppress = { v = cmf_callback }
-            cmf_suppress = { v = cmf_active_alerts }
-        }
+        cmf_suppress = { v = cmf_callback }
+        cmf_suppress = { v = cmf_active_alerts }
+        cmf_suppress = { v = cmf_alert_remove_on_click }
+        cmf_suppress = { v = cmf_alert_open_view }
+        cmf_suppress = { v = cmf_alert_open_group }
+        cmf_suppress = { v = cmf_alert_open_window }
+        cmf_suppress = { v = cmf_alert_hidden }
+        cmf_suppress = { v = cmf_hidden_alerts }
+        cmf_suppress = { v = cmf_alert_muted }
+        cmf_suppress = { v = cmf_muted_alerts }
+    }
+}
+
+# Hide an alert from the bar (right-click).
+# Scope: country
+# Args: scope:cmf_alert (flag) - the alert root key.
+cmf_sgui_hide_alert = {
+    scope = country
+    saved_scopes = { cmf_alert }
+
+    effect = {
+        _cmf_alert_set_hidden = { target = scope:cmf_alert }
+    }
+}
+
+# Hide and mute an alert (shift+right-click).
+# Scope: country
+# Args: scope:cmf_alert (flag) - the alert root key.
+cmf_sgui_mute_alert = {
+    scope = country
+    saved_scopes = { cmf_alert }
+
+    effect = {
+        _cmf_alert_set_muted = { target = scope:cmf_alert }
+    }
+}
+
+# Alerts menu: restore a hidden alert to the bar.
+# Scope: country
+# Args: scope:cmf_alert (flag) - the alert root key.
+cmf_sgui_restore_alert = {
+    scope = country
+    saved_scopes = { cmf_alert }
+
+    effect = {
+        _cmf_alert_clear_hidden = { target = scope:cmf_alert }
+    }
+}
+
+# Alerts menu: unmute a muted alert.
+# Scope: country
+# Args: scope:cmf_alert (flag) - the alert root key.
+cmf_sgui_unmute_alert = {
+    scope = country
+    saved_scopes = { cmf_alert }
+
+    effect = {
+        _cmf_alert_clear_muted = { target = scope:cmf_alert }
     }
 }

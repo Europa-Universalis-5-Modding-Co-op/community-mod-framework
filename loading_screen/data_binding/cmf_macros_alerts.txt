@@ -1,0 +1,63 @@
+﻿# Args: Key (string)
+# Returns: variable
+macro = {
+	description = "Hidden-overlay map entry for an alert key"
+	definition = "CMFAlertHiddenVar(Key)"
+	replace_with = "GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_alert_hidden', MakeScopeFlag(Key))"
+}
+
+# Args: Key (string)
+# Returns: variable
+macro = {
+	description = "Muted-overlay map entry for an alert key"
+	definition = "CMFAlertMutedVar(Key)"
+	replace_with = "GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_alert_muted', MakeScopeFlag(Key))"
+}
+
+# Args: Key (string)
+# Returns: boolean
+macro = {
+	description = "True when an alert is neither hidden nor muted"
+	definition = "CMFAlertOnBar(Key)"
+	replace_with = "And(Not(CMFAlertHiddenVar(Key).IsSet), Not(CMFAlertMutedVar(Key).IsSet))"
+}
+
+# Args: Key (string)
+# Returns: variable
+macro = {
+	description = "Open-view config map entry for an alert key"
+	definition = "CMFAlertOpenViewVar(Key)"
+	replace_with = "GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_alert_open_view', MakeScopeFlag(Key))"
+}
+
+# Args: Key (string)
+# Returns: variable
+macro = {
+	description = "Open-group config map entry for an alert key"
+	definition = "CMFAlertOpenGroupVar(Key)"
+	replace_with = "GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_alert_open_group', MakeScopeFlag(Key))"
+}
+
+# Args: Key (string)
+# Returns: variable
+macro = {
+	description = "Open-window config map entry for an alert key"
+	definition = "CMFAlertOpenWindowVar(Key)"
+	replace_with = "GetPlayer.MakeScope.GetVariableFromVariableMap('cmf_alert_open_window', MakeScopeFlag(Key))"
+}
+
+# Args: Key (string)
+# Returns: string
+macro = {
+	description = "Left-click CTA title: the alert's _left_click key or the vanilla default"
+	definition = "CMFAlertLeftClickTitle(Key)"
+	replace_with = "Select_CString(EqualTo_string(Localize(Concatenate(Key, '_left_click')), Concatenate(Key, '_left_click')), Localize('ALERT_CTA_LEFT_CLICK'), Localize(Concatenate(Key, '_left_click')))"
+}
+
+# Args: Name (string), Key (string)
+# Returns: none
+macro = {
+	description = "Execute an alert scripted GUI with the alert flag as cmf_alert scope"
+	definition = "CMFAlertExecute(Name,Key)"
+	replace_with = "GetScriptedGui(Name).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('cmf_alert', MakeScopeFlag(Key)).End)"
+}

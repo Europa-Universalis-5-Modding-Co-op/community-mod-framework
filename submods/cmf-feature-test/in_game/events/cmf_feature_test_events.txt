@@ -1,0 +1,13 @@
+﻿namespace = cmf_feature_test
+
+# Opened by left-clicking the Event Test Alert.
+cmf_feature_test.1 = {
+	type = country_event
+	title = cmf_feature_test.1.title
+	desc = cmf_feature_test.1.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/scientific_revolution.dds"
+	option = {
+		name = cmf_feature_test.1.a
+	}
+}

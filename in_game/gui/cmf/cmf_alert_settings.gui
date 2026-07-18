@@ -1,0 +1,529 @@
+﻿# Redefines vanilla AlertSettingsContent (in_game/gui/alert_settings.gui) to append
+# the CMF hidden and muted mod alert categories to the alerts menu.
+
+template cmf_alert_horizontal {
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')]"
+		using = green_alert_horizontal
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')]"
+		using = yellow_alert_horizontal
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')]"
+		using = orange_alert_horizontal
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple')]"
+		using = purple_alert_horizontal
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[Or(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red'), EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war'))]"
+		using = red_alert_horizontal
+	}
+
+	# Fallback for blue, black, and colors without a horizontal texture.
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[And6(
+			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')),
+			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')),
+			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')),
+			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple')),
+			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')),
+			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war'))
+		)]"
+		using = blue_alert_horizontal
+	}
+}
+
+types "cmf_alert_settings_types" {
+
+	type cmf_alert_settings_entry = hbox {
+		layoutpolicy_horizontal = expanding
+
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { -1 30 }
+
+			button = {
+				size = { 100% 100% }
+				using = cmf_alert_horizontal
+
+				block "cmf_alert_row_action" {}
+
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_right = 5
+				spacing = 10
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					align = nobaseline
+					fontsize_min = 10
+					autoresize = no
+					text = "[Concatenate(Localize(Concatenate(Scope.GetFlagName, '_icon')), Concatenate(' ', Localize(Concatenate(Scope.GetFlagName, '_name'))))]"
+				}
+
+				expand = {}
+			}
+		}
+	}
+
+	type AlertSettingsContent = vbox {
+		layoutpolicy_horizontal = expanding
+		spacing = 6
+
+		AlertSettingsCategory = {
+			visible = "[GreaterThan_int32(GetDataModelSize(AlertManager.GetHidden), '(int32)0')]"
+
+			blockoverride "title_icon"
+			{
+				icon = {
+					size = { 24 24 }
+					using = button_notification_template
+
+					# button_check_visibility = {
+					# 	size = { 24 24 }
+					# 	down = "[AlertSettings.ShowInactive]"
+
+					# 	action_tooltip = {
+					# 		title = "ALERT_SETTINGS_TOGGLE_VISIBILITY_UNACTIVE"
+					# 		on_action = "[AlertSettings.ToggleInactive]"
+					# 	}
+
+					# 	tooltipwidget = { BasicFunctionalTooltip = {} }
+					# }
+				}
+			}
+
+			blockoverride "title_button" {
+				action_tooltip = {
+					title = "ALERT_SETTINGS_TOGGLE_VISIBILITY"
+					on_action = "[AlertSettings.ToggleDiscarded]"
+				}
+
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+			}
+			blockoverride "title_text" { text = "HIDDEN_ALERTS" }
+			blockoverride "category_datamodel" {
+				visible = "[And(DataModelHasItems(AlertManager.GetHidden), AlertSettings.ShowDiscarded)]"
+				datamodel = "[AlertManager.GetHidden]"
+			}
+			blockoverride "title_right" {
+				text_single = {
+					text = "[GetDataModelSize(AlertManager.GetHidden)]"
+				}
+
+				widget = {
+					size = { 23 23 }
+					widget = {
+						size = { 100% 100% }
+						visible = "[DataModelHasItems(AlertManager.GetHidden)]"
+
+						background = {
+							texture = "gfx/interface/buttons/checkbox_bg_round.dds"
+							texture_density = 2
+							modify_texture = {
+								using = color_economy_texture
+								alpha = 1
+							}
+
+							modify_texture = {
+								using = overlay_cloth_texture
+								blend_mode = overlay
+								alpha = 0.2
+							}
+						}
+
+						icon = {
+							parentanchor = center
+							visible = "[Not(AlertSettings.ShowDiscarded)]"
+							size = { 16 16 }
+							texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+
+							glow = {
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.3
+							}
+						}
+
+						icon = {
+							parentanchor = center
+							visible = "[AlertSettings.ShowDiscarded]"
+							size = { 16 16 }
+							position = { 0 2 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+
+							glow = {
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.3
+							}
+						}
+					}
+				}
+			}
+
+			blockoverride "category_item" {
+				AlertEntryItem = {
+					visible = "[Not(AlertEntry.IsDiscarted)]"
+				}
+			}
+		}
+
+		AlertSettingsCategory = {
+			visible = "[GreaterThan_int32(GetDataModelSize(AlertManager.GetDiscarded), '(int32)0')]"
+
+			blockoverride "title_icon"
+			{
+				icon = {
+					size = { 24 24 }
+					using = button_visibility_template
+
+					# button_check_visibility = {
+					# 	size = { 24 24 }
+					# 	down = "[AlertSettings.ShowInactive]"
+
+					# 	action_tooltip = {
+					# 		title = "ALERT_SETTINGS_TOGGLE_VISIBILITY_UNACTIVE"
+					# 		on_action = "[AlertSettings.ToggleInactive]"
+					# 	}
+
+					# 	tooltipwidget = { BasicFunctionalTooltip = {} }
+					# }
+				}
+			}
+			blockoverride "title_button" {
+				action_tooltip = {
+					title = "ALERT_SETTINGS_TOGGLE_VISIBILITY"
+					on_action = "[AlertSettings.ToggleHidden]"
+				}
+
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+			}
+			blockoverride "title_text" { text = "DISCARDED_ALERTS" }
+			blockoverride "category_datamodel" {
+				visible = "[And(DataModelHasItems(AlertManager.GetDiscarded), AlertSettings.ShowHidden)]"
+				datamodel = "[AlertManager.GetDiscarded]"
+			}
+			blockoverride "title_right" {
+				text_single = {
+					text = "[GetDataModelSize(AlertManager.GetDiscarded)]"
+				}
+
+				widget = {
+					size = { 23 23 }
+					widget = {
+						size = { 100% 100% }
+						visible = "[DataModelHasItems(AlertManager.GetDiscarded)]"
+
+						background = {
+							texture = "gfx/interface/buttons/checkbox_bg_round.dds"
+							texture_density = 2
+							modify_texture = {
+								using = color_economy_texture
+								alpha = 1
+							}
+
+							modify_texture = {
+								using = overlay_cloth_texture
+								blend_mode = overlay
+								alpha = 0.2
+							}
+						}
+
+						icon = {
+							parentanchor = center
+							visible = "[Not(AlertSettings.ShowHidden)]"
+							size = { 16 16 }
+							texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+
+							glow = {
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.3
+							}
+						}
+
+						icon = {
+							parentanchor = center
+							visible = "[AlertSettings.ShowHidden]"
+							size = { 16 16 }
+							position = { 0 2 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+
+							glow = {
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.3
+							}
+						}
+					}
+				}
+			}
+
+			blockoverride "category_item" {
+				AlertEntryItem = {
+					visible = "[And(AlertEntry.IsDiscarted, Or(AlertSettings.ShowInactive, AlertEntry.IsActive))]"
+				}
+			}
+		}
+
+		# CMF: hidden mod alerts category
+		AlertSettingsCategory = {
+			visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_hidden_alerts'))]"
+
+			blockoverride "title_icon"
+			{
+				icon = {
+					size = { 24 24 }
+					using = button_notification_template
+				}
+			}
+
+			blockoverride "title_button" {
+				action_tooltip = {
+					title = "ALERT_SETTINGS_TOGGLE_VISIBILITY"
+					on_action = "[GetVariableSystem.Toggle('cmf_alerts_hidden_collapsed')]"
+				}
+
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+			}
+			blockoverride "title_text" { text = "cmf_alerts_hidden_header" }
+			blockoverride "category_datamodel" {
+				visible = "[Not(GetVariableSystem.Exists('cmf_alerts_hidden_collapsed'))]"
+				datamodel = "[GetPlayer.MakeScope.GetList('cmf_hidden_alerts')]"
+			}
+			blockoverride "title_right" {
+				text_single = {
+					text = "[GetDataModelSize(GetPlayer.MakeScope.GetList('cmf_hidden_alerts'))]"
+				}
+
+				widget = {
+					size = { 23 23 }
+					widget = {
+						size = { 100% 100% }
+
+						background = {
+							texture = "gfx/interface/buttons/checkbox_bg_round.dds"
+							texture_density = 2
+							modify_texture = {
+								using = color_economy_texture
+								alpha = 1
+							}
+
+							modify_texture = {
+								using = overlay_cloth_texture
+								blend_mode = overlay
+								alpha = 0.2
+							}
+						}
+
+						icon = {
+							parentanchor = center
+							visible = "[GetVariableSystem.Exists('cmf_alerts_hidden_collapsed')]"
+							size = { 16 16 }
+							texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+
+							glow = {
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.3
+							}
+						}
+
+						icon = {
+							parentanchor = center
+							visible = "[Not(GetVariableSystem.Exists('cmf_alerts_hidden_collapsed'))]"
+							size = { 16 16 }
+							position = { 0 2 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+
+							glow = {
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.3
+							}
+						}
+					}
+				}
+			}
+
+			blockoverride "category_item" {
+				cmf_alert_settings_entry = {
+					blockoverride "cmf_alert_row_action" {
+						action_tooltip = {
+							click_type = right
+							title = "ALERT_SHOW"
+							clicksound = "UI_alert_discard"
+							on_action = "[CMFAlertExecute('cmf_sgui_restore_alert', Scope.GetFlagName)]"
+						}
+					}
+				}
+			}
+		}
+
+		# CMF: muted mod alerts category
+		AlertSettingsCategory = {
+			visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_muted_alerts'))]"
+
+			blockoverride "title_icon"
+			{
+				icon = {
+					size = { 24 24 }
+					using = button_visibility_template
+				}
+			}
+
+			blockoverride "title_button" {
+				action_tooltip = {
+					title = "ALERT_SETTINGS_TOGGLE_VISIBILITY"
+					on_action = "[GetVariableSystem.Toggle('cmf_alerts_muted_collapsed')]"
+				}
+
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+			}
+			blockoverride "title_text" { text = "cmf_alerts_muted_header" }
+			blockoverride "category_datamodel" {
+				visible = "[Not(GetVariableSystem.Exists('cmf_alerts_muted_collapsed'))]"
+				datamodel = "[GetPlayer.MakeScope.GetList('cmf_muted_alerts')]"
+			}
+			blockoverride "title_right" {
+				text_single = {
+					text = "[GetDataModelSize(GetPlayer.MakeScope.GetList('cmf_muted_alerts'))]"
+				}
+
+				widget = {
+					size = { 23 23 }
+					widget = {
+						size = { 100% 100% }
+
+						background = {
+							texture = "gfx/interface/buttons/checkbox_bg_round.dds"
+							texture_density = 2
+							modify_texture = {
+								using = color_economy_texture
+								alpha = 1
+							}
+
+							modify_texture = {
+								using = overlay_cloth_texture
+								blend_mode = overlay
+								alpha = 0.2
+							}
+						}
+
+						icon = {
+							parentanchor = center
+							visible = "[GetVariableSystem.Exists('cmf_alerts_muted_collapsed')]"
+							size = { 16 16 }
+							texture = "gfx/interface/buttons/flats/button_simple_right.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+
+							glow = {
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.3
+							}
+						}
+
+						icon = {
+							parentanchor = center
+							visible = "[Not(GetVariableSystem.Exists('cmf_alerts_muted_collapsed'))]"
+							size = { 16 16 }
+							position = { 0 2 }
+							texture = "gfx/interface/buttons/flats/button_simple_down.dds"
+							using = color_gold
+							modify_texture = {
+								using = overlay_window_texture
+								blend_mode = overlay
+								alpha = 1
+							}
+
+							glow = {
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.3
+							}
+						}
+					}
+				}
+			}
+
+			blockoverride "category_item" {
+				cmf_alert_settings_entry = {
+					blockoverride "cmf_alert_row_action" {
+						action_tooltip = {
+							click_type = right
+							title = "ALERT_UNMUTE"
+							on_action = "[CMFAlertExecute('cmf_sgui_unmute_alert', Scope.GetFlagName)]"
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -155,6 +155,22 @@ macro = {
 # Args: SettingKey (string), SlotKey (string)
 # Returns: boolean
 macro = {
+    description = "True when one list field slot is a button"
+    definition = "CMMListFieldIsButton(SettingKey,SlotKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)6')"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list field slot is display-only text"
+    definition = "CMMListFieldIsText(SettingKey,SlotKey)"
+    replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)7')"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
     description = "True when one list field has simple prefix/postfix format (has_format == 1)"
     definition = "CMMListFieldHasSimpleFormat(SettingKey,SlotKey)"
     replace_with = "CMMValueEqualsOne(CMMListFieldMetadataValue(SettingKey, SlotKey, '_has_format_'))"
@@ -246,6 +262,14 @@ macro = {
     description = "Resolved _desc localization text for one list field"
     definition = "CMMListFieldDescText(SettingKey,SlotKey)"
     replace_with = "Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_desc'))"
+}
+
+# Args: SettingKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Resolved _text caption for one list button field"
+    definition = "CMMListFieldButtonText(SettingKey,SlotKey)"
+    replace_with = "Localize(Concatenate(CMMListFieldLocKey(SettingKey, SlotKey), '_text'))"
 }
 
 # Args: SettingKey (string), SlotKey (string)

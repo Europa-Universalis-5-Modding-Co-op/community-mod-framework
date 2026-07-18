@@ -84,7 +84,7 @@ Hide the entire action bar from GUI code with <code>GetVariableSystem.Set('cmf_h
 == Custom Alerts ==
 [[File:CMF_Custom_Alerts.png|thumb|300px|Custom alerts in the alert bar.]]
 
-The Custom Alerts system allows mods to display dynamic, dismissable notifications in the in-game alert bar. Alerts are color-coded and interactive: players can click them to trigger an effect, or right-click to dismiss.
+The Custom Alerts system allows mods to display dynamic notifications in the in-game alert bar. Alerts are color-coded and interactive: players can left-click them to trigger an effect, right-click to hide them, or shift+right-click to mute them. Hidden and muted alerts are managed in the vanilla Alerts Menu.
 
 Each alert requires localization keys:
 <syntaxhighlight lang="yaml">
@@ -105,6 +105,8 @@ l_english:
 | <code><root_key>_name</code> || Tooltip header text
 |-
 | <code><root_key>_tooltip</code> || Tooltip body text
+|-
+| <code><root_key>_left_click</code> || Optional. Left-click button text; defaults to the vanilla Open text
 |}
 
 All effects require '''country scope'''.
@@ -116,10 +118,22 @@ All effects require '''country scope'''.
 |-
 | <code>cmf_remove_alert = { alert = <root_key> }</code> || Remove an alert
 |-
+| <code>cmf_set_alert_remove_on_click = { alert = <root_key> }</code> || Remove the alert when it is left-clicked
+|-
+| <code>cmf_set_alert_open_view = { alert = <root_key> view = <view> }</code> || Open a lateral view on left-click
+|-
+| <code>cmf_set_alert_open_group = { alert = <root_key> group = <group> }</code> || Open a lateral view group on left-click
+|-
+| <code>cmf_set_alert_open_window = { alert = <root_key> window = <gui_var> }</code> || Set a GUI variable on left-click; gate your window's visible on it
+|-
 | <code>cmf_is_alert_active = { alert = <root_key> }</code> || Check if an alert is active (trigger)
+|-
+| <code>cmf_is_alert_hidden = { alert = <root_key> }</code> || Check if the player hid the alert (trigger)
+|-
+| <code>cmf_is_alert_muted = { alert = <root_key> }</code> || Check if the player muted the alert (trigger)
 |}
 
-Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). Left-click automatically removes the alert.
+Handle clicks via <code>cmf_on_callback</code> on_action (<code>var:cmf_callback</code> = the alert flag). The alert stays until removed with <code>cmf_remove_alert</code>, unless remove-on-click is configured.
 
 == Mod Banners ==
 Display your mod as a banner on the pre-game lobby screen, with an icon, name, and description. Opt in by calling <code>cmf_register_lobby_banner</code> from a leaf on_action under <code>cmf_on_banner_registration</code>.

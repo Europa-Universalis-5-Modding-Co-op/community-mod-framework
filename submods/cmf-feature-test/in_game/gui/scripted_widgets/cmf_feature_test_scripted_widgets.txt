@@ -1,0 +1,1 @@
+﻿gui/cmf_feature_test/cmf_feature_test_window.gui = cmf_ft_window

@@ -3,7 +3,7 @@
  cmf_alert_ft_orange_color: "orange"
  cmf_alert_ft_orange_icon: "@advance!"
  cmf_alert_ft_orange_name: "Test Alert (Orange)"
- cmf_alert_ft_orange_tooltip: "Orange alert. Left-click fires callback and re-adds. Right-click dismisses."
+ cmf_alert_ft_orange_tooltip: "Orange alert. Left-click logs to the mod action log and the alert stays. Right-click hides it. Shift+right-click mutes it."
 
  cmf_alert_ft_blue: "cmf_alert_ft_blue"
  cmf_alert_ft_blue_color: "blue"
@@ -47,10 +47,52 @@
  cmf_alert_ft_purple_name: "Test Alert (Purple)"
  cmf_alert_ft_purple_tooltip: "Purple alert."
 
+ cmf_alert_ft_oneshot: "cmf_alert_ft_oneshot"
+ cmf_alert_ft_oneshot_color: "red"
+ cmf_alert_ft_oneshot_icon: "@overextension!"
+ cmf_alert_ft_oneshot_name: "Test Alert (One-Shot)"
+ cmf_alert_ft_oneshot_left_click: "Consume"
+ cmf_alert_ft_oneshot_tooltip: "One-shot alert. The left-click button reads Consume instead of Open; left-clicking removes the alert and logs to the mod action log. Toggle Test Alerts to bring it back."
+
+ cmf_alert_ft_open_view: "cmf_alert_ft_open_view"
+ cmf_alert_ft_open_view_color: "yellow"
+ cmf_alert_ft_open_view_icon: "@gold_income!"
+ cmf_alert_ft_open_view_name: "Test Alert (Open View)"
+ cmf_alert_ft_open_view_tooltip: "Left-click opens the Economy view, logs to the mod action log, and the alert stays."
+
+ cmf_alert_ft_open_group: "cmf_alert_ft_open_group"
+ cmf_alert_ft_open_group_color: "blue"
+ cmf_alert_ft_open_group_icon: "@advance!"
+ cmf_alert_ft_open_group_name: "Test Alert (Open Group)"
+ cmf_alert_ft_open_group_tooltip: "Left-click opens the Advances screen, logs to the mod action log, and the alert stays."
+
+ cmf_alert_ft_open_window: "cmf_alert_ft_open_window"
+ cmf_alert_ft_open_window_color: "green"
+ cmf_alert_ft_open_window_icon: "@stability!"
+ cmf_alert_ft_open_window_name: "Test Alert (Open Window)"
+ cmf_alert_ft_open_window_tooltip: "Left-click opens a test window, logs to the mod action log, and the alert stays."
+
+ # Test window
+ cmf_ft_window_title: "Test Window"
+ cmf_ft_window_text: "This window was opened by left-clicking the Open Window test alert."
+
+ cmf_alert_ft_event: "cmf_alert_ft_event"
+ cmf_alert_ft_event_color: "purple"
+ cmf_alert_ft_event_icon: "@prestige!"
+ cmf_alert_ft_event_name: "Test Alert (Event)"
+ cmf_alert_ft_event_tooltip: "Left-click opens a test event through the callback."
+
+ # Mod action log entries
+ cft_log_alert_orange: "left-clicked the orange test alert"
+ cft_log_alert_oneshot: "left-clicked the one-shot test alert"
+ cft_log_alert_open_view: "left-clicked the open-view test alert"
+ cft_log_alert_open_group: "left-clicked the open-group test alert"
+ cft_log_alert_open_window: "left-clicked the open-window test alert"
+
  # Alerts (alerts) Group
  cmf_feature_test__settings__alerts_name: "Alerts"
  cmf_feature_test__settings__alerts_desc: "Test alert controls."
  cmf_feature_test__alerts_enabled_name: "Test Alerts"
- cmf_feature_test__alerts_enabled_desc: "Shows the eight test alerts."
+ cmf_feature_test__alerts_enabled_desc: "Shows the test alerts."
  cmf_feature_test__settings__alerts: "cmf_feature_test__settings__alerts"
  cmf_feature_test__alerts_enabled: "cmf_feature_test__alerts_enabled"

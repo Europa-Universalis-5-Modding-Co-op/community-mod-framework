@@ -1,7 +1,34 @@
-﻿cmf_is_alert_active = {
+﻿# Check if an alert is active (shown by the mod; the player may have hidden or muted it).
+# Scope: country
+# Args: alert (key) - the alert root localization key
+cmf_is_alert_active = {
     hidden_trigger = {
         is_target_in_variable_list = {
             name = cmf_active_alerts
+            target = flag:$alert$
+        }
+    }
+}
+
+# Check if an alert is player-hidden (right-click).
+# Scope: country
+# Args: alert (key) - the alert root localization key
+cmf_is_alert_hidden = {
+    hidden_trigger = {
+        is_target_in_variable_list = {
+            name = cmf_hidden_alerts
+            target = flag:$alert$
+        }
+    }
+}
+
+# Check if an alert is player-muted (shift+right-click).
+# Scope: country
+# Args: alert (key) - the alert root localization key
+cmf_is_alert_muted = {
+    hidden_trigger = {
+        is_target_in_variable_list = {
+            name = cmf_muted_alerts
             target = flag:$alert$
         }
     }
