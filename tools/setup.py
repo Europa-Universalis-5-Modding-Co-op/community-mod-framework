@@ -112,9 +112,12 @@ def merge_env_template(template_path, env_path):
 
 # 1. Validation Checks
 if not os.path.exists(os.path.join(ROOT_DIR, ".git")):
-    print("Error: This directory is not a git repository.")
-    print("Please initialize your repository (git init) first.")
-    sys.exit(1)
+    if any(entry != SCRIPT_NAME for entry in os.listdir(ROOT_DIR)):
+        print("Error: This directory is not a git repository.")
+        print("Please initialize your repository (git init) first.")
+        sys.exit(1)
+    run_git(["init"])
+    print("Initialized a new git repository.")
 
 # Check for uncommitted changes (Ignoring this script itself)
 status_output = run_git(["status", "--porcelain"])
@@ -136,20 +139,34 @@ if status_output:
             print(line)
         sys.exit(1)
 
-current_remotes = run_git(["remote"])
-if not current_remotes or "origin" not in current_remotes:
-    print("Error: No 'origin' remote found.")
-    print("Please link your repository to GitHub (or another remote) before running this script.")
-    sys.exit(1)
+# 2. Setup Toolkit Remote and Fetch
+origin_url = run_git(["remote", "get-url", "origin"], check=False)
+cmt_url = run_git(["remote", "get-url", REMOTE_NAME], check=False)
 
-# 2. Setup Remote
-if REMOTE_NAME not in current_remotes:
-    run_git(["remote", "add", "-t", REMOTE_BRANCH, REMOTE_NAME, DEVKIT_URL])
-else:
-    run_git(["remote", "set-branches", REMOTE_NAME, REMOTE_BRANCH])
+if origin_url:
+    # Fetch-only remote so git clients can show when a toolkit update exists.
+    if not cmt_url:
+        run_git(["remote", "add", "-t", REMOTE_BRANCH, REMOTE_NAME, DEVKIT_URL])
+        cmt_url = DEVKIT_URL
+    elif cmt_url == DEVKIT_URL:
+        run_git(["remote", "set-branches", REMOTE_NAME, REMOTE_BRANCH])
+elif cmt_url == DEVKIT_URL:
+    # With no origin, GitHub Desktop treats the toolkit remote as the push target.
+    run_git(["remote", "remove", REMOTE_NAME])
+    cmt_url = ""
+    print(f"Removed the '{REMOTE_NAME}' remote.")
 
-run_git(["remote", "set-url", "--push", REMOTE_NAME, "no_push"])
-run_git(["fetch", REMOTE_NAME])
+if cmt_url == DEVKIT_URL:
+    run_git(["remote", "set-url", "--push", REMOTE_NAME, "no_push"])
+
+print(f"Fetching toolkit ({REMOTE_BRANCH})...")
+fetch_source = REMOTE_NAME if cmt_url == DEVKIT_URL else DEVKIT_URL
+run_git(["fetch", fetch_source, REMOTE_BRANCH])
+
+# A fresh repository has no commits yet, and the history merge below needs one.
+if not run_git(["rev-parse", "-q", "--verify", "HEAD"], check=False):
+    run_git(["commit", "--allow-empty", "-m", "Initial commit"])
+    print("Created initial commit.")
 
 # 3. Link the repo's history (safe merge).
 print(f"\nLinking toolkit history...")
@@ -164,7 +181,7 @@ run_git([
     "--allow-unrelated-histories",
     "-s", "recursive",
     "-X", "ours",
-    f"{REMOTE_NAME}/{REMOTE_BRANCH}"
+    "FETCH_HEAD"
 ])
 
 if has_merge_head():
@@ -192,7 +209,7 @@ print("Applying infrastructure files...")
 AUTO_COMMIT_PATHS = ["tools/", ".ignore", ".gitignore", ".gitattributes", ".editorconfig"]
 
 for path in AUTO_COMMIT_PATHS:
-    run_git(["checkout", f"{REMOTE_NAME}/{REMOTE_BRANCH}", "--", path], check=False)
+    run_git(["checkout", "FETCH_HEAD", "--", path], check=False)
 
 # Remove temp files so they aren't included.
 run_git(["rm", "-f", "--ignore-unmatch", "tools/setup.py"], check=False)
@@ -213,11 +230,11 @@ if added_files:
 # 4. Apply remaining toolkit files (staged but not committed for review).
 print("Applying toolkit files...")
 
-# Forcefully checkout the release files from the remote.
-run_git(["checkout", f"{REMOTE_NAME}/{REMOTE_BRANCH}", "--", "."])
+# Forcefully checkout the release files from the fetched toolkit branch.
+run_git(["checkout", "FETCH_HEAD", "--", "."])
 
 # --- CLEANUP STEP 2: Remove temporary files from the overwrite stage ---
-# Remove them again because 'checkout' brought them back from the remote
+# Remove them again because 'checkout' brought them back
 run_git(["rm", "-f", "--ignore-unmatch", "tools/setup.py"], check=False)
 run_git(["rm", "-f", "--ignore-unmatch", "in_game/common/dummy.txt"], check=False)
 
