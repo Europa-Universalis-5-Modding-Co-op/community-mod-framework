@@ -8,7 +8,7 @@ types cmf_action_bar {
 
     type cmf_action_bar_bottom_left = cmf_action_bar_bottom {
         visible = "[And4(
-            Not(LeftView.IsShown),
+            Not(Or(LeftView.IsShown, IsLateralViewFullScreen)),
             Not(GetVariableSystem.Exists('cmf_hide_action_bar')),
             EqualTo_CFixedPoint(CMMSettingValue('cmf_core__action_bar_position'), '(CFixedPoint)1'),
             Or(
@@ -21,8 +21,9 @@ types cmf_action_bar {
     }
 
     type cmf_action_bar_bottom_right = cmf_action_bar_bottom {
-        visible = "[And4(
-            Not(RightView.IsShown),
+        visible = "[And5(
+            Not(Or(RightView.IsShown, IsLateralViewFullScreen)),
+            Not(AccessMessageLog.IsExpanded),
             Not(GetVariableSystem.Exists('cmf_hide_action_bar')),
             Or(
                 Not(CMMSettingIsRegistered('cmf_core__action_bar_position')),
@@ -37,9 +38,27 @@ types cmf_action_bar {
         parentanchor = bottom|right
     }
 
+    type cmf_action_bar_bottom_right_above_news = cmf_action_bar_bottom {
+        visible = "[And5(
+            Not(Or(RightView.IsShown, IsLateralViewFullScreen)),
+            AccessMessageLog.IsExpanded,
+            Not(GetVariableSystem.Exists('cmf_hide_action_bar')),
+            Or(
+                Not(CMMSettingIsRegistered('cmf_core__action_bar_position')),
+                EqualTo_CFixedPoint(CMMSettingValue('cmf_core__action_bar_position'), '(CFixedPoint)3')
+            ),
+            Or(
+                Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmf_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmf_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1')),
+                DataModelHasItems(GetPlayer.MakeScope.GetList('cmf_action_bar_active_elements'))
+            )
+        )]"
+        position = { -200 -240 } # -240 matches the news content height: in_game/gui/message_log.gui:145
+        parentanchor = bottom|right
+    }
+
     type cmf_action_bar_top = cmf_action_bar_top_tabs {
         visible = "[And4(
-            Not(LeftView.IsShown),
+            Not(Or(LeftView.IsShown, IsLateralViewFullScreen)),
             Not(GetVariableSystem.Exists('cmf_hide_action_bar')),
             EqualTo_CFixedPoint(CMMSettingValue('cmf_core__action_bar_position'), '(CFixedPoint)2'),
             Or(

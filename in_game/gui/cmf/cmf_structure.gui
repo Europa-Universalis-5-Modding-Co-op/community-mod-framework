@@ -1,6 +1,6 @@
 ﻿widget = {
     name = "cmf_interaction_layer"
-    layer = topbar
+    layer = windows_layer
     size = { 100% 100% }
     datacontext = "[GetPlayer]"
     visible = "[Country.IsValid]"
@@ -14,5 +14,6 @@
         cmf_action_bar_top = {}
         cmf_action_bar_bottom_left = {}
         cmf_action_bar_bottom_right = {}
+        cmf_action_bar_bottom_right_above_news = {}
     }
 }
