@@ -101,8 +101,11 @@ _TEMPLATE_RE = re.compile(r"template\s+(\w+)\s*(\{)?\s*(?:#.*)?$")
 _WIDGET_INSTANCE_RE = re.compile(r"(\w+)\s*=\s*(\{)?\s*(?:#.*)?$")
 _NAME_PROP_RE = re.compile(r'name\s*=\s*"([^"]+)"')
 _CONSTANT_RE = re.compile(r"@(\w+)\s*=")
-# Match @name and @[name ...] (first name only) for body references.
-_CONSTANT_REF_RE = re.compile(r"@\[?(\w+)")
+# Match @name and the body of a computed @[...] expression.
+_CONSTANT_REF_RE = re.compile(r"@\[([^\]\n]*)\]|@(\w+)")
+# Names inside a computed expression, skipping numbers and the data-function
+# calls that also use @[...], such as @[Goods.GetPriceDifferenceIconName(...)].
+_EXPR_NAME_RE = re.compile(r"(?<![.\w])[A-Za-z_]\w*(?![\w.(])")
 
 # ─── Data Structures ─────────────────────────────────────────────────────────
 
@@ -655,6 +658,17 @@ def _find_overrides(mod_defs, vanilla_defs):
             for k in sorted(mod_map) if k in vanilla_map]
 
 
+def _constant_refs(text):
+    """Return every constant name *text* references, bare or inside ``@[...]``."""
+    names = set()
+    for expr, bare in _CONSTANT_REF_RE.findall(text):
+        if bare:
+            names.add(bare)
+        else:
+            names.update(_EXPR_NAME_RE.findall(expr))
+    return names
+
+
 def _link_constants(mod_defs, vanilla_defs, override_pairs):
     """Return ``[(mod_const, vanilla_const), …]`` linked by file-scope usage. A mod constant pairs with each vanilla file that holds one of its referenced overrides."""
     mod_consts = {}
@@ -668,10 +682,26 @@ def _link_constants(mod_defs, vanilla_defs, override_pairs):
             vanilla_consts.setdefault(d.source_file, {}).setdefault(d.name, d)
 
     usage = {}
+    queue = []
     for mod_def, vanilla_def in override_pairs:
-        for name in _CONSTANT_REF_RE.findall(mod_def.text):
-            usage.setdefault((mod_def.source_file, name), set()).add(
-                vanilla_def.source_file)
+        for name in _constant_refs(mod_def.text):
+            entry = usage.setdefault((mod_def.source_file, name), set())
+            if vanilla_def.source_file not in entry:
+                entry.add(vanilla_def.source_file)
+                queue.append(((mod_def.source_file, name),
+                              vanilla_def.source_file))
+
+    # Follow the references one constant's own expression makes to another.
+    while queue:
+        (mod_file, name), vfile = queue.pop()
+        mod_const = mod_consts.get(mod_file, {}).get(name)
+        if mod_const is None:
+            continue
+        for ref in _constant_refs(mod_const.text):
+            entry = usage.setdefault((mod_file, ref), set())
+            if vfile not in entry:
+                entry.add(vfile)
+                queue.append(((mod_file, ref), vfile))
 
     pairs = []
     for mod_file, by_name in mod_consts.items():
