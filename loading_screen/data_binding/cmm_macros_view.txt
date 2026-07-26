@@ -77,12 +77,30 @@ macro = {
     replace_with = "GetVariableSystem.Get(Concatenate(GroupKey, '_grd'))"
 }
 
+# Collapsed-group state, toggled from the group header.
+
 # Args: GroupKey (string)
 # Returns: boolean
 macro = {
-    description = "Cached: true when one group row has a description"
-    definition = "CMMCachedGroupHasDesc(GroupKey)"
-    replace_with = "GetVariableSystem.HasValue(Concatenate(GroupKey, '_grhd'), 'yes')"
+    description = "True when one group is collapsed"
+    definition = "CMMGroupCollapsed(GroupKey)"
+    replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_group_collapsed', GroupKey))"
+}
+
+# Args: GroupKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one group is expanded"
+    definition = "CMMGroupExpanded(GroupKey)"
+    replace_with = "Not(CMMGroupCollapsed(GroupKey))"
+}
+
+# Args: GroupKey (string)
+# Returns: none
+macro = {
+    description = "Toggle whether one group renders its settings box"
+    definition = "CMMToggleGroupCollapsed(GroupKey)"
+    replace_with = "GetScriptedGui('CMM_ToggleGroupCollapsed').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('cmm_group', MakeScopeFlag(GroupKey)).End)"
 }
 
 # Cached mod-row metadata, written once per mod row by the cmm_cache_mod_row state.
@@ -127,6 +145,14 @@ macro = {
     description = "True when one group has at least one currently-visible setting"
     definition = "CMMGroupNonEmpty(GroupKey)"
     replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_group_nonempty', MakeScopeFlag(GroupKey)).IsSet"
+}
+
+# Args: GroupKey (string)
+# Returns: string
+macro = {
+    description = "Visible setting count for one group as display text"
+    definition = "CMMGroupVisibleCountText(GroupKey)"
+    replace_with = "ToString_int32(CMMMapInt('cmm_group_visible_count', GroupKey))"
 }
 
 # Args: TabKey (string)

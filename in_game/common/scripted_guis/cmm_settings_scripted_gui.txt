@@ -58,6 +58,23 @@ CMM_ResetModToDefaults = {
 	}
 }
 
+# Toggle whether one settings group renders its settings box.
+# Scope: country
+# Args: scope:cmm_group (flag) - the group key to toggle.
+CMM_ToggleGroupCollapsed = {
+	scope = country
+	saved_scopes = { cmm_group }
+	effect = {
+		if = {
+			limit = { is_key_in_variable_map = { name = cmm_group_collapsed target = scope:cmm_group } }
+			remove_from_variable_map = { name = cmm_group_collapsed key = scope:cmm_group }
+		}
+		else = {
+			add_to_variable_map = { name = cmm_group_collapsed key = scope:cmm_group value = 1 }
+		}
+	}
+}
+
 # List _on_changed for the action-bar visible-buttons list.
 # Mirrors the toggled row to cmf_action_bar_active_elements before applying
 # the change to the bool field's stored value.

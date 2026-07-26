@@ -321,11 +321,27 @@ macro = {
 }
 
 # Args: Index (int32)
+# Returns: boolean
+macro = {
+    description = "True when a log entry carries a numeric value (arg mode 2)"
+    definition = "CMFLogIsValueEntry(Index)"
+    replace_with = "EqualTo_CFixedPoint(GetVariableFromGlobalVariableMap('cmf_log_arg_mode', CMFLogKey(Index)).GetValue, '(CFixedPoint)2')"
+}
+
+# Args: Index (int32)
 # Returns: string
 macro = {
-    description = "Full formatted log entry text: [arg1?] action [arg2?]"
+    description = "Numeric value text for a value log entry, shown as a whole number"
+    definition = "CMFLogNumText(Index)"
+    replace_with = "ToString_int32(FixedPointToInt(GetVariableFromGlobalVariableMap('cmf_log_num', CMFLogKey(Index)).GetValue))"
+}
+
+# Args: Index (int32)
+# Returns: string
+macro = {
+    description = "Full formatted log entry text: [arg1?] action [arg2?] [value?]"
     definition = "CMFLogEntryText(Index)"
-    replace_with = "Concatenate(AddTextIf(CMFLogHasArg1(Index), Concatenate(CMFLogArg1Name(Index), ' ')), Concatenate(CMFLogAction(Index), AddTextIf(CMFLogHasArg2(Index), Concatenate(' ', CMFLogArg2Name(Index)))))"
+    replace_with = "Concatenate(Concatenate(AddTextIf(CMFLogHasArg1(Index), Concatenate(CMFLogArg1Name(Index), ' ')), Concatenate(CMFLogAction(Index), AddTextIf(CMFLogHasArg2(Index), Concatenate(' ', CMFLogArg2Name(Index))))), AddTextIf(CMFLogIsValueEntry(Index), Concatenate(' ', CMFLogNumText(Index))))"
 }
 
 # Returns: boolean

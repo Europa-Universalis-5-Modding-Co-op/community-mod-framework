@@ -34,6 +34,16 @@ cmf_log_with_scope_args = {
 	_cmf_log_core_scope = { action = $action$ arg_mode = 1 }
 }
 
+# Log an action with a numeric value.
+# Entry text renders as: [action] [value] (the value is shown as a whole number).
+# Scope: country (the actor performing the action)
+# Args:
+# - action (flag): localization key for the action text
+# - value (number): the value shown after the action text
+cmf_log_value = {
+	_cmf_log_core_value = { action = $action$ value = $value$ }
+}
+
 # Clear all log entries.
 # Scope: country
 cmf_clear_log = {
@@ -59,6 +69,7 @@ _cmf_log_core_flag = {
 		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = $arg_mode$ }
 		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:$arg1$ }
 		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = flag:$arg2$ }
+		add_to_global_variable_map = { name = cmf_log_num key = scope:_cmf_log_key value = 0 }
 		change_global_variable = { name = cmf_log_count add = 1 }
 	}
 
@@ -67,6 +78,35 @@ _cmf_log_core_flag = {
 		cmf_suppress = { v = $action$ }
 		cmf_suppress = { v = $arg1$ }
 		cmf_suppress = { v = $arg2$ }
+	}
+}
+
+# Internal: log core for a numeric value arg.
+# Scope: country (the actor)
+# Args: action (flag), value (number)
+_cmf_log_core_value = {
+	save_scope_as = _cmf_log_actor
+
+	if = {
+		limit = { NOT = { has_global_variable = cmf_log_count } }
+		set_global_variable = { name = cmf_log_count value = 0 }
+	}
+
+	if = {
+		limit = { global_var:cmf_log_count < 200 }
+		_cmf_log_select_key = yes
+		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
+		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = 2 }
+		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
+		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
+		add_to_global_variable_map = { name = cmf_log_num key = scope:_cmf_log_key value = $value$ }
+		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
 	}
 }
 
@@ -90,6 +130,7 @@ _cmf_log_core_scope_single = {
 		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = $arg_mode$ }
 		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
 		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = scope:cmf_log_arg2 }
+		add_to_global_variable_map = { name = cmf_log_num key = scope:_cmf_log_key value = 0 }
 		change_global_variable = { name = cmf_log_count add = 1 }
 	}
 
@@ -119,6 +160,7 @@ _cmf_log_core_scope = {
 		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = $arg_mode$ }
 		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = scope:cmf_log_arg1 }
 		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = scope:cmf_log_arg2 }
+		add_to_global_variable_map = { name = cmf_log_num key = scope:_cmf_log_key value = 0 }
 		change_global_variable = { name = cmf_log_count add = 1 }
 	}
 
@@ -141,6 +183,7 @@ _cmf_log_suppress = {
 		cmf_suppress = { v = cmf_log_arg_mode }
 		cmf_suppress = { v = cmf_log_arg1 }
 		cmf_suppress = { v = cmf_log_arg2 }
+		cmf_suppress = { v = cmf_log_num }
 		cmf_suppress = { v = cmf_log_0 }
 		cmf_suppress = { v = cmf_log_1 }
 		cmf_suppress = { v = cmf_log_2 }
@@ -643,5 +686,6 @@ _cmf_log_clear_maps = {
 		remove_from_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key }
 		remove_from_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key }
 		remove_from_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key }
+		remove_from_global_variable_map = { name = cmf_log_num key = scope:_cmf_log_key }
 	}
 }
