@@ -84,3 +84,25 @@ cmf_sgui_unmute_alert = {
         _cmf_alert_clear_muted = { target = scope:cmf_alert }
     }
 }
+
+# Drop an alert whose mod is no longer loaded, fired by cmf_alert_prune_driver.
+# Scope: country
+# Args: scope:cmf_alert (flag) - the alert root key.
+cmf_sgui_prune_alert = {
+    scope = country
+    saved_scopes = { cmf_alert }
+
+    effect = {
+        _cmf_alert_prune = { target = scope:cmf_alert }
+    }
+}
+
+# End the load-time staleness pass, fired by cmf_alert_prune_driver.
+# Scope: country
+cmf_sgui_finish_alert_prune = {
+    scope = country
+
+    effect = {
+        clear_variable_list = cmf_alert_prune_queue
+    }
+}

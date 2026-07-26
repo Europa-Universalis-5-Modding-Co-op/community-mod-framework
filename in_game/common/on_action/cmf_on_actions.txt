@@ -214,6 +214,16 @@ on_game_load_after_lobby_human_country = {
 		cmf_on_mod_registration
 		_cmf_on_action_bar_prune
 		_cmf_on_cmm_registration_late
+		_cmf_on_alert_prune_queue
+	}
+}
+
+# Stage the saved alerts for the load-time staleness pass. Only a save load can
+# carry alerts from a mod that is no longer loaded.
+# Scope: country
+_cmf_on_alert_prune_queue = {
+	effect = {
+		_cmf_alert_queue_prune = yes
 	}
 }
 

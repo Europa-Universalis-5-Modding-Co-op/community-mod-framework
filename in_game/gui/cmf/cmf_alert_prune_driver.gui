@@ -1,0 +1,45 @@
+﻿# Purges alerts whose mod is no longer loaded. The check lives in GUI because only
+# GUI can tell that an alert's localization key no longer resolves.
+# Queue staged by _cmf_alert_queue_prune.
+widget = {
+	name = "cmf_alert_prune_driver"
+	size = { 0 0 }
+	datacontext = "[GetPlayer]"
+	visible = "[Country.IsValid]"
+
+	vbox = {
+		datamodel = "[Player.MakeScope.GetList('cmf_alert_prune_queue')]"
+
+		item = {
+			widget = {
+				size = { 0 0 }
+				visible = "[CMFAlertIsStale(Scope.GetFlagName)]"
+
+				# Pinned so an item created with a true gate still gets a first show.
+				visible_at_creation = no
+
+				state = {
+					name = _show
+					on_start = "[CMFAlertExecute('cmf_sgui_prune_alert', Scope.GetFlagName)]"
+				}
+			}
+		}
+	}
+
+	widget = {
+		size = { 0 0 }
+		visible = "[DataModelHasItems(Player.MakeScope.GetList('cmf_alert_prune_queue'))]"
+		visible_at_creation = no
+
+		state = {
+			name = _show
+			duration = 0.2
+			next = cmf_alert_prune_finish
+		}
+
+		state = {
+			name = cmf_alert_prune_finish
+			on_start = "[GetScriptedGui('cmf_sgui_finish_alert_prune').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+}

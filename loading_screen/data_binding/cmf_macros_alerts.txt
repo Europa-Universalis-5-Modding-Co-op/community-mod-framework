@@ -61,3 +61,11 @@ macro = {
 	definition = "CMFAlertExecute(Name,Key)"
 	replace_with = "GetScriptedGui(Name).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('cmf_alert', MakeScopeFlag(Key)).End)"
 }
+
+# Args: Key (string)
+# Returns: boolean
+macro = {
+	description = "True when an alert's name key does not resolve, so its mod is not loaded"
+	definition = "CMFAlertIsStale(Key)"
+	replace_with = "EqualTo_string(Localize(Concatenate(Key, '_name')), Concatenate(Key, '_name'))"
+}

@@ -114,3 +114,40 @@ _cmf_alert_clear_muted = {
     remove_from_variable_map = { name = cmf_alert_muted key = $target$ }
     remove_list_variable = { name = cmf_muted_alerts target = $target$ }
 }
+
+# Stage every alert key for the staleness pass driven by cmf_alert_prune_driver.
+# Scope: country
+_cmf_alert_queue_prune = {
+    clear_variable_list = cmf_alert_prune_queue
+    every_in_list = {
+        variable = cmf_active_alerts
+        save_scope_as = _cmf_ap_alert
+        root = { add_to_variable_list = { name = cmf_alert_prune_queue target = scope:_cmf_ap_alert } }
+    }
+    every_in_list = {
+        variable = cmf_hidden_alerts
+        save_scope_as = _cmf_ap_alert
+        root = { add_to_variable_list = { name = cmf_alert_prune_queue target = scope:_cmf_ap_alert } }
+    }
+    every_in_list = {
+        variable = cmf_muted_alerts
+        save_scope_as = _cmf_ap_alert
+        root = { add_to_variable_list = { name = cmf_alert_prune_queue target = scope:_cmf_ap_alert } }
+    }
+
+    # Benign warning suppression
+    cmf_suppress = { v = cmf_alert_prune_queue }
+}
+
+# Remove every trace of an alert whose mod is no longer loaded.
+# Scope: country
+# Args: target (target ref) - the alert flag
+_cmf_alert_prune = {
+    remove_list_variable = { name = cmf_active_alerts target = $target$ }
+    _cmf_alert_clear_hidden = { target = $target$ }
+    _cmf_alert_clear_muted = { target = $target$ }
+    remove_from_variable_map = { name = cmf_alert_remove_on_click key = $target$ }
+    remove_from_variable_map = { name = cmf_alert_open_view key = $target$ }
+    remove_from_variable_map = { name = cmf_alert_open_group key = $target$ }
+    remove_from_variable_map = { name = cmf_alert_open_window key = $target$ }
+}

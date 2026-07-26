@@ -2,3 +2,4 @@
 gui/cmf/cmf_after_lobby_caller.gui = cmf_after_lobby_caller
 gui/cmf/cmf_after_lobby_caller.gui = cmf_load_after_lobby_caller
 gui/cmf/cmf_country_transfer.gui = cmf_country_transfer_monitor
+gui/cmf/cmf_alert_prune_driver.gui = cmf_alert_prune_driver
