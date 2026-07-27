@@ -100,6 +100,13 @@ macro = {
     replace_with = "Select_CString(CMMTabHasParent(GetVariableSystem.Get('cmm_selected_tab')), CMMTabParent(GetVariableSystem.Get('cmm_selected_tab')), GetVariableSystem.Get('cmm_selected_tab'))"
 }
 
+# Returns: boolean
+macro = {
+    description = "True when the selected mod's selected top-row tab has sub-tabs to show"
+    definition = "CMMSubTabRowShown"
+    replace_with = "And(CMMSelectedModExists, CMMTabHasChildren(CMMSelectedTopTab))"
+}
+
 # Cached group-row metadata, written once per group by the cmm_cache_group_row state.
 
 # Args: GroupKey (string)
