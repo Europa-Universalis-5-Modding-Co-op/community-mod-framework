@@ -2,6 +2,14 @@
 	on_actions = {
 		et_on_game_start
 		et_on_game_start_load_probe
+		et_nc_seed
+		et_on_game_start_scope_probe
+	}
+}
+
+weather_monthly_pulse = {
+	on_actions = {
+		et_weather_pulse_probe
 	}
 }
 
@@ -23,6 +31,64 @@ et_on_game_start = {
 			key = flag:et_key_a
 			value = 77
 		}
+	}
+}
+
+# Seeds the countryless suite's counters (tests 80, 84-87) so their rows read 0
+# rather than unset before the driver runs, and so the console change_variable
+# calls have a variable to change.
+et_nc_seed = {
+	effect = {
+		if = {
+			limit = { country_exists = c:FRA }
+			c:FRA = {
+				set_variable = { name = et_nc_exec value = 0 }
+				set_variable = { name = et_nc_console value = 0 }
+				set_variable = { name = et_nc_burst value = 0 }
+				set_variable = { name = et_nc_batch value = 0 }
+				set_variable = { name = et_nc_probe_value value = 42 }
+				# Test 107's per-game marker: only a fresh game sets this back to 1.
+				set_variable = { name = et_nc_fresh value = 1 }
+				# Tests 108/109: armed once per game, cleared only by the reset.
+				set_variable = { name = et_nc_early_exec value = 0 }
+				set_variable = { name = et_nc_early_console value = 0 }
+				set_variable = { name = et_nc_early_armed value = 1 }
+				# Tests 110-112: console warm-up ladder at 2, 4 and 8 seconds.
+				set_variable = { name = et_nc_w2 value = 0 }
+				set_variable = { name = et_nc_w4 value = 0 }
+				set_variable = { name = et_nc_w8 value = 0 }
+				# Tests 113-116: first commands after each state transition.
+				set_variable = { name = et_nc_tc_exec value = 0 }
+				set_variable = { name = et_nc_tc_console value = 0 }
+				set_variable = { name = et_nc_to_exec value = 0 }
+				set_variable = { name = et_nc_to_console value = 0 }
+			}
+		}
+	}
+}
+
+# Test 104: counts on_game_start fires. A no-scope hook fires once; a country-scope
+# hook would fire once per country, so the count is the discriminator. The seed is
+# guarded so a per-country hook cannot re-zero its own counter.
+et_on_game_start_scope_probe = {
+	effect = {
+		if = {
+			limit = { NOT = { has_global_variable = et_gs_fires } }
+			set_global_variable = { name = et_gs_fires value = 0 }
+		}
+		change_global_variable = { name = et_gs_fires add = 1 }
+	}
+}
+
+# Test 105: counts weather_monthly_pulse fires the same way. Once per elapsed month
+# means global no-scope; a per-country or per-location pulse would run away.
+et_weather_pulse_probe = {
+	effect = {
+		if = {
+			limit = { NOT = { has_global_variable = et_wp_fires } }
+			set_global_variable = { name = et_wp_fires value = 0 }
+		}
+		change_global_variable = { name = et_wp_fires add = 1 }
 	}
 }
 

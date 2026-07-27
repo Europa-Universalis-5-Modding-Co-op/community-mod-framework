@@ -1,0 +1,28 @@
+﻿# Dead branch suppression for the countryless suite (tests 76-89) and the
+# on_action probes (tests 104-105). The script checker cannot see reads that
+# happen in GUI expressions, so every name written here is referenced below.
+et_nc_suppress_warnings = {
+	if = {
+		limit = {
+			always = no
+			exists = var:et_nc_exec
+			exists = var:et_nc_console
+			exists = var:et_nc_burst
+			exists = var:et_nc_batch
+			exists = var:et_nc_probe_value
+			exists = var:et_nc_fresh
+			exists = var:et_nc_early_exec
+			exists = var:et_nc_early_console
+			exists = var:et_nc_early_armed
+			exists = var:et_nc_w2
+			exists = var:et_nc_w4
+			exists = var:et_nc_w8
+			exists = var:et_nc_tc_exec
+			exists = var:et_nc_tc_console
+			exists = var:et_nc_to_exec
+			exists = var:et_nc_to_console
+			exists = global_var:et_gs_fires
+			exists = global_var:et_wp_fires
+		}
+	}
+}

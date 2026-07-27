@@ -51,6 +51,11 @@ et_hw_reset = {
 		set_variable = { name = et_70_passed value = 0 }
 		set_variable = { name = et_71_passed value = 0 }
 		set_variable = { name = et_75_passed value = 0 }
+		set_variable = { name = et_98_passed value = 0 }
+		set_variable = { name = et_99_passed value = 0 }
+		set_variable = { name = et_100_passed value = 0 }
+		set_variable = { name = et_101_passed value = 0 }
+		set_variable = { name = et_102_passed value = 0 }
 
 		if = { limit = { has_variable = et_g39_c } remove_variable = et_g39_c }
 		if = { limit = { has_variable = et_g40_c } remove_variable = et_g40_c }
@@ -73,6 +78,18 @@ et_hw_reset = {
 		if = { limit = { has_variable = et_g64_c } remove_variable = et_g64_c }
 		if = { limit = { has_variable = et_g64_snap } remove_variable = et_g64_snap }
 		if = { limit = { has_variable = et_g66_c } remove_variable = et_g66_c }
+		if = { limit = { has_variable = et_g98_c } remove_variable = et_g98_c }
+		if = { limit = { has_variable = et_g98_start_c } remove_variable = et_g98_start_c }
+		if = { limit = { has_variable = et_g98_gate } remove_variable = et_g98_gate }
+		if = { limit = { has_variable = et_g99_c } remove_variable = et_g99_c }
+		if = { limit = { has_variable = et_g99_start_c } remove_variable = et_g99_start_c }
+		if = { limit = { has_variable = et_g99_gate } remove_variable = et_g99_gate }
+		if = { limit = { has_variable = et_g100_c } remove_variable = et_g100_c }
+		if = { limit = { has_variable = et_g101_c } remove_variable = et_g101_c }
+		if = { limit = { has_variable = et_g101_ok } remove_variable = et_g101_ok }
+		if = { limit = { has_variable = et_g101_inner_paris } remove_variable = et_g101_inner_paris }
+		if = { limit = { has_variable = et_g102_c } remove_variable = et_g102_c }
+		if = { limit = { has_variable = et_g102_phase1 } remove_variable = et_g102_phase1 }
 		if = { limit = { has_variable = et_g75_c } remove_variable = et_g75_c }
 
 		if = { limit = { has_variable = et_g39_gate } remove_variable = et_g39_gate }
@@ -121,6 +138,22 @@ et_hw_seed = {
 		# Test 75: one flag seeded twice.
 		add_to_variable_list = { name = et_g75_list target = flag:et_dup_b }
 		add_to_variable_list = { name = et_g75_list target = flag:et_dup_b }
+
+		# Test 100: a global list read straight into a datamodel by GetGlobalList.
+		clear_global_variable_list = et_g100_list
+		add_to_global_variable_list = { name = et_g100_list target = flag:et_hw_i1 }
+		add_to_global_variable_list = { name = et_g100_list target = flag:et_hw_i2 }
+		add_to_global_variable_list = { name = et_g100_list target = flag:et_hw_i3 }
+
+		# Test 101: one location, downcast from Scope in the outer datamodel.
+		clear_global_variable_list = et_g101_list
+		add_to_global_variable_list = { name = et_g101_list target = location:paris }
+
+		# Test 102 phase 1: three targets for the reuse datamodel.
+		clear_variable_list = et_g102_list
+		add_to_variable_list = { name = et_g102_list target = flag:et_hw_i1 }
+		add_to_variable_list = { name = et_g102_list target = flag:et_hw_i2 }
+		add_to_variable_list = { name = et_g102_list target = flag:et_hw_i3 }
 	}
 }
 
@@ -617,6 +650,188 @@ et_hw_check_trigger_when = {
 }
 
 # Final step: script-side scope and map-value tests, then publishes the run.
+# Recorders and steps for the state-stall and nesting tests (98-102).
+et_hw_rec_98_start = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g98_start_c } } set_variable = { name = et_g98_start_c value = 0 } }
+		change_variable = { name = et_g98_start_c add = 1 }
+	}
+}
+
+et_hw_rec_98 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g98_c } } set_variable = { name = et_g98_c value = 0 } }
+		change_variable = { name = et_g98_c add = 1 }
+	}
+}
+
+et_hw_rec_99_start = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g99_start_c } } set_variable = { name = et_g99_start_c value = 0 } }
+		change_variable = { name = et_g99_start_c add = 1 }
+	}
+}
+
+et_hw_rec_99 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g99_c } } set_variable = { name = et_g99_c value = 0 } }
+		change_variable = { name = et_g99_c add = 1 }
+	}
+}
+
+et_hw_rec_100 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g100_c } } set_variable = { name = et_g100_c value = 0 } }
+		change_variable = { name = et_g100_c add = 1 }
+	}
+}
+
+# Counts inner rows and, separately, inner rows whose OUTER context is still the
+# seeded location. Equal counts mean the Scope slot survived the Location rebind.
+et_hw_rec_101 = {
+	scope = country
+
+	saved_scopes = {
+		et_outer
+		et_inner
+	}
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g101_c } } set_variable = { name = et_g101_c value = 0 } }
+		change_variable = { name = et_g101_c add = 1 }
+		if = {
+			limit = { scope:et_outer = location:paris }
+			if = { limit = { NOT = { has_variable = et_g101_ok } } set_variable = { name = et_g101_ok value = 0 } }
+			change_variable = { name = et_g101_ok add = 1 }
+		}
+		if = {
+			limit = { scope:et_inner = location:paris }
+			if = { limit = { NOT = { has_variable = et_g101_inner_paris } } set_variable = { name = et_g101_inner_paris value = 0 } }
+			change_variable = { name = et_g101_inner_paris add = 1 }
+		}
+	}
+}
+
+et_hw_rec_102 = {
+	scope = country
+
+	effect = {
+		if = { limit = { NOT = { has_variable = et_g102_c } } set_variable = { name = et_g102_c value = 0 } }
+		change_variable = { name = et_g102_c add = 1 }
+	}
+}
+
+# Opens both stall-probe gates in the same step.
+et_hw_arm_stall = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_g98_gate value = 1 }
+		set_variable = { name = et_g99_gate value = 1 }
+	}
+}
+
+# Test 102 phase 2: three different targets, same list.
+et_hw_reseed_reuse = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_g102_phase1 value = var:et_g102_c }
+		clear_variable_list = et_g102_list
+		add_to_variable_list = { name = et_g102_list target = flag:et_dup_a }
+		add_to_variable_list = { name = et_g102_list target = flag:et_dup_b }
+		add_to_variable_list = { name = et_g102_list target = flag:et_cross }
+	}
+}
+
+et_hw_check_nesting = {
+	scope = country
+
+	effect = {
+		# Result: FAIL
+		# -- Test 98 ---------------------------------------------
+		# Requires the chain to have STARTED as well as reached the tail, so a
+		# FAIL means "started and stalled at the bare middle state" rather than
+		# "never armed". The recorded claim says it stalls, so FAIL confirms it.
+		if = {
+			limit = {
+				has_variable = et_g98_start_c
+				var:et_g98_start_c >= 1
+				has_variable = et_g98_c
+				var:et_g98_c >= 1
+			}
+			set_variable = { name = et_98_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 99 ---------------------------------------------
+		# The control: identical chain, middle state has an on_start. 98 FAIL
+		# with 99 PASS isolates the on_start as the only difference.
+		if = {
+			limit = {
+				has_variable = et_g99_start_c
+				var:et_g99_start_c >= 1
+				has_variable = et_g99_c
+				var:et_g99_c >= 1
+			}
+			set_variable = { name = et_99_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 100 --------------------------------------------
+		# et_hw_seed puts 3 targets in the global list.
+		if = {
+			limit = {
+				has_variable = et_g100_c
+				var:et_g100_c >= 3
+			}
+			set_variable = { name = et_100_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 101 --------------------------------------------
+		# Every inner row still saw paris as its outer context, and at least one
+		# inner row was NOT paris, which proves the two slots held different
+		# objects rather than agreeing by accident.
+		if = {
+			limit = {
+				has_variable = et_g101_c
+				var:et_g101_c >= 1
+				has_variable = et_g101_ok
+				var:et_g101_ok = var:et_g101_c
+				OR = {
+					NOT = { has_variable = et_g101_inner_paris }
+					var:et_g101_inner_paris < var:et_g101_c
+				}
+			}
+			set_variable = { name = et_101_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 102 --------------------------------------------
+		# A pass means swapping the list contents produced no further
+		# trigger_on_create fires, i.e. the widgets were reused.
+		if = {
+			limit = {
+				has_variable = et_g102_c
+				has_variable = et_g102_phase1
+				var:et_g102_c = var:et_g102_phase1
+			}
+			set_variable = { name = et_102_passed value = 1 }
+		}
+	}
+}
+
 et_hw_finish = {
 	scope = country
 

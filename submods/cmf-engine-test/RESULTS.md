@@ -148,6 +148,13 @@ Three engine findings from getting the builder loop clean:
 - **Numeric `var:` counter values work as distinct variable map keys.** The map reaching 1M distinct entries confirms `key = var:et_size_idx` keys on the counter's value; had the keys collapsed, the map size would stay 1 and every map tier would FAIL.
 - **Variable maps are dramatically faster than variable lists at scale (about 200x at 1M).** Building 1,000,000 entries took under 1 second for a map versus 3 minutes 20 seconds for a list. Building the 1k/10k/100k tiers was instant for a map and about 3 seconds for a list. Map insertion is near constant-time (hash map); list insertion cost grows with the list's current length (roughly quadratic total). For large per-country data, prefer a variable map over a variable list.
 
+## Re-run of Tests 1-75 (2026-07-27)
+
+Every prior test re-run alongside the new suites on 1.3.x. All results match the
+last recorded run exactly: 26, 27, 31, 36-38, 43, 47, 48, 50, 53, 61 and 72-75 FAIL,
+everything else PASS, and all 8 size tiers PASS. No behaviour changed since
+2026-07-05, so nothing in the earlier findings needs revisiting for this patch.
+
 ## Re-run of Tests 1-38 (2026-06-30)
 
 Re-run alongside the size tests; every result matches the prior run (26, 27, 31 FAIL; 36 displayed FAIL; 37, 38 displayed PASS as parse-error false positives; all others PASS). No behavior changed. (Macro tests 36-38 were redesigned to fail closed after this re-run; see the Macro Param Tests section.)
@@ -277,3 +284,379 @@ a new-game-only hook and does not run on save load.
 
 Result: CONFIRMED 2026-07-12. New game -> France Greek; loaded save -> France French.
 Vanilla `on_game_start` does not fire on save load, only on a new game.
+
+## Countryless Client Tests (76-89, 103, 107)
+
+Added 2026-07-27. Probes what a client can still do with no country of its own.
+Every claim in this area rested on one comparison across CMM's own feature surface,
+in a single unspecified observer state, so the distinct client states were never
+separated.
+
+The rig is `et_nc_core` in `et_nc_windows.gui`. It self-starts once the map exists
+and finishes about 4 seconds later, and it roots at `c:FRA` rather than the player.
+Its rows in `et_window.gui` read only `GetCountry('FRA')` and `GetVariableSystem`;
+nothing in section 8 touches `Player`, which comes back blank in three of the four
+states. The one button, Re-run Countryless Suite, only sets a GUI variable, since a
+scripted GUI Execute is the mechanism under test and would be dropped in exactly
+the states that matter.
+
+Test 76 exists to make the rest readable: without a marker proving the driver ran,
+a blank row cannot be told apart from a dropped Execute.
+
+Run 2026-07-27 on 1.3.x.
+
+| # | Test | Lobby | Country | Generic obs | Specific obs |
+|---|------|-------|---------|-------------|--------------|
+| 76 | A pass has run this client session | TRUE | TRUE | TRUE | TRUE |
+| 77 | GetPlayer.IsValid | FALSE | TRUE | FALSE | TRUE |
+| 78 | IsPlayerValid | FALSE | TRUE | FALSE | TRUE |
+| 79 | IsPlayerObserver | FALSE | FALSE | TRUE | TRUE |
+| 80 | Scripted GUI Execute reached script | **PASS** | PASS | **FAIL** | **FAIL** |
+| 81 | Scripted GUI IsShown evaluates | PASS | PASS | PASS | PASS |
+| 82 | Scripted GUI IsValid evaluates | PASS | PASS | PASS | PASS |
+| 83 | GetVariableSystem write + read | PASS | PASS | PASS | PASS |
+| 84 | Data read off a named country | PASS | PASS | PASS | PASS |
+| 85 | ExecuteConsoleCommand reached script | PASS | PASS | PASS | PASS |
+| 86 | Commands landed from a 3-call burst | 1 of 3 | 1 of 3 | 1 of 3 | 1 of 3 |
+| 87 | Commands landed from one `;` string | 3 of 3 | 3 of 3 | 3 of 3 | 3 of 3 |
+| 88 | Location.GetKey on location:paris | 2191 | 2191 | 2191 | 2191 |
+| 89 | Missing global map key reads silently | PASS | PASS | PASS | PASS |
+| 103 | GetVariableSystem compares as a string | PASS | PASS | PASS | PASS |
+| 107 | GUI variable carried from an earlier game | see below | see below | see below | see below |
+| 108 | Execute ~1s after map load reached script | PASS | PASS | | |
+| 109 | Console ~1s after map load reached script | FAIL | FAIL | | |
+
+Rows 76-89 and 103 are settled-state readings, taken via Re-run.
+
+**108/109 have no per-state columns and cannot have any.** They fire at map load, and
+at map load every client is still at the country-selection lobby: observer mode and
+taking a country are both reached through it. Two different questions were split out
+of that instead, and together they close the coverage:
+
+Run 2026-07-27, one full client relaunch per column so the map-load probes are armed.
+
+| # | Test | Lobby | Country | Generic obs | Specific obs |
+|---|------|-------|---------|-------------|--------------|
+| 108 | Execute ~1s after map load | PASS | PASS | PASS | PASS |
+| 109 | Console ~1s after map load | FAIL | FAIL | FAIL | FAIL |
+| 110 | Console ~2s after map load | PASS | PASS | PASS | PASS |
+| 111 | Console ~4s after map load | PASS | PASS | PASS | FAIL* |
+| 112 | Console ~8s after map load | PASS | PASS | PASS | PASS |
+| 113 | First Execute after taking a country | n/a | PASS | n/a | n/a |
+| 114 | First console after taking a country | n/a | PASS | n/a | n/a |
+| 115 | First Execute after entering observer | n/a | n/a | FAIL | FAIL |
+| 116 | First console after entering observer | n/a | n/a | PASS | PASS |
+
+n/a means that transition never happened in that column, so the probe never fired and
+its row shows the seeded 0 as FAIL. Those cells are not results.
+
+### Findings
+
+**The console warm-up ends between 1 and 2 seconds after map load.** 109 failed in all
+four sessions and 110 passed in all four, and 112 passed in all four. So the window is
+real, short, and identical in every column - which it must be, since at map load every
+client is still at the lobby.
+
+\* **111's single FAIL is a collision artifact, not a warm-up result.** A warm-up
+cannot fail at 4s while passing at 2s and 8s. In that column the observer transition
+happened while the ladder was running, and 116 passed, so the transition probe's own
+console command was in flight when the 4s rung fired and the rung was refused - which
+is exactly test 86's one-command-at-a-time rule predicting its own interference. The
+window conclusion does not rest on this rung.
+
+**Execute needs no warm-up at all (108).** It reached script about a second after map
+load in every session, while the console at the same instant did not. The two command
+paths are not gated the same way.
+
+**No state transition re-opens a warm-up (114, 116).** The very first console command
+issued after taking a country, and after entering observer, both landed immediately.
+
+**115 with 116 is the decisive form of the observer finding.** At the first frame of
+observer mode the Execute was already dead and the console already worked. Every
+timing explanation for test 80 is now excluded: it is not warm-up, not settling, and
+not gating, because the same instant produced a working console command and a dead
+Execute. Paired with 113/114 passing on the country transition, the split is purely
+about observer status.
+
+**107 reads FALSE in all four columns and that is correct.** Each column was a fresh
+relaunch, so each was the first game of its session. 107 needs two games inside one
+client run, which the previous run established (FALSE then TRUE).
+
+**Test 107 CONFIRMED (re-run 2026-07-27 after the rebuild): GUI variables survive
+from one game to the next inside a single client run.** First game of a fresh client
+session read FALSE, second game of the same session read TRUE, which is the shape the
+claim predicts and the shape the original broken version could not produce. The
+rebuilt gate uses `et_nc_fresh`, a country variable `et_nc_seed` sets at
+`on_game_start` and whichever branch fires clears; a GUI variable cannot be the
+per-game marker when surviving the game boundary is the thing being measured. This
+retires an assertion that had sat in two memories with no verification behind it.
+
+### Findings
+
+**The country-selection lobby is NOT a countryless client for Execute purposes.**
+This is the result that overturns the recorded lesson. `.Execute()` reached script
+at the lobby (80 PASS) with `GetPlayer.IsValid`, `IsPlayerValid` and
+`IsPlayerObserver` all reading FALSE, and failed in both observer states. The prior
+claim grouped "country-selection lobby, observer mode, between releasing one country
+and taking another" as one dead state; only the observer half holds. Selecting a
+country in the lobby without pressing Play changes nothing: all four rows read the
+same as the unselected lobby, so that is not a distinct state.
+
+**The console has a warm-up of between 1 and 2 seconds after map load; scripted GUI
+Executes have none (108-112).** Across six sessions the Execute at ~1s always reached
+script and the console at ~1s never did, while the console at ~2s and ~8s always did.
+Both probes are armed once per game by `et_nc_seed` and disarmed only by the reset, so
+a settled re-run cannot overwrite their answer. See the four-state table below.
+
+**RETRACTED: an earlier reading suggested "an early window where NO command lands,
+Execute and console alike". That was a rig artifact, not engine behaviour.** The
+driver's gate is `Not(GetVariableSystem.Exists('et_nc_done'))`, and that GUI variable
+survives the game boundary - which is exactly what test 107 confirms. So in any game
+after the first of a client run the driver never auto-runs at all, and every row
+reads the zeros `et_nc_seed` wrote. Step 2 of the 107 run reproduces it cleanly: 80
+and 85 FAIL with 0 of 3 on both console rows, then one press of Re-run in the SAME
+game turns all of them green. Nothing about elapsed time was involved. 108/109
+supersede that reading entirely.
+
+**Consequence for anyone running this suite: press Re-run Countryless Suite in every
+state, including the first.** The auto-run only happens in the first game of a client
+session. Row 76 reads the same persisting GUI variable, so it reports TRUE in a later
+game even when no pass ran there; treat it as "a pass has run at some point this
+session", not as "this state was measured".
+
+This does not touch the observer result, which tests 115/116 have since put beyond
+timing entirely: at the first frame of observer mode the console command landed and
+the Execute did not.
+
+Mechanism for the lobby accepting Executes at all is still unverified.
+
+**Observing a specific country is indistinguishable from playing on every accessor
+except `IsPlayerObserver`.** 77, 78 and 79 all read TRUE there, and 79 is the only
+one that differs from a normal game. So `GetPlayer.IsValid` alone is worthless as a
+"this client controls a country" test, and `And(GetPlayer.IsValid,
+Not(IsPlayerObserver))` is exactly right. `CMFHasPlayerCountry` is confirmed correct.
+
+**Generic observer and observing a country behave identically for Execute.** Both
+FAIL, despite generic observer having no valid player at all and specific observer
+reporting a valid one. So the discriminator for a dropped Execute is observer
+status, not player validity.
+
+**Everything that was claimed to still work, does.** IsShown, IsValid,
+GetVariableSystem, arbitrary-country data reads and ExecuteConsoleCommand pass in
+all four states, including generic observer.
+
+**The console really does take one command at a time (86).** Three
+`ExecuteConsoleCommand` calls in one state landed exactly 1, in every state, and the
+log carries exactly two `console.cpp:1268` "You can't add new commands while the
+console is still running commands" lines per pass. `ExecuteConsoleCommands` with
+`;` separators landed all 3 (87), so it is the only way to batch.
+
+**`Location.GetKey` returns the numeric runtime id (88).** `location:paris` reported
+`2191`, not `paris`. Confirmed.
+
+**A missing key in a global variable map reads silently in GUI (89).** No error, no
+break. This is the opposite of the script side, where a quoted `variable_map()` on a
+trigger's left side logs two errors per evaluation.
+
+**Test 107 is VOID - the test was broken, not the claim.** Its gate was a live
+expression on `et_nc_persist`, so the driver's own end-of-pass write to that key
+flipped the gate and fired it mid-game. It read TRUE everywhere including the first
+game of the session, which is impossible if it were measuring what it claimed. The
+rig now gates both branches on a per-game country variable (`et_nc_fresh`, set by
+`et_nc_seed` at `on_game_start` and cleared by whichever branch fires), because a GUI
+variable cannot be the per-game marker when surviving the game boundary is the thing
+being measured. Re-run needed; no conclusion either way yet.
+
+### Protocol
+
+**Press Re-run Countryless Suite in every state, including the first.** The automatic
+pass fires only in the first game of a client session, because its gate reads a GUI
+variable that survives the game boundary (test 107). In any later game the rows
+otherwise show `et_nc_seed`'s zeros, which is indistinguishable from the engine
+dropping every command. Rows 108/109 are the exception: they fire once per game at
+map load and keep that answer.
+
+The normal-country run is the control and is not optional. Without a run where
+every row can pass, a wall of FAILs in observer mode is indistinguishable from a
+broken rig.
+
+1. Enable only the engine test. Start a new grand campaign. At the country-
+   selection lobby, wait 5 seconds and record the section 8 and 9 rows: that is
+   the lobby state. If the window does not render there, record that instead; the
+   other states still stand on their own.
+2. Take France and enter the game. Press Re-run Countryless Suite, wait 5 seconds,
+   and record the same rows. This is the control.
+3. Start a new grand campaign, swap to generic observer at the lobby, taking no
+   country. Once in game, press Re-run Countryless Suite, wait 5 seconds, record.
+4. Start a new grand campaign, swap to observing France specifically. Once in
+   game, press Re-run Countryless Suite, wait 5 seconds, record.
+
+Test 107 is answered by the second game of a client run, so it reads FALSE in step
+1 and TRUE from step 3 onward as long as the game was never closed in between.
+
+## Pure-Script Semantics (90-97, 106)
+
+Added 2026-07-27. Run button: Run Script Tests. No GUI rig and no timing.
+
+Run 2026-07-27 on 1.3.x.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 90 | change_variable max = 9 raises 3 to 9 | PASS | PASS |
+| 91 | change_variable min = 3 lowers 9 to 3 | PASS | PASS |
+| 92 | change_variable max = 3 leaves 9 alone | PASS | PASS |
+| 93 | List-iterator limit sees the body's own counter | FAIL (limit is blind to it) | FAIL |
+| 94 | local_var set in one scope block reads in another | PASS | PASS |
+| 95 | Same-named locals at two nesting levels share a slot | PASS | PASS |
+| 96 | Variable written on a province_definition reads back there | PROBE | **FAIL** |
+| 97 | Same variable read through a location's province_definition link | PROBE | **FAIL** |
+| 106 | Nested every_in_list scope reaches a helper called by macro-param name | FAIL (the CMM shape) | **PASS** |
+
+### Findings
+
+**`change_variable` `min`/`max` are the min/max FUNCTIONS on the current value
+(90-92).** `max = 9` raised 3 to 9, `min = 3` lowered 9 to 3, and `max = 3` left 9
+alone. The ceiling-clamp reading, which a code review once "fixed" a running
+maximum into and shipped as a regression, is wrong: `max` never lowers a value.
+This is now settled by a test rather than by an incident report.
+
+**A list-iterator `limit` cannot see the body's own counter increments (93).** The
+limit was `local_var:i < 2` on a 5-entry list with the body incrementing `i`, and
+all 5 entries were visited. Confirmed, and now isolated rather than resting on an
+observation where the batch size changed in the same edit.
+
+**`local_var:` is execution-wide (94, 95).** A local set inside `c:FRA = { }` read
+back inside `c:ENG = { }` in the same execution, and a same-named local written by
+an inner loop was visible to the outer scope afterwards. Both halves of the claim
+confirmed, including the positive direction that had only ever been inferred from
+the engine's error text.
+
+**The province_definition round-trip is dead on the WRITE side (96, 97).** This is
+the isolation the memory asked for. 96 wrote a variable on a `province_definition`
+and read it back **in the same block**, and still failed, so the value never lands
+at all. 97's failure is a consequence, not a second finding. Never store variables
+on a province_definition; the working pattern remains writing to every province
+slice via `every_province_in_province_definition`.
+
+**106 OVERTURNS the narrowed nested-scope claim.** A scope saved in a nested
+`every_in_list` over a temp list, handed to a helper as a macro-param NAME, WAS set
+inside the helper. Test 70 had already disproved the general form; this was the
+shape the memory narrowed the claim to, "until re-isolated". Both are now
+disproved, so the CMM list-reset bug was caused by something else and the
+nested-loop saved-scope rule should not be carried forward as an engine fact.
+
+90-92 are the three-way split of the `change_variable` min/max question. The
+recorded claim is that they are the min/max FUNCTIONS on the current value, not the
+floor/ceiling clamps that `min`/`max` mean inside a `value = { }` block. 92 is the
+half a code review once inverted, shipping a regression: a clamp reading would drop
+9 to 3 there.
+
+96 and 97 are the isolation the province_definition memory says was never done. The
+claim is that definition-scope variables do not round-trip, without knowing whether
+the write or the link read is the dead side. 96 PASS with 97 FAIL means the link
+read; 96 FAIL means the write.
+
+106 is the shape test 70 left open. Test 70 disproved the general form (a plain
+nested `every_country` read as a literal `scope:X` in a called effect works), and
+the memory then narrowed the claim to nested `every_in_list` with the scope name
+passed as a macro param, "until re-isolated". This is that shape.
+
+## State-Machine and Nesting (98-102)
+
+Added 2026-07-27. Runs with the hidden-window chain (Run Hidden Window Tests); the
+chain is about 4 seconds longer than before.
+
+Run 2026-07-27 on 1.3.x.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 98 | Chain reaches its tail past a bare name/duration/next state | FAIL (bare state stalls) | FAIL |
+| 99 | Control: same chain, middle state has an on_start | PASS | PASS |
+| 100 | GetGlobalList binds a global_variable_list to a datamodel | PASS | PASS |
+| 101 | Outer Scope context survives an inner Location datamodel | PASS | PASS |
+| 102 | datamodel_reuse_widgets keeps trigger_on_create from re-firing | PASS | PASS |
+
+### Findings
+
+**The bare-delay-state stall is real and now properly isolated (98 with 99).** Two
+chains identical except for an `on_start` on the middle state: the bare one never
+reached its tail, the control did, and both recorded that their `_show` fired first,
+so the failure is "started and stalled" rather than "never armed". The recorded
+lesson previously carried its own caveat that the state had been renamed in the same
+change, making `on_finish` the mechanism by inference; that caveat can be dropped.
+
+Possible mechanism, unconfirmed: the run logged one
+`pdx_gui_animation_runtime_state.cpp:613 Animation triggered has no valid state
+properties or sound effects` during the hidden-window suite. That is consistent with
+the engine refusing to play a state carrying nothing, which would be why the chain
+dies there. One occurrence, not attributed to a specific state, so it is a lead
+rather than a result. It does mean the "nothing is logged" half of the recorded
+lesson is doubtful.
+
+**`GetGlobalList` binds a script-side global_variable_list into a datamodel (100).**
+All 3 seeded targets instantiated.
+
+**An outer `Scope` datamodel binding survives an inner `Location` datamodel in the
+same tree (101).** Inside every inner row the outer `Scope.GetLocation` still
+resolved to the seeded paris, while the inner `Location` was a different location.
+Each type holds its own context slot; confirmed, and no longer resting only on a
+working fix in another mod.
+
+**`datamodel_reuse_widgets = yes` stops `trigger_on_create` firing per data item
+(102).** Swapping the list for three different targets produced no further fires.
+The CMM tab bar's deliberate exclusion from trigger_on_create caching rests on a
+real behaviour.
+
+98 and 99 are the controlled pair. The recorded claim came with its own caveat: the
+state was renamed in the same change that added the `on_finish`, so `on_finish` was
+"the mechanism by inference rather than by controlled test". These two chains are
+identical apart from the middle state's `on_start`, and both require their `_show`
+to have fired before scoring, so a FAIL means "started and stalled" rather than
+"never armed". Nothing in the existing rig covered this: every non-`_show` state in
+`et_hw_core` already carries an `on_start` or `on_finish`.
+
+101's inner datamodel is a fixed literal (`london`'s province locations) rather than
+one derived from the outer item, so the result does not depend on how many locations
+any province holds. If the `Scope` slot survives the `Location` rebinding,
+`Scope.GetLocation` is still paris inside every inner row; if it is shadowed, it is
+never paris. The check also requires at least one inner row where the two differ, so
+the two slots cannot pass by agreeing accidentally.
+
+102 seeds three targets, lets them instantiate, then swaps the list for three
+different targets. A PASS means no further `trigger_on_create` fires, i.e. the
+widgets were reused. This is the premise the CMM tab bar's exclusion from caching
+rests on; a FAIL means that exclusion is unnecessary.
+
+## on_action Scope and Periodic Pulses (104-105)
+
+Added 2026-07-27. Both count fires into a global, and the count is the result: a
+no-scope hook fires once, a country-scope hook would fire once per country. The
+seed is guarded so a per-country hook cannot re-zero its own counter.
+
+Run 2026-07-27 on 1.3.x.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 104 | on_game_start fires (1 = no scope, many = country scope) | 1 | 1 |
+| 105 | weather_monthly_pulse fires (should track elapsed months) | 6 after 6 months | 6 |
+
+### Findings
+
+**`on_game_start` fires exactly once, in no scope (104).** A country-scoped hook
+would have fired once per country and read in the hundreds. The project memory index
+line claiming it "fires before country selection, not after" describes something
+else and is not what this measures; the file it points at, "fires in no scope (not
+country scope)", is the one this confirms.
+
+**`weather_monthly_pulse` fires once per elapsed month in no scope (105).** Six fires
+between 1 April and 1 October, 1337. Not per country and not per location, so it is
+usable as the global monthly catch-up hook for a CMF-independent mod.
+
+104 settles a flat contradiction in the memory set: the project memory index line
+says `on_game_start` "fires before country selection, not after", while the file it
+points at says it "fires in no scope (not country scope)". Those are different
+claims and only the scope half is testable here.
+
+For 105, run the step-1 save from 1 April, 1337 to 1 October, 1337 and read the
+count. Six means once per elapsed month in no scope. A number in the hundreds or
+thousands would mean the pulse is country- or location-scoped.

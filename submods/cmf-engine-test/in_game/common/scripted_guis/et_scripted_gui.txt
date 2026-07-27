@@ -796,3 +796,180 @@ et_run_dups = {
 		set_variable = { name = et_dups_has_run value = 1 }
 	}
 }
+
+# Pure-script semantics (tests 90-97). No GUI rig and no timing: change_variable
+# min/max direction, whether a list iterator's limit sees the body's own writes,
+# how far a local_var reaches, and which half of province_definition storage is dead.
+et_run_script = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_90_passed value = 0 }
+		set_variable = { name = et_91_passed value = 0 }
+		set_variable = { name = et_92_passed value = 0 }
+		set_variable = { name = et_93_passed value = 0 }
+		set_variable = { name = et_94_passed value = 0 }
+		set_variable = { name = et_95_passed value = 0 }
+		set_variable = { name = et_96_passed value = 0 }
+		set_variable = { name = et_97_passed value = 0 }
+		set_variable = { name = et_106_passed value = 0 }
+		set_global_variable = { name = et_96_ok value = 0 }
+		set_global_variable = { name = et_97_ok value = 0 }
+
+		# Result: PASS
+		# -- Test 90 ---------------------------------------------
+		# max = Y as the max FUNCTION: 3 raised to 9. The opposite reading (a
+		# ceiling clamp, as in a value = { } block) would leave it at 3.
+		set_variable = { name = et_90_v value = 3 }
+		change_variable = { name = et_90_v max = 9 }
+		if = {
+			limit = { var:et_90_v = 9 }
+			set_variable = { name = et_90_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 91 ---------------------------------------------
+		# min = Y as the min function: 9 lowered to 3.
+		set_variable = { name = et_91_v value = 9 }
+		change_variable = { name = et_91_v min = 3 }
+		if = {
+			limit = { var:et_91_v = 3 }
+			set_variable = { name = et_91_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 92 ---------------------------------------------
+		# The half a code review once inverted: max never lowers a value. A
+		# ceiling clamp would drop 9 to 3 here.
+		set_variable = { name = et_92_v value = 9 }
+		change_variable = { name = et_92_v max = 3 }
+		if = {
+			limit = { var:et_92_v = 9 }
+			set_variable = { name = et_92_passed value = 1 }
+		}
+
+		# Result: FAIL
+		# -- Test 93 ---------------------------------------------
+		# Can a list iterator's limit bound the walk using a counter the body
+		# increments? A passing result means the limit DID see the increments and
+		# stopped at 2; the recorded claim says all 5 are visited.
+		if = { limit = { has_variable_list = et_93_list } clear_variable_list = et_93_list }
+		add_to_variable_list = { name = et_93_list target = flag:et_iter_a }
+		add_to_variable_list = { name = et_93_list target = flag:et_iter_b }
+		add_to_variable_list = { name = et_93_list target = flag:et_iter_c }
+		add_to_variable_list = { name = et_93_list target = flag:et_dup_a }
+		add_to_variable_list = { name = et_93_list target = flag:et_dup_b }
+		set_global_variable = { name = et_93_seen value = 0 }
+		set_local_variable = { name = et_93_i value = 0 }
+		every_in_list = {
+			variable = et_93_list
+			limit = { local_var:et_93_i < 2 }
+			change_global_variable = { name = et_93_seen add = 1 }
+			change_local_variable = { name = et_93_i add = 1 }
+		}
+		if = {
+			limit = { global_var:et_93_seen = 2 }
+			set_variable = { name = et_93_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 94 ---------------------------------------------
+		# Set a local inside one country block, read it inside another. A pass
+		# means the local namespace is the whole execution, not the scope object.
+		c:FRA = {
+			set_local_variable = { name = et_94_v value = 55 }
+		}
+		c:ENG = {
+			if = {
+				limit = { local_var:et_94_v = 55 }
+				set_local_variable = { name = et_94_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { local_var:et_94_ok = 1 }
+			set_variable = { name = et_94_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 95 ---------------------------------------------
+		# One name, two nesting levels. A pass means the inner loop's write is
+		# visible to the outer scope, i.e. they share a single slot.
+		set_local_variable = { name = et_95_v value = 1 }
+		every_in_list = {
+			variable = et_93_list
+			set_local_variable = { name = et_95_v value = 2 }
+		}
+		if = {
+			limit = { local_var:et_95_v = 2 }
+			set_variable = { name = et_95_passed value = 1 }
+		}
+
+		# Result: FAIL
+		# -- Test 96 ---------------------------------------------
+		# Write a variable on a province_definition and read it back on that same
+		# definition. Isolates the WRITE side of the round-trip.
+		# Cleared first so a value left by an earlier run cannot fake a pass.
+		location:paris = {
+			province_definition = {
+				if = { limit = { has_variable = et_96_v } remove_variable = et_96_v }
+				set_variable = { name = et_96_v value = 33 }
+				if = {
+					limit = { var:et_96_v = 33 }
+					set_global_variable = { name = et_96_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_96_ok = 1 }
+			set_variable = { name = et_96_passed value = 1 }
+		}
+
+		# Result: FAIL
+		# -- Test 97 ---------------------------------------------
+		# Read the same variable through a location's province_definition link.
+		# Isolates the LINK-READ side; 96 and 97 together name the dead half.
+		location:paris = {
+			if = {
+				limit = {
+					province_definition = { var:et_96_v = 33 }
+				}
+				set_global_variable = { name = et_97_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_97_ok = 1 }
+			set_variable = { name = et_97_passed value = 1 }
+		}
+
+		# Result: PASS
+		# -- Test 106 --------------------------------------------
+		# The narrowed claim test 70 left open: a scope saved in a NESTED
+		# every_in_list and handed to a helper by NAME as a macro param. A pass
+		# means the helper saw it set, which would overturn the claim.
+		set_global_variable = { name = et_106_ok value = 0 }
+		set_global_variable = { name = et_106_calls value = 0 }
+		if = { limit = { has_variable_list = et_106_inner } clear_variable_list = et_106_inner }
+		add_to_variable_list = { name = et_106_inner target = flag:et_iter_a }
+		add_to_variable_list = { name = et_106_inner target = flag:et_iter_b }
+		every_in_list = {
+			variable = et_93_list
+			root = {
+				every_in_list = {
+					variable = et_106_inner
+					save_scope_as = et_106_key
+					change_global_variable = { name = et_106_calls add = 1 }
+					et_106_helper = { key_scope = et_106_key }
+				}
+			}
+		}
+		if = {
+			limit = {
+				global_var:et_106_calls >= 1
+				global_var:et_106_ok = 1
+			}
+			set_variable = { name = et_106_passed value = 1 }
+		}
+
+		set_variable = { name = et_script_has_run value = 1 }
+	}
+}

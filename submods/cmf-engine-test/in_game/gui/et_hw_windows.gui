@@ -1,4 +1,4 @@
-﻿# Hidden-window engine test rig (tests 39-67). Probes the registered
+﻿# Hidden-window engine test rig (tests 39-67, 98-102). Probes the registered
 # hidden/driver window patterns used by CMF, Construction Manager, Autonomous
 # Diplomats, and SmartTaxes. Four registered top-level widgets:
 # - et_hw_core: dynamic always-true top-level holding the boot-driven
@@ -171,6 +171,41 @@ widget = {
 			name = et_hw_s18
 			on_start = "[GetVariableSystem.Clear('et_g66')]"
 			duration = 0.1
+			next = et_hw_s19
+		}
+
+		# Tests 98/99: arms both stall-probe chains at once. They differ only in
+		# whether their middle state carries an on_start.
+		state = {
+			name = et_hw_s19
+			on_start = "[GetScriptedGui('et_hw_arm_stall').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 1.5
+			next = et_hw_s20
+		}
+
+		# Tests 100/101: fire the global-list datamodels seeded by et_hw_seed.
+		state = {
+			name = et_hw_s20
+			duration = 0.1
+			on_finish = "[PdxGuiTriggerAllAnimations('et_g100_item_state')]"
+			on_finish = "[PdxGuiTriggerAllAnimations('et_g101_inner_state')]"
+			next = et_hw_s21
+		}
+
+		# Test 102 phase 2: swap the reuse list's contents for three different
+		# targets. A reused widget keeps its original instantiation, so its
+		# trigger_on_create must not fire again.
+		state = {
+			name = et_hw_s21
+			duration = 0.6
+			on_finish = "[GetScriptedGui('et_hw_reseed_reuse').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_hw_s22
+		}
+
+		state = {
+			name = et_hw_s22
+			duration = 0.8
+			on_finish = "[GetScriptedGui('et_hw_check_nesting').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 			on_finish = "[GetScriptedGui('et_hw_finish').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 		}
 	}
@@ -380,6 +415,125 @@ widget = {
 						name = et_g57_item_state
 						on_finish = "[GetScriptedGui('et_hw_rec_57').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 					}
+				}
+			}
+		}
+	}
+
+	# Test 98: the middle state carries name, duration and next and nothing
+	# else. If a bare delay state is a dead end, et_g98_tail never runs while
+	# et_g98_c still records that the chain started.
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And(GetPlayer.Exists, Player.MakeScope.GetVariable('et_g98_gate').IsSet)]"
+
+		state = {
+			name = _show
+			on_start = "[GetScriptedGui('et_hw_rec_98_start').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 0.3
+			next = et_g98_mid
+		}
+
+		state = {
+			name = et_g98_mid
+			duration = 0.3
+			next = et_g98_tail
+		}
+
+		state = {
+			name = et_g98_tail
+			on_start = "[GetScriptedGui('et_hw_rec_98').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+
+	# Test 99: the control. Identical to 98 except its middle state has an
+	# on_start, so any difference in outcome isolates that one attribute.
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And(GetPlayer.Exists, Player.MakeScope.GetVariable('et_g99_gate').IsSet)]"
+
+		state = {
+			name = _show
+			on_start = "[GetScriptedGui('et_hw_rec_99_start').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 0.3
+			next = et_g99_mid
+		}
+
+		state = {
+			name = et_g99_mid
+			on_start = "[GetVariableSystem.Set('et_g99_tick', '1')]"
+			duration = 0.3
+			next = et_g99_tail
+		}
+
+		state = {
+			name = et_g99_tail
+			on_start = "[GetScriptedGui('et_hw_rec_99').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+
+	# Test 100: a script-side global_variable_list bound straight into a
+	# datamodel. Items arrive as generic Scope.
+	widget = {
+		datamodel = "[GetGlobalList('et_g100_list')]"
+
+		item = {
+			widget = {
+				size = { 0 0 }
+				state = {
+					name = et_g100_item_state
+					on_finish = "[GetScriptedGui('et_hw_rec_100').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				}
+			}
+		}
+	}
+
+	# Test 101: an outer Scope-typed datamodel downcast to Location, then an
+	# inner Location-typed datamodel in the same tree. The inner list is a fixed
+	# literal rather than derived from the outer item, so the result does not
+	# depend on how many locations any province holds: if the Scope slot survives
+	# the Location rebinding, Scope.GetLocation is still paris inside every inner
+	# row; if it is shadowed, it is never paris.
+	widget = {
+		datamodel = "[GetGlobalList('et_g101_list')]"
+
+		item = {
+			widget = {
+				datacontext = "[Scope.GetLocation]"
+
+				widget = {
+					datamodel = "[GetLocationByKey('london').GetProvince.GetLocations]"
+
+					item = {
+						widget = {
+							size = { 0 0 }
+							state = {
+								name = et_g101_inner_state
+								on_finish = "[GetScriptedGui('et_hw_rec_101').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('et_outer', Scope.GetLocation.MakeScope).AddScope('et_inner', Location.MakeScope).End)]"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# Test 102: datamodel_reuse_widgets with a bare trigger_on_create child. The
+	# chain swaps the list contents once; a reused widget keeps its original
+	# instantiation, so the count should stay at the first seeding's 3.
+	widget = {
+		datamodel_reuse_widgets = yes
+		datamodel = "[GetPlayer.MakeScope.GetList('et_g102_list')]"
+
+		item = {
+			widget = {
+				size = { 0 0 }
+				state = {
+					name = et_g102_created
+					trigger_on_create = yes
+					on_start = "[GetScriptedGui('et_hw_rec_102').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 				}
 			}
 		}

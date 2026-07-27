@@ -37,6 +37,135 @@ types et_hw_types {
 	}
 }
 
+types et_nc_types {
+	# Result row for the countryless suite (Section 8). Reads nothing off Player,
+	# because the states this suite runs in have no player country and every
+	# Player read there comes back blank.
+	type et_nc_row = hbox {
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		spacing = 8
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 14
+			block "et_nc_row_label" {
+				text = "ET_NC_SECTION"
+			}
+		}
+
+		text_single = {
+			fontsize = 14
+			visible = "[Not(GetVariableSystem.Exists('et_nc_done'))]"
+			text = "ET_NOT_RUN"
+		}
+		text_single = {
+			fontsize = 14
+			block "et_nc_row_pass" {
+				visible = no
+			}
+			text = "ET_PASS"
+		}
+		text_single = {
+			fontsize = 14
+			block "et_nc_row_fail" {
+				visible = no
+			}
+			text = "ET_FAIL"
+		}
+	}
+
+	# Probe row: records what a function actually returns in each client state
+	# rather than scoring it, since the expected value is the unknown.
+	type et_nc_bool_row = hbox {
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		spacing = 8
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 14
+			block "et_nc_bool_label" {
+				text = "ET_NC_SECTION"
+			}
+		}
+
+		text_single = {
+			fontsize = 14
+			block "et_nc_bool_true" {
+				visible = no
+			}
+			text = "ET_TRUE"
+		}
+		text_single = {
+			fontsize = 14
+			block "et_nc_bool_false" {
+				visible = no
+			}
+			text = "ET_FALSE"
+		}
+	}
+
+	# Result row for the pure-script suite (Section 7b), scored off
+	# et_script_has_run.
+	type et_script_row = hbox {
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		spacing = 8
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 14
+			block "et_script_row_label" {
+				text = "ET_NC_SECTION"
+			}
+		}
+
+		text_single = {
+			fontsize = 14
+			visible = "[Not(Player.MakeScope.GetVariable('et_script_has_run').IsSet)]"
+			text = "ET_NOT_RUN"
+		}
+		text_single = {
+			fontsize = 14
+			block "et_script_row_pass" {
+				visible = no
+			}
+			text = "ET_PASS"
+		}
+		text_single = {
+			fontsize = 14
+			block "et_script_row_fail" {
+				visible = no
+			}
+			text = "ET_FAIL"
+		}
+	}
+
+	# Display row for a raw count or string. The value expression lives in the
+	# localization entry, so text still names a loc key.
+	type et_nc_text_row = hbox {
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		spacing = 8
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 14
+			block "et_nc_text_label" {
+				text = "ET_NC_SECTION"
+			}
+		}
+
+		text_single = {
+			fontsize = 14
+			block "et_nc_text_value" {
+				text = "ET_NOT_RUN"
+			}
+		}
+	}
+}
+
 window = {
 	name = "et_window"
 	parentanchor = center
@@ -1889,6 +2018,52 @@ window = {
 					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_75_passed').GetValue, '(CFixedPoint)1'))]" }
 					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_75_passed').GetValue, '(CFixedPoint)1')))]" }
 				}
+
+				# -- Test 98 -------------------------------------
+				# Expected FAIL: the bare middle state is expected to stall.
+				# Read against 99, which differs only by an on_start.
+				et_hw_row = {
+					blockoverride "et_hw_row_label" { text = "ET_98_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_98_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_98_passed').GetValue, '(CFixedPoint)1')))]" }
+				}
+
+				# -- Test 99 -------------------------------------
+				et_hw_row = {
+					blockoverride "et_hw_row_label" { text = "ET_99_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_99_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_99_passed').GetValue, '(CFixedPoint)1')))]" }
+				}
+
+				# -- Test 100 ------------------------------------
+				et_hw_row = {
+					blockoverride "et_hw_row_label" { text = "ET_100_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_100_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_100_passed').GetValue, '(CFixedPoint)1')))]" }
+				}
+
+				# -- Test 101 ------------------------------------
+				et_hw_row = {
+					blockoverride "et_hw_row_label" { text = "ET_101_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_101_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_101_passed').GetValue, '(CFixedPoint)1')))]" }
+				}
+
+				# -- Test 102 ------------------------------------
+				et_hw_row = {
+					blockoverride "et_hw_row_label" { text = "ET_102_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_102_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_102_passed').GetValue, '(CFixedPoint)1')))]" }
+				}
+
+				# -- Test 103 ------------------------------------
+				# GUI-side only: script cannot read the VariableSystem, so this
+				# compares '7' against '7.0' directly in the row.
+				et_nc_row = {
+					blockoverride "et_nc_row_label" { text = "ET_103_LABEL" }
+					blockoverride "et_nc_row_pass" { visible = "[And3(GetVariableSystem.Exists('et_nc_done'), GetVariableSystem.HasValue('et_nc_num', '7'), Not(GetVariableSystem.HasValue('et_nc_num', '7.0')))]" }
+					blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(And(GetVariableSystem.HasValue('et_nc_num', '7'), Not(GetVariableSystem.HasValue('et_nc_num', '7.0')))))]" }
+				}
 			}
 
 			# =======================================================
@@ -2001,6 +2176,340 @@ window = {
 					}
 				}
 			}
+
+		# =======================================================
+		# Section 7b: Pure-Script Semantics (90-97)
+		# =======================================================
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 16
+			text = "ET_SECTION_SCRIPT"
+			margin_top = 12
+		}
+
+		hbox = {
+			button_regular = {
+				text = "ET_RUN_SCRIPT"
+				minimumsize = { 180 30 }
+				fontsize = 14
+				onclick = "[GetScriptedGui('et_run_script').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				tooltip = "ET_RUN_SCRIPT_TOOLTIP"
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# -- Test 90 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_90_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_90_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_90_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 91 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_91_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_91_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_91_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 92 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_92_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_92_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_92_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 93 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_93_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_93_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_93_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 94 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_94_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_94_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_94_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 95 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_95_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_95_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_95_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 96 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_96_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_96_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_96_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 97 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_97_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_97_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_97_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 106 ------------------------------------
+			# Runs with this suite because it is pure script, though it belongs
+			# to the saved-scope question test 70 left open.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_106_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_106_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_106_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+		}
+
+		# =======================================================
+		# Section 8: Countryless Client Tests (76-89)
+		# =======================================================
+		# No run button: a button's onclick is an Execute, which is the mechanism
+		# under test. et_nc_core self-starts and finishes about 4 seconds in.
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 16
+			text = "ET_SECTION_NC"
+			margin_top = 12
+		}
+
+		text_multi = {
+			layoutpolicy_horizontal = expanding
+			autoresize = yes
+			fontsize = 12
+			text = "ET_NC_INSTRUCTIONS"
+		}
+
+		# Sets a GUI variable and nothing else, so it works with no player
+		# country. et_nc_core's reset widget does the actual clearing.
+		hbox = {
+			button_regular = {
+				text = "ET_NC_RESET"
+				minimumsize = { 180 30 }
+				fontsize = 14
+				onclick = "[GetVariableSystem.Set('et_nc_reset', '1')]"
+				tooltip = "ET_NC_RESET_TOOLTIP"
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# -- Test 76 -------------------------------------
+			# Separates "the Execute was dropped" from "the driver never ran".
+			et_nc_bool_row = {
+				blockoverride "et_nc_bool_label" { text = "ET_76_LABEL" }
+				blockoverride "et_nc_bool_true" { visible = "[GetVariableSystem.Exists('et_nc_fired')]" }
+				blockoverride "et_nc_bool_false" { visible = "[Not(GetVariableSystem.Exists('et_nc_fired'))]" }
+			}
+
+			# -- Test 77 -------------------------------------
+			et_nc_bool_row = {
+				blockoverride "et_nc_bool_label" { text = "ET_77_LABEL" }
+				blockoverride "et_nc_bool_true" { visible = "[GetPlayer.IsValid]" }
+				blockoverride "et_nc_bool_false" { visible = "[Not(GetPlayer.IsValid)]" }
+			}
+
+			# -- Test 78 -------------------------------------
+			et_nc_bool_row = {
+				blockoverride "et_nc_bool_label" { text = "ET_78_LABEL" }
+				blockoverride "et_nc_bool_true" { visible = "[IsPlayerValid]" }
+				blockoverride "et_nc_bool_false" { visible = "[Not(IsPlayerValid)]" }
+			}
+
+			# -- Test 79 -------------------------------------
+			et_nc_bool_row = {
+				blockoverride "et_nc_bool_label" { text = "ET_79_LABEL" }
+				blockoverride "et_nc_bool_true" { visible = "[IsPlayerObserver]" }
+				blockoverride "et_nc_bool_false" { visible = "[Not(IsPlayerObserver)]" }
+			}
+
+			# -- Test 80 -------------------------------------
+			# The claim under test. Read with 76: driver fired, Execute did not land.
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_80_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_exec').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_exec').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 81 -------------------------------------
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_81_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), GetScriptedGui('et_nc_shown_probe').IsShown(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End))]" }
+				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(GetScriptedGui('et_nc_shown_probe').IsShown(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End)))]" }
+			}
+
+			# -- Test 82 -------------------------------------
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_82_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), GetScriptedGui('et_nc_valid_probe').IsValid(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End))]" }
+				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(GetScriptedGui('et_nc_valid_probe').IsValid(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End)))]" }
+			}
+
+			# -- Test 83 -------------------------------------
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_83_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), GetVariableSystem.HasValue('et_nc_vs', 'seven'))]" }
+				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(GetVariableSystem.HasValue('et_nc_vs', 'seven')))]" }
+			}
+
+			# -- Test 84 -------------------------------------
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_84_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), EqualTo_CFixedPoint(GuiScope.AddScope('country', GetCountry('FRA').MakeScope).ScriptValue('et_nc_sv'), '(CFixedPoint)42'))]" }
+				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(EqualTo_CFixedPoint(GuiScope.AddScope('country', GetCountry('FRA').MakeScope).ScriptValue('et_nc_sv'), '(CFixedPoint)42')))]" }
+			}
+
+			# -- Test 85 -------------------------------------
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_85_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_console').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_console').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 86 -------------------------------------
+			# 1 confirms the one-command-at-a-time refusal; 3 overturns it.
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_86_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_86_VALUE" }
+			}
+
+			# -- Test 87 -------------------------------------
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_87_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_87_VALUE" }
+			}
+
+			# -- Test 88 -------------------------------------
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_88_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_88_VALUE" }
+			}
+
+			# -- Test 108 ------------------------------------
+			# The auto-run's answer only: the reset disarms these rather than
+			# re-firing them, so a manual re-run in a settled game cannot
+			# overwrite what the earliest pass recorded.
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_108_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_early_exec').GetValue, '(CFixedPoint)1')]" }
+				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_early_exec').GetValue, '(CFixedPoint)1'))]" }
+			}
+
+			# -- Test 109 ------------------------------------
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_109_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_early_console').GetValue, '(CFixedPoint)1')]" }
+				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_early_console').GetValue, '(CFixedPoint)1'))]" }
+			}
+
+			# -- Tests 110-112 -------------------------------
+			# Console warm-up ladder. Read with 109 (1s) and 85 (12s) to bracket
+			# how long the window lasts.
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_110_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_w2').GetValue, '(CFixedPoint)1')]" }
+				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_w2').GetValue, '(CFixedPoint)1'))]" }
+			}
+
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_111_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_w4').GetValue, '(CFixedPoint)1')]" }
+				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_w4').GetValue, '(CFixedPoint)1'))]" }
+			}
+
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_112_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_w8').GetValue, '(CFixedPoint)1')]" }
+				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_w8').GetValue, '(CFixedPoint)1'))]" }
+			}
+
+			# -- Tests 113-116 -------------------------------
+			# State-transition probes. These reach what the map-load probes
+			# cannot: at map load every client is still at the lobby.
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_113_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_tc_exec').GetValue, '(CFixedPoint)1')]" }
+				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_tc_exec').GetValue, '(CFixedPoint)1'))]" }
+			}
+
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_114_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_tc_console').GetValue, '(CFixedPoint)1')]" }
+				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_tc_console').GetValue, '(CFixedPoint)1'))]" }
+			}
+
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_115_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_to_exec').GetValue, '(CFixedPoint)1')]" }
+				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_to_exec').GetValue, '(CFixedPoint)1'))]" }
+			}
+
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_116_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_to_console').GetValue, '(CFixedPoint)1')]" }
+				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_to_console').GetValue, '(CFixedPoint)1'))]" }
+			}
+
+			# -- Test 89 -------------------------------------
+			# et_gmap9 exists and holds flag:et_key_a, so this reads a missing key
+			# from a present map rather than a missing map.
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_89_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(GetVariableFromGlobalVariableMap('et_gmap9', MakeScopeFlag('et_nc_absent')).IsSet))]" }
+				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), GetVariableFromGlobalVariableMap('et_gmap9', MakeScopeFlag('et_nc_absent')).IsSet)]" }
+			}
+		}
+
+		# =======================================================
+		# Section 9: on_action, Timing and Persistence (104-107)
+		# =======================================================
+		# 104 and 105 count fires, so the count is the result: 1 means a no-scope
+		# hook, a per-country hook would run to hundreds. 105 and 107 need elapsed
+		# time and a second game, so both are display rows.
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 16
+			text = "ET_SECTION_PULSE"
+			margin_top = 12
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# -- Test 104 ------------------------------------
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_104_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_104_VALUE" }
+			}
+
+			# -- Test 105 ------------------------------------
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_105_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_105_VALUE" }
+			}
+
+			# -- Test 107 ------------------------------------
+			# et_nc_carried is set only when et_nc_persist was already present as
+			# this game's map came up, so FALSE on the first game of a client run
+			# and TRUE on the second is the claim holding.
+			et_nc_bool_row = {
+				blockoverride "et_nc_bool_label" { text = "ET_107_LABEL" }
+				blockoverride "et_nc_bool_true" { visible = "[GetVariableSystem.HasValue('et_nc_carried', 'yes')]" }
+				blockoverride "et_nc_bool_false" { visible = "[GetVariableSystem.HasValue('et_nc_carried', 'no')]" }
+			}
+		}
 
 			} # end blockoverride "scrollbox_content"
 		} # end scrollbox

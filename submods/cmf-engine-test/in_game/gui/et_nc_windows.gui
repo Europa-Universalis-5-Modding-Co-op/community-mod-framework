@@ -1,0 +1,235 @@
+﻿# Countryless-client engine test rig (tests 76-89). Probes what still works on a
+# client with no country of its own: the country-selection lobby, generic observer
+# mode, and observing a specific country.
+#
+# The rig cannot reuse anything from et_window.gui or et_hw_windows.gui: every run
+# button there is a scripted GUI Execute and every result row reads Player, and
+# both are unavailable in the states under test. So this driver self-starts, roots
+# at c:FRA instead of the player, and its rows in et_window.gui read
+# GetCountry('FRA') and GetVariableSystem only.
+#
+# et_nc_fired is set before anything else so a blank row can be told apart from a
+# dropped Execute. Without it, "the driver never ran" and "the Execute went nowhere"
+# look identical.
+
+widget = {
+	name = "et_nc_core"
+	widgetid = et_nc_core
+	layer = top
+	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
+	position = { -10000 1 }
+
+	# Test 107. Both branches gate on c:FRA's et_nc_fresh, which et_nc_seed sets to
+	# 1 at on_game_start and whichever branch fires clears. A GUI variable cannot
+	# serve as the per-game marker here, because surviving the game boundary is the
+	# very thing under test: et_nc_persist and et_nc_done both carry over, so
+	# gating on either makes the answer true by construction. Reading the pair at
+	# map load and then closing both gates also stops the driver's own end-of-pass
+	# et_nc_persist write from re-opening them mid-game.
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And3(GetCountry('FRA').IsValid, GetVariableSystem.Exists('et_nc_persist'), EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_fresh').GetValue, '(CFixedPoint)1'))]"
+
+		state = {
+			name = _show
+			on_start = "[GetVariableSystem.Set('et_nc_carried', 'yes')]"
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_fresh value = 0 } }')]"
+		}
+	}
+
+	# The other half of test 107: no carried value at map load.
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And3(GetCountry('FRA').IsValid, Not(GetVariableSystem.Exists('et_nc_persist')), EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_fresh').GetValue, '(CFixedPoint)1'))]"
+
+		state = {
+			name = _show
+			on_start = "[GetVariableSystem.Set('et_nc_carried', 'no')]"
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_fresh value = 0 } }')]"
+		}
+	}
+
+	# Tests 108/109: the earliest commands the rig can issue, about a second after
+	# the map exists. Gated on c:FRA's et_nc_early_armed, which et_nc_seed sets and
+	# only the reset widget clears, so these keep the auto-run's answer and are not
+	# overwritten by a later manual re-run in a settled game.
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And(GetCountry('FRA').IsValid, EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_early_armed').GetValue, '(CFixedPoint)1'))]"
+
+		state = {
+			name = _show
+			on_start = "[GetScriptedGui('et_nc_early_probe').Execute(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End)]"
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_early_console value = 1 } }')]"
+		}
+	}
+
+	# Tests 110-112: how long the console warm-up lasts. Rungs at 2, 4 and 8
+	# seconds after the map exists, each one console command, read against 109's
+	# 1-second rung and against the main battery's 85 at 12s. Armed and disarmed
+	# with 108/109 so a settled re-run cannot overwrite the map-load answer.
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And(GetCountry('FRA').IsValid, EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_early_armed').GetValue, '(CFixedPoint)1'))]"
+
+		state = {
+			name = _show
+			on_start = "[GetVariableSystem.Set('et_nc_ladder', '1')]"
+			duration = 2.0
+			next = et_nc_w_a
+		}
+
+		state = {
+			name = et_nc_w_a
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_w2 value = 1 } }')]"
+			duration = 2.0
+			next = et_nc_w_b
+		}
+
+		state = {
+			name = et_nc_w_b
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_w4 value = 1 } }')]"
+			duration = 4.0
+			next = et_nc_w_c
+		}
+
+		state = {
+			name = et_nc_w_c
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_w8 value = 1 } }')]"
+		}
+	}
+
+	# Tests 113/114: the first commands issued after this client takes a country,
+	# which is a state transition the map-load probes above can never reach - at
+	# map load every client is still at the lobby. Fires once per game on the
+	# hidden-to-shown edge of the gate.
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And(GetPlayer.IsValid, Not(IsPlayerObserver))]"
+
+		state = {
+			name = _show
+			on_start = "[GetScriptedGui('et_nc_tc_probe').Execute(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End)]"
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_tc_console value = 1 } }')]"
+		}
+	}
+
+	# Tests 115/116: the same pair on entering observer mode.
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[IsPlayerObserver]"
+
+		state = {
+			name = _show
+			on_start = "[GetScriptedGui('et_nc_to_probe').Execute(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End)]"
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_to_console value = 1 } }')]"
+		}
+	}
+
+	# Re-arms the suite. Every game passes through the country-selection lobby,
+	# where the map already exists, so the driver below fires there before the
+	# player has reached observer mode or taken a country. Clearing et_nc_done
+	# reopens the driver's gate, giving one clean run per client state on demand.
+	# Uses nothing but GetVariableSystem and the console, since a scripted GUI
+	# Execute is the mechanism under test and cannot be relied on here.
+	# et_nc_persist and et_nc_carried are deliberately left alone: they are the
+	# cross-game pair for test 107.
+	widget = {
+		size = { 0 0 }
+		visible = "[GetVariableSystem.Exists('et_nc_reset')]"
+
+		state = {
+			name = _show
+			on_start = "[GetVariableSystem.Clear('et_nc_fired')]"
+			on_start = "[GetVariableSystem.Clear('et_nc_vs')]"
+			on_start = "[GetVariableSystem.Clear('et_nc_num')]"
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_exec value = 0 } set_variable = { name = et_nc_console value = 0 } set_variable = { name = et_nc_burst value = 0 } set_variable = { name = et_nc_batch value = 0 } set_variable = { name = et_nc_early_armed value = 0 } }')]"
+			on_start = "[GetVariableSystem.Clear('et_nc_done')]"
+			on_start = "[GetVariableSystem.Clear('et_nc_reset')]"
+		}
+	}
+
+	# Gated on the map existing rather than on a player, so it runs in every client
+	# state. The pin turns an already-true gate at creation into a first-show edge.
+	# The et_nc_done half closes the gate at the end of a pass so the reset widget
+	# above can reopen it, rather than the suite running once per session.
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And(GetCountry('FRA').IsValid, Not(GetVariableSystem.Exists('et_nc_done')))]"
+
+		# 12s settle. A 0.5s settle put the auto-run inside a window where the
+		# command system accepts nothing: at about 4 seconds after map load both
+		# the Execute and every console command were lost, while the same battery
+		# a minute later passed in full. Tests 108/109 measure that window
+		# deliberately; this delay keeps the main battery out of it.
+		state = {
+			name = _show
+			on_start = "[GetVariableSystem.Set('et_nc_fired', '1')]"
+			duration = 12.0
+			next = et_nc_s1
+		}
+
+		# Test 83: value written here, read back by its row.
+		# Test 103: et_nc_num is written as the string '7', so its row can check
+		# whether the VariableSystem compares as a string or as a number.
+		state = {
+			name = et_nc_s1
+			on_start = "[GetVariableSystem.Set('et_nc_vs', 'seven')]"
+			on_start = "[GetVariableSystem.Set('et_nc_num', '7')]"
+			duration = 0.1
+			next = et_nc_s2
+		}
+
+		# Test 80: the claim under test. Rooted at a valid country, which memory
+		# says does not help.
+		state = {
+			name = et_nc_s2
+			on_start = "[GetScriptedGui('et_nc_exec_probe').Execute(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End)]"
+			duration = 0.5
+			next = et_nc_s3
+		}
+
+		# Test 85: single console command.
+		state = {
+			name = et_nc_s3
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_console value = 1 } }')]"
+			duration = 0.5
+			next = et_nc_s4
+		}
+
+		# Test 86: three ExecuteConsoleCommand calls in one state. Memory says only
+		# the first lands and the rest are refused, so et_nc_burst should read 1.
+		state = {
+			name = et_nc_s4
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { change_variable = { name = et_nc_burst add = 1 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { change_variable = { name = et_nc_burst add = 1 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { change_variable = { name = et_nc_burst add = 1 } }')]"
+			duration = 1.0
+			next = et_nc_s5
+		}
+
+		# Test 87: the same three commands as one semicolon-separated string.
+		state = {
+			name = et_nc_s5
+			on_start = "[ExecuteConsoleCommands('effect c:FRA = { change_variable = { name = et_nc_batch add = 1 } };effect c:FRA = { change_variable = { name = et_nc_batch add = 1 } };effect c:FRA = { change_variable = { name = et_nc_batch add = 1 } }')]"
+			duration = 1.0
+			next = et_nc_s6
+		}
+
+		# et_nc_persist is set last and never cleared, so it is only ever present
+		# at map-load time on the second and later games of one client run.
+		state = {
+			name = et_nc_s6
+			on_start = "[GetVariableSystem.Set('et_nc_done', '1')]"
+			on_start = "[GetVariableSystem.Set('et_nc_persist', '1')]"
+			duration = 0.1
+		}
+	}
+}
