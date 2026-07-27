@@ -7,14 +7,14 @@
 widget = {
 	name = "cmf_country_transfer_monitor"
 	size = { 0 0 }
-	visible = "[GetPlayer.IsValid]"
+	visible = "[CMFHasPlayerCountry]"
 
-	# First country of the session. There is nothing to transfer from, but edits made
-	# before the country existed are waiting to be applied.
+	# First country of this game, or a tag left over from a previous game in this client run.
+	# Either way there is nothing to transfer from, but staged edits still apply.
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
-		visible = "[Not(GetVariableSystem.Exists('cmf_player_tag'))]"
+		visible = "[Not(CMFStoredPlayerTagIsCurrent)]"
 
 		state = {
 			name = _show
@@ -27,7 +27,7 @@ widget = {
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
-		visible = "[And(And(GetVariableSystem.Exists('cmf_player_tag'), Not(EqualTo_string(Localize('CMF_PLAYER_TAG'), GetVariableSystem.Get('cmf_player_tag')))), GetCountry(GetVariableSystem.Get('cmf_player_tag')).IsValid)]"
+		visible = "[And(CMFStoredPlayerTagIsCurrent, Not(EqualTo_string(Localize('CMF_PLAYER_TAG'), GetVariableSystem.Get('cmf_player_tag'))))]"
 
 		state = {
 			name = _show

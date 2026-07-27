@@ -143,7 +143,7 @@
 		block "small_button_size" { size = { -1 45 } }
 		using = FrontEndMiddleSectionButton
 		text = "CMM_PAUSE_MENU_BUTTON"
-		visible = "[And3(CMMHomeCountryValid, GetPlayer.IsValid, Or(Not(GameIsMultiplayer), IsHost))]"
+		visible = "[And3(CMMHomeCountryValid, CMFHasPlayerCountry, Or(Not(GameIsMultiplayer), IsHost))]"
 		onclick = "[GetScriptedGui('CMM_SetHostAndRegisterCoreMod').Execute(GuiScope.SetRoot(CMMHomeScope).End)]"
 		onclick = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
 		onclick = "[GetVariableSystem.Set('cmm_selected_mod', Select_CString(CMMSelectedModExists, GetVariableSystem.Get('cmm_selected_mod'), 'cmf_core'))]"
@@ -160,7 +160,7 @@
 		block "small_button_size" { size = { -1 45 } }
 		using = FrontEndMiddleSectionButton
 		text = "CMM_PAUSE_MENU_BUTTON"
-		visible = "[And(CMMHomeCountryValid, Or(Not(GetPlayer.IsValid), And(GameIsMultiplayer, Not(IsHost))))]"
+		visible = "[And(CMMHomeCountryValid, Or(Not(CMFHasPlayerCountry), And(GameIsMultiplayer, Not(IsHost))))]"
 		onclick = "[GetScriptedGui('CMM_RegisterCoreMod').Execute(GuiScope.SetRoot(CMMHomeScope).End)]"
 		onclick = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
 		onclick = "[GetVariableSystem.Set('cmm_selected_mod', Select_CString(CMMSelectedModExists, GetVariableSystem.Get('cmm_selected_mod'), 'cmf_core'))]"

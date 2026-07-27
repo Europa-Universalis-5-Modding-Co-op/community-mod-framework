@@ -7,6 +7,30 @@ macro = {
     replace_with = "GetCountry(GetVariableSystem.Get('cmm_home_tag'))"
 }
 
+# A country being observed reports as the player's, so the observer test is what separates a
+# country this client controls from one it is only watching. Vanilla pairs them the same way.
+# Returns: boolean
+macro = {
+    description = "True when this client controls a country of its own"
+    definition = "CMFHasPlayerCountry"
+    replace_with = "And(GetPlayer.IsValid, Not(IsPlayerObserver))"
+}
+
+# Args: Tag (string)
+# Returns: boolean
+macro = {
+    description = "True when a tag names a country carrying this game's registrations"
+    definition = "CMMTagIsRegistered(Tag)"
+    replace_with = "Not(IsDataModelEmpty(GetCountry(Tag).MakeScope.GetList('cmm_registered_mod_ids')))"
+}
+
+# Returns: boolean
+macro = {
+    description = "True when the stored player tag belongs to this game"
+    definition = "CMFStoredPlayerTagIsCurrent"
+    replace_with = "CMMTagIsRegistered(GetVariableSystem.Get('cmf_player_tag'))"
+}
+
 # Returns: boolean
 macro = {
     description = "True when the menu has a country to read from"
@@ -251,7 +275,7 @@ macro = {
 macro = {
     description = "Execute an auto-apply scripted GUI with setting scope"
     definition = "CMMExecuteAutoApply(GuiName,SettingKey)"
-    replace_with = "GetScriptedGui(GuiName).Execute(GuiScope.SetRoot(CMMHomeScope).AddScope('setting', MakeScopeFlag(SettingKey)).AddScope('cmm_staging', MakeScopeFlag(Select_CString(GetPlayer.IsValid, 'cmm_live', 'cmm_staged'))).End)"
+    replace_with = "GetScriptedGui(GuiName).Execute(GuiScope.SetRoot(CMMHomeScope).AddScope('setting', MakeScopeFlag(SettingKey)).AddScope('cmm_staging', MakeScopeFlag(Select_CString(CMFHasPlayerCountry, 'cmm_live', 'cmm_staged'))).End)"
 }
 
 # Args: Name (string)
