@@ -80,12 +80,14 @@ macro = {
     replace_with = "CMMValueEqualsOne(CMMMapValue('cmm_requires_unrestricted_tools_enabled', SettingKey))"
 }
 
+# A console-command setting is exempt from needing a player country, because the console
+# delivers it rather than a scripted GUI Execute.
 # Args: SettingKey (string)
 # Returns: boolean
 macro = {
     description = "True when local player can edit this setting"
     definition = "CMMCanEditSetting(SettingKey)"
-    replace_with = "And(CMFHasPlayerCountry, And(Or(Not(CMMSettingIsGlobal(SettingKey)), Or(Not(GameIsMultiplayer), IsHost)), Or(Not(CMMSettingRequiresUnrestrictedToolsEnabled(SettingKey)), Or(EqualTo_string(SettingKey, 'cmf_core__enable_unrestricted_tools'), And(CMMSettingIsRegistered('cmf_core__enable_unrestricted_tools'), CMMValueEqualsOne(CMMSettingValue('cmf_core__enable_unrestricted_tools')))))))"
+    replace_with = "And(Or(CMFHasPlayerCountry, CMMSettingHasConsoleCommand(SettingKey)), And(Or(Not(CMMSettingIsGlobal(SettingKey)), Or(Not(GameIsMultiplayer), IsHost)), Or(Not(CMMSettingRequiresUnrestrictedToolsEnabled(SettingKey)), Or(EqualTo_string(SettingKey, 'cmf_core__enable_unrestricted_tools'), And(CMMSettingIsRegistered('cmf_core__enable_unrestricted_tools'), CMMValueEqualsOne(CMMSettingValue('cmf_core__enable_unrestricted_tools')))))))"
 }
 
 # Args: SettingKey (string)
@@ -351,7 +353,7 @@ macro = {
 macro = {
     description = "Cached edit-permission rule for one setting row; the unrestricted-tools-enabled state stays live"
     definition = "CMMCachedCanEditSetting(SettingKey)"
-    replace_with = "And(CMFHasPlayerCountry, And(Or(Not(GetVariableSystem.HasValue(Concatenate(SettingKey, '_srisg'), 'yes')), Or(Not(GameIsMultiplayer), IsHost)), Or(Not(GetVariableSystem.HasValue(Concatenate(SettingKey, '_srrut'), 'yes')), Or(EqualTo_string(SettingKey, 'cmf_core__enable_unrestricted_tools'), And(CMMSettingIsRegistered('cmf_core__enable_unrestricted_tools'), CMMValueEqualsOne(CMMSettingValue('cmf_core__enable_unrestricted_tools')))))))"
+    replace_with = "And(Or(CMFHasPlayerCountry, CMMSettingHasConsoleCommand(SettingKey)), And(Or(Not(GetVariableSystem.HasValue(Concatenate(SettingKey, '_srisg'), 'yes')), Or(Not(GameIsMultiplayer), IsHost)), Or(Not(GetVariableSystem.HasValue(Concatenate(SettingKey, '_srrut'), 'yes')), Or(EqualTo_string(SettingKey, 'cmf_core__enable_unrestricted_tools'), And(CMMSettingIsRegistered('cmf_core__enable_unrestricted_tools'), CMMValueEqualsOne(CMMSettingValue('cmf_core__enable_unrestricted_tools')))))))"
 }
 
 # Args: SettingKey (string)
