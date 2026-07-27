@@ -1,4 +1,4 @@
-types et_hw_types {
+﻿types et_hw_types {
 	# Result row for the hidden-window tests (Section 6): label plus a
 	# NOT_RUN / PASS / FAIL readout driven by var:et_hw_has_run and the
 	# per-test et_NN_passed variable supplied via the blockoverrides.
@@ -2387,6 +2387,13 @@ window = {
 			et_nc_text_row = {
 				blockoverride "et_nc_text_label" { text = "ET_87_LABEL" }
 				blockoverride "et_nc_text_value" { text = "ET_87_VALUE" }
+			}
+
+			# -- Tests 117 / 118 -----------------------------
+			# Both must land all 20 calls, or the two bursts' log volumes are not comparable.
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_117_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_117_VALUE" }
 			}
 
 			# -- Test 88 -------------------------------------

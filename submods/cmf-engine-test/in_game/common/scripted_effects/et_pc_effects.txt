@@ -1,0 +1,18 @@
+﻿# Console parse-cost rig (tests 117, 118).
+#
+# A console effect command is parsed when it runs, and the claim under test is that this costs a
+# large fixed number of "Adding effect" / "Adding trigger" lines per COMMAND, rather than a cost
+# proportional to the effect the command names. The pair delivers the same 20 calls two ways: as 20
+# separate commands and as 20 calls inside one command. Equal call counts, different command counts,
+# so the difference in debug.log volume is the per-command floor.
+#
+# The counter is what makes each half pass or fail on its own terms: both bursts must land all 20
+# calls, or the volumes are not comparable. Burst A is submitted as one ';'-separated string because
+# the console refuses any command issued while another is running, so 20 separate
+# ExecuteConsoleCommand calls would land exactly one.
+
+# Deliberately one statement. The pair measures the cost of the command, so the named effect has to
+# be as small as it can be.
+et_pc_tiny = {
+	change_variable = { name = et_pc_n add = 1 }
+}

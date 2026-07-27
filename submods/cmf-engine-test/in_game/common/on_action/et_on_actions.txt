@@ -3,6 +3,7 @@
 		et_on_game_start
 		et_on_game_start_load_probe
 		et_nc_seed
+		et_pc_seed
 		et_on_game_start_scope_probe
 	}
 }
@@ -62,6 +63,20 @@ et_nc_seed = {
 				set_variable = { name = et_nc_tc_console value = 0 }
 				set_variable = { name = et_nc_to_exec value = 0 }
 				set_variable = { name = et_nc_to_console value = 0 }
+			}
+		}
+	}
+}
+
+# Seeds the parse-cost pair (tests 117, 118). et_pc_n counts the calls both bursts land, and
+# et_pc_fresh is the per-game marker the driver gate reads.
+et_pc_seed = {
+	effect = {
+		if = {
+			limit = { country_exists = c:FRA }
+			c:FRA = {
+				set_variable = { name = et_pc_n value = 0 }
+				set_variable = { name = et_pc_fresh value = 1 }
 			}
 		}
 	}

@@ -4,3 +4,4 @@ gui/et_hw_windows.gui = et_hw_static
 gui/et_hw_windows.gui = et_hw_gated_window
 gui/et_hw_windows.gui = et_hw_remote
 gui/et_nc_windows.gui = et_nc_core
+gui/et_pc_windows.gui = et_pc_core

@@ -1,0 +1,52 @@
+﻿# Console parse-cost rig (tests 117, 118). Self-starting, because the measurement is debug.log
+# volume and a run button would put its own Execute in the window.
+#
+# The two bursts are spaced far apart so their log lines separate cleanly by timestamp. The first
+# fires 5 seconds after the gate opens, which clears the 1-to-2 second console warm-up test 109
+# established, and the freshness marker is cleared last so its command lands outside both windows.
+#
+# The gate reads a country variable rather than a GUI variable: GUI variables survive from one game
+# to the next inside a client run (test 107), so a GUI marker would run the rig only in a session's
+# first game.
+
+widget = {
+	name = "et_pc_core"
+	widgetid = et_pc_core
+	layer = top
+	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
+	position = { -10000 1 }
+
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And(GetCountry('FRA').IsValid, EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_pc_fresh').GetValue, '(CFixedPoint)1'))]"
+
+		state = {
+			name = _show
+			on_start = "[GetVariableSystem.Set('et_pc_started', 'yes')]"
+			duration = 5.0
+			next = et_pc_burst_a
+		}
+
+		# Test 117: 20 commands, one call each.
+		state = {
+			name = et_pc_burst_a
+			on_start = "[ExecuteConsoleCommandsForced('effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };')]"
+			duration = 12.0
+			next = et_pc_burst_b
+		}
+
+		# Test 118: 1 command, 20 calls.
+		state = {
+			name = et_pc_burst_b
+			on_start = "[ExecuteConsoleCommandsForced('effect c:FRA = { et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes }')]"
+			duration = 8.0
+			next = et_pc_done
+		}
+
+		state = {
+			name = et_pc_done
+			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_pc_fresh value = 0 } }')]"
+		}
+	}
+}

@@ -75,6 +75,8 @@ et_suppress_warnings = {
 			exists = var:et_97_passed
 			exists = var:et_106_passed
 			exists = var:et_script_has_run
+			# Parse-cost pair (117, 118); the gate reads this in a GUI expression
+			exists = var:et_pc_fresh
 			# Suppress "set but never used" for local variables
 			exists = local_var:et_lv
 			exists = local_var:et_map_name
@@ -88,5 +90,9 @@ et_suppress_warnings = {
 			exists = flag:et_dup_a
 			exists = flag:et_dup_b
 		}
+		# Suppress "used but never set" for the names read only as the map-name half of a quoted
+		# variable_map lookup (tests 34, 35). The limit above registers reads; these are the writes.
+		set_local_variable = { name = et_map_name value = 0 }
+		set_variable = { name = et_map_name_v value = 0 }
 	}
 }

@@ -1,4 +1,4 @@
-# Engine Test Results
+﻿# Engine Test Results
 
 Date: 2026-06-14
 
@@ -660,3 +660,77 @@ claims and only the scope half is testable here.
 For 105, run the step-1 save from 1 April, 1337 to 1 October, 1337 and read the
 count. Six means once per elapsed month in no scope. A number in the hundreds or
 thousands would mean the pulse is country- or location-scoped.
+
+## Console Parse Cost (117-118)
+
+Rig: `et_pc_effects.txt`, `et_pc_windows.gui`, seeded by `et_pc_seed`. Self-starting, so no
+Execute of its own lands inside the measurement windows.
+
+The claim under test: a console `effect` command is parsed when it runs, and that costs a large
+FIXED number of `jomini_effect.cpp:158` / `jomini_trigger.cpp:103` lines per COMMAND, rather than a
+cost set by the size of the effect the command names.
+
+This came out of the Construction Manager observer bridge, where the recorded lesson was the
+opposite - "cost tracks the size of the effect tree it names" - inferred from a single measurement
+of 29 commands naming one mid-sized scoring effect at ~3,400 lines each. One data point cannot
+separate "3,400 because that tree is that big" from "3,400 because every command costs that". The
+pair below separates them.
+
+| # | Test | Expected if fixed per command | Expected if proportional |
+|---|------|-------------------------------|--------------------------|
+| 117 | 20 calls as 20 commands | ~20x the floor | same as 118 |
+| 118 | the same 20 calls in 1 command | ~1x the floor | same as 117 |
+
+Both bursts call `et_pc_tiny`, a one-statement effect that names nothing, exactly 20 times. Equal
+call counts, different command counts, so the difference in log volume is the per-command floor.
+Burst 117 is submitted as one `;`-separated string rather than 20 `ExecuteConsoleCommand` calls,
+because the console refuses any command issued while another is running (test 86) and 20 separate
+calls would land one.
+
+The counter row is the pass condition for both: `et_pc_n` must read 40. If either burst dropped
+calls the volumes are not comparable and the measurement is void.
+
+### Protocol
+
+New game as France, not ironman. The rig self-starts at map load: burst 117 fires 5 seconds in
+(clear of the 1-to-2 second console warm-up, test 109), burst 118 twelve seconds after that, and
+the freshness marker is cleared 8 seconds later so its own command sits outside both windows. Wait
+30 seconds on the map, then check the row reads 40 of 40 and read the volumes out of `debug.log`,
+which carries a `[HH:MM:SS]` stamp on every line, so the two bursts separate by timestamp. The
+`console.cpp:1175` lines mark each burst: 20 of them for 117, one for 118.
+
+### Result
+
+Run 2026-07-27, new game as France. The counter row read **40 of 40**, so both bursts landed every
+call and the volumes are comparable.
+
+| # | Test | Commands | Calls | `Adding effect` + `Adding trigger` lines |
+|---|------|----------|-------|------------------------------------------|
+| 117 | 20 calls as 20 commands | 20 | 20 | **67,535** |
+| 118 | the same 20 calls in 1 command | 1 | 20 | **3,395** |
+
+**CONFIRMED: the cost is fixed per command, not proportional to the effect named.** The same 20
+calls cost 19.9x more spread across 20 commands than packed into one.
+
+The rest of the run calibrates the floor exactly, because every other second in the log holds a
+whole number of unrelated single commands and the volume tracks it precisely: 1 command = 3,376
+lines at six separate timestamps, 2 commands = 6,752, 3 commands = 10,128. So **the floor is 3,376
+lines per command**, and it is charged whatever the command names - `et_pc_tiny` is a single
+`change_variable` statement.
+
+The named effect's own size shows up as a small term on top: burst 118's one command came to 3,395,
+which is the floor plus 19, against the 20 `et_pc_tiny` call sites it carries. About one line per
+statement instantiated. That is why burst 117 reads 3,377 per command rather than 3,376.
+
+This overturns the recorded lesson directly. The earlier reading of ~3,400 lines per command was
+attributed to the size of the scoring effect being named; a one-statement effect costing 3,376 shows
+the number was the floor all along. The design rule that follows is to minimise the COMMAND COUNT,
+not the size of the effect each command names.
+
+### Note on the proportional term
+
+The live Construction Manager measurement also showed a term above the floor for very large named
+trees: commands naming a 222,195-node tree cost on the order of a million lines each, far above the
+floor. This pair does not test that half, since a tree that size cannot be built here without
+generating a large amount of throwaway script. That half stays a live measurement.
+

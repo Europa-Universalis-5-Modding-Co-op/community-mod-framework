@@ -166,3 +166,5 @@
  ET_PASS: "#G PASS#!"
  ET_FAIL: "#R FAIL#!"
  ET_NOT_RUN: "---"
+ ET_117_LABEL: "117/118: Calls landed by both parse-cost bursts (20 commands, then 1)"
+ ET_117_VALUE: "[GetCountry('FRA').MakeScope.GetVariable('et_pc_n').GetValue|0] of 40"
