@@ -290,16 +290,6 @@ _cmm_handle_action_bar_button_change = {
 # Scope: country
 _cmm_handle_core_callback = {
 	if = {
-		limit = { var:cmf_callback = flag:cmf_core__open_log }
-		if = {
-			limit = { has_variable = cmf_log_view_open }
-			remove_variable = cmf_log_view_open
-		}
-		else = {
-			set_variable = { name = cmf_log_view_open value = yes }
-		}
-	}
-	else_if = {
 		limit = { var:cmf_callback = flag:cmf_core__action_bar_buttons }
 		cmm_for_each_list_item = {
 			setting = cmf_core__action_bar_buttons
@@ -310,7 +300,6 @@ _cmm_handle_core_callback = {
 	# Benign warning suppression
 	if = {
 		limit = { always = no }
-		cmf_suppress = { v = cmf_log_view_open }
 	}
 }
 

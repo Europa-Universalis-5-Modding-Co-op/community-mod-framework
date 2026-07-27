@@ -82,11 +82,19 @@
 				}
 
 				button_regular = {
-					visible = "[CMMCachedSettingTypeIs(Scope.GetFlagName, '6')]"
+					visible = "[And(CMMCachedSettingTypeIs(Scope.GetFlagName, '6'), Not(CMMSettingTogglesLogView(Scope.GetFlagName)))]"
 					minimumsize = { 168 32 }
 					enabled = "[CMMCachedSettingEnabled(Scope.GetFlagName)]"
 					text = "[CMMCachedSettingButtonText(Scope.GetFlagName)]"
 					onclick = "[CMMExecuteAutoApply('cmm_auto_apply_button', Scope.GetFlagName)]"
+					tooltip_enabled = no
+				}
+
+				button_regular = {
+					visible = "[And(CMMCachedSettingTypeIs(Scope.GetFlagName, '6'), CMMSettingTogglesLogView(Scope.GetFlagName))]"
+					minimumsize = { 168 32 }
+					text = "[CMMCachedSettingButtonText(Scope.GetFlagName)]"
+					onclick = "[GetVariableSystem.Toggle('cmf_log_view_open')]"
 					tooltip_enabled = no
 				}
 

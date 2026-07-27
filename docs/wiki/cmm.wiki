@@ -33,7 +33,7 @@ Most settings work automatically: just register them and CMM handles the UI and 
 
 All types except text have global variants (<code>cmm_register_global_*</code>); these store values globally and apply to all players rather than per country, and in multiplayer only the host can edit them.
 
-The menu also opens with no country selected, on the country selection lobby and in observer mode. Country-scoped settings show the last country's values and changes are applied to the next country taken, firing <code>cmf_on_callback</code> in that country's scope.
+The menu also opens with no country selected, on the country selection lobby and in observer mode. It is read-only there: settings show the last country's values and cannot be changed.
 
 == Toggle ==
 [[File:CMM_Toggle.png|thumb|right|A CMM toggle.]]

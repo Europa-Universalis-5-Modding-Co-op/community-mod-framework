@@ -24,7 +24,7 @@
 		window_header_alt = {
 			blockoverride "header_text_object" {
 				hbox = {
-					visible = "[CMMHomeScope.GetVariable('cmf_log_view_open').IsSet]"
+					visible = "[GetVariableSystem.Exists('cmf_log_view_open')]"
 
 					header_title = {
 						text = "CMM_LOG_TITLE"
@@ -32,7 +32,7 @@
 				}
 
 				hbox = {
-					visible = "[And(Not(CMMSelectedModExists), Not(CMMHomeScope.GetVariable('cmf_log_view_open').IsSet))]"
+					visible = "[And(Not(CMMSelectedModExists), Not(GetVariableSystem.Exists('cmf_log_view_open')))]"
 
 					header_title = {
 						text = "CMM_WINDOW_TITLE"
@@ -40,7 +40,7 @@
 				}
 
 				hbox = {
-					visible = "[And(CMMSelectedModExists, Not(CMMHomeScope.GetVariable('cmf_log_view_open').IsSet))]"
+					visible = "[And(CMMSelectedModExists, Not(GetVariableSystem.Exists('cmf_log_view_open')))]"
 
 					header_title = {
 						size = { -1 40 }
@@ -63,10 +63,10 @@
 
 			cmm_mod_list_panel = {}
 			cmm_settings_panel = {
-				visible = "[Not(CMMHomeScope.GetVariable('cmf_log_view_open').IsSet)]"
+				visible = "[Not(GetVariableSystem.Exists('cmf_log_view_open'))]"
 			}
 			cmm_log_panel = {
-				visible = "[CMMHomeScope.GetVariable('cmf_log_view_open').IsSet]"
+				visible = "[GetVariableSystem.Exists('cmf_log_view_open')]"
 			}
 		}
 	}

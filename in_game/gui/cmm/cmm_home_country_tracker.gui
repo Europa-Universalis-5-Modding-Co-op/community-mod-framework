@@ -19,10 +19,13 @@ widget = {
 		}
 	}
 
+	# The tag survives across games in one client run, so a country carried over from a previous
+	# game reads as valid while holding none of this game's registrations. Testing for those
+	# rather than for the tag's absence also covers the tag never having been set.
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
-		visible = "[And3(Not(GetPlayer.IsValid), Not(GetVariableSystem.Exists('cmm_home_tag')), CMMStorageCountryReady)]"
+		visible = "[And3(Not(GetPlayer.IsValid), CMMNoModsRegistered, CMMStorageCountryReady)]"
 
 		state = {
 			name = _show

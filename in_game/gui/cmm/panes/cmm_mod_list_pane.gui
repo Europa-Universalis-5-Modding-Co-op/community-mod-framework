@@ -181,7 +181,7 @@
 				using = bg_card_header_01_production
 				onclick = "[GetVariableSystem.Set('cmm_selected_mod', Scope.GetFlagName)]"
 				onclick = "[GetVariableSystem.Set('cmm_selected_tab', CMMTabLeaf(CMMMetadataFlag('cmm_mod_default_tab_', Scope.GetFlagName)))]"
-				onclick = "[CMMExecuteGui('CMF_CloseLogView')]"
+				onclick = "[GetVariableSystem.Clear('cmf_log_view_open')]"
 				down = "[GetVariableSystem.HasValue('cmm_selected_mod', Scope.GetFlagName)]"
 				tagtooltip_enabled = yes
 				tooltip = "[CMMCachedModDesc(Scope.GetFlagName)]"
