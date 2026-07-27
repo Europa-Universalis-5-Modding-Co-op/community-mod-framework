@@ -85,7 +85,7 @@ macro = {
 macro = {
     description = "List item field variable accessor"
     definition = "CMMListItemFieldVar(ItemKey,SlotKey)"
-    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey))))"
+    replace_with = "CMMHomeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey))))"
 }
 
 # Args: ItemKey (string), SlotKey (string)

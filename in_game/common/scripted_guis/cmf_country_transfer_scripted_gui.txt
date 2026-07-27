@@ -1,6 +1,7 @@
 ﻿# Fired by the country transfer monitor widget when the player's country tag changes.
-# Copies all CMM setting values from the old country to the new country, then
-# re-runs registration and fires the cmf_on_country_transfer on_action.
+# Copies all CMM setting values from the old country to the new country, applies any
+# settings changed while there was no country, then re-runs registration and fires the
+# cmf_on_country_transfer on_action.
 # Scope: none
 # Saved scopes: old_country (country), new_country (country)
 _cmf_on_country_transfer = {
@@ -26,6 +27,15 @@ _cmf_on_country_transfer = {
 			}
 		}
 
+		# Apply settings staged while the player had no country. Runs after the copy so a
+		# staged edit wins over the old country's value for the same setting.
+		if = {
+			limit = { exists = scope:new_country }
+			scope:new_country = {
+				_cmm_flush_staged_settings = yes
+			}
+		}
+
 		# Re-run registration on the new country to rebuild metadata and lookup tables
 		if = {
 			limit = { exists = scope:new_country }
@@ -46,5 +56,15 @@ _cmf_on_country_transfer = {
 				}
 			}
 		}
+	}
+}
+
+# Fired by the country transfer monitor widget when the player takes their first country of
+# the session, so settings changed before that country existed are applied to it.
+# Scope: country
+_cmf_on_country_acquired = {
+	scope = country
+	effect = {
+		_cmm_flush_staged_settings = yes
 	}
 }

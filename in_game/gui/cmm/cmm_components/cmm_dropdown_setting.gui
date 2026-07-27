@@ -5,7 +5,7 @@
 	# - Scope.GetFlagName [string]: current setting key in root context (`<mod_id>__<setting_id>`).
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: hovered 0-based widget option index in item context.
 	# - GetGlobalVariable(Scope.GetFlagName).GetValue [value]: current selected 1-based dropdown ordinal for global settings.
-	# - Player.MakeScope.GetVariable(Scope.GetFlagName) [value]: current selected 1-based dropdown ordinal for local settings.
+	# - CMMHomeScope.GetVariable(Scope.GetFlagName) [value]: current selected 1-based dropdown ordinal for local settings.
 	# - GetVariableSystem.Get('cmm_dropdown_hover_index') [string]: hovered 0-based widget option index used by selection callback.
 	# Writes:
 	# - GetVariableSystem.Set('cmm_dropdown_hover_index') [string]: tracks hovered/active 0-based widget option index.

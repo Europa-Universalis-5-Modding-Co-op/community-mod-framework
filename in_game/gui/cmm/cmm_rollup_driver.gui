@@ -7,12 +7,12 @@
 widget = {
 	name = "cmm_rollup_driver"
 	size = { 0 0 }
-	datacontext = "[GetPlayer]"
+	datacontext = "[CMMHomeCountry]"
 	visible = "[Country.IsValid]"
 
 	vbox = {
 		visible = "[GetVariableSystem.Exists('cmm_window_ready')]"
-		datamodel = "[Player.MakeScope.GetList('cmm_conditional_setting_keys')]"
+		datamodel = "[CMMHomeScope.GetList('cmm_conditional_setting_keys')]"
 
 		item = {
 			widget = {

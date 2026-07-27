@@ -6,14 +6,14 @@
 	# - GetVariableSystem.Get('cmm_selected_mod') [string]: active mod id for row visibility filtering.
 	# - GetVariableSystem.Get('cmm_selected_tab') [string]: active tab key for row visibility filtering.
 	# - GetGlobalVariable(Scope.GetFlagName).GetValue [value]: current setting value for global settings.
-	# - Player.MakeScope.GetVariable(Scope.GetFlagName) [value]: current setting value for local settings.
-	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_text')) [flag]: localized button caption for button settings.
-	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_desc')) [flag]: localized setting description used by hover tooltips.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_min_', Scope.GetFlagName)) [value]: numeric minimum bound.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_max_', Scope.GetFlagName)) [value]: numeric maximum bound.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_text_character_limit_', Scope.GetFlagName)) [value]: text character limit.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_slider_visual_step_count_', Scope.GetFlagName)) [value]: slider visual slot count.
-	# - Player.MakeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName)) [list<flag>]: ordered item keys for list settings.
+	# - CMMHomeScope.GetVariable(Scope.GetFlagName) [value]: current setting value for local settings.
+	# - CMMHomeScope.GetVariable(Concatenate(Scope.GetFlagName, '_text')) [flag]: localized button caption for button settings.
+	# - CMMHomeScope.GetVariable(Concatenate(Scope.GetFlagName, '_desc')) [flag]: localized setting description used by hover tooltips.
+	# - CMMHomeScope.GetVariable(Concatenate('cmm_setting_min_', Scope.GetFlagName)) [value]: numeric minimum bound.
+	# - CMMHomeScope.GetVariable(Concatenate('cmm_setting_max_', Scope.GetFlagName)) [value]: numeric maximum bound.
+	# - CMMHomeScope.GetVariable(Concatenate('cmm_setting_text_character_limit_', Scope.GetFlagName)) [value]: text character limit.
+	# - CMMHomeScope.GetVariable(Concatenate('cmm_setting_slider_visual_step_count_', Scope.GetFlagName)) [value]: slider visual slot count.
+	# - CMMHomeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName)) [list<flag>]: ordered item keys for list settings.
 	# Writes:
 	# - ExecuteConsoleCommand(...) [effect]: submits text settings through console-backed effect calls.
 	# - GetScriptedGui('cmm_auto_*').Execute(...) [effect]: applies setting changes via auto-apply scripted GUIs.

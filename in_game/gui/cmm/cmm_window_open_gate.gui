@@ -4,13 +4,13 @@
 widget = {
 	name = "cmm_window_open_gate"
 	size = { 0 0 }
-	datacontext = "[GetPlayer]"
+	datacontext = "[CMMHomeCountry]"
 	visible = "[Country.IsValid]"
 
 	state = {
 		name = cmm_window_open_arm
 		trigger_when = "[And(GetVariableSystem.Exists('cmm_window_open'), Not(GetVariableSystem.Exists('cmm_window_ready')))]"
-		on_start = "[GetScriptedGui('CMM_RegisterCoreMod').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		on_start = "[GetScriptedGui('CMM_RegisterCoreMod').Execute(GuiScope.SetRoot(CMMHomeScope).End)]"
 		on_start = "[PdxGuiTriggerAllAnimations('cmm_window_open_settle')]"
 	}
 

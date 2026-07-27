@@ -4,7 +4,7 @@
 	# Reads:
 	# - Scope.GetFlagName [string]: current setting key in root context (`<mod_id>__<setting_id>`).
 	# - GetGlobalVariable(Scope.GetFlagName).GetValue [value]: current slider value for global settings.
-	# - Player.MakeScope.GetVariable(Scope.GetFlagName) [value]: current slider value for local settings.
+	# - CMMHomeScope.GetVariable(Scope.GetFlagName) [value]: current slider value for local settings.
 	# - cmm_min variable map [value]: slider minimum bound (keyed by setting flag).
 	# - cmm_max variable map [value]: slider maximum bound (keyed by setting flag).
 	# - cmm_step variable map [value]: slider logical step size (keyed by setting flag).

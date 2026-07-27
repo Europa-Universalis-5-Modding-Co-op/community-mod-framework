@@ -3,11 +3,11 @@
 	# List setting widget with optional per-item move controls and dynamic field columns.
 	# Reads:
 	# - Scope.GetFlagName [string]: current list setting key in root context or current item key in row context.
-	# - Player.MakeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName)) [list<flag>]: item keys for country-scoped list settings.
+	# - CMMHomeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName)) [list<flag>]: item keys for country-scoped list settings.
 	# - GetGlobalList(Concatenate('cmm_list_items_', Scope.GetFlagName)) [list<flag>]: item keys for global list settings.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_list_is_ordered_', Scope.GetFlagName)) [value]: whether move controls are shown for the active list setting.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for one item row.
-	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_name')) [flag]: localized item label for one item row.
+	# - CMMHomeScope.GetVariable(Concatenate('cmm_setting_list_is_ordered_', Scope.GetFlagName)) [value]: whether move controls are shown for the active list setting.
+	# - CMMHomeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for one item row.
+	# - CMMHomeScope.GetVariable(Concatenate(Scope.GetFlagName, '_name')) [flag]: localized item label for one item row.
 	# - cmm_list_last_index variable map [value]: last valid row position for move-button visibility (keyed by setting flag).
 	# - GetVariableSystem.Get('cmm_list_hover_index') [string]: cached hovered row position for nested field interactions.
 	# Writes:
@@ -102,7 +102,7 @@
 			layoutpolicy_horizontal = expanding
 			spacing = 4
 			visible = "[Not(CMMSettingIsGlobal(Scope.GetFlagName))]"
-			datamodel = "[Player.MakeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName))]"
+			datamodel = "[CMMHomeScope.GetList(Concatenate('cmm_list_items_', Scope.GetFlagName))]"
 			datamodel_reuse_widgets = yes
 
 			item = {
@@ -127,9 +127,9 @@
 	# Reads:
 	# - Scope.GetFlagName [string]: current list item key (`<mod_id>__<setting_id>_item_<index>`).
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: current visible row index in the list datamodel.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for the row item.
-	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_name')) [flag]: localized row item label.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_list_is_ordered_', <setting_key>)) [value]: whether move controls are shown for the owner setting.
+	# - CMMHomeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for the row item.
+	# - CMMHomeScope.GetVariable(Concatenate(Scope.GetFlagName, '_name')) [flag]: localized row item label.
+	# - CMMHomeScope.GetVariable(Concatenate('cmm_setting_list_is_ordered_', <setting_key>)) [value]: whether move controls are shown for the owner setting.
 	# - cmm_list_last_index variable map [value]: last valid visible row index (keyed by setting flag).
 	# Writes:
 	# - GetVariableSystem.Set('cmm_list_hover_index', ...) [effect]: caches the currently hovered row position.

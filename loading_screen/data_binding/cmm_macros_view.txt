@@ -26,14 +26,14 @@ macro = {
 macro = {
     description = "True when no mods are registered yet"
     definition = "CMMNoModsRegistered"
-    replace_with = "IsDataModelEmpty(Player.MakeScope.GetList('cmm_registered_mod_ids'))"
+    replace_with = "IsDataModelEmpty(CMMHomeScope.GetList('cmm_registered_mod_ids'))"
 }
 
 # Returns: boolean
 macro = {
     description = "True when at least one mod is registered"
     definition = "CMMHasRegisteredMods"
-    replace_with = "Not(IsDataModelEmpty(Player.MakeScope.GetList('cmm_registered_mod_ids')))"
+    replace_with = "Not(IsDataModelEmpty(CMMHomeScope.GetList('cmm_registered_mod_ids')))"
 }
 
 # Args: ModId (string)
@@ -58,7 +58,7 @@ macro = {
 macro = {
     description = "True when one tab is a sub-tab of another tab"
     definition = "CMMTabHasParent(TabKey)"
-    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_tab_parent', MakeScopeFlag(TabKey)).IsSet"
+    replace_with = "CMMHomeScope.GetVariableFromVariableMap('cmm_tab_parent', MakeScopeFlag(TabKey)).IsSet"
 }
 
 # Args: TabKey (string)
@@ -66,7 +66,7 @@ macro = {
 macro = {
     description = "Parent tab key for one sub-tab"
     definition = "CMMTabParent(TabKey)"
-    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_tab_parent', MakeScopeFlag(TabKey)).GetFlagName"
+    replace_with = "CMMHomeScope.GetVariableFromVariableMap('cmm_tab_parent', MakeScopeFlag(TabKey)).GetFlagName"
 }
 
 # Args: TabKey (string)
@@ -74,7 +74,7 @@ macro = {
 macro = {
     description = "True when one tab has sub-tabs"
     definition = "CMMTabHasChildren(TabKey)"
-    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_tab_default_child', MakeScopeFlag(TabKey)).IsSet"
+    replace_with = "CMMHomeScope.GetVariableFromVariableMap('cmm_tab_default_child', MakeScopeFlag(TabKey)).IsSet"
 }
 
 # Args: TabKey (string)
@@ -82,7 +82,7 @@ macro = {
 macro = {
     description = "First sub-tab key for one tab"
     definition = "CMMTabDefaultChild(TabKey)"
-    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_tab_default_child', MakeScopeFlag(TabKey)).GetFlagName"
+    replace_with = "CMMHomeScope.GetVariableFromVariableMap('cmm_tab_default_child', MakeScopeFlag(TabKey)).GetFlagName"
 }
 
 # Args: TabKey (string)
@@ -180,7 +180,7 @@ macro = {
 macro = {
     description = "Toggle whether one group renders its settings box"
     definition = "CMMToggleGroupCollapsed(GroupKey)"
-    replace_with = "GetScriptedGui('CMM_ToggleGroupCollapsed').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('cmm_group', MakeScopeFlag(GroupKey)).End)"
+    replace_with = "GetScriptedGui('CMM_ToggleGroupCollapsed').Execute(GuiScope.SetRoot(CMMHomeScope).AddScope('cmm_group', MakeScopeFlag(GroupKey)).End)"
 }
 
 # Args: GroupKey (string)
@@ -188,7 +188,7 @@ macro = {
 macro = {
     description = "Apply the state one group is about to take to every group in its tab"
     definition = "CMMToggleTabGroupsCollapsed(GroupKey)"
-    replace_with = "GetScriptedGui('CMM_ToggleTabGroupsCollapsed').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('cmm_group', MakeScopeFlag(GroupKey)).End)"
+    replace_with = "GetScriptedGui('CMM_ToggleTabGroupsCollapsed').Execute(GuiScope.SetRoot(CMMHomeScope).AddScope('cmm_group', MakeScopeFlag(GroupKey)).End)"
 }
 
 # Cached mod-row metadata, written once per mod row by the cmm_cache_mod_row state.
@@ -232,7 +232,7 @@ macro = {
 macro = {
     description = "True when one group has at least one currently-visible setting"
     definition = "CMMGroupNonEmpty(GroupKey)"
-    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_group_nonempty', MakeScopeFlag(GroupKey)).IsSet"
+    replace_with = "CMMHomeScope.GetVariableFromVariableMap('cmm_group_nonempty', MakeScopeFlag(GroupKey)).IsSet"
 }
 
 # Args: GroupKey (string)
@@ -248,7 +248,7 @@ macro = {
 macro = {
     description = "True when one tab has at least one currently-visible setting"
     definition = "CMMTabNonEmpty(TabKey)"
-    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_tab_nonempty', MakeScopeFlag(TabKey)).IsSet"
+    replace_with = "CMMHomeScope.GetVariableFromVariableMap('cmm_tab_nonempty', MakeScopeFlag(TabKey)).IsSet"
 }
 
 # Args: ModId (string)
@@ -256,7 +256,7 @@ macro = {
 macro = {
     description = "True when one mod has at least one currently-visible setting"
     definition = "CMMModNonEmpty(ModId)"
-    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_mod_nonempty', MakeScopeFlag(ModId)).IsSet"
+    replace_with = "CMMHomeScope.GetVariableFromVariableMap('cmm_mod_nonempty', MakeScopeFlag(ModId)).IsSet"
 }
 
 # Args: SettingKey (string)
@@ -272,5 +272,5 @@ macro = {
 macro = {
     description = "Mirror one conditional setting's is_shown and rebuild the rollup"
     definition = "CMMRollupMarkSetting(SettingKey)"
-    replace_with = "GetScriptedGui(Select_CString(CMMGuiIsShown(Concatenate(SettingKey, '_on_changed')), 'CMM_MarkSettingShown', 'CMM_MarkSettingHidden')).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('setting', MakeScopeFlag(SettingKey)).End)"
+    replace_with = "GetScriptedGui(Select_CString(CMMGuiIsShown(Concatenate(SettingKey, '_on_changed')), 'CMM_MarkSettingShown', 'CMM_MarkSettingHidden')).Execute(GuiScope.SetRoot(CMMHomeScope).AddScope('setting', MakeScopeFlag(SettingKey)).End)"
 }

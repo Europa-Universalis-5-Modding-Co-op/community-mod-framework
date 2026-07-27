@@ -1,0 +1,103 @@
+﻿# Storage routing for setting values, so the menu still works with no player country.
+
+# Read the current value for scope:setting.
+# Scope: country
+# Args: out (local variable name)
+_cmm_load_setting_value = {
+	if = {
+		limit = {
+			_cmm_is_staging_active = yes
+			is_key_in_global_variable_map = { name = cmm_staged target = scope:setting }
+		}
+		set_local_variable = { name = $out$ value = "global_variable_map(cmm_staged|scope:setting)" }
+	}
+	else_if = {
+		limit = { "variable_map(cmm_is_global|scope:setting)" >= 1 }
+		set_local_variable = { name = $out$ value = "global_variable_map(cmm|scope:setting)" }
+	}
+	else = {
+		set_local_variable = { name = $out$ value = "variable_map(cmm|scope:setting)" }
+	}
+}
+
+# Store a new value for scope:setting.
+# Scope: country
+# Args: value (script value)
+_cmm_store_setting_value = {
+	if = {
+		limit = { _cmm_is_staging_write = yes }
+		remove_from_global_variable_map = { name = cmm_staged key = scope:setting }
+		add_to_global_variable_map = { name = cmm_staged key = scope:setting value = $value$ }
+	}
+	else_if = {
+		limit = { "variable_map(cmm_is_global|scope:setting)" >= 1 }
+		remove_from_global_variable_map = { name = cmm key = scope:setting }
+		add_to_global_variable_map = { name = cmm key = scope:setting value = $value$ }
+	}
+	else = {
+		remove_from_variable_map = { name = cmm key = scope:setting }
+		add_to_variable_map = { name = cmm key = scope:setting value = $value$ }
+	}
+}
+
+# Fire the change callback for scope:setting, or queue it while there is no country to fire it on.
+# A button press carries no value, so it has nothing to queue and always fires.
+# Scope: country
+_cmm_fire_setting_callback = {
+	if = {
+		limit = {
+			_cmm_is_staging_active = yes
+			NOT = { "variable_map(cmm_type|scope:setting)" = 6 }
+		}
+		add_to_global_variable_list = { name = cmm_pending_callbacks target = scope:setting }
+	}
+	else = {
+		set_variable = { name = cmf_callback value = scope:setting }
+		trigger_event_silently = {
+			on_action = cmf_on_callback
+		}
+		remove_variable = cmf_callback
+	}
+}
+
+# Move staged values onto this country and fire every callback held back while staging.
+# Scope: country
+_cmm_flush_staged_settings = {
+	save_scope_as = cmm_flush_country
+
+	if = {
+		limit = { has_global_variable_map = cmm_staged }
+		every_key_in_global_variable_map = {
+			variable = cmm_staged
+			save_scope_as = cmm_staged_key
+			set_local_variable = { name = cmm_staged_val value = "global_variable_map(cmm_staged|scope:cmm_staged_key)" }
+			scope:cmm_flush_country = {
+				add_to_variable_map = { name = cmm key = scope:cmm_staged_key value = local_var:cmm_staged_val }
+			}
+		}
+		clear_global_variable_map = cmm_staged
+		add_to_global_variable_map = { name = cmm_staged key = flag:cmm_init value = 0 }
+	}
+
+	if = {
+		limit = { has_global_variable_list = cmm_pending_callbacks }
+		every_in_global_list = {
+			variable = cmm_pending_callbacks
+			save_scope_as = cmm_pending_callback_key
+			scope:cmm_flush_country = {
+				set_variable = { name = cmf_callback value = scope:cmm_pending_callback_key }
+				trigger_event_silently = {
+					on_action = cmf_on_callback
+				}
+				remove_variable = cmf_callback
+			}
+		}
+		clear_global_variable_list = cmm_pending_callbacks
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmf_callback }
+	}
+}

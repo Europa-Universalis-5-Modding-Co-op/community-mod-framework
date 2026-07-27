@@ -15,6 +15,7 @@
 	size = { 1140 760 }
 	using = bg_window_default_alt
 	allow_outside = yes
+	datacontext = "[CMMHomeCountry]"
 	visible = "[And(GetVariableSystem.Exists('cmm_window_open'), GetVariableSystem.Exists('cmm_window_ready'))]"
 
 	vbox = {
@@ -24,7 +25,7 @@
 		window_header_alt = {
 			blockoverride "header_text_object" {
 				hbox = {
-					visible = "[Player.MakeScope.GetVariable('cmf_log_view_open').IsSet]"
+					visible = "[CMMHomeScope.GetVariable('cmf_log_view_open').IsSet]"
 
 					header_title = {
 						text = "CMM_LOG_TITLE"
@@ -32,7 +33,7 @@
 				}
 
 				hbox = {
-					visible = "[And(Not(CMMSelectedModExists), Not(Player.MakeScope.GetVariable('cmf_log_view_open').IsSet))]"
+					visible = "[And(Not(CMMSelectedModExists), Not(CMMHomeScope.GetVariable('cmf_log_view_open').IsSet))]"
 
 					header_title = {
 						text = "CMM_WINDOW_TITLE"
@@ -40,7 +41,7 @@
 				}
 
 				hbox = {
-					visible = "[And(CMMSelectedModExists, Not(Player.MakeScope.GetVariable('cmf_log_view_open').IsSet))]"
+					visible = "[And(CMMSelectedModExists, Not(CMMHomeScope.GetVariable('cmf_log_view_open').IsSet))]"
 
 					header_title = {
 						size = { -1 40 }
@@ -63,10 +64,10 @@
 
 			cmm_mod_list_panel = {}
 			cmm_settings_panel = {
-				visible = "[Not(Player.MakeScope.GetVariable('cmf_log_view_open').IsSet)]"
+				visible = "[Not(CMMHomeScope.GetVariable('cmf_log_view_open').IsSet)]"
 			}
 			cmm_log_panel = {
-				visible = "[Player.MakeScope.GetVariable('cmf_log_view_open').IsSet]"
+				visible = "[CMMHomeScope.GetVariable('cmf_log_view_open').IsSet]"
 			}
 		}
 	}

@@ -1,0 +1,7 @@
+﻿CMF = {
+	color = rgb { 41 41 41 }
+	color2 = rgb { 41 41 41 }
+	culture_definition = turkish_culture
+	religion_definition = catholic
+	is_historic = yes
+}

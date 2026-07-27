@@ -2,11 +2,11 @@
 {
 	# Right settings pane for the currently selected mod.
 	# Reads:
-	# - Player.MakeScope.GetList('cmm_registered_tab_keys') [list<flag>]: registered tab keys for tab and sub-tab rendering.
-	# - Player.MakeScope.GetList('cmm_registered_group_keys') [list<flag>]: registered group keys for group rendering.
+	# - CMMHomeScope.GetList('cmm_registered_tab_keys') [list<flag>]: registered tab keys for tab and sub-tab rendering.
+	# - CMMHomeScope.GetList('cmm_registered_group_keys') [list<flag>]: registered group keys for group rendering.
 	# - GetVariableSystem.Get('cmm_selected_mod') [string]: active mod id for tab and row filtering.
 	# - GetVariableSystem.Get('cmm_selected_tab') [string]: active tab key for tab and row filtering.
-	# - Player.MakeScope.GetVariableFromVariableMap('cmm_tab_default_child', ...) [flag]: whether the sub-tab row and its divider show.
+	# - CMMHomeScope.GetVariableFromVariableMap('cmm_tab_default_child', ...) [flag]: whether the sub-tab row and its divider show.
 	# Writes:
 	# - GetVariableSystem.Set('cmm_selected_tab') [string]: changes selected tab from tab clicks.
 	# - <mod_id>__<setting_id> callbacks [effect]: update setting values when controls are used.
@@ -62,11 +62,11 @@
 	# Top-level tab bar for the selected mod.
 	# Reads:
 	# - Scope.GetFlagName [string]: current tab key (`<mod_id>__<tab_id>`) from tab datamodel.
-	# - Player.MakeScope.GetList('cmm_registered_tab_keys') [list<flag>]: tab key source list.
+	# - CMMHomeScope.GetList('cmm_registered_tab_keys') [list<flag>]: tab key source list.
 	# - GetVariableSystem.Get('cmm_selected_mod') [string]: selected mod id used for owner filtering.
 	# - GetVariableSystem.Get('cmm_selected_tab') [string]: selected tab key used for down-state.
-	# - Player.MakeScope.GetVariableFromVariableMap('cmm_tab_parent', ...) [flag]: filters sub-tabs out of this row.
-	# - Player.MakeScope.GetVariableFromVariableMap('cmm_tab_default_child', ...) [flag]: click target for a tab with sub-tabs.
+	# - CMMHomeScope.GetVariableFromVariableMap('cmm_tab_parent', ...) [flag]: filters sub-tabs out of this row.
+	# - CMMHomeScope.GetVariableFromVariableMap('cmm_tab_default_child', ...) [flag]: click target for a tab with sub-tabs.
 	# - GetVariableSystem.Get('<mod_id>__<tab_id>_lsub') [string]: sub-tab a tab with sub-tabs reopens on.
 	# Writes:
 	# - GetVariableSystem.Set('cmm_selected_tab') [string]: selects clicked tab.
@@ -74,7 +74,7 @@
 		visible = "[CMMSelectedModExists]"
 
 		blockoverride "content" {
-			datamodel = "[Player.MakeScope.GetList('cmm_registered_tab_keys')]"
+			datamodel = "[CMMHomeScope.GetList('cmm_registered_tab_keys')]"
 			datamodel_reuse_widgets = yes
 
 			item = {
@@ -105,10 +105,10 @@
 	# Sub-tab row for the selected top-level tab, carrying the main tab bar's blue backing.
 	# Reads:
 	# - Scope.GetFlagName [string]: current tab key (`<mod_id>__<tab_id>`) from tab datamodel.
-	# - Player.MakeScope.GetList('cmm_registered_tab_keys') [list<flag>]: tab key source list.
+	# - CMMHomeScope.GetList('cmm_registered_tab_keys') [list<flag>]: tab key source list.
 	# - GetVariableSystem.Get('cmm_selected_tab') [string]: selected tab key used for down-state.
-	# - Player.MakeScope.GetVariableFromVariableMap('cmm_tab_parent', ...) [flag]: filters this row to the selected tab's siblings.
-	# - Player.MakeScope.GetVariableFromVariableMap('cmm_tab_default_child', ...) [flag]: whether the selected top-level tab has sub-tabs at all.
+	# - CMMHomeScope.GetVariableFromVariableMap('cmm_tab_parent', ...) [flag]: filters this row to the selected tab's siblings.
+	# - CMMHomeScope.GetVariableFromVariableMap('cmm_tab_default_child', ...) [flag]: whether the selected top-level tab has sub-tabs at all.
 	# Writes:
 	# - GetVariableSystem.Set('cmm_selected_tab') [string]: selects clicked sub-tab.
 	# - GetVariableSystem.Set('<mod_id>__<parent_tab_id>_lsub') [string]: records the clicked sub-tab as the parent's open sub-tab.
@@ -135,7 +135,7 @@
 			}
 		}
 
-		datamodel = "[Player.MakeScope.GetList('cmm_registered_tab_keys')]"
+		datamodel = "[CMMHomeScope.GetList('cmm_registered_tab_keys')]"
 		datamodel_reuse_widgets = yes
 
 		item = {
@@ -166,7 +166,7 @@
 
 	# Datamodel-backed group container.
 	# Reads:
-	# - Player.MakeScope.GetList('cmm_registered_group_keys') [list<flag>]: group keys rendered as group sections.
+	# - CMMHomeScope.GetList('cmm_registered_group_keys') [list<flag>]: group keys rendered as group sections.
 	# - Scope.GetFlagName [string]: current group key (`<mod_id>__<tab_id>__<group_id>`).
 	type cmm_setting_groups = vbox {
 		layoutpolicy_horizontal = expanding
@@ -174,7 +174,7 @@
 		spacing = 8
 		margin_left = 6
 		margin_right = 14
-		datamodel = "[Player.MakeScope.GetList('cmm_registered_group_keys')]"
+		datamodel = "[CMMHomeScope.GetList('cmm_registered_group_keys')]"
 
 		item = {
 			cmm_setting_group = {}
@@ -184,9 +184,9 @@
 	# Single setting group with a collapsible header and per-group setting rows.
 	# Reads:
 	# - Scope.GetFlagName [string]: current group key (`<mod_id>__<tab_id>__<group_id>`).
-	# - Player.MakeScope.GetList(Concatenate('cmm_group_setting_keys_', Scope.GetFlagName)) [list<flag>]: settings in this group.
-	# - Player.MakeScope.GetVariableFromVariableMap('cmm_group_collapsed', ...) [value]: collapsed state of this group.
-	# - Player.MakeScope.GetVariableFromVariableMap('cmm_group_visible_count', ...) [value]: visible setting count shown in the header.
+	# - CMMHomeScope.GetList(Concatenate('cmm_group_setting_keys_', Scope.GetFlagName)) [list<flag>]: settings in this group.
+	# - CMMHomeScope.GetVariableFromVariableMap('cmm_group_collapsed', ...) [value]: collapsed state of this group.
+	# - CMMHomeScope.GetVariableFromVariableMap('cmm_group_visible_count', ...) [value]: visible setting count shown in the header.
 	# Writes:
 	# - GetScriptedGui('CMM_ToggleGroupCollapsed').Execute(...) [effect]: flips this group's collapsed state.
 	type cmm_setting_group = vbox {
@@ -291,7 +291,7 @@
 			spacing = 4
 			visible = "[CMMGroupExpanded(Scope.GetFlagName)]"
 
-			datamodel = "[Player.MakeScope.GetList(Concatenate('cmm_group_setting_keys_', Scope.GetFlagName))]"
+			datamodel = "[CMMHomeScope.GetList(Concatenate('cmm_group_setting_keys_', Scope.GetFlagName))]"
 
 			item = {
 				cmm_setting_row = {}

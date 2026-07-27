@@ -4,7 +4,7 @@
 	# Reads:
 	# - Scope.GetFlagName [string]: current setting key in root context (`<mod_id>__<setting_id>`).
 	# - GetGlobalVariable(Scope.GetFlagName).GetValue [value]: current numeric value for global settings.
-	# - Player.MakeScope.GetVariable(Scope.GetFlagName) [value]: current numeric value for local settings.
+	# - CMMHomeScope.GetVariable(Scope.GetFlagName) [value]: current numeric value for local settings.
 	# - cmm_min variable map [value]: numeric minimum bound (keyed by setting flag).
 	# - cmm_max variable map [value]: numeric maximum bound (keyed by setting flag).
 	# Writes:

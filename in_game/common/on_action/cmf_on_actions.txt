@@ -15,6 +15,12 @@ _cmf_on_init = {
 			limit = { NOT = { has_global_variable = cmf_log_count } }
 			set_global_variable = { name = cmf_log_count value = 0 }
 		}
+		# Saves started before the storage country existed never set this, which is what
+		# switches the no-country menu off for them.
+		if = {
+			limit = { exists = c:CMF }
+			set_global_variable = { name = cmf_storage_country value = c:CMF }
+		}
 	}
 }
 

@@ -1,11 +1,43 @@
 ﻿# CMM GUI Macros: Core Helpers
 
+# Returns: country
+macro = {
+    description = "Country the menu reads and writes: the player, the last country held, or the storage country"
+    definition = "CMMHomeCountry"
+    replace_with = "GetCountry(GetVariableSystem.Get('cmm_home_tag'))"
+}
+
+# Returns: boolean
+macro = {
+    description = "True when this save carries the storage country"
+    definition = "CMMStorageCountryReady"
+    replace_with = "GetGlobalVariable('cmf_storage_country').IsSet"
+}
+
+# Returns: string
+macro = {
+    description = "Tag of the storage country"
+    definition = "CMMStorageCountryTag"
+    replace_with = "GetGlobalVariable('cmf_storage_country').GetCountry.GetTag"
+}
+
+# The menu's root widgets bind CMMHomeCountry as their Country datacontext, so every accessor
+# below resolves against it. Localization [expr] context cannot see that datacontext, which is
+# why CMMV inlines CMMHomeCountry instead.
+# Scope: country
+# Returns: scope
+macro = {
+    description = "Scope the menu reads its settings from"
+    definition = "CMMHomeScope"
+    replace_with = "Country.MakeScope"
+}
+
 # Args: Name (string)
 # Returns: variable
 macro = {
     description = "Country variable accessor"
     definition = "CMMVar(Name)"
-    replace_with = "Player.MakeScope.GetVariable(Name)"
+    replace_with = "CMMHomeScope.GetVariable(Name)"
 }
 
 # Args: Name (string)
@@ -69,7 +101,7 @@ macro = {
 macro = {
     description = "Read a value from a country-scoped variable map by setting key"
     definition = "CMMMapValue(MapName,SettingKey)"
-    replace_with = "Player.MakeScope.GetVariableFromVariableMap(MapName, MakeScopeFlag(SettingKey)).GetValue"
+    replace_with = "CMMHomeScope.GetVariableFromVariableMap(MapName, MakeScopeFlag(SettingKey)).GetValue"
 }
 
 # Args: MapName (string), SettingKey (string)
@@ -198,7 +230,7 @@ macro = {
 macro = {
     description = "Execute one scripted GUI callback"
     definition = "CMMExecuteGui(Name)"
-    replace_with = "GetScriptedGui(Name).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)"
+    replace_with = "GetScriptedGui(Name).Execute(GuiScope.SetRoot(CMMHomeScope).End)"
 }
 
 # Args: Prefix (string), Suffix (string)
@@ -214,7 +246,7 @@ macro = {
 macro = {
     description = "Execute an auto-apply scripted GUI with setting scope"
     definition = "CMMExecuteAutoApply(GuiName,SettingKey)"
-    replace_with = "GetScriptedGui(GuiName).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('setting', MakeScopeFlag(SettingKey)).End)"
+    replace_with = "GetScriptedGui(GuiName).Execute(GuiScope.SetRoot(CMMHomeScope).AddScope('setting', MakeScopeFlag(SettingKey)).AddScope('cmm_staging', MakeScopeBool(Not(IsPlayerValid))).End)"
 }
 
 # Args: Name (string)
@@ -222,7 +254,7 @@ macro = {
 macro = {
     description = "Execute one scripted GUI callback with the selected mod as mod scope"
     definition = "CMMExecuteGuiWithSelectedMod(Name)"
-    replace_with = "GetScriptedGui(Name).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('mod', MakeScopeFlag(GetVariableSystem.Get('cmm_selected_mod'))).End)"
+    replace_with = "GetScriptedGui(Name).Execute(GuiScope.SetRoot(CMMHomeScope).AddScope('mod', MakeScopeFlag(GetVariableSystem.Get('cmm_selected_mod'))).End)"
 }
 
 # Args: Name (string)
@@ -230,7 +262,7 @@ macro = {
 macro = {
     description = "True when one scripted GUI callback is shown"
     definition = "CMMGuiIsShown(Name)"
-    replace_with = "GetScriptedGui(Name).IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)"
+    replace_with = "GetScriptedGui(Name).IsShown(GuiScope.SetRoot(CMMHomeScope).End)"
 }
 
 # Args: Name (string)
@@ -238,7 +270,7 @@ macro = {
 macro = {
     description = "True when one scripted GUI callback is valid"
     definition = "CMMGuiIsValid(Name)"
-    replace_with = "GetScriptedGui(Name).IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)"
+    replace_with = "GetScriptedGui(Name).IsValid(GuiScope.SetRoot(CMMHomeScope).End)"
 }
 
 # Args: ModId (string), TabKey (string)

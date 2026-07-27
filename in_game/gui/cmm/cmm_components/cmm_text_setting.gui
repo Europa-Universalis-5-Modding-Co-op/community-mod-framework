@@ -3,8 +3,8 @@
 	# Text setting widget for one CMM setting row.
 	# Reads:
 	# - Scope.GetFlagName [string]: current setting key in root context (`<mod_id>__<setting_id>`).
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_text_character_limit_', Scope.GetFlagName)) [value]: maximum allowed character count.
-	# - Player.MakeScope.GetVariable(Concatenate('cmm_setting_text_quote_', Scope.GetFlagName)) [value]: whether submitted text should be wrapped in double quotes.
+	# - CMMHomeScope.GetVariable(Concatenate('cmm_setting_text_character_limit_', Scope.GetFlagName)) [value]: maximum allowed character count.
+	# - CMMHomeScope.GetVariable(Concatenate('cmm_setting_text_quote_', Scope.GetFlagName)) [value]: whether submitted text should be wrapped in double quotes.
 	# - GetVariableSystem.Get(Concatenate('cmm_text_input_', Scope.GetFlagName)) [string]: cached editbox contents for the Apply button.
 	# Writes:
 	# - GetVariableSystem.Set(Concatenate('cmm_text_input_', Scope.GetFlagName)) [string]: updates the cached row-local text as the player types.

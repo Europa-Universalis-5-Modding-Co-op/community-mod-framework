@@ -15,6 +15,10 @@ end_of_line = crlf
 [*.{txt,yml,gui}]
 charset = utf-8-bom
 
+# The engine fails to parse a game-start setup file that carries a BOM.
+[main_menu/setup/start/*.txt]
+charset = utf-8
+
 [*.yml]
 indent_style = space
 indent_size = 1

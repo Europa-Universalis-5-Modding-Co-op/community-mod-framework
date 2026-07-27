@@ -1,0 +1,30 @@
+countries = {
+	countries = {
+		CMF = {
+			capital = stockholm
+			discovered_regions = { scandinavian_region }
+			government = {
+				type = monarchy
+				heir_selection = cognatic_primogeniture
+				centralization_vs_decentralization = 1
+				traditionalist_vs_innovative = 1
+				spiritualist_vs_humanist = 1
+				aristocracy_vs_plutocracy = 1
+				serfdom_vs_free_subjects = 1
+				mercantilism_vs_free_trade = 1
+				belligerent_vs_conciliatory = 1
+				quality_vs_quantity = 1
+				offensive_vs_defensive = 1
+				land_vs_naval = 1
+				capital_economy_vs_traditional_economy = 1
+				individualism_vs_communalism = 1
+				outward_vs_inward = 1
+				parliament = { parliament_type = estate_parliament }
+				laws = {
+					marriage_law = monogamous_marriage
+					heir_religion_law = heir_same_religion
+				}
+			}
+		}
+	}
+}

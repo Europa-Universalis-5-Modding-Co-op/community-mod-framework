@@ -2,7 +2,7 @@
 {
 	# Left mod-list pane with search input and mod rows.
 	# Reads:
-	# - Player.MakeScope.GetList('cmm_registered_mod_ids') [list<flag>]: registered mod ids for row datamodel.
+	# - CMMHomeScope.GetList('cmm_registered_mod_ids') [list<flag>]: registered mod ids for row datamodel.
 	# - GetVariableSystem.Get('cmm_mod_search_text') [string]: current search text used by row filtering.
 	# - GetVariableSystem.Get('cmm_selected_mod') [string]: currently selected mod key for row state.
 	# Writes:
@@ -108,6 +108,7 @@
 			spacing = 2
 			button_regular = {
 				layoutpolicy_horizontal = expanding
+				enabled = "[IsPlayerValid]"
 				onclick = "[CMMExecuteGui('CMM_ResetToDefaults')]"
 				onclick = "[GetVariableSystem.Clear('cmm_window_open')]"
 				onclick = "[PdxGuiTriggerAllAnimations('cmm_reopen_window')]"
@@ -116,7 +117,7 @@
 			}
 			button_regular = {
 				layoutpolicy_horizontal = expanding
-				enabled = "[CMMSelectedModExists]"
+				enabled = "[And(IsPlayerValid, CMMSelectedModExists)]"
 				onclick = "[CMMExecuteGuiWithSelectedMod('CMM_ResetModToDefaults')]"
 				onclick = "[GetVariableSystem.Clear('cmm_window_open')]"
 				onclick = "[PdxGuiTriggerAllAnimations('cmm_reopen_window')]"
@@ -128,7 +129,7 @@
 
 	# Datamodel-backed mod row list container.
 	# Reads:
-	# - Player.MakeScope.GetList('cmm_registered_mod_ids') [list<flag>]: mod ids rendered as rows.
+	# - CMMHomeScope.GetList('cmm_registered_mod_ids') [list<flag>]: mod ids rendered as rows.
 	# - Scope.GetFlagName [string]: current row mod id.
 	type cmm_mod_list_rows = vbox {
 		using = layoutpolicy_expanding
@@ -138,7 +139,7 @@
 			layoutpolicy_horizontal = expanding
 			ignoreinvisible = yes
 			spacing = 4
-			datamodel = "[Player.MakeScope.GetList('cmm_registered_mod_ids')]"
+			datamodel = "[CMMHomeScope.GetList('cmm_registered_mod_ids')]"
 
 			item = {
 				cmm_mod_list_row = {}
@@ -153,7 +154,7 @@
 	# - Scope.GetFlagName [string]: current row mod id.
 	# - GetVariableSystem.Get('cmm_mod_search_text') [string]: free-text filter for row visibility.
 	# - GetVariableSystem.Get('cmm_selected_mod') [string]: selected mod id for button down-state.
-	# - Player.MakeScope.GetVariable(Concatenate(Scope.GetFlagName, '_desc')) [flag]: localized mod description used by hover tooltips.
+	# - CMMHomeScope.GetVariable(Concatenate(Scope.GetFlagName, '_desc')) [flag]: localized mod description used by hover tooltips.
 	# Writes:
 	# - GetVariableSystem.Set('cmm_selected_mod') [string]: selects this row's mod id.
 	# - GetVariableSystem.Set('cmm_selected_tab') [string]: sets selected tab to the mod default, resolved to a sub-tab when that default has any.

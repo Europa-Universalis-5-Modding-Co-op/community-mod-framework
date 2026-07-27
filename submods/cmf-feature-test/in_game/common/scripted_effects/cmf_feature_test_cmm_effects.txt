@@ -738,6 +738,13 @@ cmf_feature_test_handle_cmf_callback = {
 				setting = cmf_feature_test__toggle
 				alias = cft_toggle_alias
 			}
+			cmf_log = { action = cft_log_toggle_changed }
+		}
+		flag:cmf_feature_test__slider = {
+			cmf_log = { action = cft_log_slider_changed }
+		}
+		flag:cmf_feature_test__global_toggle = {
+			cmf_log = { action = cft_log_global_toggle_changed }
 		}
 		flag:cmf_feature_test__log_test = {
 			cmf_log = { action = cft_log_test_action }
