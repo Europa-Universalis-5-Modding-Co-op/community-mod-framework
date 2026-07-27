@@ -260,11 +260,22 @@ macro = {
 }
 
 # Args: SettingKey (string)
-# Returns: string
+# Returns: variable
 macro = {
-    description = "'yes'/'no' for one conditional setting's current is_shown"
-    definition = "CMMRollupShownString(SettingKey)"
-    replace_with = "Select_CString(CMMGuiIsShown(Concatenate(SettingKey, '_on_changed')), 'yes', 'no')"
+    description = "Mirrored is_shown recorded on the home country for one conditional setting"
+    definition = "CMMRollupRecordedShown(SettingKey)"
+    replace_with = "CMMHomeScope.GetVariableFromVariableMap('cmm_setting_shown', MakeScopeFlag(SettingKey))"
+}
+
+# Compared against the country's own record rather than a GUI-side copy of it, so a probe
+# re-fires whenever that record is missing or disagrees: on a country change, on a setting
+# never probed on this country, and on an ordinary is_shown flip.
+# Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "True when the home country's record matches one conditional setting's current is_shown"
+    definition = "CMMRollupRecordIsCurrent(SettingKey)"
+    replace_with = "And(CMMRollupRecordedShown(SettingKey).IsSet, EqualTo_CFixedPoint(CMMRollupRecordedShown(SettingKey).GetValue, Select_CFixedPoint(CMMGuiIsShown(Concatenate(SettingKey, '_on_changed')), '(CFixedPoint)1', '(CFixedPoint)0')))"
 }
 
 # Args: SettingKey (string)
