@@ -42,7 +42,6 @@ _cmm_init_variable_maps = {
 	add_to_variable_map = { name = cmm_group_visible_count key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_group_collapsed key = flag:cmm_init value = 0 }
 	add_to_global_variable_map = { name = cmm key = flag:cmm_init value = 0 }
-	add_to_global_variable_map = { name = cmm_staged key = flag:cmm_init value = 0 }
 
 	# Benign warning suppression
 	if = {

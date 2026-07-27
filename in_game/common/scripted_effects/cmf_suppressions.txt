@@ -1,7 +1,4 @@
 ﻿# Miscellaneous Suppressions
 _cmf_dummy = {
 	cmf_suppress = { v = cmf_active }
-	# Both are constructed GUI-side by CMMExecuteAutoApply, which the flag heuristics cannot see.
-	cmf_suppress = { v = cmm_staged }
-	cmf_suppress = { v = cmm_live }
 }

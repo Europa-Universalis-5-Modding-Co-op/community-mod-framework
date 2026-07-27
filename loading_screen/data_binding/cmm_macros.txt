@@ -275,7 +275,7 @@ macro = {
 macro = {
     description = "Execute an auto-apply scripted GUI with setting scope"
     definition = "CMMExecuteAutoApply(GuiName,SettingKey)"
-    replace_with = "GetScriptedGui(GuiName).Execute(GuiScope.SetRoot(CMMHomeScope).AddScope('setting', MakeScopeFlag(SettingKey)).AddScope('cmm_staging', MakeScopeFlag(Select_CString(CMFHasPlayerCountry, 'cmm_live', 'cmm_staged'))).End)"
+    replace_with = "GetScriptedGui(GuiName).Execute(GuiScope.SetRoot(CMMHomeScope).AddScope('setting', MakeScopeFlag(SettingKey)).End)"
 }
 
 # Args: Name (string)

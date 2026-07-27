@@ -10,7 +10,7 @@ widget = {
 	visible = "[CMFHasPlayerCountry]"
 
 	# First country of this game, or a tag left over from a previous game in this client run.
-	# Either way there is nothing to transfer from, but staged edits still apply.
+	# Either way there is nothing to transfer from, so only the stored tag is recorded.
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
@@ -18,7 +18,6 @@ widget = {
 
 		state = {
 			name = _show
-			on_start = "[GetScriptedGui('_cmf_on_country_acquired').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 			on_start = "[GetVariableSystem.Set('cmf_player_tag', Localize('CMF_PLAYER_TAG'))]"
 		}
 	}
