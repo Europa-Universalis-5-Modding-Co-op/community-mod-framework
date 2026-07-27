@@ -101,7 +101,7 @@
 		}
 	}
 
-	# Sub-tab row for the selected top-level tab, sitting on the settings area background.
+	# Sub-tab row for the selected top-level tab, carrying the main tab bar's blue backing.
 	# Reads:
 	# - Scope.GetFlagName [string]: current tab key (`<mod_id>__<tab_id>`) from tab datamodel.
 	# - Player.MakeScope.GetList('cmm_registered_tab_keys') [list<flag>]: tab key source list.
@@ -113,8 +113,25 @@
 	type cmm_mod_subtabs = hbox {
 		visible = "[CMMSubTabRowShown]"
 		layoutpolicy_horizontal = expanding
-		size = { -1 33 }
+		size = { -1 35 }
+		margin_left = 3
+		margin_right = 3
+		margin_top = 2
 		spacing = 5
+
+		background = {
+			using = color_dark_blue_texture
+		}
+
+		background = {
+			using = bg_fade_vertical_up_mask_texture
+			alpha = 0.3
+
+			modify_texture = {
+				using = color_black_texture
+				blend_mode = multiply
+			}
+		}
 
 		datamodel = "[Player.MakeScope.GetList('cmm_registered_tab_keys')]"
 		datamodel_reuse_widgets = yes
