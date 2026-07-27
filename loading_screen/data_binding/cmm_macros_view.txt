@@ -51,6 +51,55 @@ macro = {
     replace_with = "And(CMMSelectedModExists, Or(Not(CMMSelectedTabExists), Not(CMMTabNonEmpty(GetVariableSystem.Get('cmm_selected_tab')))))"
 }
 
+# Tab hierarchy, declared with cmm_register_subtab.
+
+# Args: TabKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one tab is a sub-tab of another tab"
+    definition = "CMMTabHasParent(TabKey)"
+    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_tab_parent', MakeScopeFlag(TabKey)).IsSet"
+}
+
+# Args: TabKey (string)
+# Returns: string
+macro = {
+    description = "Parent tab key for one sub-tab"
+    definition = "CMMTabParent(TabKey)"
+    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_tab_parent', MakeScopeFlag(TabKey)).GetFlagName"
+}
+
+# Args: TabKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one tab has sub-tabs"
+    definition = "CMMTabHasChildren(TabKey)"
+    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_tab_default_child', MakeScopeFlag(TabKey)).IsSet"
+}
+
+# Args: TabKey (string)
+# Returns: string
+macro = {
+    description = "First sub-tab key for one tab"
+    definition = "CMMTabDefaultChild(TabKey)"
+    replace_with = "Player.MakeScope.GetVariableFromVariableMap('cmm_tab_default_child', MakeScopeFlag(TabKey)).GetFlagName"
+}
+
+# Args: TabKey (string)
+# Returns: string
+macro = {
+    description = "Settings-bearing tab key for one tab, resolving a tab with sub-tabs to its first sub-tab"
+    definition = "CMMTabLeaf(TabKey)"
+    replace_with = "Select_CString(CMMTabHasChildren(TabKey), CMMTabDefaultChild(TabKey), TabKey)"
+}
+
+# Returns: string
+macro = {
+    description = "Top-row tab key for the current selection"
+    definition = "CMMSelectedTopTab"
+    replace_with = "Select_CString(CMMTabHasParent(GetVariableSystem.Get('cmm_selected_tab')), CMMTabParent(GetVariableSystem.Get('cmm_selected_tab')), GetVariableSystem.Get('cmm_selected_tab'))"
+}
+
 # Cached group-row metadata, written once per group by the cmm_cache_group_row state.
 
 # Args: GroupKey (string)
@@ -101,6 +150,14 @@ macro = {
     description = "Toggle whether one group renders its settings box"
     definition = "CMMToggleGroupCollapsed(GroupKey)"
     replace_with = "GetScriptedGui('CMM_ToggleGroupCollapsed').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('cmm_group', MakeScopeFlag(GroupKey)).End)"
+}
+
+# Args: GroupKey (string)
+# Returns: none
+macro = {
+    description = "Apply the state one group is about to take to every group in its tab"
+    definition = "CMMToggleTabGroupsCollapsed(GroupKey)"
+    replace_with = "GetScriptedGui('CMM_ToggleTabGroupsCollapsed').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('cmm_group', MakeScopeFlag(GroupKey)).End)"
 }
 
 # Cached mod-row metadata, written once per mod row by the cmm_cache_mod_row state.

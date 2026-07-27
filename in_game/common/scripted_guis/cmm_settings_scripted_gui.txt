@@ -75,6 +75,40 @@ CMM_ToggleGroupCollapsed = {
 	}
 }
 
+# Apply the state scope:cmm_group is about to take to every group in its tab.
+# Scope: country
+# Args: scope:cmm_group (flag) - the group key whose next state the tab follows.
+CMM_ToggleTabGroupsCollapsed = {
+	scope = country
+	saved_scopes = { cmm_group }
+	effect = {
+		"variable_map(cmm_group_owner_tab|scope:cmm_group)" = { save_scope_as = _cmm_gc_tab }
+
+		set_local_variable = { name = _cmm_gc_collapse value = 1 }
+		if = {
+			limit = { is_key_in_variable_map = { name = cmm_group_collapsed target = scope:cmm_group } }
+			set_local_variable = { name = _cmm_gc_collapse value = 0 }
+		}
+
+		every_in_list = {
+			variable = cmm_registered_group_keys
+			save_scope_as = _cmm_gc_group
+			root = {
+				if = {
+					limit = { "variable_map(cmm_group_owner_tab|scope:_cmm_gc_group)" = scope:_cmm_gc_tab }
+					if = {
+						limit = { local_var:_cmm_gc_collapse = 1 }
+						add_to_variable_map = { name = cmm_group_collapsed key = scope:_cmm_gc_group value = 1 }
+					}
+					else = {
+						remove_from_variable_map = { name = cmm_group_collapsed key = scope:_cmm_gc_group }
+					}
+				}
+			}
+		}
+	}
+}
+
 # List _on_changed for the action-bar visible-buttons list.
 # Mirrors the toggled row to cmf_action_bar_active_elements before applying
 # the change to the bool field's stored value.

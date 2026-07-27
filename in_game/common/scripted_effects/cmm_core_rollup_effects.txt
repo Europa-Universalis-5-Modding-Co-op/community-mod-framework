@@ -43,4 +43,20 @@ _cmm_recompute_rollup = {
 			}
 		}
 	}
+
+	# A parent tab owns no settings of its own, so it inherits from its sub-tabs.
+	every_in_list = {
+		variable = cmm_registered_tab_keys
+		save_scope_as = _cmm_ru_tab_key
+		root = {
+			if = {
+				limit = {
+					is_key_in_variable_map = { name = cmm_tab_parent target = scope:_cmm_ru_tab_key }
+					is_key_in_variable_map = { name = cmm_tab_nonempty target = scope:_cmm_ru_tab_key }
+				}
+				"variable_map(cmm_tab_parent|scope:_cmm_ru_tab_key)" = { save_scope_as = _cmm_ru_parent_tab }
+				add_to_variable_map = { name = cmm_tab_nonempty key = scope:_cmm_ru_parent_tab value = 1 }
+			}
+		}
+	}
 }

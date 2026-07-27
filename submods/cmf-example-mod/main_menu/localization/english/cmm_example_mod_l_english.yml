@@ -5,7 +5,12 @@
 
  # Tabs
  cmm_example__general_name: "General"
+ cmm_example__lists_name: "Lists"
  cmm_example__global_name: "Global"
+
+ # Sub-Tabs
+ cmm_example__ordered_name: "Ordered"
+ cmm_example__unordered_name: "Unordered"
 
  # Groups
  cmm_example__general__general_toggles_name: "Toggles"
@@ -34,10 +39,10 @@
  cmm_example__example_dropdown_option_2_name: "Option 2"
  cmm_example__example_dropdown_option_3_name: "Option 3"
 
- # General Tab - Ordered List
- cmm_example__general__example_list_name: "Ordered Settings List"
+ # Lists Tab - Ordered Sub-Tab
+ cmm_example__ordered__example_list_name: "Ordered Settings List"
  cmm_example__example_list_name: "Ordered Settings List"
- cmm_example__general__example_list_desc: "Example ordered list setting with a bool field, a dropdown field, and a numeric field."
+ cmm_example__ordered__example_list_desc: "Example ordered list setting with a bool field, a dropdown field, and a numeric field."
  cmm_example__example_list_desc: "Example ordered list setting with a bool field, a dropdown field, and a numeric field."
  cmm_example__example_list_item_column_name: "Item"
  cmm_example__example_list_i1_name: "Item A"
@@ -52,10 +57,10 @@
  cmm_example__example_list__mode_option_2_name: "Standard"
  cmm_example__example_list__mode_option_3_name: "High"
 
- # General Tab - Unordered List
- cmm_example__general__example_unordered_list_name: "Settings List"
+ # Lists Tab - Unordered Sub-Tab
+ cmm_example__unordered__example_unordered_list_name: "Settings List"
  cmm_example__example_unordered_list_name: "Settings List"
- cmm_example__general__example_unordered_list_desc: "Example unordered list setting with the same field types but no row move controls."
+ cmm_example__unordered__example_unordered_list_desc: "Example unordered list setting with the same field types but no row move controls."
  cmm_example__example_unordered_list_desc: "Example unordered list setting with the same field types but no row move controls."
  cmm_example__example_unordered_list_item_column_name: "Item"
  cmm_example__example_unordered_list_i1_name: "Static A"

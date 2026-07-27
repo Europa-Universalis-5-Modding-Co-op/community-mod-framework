@@ -188,6 +188,68 @@ cmf_feature_test_register_cmf_mod = {
 		setting_id = cascade_tab_demo
 	}
 
+	# Sub-Tabs (subtabs) Tab
+	cmm_register_subtab = {
+		mod_id = cmf_feature_test
+		tab_id = subtab_values
+		parent_tab_id = subtabs
+	}
+
+	cmm_register_subtab = {
+		mod_id = cmf_feature_test
+		tab_id = subtab_cascade
+		parent_tab_id = subtabs
+	}
+
+	## Values (subtab_values_group) Group
+	cmm_register_numeric_setting = {
+		mod_id = cmf_feature_test
+		setting_id = subtab_numeric
+		tab_id = subtab_values
+		group_id = subtab_values_group
+		default_value = 5
+		min_value = 0
+		max_value = 10
+		step_value = 1
+	}
+
+	## Cascade (subtab_cascade_group) Group
+	# Its only setting is is_shown-gated on Toggle, so Toggle off empties and hides this
+	# sub-tab while the Sub-Tabs tab stays (its other sub-tab remains).
+	cmm_register_bool_setting = {
+		mod_id = cmf_feature_test
+		setting_id = subtab_cascade_demo
+		tab_id = subtab_cascade
+		group_id = subtab_cascade_group
+		default_value = 1
+	}
+	cmm_add_scripted_gui = {
+		mod_id = cmf_feature_test
+		setting_id = subtab_cascade_demo
+	}
+
+	# Cascade Parent (cascade_parent) Tab
+	cmm_register_subtab = {
+		mod_id = cmf_feature_test
+		tab_id = cascade_parent_child
+		parent_tab_id = cascade_parent
+	}
+
+	## Cascade (cascade_parent_group) Group
+	# Its only sub-tab's only setting is is_shown-gated on Toggle, so Toggle off empties the
+	# sub-tab and takes the parent tab out of the tab row with it.
+	cmm_register_bool_setting = {
+		mod_id = cmf_feature_test
+		setting_id = cascade_parent_demo
+		tab_id = cascade_parent_child
+		group_id = cascade_parent_group
+		default_value = 1
+	}
+	cmm_add_scripted_gui = {
+		mod_id = cmf_feature_test
+		setting_id = cascade_parent_demo
+	}
+
 	# Global (global) Tab
 	## Toggles (global_toggles) Group
 	cmm_register_global_bool_setting = {

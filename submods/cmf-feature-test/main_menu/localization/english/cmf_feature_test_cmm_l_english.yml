@@ -88,6 +88,29 @@
  cmf_feature_test__cascade_tab_demo_name: "Cascade Tab Demo"
  cmf_feature_test__cascade_tab_demo_desc: "Hidden when Toggle is off."
 
+ # Sub-Tabs (subtabs) Tab
+ cmf_feature_test__subtabs_name: "Sub-Tabs"
+ ## Values (subtab_values) Sub-Tab
+ cmf_feature_test__subtab_values_name: "Values"
+ cmf_feature_test__subtab_values__subtab_values_group_name: "Values"
+ cmf_feature_test__subtab_numeric_name: "Sub-Tab Numeric"
+ cmf_feature_test__subtab_numeric_desc: "Always visible, so the Sub-Tabs tab keeps a sub-tab when Toggle is off."
+ ## Cascade (subtab_cascade) Sub-Tab
+ cmf_feature_test__subtab_cascade_name: "Cascade"
+ cmf_feature_test__subtab_cascade__subtab_cascade_group_name: "Cascade"
+ cmf_feature_test__subtab_cascade__subtab_cascade_group_desc: "This sub-tab hides when Toggle is off; the Sub-Tabs tab stays because its other sub-tab remains."
+ cmf_feature_test__subtab_cascade_demo_name: "Sub-Tab Cascade Demo"
+ cmf_feature_test__subtab_cascade_demo_desc: "Hidden when Toggle is off."
+
+ # Cascade Parent (cascade_parent) Tab
+ cmf_feature_test__cascade_parent_name: "Cascade Parent"
+ ## Cascade (cascade_parent_child) Sub-Tab
+ cmf_feature_test__cascade_parent_child_name: "Only Sub-Tab"
+ cmf_feature_test__cascade_parent_child__cascade_parent_group_name: "Cascade"
+ cmf_feature_test__cascade_parent_child__cascade_parent_group_desc: "The sub-tab and the parent tab both hide when Toggle is off."
+ cmf_feature_test__cascade_parent_demo_name: "Cascade Parent Demo"
+ cmf_feature_test__cascade_parent_demo_desc: "Hidden when Toggle is off."
+
  # Global (global) Tab
  cmf_feature_test__global_name: "Global"
  ## Toggles (global_toggles) Group
@@ -261,6 +284,17 @@
  cmf_feature_test__cascade_tab__cascade_tab_group: "cmf_feature_test__cascade_tab__cascade_tab_group"
  cmf_feature_test__cascade_group_demo: "cmf_feature_test__cascade_group_demo"
  cmf_feature_test__cascade_tab_demo: "cmf_feature_test__cascade_tab_demo"
+ cmf_feature_test__subtabs: "cmf_feature_test__subtabs"
+ cmf_feature_test__subtab_values: "cmf_feature_test__subtab_values"
+ cmf_feature_test__subtab_cascade: "cmf_feature_test__subtab_cascade"
+ cmf_feature_test__subtab_values__subtab_values_group: "cmf_feature_test__subtab_values__subtab_values_group"
+ cmf_feature_test__subtab_cascade__subtab_cascade_group: "cmf_feature_test__subtab_cascade__subtab_cascade_group"
+ cmf_feature_test__subtab_numeric: "cmf_feature_test__subtab_numeric"
+ cmf_feature_test__subtab_cascade_demo: "cmf_feature_test__subtab_cascade_demo"
+ cmf_feature_test__cascade_parent: "cmf_feature_test__cascade_parent"
+ cmf_feature_test__cascade_parent_child: "cmf_feature_test__cascade_parent_child"
+ cmf_feature_test__cascade_parent_child__cascade_parent_group: "cmf_feature_test__cascade_parent_child__cascade_parent_group"
+ cmf_feature_test__cascade_parent_demo: "cmf_feature_test__cascade_parent_demo"
  cmf_feature_test__global_toggle: "cmf_feature_test__global_toggle"
  cmf_feature_test__global_button: "cmf_feature_test__global_button"
  cmf_feature_test__global_numeric: "cmf_feature_test__global_numeric"

@@ -55,10 +55,22 @@ cmm_example_register_mod = {
 		option_count = 3
 	}
 
+	cmm_register_subtab = {
+		mod_id = cmm_example
+		tab_id = ordered
+		parent_tab_id = lists
+	}
+
+	cmm_register_subtab = {
+		mod_id = cmm_example
+		tab_id = unordered
+		parent_tab_id = lists
+	}
+
 	cmm_register_settings_list = {
 		mod_id = cmm_example
 		setting_id = example_list
-		tab_id = general
+		tab_id = ordered
 		item_count = 5
 		is_ordered = 1
 	}
@@ -91,7 +103,7 @@ cmm_example_register_mod = {
 	cmm_register_settings_list = {
 		mod_id = cmm_example
 		setting_id = example_unordered_list
-		tab_id = general
+		tab_id = unordered
 		item_count = 4
 		is_ordered = 0
 	}

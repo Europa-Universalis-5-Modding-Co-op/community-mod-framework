@@ -148,6 +148,17 @@ your_mod_on_callback = {
 
 = Advanced =
 
+== Sub-Tabs ==
+Nest one tab under another, drawing a second tab row beneath the main one. Both tabs are registered by the call:
+<syntaxhighlight lang="text">
+cmm_register_subtab = {
+	mod_id = your_mod
+	tab_id = your_subtab
+	parent_tab_id = your_tab
+}
+</syntaxhighlight>
+A tab with sub-tabs is a container: clicking it selects its first sub-tab, and settings registered directly on it do not appear.
+
 == Conditional Visibility ==
 Hide (<code>is_shown</code>) or grey out (<code>is_valid</code>) a setting based on a condition, through a Scripted GUI. See [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Conditional-Visibility Conditional Visibility] on the GitHub wiki.
 
@@ -473,7 +484,7 @@ Check with: <code>has_variable = using_feature_b</code>
 |-
 | <code>[mod_id]_name</code> / <code>_desc</code> || Mod name / description
 |-
-| <code>[mod_id]__[tab_id]_name</code> / <code>_desc</code> || Tab name / description
+| <code>[mod_id]__[tab_id]_name</code> / <code>_desc</code> || Tab or sub-tab name / description
 |-
 | <code>[mod_id]__[tab_id]__[group_id]_name</code> / <code>_desc</code> || Group name / description
 |-

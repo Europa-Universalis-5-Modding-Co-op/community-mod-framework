@@ -2,7 +2,7 @@
 {
 	# Right settings pane for the currently selected mod.
 	# Reads:
-	# - Player.MakeScope.GetList('cmm_registered_tab_keys') [list<flag>]: registered tab keys for tab rendering.
+	# - Player.MakeScope.GetList('cmm_registered_tab_keys') [list<flag>]: registered tab keys for tab and sub-tab rendering.
 	# - Player.MakeScope.GetList('cmm_registered_group_keys') [list<flag>]: registered group keys for group rendering.
 	# - GetVariableSystem.Get('cmm_selected_mod') [string]: active mod id for tab and row filtering.
 	# - GetVariableSystem.Get('cmm_selected_tab') [string]: active tab key for tab and row filtering.
@@ -13,6 +13,7 @@
 		using = layoutpolicy_expanding
 
 		cmm_mod_tabs = {}
+		cmm_mod_subtabs = {}
 
 		vbox = {
 			using = layoutpolicy_expanding
@@ -55,12 +56,14 @@
 
 	}
 
-	# Tab bar for the selected mod.
+	# Top-level tab bar for the selected mod.
 	# Reads:
 	# - Scope.GetFlagName [string]: current tab key (`<mod_id>__<tab_id>`) from tab datamodel.
 	# - Player.MakeScope.GetList('cmm_registered_tab_keys') [list<flag>]: tab key source list.
 	# - GetVariableSystem.Get('cmm_selected_mod') [string]: selected mod id used for owner filtering.
 	# - GetVariableSystem.Get('cmm_selected_tab') [string]: selected tab key used for down-state.
+	# - Player.MakeScope.GetVariableFromVariableMap('cmm_tab_parent', ...) [flag]: filters sub-tabs out of this row.
+	# - Player.MakeScope.GetVariableFromVariableMap('cmm_tab_default_child', ...) [flag]: click target for a tab with sub-tabs.
 	# Writes:
 	# - GetVariableSystem.Set('cmm_selected_tab') [string]: selects clicked tab.
 	type cmm_mod_tabs = header_main_tabs {
@@ -74,7 +77,50 @@
 				button_main_tab_alt = {
 					using = layoutpolicy_expanding
 					size = { -1 40 }
-					visible = "[And(CMMSelectedHasValue('cmm_selected_mod', CMMMetadataFlag('cmm_tab_owner_mod_id_', Scope.GetFlagName)), CMMTabNonEmpty(Scope.GetFlagName))]"
+					visible = "[And3(CMMSelectedHasValue('cmm_selected_mod', CMMMetadataFlag('cmm_tab_owner_mod_id_', Scope.GetFlagName)), Not(CMMTabHasParent(Scope.GetFlagName)), CMMTabNonEmpty(Scope.GetFlagName))]"
+					onclick = "[GetVariableSystem.Set('cmm_selected_tab', CMMTabLeaf(Scope.GetFlagName))]"
+					down = "[EqualTo_string(CMMSelectedTopTab, Scope.GetFlagName)]"
+					tooltip_enabled = no
+
+					hbox = {
+						margin = { 5 0 }
+						margin_top = 4
+						text_single = {
+							text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
+							using = Font_Type_Headers
+							using = layoutpolicy_expanding
+							align = center
+							autoresize = no
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# Sub-tab bar for the selected top-level tab. Shares the main tab bar's chrome so the two
+	# rows stack as one header block; the shorter buttons and smaller text mark the second level.
+	# Reads:
+	# - Scope.GetFlagName [string]: current tab key (`<mod_id>__<tab_id>`) from tab datamodel.
+	# - Player.MakeScope.GetList('cmm_registered_tab_keys') [list<flag>]: tab key source list.
+	# - GetVariableSystem.Get('cmm_selected_tab') [string]: selected tab key used for down-state.
+	# - Player.MakeScope.GetVariableFromVariableMap('cmm_tab_parent', ...) [flag]: filters this row to the selected tab's siblings.
+	# - Player.MakeScope.GetVariableFromVariableMap('cmm_tab_default_child', ...) [flag]: whether the selected top-level tab has sub-tabs at all.
+	# Writes:
+	# - GetVariableSystem.Set('cmm_selected_tab') [string]: selects clicked sub-tab.
+	type cmm_mod_subtabs = header_main_tabs {
+		visible = "[And(CMMSelectedModExists, CMMTabHasChildren(CMMSelectedTopTab))]"
+		size = { -1 38 }
+
+		blockoverride "content" {
+			datamodel = "[Player.MakeScope.GetList('cmm_registered_tab_keys')]"
+			datamodel_reuse_widgets = yes
+
+			item = {
+				button_main_tab_alt = {
+					using = layoutpolicy_expanding
+					size = { -1 33 }
+					visible = "[And(EqualTo_string(CMMTabParent(Scope.GetFlagName), CMMSelectedTopTab), CMMTabNonEmpty(Scope.GetFlagName))]"
 					onclick = "[GetVariableSystem.Set('cmm_selected_tab', Scope.GetFlagName)]"
 					down = "[GetVariableSystem.HasValue('cmm_selected_tab', Scope.GetFlagName)]"
 					tooltip_enabled = no
@@ -86,6 +132,7 @@
 							text = "[CMMLocalizedSuffix(Scope.GetFlagName, '_name')]"
 							using = Font_Type_Headers
 							using = layoutpolicy_expanding
+							fontsize = 16
 							align = center
 							autoresize = no
 						}
@@ -205,6 +252,12 @@
 				action_tooltip = {
 					title = "CMM_GROUP_TOGGLE_COLLAPSE"
 					on_action = "[CMMToggleGroupCollapsed(Scope.GetFlagName)]"
+				}
+
+				action_tooltip = {
+					click_type = right
+					title = "CMM_GROUP_TOGGLE_COLLAPSE_ALL"
+					on_action = "[CMMToggleTabGroupsCollapsed(Scope.GetFlagName)]"
 				}
 			}
 		}
