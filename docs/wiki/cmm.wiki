@@ -157,7 +157,7 @@ cmm_register_subtab = {
 	parent_tab_id = your_tab
 }
 </syntaxhighlight>
-A tab with sub-tabs is a container: clicking it selects its first sub-tab, and settings registered directly on it do not appear.
+A tab with sub-tabs is a container: clicking it selects the last sub-tab opened under it, or its first, and settings registered directly on it do not appear.
 
 == Conditional Visibility ==
 Hide (<code>is_shown</code>) or grey out (<code>is_valid</code>) a setting based on a condition, through a Scripted GUI. See [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/Conditional-Visibility Conditional Visibility] on the GitHub wiki.

@@ -88,9 +88,33 @@ macro = {
 # Args: TabKey (string)
 # Returns: string
 macro = {
-    description = "Settings-bearing tab key for one tab, resolving a tab with sub-tabs to its first sub-tab"
+    description = "Last sub-tab opened under one tab"
+    definition = "CMMTabLastChild(TabKey)"
+    replace_with = "GetVariableSystem.Get(Concatenate(TabKey, '_lsub'))"
+}
+
+# Args: TabKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one tab's remembered sub-tab is still one of its sub-tabs and still has settings"
+    definition = "CMMTabLastChildValid(TabKey)"
+    replace_with = "And3(CMMSelectedValueExists(Concatenate(TabKey, '_lsub')), EqualTo_string(CMMTabParent(CMMTabLastChild(TabKey)), TabKey), CMMTabNonEmpty(CMMTabLastChild(TabKey)))"
+}
+
+# Args: TabKey (string)
+# Returns: string
+macro = {
+    description = "Sub-tab one tab opens on: the last one opened under it, otherwise its first"
+    definition = "CMMTabOpenChild(TabKey)"
+    replace_with = "Select_CString(CMMTabLastChildValid(TabKey), CMMTabLastChild(TabKey), CMMTabDefaultChild(TabKey))"
+}
+
+# Args: TabKey (string)
+# Returns: string
+macro = {
+    description = "Settings-bearing tab key for one tab, resolving a tab with sub-tabs to the sub-tab it opens on"
     definition = "CMMTabLeaf(TabKey)"
-    replace_with = "Select_CString(CMMTabHasChildren(TabKey), CMMTabDefaultChild(TabKey), TabKey)"
+    replace_with = "Select_CString(CMMTabHasChildren(TabKey), CMMTabOpenChild(TabKey), TabKey)"
 }
 
 # Returns: string

@@ -197,6 +197,18 @@ cmf_feature_test_register_cmf_mod = {
 
 	cmm_register_subtab = {
 		mod_id = cmf_feature_test
+		tab_id = subtab_toggles
+		parent_tab_id = subtabs
+	}
+
+	cmm_register_subtab = {
+		mod_id = cmf_feature_test
+		tab_id = subtab_sliders
+		parent_tab_id = subtabs
+	}
+
+	cmm_register_subtab = {
+		mod_id = cmf_feature_test
 		tab_id = subtab_cascade
 		parent_tab_id = subtabs
 	}
@@ -211,6 +223,27 @@ cmf_feature_test_register_cmf_mod = {
 		min_value = 0
 		max_value = 10
 		step_value = 1
+	}
+
+	## Toggles (subtab_toggles_group) Group
+	cmm_register_bool_setting = {
+		mod_id = cmf_feature_test
+		setting_id = subtab_toggle
+		tab_id = subtab_toggles
+		group_id = subtab_toggles_group
+		default_value = 1
+	}
+
+	## Sliders (subtab_sliders_group) Group
+	cmm_register_slider_setting = {
+		mod_id = cmf_feature_test
+		setting_id = subtab_slider
+		tab_id = subtab_sliders
+		group_id = subtab_sliders_group
+		default_value = 50
+		min_value = 0
+		max_value = 100
+		step_value = 10
 	}
 
 	## Cascade (subtab_cascade_group) Group
