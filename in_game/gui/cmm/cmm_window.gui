@@ -15,7 +15,6 @@
 	size = { 1140 760 }
 	using = bg_window_default_alt
 	allow_outside = yes
-	datacontext = "[CMMHomeCountry]"
 	visible = "[And(GetVariableSystem.Exists('cmm_window_open'), GetVariableSystem.Exists('cmm_window_ready'))]"
 
 	vbox = {

@@ -108,7 +108,7 @@
 			spacing = 2
 			button_regular = {
 				layoutpolicy_horizontal = expanding
-				enabled = "[IsPlayerValid]"
+				enabled = "[GetPlayer.IsValid]"
 				onclick = "[CMMExecuteGui('CMM_ResetToDefaults')]"
 				onclick = "[GetVariableSystem.Clear('cmm_window_open')]"
 				onclick = "[PdxGuiTriggerAllAnimations('cmm_reopen_window')]"
@@ -117,7 +117,7 @@
 			}
 			button_regular = {
 				layoutpolicy_horizontal = expanding
-				enabled = "[And(IsPlayerValid, CMMSelectedModExists)]"
+				enabled = "[And(GetPlayer.IsValid, CMMSelectedModExists)]"
 				onclick = "[CMMExecuteGuiWithSelectedMod('CMM_ResetModToDefaults')]"
 				onclick = "[GetVariableSystem.Clear('cmm_window_open')]"
 				onclick = "[PdxGuiTriggerAllAnimations('cmm_reopen_window')]"

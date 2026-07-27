@@ -2,8 +2,7 @@
 widget = {
 	name = "cmm_window_reopen"
 	size = { 0 0 }
-	datacontext = "[CMMHomeCountry]"
-	visible = "[Country.IsValid]"
+	visible = "[CMMHomeCountryValid]"
 
 	state = {
 		name = cmm_reopen_window

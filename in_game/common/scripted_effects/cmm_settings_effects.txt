@@ -1,4 +1,22 @@
-﻿# Register built-in CMM settings.
+﻿# Rebuild every registration for one country: CMM's own settings, then each integrating mod's.
+# Scope: country
+_cmm_run_registration_pass = {
+	clear_variable_list = cmm_registered_mod_ids
+	clear_variable_list = cmm_registered_tab_keys
+	clear_variable_list = cmm_registered_group_keys
+	clear_variable_list = cmm_registered_setting_keys
+	clear_variable_list = cmm_conditional_setting_keys
+	_cmm_clear_registration_pass_state = yes
+	clear_global_variable_list = cmf_active_mod_ids
+	_cmm_register_menu_settings = yes
+	trigger_event_silently = {
+		on_action = cmf_on_mod_registration
+	}
+	_cmf_prune_stale_action_bar_elements = yes
+	_cmm_register_menu_settings_late = yes
+}
+
+# Register built-in CMM settings.
 # Scope: country
 _cmm_register_menu_settings = {
 	cmm_register_global_bool_setting = {

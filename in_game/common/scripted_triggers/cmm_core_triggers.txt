@@ -4,7 +4,7 @@
 _cmm_is_staging_active = {
 	trigger_if = {
 		limit = { exists = scope:cmm_staging }
-		scope:cmm_staging = yes
+		scope:cmm_staging = flag:cmm_staged
 	}
 	trigger_else = {
 		always = no

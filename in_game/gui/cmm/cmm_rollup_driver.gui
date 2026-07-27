@@ -7,8 +7,7 @@
 widget = {
 	name = "cmm_rollup_driver"
 	size = { 0 0 }
-	datacontext = "[CMMHomeCountry]"
-	visible = "[Country.IsValid]"
+	visible = "[CMMHomeCountryValid]"
 
 	vbox = {
 		visible = "[GetVariableSystem.Exists('cmm_window_ready')]"

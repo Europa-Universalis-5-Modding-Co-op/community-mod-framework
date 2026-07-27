@@ -9,27 +9,32 @@ macro = {
 
 # Returns: boolean
 macro = {
+    description = "True when the menu has a country to read from"
+    definition = "CMMHomeCountryValid"
+    replace_with = "CMMHomeCountry.IsValid"
+}
+
+# Returns: boolean
+macro = {
     description = "True when this save carries the storage country"
     definition = "CMMStorageCountryReady"
-    replace_with = "GetGlobalVariable('cmf_storage_country').IsSet"
+    replace_with = "GetCountry('CMF').IsValid"
 }
 
 # Returns: string
 macro = {
     description = "Tag of the storage country"
     definition = "CMMStorageCountryTag"
-    replace_with = "GetGlobalVariable('cmf_storage_country').GetCountry.GetTag"
+    replace_with = "'CMF'"
 }
 
-# The menu's root widgets bind CMMHomeCountry as their Country datacontext, so every accessor
-# below resolves against it. Localization [expr] context cannot see that datacontext, which is
-# why CMMV inlines CMMHomeCountry instead.
-# Scope: country
+# Resolves without a datacontext, so the accessors below also work from localization, where
+# only the Container context is supplied.
 # Returns: scope
 macro = {
     description = "Scope the menu reads its settings from"
     definition = "CMMHomeScope"
-    replace_with = "Country.MakeScope"
+    replace_with = "CMMHomeCountry.MakeScope"
 }
 
 # Args: Name (string)
@@ -246,7 +251,7 @@ macro = {
 macro = {
     description = "Execute an auto-apply scripted GUI with setting scope"
     definition = "CMMExecuteAutoApply(GuiName,SettingKey)"
-    replace_with = "GetScriptedGui(GuiName).Execute(GuiScope.SetRoot(CMMHomeScope).AddScope('setting', MakeScopeFlag(SettingKey)).AddScope('cmm_staging', MakeScopeBool(Not(IsPlayerValid))).End)"
+    replace_with = "GetScriptedGui(GuiName).Execute(GuiScope.SetRoot(CMMHomeScope).AddScope('setting', MakeScopeFlag(SettingKey)).AddScope('cmm_staging', MakeScopeFlag(Select_CString(GetPlayer.IsValid, 'cmm_live', 'cmm_staged'))).End)"
 }
 
 # Args: Name (string)

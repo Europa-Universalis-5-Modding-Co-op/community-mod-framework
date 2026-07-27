@@ -1,30 +1,32 @@
 ﻿# Keeps cmm_home_tag pointed at the country the menu reads and writes: the player's country
 # while there is one, otherwise the last country held, otherwise the storage country.
+# visible_at_creation pins each branch hidden so a gate that is already true at creation still
+# produces the hidden-to-shown edge _show needs.
 widget = {
 	name = "cmm_home_country_tracker"
 	size = { 0 0 }
 	# Always visible, but dynamically so, or the gated children below stop re-evaluating.
 	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
 
-	hbox = {
-		visible = "[And(IsPlayerValid, Not(GetVariableSystem.HasValue('cmm_home_tag', Localize('CMF_PLAYER_TAG'))))]"
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And(GetPlayer.IsValid, Not(GetVariableSystem.HasValue('cmm_home_tag', Localize('CMF_PLAYER_TAG'))))]"
 
 		state = {
-			name = cmm_home_adopt_player
-			trigger_on_create = yes
-			on_finish = "[GetVariableSystem.Set('cmm_home_tag', Localize('CMF_PLAYER_TAG'))]"
-			on_finish = "[PdxGuiWidget.TriggerAnimation('cmm_home_adopt_player')]"
+			name = _show
+			on_start = "[GetVariableSystem.Set('cmm_home_tag', Localize('CMF_PLAYER_TAG'))]"
 		}
 	}
 
-	hbox = {
-		visible = "[And3(Not(IsPlayerValid), Not(GetVariableSystem.Exists('cmm_home_tag')), CMMStorageCountryReady)]"
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And3(Not(GetPlayer.IsValid), Not(GetVariableSystem.Exists('cmm_home_tag')), CMMStorageCountryReady)]"
 
 		state = {
-			name = cmm_home_adopt_storage
-			trigger_on_create = yes
-			on_finish = "[GetVariableSystem.Set('cmm_home_tag', CMMStorageCountryTag)]"
-			on_finish = "[PdxGuiWidget.TriggerAnimation('cmm_home_adopt_storage')]"
+			name = _show
+			on_start = "[GetVariableSystem.Set('cmm_home_tag', CMMStorageCountryTag)]"
 		}
 	}
 }

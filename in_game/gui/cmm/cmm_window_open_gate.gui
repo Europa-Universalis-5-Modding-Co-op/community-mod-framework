@@ -4,8 +4,7 @@
 widget = {
 	name = "cmm_window_open_gate"
 	size = { 0 0 }
-	datacontext = "[CMMHomeCountry]"
-	visible = "[Country.IsValid]"
+	visible = "[CMMHomeCountryValid]"
 
 	state = {
 		name = cmm_window_open_arm
