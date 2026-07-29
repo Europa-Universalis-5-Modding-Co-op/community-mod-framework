@@ -88,11 +88,12 @@
 					tooltip = "CMM_LOG_CLEAR_TOOLTIP"
 				}
 
-				# An Execute never reaches script in observer mode.
+				# An Execute never reaches script in observer mode. cmf_clear_log touches only globals,
+				# so the command needs no country scope and GUI exposes only a display tag anyway.
 				button_regular_diamond = {
 					visible = "[IsPlayerObserver]"
 					minimumsize = { 168 32 }
-					onclick = "[ExecuteConsoleCommand(Concatenate('effect c:', Concatenate(GetVariableSystem.Get('cmm_home_tag'), ' = { cmf_clear_log = yes }')))]"
+					onclick = "[ExecuteConsoleCommand('effect cmf_clear_log = yes')]"
 					text = "CMM_LOG_CLEAR"
 					tooltip = "CMM_LOG_CLEAR_TOOLTIP"
 				}
