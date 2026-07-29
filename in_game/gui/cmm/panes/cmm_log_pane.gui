@@ -6,6 +6,7 @@
 	# - GetVariableFromGlobalVariableMap('cmf_log_*', MakeScopeFlag(...)) [variable]: per-entry data.
 	# Writes:
 	# - CMF_ClearLog scripted GUI [effect]: clears all log entries.
+	# - ExecuteConsoleCommand(...) [effect]: clears all log entries in observer mode.
 	type cmm_log_panel = vbox {
 		using = layoutpolicy_expanding
 
@@ -75,12 +76,23 @@
 				visible = "[And(CMFLogHasEntries, CMMGuiIsShown('CMF_ClearLog'))]"
 				layoutpolicy_horizontal = expanding
 				margin = { 0 4 }
+				ignoreinvisible = yes
 
 				expand = {}
 
 				button_regular_diamond = {
+					visible = "[Not(IsPlayerObserver)]"
 					minimumsize = { 168 32 }
 					onclick = "[CMMExecuteGui('CMF_ClearLog')]"
+					text = "CMM_LOG_CLEAR"
+					tooltip = "CMM_LOG_CLEAR_TOOLTIP"
+				}
+
+				# An Execute never reaches script in observer mode.
+				button_regular_diamond = {
+					visible = "[IsPlayerObserver]"
+					minimumsize = { 168 32 }
+					onclick = "[ExecuteConsoleCommand(Concatenate('effect c:', Concatenate(GetVariableSystem.Get('cmm_home_tag'), ' = { cmf_clear_log = yes }')))]"
 					text = "CMM_LOG_CLEAR"
 					tooltip = "CMM_LOG_CLEAR_TOOLTIP"
 				}
