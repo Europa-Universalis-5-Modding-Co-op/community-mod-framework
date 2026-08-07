@@ -56,6 +56,10 @@ et_hw_reset = {
 		set_variable = { name = et_100_passed value = 0 }
 		set_variable = { name = et_101_passed value = 0 }
 		set_variable = { name = et_102_passed value = 0 }
+		set_variable = { name = et_181_passed value = 0 }
+		set_variable = { name = et_182_passed value = 0 }
+		set_variable = { name = et_183_passed value = 0 }
+		set_variable = { name = et_184_passed value = 0 }
 
 		if = { limit = { has_variable = et_g39_c } remove_variable = et_g39_c }
 		if = { limit = { has_variable = et_g40_c } remove_variable = et_g40_c }
@@ -90,6 +94,14 @@ et_hw_reset = {
 		if = { limit = { has_variable = et_g101_inner_paris } remove_variable = et_g101_inner_paris }
 		if = { limit = { has_variable = et_g102_c } remove_variable = et_g102_c }
 		if = { limit = { has_variable = et_g102_phase1 } remove_variable = et_g102_phase1 }
+		if = { limit = { has_variable = et_g181_c } remove_variable = et_g181_c }
+		if = { limit = { has_variable = et_g181_snap } remove_variable = et_g181_snap }
+		if = { limit = { has_variable = et_g181_gate } remove_variable = et_g181_gate }
+		if = { limit = { has_variable = et_g183_c } remove_variable = et_g183_c }
+		if = { limit = { has_variable = et_g183_snap } remove_variable = et_g183_snap }
+		if = { limit = { has_variable = et_g183_gate } remove_variable = et_g183_gate }
+		if = { limit = { has_variable = et_g181_snap3 } remove_variable = et_g181_snap3 }
+		if = { limit = { has_variable = et_g183_snap3 } remove_variable = et_g183_snap3 }
 		if = { limit = { has_variable = et_g75_c } remove_variable = et_g75_c }
 
 		if = { limit = { has_variable = et_g39_gate } remove_variable = et_g39_gate }
@@ -1232,5 +1244,139 @@ et_g62_probe = {
 			}
 			set_variable = { name = et_62_passed value = 1 }
 		}
+	}
+}
+
+# Step 23: opens both hidden-advance gates. Their machines start counting while
+# the widgets are shown, so the step-24 snapshot has something to compare.
+et_hw_arm_hidden = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_g181_gate value = 1 }
+		set_variable = { name = et_g183_gate value = 1 }
+	}
+}
+
+# Counters for the two hidden-advance shapes, deliberately unguarded so the
+# step-25 check sees every fire.
+et_hw_rec_181 = {
+	scope = country
+
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = et_g181_c } }
+			set_variable = { name = et_g181_c value = 0 }
+		}
+		change_variable = { name = et_g181_c add = 1 }
+	}
+}
+
+et_hw_rec_183 = {
+	scope = country
+
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = et_g183_c } }
+			set_variable = { name = et_g183_c value = 0 }
+		}
+		change_variable = { name = et_g183_c add = 1 }
+	}
+}
+
+# Step 24: snapshots both counters and closes both gates in one effect, so the
+# step-25 delta is exactly what each machine did after its widget went hidden.
+et_hw_close_hidden = {
+	scope = country
+
+	effect = {
+		if = {
+			limit = { has_variable = et_g181_c }
+			set_variable = { name = et_g181_snap value = var:et_g181_c }
+		} else = {
+			set_variable = { name = et_g181_snap value = 0 }
+		}
+		set_variable = { name = et_g181_snap3 value = var:et_g181_snap }
+		change_variable = { name = et_g181_snap3 add = 3 }
+		if = {
+			limit = { has_variable = et_g183_c }
+			set_variable = { name = et_g183_snap value = var:et_g183_c }
+		} else = {
+			set_variable = { name = et_g183_snap value = 0 }
+		}
+		set_variable = { name = et_g183_snap3 value = var:et_g183_snap }
+		change_variable = { name = et_g183_snap3 add = 3 }
+		remove_variable = et_g181_gate
+		remove_variable = et_g183_gate
+	}
+}
+
+# Step 25 check: scores how far each machine got while hidden. Both states last
+# 0.25s and step 25 waits 1.5s, so a machine still looping owes about six fires
+# and one that only finished the state already in flight owes one. Test 65 asks
+# the same question of the self-trigger shape with a bare >, which one fire
+# satisfies, so it cannot separate the two; the >= 3 rows are what can.
+et_hw_check_hidden = {
+	scope = country
+
+	effect = {
+		# -- Test 181 --------------------------------------------
+		# A next-chained machine advanced at all after its gate closed.
+		if = {
+			limit = {
+				has_variable = et_g181_c
+				var:et_g181_c > var:et_g181_snap
+			}
+			set_variable = { name = et_181_passed value = 1 }
+		}
+
+		# -- Test 182 --------------------------------------------
+		# A next-chained machine kept looping rather than stopping after the
+		# state it already had in flight.
+		if = {
+			limit = {
+				has_variable = et_g181_c
+				var:et_g181_c >= var:et_g181_snap3
+			}
+			set_variable = { name = et_182_passed value = 1 }
+		}
+
+		# -- Test 183 --------------------------------------------
+		# Same first question for the self-TriggerAnimation shape, which is
+		# what test 65 actually covered.
+		if = {
+			limit = {
+				has_variable = et_g183_c
+				var:et_g183_c > var:et_g183_snap
+			}
+			set_variable = { name = et_183_passed value = 1 }
+		}
+
+		# -- Test 184 --------------------------------------------
+		# The self-TriggerAnimation shape kept looping. This is the row test 65
+		# was read as proving and does not.
+		if = {
+			limit = {
+				has_variable = et_g183_c
+				var:et_g183_c >= var:et_g183_snap3
+			}
+			set_variable = { name = et_184_passed value = 1 }
+		}
+	}
+}
+
+et_g181_should = {
+	scope = country
+
+	is_shown = {
+		has_variable = et_g181_gate
+	}
+}
+
+et_g183_should = {
+	scope = country
+
+	is_shown = {
+		has_variable = et_g183_gate
 	}
 }

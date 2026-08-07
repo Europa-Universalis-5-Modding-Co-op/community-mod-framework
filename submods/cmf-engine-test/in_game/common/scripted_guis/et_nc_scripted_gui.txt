@@ -1,7 +1,7 @@
 ﻿# Countryless-client engine test scripted GUIs (tests 76-89).
 # The rig lives in gui/et_nc_windows.gui and self-starts; there is no run button,
 # because a button's onclick is an Execute and that is the mechanism under test.
-# Root is c:FRA for every entry, never the player.
+# Root is c:CAS for every entry, never the player.
 
 # Test 80: the Execute under test. Reaching this effect at all is the result.
 et_nc_exec_probe = {

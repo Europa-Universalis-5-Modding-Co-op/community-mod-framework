@@ -1,0 +1,97 @@
+﻿# Probe building types for tests 128-155. Every gate is left open - no location_potential,
+# no country_potential, an empty allow and all four ranks - so a refusal can only come from
+# the one field under test.
+#
+# There is no need_good_relation = no twin: the engine requires every foreign type to carry one
+# of need_good_relation, stronger_power_projection, own_or_overlord_relation_needed or
+# international_organization_link (building_type.cpp:2447), so the control for et_probe_rel is
+# the same type at a raised opinion instead.
+
+et_probe_multi = {
+	is_foreign = no
+	pop_type = laborers
+	max_levels = 3
+
+	category = infrastructure_category
+	employment_size = generic_peasant_building_employment
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	build_time = infrastructure_build_time
+	forbidden_for_estates = yes
+
+	allow = { }
+
+	unique_production_methods = {
+		et_probe_multi_maintenance = {
+			masonry = 0.01
+			category = building_maintenance
+		}
+	}
+
+	modifier = {
+	}
+}
+
+et_probe_single = {
+	is_foreign = no
+	pop_type = laborers
+	max_levels = 1
+
+	category = infrastructure_category
+	employment_size = generic_peasant_building_employment
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	build_time = infrastructure_build_time
+	forbidden_for_estates = yes
+
+	allow = { }
+
+	unique_production_methods = {
+		et_probe_single_maintenance = {
+			masonry = 0.01
+			category = building_maintenance
+		}
+	}
+
+	modifier = {
+	}
+}
+
+et_probe_rel = {
+	is_foreign = yes
+	need_good_relation = yes
+	pop_type = burghers
+	max_levels = 1
+
+	category = trade_category
+	employment_size = foreign_trade_employment
+	pop_size_created = foreign_trade_employment
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	build_time = trade_post_build_time
+	forbidden_for_estates = yes
+
+	allow = { }
+
+	unique_production_methods = {
+		et_probe_rel_maintenance = {
+			masonry = 0.01
+			category = building_maintenance
+		}
+	}
+
+	modifier = {
+	}
+}

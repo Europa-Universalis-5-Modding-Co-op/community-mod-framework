@@ -405,6 +405,94 @@ macro = {
     replace_with = "Concatenate(Concatenate(AddTextIf(CMFLogHasArg1(Index), Concatenate(CMFLogArg1Name(Index), ' ')), Concatenate(CMFLogAction(Index), AddTextIf(CMFLogHasArg2(Index), Concatenate(' ', CMFLogArg2Name(Index))))), AddTextIf(CMFLogIsValueEntry(Index), Concatenate(' ', CMFLogNumText(Index))))"
 }
 
+# Args: Index (int32)
+# Returns: boolean
+macro = {
+    description = "True when a log entry carries a decimal value (arg mode 5)"
+    definition = "CMFLogIsDecimalValueEntry(Index)"
+    replace_with = "EqualTo_CFixedPoint(GetVariableFromGlobalVariableMap('cmf_log_arg_mode', CMFLogKey(Index)).GetValue, '(CFixedPoint)5')"
+}
+
+# Args: Index (int32)
+# Returns: boolean
+macro = {
+    description = "True when a log entry carries a location and one labelled value (arg mode 4)"
+    definition = "CMFLogIsLocationEntry(Index)"
+    replace_with = "EqualTo_CFixedPoint(GetVariableFromGlobalVariableMap('cmf_log_arg_mode', CMFLogKey(Index)).GetValue, '(CFixedPoint)4')"
+}
+
+# Args: Index (int32)
+# Returns: string
+macro = {
+    description = "Leading text of a location log entry: action, location, then the value's label"
+    definition = "CMFLogLocationText(Index)"
+    replace_with = "Concatenate(Concatenate(CMFLogAction(Index), ' '), Concatenate(Concatenate(GetVariableFromGlobalVariableMap('cmf_log_loc', CMFLogKey(Index)).GetLocation.GetName, ' '), CMFLogArg1Label(Index)))"
+}
+
+# Args: Index (int32)
+# Returns: boolean
+macro = {
+    description = "True when a log entry carries a location and three labelled values (arg mode 6)"
+    definition = "CMFLogIsLocationValuesEntry(Index)"
+    replace_with = "EqualTo_CFixedPoint(GetVariableFromGlobalVariableMap('cmf_log_arg_mode', CMFLogKey(Index)).GetValue, '(CFixedPoint)6')"
+}
+
+# Args: Index (int32)
+# Returns: boolean
+macro = {
+    description = "True when a log entry carries a building type and a location (arg mode 3)"
+    definition = "CMFLogIsBuildingLocationEntry(Index)"
+    replace_with = "EqualTo_CFixedPoint(GetVariableFromGlobalVariableMap('cmf_log_arg_mode', CMFLogKey(Index)).GetValue, '(CFixedPoint)3')"
+}
+
+# Args: Index (int32)
+# Returns: CFixedPoint
+macro = {
+    description = "First numeric value of a log entry, for a caller that formats it itself"
+    definition = "CMFLogNumValue(Index)"
+    replace_with = "GetVariableFromGlobalVariableMap('cmf_log_num', CMFLogKey(Index)).GetValue"
+}
+
+# Args: Index (int32)
+# Returns: CFixedPoint
+macro = {
+    description = "Second numeric value of a log entry, for a caller that formats it itself"
+    definition = "CMFLogNum2Value(Index)"
+    replace_with = "GetVariableFromGlobalVariableMap('cmf_log_num2', CMFLogKey(Index)).GetValue"
+}
+
+# Args: Index (int32)
+# Returns: CFixedPoint
+macro = {
+    description = "Third numeric value of a log entry, for a caller that formats it itself"
+    definition = "CMFLogNum3Value(Index)"
+    replace_with = "GetVariableFromGlobalVariableMap('cmf_log_num3', CMFLogKey(Index)).GetValue"
+}
+
+# Args: Index (int32)
+# Returns: string
+macro = {
+    description = "Localized arg1 text of a log entry that stores arg1 as a localization key"
+    definition = "CMFLogArg1Label(Index)"
+    replace_with = "Localize(GetVariableFromGlobalVariableMap('cmf_log_arg1', CMFLogKey(Index)).GetFlagName)"
+}
+
+# Args: Index (int32)
+# Returns: string
+macro = {
+    description = "Localized arg2 text of a log entry that stores arg2 as a localization key"
+    definition = "CMFLogArg2Label(Index)"
+    replace_with = "Localize(GetVariableFromGlobalVariableMap('cmf_log_arg2', CMFLogKey(Index)).GetFlagName)"
+}
+
+# Args: Index (int32)
+# Returns: string
+macro = {
+    description = "Leading text of a building type and location log entry: action, building type, location, then the first value's label"
+    definition = "CMFLogBuildingLocationText(Index)"
+    replace_with = "Concatenate(Concatenate(Concatenate(CMFLogAction(Index), ' '), Concatenate(GetVariableFromGlobalVariableMap('cmf_log_bt', CMFLogKey(Index)).GetBuildingType.GetName, ', ')), Concatenate(Concatenate(GetVariableFromGlobalVariableMap('cmf_log_loc', CMFLogKey(Index)).GetLocation.GetName, ' '), CMFLogArg1Label(Index)))"
+}
+
 # Returns: boolean
 macro = {
     description = "True when at least one log entry exists"

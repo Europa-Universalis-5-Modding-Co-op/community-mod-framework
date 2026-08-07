@@ -5,8 +5,8 @@
 # The rig cannot reuse anything from et_window.gui or et_hw_windows.gui: every run
 # button there is a scripted GUI Execute and every result row reads Player, and
 # both are unavailable in the states under test. So this driver self-starts, roots
-# at c:FRA instead of the player, and its rows in et_window.gui read
-# GetCountry('FRA') and GetVariableSystem only.
+# at c:CAS instead of the player, and its rows in et_window.gui read
+# GetCountry('CAS') and GetVariableSystem only.
 #
 # et_nc_fired is set before anything else so a blank row can be told apart from a
 # dropped Execute. Without it, "the driver never ran" and "the Execute went nowhere"
@@ -19,7 +19,7 @@ widget = {
 	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
 	position = { -10000 1 }
 
-	# Test 107. Both branches gate on c:FRA's et_nc_fresh, which et_nc_seed sets to
+	# Test 107. Both branches gate on c:CAS's et_nc_fresh, which et_nc_seed sets to
 	# 1 at on_game_start and whichever branch fires clears. A GUI variable cannot
 	# serve as the per-game marker here, because surviving the game boundary is the
 	# very thing under test: et_nc_persist and et_nc_done both carry over, so
@@ -29,12 +29,12 @@ widget = {
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
-		visible = "[And3(GetCountry('FRA').IsValid, GetVariableSystem.Exists('et_nc_persist'), EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_fresh').GetValue, '(CFixedPoint)1'))]"
+		visible = "[And3(GetCountry('CAS').IsValid, GetVariableSystem.Exists('et_nc_persist'), EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_fresh').GetValue, '(CFixedPoint)1'))]"
 
 		state = {
 			name = _show
 			on_start = "[GetVariableSystem.Set('et_nc_carried', 'yes')]"
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_fresh value = 0 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_nc_fresh value = 0 } }')]"
 		}
 	}
 
@@ -42,28 +42,28 @@ widget = {
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
-		visible = "[And3(GetCountry('FRA').IsValid, Not(GetVariableSystem.Exists('et_nc_persist')), EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_fresh').GetValue, '(CFixedPoint)1'))]"
+		visible = "[And3(GetCountry('CAS').IsValid, Not(GetVariableSystem.Exists('et_nc_persist')), EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_fresh').GetValue, '(CFixedPoint)1'))]"
 
 		state = {
 			name = _show
 			on_start = "[GetVariableSystem.Set('et_nc_carried', 'no')]"
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_fresh value = 0 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_nc_fresh value = 0 } }')]"
 		}
 	}
 
 	# Tests 108/109: the earliest commands the rig can issue, about a second after
-	# the map exists. Gated on c:FRA's et_nc_early_armed, which et_nc_seed sets and
+	# the map exists. Gated on c:CAS's et_nc_early_armed, which et_nc_seed sets and
 	# only the reset widget clears, so these keep the auto-run's answer and are not
 	# overwritten by a later manual re-run in a settled game.
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
-		visible = "[And(GetCountry('FRA').IsValid, EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_early_armed').GetValue, '(CFixedPoint)1'))]"
+		visible = "[And(GetCountry('CAS').IsValid, EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_early_armed').GetValue, '(CFixedPoint)1'))]"
 
 		state = {
 			name = _show
-			on_start = "[GetScriptedGui('et_nc_early_probe').Execute(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End)]"
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_early_console value = 1 } }')]"
+			on_start = "[GetScriptedGui('et_nc_early_probe').Execute(GuiScope.SetRoot(GetCountry('CAS').MakeScope).End)]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_nc_early_console value = 1 } }')]"
 		}
 	}
 
@@ -74,7 +74,7 @@ widget = {
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
-		visible = "[And(GetCountry('FRA').IsValid, EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_nc_early_armed').GetValue, '(CFixedPoint)1'))]"
+		visible = "[And(GetCountry('CAS').IsValid, EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_early_armed').GetValue, '(CFixedPoint)1'))]"
 
 		state = {
 			name = _show
@@ -85,21 +85,21 @@ widget = {
 
 		state = {
 			name = et_nc_w_a
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_w2 value = 1 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_nc_w2 value = 1 } }')]"
 			duration = 2.0
 			next = et_nc_w_b
 		}
 
 		state = {
 			name = et_nc_w_b
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_w4 value = 1 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_nc_w4 value = 1 } }')]"
 			duration = 4.0
 			next = et_nc_w_c
 		}
 
 		state = {
 			name = et_nc_w_c
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_w8 value = 1 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_nc_w8 value = 1 } }')]"
 		}
 	}
 
@@ -114,8 +114,8 @@ widget = {
 
 		state = {
 			name = _show
-			on_start = "[GetScriptedGui('et_nc_tc_probe').Execute(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End)]"
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_tc_console value = 1 } }')]"
+			on_start = "[GetScriptedGui('et_nc_tc_probe').Execute(GuiScope.SetRoot(GetCountry('CAS').MakeScope).End)]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_nc_tc_console value = 1 } }')]"
 		}
 	}
 
@@ -127,8 +127,8 @@ widget = {
 
 		state = {
 			name = _show
-			on_start = "[GetScriptedGui('et_nc_to_probe').Execute(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End)]"
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_to_console value = 1 } }')]"
+			on_start = "[GetScriptedGui('et_nc_to_probe').Execute(GuiScope.SetRoot(GetCountry('CAS').MakeScope).End)]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_nc_to_console value = 1 } }')]"
 		}
 	}
 
@@ -149,7 +149,7 @@ widget = {
 			on_start = "[GetVariableSystem.Clear('et_nc_fired')]"
 			on_start = "[GetVariableSystem.Clear('et_nc_vs')]"
 			on_start = "[GetVariableSystem.Clear('et_nc_num')]"
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_exec value = 0 } set_variable = { name = et_nc_console value = 0 } set_variable = { name = et_nc_burst value = 0 } set_variable = { name = et_nc_batch value = 0 } set_variable = { name = et_nc_early_armed value = 0 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_nc_exec value = 0 } set_variable = { name = et_nc_console value = 0 } set_variable = { name = et_nc_burst value = 0 } set_variable = { name = et_nc_batch value = 0 } set_variable = { name = et_nc_early_armed value = 0 } }')]"
 			on_start = "[GetVariableSystem.Clear('et_nc_done')]"
 			on_start = "[GetVariableSystem.Clear('et_nc_reset')]"
 		}
@@ -162,7 +162,7 @@ widget = {
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
-		visible = "[And(GetCountry('FRA').IsValid, Not(GetVariableSystem.Exists('et_nc_done')))]"
+		visible = "[And(GetCountry('CAS').IsValid, Not(GetVariableSystem.Exists('et_nc_done')))]"
 
 		# 12s settle. A 0.5s settle put the auto-run inside a window where the
 		# command system accepts nothing: at about 4 seconds after map load both
@@ -191,7 +191,7 @@ widget = {
 		# says does not help.
 		state = {
 			name = et_nc_s2
-			on_start = "[GetScriptedGui('et_nc_exec_probe').Execute(GuiScope.SetRoot(GetCountry('FRA').MakeScope).End)]"
+			on_start = "[GetScriptedGui('et_nc_exec_probe').Execute(GuiScope.SetRoot(GetCountry('CAS').MakeScope).End)]"
 			duration = 0.5
 			next = et_nc_s3
 		}
@@ -199,7 +199,7 @@ widget = {
 		# Test 85: single console command.
 		state = {
 			name = et_nc_s3
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_nc_console value = 1 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_nc_console value = 1 } }')]"
 			duration = 0.5
 			next = et_nc_s4
 		}
@@ -208,9 +208,9 @@ widget = {
 		# the first lands and the rest are refused, so et_nc_burst should read 1.
 		state = {
 			name = et_nc_s4
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { change_variable = { name = et_nc_burst add = 1 } }')]"
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { change_variable = { name = et_nc_burst add = 1 } }')]"
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { change_variable = { name = et_nc_burst add = 1 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { change_variable = { name = et_nc_burst add = 1 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { change_variable = { name = et_nc_burst add = 1 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { change_variable = { name = et_nc_burst add = 1 } }')]"
 			duration = 1.0
 			next = et_nc_s5
 		}
@@ -218,7 +218,7 @@ widget = {
 		# Test 87: the same three commands as one semicolon-separated string.
 		state = {
 			name = et_nc_s5
-			on_start = "[ExecuteConsoleCommands('effect c:FRA = { change_variable = { name = et_nc_batch add = 1 } };effect c:FRA = { change_variable = { name = et_nc_batch add = 1 } };effect c:FRA = { change_variable = { name = et_nc_batch add = 1 } }')]"
+			on_start = "[ExecuteConsoleCommands('effect c:CAS = { change_variable = { name = et_nc_batch add = 1 } };effect c:CAS = { change_variable = { name = et_nc_batch add = 1 } };effect c:CAS = { change_variable = { name = et_nc_batch add = 1 } }')]"
 			duration = 1.0
 			next = et_nc_s6
 		}

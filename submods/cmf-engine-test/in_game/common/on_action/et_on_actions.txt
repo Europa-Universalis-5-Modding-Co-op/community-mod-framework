@@ -1,7 +1,6 @@
 ﻿on_game_start = {
 	on_actions = {
 		et_on_game_start
-		et_on_game_start_load_probe
 		et_nc_seed
 		et_pc_seed
 		et_on_game_start_scope_probe
@@ -41,8 +40,8 @@ et_on_game_start = {
 et_nc_seed = {
 	effect = {
 		if = {
-			limit = { country_exists = c:FRA }
-			c:FRA = {
+			limit = { country_exists = c:CAS }
+			c:CAS = {
 				set_variable = { name = et_nc_exec value = 0 }
 				set_variable = { name = et_nc_console value = 0 }
 				set_variable = { name = et_nc_burst value = 0 }
@@ -73,8 +72,8 @@ et_nc_seed = {
 et_pc_seed = {
 	effect = {
 		if = {
-			limit = { country_exists = c:FRA }
-			c:FRA = {
+			limit = { country_exists = c:CAS }
+			c:CAS = {
 				set_variable = { name = et_pc_n value = 0 }
 				set_variable = { name = et_pc_fresh value = 1 }
 			}
@@ -104,17 +103,5 @@ et_weather_pulse_probe = {
 			set_global_variable = { name = et_wp_fires value = 0 }
 		}
 		change_global_variable = { name = et_wp_fires add = 1 }
-	}
-}
-
-# Probe: does vanilla on_game_start fire on save load, or only on a new game? (see RESULTS.md)
-et_on_game_start_load_probe = {
-	effect = {
-		if = {
-			limit = { country_exists = c:FRA }
-			c:FRA = {
-				change_culture = culture:greek_culture
-			}
-		}
 	}
 }

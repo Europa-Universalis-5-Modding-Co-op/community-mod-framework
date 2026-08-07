@@ -1,0 +1,44 @@
+﻿# Readers for the building-handle round trip rig (tests 147, 148). Both are Executed from
+# et_bt_windows.gui; the seed that fills et_bt_list lives at the end of et_run_script.
+
+# Test 147: the item widget hands its downcast building back to script, where it still
+# answers as a building of the seeded type.
+et_bt_seen = {
+	scope = country
+	saved_scopes = { et_bt_b }
+
+	effect = {
+		if = {
+			limit = { scope:et_bt_b = { building_type = building_type:et_probe_multi } }
+			set_variable = { name = et_147_passed value = 1 }
+		}
+	}
+}
+
+# Test 148: whether ToggleBuilding acted on that same handle. The seed only takes a building
+# reading is_opened = yes, so a closed one here can only have come from the toggle. Finds it
+# by location and type rather than through a stored handle, so a failure lands on the engine
+# action and not on the storage.
+et_bt_check = {
+	scope = country
+
+	effect = {
+		set_global_variable = { name = et_148_ok value = 0 }
+		capital = {
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						is_opened = no
+					}
+				}
+				set_global_variable = { name = et_148_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_148_ok = 1 }
+			set_variable = { name = et_148_passed value = 1 }
+		}
+		remove_variable = et_bt_fire
+	}
+}

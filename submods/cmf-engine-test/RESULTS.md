@@ -2,6 +2,19 @@
 
 Date: 2026-06-14
 
+## Test Nation
+
+The suite runs as **Castile (`CAS`)**. Every rig that names a country absolutely
+anchors on `c:CAS`: the countryless suite's seed and rows, the parse-cost pair, and
+each `ExecuteConsoleCommand` string. Play Castile unless a section says otherwise.
+
+Spain is not a usable anchor: EU5 has no `SPA` or `ESP` tag at all and no Spain
+formable, so Castile is the Iberian country the suite runs as.
+
+Test 94 is the one deliberate exception. It sets a local inside `c:FRA` and reads it
+inside `c:ENG` to prove the local namespace spans the whole execution, so those two
+tags are arbitrary scope blocks rather than the test nation and work whoever you play.
+
 ## Country Tests (et_run)
 
 | # | Test | Result |
@@ -264,26 +277,38 @@ existing save, or only when starting a NEW game. CMF added its own `on_game_load
 hook because vanilla has no load hook; this test confirms that directly instead of
 inferring it.
 
-`et_on_game_start_load_probe` (in `et_on_actions.txt`, hooked under `on_game_start`)
-runs `c:FRA = { change_culture = culture:greek_culture }`, flipping France's primary
-culture to Greek. `on_game_start` fires in empty scope, so the probe navigates to
-`c:FRA` explicitly behind a `country_exists` guard.
+The measurement is test 104's counter, `et_gs_fires`, read off its row in the
+on_action section. `et_on_game_start_scope_probe` seeds it only when the global is
+absent and increments it on every fire, and globals persist in the save, so a load
+that fires the hook raises the count instead of re-zeroing it.
 
 Protocol (both steps are required - step 1 is the control that proves the hook works
 at all, so that a negative in step 2 means "did not fire on load" and not "hook broken"):
 
-1. Enable the engine test. Start a NEW game, then select France and open its country
-   panel. Its primary culture should read Greek. This confirms the on_action runs.
-2. Take an existing save where France is still French (any normal save made without
-   this probe). With the engine test enabled, load it and open France's country panel.
-   - France shows Greek -> `on_game_start` DID fire on load.
-   - France still French -> `on_game_start` did NOT fire on load.
+1. Enable the engine test. Start a NEW game and read row 104. It reads 1. This
+   confirms the on_action runs.
+2. Save, then load that save, and read row 104 again.
+   - Reads 2 -> `on_game_start` DID fire on load.
+   - Still reads 1 -> `on_game_start` did NOT fire on load.
 
-Expected: France flips in step 1 and stays French in step 2, i.e. `on_game_start` is
-a new-game-only hook and does not run on save load.
+Expected: 1 in step 1 and 1 in step 2, i.e. `on_game_start` is a new-game-only hook
+and does not run on save load.
 
-Result: CONFIRMED 2026-07-12. New game -> France Greek; loaded save -> France French.
-Vanilla `on_game_start` does not fire on save load, only on a new game.
+Result: CONFIRMED 2026-07-12. Vanilla `on_game_start` does not fire on save load, only
+on a new game.
+
+The 2026-07-12 run measured this with a separate probe that flipped France's primary
+culture to Greek, which is how the culture is visible in the country panel with no rig
+at all. That probe was retired 2026-07-31: it fired on every new game and left France
+with no pops of its primary culture, which cost four `error.log` entries per run
+(`country.cpp` accepted-culture overflow, two `initialize_from_bookmark.cpp` culture
+mismatches, and a discriminated `nobles_estate`) and corrupted the country the rest of
+the suite is run as. The counter answers the same question non-destructively and is
+already on screen.
+
+Reading note: row 104's other claim, that `on_game_start` fires once and therefore in
+no scope, is read on a fresh new game. Once a save has been loaded the count is
+cumulative across games rather than a per-fire figure.
 
 ## Countryless Client Tests (76-89, 103, 107)
 
@@ -293,8 +318,8 @@ in a single unspecified observer state, so the distinct client states were never
 separated.
 
 The rig is `et_nc_core` in `et_nc_windows.gui`. It self-starts once the map exists
-and finishes about 4 seconds later, and it roots at `c:FRA` rather than the player.
-Its rows in `et_window.gui` read only `GetCountry('FRA')` and `GetVariableSystem`;
+and finishes about 4 seconds later, and it roots at `c:CAS` rather than the player.
+Its rows in `et_window.gui` read only `GetCountry('CAS')` and `GetVariableSystem`;
 nothing in section 8 touches `Player`, which comes back blank in three of the four
 states. The one button, Re-run Countryless Suite, only sets a GUI variable, since a
 scripted GUI Execute is the mechanism under test and would be dropped in exactly
@@ -484,11 +509,11 @@ broken rig.
    selection lobby, wait 5 seconds and record the section 8 and 9 rows: that is
    the lobby state. If the window does not render there, record that instead; the
    other states still stand on their own.
-2. Take France and enter the game. Press Re-run Countryless Suite, wait 5 seconds,
+2. Take Castile and enter the game. Press Re-run Countryless Suite, wait 5 seconds,
    and record the same rows. This is the control.
 3. Start a new grand campaign, swap to generic observer at the lobby, taking no
    country. Once in game, press Re-run Countryless Suite, wait 5 seconds, record.
-4. Start a new grand campaign, swap to observing France specifically. Once in
+4. Start a new grand campaign, swap to observing Castile specifically. Once in
    game, press Re-run Countryless Suite, wait 5 seconds, record.
 
 Test 107 is answered by the second game of a client run, so it reads FALSE in step
@@ -498,7 +523,8 @@ Test 107 is answered by the second game of a client run, so it reads FALSE in st
 
 Added 2026-07-27. Run button: Run Script Tests. No GUI rig and no timing.
 
-Run 2026-07-27 on 1.3.x.
+Run 2026-07-27 on 1.3.x. Re-run 2026-07-31 alongside 119-123: every row matched
+exactly (93, 96 and 97 FAIL, the rest PASS), so nothing here changed.
 
 | # | Test | Expected | Result |
 |---|------|----------|--------|
@@ -692,7 +718,7 @@ calls the volumes are not comparable and the measurement is void.
 
 ### Protocol
 
-New game as France, not ironman. The rig self-starts at map load: burst 117 fires 5 seconds in
+New game as Castile, not ironman. The rig self-starts at map load: burst 117 fires 5 seconds in
 (clear of the 1-to-2 second console warm-up, test 109), burst 118 twelve seconds after that, and
 the freshness marker is cleared 8 seconds later so its own command sits outside both windows. Wait
 30 seconds on the map, then check the row reads 40 of 40 and read the volumes out of `debug.log`,
@@ -734,3 +760,694 @@ trees: commands naming a 222,195-node tree cost on the order of a million lines 
 floor. This pair does not test that half, since a tree that size cannot be built here without
 generating a large amount of throwaway script. That half stays a live measurement.
 
+
+## Ordered Iterator Defaults (119-121)
+
+Added 2026-07-31. Run button: Run Script Tests. No GUI rig and no timing. Start on any
+country holding more than one location; all three rows read FAIL on a one-location country
+by design, since the guard demands N > 1.
+
+Run 2026-07-31 on 1.3.x as France.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 119 | ordered_owned_location with no position and no max visits one location | PASS | PASS |
+| 120 | Control - the same iterator with max visits every location | PASS | PASS |
+| 121 | The one location the bare form visits is the top of the order | PASS | PASS |
+
+### Findings
+
+**An ordered list iterator with neither `position` nor `max` visits exactly one
+object (119 with 120).** The bare `ordered_owned_location` visited 1 of France's
+locations; the identical iterator carrying `max = 100000` and
+`check_range_bounds = no` visited every one. The max is the only difference between
+the two, so 119 is the iterator defaulting to one entry rather than failing outright.
+
+**The one object visited is the top of the order (121).** Ranks were assigned 1..N and
+the single visit landed on rank N, so `order_by` is honoured in full and only the
+breadth is lost.
+
+This is what makes the bug invisible in a live mod: the one object acted on is the
+correct best-scoring one, so the feature looks like it is picking well rather than
+like it is ignoring everything else. Construction Manager shipped an
+`ordered_location_in_market` carrying only `order_by` and built four building levels a
+month where several hundred were wanted, with nothing logged.
+
+Test 34 had already established the same default for `ordered_key_in_variable_map`, so
+the behaviour now holds across both a map iterator and a list-shaped iterator over game
+objects. Treat it as the rule for every `ordered_*` iterator: without `max`, one entry.
+
+Still not separately testable: whether the engine reaches one entry by defaulting
+`position` to 0 or `max` to 1. Both readings select the top of the order, so no
+observation distinguishes them.
+
+### Why
+
+Test 34 established that `ordered_key_in_variable_map` with neither `position` nor `max`
+visits exactly one entry. Whether the same holds for a list-shaped iterator over game
+objects was never checked, and Construction Manager shipped an
+`ordered_location_in_market` carrying only `order_by` on 2026-07-31. It built its
+best-scoring location every month and silently ignored the rest of the market: the
+symptom was four building levels a cycle where several hundred were wanted, with no
+error logged. Adding `max` plus `check_range_bounds = no` fixed it.
+
+### Design
+
+Every owned location is ranked 1..N into the location variable `et_119_rank` first, so
+the order is total and the visited entry is identifiable by its rank. 119 then runs the
+bare iterator and counts; 120 runs the identical iterator with `max = 100000` and
+`check_range_bounds = no` and counts; 121 reads which rank the bare form's single visit
+landed on. 119 and 120 differ in nothing but the max, which is what makes 120 the
+control: without it, a count of 1 could mean the iterator failed outright rather than
+defaulting to one entry.
+
+121 exists because the ordering is honoured while the breadth is lost, which is exactly
+what makes the bug hard to see: the one object visited is the correct top-ranked one, so
+the feature looks like it is picking well rather than like it is broken.
+
+Not separately testable: whether the engine reaches one entry by defaulting `position`
+to 0 or `max` to 1. Both readings select the top of the order, so no observation
+distinguishes them, and the claim to record is the observable one - neither parameter
+means one entry.
+
+## building_type_max_level Error Pair (122-123)
+
+Added 2026-07-31. Run button: Run Script Tests. **The answer is in `error.log`, not in the
+rows** - the two rows only report that the pair ran. Builds masons in your capital and grants
+10000 gold, so use a throwaway save.
+
+Run 2026-07-31 on 1.3.x as France.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 122 | Five building_type_max_level evaluations, nothing queued between them | PASS = the pair ran | PASS |
+| 123 | The same five with construct_building between them | PASS = ran and a level landed | PASS |
+
+**`error.log` carried zero `building_type_max_level` lines.**
+
+### Findings
+
+**The pair did not reproduce the error, and the run is a valid measurement.** Both rows
+passed, so both loops completed their five evaluations and 123 landed a mason level:
+ten evaluations of the trigger in total, half of them immediately after a
+`construct_building`, and nothing logged.
+
+**The construct theory is not confirmed.** It is also not refuted, because this rig
+differs from the Construction Manager call sites in more than the construct. What the
+two share is already substantial: both evaluate the trigger inside a `while` limit under
+a scripted GUI Execute, and 123 queues a level between evaluations. What differs is the
+location. This pair ran on the capital; the sites that log run on ordinary owned
+locations reached through an iterator.
+
+Next step if this is picked up again, per the section's own reading guide: move the pair
+off the capital and onto ordinary owned locations reached by `every_owned_location`,
+keeping everything else identical. Until then the trigger's error stays unexplained, and
+the `owner` param remains ruled out from the earlier Construction Manager evidence
+rather than from anything measured here.
+
+The one thing this does settle: the error is not intrinsic to evaluating
+`building_type_max_level` in a loop that constructs. A context exists where exactly that
+shape is clean.
+
+### Why
+
+`building_type_max_level` logs `jomini_script_system.cpp:252: Script system error! Error:
+building_type_max_level trigger [ building_type ]` once per evaluation in some contexts.
+Construction Manager first pinned that on the optional `owner` param, then logged the identical
+error from a call site passing no `owner` at all, so that theory is dead. What every call site
+that has logged it shares, and the quiet ones lack, is `construct_building` inside the same
+`while` whose limit holds the trigger, so the cap is re-read immediately after a level is
+queued. This pair tests that and nothing else.
+
+### How to read it
+
+Both loops evaluate the trigger exactly five times on the capital, against `building_type:mason`,
+with an OR that is always true so the counter is what ends them. They differ in one statement:
+123 queues a level between evaluations, 122 does not.
+
+Run the suite on a fresh save, then search `error.log` for `building_type_max_level`. The lines
+carry `[HH:MM:SS]` stamps and both loops run in the same press, so count them rather than trying
+to separate them by time:
+
+- **Roughly five lines**: the construct is the cause. The fix is to stop re-evaluating the trigger
+  after a construct, either by reading the cap another way or by counting the levels first and
+  constructing them afterwards.
+- **Roughly ten lines**: the trigger errors on every evaluation in this context and the construct
+  is irrelevant. Nothing in a loop shape will help; the trigger has to go.
+- **None**: the capital did not reproduce it. The Construction Manager sites that log run on
+  ordinary owned locations under a scripted GUI Execute, so try moving the pair onto one of those
+  before concluding the trigger is clean.
+
+If 123 reads FAIL, no level landed and the pair measured nothing: check the capital can take
+another mason.
+
+## building_type_max_level, Owned Location (124-125)
+
+Added 2026-07-31. Run button: Run Script Tests. **The answer is in `error.log`**, the rows only
+report that the pair ran. Builds masons on an owned location, so use a throwaway save.
+
+**Not yet run.**
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 124 | The 122 shape on an owned location reached by an iterator | PASS = the pair ran | - |
+| 125 | The 123 shape on that same location | PASS = ran and a level landed | - |
+
+### Why
+
+122 and 123 ran clean on the capital, which left the location as the last difference from the
+Construction Manager call sites that log: those reach ordinary owned locations through an
+iterator, not through the `capital` link. 124 and 125 are 122 and 123 with that one thing
+changed. Both take the first location `every_owned_location` hands back, cut to one location by
+an inner `if` because a list-iterator limit cannot see what its own body sets (test 93).
+
+### How to read it
+
+Search `error.log` for `building_type_max_level` after the run.
+
+- **Roughly five lines**: the construct after the evaluation is the cause, but only away from the
+  capital. Both halves matter, which points at the location's own state rather than the loop
+  shape.
+- **Roughly ten lines**: the location is the whole story and the construct is irrelevant; the
+  trigger errors on every evaluation on an ordinary owned location.
+- **None**: neither the construct nor an iterator-reached location reproduces it, and the cause is
+  something else in the Construction Manager sites entirely. At that point stop guessing from the
+  outside and instrument the live call sites rather than adding a sixth variant here.
+
+If 125 reads FAIL, no level landed and the pair measured nothing.
+
+## construct_building Skips Placement Validation (126-127)
+
+Added 2026-07-31. Run button: Run Script Tests. Builds in your capital and grants 10000 gold,
+so use a throwaway save.
+
+**Not yet run.**
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 126 | Control - the engine refuses rural_glassmaker in a town-or-better capital | PASS | - |
+| 127 | construct_building places it there anyway | PASS = the effect validates nothing | - |
+
+### Why
+
+Construction Manager put 33 trade office levels into a 3-slot location whose owner the player
+had no relations with, and could not have built in at all. The diagnosis was that
+`construct_building` is a script effect that enforces none of the type's placement rules: not
+the `allow` block, not `need_good_relation`, not the level cap. Everything downstream of that
+diagnosis, including cutting the foreign path to one level per cycle, rests on it, so it needs
+its own measurement.
+
+### Design
+
+`rural_glassmaker` is `rural_settlement = yes` with `town = no` and `city = no`
+(`in_game/common/building_types/rural_buildings.txt`), so no capital above rural rank can take
+one. 126 asserts the engine agrees, using `can_build_building` with the player as `scope:actor`,
+and is skipped on a rural capital by its own rank guard. 127 then calls `construct_building`
+for that same type at that same location and checks whether a level landed.
+
+A PASS on 127 confirms the effect places a building the engine refuses. A FAIL means it does
+validate, the diagnosis of the foreign bug was wrong, and the one-level-per-cycle change needs
+revisiting.
+
+This does not isolate `need_good_relation` specifically, only the general claim that
+`construct_building` does not check placement. The relations field is one rule among several
+that the same code path skips, and a rank rule is the one that can be forced deterministically
+without arranging a diplomatic state.
+
+If 126 reads FAIL, your capital is a rural settlement or the engine allowed the placement, and
+127 is skipped: the pair measured nothing.
+
+## Probe Building Types (128-180)
+
+Added 2026-07-31. Run button: Run Script Tests, plus Re-read Probe Levels for 159 and 160 and
+et_bt_core for 147 and 148. **Changes the save**: grants gold, builds in your capital, in one other
+owned location and in a neighbour's capital, raises opinion with that neighbour, researches Road
+Building and orders three roads. Use a throwaway save and press each button once.
+
+Five runs on 1.3.x as Castile, 2026-07-31. The column below is the current answer for each row,
+taken from the run that last exercised it. 169-172 were added after those runs and have not been
+run; the group needs a country with at least two owned locations that are not neighbours of each
+other and hold no road construction, on top of what the rows below want.
+
+Every one of these rows runs against `et_probe_multi`, `et_probe_single` or `et_probe_rel`
+(`in_game/common/building_types/et_building_types.txt`). They carry no `location_potential`, no
+`country_potential`, an empty `allow` and all four location ranks, so a refusal can only come from
+the field under test. There is no `need_good_relation = no` twin, because the engine requires every
+foreign type to carry one of `need_good_relation`, `stronger_power_projection`,
+`own_or_overlord_relation_needed` or `international_organization_link` (building_type.cpp:2447); the
+control is the same type at a raised opinion instead.
+
+Nothing here names a country, but the group needs one with a land neighbour, more than one owned
+location, and at least one owned location that does not border its capital. Castile at 1337, the
+suite's own test nation, satisfies all three.
+
+| # | Test | Expected | Result |
+|---|------|----------|-------|
+| 128 | building_type_max_level reports 3 for a max_levels = 3 type | one of 128/149/150/151 | FAIL |
+| 149 | ... or it reports 0 | one of 128/149/150/151 | **PASS** |
+| 150 | ... or it reports 1 or 2 | one of 128/149/150/151 | FAIL |
+| 151 | ... or it reports more than 3 | one of 128/149/150/151 | FAIL |
+| 156 | The same trigger reports more than 0 for vanilla mason | PASS | **FAIL** |
+| 157 | ... and reports 1 for vanilla royal_court, whose cap is a literal | PASS | **FAIL** |
+| 161 | With the owner param, the trigger reports more than 0 for vanilla mason | PASS | **FAIL** |
+| 162 | ... and reports 1 for vanilla royal_court | PASS | **FAIL** |
+| 163 | ... and reports 3 for the max_levels = 3 probe | PASS | **FAIL** |
+| 164 | After a month tick, the trigger reports 3 for the probe | PASS | **FAIL** |
+| 168 | ... or it still reports 0 | one of 164/168 | **PASS** |
+| 165 | After a month tick, with owner, it reports 3 for the probe | PASS | **FAIL** |
+| 166 | After a month tick, it reports more than 0 for vanilla mason | PASS | **FAIL** |
+| 167 | After a month tick, it reports 1 for vanilla royal_court | PASS | **FAIL** |
+| 130 | The reading does not move once a level is in place | PASS | PASS |
+| 129 | instant = yes puts the level up in the same tick | PASS | FAIL |
+| 152 | ... a building of that type exists there at all | PASS | PASS |
+| 153 | ... and nothing of that type is left under construction | PASS | FAIL |
+| 133 | construct_building places a fourth level past max_levels = 3 | PASS | PASS |
+| 158 | A positive change_building_level_in_location delta stands a level | PASS | PASS |
+| 131 | is_at_max_level reads no at one level of three | PASS | PASS |
+| 132 | is_at_max_level reads yes at three of three | PASS | PASS |
+| 134 | Guard - a queued max_levels = 1 type stands at 0 levels with 1 under construction | PASS | PASS |
+| 135 | That building reads is_at_max_level no | PASS | PASS |
+| 136 | cost_multiplier = 0 with instant = yes still places the level | PASS | FAIL |
+| 137 | And charges nothing for it | PASS | PASS |
+| 138 | A negative change_building_level_in_location delta lowers a building by one | PASS | PASS |
+| 139 | Guard - opinion is under 100 both ways | PASS | PASS |
+| 140 | can_build_building in location scope refuses the probe | PASS | **FAIL** |
+| 141 | The same trigger in country scope refuses it | PASS | **FAIL** |
+| 142 | construct_building places it there anyway | PASS | PASS |
+| 154 | Guard - opinion raised past 100 both ways | PASS | PASS |
+| 155 | Control - can_build_building now allows the same probe elsewhere | PASS | PASS |
+| 143 | Guard - Road Building researched, a road-less neighbour and one non-neighbour found | PASS | PASS |
+| 144 | construct_road between two neighbours starts a road construction | PASS | PASS |
+| 145 | That road took no civil construction slot | PASS | **FAIL** |
+| 146 | construct_road between two non-neighbours starts nothing | PASS | PASS, but see 169-172 |
+| 169 | Guard - two road-free owned locations that are not neighbours of each other | PASS | PASS |
+| 170 | An order between them shows a road construction at the from end | one of 170/171/172 answers | **PASS** |
+| 171 | ... and at the to end | one of 170/171/172 answers | **FAIL** |
+| 172 | ... and the from end's civil construction count moved | one of 170/171/172 answers | **PASS** |
+| 176 | building_max_level reports 3 for the probe at 3 of 3 | one of 176/177 answers | **PASS** |
+| 177 | ... or it reports 0 | one of 176/177 answers | FAIL |
+| 178 | is_max_level reads yes at 3 of 3 | PASS | PASS |
+| 179 | is_max_level reads no one level below the cap | PASS | PASS |
+| 180 | construct_road charges the order when it is issued | PASS | PASS |
+| 173 | The non-adjacent order left a new road at the from end | see below | **PASS** |
+| 174 | ... and at the to end | see below | **PASS** |
+| 175 | ... and the from end no longer reports a road construction | PASS | **PASS** |
+| 147 | A building crosses a variable list into a datamodel and downcasts with Scope.GetBuilding | PASS | PASS |
+| 148 | ToggleBuilding on that handle closes the building | PASS | PASS |
+| 159 | The capital's instant = yes levels have finished by the recheck | PASS | PASS |
+| 160 | The cost_multiplier = 0 plus instant = yes build stands by the recheck | PASS | PASS |
+
+### Findings
+
+**`building_type_max_level` reports 0 with no `owner` param, for vanilla types as well as mod
+ones (149, 156, 157, 130).** Vanilla `mason`, whose cap comes from the `guild_max_level` script
+value, read not-more-than-0. Vanilla `royal_court`, whose cap is the literal 1, read not-1. The
+`max_levels = 3` probe read exactly 0, and kept reading 0 once a level stood. Nothing was logged in
+any of the five runs. The `owner` param does not change it either: 161-163 repeated all three
+reads with `owner` supplied as the bare link and all three failed. **This is Construction Manager's
+fall-open reproduced in isolation: a `while` whose limit reads `value <= 0` passes forever and one
+reading `value > 0` never runs.** The engine itself knows the cap - `is_at_max_level` gets it right
+on the same building in the same run - so the value is not missing from the game, only from this
+trigger's answer.
+
+**The value is not stale either.** 164-168 repeated every read two months on, after two month ticks
+with the game running: the probe still reported 0 with and without `owner`, and vanilla `mason` and
+`royal_court` were still wrong. So across five runs the trigger returned 0 for a mod type and two
+vanilla types, one with a script-value cap and one with a literal cap, with and without the `owner`
+param, with nothing standing, with a level standing, and after two month ticks, logging nothing
+every time.
+
+**Treat `building_type_max_level`'s value as unusable in script.** Nothing should read it. The one
+context not tried is evaluating it from a plain on_action or event effect rather than from a
+scripted-GUI Execute, and that is not worth another variant: every Construction Manager call site is
+the tested context, and five consistent runs is the answer.
+
+**`is_at_max_level` tracks the level count against `max_levels` (131, 132, 135).** No at one level
+of three, yes at three of three, and no on a building whose only possible level is queued. Same
+building, same location, same employment situation in 131 and 132, with only the level count
+moving, so the "working at full capacity" wording is about levels. The
+`building_levels_under_construction = 0` pairing Construction Manager uses is required rather than
+defensive.
+
+**`change_building_level_in_location` works in both directions (158, 138).** A positive delta stood
+a level on a building whose levels were all queued, and a negative one took a three-level stack down
+to two. Building Cleanup's `market_village` trim is sound, and the positive direction is a
+synchronous way to stand a level that `construct_building` does not offer.
+
+**`instant = yes` skips the build time but the level lands on a later tick (129, 152, 153, 159,
+160).** Immediately after the call the building exists with levels queued and none standing; ten
+game days later they had all resolved, and they were still standing two months on, the
+`cost_multiplier = 0` pairing included. So the
+lucky-nation governor relocation gets its seat back, just not in the same execution that destroyed
+the old one. Any chain that constructs instantly and reads the level back in the same block reads
+zero.
+
+**`can_build_building` does NOT enforce `need_good_relation` (139, 140, 141, 154, 155).** Both
+guards passed at opinion under 100 in both directions, the control passed at opinion over 100, and
+the trigger allowed the type in both states, in location scope and in country scope alike. The field
+is real - the engine rejects a foreign type carrying none of the four relation gates - but the
+trigger does not read it. Consequence for Construction Manager: the foreign path's single placement
+gate does not cover relations, so foreign builds can land where relations forbid them.
+
+**`construct_building` skips every placement rule tested (126, 127, 133, 142).** A rural-only type
+in a town-or-better capital, a fourth level of a `max_levels = 3` type, and a relation-gated foreign
+type at a neighbour's capital. All three placed.
+
+**A road takes a civil construction slot (145, three times).** `num_civil_constructions` rose across
+the `construct_road` call with nothing else between the two reads. This contradicts the play report
+the Roads category was ungated on, and agrees with vanilla's own
+`game_concept_civil_construction_desc` naming road building as a civil construction. Construction
+Manager's Roads drain currently issues orders against slots it does not count.
+
+**Rows 176-180 and 173-175 were added 2026-08-01 and have not been run.** 176-179 measure the two
+triggers left as candidates for bounding a build loop now that `building_type_max_level`'s value is
+unusable: `building_max_level` and `is_max_level`, both building scope, read on the probe at 3 of 3
+and again one level below its cap. If `building_max_level` reports 3, Construction Manager's shared
+slot-filling batch can be given a real cap again; it currently has none. 180 reads gold across the
+144 order, which is the only unmeasured half of what a road order costs at issue.
+
+**173-175 answer what a non-adjacent order builds**, which 169-172 could not: they count the roaded
+neighbours at each end before the order and again from the Re-read button once a gravel road has had
+time to finish. 173 alone means a stub or a partial path near the `from` end; 173 and 174 together
+mean the span was bridged; neither, with 175 passing, means the order resolved into nothing. The
+lucky-nation reorganization waits on `has_road_to_capital` at a site it ordered a road to from the
+capital, so only the 173-and-174 outcome makes that path work as written.
+
+**The `jomini_script_system.cpp:252` error reproduces here (2026-08-01).** The 2026-08-01 run logged
+`building_type_max_level trigger [ building_type ]` at every one of this suite's own call sites for
+it - the 128/149/150/151 bracket, 130, 156/157 and 161-163 - which is the error the 122-125 variants
+were written for and never produced. So it is not something about Construction Manager's
+environment. Whether the five earlier runs logged it too and nobody read the log is unknown.
+
+**`building_max_level` works where `building_type_max_level` does not (176, 177, 178, 179).** The
+building-scope trigger reported exactly 3 for the `max_levels = 3` probe, and `is_max_level` read yes
+at 3 of 3 and no one level below the cap. So the engine will hand a script the cap after all; it is
+`building_type_max_level`, the building-TYPE-scope trigger, that is broken, and the working
+replacement needs a building of the type to be standing or queued at the location, which
+`any_buildings_in_location` reports from the moment the first level is ordered (152). Construction
+Manager's shared slot-filling batch is bounded on it again.
+
+**`construct_road` charges the order when it is issued (180).** The treasury moved across a single
+call with nothing in between. Its first run was void and reported FAIL: the row was evaluated where
+it was written, after test 138, while the measurement that sets `et_180_ok` runs with test 144 much
+further down, so the comparison read a global that did not exist yet and the log said so
+(`Failed to fetch variable for 'et_180_ok' due to not being set`). The evaluation now sits directly
+after 145 and the row passes, agreeing with a console check on a paused game and with what
+Construction Manager already had recorded from play. The amount and the duration are still
+unmeasured; only the timing is settled.
+
+**`construct_road` is accepted between neighbours (144).** The first measurement the effect has ever
+had. Cost and duration are still unmeasured.
+
+**A NON-adjacent order is ACCEPTED, and 146 was reading the wrong end (169-172).** 146 orders from
+the capital, which already carries 144's order, so the only end it can read is the `to` end, and
+three different behaviours all leave that end clear: a refusal, an acceptance that registers the
+construction at the `from` end alone, and an accepted order that starts a path near the `from` end.
+169-172 separate them by ordering between two road-free owned locations that are not neighbours of
+each other and reading both ends plus the `from` end's `num_civil_constructions`. The `from` end
+shows a road construction (170) and its civil construction count moved (172), so the order was
+taken and it occupies a slot exactly as an adjacent one does; the `to` end shows nothing (171). So
+**`construct_road` does not require adjacency to be accepted, and `has_road_constructions` reports
+at the `from` end only.** 146's PASS was the `to` end being blind to an order that had in fact been
+placed, not a refusal.
+
+**A non-adjacent order lays road at BOTH ends of the span and resolves (173, 174, 175).** Ordering
+between two road-free owned locations that are not neighbours of each other left each end holding a
+road to a neighbour it did not have before, and the from end no longer reporting a construction. A
+stub at the from end would have passed 173 alone. So the engine routes the order across the tiles
+between rather than refusing it or dropping it on the spot. What the rows cannot show is every
+intermediate hop, since two non-adjacent locations can never hold a road to each other and
+`has_latest_road_to` between them is meaningless; both endpoints gaining one is the strongest signal
+available from script.
+
+**This group cannot measure how long a road takes, and must not be read as if it does.** The order
+is issued after the probe buildings, which queue several levels in the capital, and a road takes a
+civil construction slot (145), so it waits behind them. The wall-clock between pressing the button
+and 173-175 passing is that queue, not the road. Observed road durations in ordinary play run about
+125 to 669 days depending on the corridor and the modifiers. Measuring it here would need the road
+ordered first, or ordered from a location the probe buildings never touch.
+
+**`construct_road` is accepted between neighbours (144).** The first measurement the effect has ever
+had. Cost and duration are still unmeasured.
+
+**A NON-adjacent order is ACCEPTED, and 146 was reading the wrong end (169-172).** 146 orders from
+the capital, which already carries 144's order, so the only end it can read is the `to` end, and
+three different behaviours all leave that end clear: a refusal, an acceptance that registers the
+construction at the `from` end alone, and an accepted order that starts a path near the `from` end.
+169-172 separate them by ordering between two road-free owned locations that are not neighbours of
+each other and reading both ends plus the `from` end's `num_civil_constructions`. The `from` end
+shows a road construction (170) and its civil construction count moved (172), so the order was
+taken and it occupies a slot exactly as an adjacent one does; the `to` end shows nothing (171). So
+**`construct_road` does not require adjacency to be accepted, and `has_road_constructions` reports
+at the `from` end only.** 146's PASS was the `to` end being blind to an order that had in fact been
+placed, not a refusal.
+
+**A non-adjacent order lays road at BOTH ends of the span and resolves (173, 174, 175).** Ordering
+between two road-free owned locations that are not neighbours of each other left each end holding a
+road to a neighbour it did not have before, and the from end no longer reporting a construction. A
+stub at the from end would have passed 173 alone. So the engine routes the order across the tiles
+between rather than refusing it or dropping it on the spot. What the rows cannot show is every
+intermediate hop, since two non-adjacent locations can never hold a road to each other and
+`has_latest_road_to` between them is meaningless; both endpoints gaining one is the strongest signal
+available from script.
+
+**It is SLOW.** The order was issued at game start and had not finished by 1 January 1339; it had by
+1343. So a multi-hop span takes something between roughly two and six years, against a single
+corridor that finishes far inside that. Any retry cadence written for a one-hop corridor will fire
+several times over a span that is progressing perfectly well, and `construct_road` charges each
+order when it is issued (180).
+
+**`construct_road` is accepted between neighbours (144).** The first measurement the effect has ever
+had. Cost and duration are still unmeasured.
+
+**A NON-adjacent order is ACCEPTED, and 146 was reading the wrong end (169-172).** 146 orders from
+the capital, which already carries 144's order, so the only end it can read is the `to` end, and
+three different behaviours all leave that end clear: a refusal, an acceptance that registers the
+construction at the `from` end alone, and an accepted order that starts a path near the `from` end.
+169-172 separate them by ordering between two road-free owned locations that are not neighbours of
+each other and reading both ends plus the `from` end's `num_civil_constructions`. The `from` end
+shows a road construction (170) and its civil construction count moved (172), so the order was
+taken and it occupies a slot exactly as an adjacent one does; the `to` end shows nothing (171). So
+**`construct_road` does not require adjacency to be accepted, and `has_road_constructions` reports
+at the `from` end only.** 146's PASS was the `to` end being blind to an order that had in fact been
+placed, not a refusal.
+
+**What a non-adjacent order actually builds is still unknown.** Whether it produces a road that ever
+connects the two ends, a path across the tiles between them, or an inert stub at the `from` end
+cannot be told from `has_road_constructions`, which reports one bit at one end. Answering it needs a
+run that lets the construction finish and then reads `has_latest_road_to` across the span. That is
+what Construction Manager's lucky-nation reorganization rests on: it orders from the capital
+straight to a distant governor site and then waits for `has_road_to_capital` to come true there.
+
+**A building handle survives a variable list into GUI and `ToggleBuilding` acts on it (147, 148).**
+Construction Manager's Building Cleanup close and reopen is sound, and the fort commit `5ee5715`
+that "deleted nothing in play" was not failing on the round trip.
+
+**`cost_multiplier` requires `cost_multiplier_reason`.** Run 1's call omitted it and the whole
+effect was rejected at load with `PostValidate of effect 'construct_building' returned false`
+(jomini_effect.cpp:140). Every vanilla call site pairs the two, and so does Construction Manager's
+`cm_ln_construct_governor_free`.
+
+**Known noise this group produces.** A probe building completing logs
+`[Wwise] Event 'construction_building_generic_01_finished' not found` once per level. The sound
+bank ships `construction_building_generic_finished_01`, so the engine composes the name in a
+different word order than the bank uses; every `audio_category` has the same `_finished_NN` shape,
+so no category choice avoids it and nothing mod-side can fix it. Whether vanilla buildings trigger
+the same line on completion is untested.
+
+### Why
+
+Construction Manager depends on all of the following. All are now settled.
+
+- **`building_type_max_level`'s value is the configured cap.** REPRODUCED AS FALSE: it reads 0, for
+  vanilla types as well as modded ones, with and without `owner`, and two months on as well as
+  immediately. Every Construction Manager `value <= 0` branch is passing and every `value > 0`
+  branch is failing.
+- **`can_build_building` captures `need_good_relation`.** SETTLED, and the answer is no.
+- **`construct_building` enforces no placement rule.** SETTLED: rank, level cap and relations all
+  skipped. The whole shape of `cm_q_fb_build_levels` rests on this.
+- **`is_at_max_level` semantics.** SETTLED: levels, not employment, and queued levels do not count.
+- **`cost_multiplier = 0` with `instant = yes`.** SETTLED: the pairing places the level and charges
+  nothing, on a later tick rather than in the same execution.
+- **A negative `change_building_level_in_location` delta.** SETTLED.
+- **`construct_road`.** SETTLED for acceptance, adjacency and slot cost.
+- **A building handle surviving a variable list into GUI.** SETTLED.
+
+### How to read it
+
+**128, 149-151, 156, 157, 161-168.** Exactly one of 128/149/150/151 passes and which one is the
+answer; every run has said 0. 156 and 157 put that on vanilla types and both failed, so the 0 is not
+about the probe. 161-163 repeated all three reads with `owner` supplied as the bare link and all
+three failed, so the param is not what it wants. 164-168 repeated them two months on and 168 passed
+while 164-167 failed, so the value does not settle with time either. **The question is closed: the
+trigger's value is unusable in script, and no further variant is worth a run.**
+
+**130.** Compares the same bracket before and after a level is in place, so it answers whatever the
+number turns out to be. PASS means the reading is a cap and never moves as levels arrive.
+
+**129, 152, 153, 159, 160.** SETTLED. 152 PASS with 153 FAIL and 129 FAIL means the call queued a
+level rather than standing one; 159 and 160 PASS after ten game days mean it resolves on a later
+tick. 136 fails for the same reason 129 does and is not a separate problem; 160 is the row that
+answers the relocation question.
+
+**158, 131, 132, 138.** SETTLED. 158 is the gate on the other three - it is how they stand levels,
+since `instant` does not do it synchronously.
+
+**136-137.** Read 137 only when 136 passes; with no standing level nothing moves and 137 could pass
+for the wrong reason. Run 3 has 160 confirming the build did happen and did land, so 137 is real:
+the pairing charges nothing.
+
+**139-142, 154-155.** SETTLED. 139 and 154 are the guards on the two opinion states and 155 is the
+control; all three passed, and 140 and 141 both failed, so `can_build_building` is indifferent to
+`need_good_relation` in both scopes. 142 says `construct_building` places the type regardless.
+
+**143-146.** SETTLED. 143 is the guard. 144 and 146 settled adjacency; 145 settled the slot cost,
+three times.
+
+**147-148.** These two rows stay FAIL for about a second after the button, because the button only
+seeds the list and `et_bt_core` does the work. Both passed. 147 PASS with 148 FAIL would have landed
+the failure on the engine action rather than the storage, which is the split the Construction
+Manager fort commit `5ee5715` never got: it changed the handle and the round trip at once.
+
+### Not covered here
+
+These Construction Manager claims are named as unverified and are deliberately absent, because this
+submod cannot reach them:
+
+- Whether `GetBuildOrExpandBuildingCost` resolves its actor as the player when a lucky nation asks.
+  There is no second cost to compare the answer against, so the reading would not distinguish a
+  wrong actor from a correct one.
+- Every `cm_ln_frugal_government` claim (`ai_government_power_target_modifier` adding to or only
+  raising the define base, `diplomacy_importance_modifier` reaching the maintenance slider, a high
+  `gold_importance_modifier` starving army upkeep, a `diplomatic_spending_cost` total below -1).
+  All are AI valuation behaviour observed over years of play, with no script-readable output.
+- Whether `fire_generic_action` resolves headlessly for an AI actor rather than opening the estate
+  picker, and whether it raises a message. Both halves are visual.
+- Whether `Country.GetDebugTag` is what broke the observer console bridge. The failure signal was
+  the absence of a parse block in debug.log, which Claude cannot read.
+- Reproducing the `building_type_max_level` error itself. 122-125 are four variants that all came
+  back clean; per that section's own reading guide the next step is instrumenting the live call
+  sites, not a sixth variant. 128 and 130 measure what the trigger reports rather than when it
+  errors, which is the half that has a consequence in the mod.
+
+## Hidden State Machines, Counted (181-184)
+
+Added 2026-08-03. Runs with the hidden-window chain (Run Hidden Window Tests).
+
+Test 65 asked whether a state machine keeps advancing after its widget goes
+hidden and scored it `et_g64_c > et_g64_snap`. One further fire satisfies that,
+so it cannot tell a machine that kept looping for the whole 1.2s from one that
+merely finished the state it already had in flight, and 65's PASS was being read
+as the first when it only establishes the second. Two shapes also behave
+differently and only one of them was ever tested: 64/65 loop by re-triggering
+themselves with `PdxGuiWidget.TriggerAnimation`, while a driver that hands one
+state to the next with `next` was never covered.
+
+Both new widgets carry a 0.25s state and their own gate and counter, both gates
+close in one effect that snapshots both counters, and the check runs 1.5s later.
+A machine still looping owes about six fires over that window; one that stopped
+after the state in flight owes one. So the `>= 3` rows are the discriminator and
+the `> snapshot` rows only repeat what 65 already showed.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 181 | next-chained machine advances at all while hidden | PROBE | |
+| 182 | next-chained machine keeps looping while hidden | PROBE | |
+| 183 | self-trigger loop advances at all while hidden | PASS (65) | |
+| 184 | self-trigger loop keeps looping while hidden | PROBE | |
+
+Field observation this exists to settle, from Construction Manager's lucky-nation
+console bridge (2026-08-03, NOT a controlled test): a `next`-chained submitter
+gated on its queue being non-empty issued exactly two console commands per game
+month rather than one every 1.5s, and issued none at all while the game was
+paused. Both fit 181 PASS with 182 FAIL, a machine advancing about one state past
+the hide and then stopping. An earlier transition in the same session, where the
+gate went false for 14 seconds as the client took a country, logged no console
+line at all across the window, which fits the same reading.
+
+## Straits and Multi-Hop Road Orders (185-193)
+
+Added 2026-08-06. 185-189 and 191-193 run with the script chain (Run Script
+Tests); 190 runs with Re-Read Probe Levels.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 185 | is_strait_connection_to exists - reads no to a land neighbour of Messina | PROBE | FAIL |
+| 186 | ... and yes across the Strait of Messina | PROBE | PASS |
+| 187 | Guard - Castile owns Coruna and Ferrol, the path through Betanzos unbuilt | PROBE | PASS (see below) |
+| 188 | An order over the two-hop land path shows a construction at the from end | PROBE | PASS on a fresh path |
+| 189 | ... and the order was charged to the treasury | PROBE | PASS on a fresh path |
+| 190 | That order laid a direct road between the two endpoints | PROBE | FAIL |
+| 191 | Guard - Messina and Reggio are ours, no land path between them, no road yet | PROBE | PASS |
+| 192 | An order with no possible road path starts no construction | PROBE | PASS |
+| 193 | ... and costs nothing | PROBE | PASS |
+
+**`is_strait_connection_to` does not exist on 1.3 (185-186).** The run logged
+`Unknown trigger type: is_strait_connection_to` twice
+(`pdx_persistent_reader.cpp:289`), once per call site. So the OGAS Optimized
+workshop mod's strait filter is inert: its limit admits every neighbour. EU5
+exposes no way to detect a strait from script.
+
+**A limit holding an unknown trigger does not gate its branch (185-186).** This is
+the reusable finding and it is why the first version of this pair proved nothing.
+That version asked about the strait as its guard, on the reasoning that an invalid
+trigger reads false and would fail it. Both rows passed instead, on a trigger the
+log shows was never there, so the branches ran regardless of what their limits
+said. Whether the engine discards the whole limit or drops just the unknown
+condition is NOT separated here. What is established is the direction, and it is
+the dangerous one: a removed or misspelled trigger fails OPEN, running the branch
+it was meant to guard. The rows now discriminate without the log, and a missing
+trigger is the failing case: 185 asks about a LAND neighbour, which a working
+trigger answers no.
+
+**187-190 are NOT a strait test, and were written as one.** Coruna and Ferrol
+carry a `rias_altas` strait entry but also have a land route, through Betanzos.
+An `adjacencies.csv` entry ADDS a crossing; it does not mean the pair lacks a land
+connection, and that was the wrong assumption behind the whole group.
+
+What they do establish, and it is worth having: **an order between two locations
+with no direct road routes along the land path between them and queues and charges
+EVERY segment on it** (user, 2026-08-06). The order went coruna - betanzos -
+ferrol and paid for both hops. That is also the cleanest reading of 173-175, where
+a non-adjacent order left both ends holding a road to a neighbour they did not
+have before - a routed multi-hop path, not stubs. Three consequences follow:
+`has_road_to` between the two ENDPOINTS never becomes true on a multi-hop order,
+which is 190's FAIL; the cost is the sum of the path's segments rather than one
+corridor's; and re-issuing once the path is built is refused and charges nothing,
+which is why a second press read 188 and 189 as FAIL while 187 still passed.
+
+**187 was a broken guard for its first two runs and is fixed.** It asked whether
+Coruna had a road to Ferrol, which a two-hop order never creates, so it read the
+same on a fresh game and on one where the whole path was already built and the
+order would be refused. That is why 188 and 189 read PASS on the first run and
+FAIL on later ones with 187 still passing: the path existed, the order was
+refused, and the guard could not see it. It now asks about Coruna's road to
+Betanzos, the first hop, which is a real "nothing built yet" test. **An order
+whose path already exists is refused and charges nothing** - that is what those
+later runs measured, and it holds alongside the fresh-path result.
+
+**191-193 are the strait test, and all three passed.** An order with no possible
+road path is REFUSED and COSTS NOTHING. Their guard has none of 187's weakness:
+no road between Messina and Reggio can ever exist, so a refused order leaves the
+state untouched and the group re-runs identically.
+
+For a road builder that cannot see straits, the two results together bound the
+cost of not seeing them. An unspannable crossing is free to attempt, however many
+times. A crossing that IS spannable by a land detour is charged once, for the
+detour, and buys real roads on those segments; every later order on it is refused
+and free, so the retries a road feature makes while deciding to set the corridor
+aside cost nothing. No `adjacencies.csv` exclusion table is needed on cost
+grounds. What remains is that the corridor the caller scored never gets its road,
+so its proximity or market access does not move.
+
+ Every strait pair Castile owns also has a land
+route, so the pair has to be an island crossing and has to be handed over first:
+messina is on Sicily and reggiocal on the Italian mainland, and the block calls
+`change_location_owner_forcefully` on both before ordering. PASS on both rows
+means an order with no possible path is refused and costs nothing, so the
+retry-and-set-aside path every road feature uses is free on a true crossing and no
+`adjacencies.csv` exclusion table is needed. FAIL means gold goes on a road that
+cannot exist.
+
+A strait-adjacent pair is adjacent to `every_neighbor_location` but not by road,
+which is what makes both cases reachable from a plan that walks neighbours.

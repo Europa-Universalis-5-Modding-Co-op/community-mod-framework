@@ -813,8 +813,73 @@ et_run_script = {
 		set_variable = { name = et_96_passed value = 0 }
 		set_variable = { name = et_97_passed value = 0 }
 		set_variable = { name = et_106_passed value = 0 }
+		set_variable = { name = et_119_passed value = 0 }
+		set_variable = { name = et_120_passed value = 0 }
+		set_variable = { name = et_121_passed value = 0 }
+		set_variable = { name = et_122_passed value = 0 }
+		set_variable = { name = et_123_passed value = 0 }
+		set_variable = { name = et_124_passed value = 0 }
+		set_variable = { name = et_125_passed value = 0 }
+		set_variable = { name = et_126_passed value = 0 }
+		set_variable = { name = et_127_passed value = 0 }
+		set_variable = { name = et_128_passed value = 0 }
+		set_variable = { name = et_129_passed value = 0 }
+		set_variable = { name = et_130_passed value = 0 }
+		set_variable = { name = et_131_passed value = 0 }
+		set_variable = { name = et_132_passed value = 0 }
+		set_variable = { name = et_133_passed value = 0 }
+		set_variable = { name = et_134_passed value = 0 }
+		set_variable = { name = et_135_passed value = 0 }
+		set_variable = { name = et_136_passed value = 0 }
+		set_variable = { name = et_137_passed value = 0 }
+		set_variable = { name = et_138_passed value = 0 }
+		set_variable = { name = et_139_passed value = 0 }
+		set_variable = { name = et_140_passed value = 0 }
+		set_variable = { name = et_141_passed value = 0 }
+		set_variable = { name = et_142_passed value = 0 }
+		set_variable = { name = et_143_passed value = 0 }
+		set_variable = { name = et_144_passed value = 0 }
+		set_variable = { name = et_145_passed value = 0 }
+		set_variable = { name = et_146_passed value = 0 }
+		set_variable = { name = et_147_passed value = 0 }
+		set_variable = { name = et_148_passed value = 0 }
+		set_variable = { name = et_149_passed value = 0 }
+		set_variable = { name = et_150_passed value = 0 }
+		set_variable = { name = et_151_passed value = 0 }
+		set_variable = { name = et_152_passed value = 0 }
+		set_variable = { name = et_153_passed value = 0 }
+		set_variable = { name = et_154_passed value = 0 }
+		set_variable = { name = et_155_passed value = 0 }
+		set_variable = { name = et_156_passed value = 0 }
+		set_variable = { name = et_157_passed value = 0 }
+		set_variable = { name = et_158_passed value = 0 }
+		set_variable = { name = et_161_passed value = 0 }
+		set_variable = { name = et_162_passed value = 0 }
+		set_variable = { name = et_163_passed value = 0 }
+		set_variable = { name = et_169_passed value = 0 }
+		set_variable = { name = et_170_passed value = 0 }
+		set_variable = { name = et_171_passed value = 0 }
+		set_variable = { name = et_172_passed value = 0 }
+		set_variable = { name = et_176_passed value = 0 }
+		set_variable = { name = et_177_passed value = 0 }
+		set_variable = { name = et_178_passed value = 0 }
+		set_variable = { name = et_179_passed value = 0 }
+		set_variable = { name = et_180_passed value = 0 }
+		set_variable = { name = et_185_passed value = 0 }
+		set_variable = { name = et_186_passed value = 0 }
 		set_global_variable = { name = et_96_ok value = 0 }
 		set_global_variable = { name = et_97_ok value = 0 }
+		# Seeded here rather than in et_st_run, so an et_st_run the engine dropped leaves both rows
+		# failing instead of carrying an earlier press's answer.
+		set_global_variable = { name = et_st_seen value = 0 }
+		set_global_variable = { name = et_st_hit value = 0 }
+		set_global_variable = { name = et_186_ok value = 0 }
+		set_variable = { name = et_187_passed value = 0 }
+		set_variable = { name = et_188_passed value = 0 }
+		set_variable = { name = et_189_passed value = 0 }
+		set_variable = { name = et_191_passed value = 0 }
+		set_variable = { name = et_192_passed value = 0 }
+		set_variable = { name = et_193_passed value = 0 }
 
 		# Result: PASS
 		# -- Test 90 ---------------------------------------------
@@ -970,6 +1035,1516 @@ et_run_script = {
 			set_variable = { name = et_106_passed value = 1 }
 		}
 
+		# -- Test 119 --------------------------------------------
+		# An ordered_ iterator over game objects carrying neither position nor max.
+		# Test 34 showed ordered_key_in_variable_map visits one entry that way; this
+		# asks the same of a list-shaped iterator over locations. Every owned location
+		# is ranked 1..N first so the order is total and the winner is identifiable.
+		# A pass means one location, which is the shape that silently drops a sweep.
+		set_global_variable = { name = et_119_n value = 0 }
+		every_owned_location = {
+			change_global_variable = { name = et_119_n add = 1 }
+			set_variable = { name = et_119_rank value = global_var:et_119_n }
+		}
+		set_global_variable = { name = et_119_count value = 0 }
+		set_global_variable = { name = et_119_top value = 0 }
+		ordered_owned_location = {
+			order_by = var:et_119_rank
+			change_global_variable = { name = et_119_count add = 1 }
+			set_global_variable = { name = et_119_top value = var:et_119_rank }
+		}
+		if = {
+			limit = {
+				global_var:et_119_n > 1
+				global_var:et_119_count = 1
+			}
+			set_variable = { name = et_119_passed value = 1 }
+		}
+
+		# -- Test 120 --------------------------------------------
+		# The control for 119: the same iterator over the same ranks, differing only
+		# in the max and its range guard. A pass means every location was visited, so
+		# max is the single variable and 119 is not the iterator failing outright.
+		set_global_variable = { name = et_120_count value = 0 }
+		ordered_owned_location = {
+			order_by = var:et_119_rank
+			max = 100000
+			check_range_bounds = no
+			change_global_variable = { name = et_120_count add = 1 }
+		}
+		if = {
+			limit = {
+				global_var:et_119_n > 1
+				global_var:et_120_count = global_var:et_119_n
+			}
+			set_variable = { name = et_120_passed value = 1 }
+		}
+
+		# -- Test 121 --------------------------------------------
+		# Which entry the bare form of 119 visits. Ranks run 1..N and ordered_
+		# iterators sort high to low, so the top of the order carries rank N. A pass
+		# means the ordering itself is honoured and only the breadth is lost, which is
+		# what makes the bug invisible: the one location built is the right one.
+		if = {
+			limit = {
+				global_var:et_119_n > 1
+				global_var:et_119_top = global_var:et_119_n
+			}
+			set_variable = { name = et_121_passed value = 1 }
+		}
+
+		# -- Test 122 --------------------------------------------
+		# building_type_max_level logs "Script system error! Error: building_type_max_level
+		# trigger [ building_type ]" once per evaluation in some contexts. The signal is
+		# error.log rather than a row, so 122 and 123 are read out of the log: both evaluate
+		# the trigger five times on the capital and differ only in whether a level is queued
+		# between the evaluations. This is the half that queues nothing.
+		# The row passes when the five evaluations ran, so a FAIL means the pair measured
+		# nothing rather than that the trigger is clean.
+		set_global_variable = { name = et_122_n value = 0 }
+		capital = {
+			while = {
+				limit = {
+					global_var:et_122_n < 5
+					OR = {
+						building_type_max_level = { building_type = building_type:mason value <= 0 }
+						building_type_max_level = { building_type = building_type:mason value > 0 }
+					}
+				}
+				change_global_variable = { name = et_122_n add = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_122_n = 5 }
+			set_variable = { name = et_122_passed value = 1 }
+		}
+
+		# -- Test 123 --------------------------------------------
+		# The twin of 122 with construct_building in the body, which is what every call site
+		# that has logged the error had and the quiet ones did not. Grants gold first so the
+		# construct is never refused for cost, and builds masons in the capital, so run this
+		# on a throwaway save.
+		# The row passes only when all five evaluations ran AND a level actually landed;
+		# without the level the pair proves nothing.
+		add_gold = 10000
+		save_temporary_scope_as = et_123_country
+		set_global_variable = { name = et_123_n value = 0 }
+		set_global_variable = { name = et_123_built value = 0 }
+		capital = {
+			while = {
+				limit = {
+					global_var:et_123_n < 5
+					OR = {
+						building_type_max_level = { building_type = building_type:mason value <= 0 }
+						building_type_max_level = { building_type = building_type:mason value > 0 }
+					}
+				}
+				change_global_variable = { name = et_123_n add = 1 }
+				construct_building = {
+					building_type = building_type:mason
+					owner = scope:et_123_country
+					payer = scope:et_123_country
+				}
+			}
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:mason
+						building_levels_under_construction > 0
+					}
+				}
+				set_global_variable = { name = et_123_built value = 1 }
+			}
+		}
+		if = {
+			limit = {
+				global_var:et_123_n = 5
+				global_var:et_123_built = 1
+			}
+			set_variable = { name = et_123_passed value = 1 }
+		}
+
+		# -- Test 124 --------------------------------------------
+		# 122 and 123 ran on the capital and stayed clean, so the location is the last
+		# difference from the Construction Manager sites that log: those reach ordinary owned
+		# locations through an iterator. 124 and 125 repeat the pair on the first owned
+		# location an iterator hands back, changing nothing else. This is the half that
+		# queues nothing. Answer is in error.log; the row only says the pair ran.
+		# The iterator limit cannot see what its own body sets (test 93), so the one-location
+		# cut is an inner if.
+		set_global_variable = { name = et_124_n value = 0 }
+		set_global_variable = { name = et_124_done value = 0 }
+		every_owned_location = {
+			if = {
+				limit = { global_var:et_124_done = 0 }
+				set_global_variable = { name = et_124_done value = 1 }
+				while = {
+					limit = {
+						global_var:et_124_n < 5
+						OR = {
+							building_type_max_level = { building_type = building_type:mason value <= 0 }
+							building_type_max_level = { building_type = building_type:mason value > 0 }
+						}
+					}
+					change_global_variable = { name = et_124_n add = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_124_n = 5 }
+			set_variable = { name = et_124_passed value = 1 }
+		}
+
+		# -- Test 125 --------------------------------------------
+		# The twin of 124 with construct_building between the evaluations. Builds masons on an
+		# owned location, so run this on a throwaway save.
+		# The row passes only when all five evaluations ran AND a level landed.
+		save_temporary_scope_as = et_125_country
+		set_global_variable = { name = et_125_n value = 0 }
+		set_global_variable = { name = et_125_done value = 0 }
+		set_global_variable = { name = et_125_built value = 0 }
+		every_owned_location = {
+			if = {
+				limit = { global_var:et_125_done = 0 }
+				set_global_variable = { name = et_125_done value = 1 }
+				while = {
+					limit = {
+						global_var:et_125_n < 5
+						OR = {
+							building_type_max_level = { building_type = building_type:mason value <= 0 }
+							building_type_max_level = { building_type = building_type:mason value > 0 }
+						}
+					}
+					change_global_variable = { name = et_125_n add = 1 }
+					construct_building = {
+						building_type = building_type:mason
+						owner = scope:et_125_country
+						payer = scope:et_125_country
+					}
+				}
+				if = {
+					limit = {
+						any_buildings_in_location = {
+							building_type = building_type:mason
+							building_levels_under_construction > 0
+						}
+					}
+					set_global_variable = { name = et_125_built value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = {
+				global_var:et_125_n = 5
+				global_var:et_125_built = 1
+			}
+			set_variable = { name = et_125_passed value = 1 }
+		}
+
+		# -- Test 126 --------------------------------------------
+		# Control for 127. rural_glassmaker is rural_settlement only (town = no, city = no,
+		# in_game/common/building_types/rural_buildings.txt), so a capital that is a town or
+		# better cannot take one. A pass means the engine agrees the placement is refused,
+		# which is what makes 127 meaningful.
+		set_global_variable = { name = et_126_refused value = 0 }
+		save_temporary_scope_as = et_126_country
+		capital = {
+			if = {
+				limit = {
+					NOT = { location_rank = location_rank:rural_settlement }
+					scope:et_126_country = { save_temporary_scope_as = actor }
+					NOT = { can_build_building = building_type:rural_glassmaker }
+				}
+				set_global_variable = { name = et_126_refused value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_126_refused = 1 }
+			set_variable = { name = et_126_passed value = 1 }
+		}
+
+		# -- Test 127 --------------------------------------------
+		# The claim Construction Manager's foreign over-queue rested on: construct_building
+		# places a level whatever the type's own placement rules say. Calls it on the same
+		# capital 126 just showed the engine refuses. A PASS means the level landed anyway,
+		# confirming the effect validates nothing; a FAIL means it does validate and the
+		# diagnosis of that bug was wrong.
+		# Does not isolate need_good_relation specifically, only that placement is unchecked.
+		# Builds in your capital, so run this on a throwaway save.
+		set_global_variable = { name = et_127_built value = 0 }
+		if = {
+			limit = { global_var:et_126_refused = 1 }
+			add_gold = 10000
+			capital = {
+				construct_building = {
+					building_type = building_type:rural_glassmaker
+					owner = scope:et_126_country
+					payer = scope:et_126_country
+				}
+				if = {
+					limit = {
+						any_buildings_in_location = {
+							building_type = building_type:rural_glassmaker
+							building_levels_under_construction > 0
+						}
+					}
+					set_global_variable = { name = et_127_built value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_127_built = 1 }
+			set_variable = { name = et_127_passed value = 1 }
+		}
+
+		# Tests 128-148 all run against the et_probe_* building types, which carry no
+		# location_potential, no country_potential, an empty allow and every location rank,
+		# so a refusal can only come from the field under test. They grant gold, build in
+		# your capital, in one other owned location and in a neighbour's capital, research
+		# road_building and order two roads, so run them on a throwaway save and press the
+		# button once.
+		add_gold = 10000
+		save_temporary_scope_as = et_probe_country
+		capital = { set_global_variable = { name = et_cap_loc value = this } }
+
+		# -- Tests 128, 149, 150, 151 ----------------------------
+		# What building_type_max_level's value reports, with nothing standing yet.
+		# et_probe_multi is max_levels = 3 and vanilla uses literals of 2, 5 and 7, so 3 is a
+		# value the field takes. The first run read something else, so the four rows bracket
+		# the number instead of asserting one: exactly one of them passes.
+		set_global_variable = { name = et_ml_a value = 0 }
+		capital = {
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value = 0 } }
+				set_global_variable = { name = et_ml_a value = 1 }
+			}
+			else_if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value <= 2 } }
+				set_global_variable = { name = et_ml_a value = 2 }
+			}
+			else_if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value = 3 } }
+				set_global_variable = { name = et_ml_a value = 3 }
+			}
+			else = {
+				set_global_variable = { name = et_ml_a value = 4 }
+			}
+		}
+		if = {
+			limit = { global_var:et_ml_a = 3 }
+			set_variable = { name = et_128_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_ml_a = 1 }
+			set_variable = { name = et_149_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_ml_a = 2 }
+			set_variable = { name = et_150_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_ml_a = 4 }
+			set_variable = { name = et_151_passed value = 1 }
+		}
+
+		# -- Tests 129, 152, 153 ---------------------------------
+		# instant = yes on its own, split three ways because the first run failed 129 while
+		# 147 found an opened building of this type in the capital: 152 says whether anything
+		# was created, 153 whether it was left queued, 129 whether a level actually stands.
+		set_global_variable = { name = et_129_ok value = 0 }
+		set_global_variable = { name = et_152_ok value = 0 }
+		set_global_variable = { name = et_153_ok value = 0 }
+		capital = {
+			construct_building = {
+				building_type = building_type:et_probe_multi
+				owner = scope:et_probe_country
+				payer = scope:et_probe_country
+				instant = yes
+			}
+			if = {
+				limit = { any_buildings_in_location = { building_type = building_type:et_probe_multi } }
+				set_global_variable = { name = et_152_ok value = 1 }
+			}
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						building_levels_under_construction = 0
+					}
+				}
+				set_global_variable = { name = et_153_ok value = 1 }
+			}
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						building_level = 1
+					}
+				}
+				set_global_variable = { name = et_129_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_129_ok = 1 }
+			set_variable = { name = et_129_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_152_ok = 1 }
+			set_variable = { name = et_152_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_153_ok = 1 }
+			set_variable = { name = et_153_passed value = 1 }
+		}
+
+		# -- Test 130 --------------------------------------------
+		# The same bracket run again with a level in place. A pass means the reading does not
+		# move as levels arrive, so it is the cap and a while whose limit reads value > 0 is
+		# never bounded by it. It compares the two brackets rather than a fixed 3, so it
+		# answers even when the number itself is not the configured max.
+		set_global_variable = { name = et_ml_b value = 0 }
+		capital = {
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value = 0 } }
+				set_global_variable = { name = et_ml_b value = 1 }
+			}
+			else_if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value <= 2 } }
+				set_global_variable = { name = et_ml_b value = 2 }
+			}
+			else_if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value = 3 } }
+				set_global_variable = { name = et_ml_b value = 3 }
+			}
+			else = {
+				set_global_variable = { name = et_ml_b value = 4 }
+			}
+		}
+		if = {
+			limit = { global_var:et_ml_b = global_var:et_ml_a }
+			set_variable = { name = et_130_passed value = 1 }
+		}
+
+		# -- Tests 156, 157 --------------------------------------
+		# Whether building_type_max_level works at all. 149 read 0 for et_probe_multi, so these
+		# ask two vanilla types at the same location: mason takes its cap from the
+		# guild_max_level script value, royal_court from a literal 1
+		# (in_game/common/building_types/capital_buildings.txt:5).
+		set_global_variable = { name = et_156_ok value = 0 }
+		set_global_variable = { name = et_157_ok value = 0 }
+		capital = {
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:mason value > 0 } }
+				set_global_variable = { name = et_156_ok value = 1 }
+			}
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:royal_court value = 1 } }
+				set_global_variable = { name = et_157_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_156_ok = 1 }
+			set_variable = { name = et_156_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_157_ok = 1 }
+			set_variable = { name = et_157_passed value = 1 }
+		}
+
+		# -- Tests 161, 162, 163 ---------------------------------
+		# Every read above omits the optional owner param and every one has come back 0,
+		# vanilla types included. These repeat 156, 157 and 128 with it supplied. It is passed
+		# as the bare owner LINK, never a saved scope, which logs a Heuristics error per
+		# evaluation.
+		set_global_variable = { name = et_161_ok value = 0 }
+		set_global_variable = { name = et_162_ok value = 0 }
+		set_global_variable = { name = et_163_ok value = 0 }
+		capital = {
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:mason owner = owner value > 0 } }
+				set_global_variable = { name = et_161_ok value = 1 }
+			}
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:royal_court owner = owner value = 1 } }
+				set_global_variable = { name = et_162_ok value = 1 }
+			}
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi owner = owner value = 3 } }
+				set_global_variable = { name = et_163_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_161_ok = 1 }
+			set_variable = { name = et_161_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_162_ok = 1 }
+			set_variable = { name = et_162_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_163_ok = 1 }
+			set_variable = { name = et_163_passed value = 1 }
+		}
+
+		# -- Test 133 --------------------------------------------
+		# The level cap half of the construct_building claim 126 and 127 opened: a fourth level
+		# of a max_levels = 3 type. Counts standing or queued levels, so it answers whether
+		# instant = yes worked or not - a queued fourth level is exactly what the 33-level trade
+		# office was. It runs before the level deltas below so nothing has converted a queued
+		# level by the time it counts.
+		set_global_variable = { name = et_133_ok value = 0 }
+		capital = {
+			construct_building = {
+				building_type = building_type:et_probe_multi
+				owner = scope:et_probe_country
+				payer = scope:et_probe_country
+				instant = yes
+			}
+			construct_building = {
+				building_type = building_type:et_probe_multi
+				owner = scope:et_probe_country
+				payer = scope:et_probe_country
+				instant = yes
+			}
+			construct_building = {
+				building_type = building_type:et_probe_multi
+				owner = scope:et_probe_country
+				payer = scope:et_probe_country
+				instant = yes
+			}
+			if = {
+				limit = {
+					OR = {
+						any_buildings_in_location = {
+							building_type = building_type:et_probe_multi
+							building_level >= 4
+						}
+						any_buildings_in_location = {
+							building_type = building_type:et_probe_multi
+							building_levels_under_construction >= 4
+						}
+					}
+				}
+				set_global_variable = { name = et_133_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_133_ok = 1 }
+			set_variable = { name = et_133_passed value = 1 }
+		}
+
+		# -- Test 158 --------------------------------------------
+		# A positive change_building_level_in_location delta, the direction vanilla passes. It is
+		# how 131, 132 and 138 get levels standing now that instant = yes has been shown not to
+		# within the same execution, so a FAIL here means those three measured nothing.
+		set_global_variable = { name = et_158_ok value = 0 }
+		capital = {
+			change_building_level_in_location = {
+				building = building_type:et_probe_multi
+				value = 1
+			}
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						building_level = 1
+					}
+				}
+				set_global_variable = { name = et_158_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_158_ok = 1 }
+			set_variable = { name = et_158_passed value = 1 }
+		}
+
+		# -- Test 131 --------------------------------------------
+		# is_at_max_level one level into a three level type.
+		set_global_variable = { name = et_131_ok value = 0 }
+		capital = {
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						building_level = 1
+						is_at_max_level = no
+					}
+				}
+				set_global_variable = { name = et_131_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_131_ok = 1 }
+			set_variable = { name = et_131_passed value = 1 }
+		}
+
+		# -- Test 132 --------------------------------------------
+		# The same building at its cap. 131 and 132 together are what tie is_at_max_level to the
+		# level count rather than to something else that happens to move with it.
+		set_global_variable = { name = et_132_ok value = 0 }
+		capital = {
+			change_building_level_in_location = {
+				building = building_type:et_probe_multi
+				value = 1
+			}
+			change_building_level_in_location = {
+				building = building_type:et_probe_multi
+				value = 1
+			}
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						building_level = 3
+						is_at_max_level = yes
+					}
+				}
+				set_global_variable = { name = et_132_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_132_ok = 1 }
+			set_variable = { name = et_132_passed value = 1 }
+		}
+
+		# -- Tests 176, 177, 178 ---------------------------------
+		# The two triggers building_type_max_level's dead value leaves as the only candidates for
+		# bounding a build loop. Both are building scope, so they answer only where a building
+		# stands, which the probe now does at 3 of 3. 176 and 177 bracket the number the same way
+		# 128 and 149 do, so a wrong answer is still an answer.
+		set_global_variable = { name = et_ml_c value = 0 }
+		set_global_variable = { name = et_178_ok value = 0 }
+		capital = {
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						building_max_level = 3
+					}
+				}
+				set_global_variable = { name = et_ml_c value = 3 }
+			}
+			else_if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						building_max_level = 0
+					}
+				}
+				set_global_variable = { name = et_ml_c value = 1 }
+			}
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						is_max_level = yes
+					}
+				}
+				set_global_variable = { name = et_178_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_ml_c = 3 }
+			set_variable = { name = et_176_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_ml_c = 1 }
+			set_variable = { name = et_177_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_178_ok = 1 }
+			set_variable = { name = et_178_passed value = 1 }
+		}
+
+		# -- Test 134 --------------------------------------------
+		# Guard for 135. Queues a max_levels = 1 type in one other owned location and reads
+		# back zero standing levels with one under construction.
+		set_global_variable = { name = et_uc_done value = 0 }
+		set_global_variable = { name = et_134_ok value = 0 }
+		set_global_variable = { name = et_135_ok value = 0 }
+		every_owned_location = {
+			if = {
+				limit = {
+					global_var:et_uc_done = 0
+					NOT = { this = global_var:et_cap_loc }
+				}
+				set_global_variable = { name = et_uc_done value = 1 }
+				set_global_variable = { name = et_uc_loc value = this }
+				construct_building = {
+					building_type = building_type:et_probe_single
+					owner = scope:et_probe_country
+					payer = scope:et_probe_country
+				}
+				if = {
+					limit = {
+						any_buildings_in_location = {
+							building_type = building_type:et_probe_single
+							building_level = 0
+							building_levels_under_construction = 1
+						}
+					}
+					set_global_variable = { name = et_134_ok value = 1 }
+				}
+				if = {
+					limit = {
+						any_buildings_in_location = {
+							building_type = building_type:et_probe_single
+							building_level = 0
+							is_at_max_level = no
+						}
+					}
+					set_global_variable = { name = et_135_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_134_ok = 1 }
+			set_variable = { name = et_134_passed value = 1 }
+		}
+
+		# -- Test 135 --------------------------------------------
+		# The one level that type can ever have is under construction. A pass means levels
+		# under construction do not count toward the cap, so is_at_max_level needs the
+		# building_levels_under_construction pairing to answer "is there room here".
+		if = {
+			limit = { global_var:et_135_ok = 1 }
+			set_variable = { name = et_135_passed value = 1 }
+		}
+
+		# -- Test 136 --------------------------------------------
+		# cost_multiplier = 0 and instant = yes in one call. Each half is vanilla-proven
+		# alone; a lucky nation's governor relocation destroys the old seat before it makes
+		# this call, so a pairing that silently does nothing costs a governor outright.
+		# cost_multiplier_reason is required alongside cost_multiplier: without it the whole
+		# effect is rejected at load with "PostValidate of effect 'construct_building'
+		# returned false", which is what the first run hit. Every vanilla call site pairs
+		# them, and so does the lucky-nation call this mirrors.
+		set_variable = { name = et_gold_before value = gold }
+		set_global_variable = { name = et_136_ok value = 0 }
+		if = {
+			limit = { global_var:et_uc_done = 1 }
+			global_var:et_uc_loc = {
+				construct_building = {
+					building_type = building_type:et_probe_multi
+					owner = scope:et_probe_country
+					payer = scope:et_probe_country
+					cost_multiplier = 0
+					cost_multiplier_reason = et_probe_free
+					instant = yes
+				}
+				if = {
+					limit = {
+						any_buildings_in_location = {
+							building_type = building_type:et_probe_multi
+							building_level = 1
+						}
+					}
+					set_global_variable = { name = et_136_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_136_ok = 1 }
+			set_variable = { name = et_136_passed value = 1 }
+		}
+
+		# -- Test 137 --------------------------------------------
+		# The gold half of the same call. Only meaningful once 136 shows a build happened.
+		if = {
+			limit = { gold = var:et_gold_before }
+			set_variable = { name = et_137_passed value = 1 }
+		}
+
+		# -- Test 138 --------------------------------------------
+		# A negative change_building_level_in_location delta, which vanilla never passes. Building
+		# Cleanup trims market_village with one instead of destroying it. Runs at the capital, on
+		# the stack 132 just took to three, so the second location's instant build is left
+		# untouched for the recheck in 160.
+		set_global_variable = { name = et_138_ok value = 0 }
+		set_global_variable = { name = et_138_ready value = 0 }
+		capital = {
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						building_level = 3
+					}
+				}
+				set_global_variable = { name = et_138_ready value = 1 }
+			}
+			change_building_level_in_location = {
+				building = building_type:et_probe_multi
+				value = -1
+			}
+			if = {
+				limit = {
+					global_var:et_138_ready = 1
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						building_level = 2
+					}
+				}
+				set_global_variable = { name = et_138_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_138_ok = 1 }
+			set_variable = { name = et_138_passed value = 1 }
+		}
+
+		# -- Test 179 --------------------------------------------
+		# is_max_level on the same building one level below its cap. With 178 it is what ties the
+		# trigger to the level count rather than to something else that moves with it, and only
+		# both together make it usable as the bound is_at_max_level already provides.
+		set_global_variable = { name = et_179_ok value = 0 }
+		capital = {
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						is_max_level = no
+					}
+				}
+				set_global_variable = { name = et_179_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_179_ok = 1 }
+			set_variable = { name = et_179_passed value = 1 }
+		}
+
+		# -- Test 139 --------------------------------------------
+		# Guard for 140 to 142. GOOD_RELATION_THRESHOLD_FOR_BUILDINGS is 100
+		# (loading_screen/common/defines/00_defines.txt:2025), so the group only separates
+		# while the picked neighbour sits below it. Both directions are read, because which
+		# one the rule looks at is not documented.
+		set_global_variable = { name = et_fp_done value = 0 }
+		set_global_variable = { name = et_fp_alt value = 0 }
+		every_neighbor_country = {
+			if = {
+				limit = { global_var:et_fp_done = 0 }
+				set_global_variable = { name = et_fp_done value = 1 }
+				set_global_variable = { name = et_fp_ctry value = this }
+				capital = { set_global_variable = { name = et_fp_loc value = this } }
+				every_owned_location = {
+					if = {
+						limit = {
+							global_var:et_fp_alt = 0
+							NOT = { this = global_var:et_fp_loc }
+						}
+						set_global_variable = { name = et_fp_alt value = 1 }
+						set_global_variable = { name = et_fp_loc2 value = this }
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				global_var:et_fp_done = 1
+				opinion = { target = global_var:et_fp_ctry value < 100 }
+				global_var:et_fp_ctry = { opinion = { target = scope:et_probe_country value < 100 } }
+			}
+			set_variable = { name = et_139_passed value = 1 }
+		}
+
+		# -- Test 140 --------------------------------------------
+		# Whether can_build_building carries need_good_relation in LOCATION scope, which is
+		# the scope the foreign path's single placement gate evaluates it in.
+		set_global_variable = { name = et_140_ok value = 0 }
+		if = {
+			limit = { global_var:et_fp_done = 1 }
+			global_var:et_fp_loc = {
+				if = {
+					limit = {
+						scope:et_probe_country = { save_temporary_scope_as = actor }
+						NOT = { can_build_building = building_type:et_probe_rel }
+					}
+					set_global_variable = { name = et_140_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_140_ok = 1 }
+			set_variable = { name = et_140_passed value = 1 }
+		}
+
+		# -- Test 141 --------------------------------------------
+		# The same trigger in COUNTRY scope, where the docs say it checks the country
+		# requirements instead of the local ones. It names no location, so a PASS only says
+		# something country-side refuses the type and not that the refusal is the relations
+		# rule; 154 and 155 are what settle that.
+		set_global_variable = { name = et_141_ok value = 0 }
+		if = {
+			limit = { NOT = { can_build_building = building_type:et_probe_rel } }
+			set_global_variable = { name = et_141_ok value = 1 }
+		}
+		if = {
+			limit = { global_var:et_141_ok = 1 }
+			set_variable = { name = et_141_passed value = 1 }
+		}
+
+		# -- Test 142 --------------------------------------------
+		# construct_building against the relations rule specifically, which is the rule the
+		# 33-level trade office landed past. Meaningful only where 141 passed.
+		set_global_variable = { name = et_142_ok value = 0 }
+		if = {
+			limit = { global_var:et_fp_done = 1 }
+			global_var:et_fp_loc = {
+				construct_building = {
+					building_type = building_type:et_probe_rel
+					owner = scope:et_probe_country
+					payer = scope:et_probe_country
+				}
+				if = {
+					limit = {
+						any_buildings_in_location = {
+							building_type = building_type:et_probe_rel
+							owner = scope:et_probe_country
+							building_levels_under_construction > 0
+						}
+					}
+					set_global_variable = { name = et_142_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_142_ok = 1 }
+			set_variable = { name = et_142_passed value = 1 }
+		}
+
+		# -- Tests 154, 155 --------------------------------------
+		# The control for 140, and the one that actually settles it: the same type at the
+		# same neighbour with nothing changed but the opinion, read at a second location of
+		# theirs because 142 has just filled the first. Both directions are raised, since
+		# which one the rule reads is not documented.
+		# 140 FAIL with 155 PASS means the trigger is indifferent to opinion; 140 PASS with
+		# 155 PASS means it enforces it and the refusal at low opinion was the relations rule
+		# rather than something else about the site.
+		set_global_variable = { name = et_155_ok value = 0 }
+		if = {
+			limit = { global_var:et_fp_done = 1 }
+			add_opinion = { target = global_var:et_fp_ctry modifier = et_probe_opinion }
+			reverse_add_opinion = { target = global_var:et_fp_ctry modifier = et_probe_opinion }
+		}
+		if = {
+			limit = {
+				global_var:et_fp_done = 1
+				opinion = { target = global_var:et_fp_ctry value >= 100 }
+				global_var:et_fp_ctry = { opinion = { target = scope:et_probe_country value >= 100 } }
+			}
+			set_variable = { name = et_154_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_fp_alt = 1 }
+			global_var:et_fp_loc2 = {
+				if = {
+					limit = {
+						scope:et_probe_country = { save_temporary_scope_as = actor }
+						can_build_building = building_type:et_probe_rel
+					}
+					set_global_variable = { name = et_155_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_155_ok = 1 }
+			set_variable = { name = et_155_passed value = 1 }
+		}
+
+		# -- Test 143 --------------------------------------------
+		# Guard for 144 to 146: the advance that unlocks gravel_road
+		# (in_game/common/advances/3_road_unlocks.txt:2), an owned neighbour of the capital
+		# with no road construction and no latest road yet, and one owned location that is
+		# not a neighbour of the capital at all. Neighbours are marked first because a
+		# nested any_neighbor_location cannot reach the outer location: prev is a global
+		# link and prev.prev fails to load.
+		# The requires chain is granted too, in case research_advance enforces it.
+		research_advance = advance_type:agriculture_advance
+		research_advance = advance_type:city_building_advance
+		research_advance = advance_type:road_building
+		set_global_variable = { name = et_rd_done value = 0 }
+		set_global_variable = { name = et_na_done value = 0 }
+		global_var:et_cap_loc = {
+			every_neighbor_location = {
+				set_variable = { name = et_cap_adj value = 1 }
+				if = {
+					limit = {
+						global_var:et_rd_done = 0
+						owner ?= scope:et_probe_country
+						has_road_constructions = no
+						NOT = { has_latest_road_to = global_var:et_cap_loc }
+					}
+					set_global_variable = { name = et_rd_done value = 1 }
+					set_global_variable = { name = et_rd_to value = this }
+				}
+			}
+		}
+		every_owned_location = {
+			if = {
+				limit = {
+					global_var:et_na_done = 0
+					NOT = { exists = var:et_cap_adj }
+					NOT = { this = global_var:et_cap_loc }
+					has_road_constructions = no
+				}
+				set_global_variable = { name = et_na_done value = 1 }
+				set_global_variable = { name = et_na_loc value = this }
+			}
+		}
+		if = {
+			limit = {
+				has_advance = road_building
+				global_var:et_rd_done = 1
+				global_var:et_na_done = 1
+				global_var:et_cap_loc = { has_road_constructions = no }
+			}
+			set_variable = { name = et_143_passed value = 1 }
+		}
+
+		# -- Test 144 --------------------------------------------
+		# construct_road has no vanilla call site anywhere, so this is the first measurement
+		# that an order is accepted at all.
+		set_global_variable = { name = et_144_ok value = 0 }
+		set_global_variable = { name = et_145_ok value = 0 }
+		set_global_variable = { name = et_180_ok value = 0 }
+		set_global_variable = { name = et_rd_slots value = 0 }
+		set_variable = { name = et_rd_gold value = gold }
+		if = {
+			limit = { global_var:et_rd_done = 1 }
+			global_var:et_cap_loc = {
+				set_global_variable = { name = et_rd_slots value = num_civil_constructions }
+			}
+			construct_road = {
+				road_type = road_type:gravel_road
+				from = global_var:et_cap_loc
+				to = global_var:et_rd_to
+			}
+			# -- Test 180 ---------------------------------------
+			# Whether the order is charged when it is issued. Construction Manager's Roads drain
+			# assumes it is, on a reading of its own gold log in play, and does not book the spend
+			# a second time in cm_q_planned_spend.
+			if = {
+				limit = { NOT = { gold = var:et_rd_gold } }
+				set_global_variable = { name = et_180_ok value = 1 }
+			}
+			global_var:et_cap_loc = {
+				if = {
+					limit = { has_road_constructions = yes }
+					set_global_variable = { name = et_144_ok value = 1 }
+				}
+				if = {
+					limit = { num_civil_constructions = global_var:et_rd_slots }
+					set_global_variable = { name = et_145_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_144_ok = 1 }
+			set_variable = { name = et_144_passed value = 1 }
+		}
+
+		# -- Test 145 --------------------------------------------
+		# Whether the order the previous test placed took one of the location's civil
+		# construction slots. Roads is not slot-gated on the strength of a play report alone.
+		if = {
+			limit = { global_var:et_145_ok = 1 }
+			set_variable = { name = et_145_passed value = 1 }
+		}
+
+		if = {
+			limit = { global_var:et_180_ok = 1 }
+			set_variable = { name = et_180_passed value = 1 }
+		}
+
+		# -- Test 146 --------------------------------------------
+		# Whether from and to have to be neighbours. A pass means the order was refused, so
+		# the Roads category can keep treating a corridor as a one-hop thing.
+		set_global_variable = { name = et_146_ok value = 0 }
+		if = {
+			limit = { global_var:et_na_done = 1 }
+			construct_road = {
+				road_type = road_type:gravel_road
+				from = global_var:et_cap_loc
+				to = global_var:et_na_loc
+			}
+			global_var:et_na_loc = {
+				if = {
+					limit = { has_road_constructions = no }
+					set_global_variable = { name = et_146_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = {
+				global_var:et_na_done = 1
+				global_var:et_146_ok = 1
+			}
+			set_variable = { name = et_146_passed value = 1 }
+		}
+
+		# -- Tests 169, 170, 171, 172 ----------------------------
+		# 146 asks whether from and to have to be neighbours and cannot answer it. Its from end is
+		# the capital, which already carries 144's order, so only the to end can be read, and a
+		# refusal, a registration at the from end alone and a path started near the from end all
+		# leave that end clear. This group orders between two road-free owned locations that are
+		# not neighbours of each other, reads both ends, and reads the from end's civil
+		# construction count, which 145 showed moves when an order is accepted. Neither end is a
+		# location 143 to 146 touched, so the order they run in does not matter.
+		set_global_variable = { name = et_nb_from_done value = 0 }
+		set_global_variable = { name = et_nb_to_done value = 0 }
+		set_global_variable = { name = et_nb_slots value = 0 }
+		set_global_variable = { name = et_169_ok value = 0 }
+		set_global_variable = { name = et_170_ok value = 0 }
+		set_global_variable = { name = et_171_ok value = 0 }
+		set_global_variable = { name = et_172_ok value = 0 }
+		if = {
+			limit = {
+				global_var:et_rd_done = 1
+				global_var:et_na_done = 1
+			}
+			every_owned_location = {
+				if = {
+					limit = {
+						global_var:et_nb_from_done = 0
+						NOT = { this = global_var:et_cap_loc }
+						NOT = { this = global_var:et_rd_to }
+						NOT = { this = global_var:et_na_loc }
+						has_road_constructions = no
+					}
+					set_global_variable = { name = et_nb_from_done value = 1 }
+					set_global_variable = { name = et_nb_from value = this }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_nb_from_done = 1 }
+			global_var:et_nb_from = {
+				every_neighbor_location = { set_variable = { name = et_nb_adj value = 1 } }
+			}
+			every_owned_location = {
+				if = {
+					limit = {
+						global_var:et_nb_to_done = 0
+						NOT = { exists = var:et_nb_adj }
+						NOT = { this = global_var:et_nb_from }
+						NOT = { this = global_var:et_cap_loc }
+						NOT = { this = global_var:et_rd_to }
+						NOT = { this = global_var:et_na_loc }
+						has_road_constructions = no
+					}
+					set_global_variable = { name = et_nb_to_done value = 1 }
+					set_global_variable = { name = et_nb_to value = this }
+				}
+			}
+		}
+		if = {
+			limit = {
+				global_var:et_nb_from_done = 1
+				global_var:et_nb_to_done = 1
+				global_var:et_nb_from = { has_road_constructions = no }
+				global_var:et_nb_to = { has_road_constructions = no }
+			}
+			set_global_variable = { name = et_169_ok value = 1 }
+			global_var:et_nb_from = {
+				set_global_variable = { name = et_nb_slots value = num_civil_constructions }
+			}
+			# Roaded-neighbour counts at both ends before the order, which 173 and 174 read back
+			# once the construction has had time to finish. has_road_constructions answers one bit
+			# at one end and cannot say whether a road was actually laid, or where.
+			set_global_variable = { name = et_nb_rd_a value = 0 }
+			set_global_variable = { name = et_nb_rd_b value = 0 }
+			global_var:et_nb_from = {
+				save_temporary_scope_as = et_nb_a
+				every_neighbor_location = {
+					save_temporary_scope_as = et_nb_n
+					if = {
+						limit = { scope:et_nb_a = { has_latest_road_to = scope:et_nb_n } }
+						change_global_variable = { name = et_nb_rd_a add = 1 }
+					}
+				}
+			}
+			global_var:et_nb_to = {
+				save_temporary_scope_as = et_nb_b
+				every_neighbor_location = {
+					save_temporary_scope_as = et_nb_n
+					if = {
+						limit = { scope:et_nb_b = { has_latest_road_to = scope:et_nb_n } }
+						change_global_variable = { name = et_nb_rd_b add = 1 }
+					}
+				}
+			}
+			construct_road = {
+				road_type = road_type:gravel_road
+				from = global_var:et_nb_from
+				to = global_var:et_nb_to
+			}
+			global_var:et_nb_from = {
+				if = {
+					limit = { has_road_constructions = yes }
+					set_global_variable = { name = et_170_ok value = 1 }
+				}
+				if = {
+					limit = { NOT = { num_civil_constructions = global_var:et_nb_slots } }
+					set_global_variable = { name = et_172_ok value = 1 }
+				}
+			}
+			global_var:et_nb_to = {
+				if = {
+					limit = { has_road_constructions = yes }
+					set_global_variable = { name = et_171_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_169_ok = 1 }
+			set_variable = { name = et_169_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_170_ok = 1 }
+			set_variable = { name = et_170_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_171_ok = 1 }
+			set_variable = { name = et_171_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_172_ok = 1 }
+			set_variable = { name = et_172_passed value = 1 }
+		}
+
+		# -- Tests 147-148 seed ----------------------------------
+		# Hands one opened building to et_bt_windows.gui, which is where the round trip is.
+		# The add runs inside the iterator against prev, so nothing outside the list itself
+		# holds a building here: whether a plain variable can is part of what 147 measures.
+		set_global_variable = { name = et_bt_seed value = 0 }
+		if = { limit = { has_variable_list = et_bt_list } clear_variable_list = et_bt_list }
+		capital = {
+			every_buildings_in_location = {
+				if = {
+					limit = {
+						global_var:et_bt_seed = 0
+						building_type = building_type:et_probe_multi
+						is_opened = yes
+					}
+					set_global_variable = { name = et_bt_seed value = 1 }
+					scope:et_probe_country = {
+						add_to_variable_list = { name = et_bt_list target = prev }
+						set_variable = { name = et_bt_fire value = 1 }
+					}
+				}
+			}
+		}
+
+		# -- Tests 185-186: is_strait_connection_to --------------
+		# A limit holding an unknown trigger does not gate its branch, so 186 reads yes whether the
+		# trigger works or is missing. 185 asks it of a land neighbour, which a working trigger
+		# answers no, and so is the row a missing trigger fails.
+		et_st_run = yes
+		if = {
+			limit = {
+				global_var:et_st_seen = 1
+				global_var:et_st_hit = 0
+			}
+			set_variable = { name = et_185_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_186_ok = 1 }
+			set_variable = { name = et_186_passed value = 1 }
+		}
+
+		# -- Tests 187-189: an order over a two-hop land path ----
+		# coruna and ferrol are both Castile's at 1337 (main_menu/setup/start/10_countries.txt,
+		# the CAS own_control_core block) and carry a rias_altas strait entry
+		# (in_game/map_data/adjacencies.csv), with no road between them at start.
+		#
+		# These were written as a strait test and are not one: the two also have a land route,
+		# through betanzos, so the order took the road path coruna - betanzos - ferrol. What they
+		# actually measure is a multi-hop order, which is worth having. 191-193 are the strait test.
+		save_temporary_scope_as = et_st_ctry
+		set_global_variable = { name = et_187_ok value = 0 }
+		set_global_variable = { name = et_188_ok value = 0 }
+		set_global_variable = { name = et_189_ok value = 0 }
+		if = {
+			limit = {
+				location:coruna = {
+					owner ?= scope:et_st_ctry
+					has_road_constructions = no
+					# The first hop of the path, not the endpoints: a two-hop order never leaves a
+					# road between coruna and ferrol, so asking about that cannot tell a fresh run
+					# from one where the whole path is already built and the order will be refused.
+					NOT = { has_road_to = location:betanzos }
+				}
+				location:ferrol = { owner ?= scope:et_st_ctry }
+			}
+			set_global_variable = { name = et_187_ok value = 1 }
+			set_variable = { name = et_st_gold value = gold }
+			construct_road = {
+				road_type = road_type:gravel_road
+				from = location:coruna
+				to = location:ferrol
+			}
+			if = {
+				limit = { NOT = { gold = var:et_st_gold } }
+				set_global_variable = { name = et_189_ok value = 1 }
+			}
+			location:coruna = {
+				if = {
+					limit = { has_road_constructions = yes }
+					set_global_variable = { name = et_188_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_187_ok = 1 }
+			set_variable = { name = et_187_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_188_ok = 1 }
+			set_variable = { name = et_188_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_189_ok = 1 }
+			set_variable = { name = et_189_passed value = 1 }
+		}
+
+		# -- Tests 191-193: an order with no land path at all ----
+		# 187-189 could not ask this, because every strait pair Castile owns also has a land route
+		# and construct_road routes along it. messina is on Sicily and reggiocal is on the Italian
+		# mainland (strait_messina, in_game/map_data/adjacencies.csv:2), so there is no road path
+		# between them at any length, and the pair is handed to the test country first because
+		# Castile owns no island crossing of its own.
+		#
+		# This is the case a road builder actually meets: it cannot see straits (185), so it will
+		# order across one. PASS on both rows means such an order is refused and costs nothing,
+		# and the retry-and-set-aside path every road feature uses is free. FAIL means gold goes on
+		# a road that cannot exist, and the exclusion has to come from adjacencies.csv.
+		set_global_variable = { name = et_191_ok value = 0 }
+		set_global_variable = { name = et_192_ok value = 0 }
+		set_global_variable = { name = et_193_ok value = 0 }
+		location:messina = { change_location_owner_forcefully = scope:et_st_ctry }
+		location:reggiocal = { change_location_owner_forcefully = scope:et_st_ctry }
+		if = {
+			limit = {
+				location:messina = {
+					owner ?= scope:et_st_ctry
+					has_road_constructions = no
+					NOT = { has_road_to = location:reggiocal }
+				}
+				location:reggiocal = { owner ?= scope:et_st_ctry }
+			}
+			set_global_variable = { name = et_191_ok value = 1 }
+			set_variable = { name = et_sx_gold value = gold }
+			construct_road = {
+				road_type = road_type:gravel_road
+				from = location:messina
+				to = location:reggiocal
+			}
+			if = {
+				limit = { gold = var:et_sx_gold }
+				set_global_variable = { name = et_193_ok value = 1 }
+			}
+			location:messina = {
+				if = {
+					limit = { has_road_constructions = no }
+					set_global_variable = { name = et_192_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { global_var:et_191_ok = 1 }
+			set_variable = { name = et_191_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_192_ok = 1 }
+			set_variable = { name = et_192_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_193_ok = 1 }
+			set_variable = { name = et_193_passed value = 1 }
+		}
+
 		set_variable = { name = et_script_has_run value = 1 }
+	}
+}
+
+# Tests 159 and 160, on their own button. Run 2 showed instant = yes leaves the level queued
+# rather than standing, and whether it ever resolves needs game time to pass, which no button
+# press can supply on its own. Press Run Script Tests, let the game run a few days, then press
+# this. It builds nothing and changes nothing.
+et_run_probe_recheck = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_159_passed value = 0 }
+		set_variable = { name = et_160_passed value = 0 }
+		set_variable = { name = et_164_passed value = 0 }
+		set_variable = { name = et_165_passed value = 0 }
+		set_variable = { name = et_166_passed value = 0 }
+		set_variable = { name = et_167_passed value = 0 }
+		set_variable = { name = et_168_passed value = 0 }
+		set_variable = { name = et_173_passed value = 0 }
+		set_variable = { name = et_174_passed value = 0 }
+		set_variable = { name = et_175_passed value = 0 }
+		set_global_variable = { name = et_159_ok value = 0 }
+		set_global_variable = { name = et_160_ok value = 0 }
+
+		# -- Tests 173, 174, 175 ---------------------------------
+		# What the non-adjacent order of 169-172 actually built. has_road_constructions reports one
+		# bit at the from end, so it cannot tell a road that connected the two ends from a path laid
+		# partway or an inert stub. These recount the roaded neighbours at each end against the
+		# counts taken before the order and check the order has resolved rather than sitting.
+		# Run this button after enough game time for a gravel road to finish.
+		# 173 alone is a stub or a partial path near the from end; 173 and 174 together is a span
+		# that reached across; neither, with 175, is an order that evaporated.
+		set_global_variable = { name = et_nb_rd_a2 value = 0 }
+		set_global_variable = { name = et_nb_rd_b2 value = 0 }
+		set_global_variable = { name = et_175_ok value = 0 }
+		if = {
+			limit = {
+				global_var:et_nb_from_done = 1
+				global_var:et_nb_to_done = 1
+			}
+			global_var:et_nb_from = {
+				save_temporary_scope_as = et_nb_a
+				every_neighbor_location = {
+					save_temporary_scope_as = et_nb_n
+					if = {
+						limit = { scope:et_nb_a = { has_latest_road_to = scope:et_nb_n } }
+						change_global_variable = { name = et_nb_rd_a2 add = 1 }
+					}
+				}
+				if = {
+					limit = { has_road_constructions = no }
+					set_global_variable = { name = et_175_ok value = 1 }
+				}
+			}
+			global_var:et_nb_to = {
+				save_temporary_scope_as = et_nb_b
+				every_neighbor_location = {
+					save_temporary_scope_as = et_nb_n
+					if = {
+						limit = { scope:et_nb_b = { has_latest_road_to = scope:et_nb_n } }
+						change_global_variable = { name = et_nb_rd_b2 add = 1 }
+					}
+				}
+			}
+			if = {
+				limit = { global_var:et_nb_rd_a2 > global_var:et_nb_rd_a }
+				set_variable = { name = et_173_passed value = 1 }
+			}
+			if = {
+				limit = { global_var:et_nb_rd_b2 > global_var:et_nb_rd_b }
+				set_variable = { name = et_174_passed value = 1 }
+			}
+			if = {
+				limit = { global_var:et_175_ok = 1 }
+				set_variable = { name = et_175_passed value = 1 }
+			}
+		}
+
+		# 159: the capital's plain instant = yes levels.
+		capital = {
+			if = {
+				limit = {
+					any_buildings_in_location = {
+						building_type = building_type:et_probe_multi
+						building_levels_under_construction = 0
+					}
+				}
+				set_global_variable = { name = et_159_ok value = 1 }
+			}
+		}
+
+		# 160: the cost_multiplier = 0 plus instant = yes build at the second location, which
+		# nothing else touches. This is the lucky-nation governor relocation's exact call.
+		if = {
+			limit = { global_var:et_uc_done = 1 }
+			global_var:et_uc_loc = {
+				if = {
+					limit = {
+						any_buildings_in_location = {
+							building_type = building_type:et_probe_multi
+							building_level >= 1
+							building_levels_under_construction = 0
+						}
+					}
+					set_global_variable = { name = et_160_ok value = 1 }
+				}
+			}
+		}
+
+		if = {
+			limit = { global_var:et_159_ok = 1 }
+			set_variable = { name = et_159_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_160_ok = 1 }
+			set_variable = { name = et_160_passed value = 1 }
+		}
+
+		# 164-168: the max-level reads again after game time has passed. Every immediate read has
+		# come back 0 - probe and vanilla types, with and without the owner param - and a value
+		# that only refreshes on a month tick would look exactly like that.
+		set_global_variable = { name = et_ml_c value = 0 }
+		set_global_variable = { name = et_165_ok value = 0 }
+		set_global_variable = { name = et_166_ok value = 0 }
+		set_global_variable = { name = et_167_ok value = 0 }
+		capital = {
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value = 0 } }
+				set_global_variable = { name = et_ml_c value = 1 }
+			}
+			else_if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value = 3 } }
+				set_global_variable = { name = et_ml_c value = 3 }
+			}
+			else = {
+				set_global_variable = { name = et_ml_c value = 4 }
+			}
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi owner = owner value = 3 } }
+				set_global_variable = { name = et_165_ok value = 1 }
+			}
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:mason value > 0 } }
+				set_global_variable = { name = et_166_ok value = 1 }
+			}
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:royal_court value = 1 } }
+				set_global_variable = { name = et_167_ok value = 1 }
+			}
+		}
+		if = {
+			limit = { global_var:et_ml_c = 3 }
+			set_variable = { name = et_164_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_ml_c = 1 }
+			set_variable = { name = et_168_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_165_ok = 1 }
+			set_variable = { name = et_165_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_166_ok = 1 }
+			set_variable = { name = et_166_passed value = 1 }
+		}
+		if = {
+			limit = { global_var:et_167_ok = 1 }
+			set_variable = { name = et_167_passed value = 1 }
+		}
+
+		# 190: whether the strait order 187-189 placed ever laid a road. A gravel road is
+		# build_time_per_unit_distance 15 per unit of distance, so this needs months rather than
+		# the days the rest of this pass wants, and a FAIL only means "not yet" until enough of
+		# them have passed. Press again later; it reads live state and can be pressed repeatedly.
+		set_variable = { name = et_190_passed value = 0 }
+		if = {
+			limit = { location:coruna = { has_road_to = location:ferrol } }
+			set_variable = { name = et_190_passed value = 1 }
+		}
+
+		set_variable = { name = et_recheck_has_run value = 1 }
 	}
 }

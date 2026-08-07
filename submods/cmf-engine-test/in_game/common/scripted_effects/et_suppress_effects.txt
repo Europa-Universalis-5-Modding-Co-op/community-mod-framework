@@ -74,7 +74,79 @@ et_suppress_warnings = {
 			exists = var:et_96_passed
 			exists = var:et_97_passed
 			exists = var:et_106_passed
+			exists = var:et_119_passed
+			exists = var:et_120_passed
+			exists = var:et_121_passed
+			exists = var:et_122_passed
+			exists = var:et_123_passed
+			exists = var:et_124_passed
+			exists = var:et_125_passed
+			exists = var:et_126_passed
+			exists = var:et_127_passed
+			exists = var:et_128_passed
+			exists = var:et_129_passed
+			exists = var:et_130_passed
+			exists = var:et_131_passed
+			exists = var:et_132_passed
+			exists = var:et_133_passed
+			exists = var:et_134_passed
+			exists = var:et_135_passed
+			exists = var:et_136_passed
+			exists = var:et_137_passed
+			exists = var:et_138_passed
+			exists = var:et_139_passed
+			exists = var:et_140_passed
+			exists = var:et_141_passed
+			exists = var:et_142_passed
+			exists = var:et_143_passed
+			exists = var:et_144_passed
+			exists = var:et_145_passed
+			exists = var:et_146_passed
+			exists = var:et_147_passed
+			exists = var:et_148_passed
+			exists = var:et_149_passed
+			exists = var:et_150_passed
+			exists = var:et_151_passed
+			exists = var:et_152_passed
+			exists = var:et_153_passed
+			exists = var:et_154_passed
+			exists = var:et_155_passed
+			exists = var:et_156_passed
+			exists = var:et_157_passed
+			exists = var:et_158_passed
+			exists = var:et_159_passed
+			exists = var:et_160_passed
+			exists = var:et_161_passed
+			exists = var:et_162_passed
+			exists = var:et_163_passed
+			exists = var:et_164_passed
+			exists = var:et_165_passed
+			exists = var:et_166_passed
+			exists = var:et_167_passed
+			exists = var:et_168_passed
+			exists = var:et_169_passed
+			exists = var:et_170_passed
+			exists = var:et_171_passed
+			exists = var:et_172_passed
+			exists = var:et_nb_adj
+			exists = var:et_173_passed
+			exists = var:et_174_passed
+			exists = var:et_175_passed
+			exists = var:et_176_passed
+			exists = var:et_177_passed
+			exists = var:et_178_passed
+			exists = var:et_179_passed
+			exists = var:et_180_passed
+			exists = var:et_rd_gold
+			exists = var:et_recheck_has_run
+			exists = var:et_119_rank
+			exists = var:et_cap_adj
+			exists = var:et_gold_before
 			exists = var:et_script_has_run
+			# Building-handle round trip (147, 148); the driver and the datamodel read these
+			# in GUI expressions
+			exists = var:et_bt_fire
+			has_variable_list = et_bt_list
 			# Parse-cost pair (117, 118); the gate reads this in a GUI expression
 			exists = var:et_pc_fresh
 			# Suppress "set but never used" for local variables
@@ -90,8 +162,9 @@ et_suppress_warnings = {
 			exists = flag:et_dup_a
 			exists = flag:et_dup_b
 		}
-		# Suppress "used but never set" for the names read only as the map-name half of a quoted
-		# variable_map lookup (tests 34, 35). The limit above registers reads; these are the writes.
+		# Tests 26 and 27 read these as the map-name half of a quoted variable_map lookup, which
+		# warns "used but never set" on every validation pass. Nothing suppresses that: the engine
+		# rejects a set made in an unused effect, and a reached on_action set fails too.
 		set_local_variable = { name = et_map_name value = 0 }
 		set_variable = { name = et_map_name_v value = 0 }
 	}

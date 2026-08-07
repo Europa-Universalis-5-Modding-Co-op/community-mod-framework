@@ -19,7 +19,7 @@ widget = {
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
-		visible = "[And(GetCountry('FRA').IsValid, EqualTo_CFixedPoint(GetCountry('FRA').MakeScope.GetVariable('et_pc_fresh').GetValue, '(CFixedPoint)1'))]"
+		visible = "[And(GetCountry('CAS').IsValid, EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_pc_fresh').GetValue, '(CFixedPoint)1'))]"
 
 		state = {
 			name = _show
@@ -31,7 +31,7 @@ widget = {
 		# Test 117: 20 commands, one call each.
 		state = {
 			name = et_pc_burst_a
-			on_start = "[ExecuteConsoleCommandsForced('effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };effect c:FRA = { et_pc_tiny = yes };')]"
+			on_start = "[ExecuteConsoleCommandsForced('effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };')]"
 			duration = 12.0
 			next = et_pc_burst_b
 		}
@@ -39,14 +39,14 @@ widget = {
 		# Test 118: 1 command, 20 calls.
 		state = {
 			name = et_pc_burst_b
-			on_start = "[ExecuteConsoleCommandsForced('effect c:FRA = { et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes }')]"
+			on_start = "[ExecuteConsoleCommandsForced('effect c:CAS = { et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes }')]"
 			duration = 8.0
 			next = et_pc_done
 		}
 
 		state = {
 			name = et_pc_done
-			on_start = "[ExecuteConsoleCommand('effect c:FRA = { set_variable = { name = et_pc_fresh value = 0 } }')]"
+			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_pc_fresh value = 0 } }')]"
 		}
 	}
 }

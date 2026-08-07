@@ -113,6 +113,7 @@
 		using = bg_window_default_alt
 		margin = { 8 2 }
 		spacing = 8
+		ignoreinvisible = yes
 
 		country_flag_small = {
 			datacontext = "[CMFLogActorCountry(PdxGuiWidget.GetIndexInDataModel)]"
@@ -124,13 +125,165 @@
 			autoresize = no
 			align = left|vcenter
 			default_format = "#bold"
+			fontsize_min = 11
 			text = "[CMFLogActorCountry(PdxGuiWidget.GetIndexInDataModel).GetName]"
 		}
 
 		text_single = {
 			layoutpolicy_horizontal = expanding
+			autoresize = no
+			fontsize_min = 11
 			align = left|vcenter
+			visible = "[And(Not(CMFLogIsLocationValuesEntry(PdxGuiWidget.GetIndexInDataModel)), And(Not(CMFLogIsBuildingLocationEntry(PdxGuiWidget.GetIndexInDataModel)), And(Not(CMFLogIsLocationEntry(PdxGuiWidget.GetIndexInDataModel)), Not(CMFLogIsDecimalValueEntry(PdxGuiWidget.GetIndexInDataModel)))))]"
 			text = "[CMFLogEntryText(PdxGuiWidget.GetIndexInDataModel)]"
+		}
+
+		# Every piece of these rows is a fixed column carrying autoresize = no and fontsize_min, the
+		# same shape the actor name above uses. An hbox cannot be narrower than the sum of its
+		# children's natural widths, so a piece left to size to its own text makes the whole row
+		# wider than the pane and the tail of it is cut off. Widest case is the building-location
+		# row: 36 flag + 120 actor + 260 + 65 + 85 + 65 with 8 and 5 spacings and the row's 8
+		# margins, which comes to 678 inside a pane measured at 772 before its own borders.
+		# layoutpolicy_horizontal = expanding on the leading text is what must NOT be used to bound
+		# it, since it swallows the row's spare width and strands the numbers at the right edge.
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+			visible = "[CMFLogIsDecimalValueEntry(PdxGuiWidget.GetIndexInDataModel)]"
+
+			text_single = {
+				minimumsize = { 260 0 }
+				maximumsize = { 260 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogAction(PdxGuiWidget.GetIndexInDataModel)]"
+			}
+
+			text_single = {
+				minimumsize = { 65 0 }
+				maximumsize = { 65 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogNumValue(PdxGuiWidget.GetIndexInDataModel)|2]"
+			}
+
+			expand = {}
+		}
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+			visible = "[CMFLogIsLocationEntry(PdxGuiWidget.GetIndexInDataModel)]"
+
+			text_single = {
+				minimumsize = { 260 0 }
+				maximumsize = { 260 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogLocationText(PdxGuiWidget.GetIndexInDataModel)]"
+			}
+
+			text_single = {
+				minimumsize = { 65 0 }
+				maximumsize = { 65 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogNumValue(PdxGuiWidget.GetIndexInDataModel)|2]"
+			}
+
+			expand = {}
+		}
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+			visible = "[CMFLogIsLocationValuesEntry(PdxGuiWidget.GetIndexInDataModel)]"
+
+			text_single = {
+				minimumsize = { 260 0 }
+				maximumsize = { 260 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogLocationText(PdxGuiWidget.GetIndexInDataModel)]"
+			}
+
+			text_single = {
+				minimumsize = { 65 0 }
+				maximumsize = { 65 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogNumValue(PdxGuiWidget.GetIndexInDataModel)|2]"
+			}
+
+			text_single = {
+				minimumsize = { 65 0 }
+				maximumsize = { 65 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogNum2Value(PdxGuiWidget.GetIndexInDataModel)|2]"
+			}
+
+			text_single = {
+				minimumsize = { 65 0 }
+				maximumsize = { 65 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogNum3Value(PdxGuiWidget.GetIndexInDataModel)|2]"
+			}
+
+			expand = {}
+		}
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+			visible = "[CMFLogIsBuildingLocationEntry(PdxGuiWidget.GetIndexInDataModel)]"
+
+			text_single = {
+				minimumsize = { 260 0 }
+				maximumsize = { 260 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogBuildingLocationText(PdxGuiWidget.GetIndexInDataModel)]"
+			}
+
+			text_single = {
+				minimumsize = { 65 0 }
+				maximumsize = { 65 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogNumValue(PdxGuiWidget.GetIndexInDataModel)|2]"
+			}
+
+			text_single = {
+				minimumsize = { 85 0 }
+				maximumsize = { 85 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogArg2Label(PdxGuiWidget.GetIndexInDataModel)]"
+			}
+
+			text_single = {
+				minimumsize = { 65 0 }
+				maximumsize = { 65 -1 }
+				autoresize = no
+				fontsize_min = 11
+				align = left|vcenter
+				text = "[CMFLogNum2Value(PdxGuiWidget.GetIndexInDataModel)|2]"
+			}
+
+			expand = {}
 		}
 	}
 }

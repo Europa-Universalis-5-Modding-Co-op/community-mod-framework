@@ -44,6 +44,64 @@ cmf_log_value = {
 	_cmf_log_core_value = { action = $action$ value = $value$ }
 }
 
+# Log an action with a numeric value shown with two decimals.
+# Entry text renders as: [action] [value]
+# Scope: country (the actor performing the action)
+# Args:
+# - action (flag): localization key for the action text
+# - value (number): the value shown after the action text
+cmf_log_decimal_value = {
+	_cmf_log_core_decimal_value = { action = $action$ value = $value$ }
+}
+
+# Log an action with a location and one labelled numeric value.
+# Entry text renders as: [action] [location] [arg1] [value] (the value is shown with two decimals).
+# Scope: country (the actor performing the action)
+# Requires: scope:cmf_log_loc saved before calling.
+# Args:
+# - action (flag): localization key for the action text
+# - arg1 (flag): localization key labelling the value
+# - value (number): the value
+cmf_log_with_location = {
+	_cmf_log_core_location = { action = $action$ arg1 = $arg1$ value = $value$ }
+}
+
+# Log an action with a location and three values sharing one label.
+# Entry text renders as: [action] [location] [arg1] [value] [value2] [value3]
+# (the values are shown with two decimals).
+# Scope: country (the actor performing the action)
+# Requires: scope:cmf_log_loc saved before calling.
+# Args:
+# - action (flag): localization key for the action text
+# - arg1 (flag): localization key labelling the values
+# - value (number): the first value
+# - value2 (number): the second value
+# - value3 (number): the third value
+cmf_log_with_location_values = {
+	_cmf_log_core_location_values = {
+		action = $action$
+		arg1 = $arg1$
+		value = $value$
+		value2 = $value2$
+		value3 = $value3$
+	}
+}
+
+# Log an action with a building type, a location, and two labelled numeric values.
+# Entry text renders as: [action] [building type], [location] [arg1] [value] [arg2] [value2]
+# (both values are shown with two decimals).
+# Scope: country (the actor performing the action)
+# Requires: scope:cmf_log_bt and scope:cmf_log_loc saved before calling.
+# Args:
+# - action (flag): localization key for the action text
+# - arg1 (flag): localization key labelling the first value
+# - arg2 (flag): localization key labelling the second value
+# - value (number): the first value
+# - value2 (number): the second value
+cmf_log_with_building_location = {
+	_cmf_log_core_building_location = { action = $action$ arg1 = $arg1$ arg2 = $arg2$ value = $value$ value2 = $value2$ }
+}
+
 # Clear all log entries.
 # Scope: country
 cmf_clear_log = {
@@ -107,6 +165,138 @@ _cmf_log_core_value = {
 	if = {
 		limit = { always = no }
 		cmf_suppress = { v = $action$ }
+	}
+}
+
+# Internal: log core for a building type, a location, and two labelled numeric values.
+# Scope: country (the actor)
+# Requires: scope:cmf_log_bt and scope:cmf_log_loc saved before calling.
+# Args: action (flag), arg1 (flag), arg2 (flag), value (number), value2 (number)
+_cmf_log_core_building_location = {
+	save_scope_as = _cmf_log_actor
+
+	if = {
+		limit = { NOT = { has_global_variable = cmf_log_count } }
+		set_global_variable = { name = cmf_log_count value = 0 }
+	}
+
+	if = {
+		limit = { global_var:cmf_log_count < 200 }
+		_cmf_log_select_key = yes
+		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
+		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = 3 }
+		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:$arg1$ }
+		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = flag:$arg2$ }
+		add_to_global_variable_map = { name = cmf_log_bt key = scope:_cmf_log_key value = scope:cmf_log_bt }
+		add_to_global_variable_map = { name = cmf_log_loc key = scope:_cmf_log_key value = scope:cmf_log_loc }
+		add_to_global_variable_map = { name = cmf_log_num key = scope:_cmf_log_key value = $value$ }
+		add_to_global_variable_map = { name = cmf_log_num2 key = scope:_cmf_log_key value = $value2$ }
+		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
+		cmf_suppress = { v = $arg1$ }
+		cmf_suppress = { v = $arg2$ }
+	}
+}
+
+# Internal: log core for a value shown with two decimals.
+# Scope: country (the actor)
+# Args: action (flag), value (number)
+_cmf_log_core_decimal_value = {
+	save_scope_as = _cmf_log_actor
+
+	if = {
+		limit = { NOT = { has_global_variable = cmf_log_count } }
+		set_global_variable = { name = cmf_log_count value = 0 }
+	}
+
+	if = {
+		limit = { global_var:cmf_log_count < 200 }
+		_cmf_log_select_key = yes
+		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
+		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = 5 }
+		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
+		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
+		add_to_global_variable_map = { name = cmf_log_num key = scope:_cmf_log_key value = $value$ }
+		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
+	}
+}
+
+# Internal: log core for a location and one labelled numeric value.
+# Scope: country (the actor)
+# Requires: scope:cmf_log_loc saved before calling.
+# Args: action (flag), arg1 (flag), value (number)
+_cmf_log_core_location = {
+	save_scope_as = _cmf_log_actor
+
+	if = {
+		limit = { NOT = { has_global_variable = cmf_log_count } }
+		set_global_variable = { name = cmf_log_count value = 0 }
+	}
+
+	if = {
+		limit = { global_var:cmf_log_count < 200 }
+		_cmf_log_select_key = yes
+		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
+		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = 4 }
+		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:$arg1$ }
+		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
+		add_to_global_variable_map = { name = cmf_log_loc key = scope:_cmf_log_key value = scope:cmf_log_loc }
+		add_to_global_variable_map = { name = cmf_log_num key = scope:_cmf_log_key value = $value$ }
+		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
+		cmf_suppress = { v = $arg1$ }
+		cmf_suppress = { v = cmf_log_loc }
+	}
+}
+
+# Internal: log core for a location and three values sharing one label.
+# Scope: country (the actor)
+# Requires: scope:cmf_log_loc saved before calling.
+# Args: action (flag), arg1 (flag), value (number), value2 (number), value3 (number)
+_cmf_log_core_location_values = {
+	save_scope_as = _cmf_log_actor
+
+	if = {
+		limit = { NOT = { has_global_variable = cmf_log_count } }
+		set_global_variable = { name = cmf_log_count value = 0 }
+	}
+
+	if = {
+		limit = { global_var:cmf_log_count < 200 }
+		_cmf_log_select_key = yes
+		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
+		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = 6 }
+		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:$arg1$ }
+		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
+		add_to_global_variable_map = { name = cmf_log_loc key = scope:_cmf_log_key value = scope:cmf_log_loc }
+		add_to_global_variable_map = { name = cmf_log_num key = scope:_cmf_log_key value = $value$ }
+		add_to_global_variable_map = { name = cmf_log_num2 key = scope:_cmf_log_key value = $value2$ }
+		add_to_global_variable_map = { name = cmf_log_num3 key = scope:_cmf_log_key value = $value3$ }
+		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
+		cmf_suppress = { v = $arg1$ }
+		cmf_suppress = { v = cmf_log_loc }
 	}
 }
 
@@ -183,7 +373,11 @@ _cmf_log_suppress = {
 		cmf_suppress = { v = cmf_log_arg_mode }
 		cmf_suppress = { v = cmf_log_arg1 }
 		cmf_suppress = { v = cmf_log_arg2 }
+		cmf_suppress = { v = cmf_log_bt }
+		cmf_suppress = { v = cmf_log_loc }
 		cmf_suppress = { v = cmf_log_num }
+		cmf_suppress = { v = cmf_log_num2 }
+		cmf_suppress = { v = cmf_log_num3 }
 		cmf_suppress = { v = cmf_log_0 }
 		cmf_suppress = { v = cmf_log_1 }
 		cmf_suppress = { v = cmf_log_2 }
@@ -686,6 +880,10 @@ _cmf_log_clear_maps = {
 		remove_from_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key }
 		remove_from_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key }
 		remove_from_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key }
+		remove_from_global_variable_map = { name = cmf_log_bt key = scope:_cmf_log_key }
+		remove_from_global_variable_map = { name = cmf_log_loc key = scope:_cmf_log_key }
 		remove_from_global_variable_map = { name = cmf_log_num key = scope:_cmf_log_key }
+		remove_from_global_variable_map = { name = cmf_log_num2 key = scope:_cmf_log_key }
+		remove_from_global_variable_map = { name = cmf_log_num3 key = scope:_cmf_log_key }
 	}
 }

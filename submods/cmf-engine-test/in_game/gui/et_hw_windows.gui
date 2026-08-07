@@ -206,6 +206,32 @@ widget = {
 			name = et_hw_s22
 			duration = 0.8
 			on_finish = "[GetScriptedGui('et_hw_check_nesting').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_hw_s23
+		}
+
+		# Tests 181-184: opens both hidden-advance gates and lets each machine
+		# count while its widget is shown.
+		state = {
+			name = et_hw_s23
+			on_start = "[GetScriptedGui('et_hw_arm_hidden').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			duration = 1.0
+			next = et_hw_s24
+		}
+
+		# Snapshots both counters and closes both gates together.
+		state = {
+			name = et_hw_s24
+			duration = 0.1
+			on_finish = "[GetScriptedGui('et_hw_close_hidden').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_hw_s25
+		}
+
+		# 1.5s hidden against 0.25s states: a machine still looping owes about six
+		# fires, one that only finished the state in flight owes one.
+		state = {
+			name = et_hw_s25
+			duration = 1.5
+			on_finish = "[GetScriptedGui('et_hw_check_hidden').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 			on_finish = "[GetScriptedGui('et_hw_finish').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 		}
 	}
@@ -331,6 +357,46 @@ widget = {
 						duration = 0.25
 						on_finish = "[GetScriptedGui('et_hw_rec_64').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 						on_finish = "[PdxGuiWidget.TriggerAnimation('et_g64_poll')]"
+					}
+				}
+
+				# Tests 181/182: next-chained loop, the shape a driver that hands one
+				# state to the next uses. Every state carries an on_finish, without
+				# which a state reached through next never advances at all.
+				widget = {
+					size = { 0 0 }
+					visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g181_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+					state = {
+						name = _show
+						duration = 0.25
+						on_finish = "[GetScriptedGui('et_hw_rec_181').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						next = et_g181_b
+					}
+					state = {
+						name = et_g181_b
+						duration = 0.25
+						on_finish = "[GetScriptedGui('et_hw_rec_181').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						next = et_g181_a
+					}
+					state = {
+						name = et_g181_a
+						duration = 0.25
+						on_finish = "[GetScriptedGui('et_hw_rec_181').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						next = et_g181_b
+					}
+				}
+
+				# Tests 183/184: test 64's self-TriggerAnimation shape on its own gate
+				# and counter, so 64/65 keep measuring what they always did.
+				widget = {
+					size = { 0 0 }
+					visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g183_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+					state = {
+						name = et_g183_poll
+						trigger_on_create = yes
+						duration = 0.25
+						on_finish = "[GetScriptedGui('et_hw_rec_183').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						on_finish = "[PdxGuiWidget.TriggerAnimation('et_g183_poll')]"
 					}
 				}
 

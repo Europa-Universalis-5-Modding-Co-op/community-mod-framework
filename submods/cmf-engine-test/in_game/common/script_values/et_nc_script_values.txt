@@ -1,5 +1,5 @@
 ﻿# Test 84: reads a variable off a country the GUI names directly, with no player
-# involved, via GuiScope.AddScope('country', GetCountry('FRA').MakeScope).ScriptValue.
+# involved, via GuiScope.AddScope('country', GetCountry('CAS').MakeScope).ScriptValue.
 # et_nc_seed sets the source variable to 42.
 
 et_nc_sv = {
