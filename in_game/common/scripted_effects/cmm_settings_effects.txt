@@ -144,7 +144,7 @@ _cmm_register_menu_settings_late = {
 		cmf_suppress = { v = cmf_action_bar_elements_local }
 		cmf_suppress = { v = cmf_core_mod_menu_button }
 		cmf_suppress = { v = cmf_core__action_bar_buttons_mod_menu_item_name }
-		add_to_global_variable_list = { name = cmf_action_bar_elements target = flag:cmf_core_mod_menu_button }
+		cmf_suppress = { v = cmf_action_bar_elements }
 	}
 }
 
@@ -295,11 +295,6 @@ _cmm_handle_core_callback = {
 			setting = cmf_core__action_bar_buttons
 			effect = _cmm_sync_action_bar_active_from_field
 		}
-	}
-
-	# Benign warning suppression
-	if = {
-		limit = { always = no }
 	}
 }
 
