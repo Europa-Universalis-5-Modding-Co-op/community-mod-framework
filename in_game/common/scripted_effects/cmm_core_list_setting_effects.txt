@@ -516,7 +516,7 @@ cmm_register_list_text_field = {
 # - setting_id (key): Target list setting id within the mod.
 # - field_id (key): Field id to mark as formatted.
 cmm_set_list_field_format = {
-	cmf_change_variable_map = { name = cmm_list_field_format_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = 1 }
+	add_to_variable_map = { name = cmm_list_field_format_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = 1 }
 
 	if = {
 		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
@@ -541,7 +541,7 @@ cmm_set_list_field_format = {
 # - setting_id (key): Target list setting id within the mod.
 # - field_id (key): Field id to mark as conditionally formatted.
 cmm_set_list_field_conditional_format = {
-	cmf_change_variable_map = { name = cmm_list_field_format_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = 2 }
+	add_to_variable_map = { name = cmm_list_field_format_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = 2 }
 
 	if = {
 		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
@@ -568,8 +568,8 @@ cmm_set_list_field_conditional_format = {
 # - name (key): Localization key for the column header.
 # - root (key): Localization key root for desc, prefix, and postfix.
 cmm_set_list_field_localization = {
-	cmf_change_variable_map = { name = cmm_list_field_loc_name_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = flag:$name$ }
-	cmf_change_variable_map = { name = cmm_list_field_loc_key_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = flag:$root$ }
+	add_to_variable_map = { name = cmm_list_field_loc_name_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = flag:$name$ }
+	add_to_variable_map = { name = cmm_list_field_loc_key_pending key = flag:$mod_id$__$setting_id$__$field_id$ value = flag:$root$ }
 
 	if = {
 		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
@@ -650,30 +650,30 @@ _cmm_reseed_list_field_default_at_slot = {
 # - value (number): Default value for this item.
 cmm_set_list_field_default_for_item = {
 	# Field registration reads this to seed the item's initial value and reset default.
-	cmf_change_variable_map = { name = cmm_list_field_default_pending key = flag:$mod_id$__$setting_id$__$field_id$_i$item$ value = $value$ }
+	add_to_variable_map = { name = cmm_list_field_default_pending key = flag:$mod_id$__$setting_id$__$field_id$_i$item$ value = $value$ }
 
 	if = {
 		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
 		switch = {
 			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
 			1 = {
-				cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f1 value = $value$ }
+				add_to_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f1 value = $value$ }
 				_cmm_reseed_list_field_default_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ item = $item$ slot = 1 value = $value$ }
 			}
 			2 = {
-				cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f2 value = $value$ }
+				add_to_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f2 value = $value$ }
 				_cmm_reseed_list_field_default_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ item = $item$ slot = 2 value = $value$ }
 			}
 			3 = {
-				cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f3 value = $value$ }
+				add_to_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f3 value = $value$ }
 				_cmm_reseed_list_field_default_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ item = $item$ slot = 3 value = $value$ }
 			}
 			4 = {
-				cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f4 value = $value$ }
+				add_to_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f4 value = $value$ }
 				_cmm_reseed_list_field_default_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ item = $item$ slot = 4 value = $value$ }
 			}
 			5 = {
-				cmf_change_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f5 value = $value$ }
+				add_to_variable_map = { name = cmm_list_field_default key = flag:$mod_id$__$setting_id$_i$item$_f5 value = $value$ }
 				_cmm_reseed_list_field_default_at_slot = { mod_id = $mod_id$ setting_id = $setting_id$ item = $item$ slot = 5 value = $value$ }
 			}
 		}
