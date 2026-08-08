@@ -1,7 +1,7 @@
 {
     "name": "Community Mod Framework - 1.3 Pavia Dev",
     "id": "community_mod_framework.dev",
-    "version": "2.3.3",
+    "version": "2.4.0",
     "game_id": "eu5",
     "supported_game_version": "1.3.*",
     "cmf_last_updated_game_version": "1.3.10",
