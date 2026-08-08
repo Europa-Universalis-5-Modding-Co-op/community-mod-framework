@@ -77,6 +77,11 @@
  cmf_feature_test__conditional_enabled_list_i2_name: "Item Two"
  cmf_feature_test__conditional_enabled_list__enabled_name: "Enabled"
  cmf_feature_test__conditional_enabled_list__enabled_desc: "Greyed out and disabled when Toggle is off (is_valid)."
+ ## Alerts (alerts) Group
+ cmf_feature_test__settings__alerts_name: "Alerts"
+ cmf_feature_test__settings__alerts_desc: "Test alert controls."
+ cmf_feature_test__alerts_enabled_name: "Test Alerts"
+ cmf_feature_test__alerts_enabled_desc: "Shows the test alerts."
  ## Cascade Group (cascade_group) Group
  cmf_feature_test__settings__cascade_group_name: "Cascade Group"
  cmf_feature_test__settings__cascade_group_desc: "Hides entirely when Toggle is off; the Settings tab stays because its other groups remain."
@@ -292,6 +297,8 @@
  cmf_feature_test__text_plain: "cmf_feature_test__text_plain"
  cmf_feature_test__text_quoted: "cmf_feature_test__text_quoted"
  cmf_feature_test__conditional_numeric: "cmf_feature_test__conditional_numeric"
+ cmf_feature_test__settings__alerts: "cmf_feature_test__settings__alerts"
+ cmf_feature_test__alerts_enabled: "cmf_feature_test__alerts_enabled"
  cmf_feature_test__settings__cascade_group: "cmf_feature_test__settings__cascade_group"
  cmf_feature_test__cascade_tab: "cmf_feature_test__cascade_tab"
  cmf_feature_test__cascade_tab__cascade_tab_group: "cmf_feature_test__cascade_tab__cascade_tab_group"

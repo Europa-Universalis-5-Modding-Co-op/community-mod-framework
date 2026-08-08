@@ -154,6 +154,15 @@ cmf_feature_test_register_cmf_mod = {
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = conditional_enabled_list item = 1 value = root }
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = conditional_enabled_list item = 2 value = root }
 
+	## Alerts (alerts) Group
+	cmm_register_bool_setting = {
+		mod_id = cmf_feature_test
+		setting_id = alerts_enabled
+		tab_id = settings
+		group_id = alerts
+		default_value = 0
+	}
+
 	## Cascade Group (cascade_group) Group
 	# Its only setting is is_shown-gated on Toggle, so Toggle off empties and hides this
 	# group while the Settings tab stays (its other groups remain).
@@ -763,6 +772,10 @@ cmf_feature_test_handle_cmf_callback = {
 				save_scope_as = cmf_log_arg2
 			}
 			cmf_log_with_scope_args = { action = cft_log_transferred_to }
+		}
+		## Alerts (alerts) Group
+		flag:cmf_feature_test__alerts_enabled = {
+			cmf_feature_test_sync_alerts = yes
 		}
 	}
 }

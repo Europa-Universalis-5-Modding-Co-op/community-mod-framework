@@ -8,15 +8,6 @@ cmf_feature_test_register_cmf = {
 	# Register scripted GUI for primary button (enables is_shown/is_valid)
 	cmf_register_scripted_gui = { element = cmf_action_bar_ft_primary }
 
-	# Alerts
-	cmm_register_bool_setting = {
-		mod_id = cmf_feature_test
-		setting_id = alerts_enabled
-		tab_id = settings
-		group_id = alerts
-		default_value = 0
-	}
-
 	# Alert click behavior (idempotent)
 	cmf_set_alert_remove_on_click = { alert = cmf_alert_ft_oneshot }
 	cmf_set_alert_open_view = { alert = cmf_alert_ft_open_view view = economy }
@@ -70,10 +61,6 @@ cmf_feature_test_handle_callback = {
 		trigger = var:cmf_callback
 
 		# -- Setting callbacks ---------------------------------------------
-
-		flag:cmf_feature_test__alerts_enabled = {
-			cmf_feature_test_sync_alerts = yes
-		}
 
 		flag:cmf_feature_test__ordered_list = {
 			# Iterate list items to verify cmm_for_each_list_item works

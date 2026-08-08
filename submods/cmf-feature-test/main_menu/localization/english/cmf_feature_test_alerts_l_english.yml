@@ -88,11 +88,3 @@
  cft_log_alert_open_view: "left-clicked the open-view test alert"
  cft_log_alert_open_group: "left-clicked the open-group test alert"
  cft_log_alert_open_window: "left-clicked the open-window test alert"
-
- # Alerts (alerts) Group
- cmf_feature_test__settings__alerts_name: "Alerts"
- cmf_feature_test__settings__alerts_desc: "Test alert controls."
- cmf_feature_test__alerts_enabled_name: "Test Alerts"
- cmf_feature_test__alerts_enabled_desc: "Shows the test alerts."
- cmf_feature_test__settings__alerts: "cmf_feature_test__settings__alerts"
- cmf_feature_test__alerts_enabled: "cmf_feature_test__alerts_enabled"
