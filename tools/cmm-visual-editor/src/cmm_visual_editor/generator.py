@@ -94,6 +94,13 @@ def _gen_effects(model: ModModel) -> str:
             lines.append("")
         first_tab = False
         lines.append(f"\t# {tab.name or tab.tab_id} ({tab.tab_id}) Tab")
+        if tab.parent_tab_id:
+            lines.append(f"\tcmm_register_subtab = {{")
+            lines.append(f"\t\tmod_id = {mod_id}")
+            lines.append(f"\t\ttab_id = {tab.tab_id}")
+            lines.append(f"\t\tparent_tab_id = {tab.parent_tab_id}")
+            lines.append(f"\t}}")
+            lines.append("")
         first_group = True
         for group in tab.groups:
             if not group.settings:
@@ -190,8 +197,13 @@ def _emit_callback_handler(lines: list, model: ModModel):
                 alias_inverted = setting.alias_inverted if st == "bool" else False
                 option_aliases = _get_option_aliases(setting) if st == "dropdown" else []
                 custom_effect = setting.on_changed_effect or ""
+                if custom_effect and setting.alias_synced_by_effect:
+                    alias = ""
+                    option_aliases = []
                 if alias or option_aliases or custom_effect:
                     cases.append((tab.tab_id, tab.name or tab.tab_id, group.group_id, group.name or group.group_id, qid, st, alias, alias_inverted, option_aliases, custom_effect))
+
+    extra = (model.callback_extra or "").strip("\n")
 
     lines.append("")
     lines.append(f"# Callback handler for cmf_on_callback.")
@@ -200,6 +212,10 @@ def _emit_callback_handler(lines: list, model: ModModel):
     lines.append(f"{prefix}_handle_cmf_callback = {{")
     lines.append(f"\tswitch = {{")
     lines.append(f"\t\ttrigger = var:cmf_callback")
+
+    if extra:
+        for line in extra.splitlines():
+            lines.append(line)
 
     if cases:
         current_tab = None
@@ -231,7 +247,7 @@ def _emit_callback_handler(lines: list, model: ModModel):
             if custom_effect:
                 lines.append(f"\t\t\t{custom_effect} = yes")
             lines.append(f"\t\t}}")
-    else:
+    elif not extra:
         lines.append(f"\t\t# flag:{mod_id}__my_setting = {{")
         lines.append(f"\t\t# \t# Custom side effects when this setting changes")
         lines.append(f"\t\t# }}")
@@ -266,6 +282,18 @@ def _emit_option_alias_sync(lines: list, setting: Setting, qid: str, indent: str
 def _setting_has_alias(setting: Setting, mod_id: str) -> str:
     """Return the alias if the setting has one, else empty."""
     return (setting.alias or "").strip()
+
+
+def _field_loc_root(field: ListField, mod_id: str, setting_id: str) -> str:
+    """Localization root key for a list field, after any cmm_set_list_field_localization override."""
+    if field.loc_name_key and field.loc_root_key:
+        return field.loc_root_key
+    return f"{mod_id}__{setting_id}__{field.field_id}"
+
+
+def _field_stores_value(field: ListField) -> bool:
+    """False for field types that hold no per-item value in the cmm map."""
+    return field.field_type not in ("button", "text")
 
 
 def _field_has_alias(field: ListField, mod_id: str, setting_id: str, slot: int) -> str:
@@ -330,6 +358,8 @@ def _emit_registration(lines: list, mod_id: str, tab_id: str, group_id: str, set
             item_count = _int(setting.item_count, 1)
             for fi, field in enumerate(setting.fields or []):
                 slot = fi + 1
+                if not _field_stores_value(field):
+                    continue
                 item_aliases = field.item_aliases or []
                 alias = _field_has_alias(field, mod_id, setting.setting_id, slot)
                 if item_aliases or alias:
@@ -500,6 +530,23 @@ def _emit_list_field(lines: list, mod_id: str, setting_id: str, field: ListField
             if val is None or val == "":
                 continue
             lines.append(f"\tcmm_set_list_data_value = {{ mod_id = {mod_id} setting_id = {setting_id} field_id = {field.field_id} item = {i} value = {_num(val, 0)} }}")
+    elif ft == "button":
+        lines.append(f"\tcmm_register_list_button_field = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting_id}")
+        lines.append(f"\t\tfield_id = {field.field_id}")
+        lines.append(f"\t}}")
+    elif ft == "text":
+        lines.append(f"\tcmm_register_list_text_field = {{")
+        lines.append(f"\t\tmod_id = {mod_id}")
+        lines.append(f"\t\tsetting_id = {setting_id}")
+        lines.append(f"\t\tfield_id = {field.field_id}")
+        lines.append(f"\t}}")
+        root = _field_loc_root(field, mod_id, setting_id)
+        for i, val in enumerate(field.item_text_values or [], start=1):
+            if not val:
+                continue
+            lines.append(f"\tcmm_set_list_text_value = {{ mod_id = {mod_id} setting_id = {setting_id} field_id = {field.field_id} item = {i} value = flag:{root}_i{i}_text }}")
     # List field format flag
     if field.display_format_high or field.display_format_low:
         lines.append(f"\tcmm_set_list_field_conditional_format = {{")
@@ -562,6 +609,12 @@ def _emit_list_iteration_boilerplate(lines: list, mod_id: str, setting: Setting)
         fid = field.field_id or f"field_{slot}"
         item_aliases = field.item_aliases or []
         has_per_item = any(a for a in item_aliases)
+        if ftype == "button":
+            lines.append(f'#     # ({fid}, button)  a press sets var:cmm_list_button_item and var:cmm_list_button_slot')
+            continue
+        if ftype == "text":
+            lines.append(f'#     # var:$setting$_i$i$_tf{slot}  ({fid}, text)  flag naming the shown localization key')
+            continue
         if field.alias:
             prefix = "global_var" if setting.is_global else "var"
             lines.append(f'#     # {prefix}:{field.alias}  ({fid}, {ftype})')
@@ -639,6 +692,8 @@ def _gen_list_callback_block(qid: str, setting: Setting, mod_id: str) -> str:
         item_count = _int(setting.item_count, 1)
         for fi, field in enumerate(setting.fields or []):
             slot = fi + 1
+            if not _field_stores_value(field):
+                continue
             item_aliases = field.item_aliases or []
             alias = _field_has_alias(field, mod_id, setting.setting_id, slot)
             if item_aliases or alias:
@@ -702,12 +757,17 @@ def _gen_localization(model: ModModel) -> str:
 
     # Tabs, groups, and settings
     seen_groups = set()
+    settings_tabs = {t.tab_id for t in model.tabs if any(g.settings for g in t.groups)}
+    parent_tabs = {t.parent_tab_id for t in model.tabs if t.parent_tab_id and t.tab_id in settings_tabs}
     for tab in model.tabs:
-        if not any(g.settings for g in tab.groups):
+        has_settings = tab.tab_id in settings_tabs
+        if not has_settings and tab.tab_id not in parent_tabs:
             continue
         lines.append("")
         lines.append(f" # {tab.name or tab.tab_id} ({tab.tab_id}) Tab")
         lines.append(f' {mod_id}__{tab.tab_id}_name: "{_esc(tab.name or tab.tab_id)}"')
+        if not has_settings:
+            continue
 
         for group in tab.groups:
             if not group.settings:
@@ -721,6 +781,9 @@ def _gen_localization(model: ModModel) -> str:
 
             for setting in group.settings:
                 _emit_setting_loc(lines, mod_id, setting)
+
+    if not model.emit_flag_keys:
+        return "\n".join(lines) + "\n"
 
     # Self-referencing flag keys (optional, safe to remove — no EU5 errors/warnings will occur)
     flag_keys = [mod_id]
@@ -756,8 +819,12 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
         # Lists use the group name as their display name; no setting-level name/desc.
         lines.append(f' {qid}_item_column_name: "{_esc(setting.item_column_name or "Item")}"')
         if not setting.list_source:
+            descs = setting.item_descs or []
             for i, name in enumerate(setting.item_names or [], start=1):
                 lines.append(f' {qid}_i{i}_name: "{_esc(name)}"')
+                desc = descs[i - 1] if i - 1 < len(descs) else ""
+                if desc:
+                    lines.append(f' {qid}_i{i}_desc: "{_esc(desc)}"')
 
         for field in (setting.fields or []):
             fqid = f"{qid}__{field.field_id}"
@@ -770,6 +837,13 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
             lines.append(f' {name_key}: "{_esc(field.name or field.field_id)}"')
             if field.desc:
                 lines.append(f' {root}_desc: "{_esc(field.desc)}"')
+            if field.field_type == "button":
+                lines.append(f' {root}_text: "{_esc(field.button_text or field.name or field.field_id)}"')
+            if field.field_type == "text":
+                for i, val in enumerate(field.item_text_values or [], start=1):
+                    if not val:
+                        continue
+                    lines.append(f' {root}_i{i}_text: "{_esc(val)}"')
             if field.display_format and "$VALUE$" in field.display_format:
                 parts = field.display_format.split("$VALUE$", 1)
                 if parts[0]:
@@ -812,8 +886,14 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
                 lines.append(f' {qid}_option_{opt.index}_desc: "{_esc(opt.desc)}"')
 
 
+METADATA_MANAGED_KEYS = (
+    "name", "id", "version", "game_id", "supported_game_version",
+    "short_description", "tags", "relationships",
+)
+
+
 def _gen_metadata(model: ModModel) -> str:
-    data = {
+    managed = {
         "name": model.metadata_name or model.mod_name,
         "id": model.metadata_id,
         "version": model.metadata_version,
@@ -831,8 +911,20 @@ def _gen_metadata(model: ModModel) -> str:
             },
             *model.metadata_relationships,
         ],
-        "game_custom_data": {},
     }
+    extra = dict(model.metadata_extra or {})
+    extra.setdefault("game_custom_data", {})
+
+    data = {}
+    for key in (model.metadata_key_order or []):
+        if key in managed:
+            data[key] = managed[key]
+        elif key in extra:
+            data[key] = extra[key]
+    for key, value in managed.items():
+        data.setdefault(key, value)
+    for key, value in extra.items():
+        data.setdefault(key, value)
     return json.dumps(data, indent=4, ensure_ascii=False)
 
 

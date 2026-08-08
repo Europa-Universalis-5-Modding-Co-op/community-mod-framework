@@ -190,6 +190,13 @@ const SettingEditorComponent = {
                             </label>
                         </div>
                     </div>
+                    <div class="field-row" v-if="setting.on_changed_effect && hasAlias && !['text', 'list'].includes(setting.setting_type)">
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="setting.alias_synced_by_effect">
+                            Effect syncs the alias itself
+                        </label>
+                        <span class="field-hint">Leaves the alias sync out of the callback, so the effect still sees the previous value.</span>
+                    </div>
                 </div>
             </div>
         </div>

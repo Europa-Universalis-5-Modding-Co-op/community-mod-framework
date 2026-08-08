@@ -16,7 +16,7 @@ class DropdownOption:
 @dataclass
 class ListField:
     field_id: str
-    field_type: str  # "bool" | "dropdown" | "numeric" | "slider" | "data"
+    field_type: str  # "bool" | "dropdown" | "numeric" | "slider" | "data" | "button" | "text"
     name: str
     desc: str = ""  # header tooltip (optional; maps to _desc localization key)
     # bool
@@ -29,8 +29,12 @@ class ListField:
     min_value: Optional[float] = None
     max_value: Optional[float] = None
     step_value: Optional[float] = None
+    # button
+    button_text: str = ""
     # data field per-item values (1-based; aligned with item_count)
     item_data_values: Optional[list] = None
+    # text field per-item display strings (1-based; aligned with item_count)
+    item_text_values: Optional[list] = None
     # per-item defaults for interactive fields; 1-based, aligned with item_count
     item_default_values: Optional[list] = None
     # alias
@@ -75,6 +79,7 @@ class Setting:
     is_ordered: Optional[int] = None
     item_column_name: Optional[str] = None
     item_names: Optional[list] = None
+    item_descs: Optional[list] = None  # per-item row tooltips (1-based; aligned with item_count)
     item_values: Optional[list] = None  # per-item scope values (e.g. "building_type:fine_cloth_guild")
     hidden_items: Optional[list] = None  # 1-based item indices where entire row is hidden
     list_source: Optional[str] = None  # variable list name for cmm_register_settings_list_from_list
@@ -92,6 +97,8 @@ class Setting:
     # alias
     alias: str = ""
     alias_inverted: bool = False
+    # the on-changed effect syncs the alias itself, so the callback case must not sync it first
+    alias_synced_by_effect: Optional[bool] = None
     # scripted gui (is_shown / is_valid conditions)
     scripted_gui: Optional[bool] = None
     visible: Optional[str] = None
@@ -110,6 +117,7 @@ class Group:
 class Tab:
     tab_id: str
     name: str = ""
+    parent_tab_id: str = ""  # when set, this tab renders as a sub-tab of that tab
     groups: list = field(default_factory=list)
 
 
@@ -123,6 +131,7 @@ class ModModel:
     banner_background: str = ""
     lobby_banner: bool = False
     register_hook_extra: str = ""
+    callback_extra: str = ""
     metadata_name: str = ""
     metadata_id: str = ""
     metadata_version: str = "0.1"
@@ -130,7 +139,10 @@ class ModModel:
     metadata_tags: list = field(default_factory=lambda: ["Utilities"])
     metadata_game_version: str = "1.1.*"
     metadata_relationships: list = field(default_factory=list)
+    metadata_extra: dict = field(default_factory=dict)
+    metadata_key_order: list = field(default_factory=list)
     noinspection: bool = False
+    emit_flag_keys: bool = True
     tabs: list = field(default_factory=list)
 
 
@@ -171,6 +183,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["is_ordered"] = s.is_ordered
             d["item_column_name"] = s.item_column_name or ""
             d["item_names"] = s.item_names or []
+            if s.item_descs and any(v for v in s.item_descs):
+                d["item_descs"] = s.item_descs
             d["item_values"] = s.item_values or []
             if s.hidden_items:
                 d["hidden_items"] = s.hidden_items
@@ -192,6 +206,8 @@ def model_to_dict(model: ModModel) -> dict:
             d["alias"] = s.alias
         if s.alias_inverted:
             d["alias_inverted"] = s.alias_inverted
+        if s.alias_synced_by_effect:
+            d["alias_synced_by_effect"] = s.alias_synced_by_effect
         if s.scripted_gui:
             d["scripted_gui"] = s.scripted_gui
         if s.visible:
@@ -234,6 +250,11 @@ def model_to_dict(model: ModModel) -> dict:
             d["default_value"] = f.default_value
             if f.item_data_values and any(v is not None and v != "" for v in f.item_data_values):
                 d["item_data_values"] = f.item_data_values
+        elif f.field_type == "button":
+            d["button_text"] = f.button_text or ""
+        elif f.field_type == "text":
+            if f.item_text_values and any(v for v in f.item_text_values):
+                d["item_text_values"] = f.item_text_values
         if f.display_format:
             d["display_format"] = f.display_format
         if f.display_format_high:
@@ -255,6 +276,7 @@ def model_to_dict(model: ModModel) -> dict:
         "banner_background": model.banner_background,
         "lobby_banner": model.lobby_banner,
         "register_hook_extra": model.register_hook_extra,
+        "callback_extra": model.callback_extra,
         "metadata_name": model.metadata_name,
         "metadata_id": model.metadata_id,
         "metadata_version": model.metadata_version,
@@ -262,11 +284,15 @@ def model_to_dict(model: ModModel) -> dict:
         "metadata_tags": model.metadata_tags,
         "metadata_game_version": model.metadata_game_version,
         "metadata_relationships": model.metadata_relationships,
+        "metadata_extra": model.metadata_extra,
+        "metadata_key_order": model.metadata_key_order,
         "noinspection": model.noinspection,
+        "emit_flag_keys": model.emit_flag_keys,
         "tabs": [
             {
                 "tab_id": t.tab_id,
                 "name": t.name,
+                "parent_tab_id": t.parent_tab_id,
                 "groups": [
                     {
                         "group_id": g.group_id,
@@ -308,7 +334,9 @@ def dict_to_model(data: dict) -> ModModel:
             min_value=f.get("min_value"),
             max_value=f.get("max_value"),
             step_value=f.get("step_value"),
+            button_text=f.get("button_text", ""),
             item_data_values=f.get("item_data_values"),
+            item_text_values=f.get("item_text_values"),
             item_default_values=f.get("item_default_values"),
             alias=f.get("alias", ""),
             item_aliases=f.get("item_aliases"),
@@ -342,6 +370,7 @@ def dict_to_model(data: dict) -> ModModel:
             is_ordered=s.get("is_ordered"),
             item_column_name=s.get("item_column_name"),
             item_names=s.get("item_names"),
+            item_descs=s.get("item_descs"),
             item_values=s.get("item_values"),
             hidden_items=s.get("hidden_items"),
             list_source=s.get("list_source"),
@@ -354,6 +383,7 @@ def dict_to_model(data: dict) -> ModModel:
             multiselector=s.get("multiselector"),
             alias=s.get("alias", ""),
             alias_inverted=s.get("alias_inverted", False),
+            alias_synced_by_effect=s.get("alias_synced_by_effect"),
             scripted_gui=s.get("scripted_gui"),
             visible=s.get("visible"),
             enabled=s.get("enabled"),
@@ -368,6 +398,7 @@ def dict_to_model(data: dict) -> ModModel:
         banner_background=data.get("banner_background", ""),
         lobby_banner=data.get("lobby_banner", False),
         register_hook_extra=data.get("register_hook_extra", ""),
+        callback_extra=data.get("callback_extra", ""),
         metadata_name=data.get("metadata_name", ""),
         metadata_id=data.get("metadata_id", ""),
         metadata_version=data.get("metadata_version", "0.1"),
@@ -375,11 +406,15 @@ def dict_to_model(data: dict) -> ModModel:
         metadata_tags=data.get("metadata_tags", ["Utilities"]),
         metadata_game_version=data.get("metadata_game_version", "1.1.*"),
         metadata_relationships=data.get("metadata_relationships", []),
+        metadata_extra=data.get("metadata_extra", {}),
+        metadata_key_order=data.get("metadata_key_order", []),
         noinspection=data.get("noinspection", False),
+        emit_flag_keys=data.get("emit_flag_keys", True),
         tabs=[
             Tab(
                 tab_id=t["tab_id"] or "general",
                 name=t.get("name", "") or ("" if t["tab_id"] else "General"),
+                parent_tab_id=t.get("parent_tab_id", ""),
                 groups=[
                     Group(
                         group_id=g["group_id"] or "general",

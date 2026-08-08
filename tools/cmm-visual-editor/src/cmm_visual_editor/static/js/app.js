@@ -76,6 +76,7 @@ const app = createApp({
             banner_background: '',
             lobby_banner: false,
             register_hook_extra: '',
+            callback_extra: '',
             metadata_name: '',
             metadata_id: '',
             metadata_version: '0.1',
@@ -83,7 +84,10 @@ const app = createApp({
             metadata_tags: ['Utilities'],
             metadata_game_version: '1.1.*',
             metadata_relationships: [],
+            metadata_extra: {},
+            metadata_key_order: [],
             noinspection: false,
+            emit_flag_keys: true,
             tabs: [],
         });
 
@@ -168,6 +172,16 @@ const app = createApp({
             return tab.groups[selectedGroupIdx.value] || null;
         });
 
+        // Nesting is one level deep, so a tab that already has sub-tabs cannot become one.
+        const parentTabChoices = computed(() => {
+            const tab = selectedTab.value;
+            if (!tab) return [];
+            const parents = new Set(state.tabs.map(t => t.parent_tab_id).filter(Boolean));
+            return state.tabs.filter(t =>
+                t.tab_id && t !== tab && !t.parent_tab_id && !parents.has(tab.tab_id)
+            );
+        });
+
         function clampSelection() {
             if (selectedTabIdx.value >= state.tabs.length)
                 selectedTabIdx.value = Math.max(0, state.tabs.length - 1);
@@ -185,7 +199,7 @@ const app = createApp({
         }
 
         function addTab() {
-            state.tabs.push({ tab_id: '', name: '', groups: [] });
+            state.tabs.push({ tab_id: '', name: '', parent_tab_id: '', groups: [] });
             selectedTabIdx.value = state.tabs.length - 1;
             selectedGroupIdx.value = 0;
         }
@@ -617,11 +631,12 @@ const app = createApp({
                 mod_id: '', file_prefix: '', mod_name: '', mod_desc: '',
                 banner_icon: '', banner_background: '',
                 lobby_banner: false,
-                register_hook_extra: '',
+                register_hook_extra: '', callback_extra: '',
                 metadata_name: '', metadata_id: '', metadata_version: '0.1',
                 metadata_short_description: '', metadata_tags: ['Utilities'],
                 metadata_game_version: '1.1.*', metadata_relationships: [],
-                noinspection: false, tabs: [],
+                metadata_extra: {}, metadata_key_order: [],
+                noinspection: false, emit_flag_keys: true, tabs: [],
             };
             Object.assign(state, defaults);
             selectedTabIdx.value = 0;
@@ -731,7 +746,7 @@ const app = createApp({
         return {
             state, selectedTabIdx, selectedGroupIdx, rightTab, collapseSignal,
             showImport, importPath, importWarnings,
-            selectedTab, selectedGroup,
+            selectedTab, selectedGroup, parentTabChoices,
             modDir, dirty, saveStatus, saveError, showSettings, appVersion,
             undoCount, redoCount,
             drag, resetDrag,

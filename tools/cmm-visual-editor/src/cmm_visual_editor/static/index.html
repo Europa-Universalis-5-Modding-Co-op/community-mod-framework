@@ -63,6 +63,7 @@
                             class="tab-btn"
                             :class="{
                                 active: selectedTabIdx === i,
+                                subtab: !!tab.parent_tab_id,
                                 dragging: drag.type === 'tab' && drag.sourceItemIdx === i,
                                 'drag-over-before': drag.overTabIdx === i && ((drag.type === 'tab' && drag.position === 'before') || false),
                                 'drag-over-after': drag.overTabIdx === i && ((drag.type === 'tab' && drag.position === 'after') || false),
@@ -88,6 +89,15 @@
                         <div class="field-row">
                             <label>Display Name</label>
                             <input v-model="selectedTab.name" :placeholder="selectedTab.tab_id || 'General'">
+                        </div>
+                        <div class="field-row">
+                            <label>Parent Tab</label>
+                            <select v-model="selectedTab.parent_tab_id">
+                                <option value="">None (top-level tab)</option>
+                                <option v-for="t in parentTabChoices" :key="t.tab_id" :value="t.tab_id">
+                                    {{ t.name || t.tab_id }}
+                                </option>
+                            </select>
                         </div>
 
                         <div class="section-header" style="margin-top:12px">
@@ -232,6 +242,13 @@
                         Add <code>#noinspection ALL</code> to generated files
                     </label>
                     <span class="field-hint">Suppresses IDE inspections for mods that don't add CMF as a dependency.</span>
+                </div>
+                <div class="field-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" v-model="state.emit_flag_keys">
+                        Write self-referencing flag keys into the localization file
+                    </label>
+                    <span class="field-hint">One <code>key: "key"</code> entry per tab, group, setting and list field. The game needs none of them; they only quiet IDE warnings.</span>
                 </div>
                 <div class="modal-actions">
                     <span v-if="appVersion" class="app-version">v{{ appVersion }}</span>

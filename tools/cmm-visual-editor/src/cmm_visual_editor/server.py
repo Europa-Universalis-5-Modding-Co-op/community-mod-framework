@@ -107,7 +107,12 @@ class RequestHandler(BaseHTTPRequestHandler):
                 "metadata_tags": ["Utilities"],
                 "metadata_game_version": "1.1.*",
                 "metadata_relationships": [],
+                "metadata_extra": {},
+                "metadata_key_order": [],
+                "register_hook_extra": "",
+                "callback_extra": "",
                 "noinspection": False,
+                "emit_flag_keys": True,
                 "tabs": [],
             })
             return

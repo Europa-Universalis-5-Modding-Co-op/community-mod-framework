@@ -40,6 +40,21 @@ const ListEditorComponent = {
             </div>
         </div>
 
+        <div v-if="listMode === 'static'" class="per-item-aliases">
+            <h6 class="collapsible-header" @click="togglePerItemSection(-1, 'row-desc')">
+                <span class="collapse-indicator">{{ isPerItemSectionOpen(-1, 'row-desc') ? '&#9660;' : '&#9654;' }}</span>
+                Per-Item Descriptions
+            </h6>
+            <div v-show="isPerItemSectionOpen(-1, 'row-desc')">
+                <span class="field-hint">Tooltip shown when hovering the row.</span>
+                <div v-for="(name, ii) in (setting.item_names || [])" :key="'rowdesc-'+ii" class="field-row compact list-item-row">
+                    <label class="compact-label">{{ ii + 1 }}</label>
+                    <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
+                    <input :value="(setting.item_descs||[])[ii] || ''" @input="setItemDesc(ii, $event.target.value)" placeholder="(no tooltip)" class="item-value-input">
+                </div>
+            </div>
+        </div>
+
         <div v-if="listMode === 'static' && (setting.item_count || 1) > 1" class="per-item-aliases">
             <h6 class="collapsible-header" @click="togglePerItemSection(-1, 'row-visibility')">
                 <span class="collapse-indicator">{{ isPerItemSectionOpen(-1, 'row-visibility') ? '&#9660;' : '&#9654;' }}</span>
@@ -106,6 +121,8 @@ const ListEditorComponent = {
                                 <option value="numeric">Numeric</option>
                                 <option value="slider">Slider</option>
                                 <option value="data">Data (read-only)</option>
+                                <option value="text">Text (read-only)</option>
+                                <option value="button">Button</option>
                             </select>
                         </div>
                         <div class="field-row">
@@ -181,6 +198,27 @@ const ListEditorComponent = {
                         </div>
                     </div>
 
+                    <!-- Button field -->
+                    <div v-if="field.field_type === 'button'" class="field-row">
+                        <label>Button Text</label>
+                        <input v-model="field.button_text" :placeholder="field.name || 'Run'">
+                    </div>
+
+                    <!-- Text field per-item values (static lists only) -->
+                    <div v-if="field.field_type === 'text' && listMode === 'static' && field.field_id" class="per-item-aliases">
+                        <h6 class="collapsible-header" @click="togglePerItemSection(fi, 'text_values')">
+                            <span class="collapse-indicator">{{ isPerItemSectionOpen(fi, 'text_values') ? '&#9660;' : '&#9654;' }}</span>
+                            Per-Item Text
+                        </h6>
+                        <div v-show="isPerItemSectionOpen(fi, 'text_values')">
+                            <div v-for="(name, ii) in (setting.item_names || [])" :key="'tv-'+ii" class="field-row compact list-item-row">
+                                <label class="compact-label">{{ ii + 1 }}</label>
+                                <span class="item-alias-name">{{ name || 'Item ' + (ii+1) }}</span>
+                                <input :value="(field.item_text_values||[])[ii] || ''" @input="setItemTextValue(fi, ii, $event.target.value)" placeholder="displayed text">
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Numeric / Slider field -->
                     <div v-if="field.field_type === 'numeric' || field.field_type === 'slider'" class="field-grid">
                         <div class="field-row">
@@ -214,7 +252,7 @@ const ListEditorComponent = {
                     </div>
 
                     <!-- Per-item defaults: interactive fields, static lists only -->
-                    <div v-if="field.field_type !== 'data' && listMode === 'static' && field.field_id" class="per-item-aliases">
+                    <div v-if="fieldStoresValue(field) && field.field_type !== 'data' && listMode === 'static' && field.field_id" class="per-item-aliases">
                         <h6 class="collapsible-header" @click="togglePerItemSection(fi, 'defaults')">
                             <span class="collapse-indicator">{{ isPerItemSectionOpen(fi, 'defaults') ? '&#9660;' : '&#9654;' }}</span>
                             Per-Item Defaults
@@ -247,7 +285,7 @@ const ListEditorComponent = {
                     </div>
 
                     <!-- Per-item aliases (static lists only) -->
-                    <div v-if="listMode === 'static' && field.field_id" class="per-item-aliases">
+                    <div v-if="fieldStoresValue(field) && listMode === 'static' && field.field_id" class="per-item-aliases">
                         <h6 class="collapsible-header" @click="togglePerItemSection(fi, 'aliases')">
                             <span class="collapse-indicator">{{ isPerItemSectionOpen(fi, 'aliases') ? '&#9660;' : '&#9654;' }}</span>
                             Per-Item Aliases
@@ -324,9 +362,13 @@ const ListEditorComponent = {
             const field = (this.setting.fields || [])[fi];
             return field && field.item_aliases && field.item_aliases.some(a => a);
         },
+        fieldStoresValue(field) {
+            return field && field.field_type !== 'button' && field.field_type !== 'text';
+        },
         fieldAccessor(fi) {
             if (!this.modId || !this.effectiveSettingId) return '';
             const field = (this.setting.fields || [])[fi];
+            if (!this.fieldStoresValue(field)) return '';
             if (this.hasItemAliases(fi)) {
                 return 'per-item';
             }
@@ -412,6 +454,15 @@ const ListEditorComponent = {
             }
             while (this.setting.item_values.length > count) {
                 this.setting.item_values.pop();
+            }
+            // Sync item_descs array length
+            if (this.setting.item_descs) {
+                while (this.setting.item_descs.length < count) {
+                    this.setting.item_descs.push('');
+                }
+                while (this.setting.item_descs.length > count) {
+                    this.setting.item_descs.pop();
+                }
             }
             // Sync hidden_items (remove out-of-range items)
             if (this.setting.hidden_items) {
@@ -531,6 +582,13 @@ const ListEditorComponent = {
             }
             this.setting.item_values[index] = value;
         },
+        setItemDesc(index, value) {
+            if (!this.setting.item_descs) this.setting.item_descs = [];
+            while (this.setting.item_descs.length <= index) {
+                this.setting.item_descs.push('');
+            }
+            this.setting.item_descs[index] = value;
+        },
         setItemDataValue(fi, itemIndex, value) {
             const field = (this.setting.fields || [])[fi];
             if (!field) return;
@@ -541,6 +599,17 @@ const ListEditorComponent = {
             }
             field.item_data_values[itemIndex] = value === '' ? '' : Number(value);
             field.item_data_values = [...field.item_data_values];
+        },
+        setItemTextValue(fi, itemIndex, value) {
+            const field = (this.setting.fields || [])[fi];
+            if (!field) return;
+            if (!field.item_text_values) field.item_text_values = [];
+            const count = this.setting.item_count || 1;
+            while (field.item_text_values.length < count) {
+                field.item_text_values.push('');
+            }
+            field.item_text_values[itemIndex] = value;
+            field.item_text_values = [...field.item_text_values];
         },
         setItemDefaultValue(fi, itemIndex, value) {
             const field = (this.setting.fields || [])[fi];
@@ -579,6 +648,7 @@ const ListEditorComponent = {
                 min_value: 0,
                 max_value: 10,
                 step_value: 1,
+                button_text: '',
                 display_format: '',
                 display_format_high: '',
                 display_format_low: '',

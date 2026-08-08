@@ -450,6 +450,7 @@ body {
 
 .tab-btn:hover, .group-btn:hover { background: var(--border); color: var(--text); }
 .tab-btn.active, .group-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.tab-btn.subtab { border-style: dashed; margin-left: 10px; }
 
 .tab-remove {
     font-size: 14px;

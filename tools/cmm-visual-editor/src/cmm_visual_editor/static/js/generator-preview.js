@@ -118,6 +118,14 @@ ${prefix}_register_lobby_banner = {
             if (!firstTab) lines.push('');
             firstTab = false;
             lines.push(`\t# ${tab.name || tab.tab_id} (${tab.tab_id}) Tab`);
+            if (tab.parent_tab_id) {
+                lines.push(`\tcmm_register_subtab = {`);
+                lines.push(`\t\tmod_id = ${modId}`);
+                lines.push(`\t\ttab_id = ${tab.tab_id}`);
+                lines.push(`\t\tparent_tab_id = ${tab.parent_tab_id}`);
+                lines.push(`\t}`);
+                lines.push('');
+            }
             let firstGroup = true;
             for (const group of (tab.groups || [])) {
                 if (!(group.settings || []).length) continue;
@@ -208,6 +216,15 @@ ${prefix}_register_lobby_banner = {
         return alias === defaultKey ? '' : alias;
     },
 
+    _fieldLocRoot(field, modId, settingId) {
+        if (field.loc_name_key && field.loc_root_key) return field.loc_root_key;
+        return `${modId}__${settingId}__${field.field_id}`;
+    },
+
+    _fieldStoresValue(field) {
+        return field.field_type !== 'button' && field.field_type !== 'text';
+    },
+
     _fieldHasAlias(field, modId, settingId, slot) {
         const alias = (field.alias || '').trim();
         if (!alias) return '';
@@ -293,6 +310,7 @@ ${prefix}_register_lobby_banner = {
                 for (let fi = 0; fi < (setting.fields || []).length; fi++) {
                     const field = setting.fields[fi];
                     const slot = fi + 1;
+                    if (!this._fieldStoresValue(field)) continue;
                     const itemAliases = field.item_aliases || [];
                     const alias = this._fieldHasAlias(field, modId, setting.setting_id, slot);
                     if (itemAliases.some(a => a) || alias) {
@@ -472,6 +490,24 @@ ${prefix}_register_lobby_banner = {
                 if (v === null || v === undefined || v === '') continue;
                 lines.push(`\tcmm_set_list_data_value = { mod_id = ${modId} setting_id = ${settingId} field_id = ${field.field_id} item = ${i + 1} value = ${this._num(v, 0)} }`);
             }
+        } else if (ft === 'button') {
+            lines.push(`\tcmm_register_list_button_field = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${settingId}`);
+            lines.push(`\t\tfield_id = ${field.field_id}`);
+            lines.push(`\t}`);
+        } else if (ft === 'text') {
+            lines.push(`\tcmm_register_list_text_field = {`);
+            lines.push(`\t\tmod_id = ${modId}`);
+            lines.push(`\t\tsetting_id = ${settingId}`);
+            lines.push(`\t\tfield_id = ${field.field_id}`);
+            lines.push(`\t}`);
+            const root = this._fieldLocRoot(field, modId, settingId);
+            const textVals = field.item_text_values || [];
+            for (let i = 0; i < textVals.length; i++) {
+                if (!textVals[i]) continue;
+                lines.push(`\tcmm_set_list_text_value = { mod_id = ${modId} setting_id = ${settingId} field_id = ${field.field_id} item = ${i + 1} value = flag:${root}_i${i + 1}_text }`);
+            }
         }
         // List field format flag
         if (field.display_format_high || field.display_format_low) {
@@ -539,6 +575,14 @@ ${prefix}_register_lobby_banner = {
             const fid = fields[fi].field_id || `field_${slot}`;
             const itemAliases = fields[fi].item_aliases;
             const hasPerItem = itemAliases && itemAliases.some(a => a);
+            if (ftype === 'button') {
+                lines.push(`#     # (${fid}, button)  a press sets var:cmm_list_button_item and var:cmm_list_button_slot`);
+                continue;
+            }
+            if (ftype === 'text') {
+                lines.push(`#     # var:$setting$_i$i$_tf${slot}  (${fid}, text)  flag naming the shown localization key`);
+                continue;
+            }
             if (fields[fi].alias) {
                 const prefix = setting.is_global ? 'global_var' : 'var';
                 lines.push(`#     # ${prefix}:${fields[fi].alias}  (${fid}, ${ftype})`);
@@ -627,6 +671,7 @@ ${prefix}_register_lobby_banner = {
             for (let fi = 0; fi < (setting.fields || []).length; fi++) {
                 const field = setting.fields[fi];
                 const slot = fi + 1;
+                if (!this._fieldStoresValue(field)) continue;
                 const itemAliases = field.item_aliases || [];
                 const alias = this._fieldHasAlias(field, modId, setting.setting_id, slot);
                 if (itemAliases.some(a => a) || alias) {
@@ -697,14 +742,21 @@ ${prefix}_register_lobby_banner = {
                     const qid = `${modId}__${setting.setting_id}`;
                     const alias = st !== 'button' ? this._settingHasAlias(setting, modId) : '';
                     const aliasInverted = st === 'bool' ? !!setting.alias_inverted : false;
-                    const optionAliases = st === 'dropdown' ? this._getOptionAliases(setting) : [];
+                    let optionAliases = st === 'dropdown' ? this._getOptionAliases(setting) : [];
                     const customEffect = setting.on_changed_effect || '';
-                    if (alias || optionAliases.length || customEffect) {
-                        cases.push({ tabId: tab.tab_id, tabName: tab.name || tab.tab_id, groupId: group.group_id, groupName: group.name || group.group_id, qid, st, alias, aliasInverted, optionAliases, customEffect });
+                    let effAlias = alias;
+                    if (customEffect && setting.alias_synced_by_effect) {
+                        effAlias = '';
+                        optionAliases = [];
+                    }
+                    if (effAlias || optionAliases.length || customEffect) {
+                        cases.push({ tabId: tab.tab_id, tabName: tab.name || tab.tab_id, groupId: group.group_id, groupName: group.name || group.group_id, qid, st, alias: effAlias, aliasInverted, optionAliases, customEffect });
                     }
                 }
             }
         }
+
+        const extra = (state.callback_extra || '').replace(/^\n+|\n+$/g, '');
 
         lines.push('');
         lines.push(`# Callback handler for cmf_on_callback.`);
@@ -713,6 +765,10 @@ ${prefix}_register_lobby_banner = {
         lines.push(`${prefix}_handle_cmf_callback = {`);
         lines.push(`\tswitch = {`);
         lines.push(`\t\ttrigger = var:cmf_callback`);
+
+        if (extra) {
+            for (const line of extra.split('\n')) lines.push(line);
+        }
 
         if (cases.length) {
             let currentTab = null;
@@ -752,7 +808,7 @@ ${prefix}_register_lobby_banner = {
                 }
                 lines.push(`\t\t}`);
             }
-        } else {
+        } else if (!extra) {
             lines.push(`\t\t# flag:${modId}__my_setting = {`);
             lines.push(`\t\t# \t# Custom side effects when this setting changes`);
             lines.push(`\t\t# }`);
@@ -779,12 +835,19 @@ ${prefix}_register_lobby_banner = {
 
         // Tabs, groups, and settings
         const seenGroups = new Set();
+        const settingsTabs = new Set((state.tabs || [])
+            .filter(t => (t.groups || []).some(g => (g.settings || []).length > 0))
+            .map(t => t.tab_id));
+        const parentTabs = new Set((state.tabs || [])
+            .filter(t => t.parent_tab_id && settingsTabs.has(t.tab_id))
+            .map(t => t.parent_tab_id));
         for (const tab of (state.tabs || [])) {
-            const hasContent = (tab.groups || []).some(g => (g.settings || []).length > 0);
-            if (!hasContent) continue;
+            const hasContent = settingsTabs.has(tab.tab_id);
+            if (!hasContent && !parentTabs.has(tab.tab_id)) continue;
             lines.push('');
             lines.push(` # ${tab.name || tab.tab_id} (${tab.tab_id}) Tab`);
             lines.push(` ${modId}__${tab.tab_id}_name: "${this._esc(tab.name || tab.tab_id)}"`);
+            if (!hasContent) continue;
 
             for (const group of (tab.groups || [])) {
                 if (!(group.settings || []).length) continue;
@@ -801,6 +864,10 @@ ${prefix}_register_lobby_banner = {
                     this._emitSettingLoc(lines, modId, s);
                 }
             }
+        }
+
+        if (state.emit_flag_keys === false) {
+            return lines.join('\n') + '\n';
         }
 
         // Self-referencing flag keys (suppress engine localization warnings)
@@ -847,8 +914,12 @@ ${prefix}_register_lobby_banner = {
             // Lists use the group name as their display name; no setting-level name/desc.
             lines.push(` ${qid}_item_column_name: "${this._esc(setting.item_column_name || 'Item')}"`);
             if (!setting.list_source) {
+                const descs = setting.item_descs || [];
                 for (let i = 0; i < (setting.item_names || []).length; i++) {
                     lines.push(` ${qid}_i${i + 1}_name: "${this._esc(setting.item_names[i])}"`);
+                    if (descs[i]) {
+                        lines.push(` ${qid}_i${i + 1}_desc: "${this._esc(descs[i])}"`);
+                    }
                 }
             }
             for (const field of (setting.fields || [])) {
@@ -858,6 +929,16 @@ ${prefix}_register_lobby_banner = {
                 lines.push(` ${nameKey}: "${this._esc(field.name || field.field_id)}"`);
                 if (field.desc) {
                     lines.push(` ${root}_desc: "${this._esc(field.desc)}"`);
+                }
+                if (field.field_type === 'button') {
+                    lines.push(` ${root}_text: "${this._esc(field.button_text || field.name || field.field_id)}"`);
+                }
+                if (field.field_type === 'text') {
+                    const textVals = field.item_text_values || [];
+                    for (let i = 0; i < textVals.length; i++) {
+                        if (!textVals[i]) continue;
+                        lines.push(` ${root}_i${i + 1}_text: "${this._esc(textVals[i])}"`);
+                    }
                 }
                 if (field.display_format && field.display_format.includes('$VALUE$')) {
                     const parts = field.display_format.split('$VALUE$');
@@ -919,7 +1000,7 @@ ${prefix}_register_lobby_banner = {
     },
 
     genMetadata(state) {
-        return JSON.stringify({
+        const managed = {
             name: state.metadata_name || state.mod_name,
             id: state.metadata_id,
             version: state.metadata_version,
@@ -937,8 +1018,22 @@ ${prefix}_register_lobby_banner = {
                 },
                 ...(state.metadata_relationships || []),
             ],
-            game_custom_data: {},
-        }, null, 4);
+        };
+        const extra = Object.assign({}, state.metadata_extra || {});
+        if (!('game_custom_data' in extra)) extra.game_custom_data = {};
+
+        const data = {};
+        for (const key of (state.metadata_key_order || [])) {
+            if (key in managed) data[key] = managed[key];
+            else if (key in extra) data[key] = extra[key];
+        }
+        for (const [key, value] of Object.entries(managed)) {
+            if (!(key in data)) data[key] = value;
+        }
+        for (const [key, value] of Object.entries(extra)) {
+            if (!(key in data)) data[key] = value;
+        }
+        return JSON.stringify(data, null, 4);
     },
 
     _num(v, def) {

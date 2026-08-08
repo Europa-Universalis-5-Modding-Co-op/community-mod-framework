@@ -34,12 +34,18 @@ The tool generates 5 files into a mod directory, where `<prefix>` is the file pr
 
 File names include `_cmm` to avoid conflicts with a mod's own effect/GUI/localization files.
 
+Each of these files is rewritten in full on every save, so anything hand-written in one is lost. Keep custom script in a sibling file the tool does not own, such as `<prefix>_cmm_custom_effects.txt`. Registrations found outside the effects file above are not imported, and the tool reports them as warnings; the exception is a `cmm_register_list_*_field` call re-registering a field the generated file already declares, which is a normal runtime override.
+
+The tool never writes to `.metadata/metadata.json` keys it does not manage: any other top-level key, and the original key order, survive a save.
+
 ### Callback Preservation
 
 When saving to a mod directory that already has generated files:
 - **Scripted GUI callbacks** (`_on_changed` blocks): existing callbacks are preserved. Only newly added settings get template callbacks appended.
 - **Text effect callbacks**: existing text `_on_changed` effects are preserved. The registration block is always regenerated.
-- **On action, localization, metadata**: always fully regenerated (these contain no custom logic).
+- **Registration hook**: effects added beside `<prefix>_register_cmf_mod` in the on-action leaf are preserved.
+- **Callback switch**: cases for flags that are not settings, such as an action bar element's, are preserved.
+- **Localization, metadata**: always fully regenerated, apart from the metadata keys noted above.
 
 This means you can add custom logic to your callbacks and re-save from the tool without losing it.
 

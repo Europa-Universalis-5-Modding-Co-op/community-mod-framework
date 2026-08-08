@@ -30,28 +30,52 @@ def parse_mod_directory(directory: Path) -> Tuple[ModModel, list]:
         rel = path.relative_to(directory)
         return any(part in _skip_dirs for part in rel.parts)
 
-    # Find files by pattern
+    texts = {}
     for f in directory.rglob("*.txt"):
         if _in_skip_dir(f):
             continue
-        name = f.name.lower()
         try:
-            raw = f.read_bytes()
-            text = decode_bom(raw)
+            texts[f] = decode_bom(f.read_bytes())
         except Exception as e:
             warnings.append(f"Could not read {f}: {e}")
-            continue
 
-        if "on_action" in name and "cmf_on_mod_registration" in text:
+    for f, text in texts.items():
+        if "on_action" in f.name.lower() and "cmf_on_mod_registration" in text:
             on_action_content = text
-        elif "scripted_gui" in str(f.parent).lower() or "scripted_gui" in name:
-            if "_on_changed" in text:
-                gui_content += "\n" + text
-        elif "effect" in name or "effect" in str(f.parent).lower():
-            if "cmm_register_" in text:
-                if text.lstrip().startswith("#noinspection ALL"):
-                    noinspection = True
-                effects_content += "\n" + text
+            break
+
+    # The editor writes exactly one effects file and one scripted GUI file. When those
+    # are present, read only them: a mod's hand-written siblings hold registration calls
+    # of their own, and folding those into the model duplicates them on the next export.
+    prefix = _parse_prefix(on_action_content)
+    owned_effects = directory / "in_game/common/scripted_effects" / f"{prefix}_cmm_effects.txt"
+    owned_gui = directory / "in_game/common/scripted_guis" / f"{prefix}_cmm_scripted_gui.txt"
+    outside = {}
+
+    if prefix and owned_effects in texts:
+        effects_content = texts[owned_effects]
+        if effects_content.lstrip().startswith("#noinspection ALL"):
+            noinspection = True
+        if owned_gui in texts:
+            gui_content = texts[owned_gui]
+
+        for f, text in texts.items():
+            if f == owned_effects or f == owned_gui or "cmm_register_" not in text:
+                continue
+            outside[f.relative_to(directory).as_posix()] = text
+    else:
+        for f, text in texts.items():
+            name = f.name.lower()
+            if "on_action" in name and "cmf_on_mod_registration" in text:
+                continue
+            if "scripted_gui" in str(f.parent).lower() or "scripted_gui" in name:
+                if "_on_changed" in text:
+                    gui_content += "\n" + text
+            elif "effect" in name or "effect" in str(f.parent).lower():
+                if "cmm_register_" in text:
+                    if text.lstrip().startswith("#noinspection ALL"):
+                        noinspection = True
+                    effects_content += "\n" + text
 
     for f in directory.rglob("*_l_english.yml"):
         if _in_skip_dir(f):
@@ -74,6 +98,7 @@ def parse_mod_directory(directory: Path) -> Tuple[ModModel, list]:
         loc_content, metadata_content, warnings,
         noinspection=noinspection,
         directory=directory,
+        outside=outside,
     )
 
 
@@ -95,6 +120,7 @@ def _build_model(
     loc: str, metadata: str, warnings: list,
     noinspection: bool = False,
     directory: Path = None,
+    outside: dict = None,
 ) -> Tuple[ModModel, list]:
     # Parse prefix from on_action
     prefix = _parse_prefix(on_action)
@@ -140,6 +166,7 @@ def _build_model(
     list_field_disables = {}  # (setting_id, field_id) -> [item_number]
     list_item_hides = {}  # setting_id -> [item_number]
     list_data_values = {}  # (setting_id, field_id) -> {item_number: value}
+    list_text_values = {}  # (setting_id, field_id) -> {item_number: localization key}
     list_field_defaults = {}  # (setting_id, field_id) -> {item_number: value}
     for reg in registrations:
         reg_type = reg.get("_type", "")
@@ -192,8 +219,19 @@ def _build_model(
                 if key not in list_data_values:
                     list_data_values[key] = {}
                 list_data_values[key][item] = _to_float(value)
+        elif reg_type == "list_text_value":
+            sid = reg.get("setting_id", "")
+            fid = reg.get("field_id", "")
+            item = _to_int(reg.get("item", "0"))
+            value = reg.get("value", "")
+            if sid and fid and item > 0 and value:
+                key = (sid, fid)
+                if key not in list_text_values:
+                    list_text_values[key] = {}
+                list_text_values[key][item] = value[5:] if value.startswith("flag:") else value
 
     # Second pass: build tabs/groups/settings
+    subtab_parents = {}  # tab_id -> parent tab_id
     for reg in registrations:
         reg_type = reg.get("_type", "")
 
@@ -203,10 +241,26 @@ def _build_model(
             continue  # already collected above
         if reg_type == "list_data_value":
             continue  # already collected above
+        if reg_type == "list_text_value":
+            continue  # already collected above
         if reg_type == "list_field_disable":
             continue  # already collected above
         if reg_type == "list_item_hide":
             continue  # already collected above
+        if reg_type == "subtab":
+            child = reg.get("tab_id", "")
+            parent = reg.get("parent_tab_id", "")
+            if not child or not parent:
+                continue
+            subtab_parents[child] = parent
+            # The parent holds no settings of its own, so nothing else creates it.
+            if parent not in tabs_map:
+                tabs_map[parent] = Tab(
+                    tab_id=parent,
+                    name=loc_map.get(f"{mod_id}__{parent}_name", parent),
+                )
+                tab_order.append(parent)
+            continue
 
         tab_id = reg.get("tab_id", "general")
         group_id = reg.get("group_id", reg.get("setting_id", "default"))
@@ -233,7 +287,7 @@ def _build_model(
             reg, mod_id, loc_map, list_fields, list_item_values,
             setting_aliases, inverted_aliases, field_aliases, option_aliases,
             list_field_disables, list_item_hides, list_data_values,
-            list_field_defaults, field_loc_overrides,
+            list_text_values, list_field_defaults, field_loc_overrides,
         )
         if setting:
             # Deduplicate: skip if same setting_id already exists in this group
@@ -244,16 +298,23 @@ def _build_model(
 
     # Parse custom on_changed effects from effects and GUI content
     custom_effects = _parse_custom_effects(effects, gui)
+    callback_cases = _parse_callback_cases(effects)
+    known_flags = set()
     for gkey in group_order:
         group = groups_map[gkey]
         for setting in group.settings:
             qid = f"{mod_id}__{setting.setting_id}"
+            known_flags.add(qid)
             if qid in custom_effects:
                 info = custom_effects[qid]
                 setting.on_changed_effect = info["effect"]
                 setting.pass_value_param = info.get("param")
                 if info.get("no_pass"):
                     setting.no_pass_value = True
+                # A case that calls a custom effect and never syncs the alias means the
+                # effect does the sync itself, and usually needs the old value first.
+                if setting.alias and "cmm_sync_" not in callback_cases.get(qid, ""):
+                    setting.alias_synced_by_effect = True
             if setting.setting_id in no_reset_settings:
                 setting.no_reset = True
             if setting.setting_id in requires_unrestricted_tools_settings:
@@ -297,11 +358,36 @@ def _build_model(
             except Exception as e:
                 warnings.append(f"Could not read background file: {e}")
 
+    for child, parent in subtab_parents.items():
+        if child in tabs_map:
+            tabs_map[child].parent_tab_id = parent
+
+    # A setting registered somewhere the editor does not rewrite is invisible here, and moving
+    # it into the model would register it twice. Re-registering a field the owned file already
+    # declares is a normal runtime override, so only unknown settings are worth reporting.
+    known_ids = {f.split("__", 1)[1] for f in known_flags if "__" in f}
+    for rel, text in (outside or {}).items():
+        for reg in _parse_registrations(text, []):
+            rtype = reg.get("_type", "")
+            if rtype in ("unknown",) or "_field" in rtype or rtype.startswith(("list_item", "list_data", "list_text", "list_field")):
+                continue
+            sid = reg.get("setting_id", "")
+            if sid and sid not in known_ids:
+                warnings.append(
+                    f"{rel} registers setting '{sid}' outside {prefix}_cmm_effects.txt, so it is "
+                    f"not shown here. Move it into {prefix}_cmm_effects.txt to edit it."
+                )
+                known_ids.add(sid)
+
     lobby_banner = "cmf_register_lobby_banner" in on_action
     register_hook_extra = _parse_register_hook_extra(on_action, prefix)
+    callback_extra = _parse_callback_extra(effects, known_flags)
 
     # Keep the toolkit's trailing " Dev" install marker out of the in-game menu name.
     meta_name = (meta.get("name") or "").removesuffix(" Dev")
+
+    from .generator import METADATA_MANAGED_KEYS
+    metadata_extra = {k: v for k, v in meta.items() if k not in METADATA_MANAGED_KEYS}
 
     model = ModModel(
         mod_id=mod_id,
@@ -312,6 +398,7 @@ def _build_model(
         banner_background=banner_background,
         lobby_banner=lobby_banner,
         register_hook_extra=register_hook_extra,
+        callback_extra=callback_extra,
         metadata_name=meta.get("name", ""),
         metadata_id=meta.get("id", ""),
         metadata_version=meta.get("version", "0.1"),
@@ -322,7 +409,10 @@ def _build_model(
             r for r in meta.get("relationships", [])
             if r.get("id") != "community_mod_framework"
         ],
+        metadata_extra=metadata_extra,
+        metadata_key_order=list(meta.keys()),
         noinspection=noinspection,
+        emit_flag_keys=loc_map.get(mod_id, "") == mod_id if mod_id else True,
         tabs=[tabs_map[tid] for tid in tab_order],
     )
 
@@ -615,6 +705,76 @@ def _parse_field_aliases(content: str) -> dict:
     return aliases
 
 
+def _find_callback_switch(effects: str) -> Tuple[int, int]:
+    """Locate the switch body inside the generated callback handler. (-1, -1) when absent."""
+    cb = re.search(r"^\w+_handle_(?:cmf_)?callback\s*=\s*\{", effects, re.MULTILINE)
+    if not cb:
+        return -1, -1
+    cb_end = _find_closing_brace(effects, cb.end())
+    if cb_end < 0:
+        return -1, -1
+    sw = re.search(r"\bswitch\s*=\s*\{", effects[cb.end():cb_end])
+    if not sw:
+        return -1, -1
+    start = cb.end() + sw.end()
+    end = _find_closing_brace(effects, start)
+    return (start, end) if end >= 0 else (-1, -1)
+
+
+def _parse_callback_cases(effects: str) -> dict:
+    """Extract each `flag:<key> = { ... }` case of the callback switch -> its raw body."""
+    start, end = _find_callback_switch(effects)
+    if start < 0:
+        return {}
+    body = effects[start:end]
+    cases = {}
+    for fm in re.finditer(r"flag:(\w+)\s*=\s*\{", body):
+        fe = _find_closing_brace(body, fm.end())
+        if fe < 0:
+            continue
+        cases[fm.group(1)] = body[fm.end():fe]
+    return cases
+
+
+def _parse_callback_extra(effects: str, known_flags: set) -> str:
+    """Capture callback cases the editor does not own, such as an action bar element's.
+
+    Returns the source lines verbatim, so their indentation and any leading comment
+    survive the round trip.
+    """
+    start, end = _find_callback_switch(effects)
+    if start < 0:
+        return ""
+    body = effects[start:end]
+    lines = body.split("\n")
+
+    # Map each case's opening line index to the line index just past its closing brace.
+    kept = []
+    depth = 0
+    case_flag = None
+    case_start = 0
+    for idx, line in enumerate(lines):
+        if depth == 0:
+            m = re.match(r"\s*flag:(\w+)\s*=\s*\{", line)
+            if m:
+                case_flag = m.group(1)
+                case_start = idx
+        depth += line.count("{") - line.count("}")
+        if case_flag is not None and depth == 0:
+            if case_flag not in known_flags:
+                head = case_start
+                while head > 0 and lines[head - 1].strip().startswith("#"):
+                    head -= 1
+                kept.extend(lines[head:idx + 1])
+            case_flag = None
+
+    while kept and not kept[0].strip():
+        kept.pop(0)
+    while kept and not kept[-1].strip():
+        kept.pop()
+    return "\n".join(kept)
+
+
 def _parse_custom_effects(effects: str, gui: str = "") -> dict:
     """Parse custom on_changed effect info from effects and GUI content.
 
@@ -734,8 +894,9 @@ def _parse_registrations(content: str, warnings: list) -> list:
         r"(cmm_register_(?:global_)?(?:bool_setting|button_setting|numeric_setting|"
         r"slider_setting|dropdown_setting|text_setting|settings_list|"
         r"settings_list_from_list|"
-        r"list_bool_field|list_dropdown_field|list_numeric_field|list_slider_field|list_data_field)|"
-        r"cmm_set_list_item_value|cmm_set_list_data_value|cmm_set_list_field_default_for_item|cmm_disable_list_field_for_item|cmm_hide_list_item)\s*=\s*\{",
+        r"list_bool_field|list_dropdown_field|list_numeric_field|list_slider_field|list_data_field|"
+        r"list_button_field|list_text_field|subtab)|"
+        r"cmm_set_list_item_value|cmm_set_list_data_value|cmm_set_list_text_value|cmm_set_list_field_default_for_item|cmm_disable_list_field_for_item|cmm_hide_list_item)\s*=\s*\{",
         re.IGNORECASE,
     )
 
@@ -785,6 +946,12 @@ def _func_to_type(func_name: str) -> str:
         return "list_slider_field"
     if "list_data_field" in fn:
         return "list_data_field"
+    if "list_button_field" in fn:
+        return "list_button_field"
+    if "list_text_field" in fn:
+        return "list_text_field"
+    if "register_subtab" in fn:
+        return "subtab"
     if "settings_list_from_list" in fn:
         return "list_from_list"
     if "settings_list" in fn:
@@ -793,6 +960,8 @@ def _func_to_type(func_name: str) -> str:
         return "list_item_value"
     if "set_list_data_value" in fn:
         return "list_data_value"
+    if "set_list_text_value" in fn:
+        return "list_text_value"
     if "set_list_field_default_for_item" in fn:
         return "list_field_default"
     if "disable_list_field_for_item" in fn:
@@ -857,6 +1026,7 @@ def _reg_to_setting(
     list_field_disables: dict = None,
     list_item_hides: dict = None,
     list_data_values: dict = None,
+    list_text_values: dict = None,
     list_field_defaults: dict = None,
     loc_overrides: dict = None,
 ) -> Setting:
@@ -868,6 +1038,10 @@ def _reg_to_setting(
         return None  # item values handled separately
     if reg_type == "list_data_value":
         return None  # data values handled separately
+    if reg_type == "list_text_value":
+        return None  # text values handled separately
+    if reg_type == "subtab":
+        return None  # sub-tab parents handled separately
     if reg_type == "list_field_disable":
         return None  # field disables handled separately
     if reg_type == "list_item_hide":
@@ -930,10 +1104,13 @@ def _reg_to_setting(
         else:
             setting.item_count = _to_int(reg.get("item_count", "1"))
             item_names = []
+            item_descs = []
             for i in range(1, setting.item_count + 1):
-                iname = loc_map.get(f"{qid}_i{i}_name", f"Item {i}")
-                item_names.append(iname)
+                item_names.append(loc_map.get(f"{qid}_i{i}_name", f"Item {i}"))
+                item_descs.append(loc_map.get(f"{qid}_i{i}_desc", ""))
             setting.item_names = item_names
+            if any(item_descs):
+                setting.item_descs = item_descs
 
         # Collect item values
         values_map = (list_item_values or {}).get(sid, {})
@@ -962,6 +1139,14 @@ def _reg_to_setting(
                     if dv_map:
                         count = setting.item_count or 1
                         fld.item_data_values = [dv_map.get(i, "") for i in range(1, count + 1)]
+                elif fld.field_type == "text":
+                    tv_map = (list_text_values or {}).get((sid, fld.field_id))
+                    if tv_map:
+                        count = setting.item_count or 1
+                        fld.item_text_values = [
+                            loc_map.get(tv_map[i], "") if i in tv_map else ""
+                            for i in range(1, count + 1)
+                        ]
                 # Attach per-item defaults for interactive fields
                 elif fld.field_type in ("bool", "dropdown", "numeric", "slider"):
                     def_map = (list_field_defaults or {}).get((sid, fld.field_id))
@@ -991,6 +1176,10 @@ def _parse_list_field(
         ftype = "numeric"
     elif "data" in ftype_raw:
         ftype = "data"
+    elif "button" in ftype_raw:
+        ftype = "button"
+    elif "text" in ftype_raw:
+        ftype = "text"
     else:
         return None
 
@@ -1053,6 +1242,8 @@ def _parse_list_field(
         field.step_value = _to_float(reg.get("step_value", "1"))
     elif ftype == "data":
         field.default_value = _to_float(reg.get("default_value", "0"))
+    elif ftype == "button":
+        field.button_text = loc_map.get(f"{root}_text", "")
 
     # Format display — reconstruct $VALUE$ format from prefix/postfix loc keys
     pfx = loc_map.get(f"{root}_prefix", "")
