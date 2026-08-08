@@ -153,6 +153,7 @@
 		tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "CMM_PAUSE_MENU_BUTTON_TOOLTIP" } } }
 	}
 
+	# CMF: CMM open menu button, read-only variant
 	button_wax = {
 		blockoverride "button_texture" {
 			texture = "gfx/interface/buttons/button_wax_blue.dds"

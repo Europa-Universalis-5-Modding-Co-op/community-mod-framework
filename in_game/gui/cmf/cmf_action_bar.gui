@@ -1,4 +1,4 @@
-﻿# this must be in sync with outliner.gui and message_log.gui
+﻿# Vanilla topbar layout values: in_game/gui/ingame_topbar.gui:9 @topbar_height, :10 @panel_bar_height, :15 @left_panel_width, :17 @panel_x
 @topbar_height = 40
 @panel_bar_height = 90
 @left_panel_width = 570
