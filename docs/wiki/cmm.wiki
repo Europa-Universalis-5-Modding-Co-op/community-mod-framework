@@ -29,7 +29,7 @@ curl.exe -sL https://raw.githubusercontent.com/Europa-Universalis-5-Modding-Co-o
 If you prefer to set up settings manually (instead of using the [https://github.com/Europa-Universalis-5-Modding-Co-op/community-mod-framework/wiki/CMM-Visual-Editor Visual Editor] above), follow the [[Community Mod Framework#Basic Setup|CMF Basic Setup]] to create your registration effect and <code>cmf_on_mod_registration</code> on_action hook. Then create a localization file for your settings.
 
 = Settings =
-Most settings work automatically: just register them and CMM handles the UI and value storage. Only text and settings list require callbacks. All other types use auto-apply and work out of the box.
+Most settings work automatically through auto-apply: just register them and CMM handles the UI and value storage. Only text and settings list require callbacks.
 
 All types except text have global variants (<code>cmm_register_global_*</code>); these store values globally and apply to all players rather than per country, and in multiplayer only the host can edit them.
 
@@ -187,7 +187,7 @@ your_mod__your_text_on_changed = {
 
 == Settings List ==
 [[File:CMM_Ordered_Settings_List.png|thumb|right|An ordered list setting in CMM.]]
-A table of items where each row has one or more field columns (toggles, dropdowns, or numeric steppers). Lists can optionally be ordered. Settings lists require a Scripted GUI callback.
+A table of items where each row has one or more field columns (toggles, dropdowns, numeric steppers, sliders, data, buttons, or text). Lists can optionally be ordered. Settings lists require a Scripted GUI callback.
 
 === Registering a List ===
 <syntaxhighlight lang="text">
