@@ -1106,22 +1106,6 @@ _cmm_add_staged_settings_list_item_internal = {
 	}
 }
 
-# Add one item from `scope:cmm_list_staged_item_value` to a dynamic settings list.
-# Used by cmm_register_settings_list_from_list. Scope must be set before calling.
-# Scope: country
-# Args: mod_id (key), setting_id (key)
-_cmm_add_staged_settings_list_item = {
-	_cmm_add_staged_settings_list_item_internal = { mod_id = $mod_id$ setting_id = $setting_id$ vt = variable }
-}
-
-# Add one item from `scope:cmm_list_staged_item_value` to a dynamic global settings list.
-# Used by cmm_register_global_settings_list_from_list. Scope must be set before calling.
-# Scope: country
-# Args: mod_id (key), setting_id (key)
-_cmm_add_global_staged_settings_list_item = {
-	_cmm_add_staged_settings_list_item_internal = { mod_id = $mod_id$ setting_id = $setting_id$ vt = global_variable }
-}
-
 # Finalize a dynamic settings list after all item-add calls.
 # Sets the item count from the accumulated add counter and marks the list initialized.
 # Register fields (cmm_register_list_bool_field, etc.) after this call.

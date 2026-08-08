@@ -10,9 +10,9 @@
 	# - cmm_step variable map [value]: slider logical step size (keyed by setting flag).
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: current visual slot index inside the repeated track datamodel.
 	# Writes:
-	# - cmm_numeric_step_delta_to_apply [value]: pending accumulated slider +/- step delta for `cmm_apply_slider_change`.
-	# - cmm_numeric_change_to_apply [value]: pending slider min/max jump mode for `cmm_apply_slider_change`.
-	# - cmm_slider_index_to_apply [value]: pending visual slot index for `cmm_apply_slider_change`.
+	# - cmm_numeric_step_delta_to_apply [value]: pending accumulated slider +/- step delta for `cmm_auto_apply_slider`.
+	# - cmm_numeric_change_to_apply [value]: pending slider min/max jump mode for `cmm_auto_apply_slider`.
+	# - cmm_slider_index_to_apply [value]: pending visual slot index for `cmm_auto_apply_slider`.
 	# - GetScriptedGui('cmm_auto_apply_slider').Execute(...) [effect]: applies setting changes via auto-apply scripted GUI.
 	type cmm_slider_setting = widget {
 		size = { 320 34 }

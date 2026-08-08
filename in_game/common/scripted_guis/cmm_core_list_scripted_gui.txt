@@ -218,22 +218,6 @@ CMM_MarkListColumnApplyAll = {
 	}
 }
 
-# Mark the next ordered list interaction as a dropdown-field next cycle.
-# Scope: country
-CMM_MarkListFieldCycleNext = {
-	effect = {
-		set_variable = { name = cmm_list_action_to_apply value = 6 }
-	}
-}
-
-# Mark the next ordered list interaction as a dropdown-field previous cycle.
-# Scope: country
-CMM_MarkListFieldCyclePrev = {
-	effect = {
-		set_variable = { name = cmm_list_action_to_apply value = 7 }
-	}
-}
-
 # Mark the next ordered list interaction as a button-field press.
 # Scope: country
 CMM_MarkListButtonPress = {

@@ -8,8 +8,8 @@
 	# - cmm_min variable map [value]: numeric minimum bound (keyed by setting flag).
 	# - cmm_max variable map [value]: numeric maximum bound (keyed by setting flag).
 	# Writes:
-	# - cmm_numeric_step_delta_to_apply [value]: pending accumulated numeric +/- step delta for `cmm_apply_numeric_change`.
-	# - cmm_numeric_change_to_apply [value]: pending numeric min/max jump mode for `cmm_apply_numeric_change`.
+	# - cmm_numeric_step_delta_to_apply [value]: pending accumulated numeric +/- step delta for `cmm_auto_apply_numeric`.
+	# - cmm_numeric_change_to_apply [value]: pending numeric min/max jump mode for `cmm_auto_apply_numeric`.
 	# - GetScriptedGui('cmm_auto_apply_numeric').Execute(...) [effect]: applies setting changes via auto-apply scripted GUI.
 	type cmm_numeric_setting = hbox {
 		spacing = 6

@@ -410,30 +410,6 @@ _cmm_list_apply_field_slot_at_item = {
 			}
 		}
 		else_if = {
-			limit = { AND = { var:cmm_list_action_to_apply = 6 var:cmm_list_field_$slot$_type_$setting$ = 2 } }
-			set_variable = { name = cmm_tmp_field_new value = local_var:cmm_field_val }
-			change_variable = { name = cmm_tmp_field_new add = 1 }
-			if = {
-				limit = { var:cmm_tmp_field_new > var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
-				set_variable = { name = cmm_tmp_field_new value = 1 }
-			}
-			remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_field_new }
-			remove_variable = cmm_tmp_field_new
-		}
-		else_if = {
-			limit = { AND = { var:cmm_list_action_to_apply = 7 var:cmm_list_field_$slot$_type_$setting$ = 2 } }
-			set_variable = { name = cmm_tmp_field_new value = local_var:cmm_field_val }
-			change_variable = { name = cmm_tmp_field_new add = -1 }
-			if = {
-				limit = { var:cmm_tmp_field_new < 1 }
-				set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_$slot$_dropdown_last_index_$setting$ }
-			}
-			remove_from_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ }
-			add_to_$vt$_map = { name = cmm key = flag:$setting$_i$item$_f$slot$ value = var:cmm_tmp_field_new }
-			remove_variable = cmm_tmp_field_new
-		}
-		else_if = {
 			limit = { AND = { var:cmm_list_action_to_apply = 8 var:cmm_list_field_$slot$_type_$setting$ = 2 has_variable = cmm_dropdown_index_to_apply } }
 			set_variable = { name = cmm_tmp_field_new value = var:cmm_dropdown_index_to_apply }
 			if = {
@@ -920,7 +896,7 @@ _cmm_apply_list_change_internal = {
 			limit = {
 				AND = {
 					has_variable = cmm_list_action_to_apply
-					OR = { var:cmm_list_action_to_apply = 5 var:cmm_list_action_to_apply = 6 var:cmm_list_action_to_apply = 7 var:cmm_list_action_to_apply = 8 }
+					OR = { var:cmm_list_action_to_apply = 5 var:cmm_list_action_to_apply = 8 }
 					has_variable = cmm_list_field_slot_to_apply
 				}
 			}

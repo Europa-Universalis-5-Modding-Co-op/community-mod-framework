@@ -9,7 +9,7 @@
 	# - GetVariableSystem.Get('cmm_dropdown_hover_index') [string]: hovered 0-based widget option index used by selection callback.
 	# Writes:
 	# - GetVariableSystem.Set('cmm_dropdown_hover_index') [string]: tracks hovered/active 0-based widget option index.
-	# - cmm_dropdown_index_to_apply [value]: pending selected 1-based dropdown ordinal for `cmm_apply_dropdown_change`.
+	# - cmm_dropdown_index_to_apply [value]: pending selected 1-based dropdown ordinal for `cmm_auto_apply_dropdown`.
 	# - GetScriptedGui('cmm_auto_apply_dropdown').Execute(...) [effect]: applies setting changes via auto-apply scripted GUI.
 	type cmm_dropdown_setting = dropDown {
 		size = { 168 30 }
