@@ -117,14 +117,6 @@ macro = {
     replace_with = "EqualTo_CFixedPoint(Value, '(CFixedPoint)1')"
 }
 
-# Args: Prefix (string), Key (string)
-# Returns: boolean
-macro = {
-    description = "True when one metadata value equals 1"
-    definition = "CMMMetadataEqualsOne(Prefix,Key)"
-    replace_with = "CMMValueEqualsOne(CMMMetadataValue(Prefix, Key))"
-}
-
 # Args: MapName (string), SettingKey (string)
 # Returns: value
 macro = {

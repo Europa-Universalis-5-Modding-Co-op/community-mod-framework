@@ -9,14 +9,6 @@ macro = {
 }
 
 # Args: ItemKey (string)
-# Returns: boolean
-macro = {
-    description = "True when local player can edit the owner setting for one list item"
-    definition = "CMMCanEditListItemSetting(ItemKey)"
-    replace_with = "CMMCanEditSetting(CMMListItemOwnerSettingKey(ItemKey))"
-}
-
-# Args: ItemKey (string)
 # Returns: none
 macro = {
     description = "Execute the owner setting callback for one list item"
@@ -123,30 +115,6 @@ macro = {
 # Args: SettingKey (string), SlotKey (string)
 # Returns: boolean
 macro = {
-    description = "True when one list field slot is dropdown"
-    definition = "CMMListFieldIsDropdown(SettingKey,SlotKey)"
-    replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)2')"
-}
-
-# Args: SettingKey (string), SlotKey (string)
-# Returns: boolean
-macro = {
-    description = "True when one list field slot is numeric"
-    definition = "CMMListFieldIsNumeric(SettingKey,SlotKey)"
-    replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)3')"
-}
-
-# Args: SettingKey (string), SlotKey (string)
-# Returns: boolean
-macro = {
-    description = "True when one list field slot is slider"
-    definition = "CMMListFieldIsSlider(SettingKey,SlotKey)"
-    replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)4')"
-}
-
-# Args: SettingKey (string), SlotKey (string)
-# Returns: boolean
-macro = {
     description = "True when one list field slot is data (display-only)"
     definition = "CMMListFieldIsData(SettingKey,SlotKey)"
     replace_with = "EqualTo_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_type_'), '(CFixedPoint)5')"
@@ -171,25 +139,9 @@ macro = {
 # Args: SettingKey (string), SlotKey (string)
 # Returns: boolean
 macro = {
-    description = "True when one list field has simple prefix/postfix format (has_format == 1)"
-    definition = "CMMListFieldHasSimpleFormat(SettingKey,SlotKey)"
-    replace_with = "CMMValueEqualsOne(CMMListFieldMetadataValue(SettingKey, SlotKey, '_has_format_'))"
-}
-
-# Args: SettingKey (string), SlotKey (string)
-# Returns: boolean
-macro = {
     description = "True when one list field has sign-conditional prefix/postfix format (has_format >= 2)"
     definition = "CMMListFieldHasConditionalFormat(SettingKey,SlotKey)"
     replace_with = "GreaterThan_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_has_format_'), '(CFixedPoint)1')"
-}
-
-# Args: SettingKey (string), SlotKey (string)
-# Returns: boolean
-macro = {
-    description = "True when one list field has any registered format (has_format > 0)"
-    definition = "CMMListFieldHasRegisteredFormat(SettingKey,SlotKey)"
-    replace_with = "GreaterThan_CFixedPoint(CMMListFieldMetadataValue(SettingKey, SlotKey, '_has_format_'), '(CFixedPoint)0')"
 }
 
 # Args: SettingKey (string), ItemKey (string), SlotKey (string)

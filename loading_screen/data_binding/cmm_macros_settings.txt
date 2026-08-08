@@ -107,14 +107,6 @@ macro = {
 }
 
 # Args: SettingKey (string)
-# Returns: boolean
-macro = {
-    description = "Visibility rule for one setting row"
-    definition = "CMMSettingRowVisible(SettingKey)"
-    replace_with = "And(CMMMatchesSelectedModAndTab(CMMMetadataFlag('cmm_setting_owner_mod_id_', SettingKey), CMMMetadataFlag('cmm_setting_owner_tab_key_', SettingKey)), And(CMMSettingIsRegistered(SettingKey), Or(Not(CMMHasScriptedGui(SettingKey)), CMMGuiIsShown(Concatenate(SettingKey, '_on_changed')))))"
-}
-
-# Args: SettingKey (string)
 # Returns: none
 macro = {
     description = "Execute setting on-changed scripted GUI callback"

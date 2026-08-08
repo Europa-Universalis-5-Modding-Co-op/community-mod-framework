@@ -14,14 +14,6 @@ macro = {
     replace_with = "CMMSelectedValueExists('cmm_selected_tab')"
 }
 
-# Args: GroupKey (string)
-# Returns: boolean
-macro = {
-    description = "Visibility rule for one group row"
-    definition = "CMMGroupRowVisible(GroupKey)"
-    replace_with = "CMMMatchesSelectedModAndTab(CMMMetadataFlag('cmm_group_owner_mod_id_', GroupKey), CMMMetadataFlag('cmm_group_owner_tab_key_', GroupKey))"
-}
-
 # Returns: boolean
 macro = {
     description = "True when no mods are registered yet"
@@ -34,14 +26,6 @@ macro = {
     description = "True when at least one mod is registered"
     definition = "CMMHasRegisteredMods"
     replace_with = "Not(IsDataModelEmpty(CMMHomeScope.GetList('cmm_registered_mod_ids')))"
-}
-
-# Args: ModId (string)
-# Returns: boolean
-macro = {
-    description = "Filter match for one mod row against current search text"
-    definition = "CMMModMatchesSearch(ModId)"
-    replace_with = "Or4(Not(CMMSelectedValueExists('cmm_mod_search_text')), StringIsEmpty(GetVariableSystem.Get('cmm_mod_search_text')), StringContains(CMMLocalizedSuffix(ModId, '_name'), GetVariableSystem.Get('cmm_mod_search_text')), StringContains(ModId, GetVariableSystem.Get('cmm_mod_search_text')))"
 }
 
 # Returns: boolean
