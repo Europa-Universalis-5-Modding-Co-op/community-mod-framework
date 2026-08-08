@@ -2,3 +2,5 @@
  # Internal: resolves to the current player's country debug tag at runtime.
  # Used by the country transfer widget to detect tag switches.
  CMF_PLAYER_TAG: "[GetPlayer.GetDebugTag]"
+ cmf_alerts_hidden_header: "Gizli Mod Uyarıları"
+ cmf_alerts_muted_header: "Sessize Alınmış Mod Uyarıları"
