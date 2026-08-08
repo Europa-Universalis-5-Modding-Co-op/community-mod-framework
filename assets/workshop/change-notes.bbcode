@@ -1,3 +1,28 @@
+# v2.4.0:
+- The mod menu now opens with no country selected, on the country selection lobby and in observer mode, showing your last country's values. Settings can't be changed until you have a country
+- Enable Debug Mode and the Mod Action Log stay usable without a country
+- Add cmm_register_subtab to nest a tab under another tab, drawing a second tab row beneath the main one
+- You can now click a settings group's header to collapse it, or right-click to collapse every group in the tab
+- Group headers now show how many of their settings are visible
+- Add cmm_register_list_button_field for a button column in a settings list
+- Add cmm_register_list_text_field and cmm_set_list_text_value for a display-only text column in a settings list
+- Add cmm_move_list_item to move a settings list item to a display position
+- Add cmf_log_value and cmf_log_decimal_value to log a number alongside an action
+- Add cmf_log_with_location, cmf_log_with_location_values, and cmf_log_with_building_location to log a location or a building with labelled values
+- The action bar now stays on top of other windows
+- The action bar moves above the news panel while it's expanded, and hides under a fullscreen view
+- Extend cmf_suppress to cover variable maps
+- Fix empty groups not hiding after switching countries
+- Custom alerts now stay when left-clicked by default, with a new cmf_set_alert_remove_on_click for changing it
+- Add cmf_set_alert_open_view and cmf_set_alert_open_group to open a view on alert left-click
+- Add optional <root_key>_left_click localization key for the alert left-click button text
+- Right-click now hides a custom alert and shift+right-click mutes it, like vanilla alerts
+- Hidden and muted custom alerts can be restored from the vanilla alerts menu
+- Add cmf_is_alert_hidden and cmf_is_alert_muted triggers
+- Add cmf_set_alert_open_window to open your own window on alert left-click
+- Clear custom alerts left behind by a mod that's no longer active
+- CMM Visual Editor updated to 1.3.1
+
 # v2.3.3:
 - The mod menu now opens on a default tab the first time it's opened
 - Right-click a settings list column header to apply its value to all rows
@@ -9,14 +34,6 @@
 - Add cmf_was_mod_active_at_game_start trigger to check whether a mod was active when the game was started
 - Extend cmf_suppress to cover global variables and variable lists
 - Add bom to some loc files missing it
-- Custom alerts now stay when left-clicked; use cmf_set_alert_remove_on_click for one-shot alerts
-- Add cmf_set_alert_open_view and cmf_set_alert_open_group to open a view on alert left-click
-- Add optional <root_key>_left_click localization key for the alert left-click button text
-- Right-click now hides a custom alert and shift+right-click mutes it, like vanilla alerts
-- Hidden and muted custom alerts can be restored from the vanilla alerts menu
-- Add cmf_is_alert_hidden and cmf_is_alert_muted triggers
-- Add cmf_set_alert_open_window to open your own window on alert left-click
-- Clear custom alerts left behind by a mod that's no longer active
 - Update for v1.3.10
 
 # v2.3.2:
