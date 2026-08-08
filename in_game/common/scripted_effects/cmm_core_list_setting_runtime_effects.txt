@@ -1243,6 +1243,8 @@ cmm_move_list_item = {
 # Scope: country
 # Args: setting (key), item (number), position (number), vt (variable/global_variable), lt (in/in_global)
 _cmm_move_list_item_internal = {
+	# A country interaction's effect block runs with no root.
+	save_scope_as = cmm_mv_owner
 	set_local_variable = { name = cmm_mv_found value = 0 }
 
 	every_$lt$_list = {
@@ -1273,7 +1275,7 @@ _cmm_move_list_item_internal = {
 			variable = cmm_list_items_$setting$
 			save_scope_as = cmm_mv_current_item
 
-			root = {
+			scope:cmm_mv_owner = {
 				add_to_variable_list = {
 					name = cmm_list_rebuild_temp
 					target = scope:cmm_mv_current_item
@@ -1299,7 +1301,7 @@ _cmm_move_list_item_internal = {
 							local_var:cmm_mv_inserted = 0
 						}
 					}
-					root = {
+					scope:cmm_mv_owner = {
 						add_to_$vt$_list = {
 							name = cmm_list_items_$setting$
 							target = flag:$setting$_i$item$
@@ -1308,7 +1310,7 @@ _cmm_move_list_item_internal = {
 					set_local_variable = { name = cmm_mv_inserted value = 1 }
 				}
 
-				root = {
+				scope:cmm_mv_owner = {
 					add_to_$vt$_list = {
 						name = cmm_list_items_$setting$
 						target = scope:cmm_mv_current_item
