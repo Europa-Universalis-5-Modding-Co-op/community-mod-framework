@@ -1,4 +1,4 @@
-# Reveals the CMM window a beat after it is requested open, so its list rows first
+﻿# Reveals the CMM window a beat after it is requested open, so its list rows first
 # instantiate after the deferred per-open registration has set dependent mods' hide flags.
 # datamodel_reuse_widgets leaves already-shown rows unfiltered until a manual reopen.
 widget = {

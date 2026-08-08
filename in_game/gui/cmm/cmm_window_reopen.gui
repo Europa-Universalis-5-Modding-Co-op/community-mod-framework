@@ -1,4 +1,4 @@
-# Triggered by the reset buttons to re-register and reopen the CMM window so its datamodels rebuild against the reset values.
+﻿# Triggered by the reset buttons to re-register and reopen the CMM window so its datamodels rebuild against the reset values.
 widget = {
 	name = "cmm_window_reopen"
 	size = { 0 0 }
