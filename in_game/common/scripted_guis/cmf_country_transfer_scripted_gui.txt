@@ -26,13 +26,13 @@ _cmf_on_country_transfer = {
 			}
 		}
 
-		# Re-run registration on the new country to rebuild metadata and lookup tables
+		# The on_action hop gives the pass the new country as root, which the registration
+		# chain reads throughout.
 		if = {
 			limit = { exists = scope:new_country }
 			scope:new_country = {
-				_cmm_clear_registration_pass_state = yes
 				trigger_event_silently = {
-					on_action = cmf_on_mod_registration
+					on_action = _cmf_on_country_transfer_registration
 				}
 			}
 		}

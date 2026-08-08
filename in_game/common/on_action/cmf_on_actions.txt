@@ -30,6 +30,13 @@ _cmf_on_storage_country_registration_scoped = {
 	}
 }
 
+# Scope: country (the country the player moved to)
+_cmf_on_country_transfer_registration = {
+	effect = {
+		_cmm_run_registration_pass = yes
+	}
+}
+
 # Set global presence flag for cross-mod detection.
 # Scope: global
 _cmf_on_init = {
