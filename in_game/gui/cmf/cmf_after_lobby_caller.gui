@@ -22,3 +22,17 @@ widget = {
 		on_start = "[GetScriptedGui('cmf_load_after_lobby_caller').Execute(GuiScope.End)]"
 	}
 }
+
+# Hands the host answer to script. IsHost is a client-local reading, so it travels as an argument
+# rather than as a gate on this widget: every client fires and the effect keeps only the host's.
+widget = {
+	name = "cmf_mark_host_caller"
+	size = { 0 0 }
+	datacontext = "[GetPlayer]"
+	visible = "[And(Country.IsValid, Not(IsLobbyOpen))]"
+
+	state = {
+		name = _show
+		on_start = "[GetScriptedGui('cmf_mark_host_caller').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('cmf_is_host_client', MakeScopeBool(Or(Not(GameIsMultiplayer), IsHost))).End)]"
+	}
+}

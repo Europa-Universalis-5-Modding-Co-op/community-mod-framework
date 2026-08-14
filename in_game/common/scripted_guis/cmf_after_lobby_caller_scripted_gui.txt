@@ -41,3 +41,18 @@ cmf_load_after_lobby_caller = {
 		remove_global_variable = cmf_is_new_game
 	}
 }
+
+# Records the host country, so is_host answers from the moment a game is under way instead of
+# reading false for every player until someone opens the menu. Only GUI can tell which machine is
+# the host, so every client fires this and passes its own answer; the non-host copies do nothing.
+# Scope: country
+# Args: cmf_is_host_client (bool)
+cmf_mark_host_caller = {
+	saved_scopes = { cmf_is_host_client }
+	effect = {
+		if = {
+			limit = { scope:cmf_is_host_client = yes }
+			_cmm_mark_host_country = yes
+		}
+	}
+}
