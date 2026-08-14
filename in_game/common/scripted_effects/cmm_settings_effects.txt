@@ -240,52 +240,6 @@ _cmm_sync_action_bar_button_name_from_element = {
 	}
 }
 
-# Per-item: when iterating the action-bar buttons list, if the current item is
-# the one being toggled (its ordinal matches _cmm_action_bar_change_pos), update
-# cmf_action_bar_active_elements to add or remove that element based on
-# _cmm_action_bar_change_val.
-# Scope: country
-# Args:
-# - setting (key): Composite setting key (cmf_core__action_bar_buttons).
-# - i (number): Item ordinal (1-50).
-_cmm_handle_action_bar_button_change = {
-	if = {
-		limit = {
-			$i$ = var:_cmm_action_bar_change_pos
-			NOT = { $i$ = 1 }
-		}
-		if = {
-			limit = { var:_cmm_action_bar_change_val = 1 }
-			if = {
-				limit = {
-					NOT = {
-						is_target_in_variable_list = {
-							name = cmf_action_bar_active_elements
-							target = scope:cmm_list_current_item_value
-						}
-					}
-				}
-				add_to_variable_list = {
-					name = cmf_action_bar_active_elements
-					target = scope:cmm_list_current_item_value
-				}
-			}
-		}
-		else = {
-			remove_list_variable = {
-				name = cmf_action_bar_active_elements
-				target = scope:cmm_list_current_item_value
-			}
-		}
-	}
-
-	# Accept setting param (unused here)
-	if = {
-		limit = { always = no }
-		cmf_suppress = { v = $setting$_$i$ }
-	}
-}
-
 # Handle CMM core button callbacks.
 # Scope: country
 _cmm_handle_core_callback = {

@@ -1,0 +1,97 @@
+﻿# Tests 194-198: whether every_market_present_in_country on an overlord reaches a market only a
+# subject holds. Three market sets are built on the running country - the markets its own locations
+# sit in, what the iterator reports, and the markets its subjects hold that it holds none of - and
+# compared against each other.
+#
+# Called from the run button and from the re-read button, so the answer can be taken again after a
+# tick has passed and any per-country market list the engine caches has been rebuilt.
+#
+# 197 and 198 together say the iterator is exactly the markets the country's own locations sit in.
+# An iterator that returned nothing at all would pass 196 and 197 on its own; 198 is what catches
+# that.
+# Scope: country
+
+et_mk_measure = {
+	save_temporary_scope_as = et_mk_c
+	clear_variable_map = et_mk_own
+	clear_variable_map = et_mk_it
+	clear_variable_map = et_mk_sub
+	every_owned_location = {
+		market ?= {
+			save_temporary_scope_as = et_mk_m
+			scope:et_mk_c = { add_to_variable_map = { name = et_mk_own key = scope:et_mk_m value = 1 } }
+		}
+	}
+	every_market_present_in_country = {
+		save_temporary_scope_as = et_mk_m
+		scope:et_mk_c = { add_to_variable_map = { name = et_mk_it key = scope:et_mk_m value = 1 } }
+	}
+	every_subject_or_below = {
+		every_owned_location = {
+			market ?= {
+				save_temporary_scope_as = et_mk_m
+				scope:et_mk_c = {
+					if = {
+						limit = { NOT = { is_key_in_variable_map = { name = et_mk_own target = scope:et_mk_m } } }
+						add_to_variable_map = { name = et_mk_sub key = scope:et_mk_m value = 1 }
+					}
+				}
+			}
+		}
+	}
+	# Nothing but a subject location writes et_mk_sub, so its size answers the whole guard.
+	if = {
+		limit = { variable_map_size = { name = et_mk_sub value >= 1 } }
+		set_variable = { name = et_194_passed value = 1 }
+	}
+	set_local_variable = { name = et_mk_hit value = 0 }
+	every_key_in_variable_map = {
+		variable = et_mk_sub
+		save_temporary_scope_as = et_mk_k
+		# The iterator makes the key the scope, so the second map read has to name its owner.
+		if = {
+			limit = { scope:et_mk_c = { is_key_in_variable_map = { name = et_mk_it target = scope:et_mk_k } } }
+			set_local_variable = { name = et_mk_hit value = 1 }
+		}
+	}
+	if = {
+		limit = {
+			var:et_194_passed = 1
+			local_var:et_mk_hit = 1
+		}
+		set_variable = { name = et_195_passed value = 1 }
+	}
+	if = {
+		limit = {
+			var:et_194_passed = 1
+			local_var:et_mk_hit = 0
+		}
+		set_variable = { name = et_196_passed value = 1 }
+	}
+	set_local_variable = { name = et_mk_extra value = 0 }
+	every_key_in_variable_map = {
+		variable = et_mk_it
+		save_temporary_scope_as = et_mk_k
+		if = {
+			limit = { scope:et_mk_c = { NOT = { is_key_in_variable_map = { name = et_mk_own target = scope:et_mk_k } } } }
+			set_local_variable = { name = et_mk_extra value = 1 }
+		}
+	}
+	if = {
+		limit = { local_var:et_mk_extra = 0 }
+		set_variable = { name = et_197_passed value = 1 }
+	}
+	set_local_variable = { name = et_mk_miss value = 0 }
+	every_key_in_variable_map = {
+		variable = et_mk_own
+		save_temporary_scope_as = et_mk_k
+		if = {
+			limit = { scope:et_mk_c = { NOT = { is_key_in_variable_map = { name = et_mk_it target = scope:et_mk_k } } } }
+			set_local_variable = { name = et_mk_miss value = 1 }
+		}
+	}
+	if = {
+		limit = { local_var:et_mk_miss = 0 }
+		set_variable = { name = et_198_passed value = 1 }
+	}
+}

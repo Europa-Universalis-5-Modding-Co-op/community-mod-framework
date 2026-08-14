@@ -1451,3 +1451,57 @@ cannot exist.
 
 A strait-adjacent pair is adjacent to `every_neighbor_location` but not by road,
 which is what makes both cases reachable from a plan that walks neighbours.
+
+## Markets Reported For An Overlord (194-198)
+
+Added and run 2026-08-14. Runs with the script chain (Run Script Tests), and all
+five rows are re-taken by Re-read Probe Levels.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 194 | Guard - a subject holds at least one market we hold no location in | PROBE | PASS |
+| 195 | every_market_present_in_country reports one of those subject-only markets | PROBE | FAIL |
+| 196 | ... or it reports none of them | PROBE | PASS |
+| 197 | The iterator reports nothing beyond the markets our own locations sit in | PROBE | PASS |
+| 198 | ... and it reports every one of those | PROBE | PASS |
+
+**`every_market_present_in_country` is exactly the set of markets the country's
+OWN locations sit in.** A market only a subject holds is not in it (195/196), and
+neither is anything else: 197 and 198 close the set from both sides, so the
+iterator is not merely missing subjects, it reports own-location markets and
+nothing more. The Mamluk vassal held markets Castile has no location in (194) and
+none of them came back.
+
+The question is what "present in a country" counts. The docs say only "Iterate
+through all markets in a country", and vanilla's call sites never separate the
+readings: every one of them asks whether a good is produced somewhere the country
+can reach, which a subject's market and an own market answer alike.
+
+Construction Manager bounds its Auto-Build staging to a rotating subset of the
+markets this iterator returns, and admits a location by resolving that location's
+market against the subset. So a market the iterator never reports can never enter
+the rotation, and any location in it is stranded rather than merely slow. That is
+what makes the subject case worth measuring rather than assuming.
+
+**How to read the rows.** 195 and 196 are complements and both are gated on the
+194 guard, so a good run shows exactly one of them PASS. Both FAIL means the
+setup produced no subject-only market and the pair says nothing.
+
+197 and 198 together say the iterator is exactly the set of markets the country's
+own locations sit in. 197 alone rules out anything extra, subjects included; 198
+alone rules out anything missing. An iterator that returned nothing at all would
+pass 196 and 197 on its own, and 198 is what catches that.
+
+**Setup.** Castile owns no location outside Iberia, so the run makes the Mamluks
+a vassal (`make_subject_of` with `subject_type:vassal`) to supply markets the
+overlord holds nothing in. It is skipped when they are already a subject, so a
+second press does not re-make it, and the Re-Read button never makes it at all.
+
+**Why both buttons take the measurement.** Nothing says whether the engine
+answers this iterator live off the subject list or from a per-country market list
+it rebuilds on a tick, and a read taken in the same execution as
+`make_subject_of` cannot tell a real negative from a cache that has not caught up
+yet. The 2026-08-14 run pressed Run Script Tests on 1 April, 1337 and Re-read
+Probe Levels on 1 June, 1337, and all five rows read the same both times, so the
+negative is the iterator's answer rather than a stale list. Nothing here waits on
+construction; two months is about cache refresh and is far more than that needs.

@@ -880,6 +880,11 @@ et_run_script = {
 		set_variable = { name = et_191_passed value = 0 }
 		set_variable = { name = et_192_passed value = 0 }
 		set_variable = { name = et_193_passed value = 0 }
+		set_variable = { name = et_194_passed value = 0 }
+		set_variable = { name = et_195_passed value = 0 }
+		set_variable = { name = et_196_passed value = 0 }
+		set_variable = { name = et_197_passed value = 0 }
+		set_variable = { name = et_198_passed value = 0 }
 
 		# Result: PASS
 		# -- Test 90 ---------------------------------------------
@@ -2363,6 +2368,27 @@ et_run_script = {
 			set_variable = { name = et_193_passed value = 1 }
 		}
 
+		# -- Tests 194-198: markets reported for an overlord ----
+		# Construction Manager bounds its Auto-Build staging to a rotating subset of the markets
+		# every_market_present_in_country reports, and admits a location by resolving its market
+		# against that subset. Whether the set an overlord gets back covers a market only a subject
+		# holds decides whether subject locations can ride the same rotation.
+		#
+		# Castile owns nothing outside Iberia, so the Mamluks are made a vassal to supply markets
+		# the overlord holds no location in. 194 is the guard and 195 and 196 are gated on it, so a
+		# run without a subject-only market reads FAIL on both rather than PASS on one by default.
+		save_temporary_scope_as = et_mk_ctry
+		c:MAM ?= {
+			if = {
+				limit = { NOT = { is_subject_of = scope:et_mk_ctry } }
+				make_subject_of = {
+					target = scope:et_mk_ctry
+					type = subject_type:vassal
+				}
+			}
+		}
+		et_mk_measure = yes
+
 		set_variable = { name = et_script_has_run value = 1 }
 	}
 }
@@ -2544,6 +2570,16 @@ et_run_probe_recheck = {
 			limit = { location:coruna = { has_road_to = location:ferrol } }
 			set_variable = { name = et_190_passed value = 1 }
 		}
+
+		# 194-198 again, in case the engine keeps a per-country market list it rebuilds on a tick
+		# rather than answering from the subject relationship live. The vassal is not re-made here,
+		# so this reads the same setup the run button left.
+		set_variable = { name = et_194_passed value = 0 }
+		set_variable = { name = et_195_passed value = 0 }
+		set_variable = { name = et_196_passed value = 0 }
+		set_variable = { name = et_197_passed value = 0 }
+		set_variable = { name = et_198_passed value = 0 }
+		et_mk_measure = yes
 
 		set_variable = { name = et_recheck_has_run value = 1 }
 	}
