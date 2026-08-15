@@ -885,6 +885,11 @@ et_run_script = {
 		set_variable = { name = et_196_passed value = 0 }
 		set_variable = { name = et_197_passed value = 0 }
 		set_variable = { name = et_198_passed value = 0 }
+		set_variable = { name = et_199_passed value = 0 }
+		set_variable = { name = et_200_passed value = 0 }
+		set_variable = { name = et_201_passed value = 0 }
+		set_variable = { name = et_202_passed value = 0 }
+		set_variable = { name = et_203_passed value = 0 }
 
 		# Result: PASS
 		# -- Test 90 ---------------------------------------------
@@ -2388,6 +2393,46 @@ et_run_script = {
 			}
 		}
 		et_mk_measure = yes
+
+		# -- Tests 199-203: what GetNextReplacementBuilding filters on ----
+		# The promote takes a country and all eight vanilla call sites hand it Player.Self, so the
+		# answer is country relative. That the filter is specifically that country's ADVANCE UNLOCKS
+		# is asserted in Construction Manager's classification comments with no source recorded
+		# anywhere, and this is what settles it.
+		#
+		# dock -> dry_dock is the chain: dry_dock declares obsolete = dock
+		# (in_game/common/building_types/port_buildings.txt:48 and :56) and dry_dock_advance unlocks
+		# dry_dock carrying no requires of its own
+		# (in_game/common/advances/1_building_unlocks.txt:775). Both advances are age 2 or later, so
+		# no 1337 start holds either.
+		#
+		# The base tier's own three-deep age 2 chain is granted HERE, ahead of the first read, so
+		# the base is unlocked on both sides and the replacement's advance is the only thing that
+		# moves between the two answers. The requires chain is granted too, in case
+		# research_advance enforces it.
+		clear_variable_list = et_rp_list
+		add_to_variable_list = { name = et_rp_list target = building_type:dock }
+		remove_variable = et_rp_read_1
+		remove_variable = et_rp_is_dry_1
+		remove_variable = et_rp_read_2
+		remove_variable = et_rp_is_dry_2
+		set_variable = { name = et_rp_phase value = 1 }
+
+		research_advance = advance_type:banking_advance
+		research_advance = advance_type:merchants_and_trade
+		research_advance = advance_type:dock_advance
+
+		# Test 199: the base is unlocked and the replacement is not, which is what makes the before
+		# read mean anything at all.
+		if = {
+			limit = {
+				has_advance = dock_advance
+				NOT = { has_advance = dry_dock_advance }
+			}
+			set_variable = { name = et_199_passed value = 1 }
+		}
+
+		set_variable = { name = et_rp_fire value = 1 }
 
 		set_variable = { name = et_script_has_run value = 1 }
 	}

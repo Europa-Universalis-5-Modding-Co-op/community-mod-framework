@@ -2700,6 +2700,40 @@ window = {
 			}
 
 
+			# -- Tests 199-203: what GetNextReplacementBuilding filters on ---
+			# Seeded by the run button, answered about 1.6s later by et_rp_core, so these read FAIL
+			# for a moment after the press. 199 and 202 are the guards; 200 and 201 are complements
+			# and a good run passes exactly one of them.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_199_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_199_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_199_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_200_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_200_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_200_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_201_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_201_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_201_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_202_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_202_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_202_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_203_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_203_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_203_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
 			# -- Tests 147-148: building handle round trip ---
 			# Seeded by the run button, answered about a second later by et_bt_core.
 			et_script_row = {

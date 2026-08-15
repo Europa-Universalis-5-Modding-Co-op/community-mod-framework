@@ -1,0 +1,65 @@
+﻿# Replacement-tier rig (tests 199-203). GetNextReplacementBuilding reads only in GUI, so the
+# question of what its country argument filters on can only be asked from here.
+#
+# The seed in et_run_script grants the base tier's advances, fills et_rp_list with dock and sets
+# et_rp_fire; the driver reads, grants dry_dock_advance, and reads again, so the replacement's own
+# unlock is the only thing that changes between the two answers. The driver is pinned so the gate
+# going true makes the hidden->shown edge that fires _show, and the datamodel is a statically
+# visible sibling rather than a child of it, so its item is instantiated before the first sweep.
+#
+# Every state carries an on_finish: a state reached through another's next that has none never
+# advances, and the chain behind it silently never runs.
+
+widget = {
+	name = "et_rp_core"
+	widgetid = et_rp_core
+	layer = top
+	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
+	position = { -10000 1 }
+
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And(GetPlayer.Exists, Player.MakeScope.GetVariable('et_rp_fire').IsSet)]"
+
+		state = {
+			name = _show
+			duration = 0.4
+			on_finish = "[PdxGuiTriggerAllAnimations('et_rp_read')]"
+			next = et_rp_between
+		}
+
+		state = {
+			name = et_rp_between
+			duration = 0.4
+			on_finish = "[GetScriptedGui('et_rp_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			next = et_rp_after
+		}
+
+		state = {
+			name = et_rp_after
+			duration = 0.4
+			on_finish = "[PdxGuiTriggerAllAnimations('et_rp_read')]"
+			next = et_rp_settle
+		}
+
+		state = {
+			name = et_rp_settle
+			duration = 0.4
+			on_finish = "[GetScriptedGui('et_rp_check').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+
+	widget = {
+		datamodel = "[GetPlayer.MakeScope.GetList('et_rp_list')]"
+		item = {
+			widget = {
+				datacontext = "[Scope.GetBuildingType]"
+				state = {
+					name = et_rp_read
+					on_finish = "[GetScriptedGui('et_rp_seen').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('et_rp_next', BuildingType.GetNextReplacementBuilding(Player.Self).MakeScope).End)]"
+				}
+			}
+		}
+	}
+}

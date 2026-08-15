@@ -1505,3 +1505,71 @@ yet. The 2026-08-14 run pressed Run Script Tests on 1 April, 1337 and Re-read
 Probe Levels on 1 June, 1337, and all five rows read the same both times, so the
 negative is the iterator's answer rather than a stale list. Nothing here waits on
 construction; two months is about cache refresh and is far more than that needs.
+
+## What GetNextReplacementBuilding Filters On (199-203)
+
+Added and run 2026-08-14. Runs with the script chain (Run Script Tests).
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 199 | Guard - dock is unlocked for us and dry_dock is not | PROBE | PASS |
+| 200 | Before the advance, GetNextReplacementBuilding on dock reports no dry_dock | PROBE | PASS |
+| 201 | ... or it reports dry_dock already | PROBE | FAIL |
+| 202 | Guard - research_advance granted dry_dock_advance | PROBE | PASS |
+| 203 | After the advance, GetNextReplacementBuilding on dock reports dry_dock | PROBE | PASS |
+
+**`GetNextReplacementBuilding` filters on the argument country's ADVANCE UNLOCKS.**
+With dock unlocked on both sides, it reported no replacement while
+`dry_dock_advance` was unresearched (200) and reported `dry_dock` once it was
+(203). Both guards passed and the complement failed as it should, so the pair is
+a real before-and-after rather than a read that never fired.
+
+**What this does NOT establish** is that unlocks are the ONLY filter. Government
+type, `country_potential` and the rest of a building type's own gates were never
+varied, so any of them could filter as well. What is measured is that an advance
+unlock is sufficient to change the answer.
+
+`BuildingType.GetNextReplacementBuilding( Arg0 )` is a GUI-only promote returning a
+`BuildingType`, and all eight vanilla call sites hand it `Player.Self`
+(`build_location_lateralview.gui` five, `location_window.gui` one,
+`production_lateralview.gui` two), so the answer being country relative needed no
+test. What the argument filters on did: Construction Manager's building-type
+classification asserts it is that country's unlocks, reuses a saved
+classification on every load and re-records the replacement tiers on the strength
+of it, and that assertion carried no source in either repo until this run.
+
+**The chain.** `dry_dock` declares `obsolete = dock`
+(`in_game/common/building_types/port_buildings.txt:48` and `:56`), and
+`dry_dock_advance` unlocks `dry_dock` carrying no `requires` of its own
+(`in_game/common/advances/1_building_unlocks.txt:775`). It was picked for that
+missing `requires`: one grant, no chain to reason about. `dock`'s own unlock is
+`dock_advance` <- `merchants_and_trade` <- `banking_advance`, all age 2, and
+`dry_dock_advance` is age 3, so no 1337 start holds either end.
+
+**Why the base tier's advances are granted first.** The seed researches all three
+of dock's chain BEFORE the first read. Without that, a before read returning
+nothing could be explained by the base being locked rather than the replacement,
+and the test would prove nothing. With it, the replacement's own advance is the
+only thing that moves between the two answers.
+
+**How to read the rows.** 200 and 201 are complements gated on the before read
+having fired, so a good run passes exactly one. Both failing means the read never
+fired and the pair says nothing.
+
+- 200 PASS and 203 PASS: the filter is advance unlocks. The assertion is
+  confirmed and Construction Manager's load-time upgrade-map refresh is doing
+  what its comments say.
+- 201 PASS and 203 PASS: the replacement was reported before its advance was
+  researched, so unlocks are NOT the filter. The refresh is then chasing
+  something else, and what the country argument selects on is still open.
+- 203 FAIL: inconclusive whatever 200 and 201 did. Check 202 first, since a
+  refused `research_advance` explains it without the engine being involved.
+
+**Rig.** `et_rp_windows.gui` (`et_rp_core`, registered in
+`et_scripted_widgets.txt`) holds a pinned driver and a statically visible
+datamodel sibling, the same split `et_bt_core` uses. The driver reads, Executes
+`et_rp_step` to grant `dry_dock_advance` and open phase 2, reads again, then
+Executes `et_rp_check`. Every state carries an `on_finish`, since a state reached
+through another's `next` that has none never advances and the chain behind it
+silently never runs. About 1.6s end to end, so the five rows read FAIL for a
+moment after the press.

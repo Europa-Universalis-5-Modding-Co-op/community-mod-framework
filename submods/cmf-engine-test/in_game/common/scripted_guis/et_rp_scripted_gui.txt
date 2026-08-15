@@ -1,0 +1,93 @@
+﻿# Readers for the replacement-tier rig (tests 199-203). All three are Executed from
+# et_rp_windows.gui; the seed that fills et_rp_list lives at the end of et_run_script.
+#
+# GetNextReplacementBuilding is a GUI-only promote taking a country argument, and all eight vanilla
+# call sites hand it Player.Self, so the answer is country relative. What the argument filters on is
+# the open question: it is asserted to be what that country has UNLOCKED, with no source recorded
+# anywhere, and the whole rig exists to settle that.
+
+# Records what one read returned. Fires twice, once per phase, and stores the phase's answer as two
+# flags rather than the building type itself: the comparison against dry_dock is cheaper to make
+# here, where the scope is already in hand, than to make later from a stored scope.
+# et_rp_read_N is set whether or not a replacement came back, which is what separates a read that
+# returned nothing from a read that never fired.
+et_rp_seen = {
+	scope = country
+	saved_scopes = { et_rp_next }
+
+	effect = {
+		if = {
+			limit = { var:et_rp_phase = 1 }
+			set_variable = { name = et_rp_read_1 value = 1 }
+			if = {
+				limit = {
+					exists = scope:et_rp_next
+					scope:et_rp_next = building_type:dry_dock
+				}
+				set_variable = { name = et_rp_is_dry_1 value = 1 }
+			}
+		}
+		else = {
+			set_variable = { name = et_rp_read_2 value = 1 }
+			if = {
+				limit = {
+					exists = scope:et_rp_next
+					scope:et_rp_next = building_type:dry_dock
+				}
+				set_variable = { name = et_rp_is_dry_2 value = 1 }
+			}
+		}
+	}
+}
+
+# Runs between the two reads: grants the replacement's own advance and opens phase 2. The base
+# tier's advances were granted before the first read, so this is the only thing that moves between
+# them.
+et_rp_step = {
+	scope = country
+
+	effect = {
+		research_advance = advance_type:dry_dock_advance
+
+		# Test 202: the grant took. Without it the after read says nothing at all.
+		if = {
+			limit = { has_advance = dry_dock_advance }
+			set_variable = { name = et_202_passed value = 1 }
+		}
+
+		set_variable = { name = et_rp_phase value = 2 }
+	}
+}
+
+# Compares the two reads.
+et_rp_check = {
+	scope = country
+
+	effect = {
+		# Tests 200 and 201 are complements gated on the before read having fired, so a good run
+		# passes exactly one of them: either dock reported no dry_dock while dry_dock_advance was
+		# unresearched, or it reported it already. Both failing means the read never fired and the
+		# pair says nothing.
+		if = {
+			limit = { exists = var:et_rp_read_1 }
+			if = {
+				limit = { NOT = { exists = var:et_rp_is_dry_1 } }
+				set_variable = { name = et_200_passed value = 1 }
+			}
+			else = {
+				set_variable = { name = et_201_passed value = 1 }
+			}
+		}
+
+		# Test 203: once the advance is in, dock reports dry_dock.
+		if = {
+			limit = {
+				exists = var:et_rp_read_2
+				exists = var:et_rp_is_dry_2
+			}
+			set_variable = { name = et_203_passed value = 1 }
+		}
+
+		remove_variable = et_rp_fire
+	}
+}
