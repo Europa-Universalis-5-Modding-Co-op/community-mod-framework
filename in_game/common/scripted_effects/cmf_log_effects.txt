@@ -54,6 +54,15 @@ cmf_log_decimal_value = {
 	_cmf_log_core_decimal_value = { action = $action$ value = $value$ }
 }
 
+# Log an action with a location and no value.
+# Entry text renders as: [action] [location]
+# Scope: country (the actor performing the action)
+# Requires: scope:cmf_log_loc saved before calling.
+# Args: action (flag) - localization key for the action text
+cmf_log_at_location = {
+	_cmf_log_core_at_location = { action = $action$ }
+}
+
 # Log an action with a location and one labelled numeric value.
 # Entry text renders as: [action] [location] [arg1] [value] (the value is shown with two decimals).
 # Scope: country (the actor performing the action)
@@ -229,6 +238,38 @@ _cmf_log_core_decimal_value = {
 	if = {
 		limit = { always = no }
 		cmf_suppress = { v = $action$ }
+	}
+}
+
+# Internal: log core for a location with no value.
+# Scope: country (the actor)
+# Requires: scope:cmf_log_loc saved before calling.
+# Args: action (flag)
+_cmf_log_core_at_location = {
+	save_scope_as = _cmf_log_actor
+
+	if = {
+		limit = { NOT = { has_global_variable = cmf_log_count } }
+		set_global_variable = { name = cmf_log_count value = 0 }
+	}
+
+	if = {
+		limit = { global_var:cmf_log_count < 200 }
+		_cmf_log_select_key = yes
+		add_to_global_variable_map = { name = cmf_log_action key = scope:_cmf_log_key value = flag:$action$ }
+		add_to_global_variable_map = { name = cmf_log_actor key = scope:_cmf_log_key value = scope:_cmf_log_actor }
+		add_to_global_variable_map = { name = cmf_log_arg_mode key = scope:_cmf_log_key value = 7 }
+		add_to_global_variable_map = { name = cmf_log_arg1 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
+		add_to_global_variable_map = { name = cmf_log_arg2 key = scope:_cmf_log_key value = flag:_cmf_log_no_arg }
+		add_to_global_variable_map = { name = cmf_log_loc key = scope:_cmf_log_key value = scope:cmf_log_loc }
+		add_to_global_variable_map = { name = cmf_log_num key = scope:_cmf_log_key value = 0 }
+		change_global_variable = { name = cmf_log_count add = 1 }
+	}
+
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = $action$ }
+		cmf_suppress = { v = cmf_log_loc }
 	}
 }
 

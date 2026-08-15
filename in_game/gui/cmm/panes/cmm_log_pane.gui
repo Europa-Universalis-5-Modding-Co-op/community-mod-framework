@@ -134,8 +134,18 @@
 			autoresize = no
 			fontsize_min = 11
 			align = left|vcenter
-			visible = "[And(Not(CMFLogIsLocationValuesEntry(PdxGuiWidget.GetIndexInDataModel)), And(Not(CMFLogIsBuildingLocationEntry(PdxGuiWidget.GetIndexInDataModel)), And(Not(CMFLogIsLocationEntry(PdxGuiWidget.GetIndexInDataModel)), Not(CMFLogIsDecimalValueEntry(PdxGuiWidget.GetIndexInDataModel)))))]"
+			visible = "[And(Not(CMFLogIsAtLocationEntry(PdxGuiWidget.GetIndexInDataModel)), And(Not(CMFLogIsLocationValuesEntry(PdxGuiWidget.GetIndexInDataModel)), And(Not(CMFLogIsBuildingLocationEntry(PdxGuiWidget.GetIndexInDataModel)), And(Not(CMFLogIsLocationEntry(PdxGuiWidget.GetIndexInDataModel)), Not(CMFLogIsDecimalValueEntry(PdxGuiWidget.GetIndexInDataModel))))))]"
 			text = "[CMFLogEntryText(PdxGuiWidget.GetIndexInDataModel)]"
+		}
+
+		# No decimal in this entry, so it needs none of the fixed columns the rows below use.
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			autoresize = no
+			fontsize_min = 11
+			align = left|vcenter
+			visible = "[CMFLogIsAtLocationEntry(PdxGuiWidget.GetIndexInDataModel)]"
+			text = "[CMFLogAtLocationText(PdxGuiWidget.GetIndexInDataModel)]"
 		}
 
 		# Every piece of these rows is a fixed column carrying autoresize = no and fontsize_min, the

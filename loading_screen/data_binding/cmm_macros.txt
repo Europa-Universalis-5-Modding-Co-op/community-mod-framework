@@ -424,6 +424,22 @@ macro = {
 # Args: Index (int32)
 # Returns: boolean
 macro = {
+    description = "True when a log entry carries a location and no value (arg mode 7)"
+    definition = "CMFLogIsAtLocationEntry(Index)"
+    replace_with = "EqualTo_CFixedPoint(GetVariableFromGlobalVariableMap('cmf_log_arg_mode', CMFLogKey(Index)).GetValue, '(CFixedPoint)7')"
+}
+
+# Args: Index (int32)
+# Returns: string
+macro = {
+    description = "Text of a location log entry that carries no value: action then location"
+    definition = "CMFLogAtLocationText(Index)"
+    replace_with = "Concatenate(Concatenate(CMFLogAction(Index), ' '), GetVariableFromGlobalVariableMap('cmf_log_loc', CMFLogKey(Index)).GetLocation.GetName)"
+}
+
+# Args: Index (int32)
+# Returns: boolean
+macro = {
     description = "True when a log entry carries a location and three labelled values (arg mode 6)"
     definition = "CMFLogIsLocationValuesEntry(Index)"
     replace_with = "EqualTo_CFixedPoint(GetVariableFromGlobalVariableMap('cmf_log_arg_mode', CMFLogKey(Index)).GetValue, '(CFixedPoint)6')"
