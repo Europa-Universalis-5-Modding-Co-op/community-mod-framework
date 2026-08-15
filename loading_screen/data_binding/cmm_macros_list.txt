@@ -320,6 +320,46 @@ macro = {
     replace_with = "Not(CMMListItemFieldIsDisabled(ItemKey, SlotKey))"
 }
 
+# Args: ItemKey (string), SlotKey (string)
+# Returns: variable
+macro = {
+    description = "Button field tab target map entry for one list item slot"
+    definition = "CMMListItemButtonTabVar(ItemKey,SlotKey)"
+    replace_with = "CMMHomeScope.GetVariableFromVariableMap('cmm_list_button_tab', MakeScopeFlag(Concatenate(ItemKey, Concatenate('_f', SlotKey))))"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: boolean
+macro = {
+    description = "True when one list item button field opens a tab"
+    definition = "CMMListItemButtonOpensTab(ItemKey,SlotKey)"
+    replace_with = "CMMListItemButtonTabVar(ItemKey, SlotKey).IsSet"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Tab key one list item button field opens"
+    definition = "CMMListItemButtonTab(ItemKey,SlotKey)"
+    replace_with = "CMMListItemButtonTabVar(ItemKey, SlotKey).GetFlagName"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Settings-bearing tab key one list item button field opens, resolving a tab with sub-tabs to the sub-tab it opens on"
+    definition = "CMMListItemButtonTabLeaf(ItemKey,SlotKey)"
+    replace_with = "CMMTabLeaf(CMMListItemButtonTab(ItemKey, SlotKey))"
+}
+
+# Args: ItemKey (string), SlotKey (string)
+# Returns: string
+macro = {
+    description = "Variable system key recording a list item button's tab as its parent's open sub-tab, falling back to the selected tab key itself when that tab has no parent to remember it"
+    definition = "CMMListItemButtonSubTabKey(ItemKey,SlotKey)"
+    replace_with = "Select_CString(CMMTabHasParent(CMMListItemButtonTabLeaf(ItemKey, SlotKey)), Concatenate(CMMTabParent(CMMListItemButtonTabLeaf(ItemKey, SlotKey)), '_lsub'), 'cmm_selected_tab')"
+}
+
 # Args: ItemKey (string)
 # Returns: boolean
 macro = {

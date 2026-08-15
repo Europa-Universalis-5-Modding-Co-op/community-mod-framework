@@ -725,6 +725,53 @@ cmm_enable_list_field_for_item = {
 	}
 }
 
+# Open one tab when one specific item's button field is pressed.
+# The button selects the tab instead of reporting the press to the list's `_on_changed`.
+# Naming a tab that has sub-tabs opens the sub-tab it opens on.
+# Call after the field has been registered (cmm_register_list_button_field).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Button field id to give a target.
+# - item (number): Item ordinal to give a target (`1..item_count`).
+# - tab_id (key): Tab id within the mod to open.
+cmm_set_list_button_open_tab = {
+	if = {
+		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = { add_to_variable_map = { name = cmm_list_button_tab key = flag:$mod_id$__$setting_id$_i$item$_f1 value = flag:$mod_id$__$tab_id$ } }
+			2 = { add_to_variable_map = { name = cmm_list_button_tab key = flag:$mod_id$__$setting_id$_i$item$_f2 value = flag:$mod_id$__$tab_id$ } }
+			3 = { add_to_variable_map = { name = cmm_list_button_tab key = flag:$mod_id$__$setting_id$_i$item$_f3 value = flag:$mod_id$__$tab_id$ } }
+			4 = { add_to_variable_map = { name = cmm_list_button_tab key = flag:$mod_id$__$setting_id$_i$item$_f4 value = flag:$mod_id$__$tab_id$ } }
+			5 = { add_to_variable_map = { name = cmm_list_button_tab key = flag:$mod_id$__$setting_id$_i$item$_f5 value = flag:$mod_id$__$tab_id$ } }
+		}
+	}
+}
+
+# Drop one item's button field tab target, returning it to a button that reports its press.
+# Reverses cmm_set_list_button_open_tab.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Button field id to clear.
+# - item (number): Item ordinal to clear (`1..item_count`).
+cmm_clear_list_button_open_tab = {
+	if = {
+		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = { remove_from_variable_map = { name = cmm_list_button_tab key = flag:$mod_id$__$setting_id$_i$item$_f1 } }
+			2 = { remove_from_variable_map = { name = cmm_list_button_tab key = flag:$mod_id$__$setting_id$_i$item$_f2 } }
+			3 = { remove_from_variable_map = { name = cmm_list_button_tab key = flag:$mod_id$__$setting_id$_i$item$_f3 } }
+			4 = { remove_from_variable_map = { name = cmm_list_button_tab key = flag:$mod_id$__$setting_id$_i$item$_f4 } }
+			5 = { remove_from_variable_map = { name = cmm_list_button_tab key = flag:$mod_id$__$setting_id$_i$item$_f5 } }
+		}
+	}
+}
+
 # Hide one item row in a list setting so it does not render in the menu.
 # The item still exists in the datamodel and is still iterated by cmm_for_each_list_item.
 # Call after the list has been registered (e.g. cmm_register_settings_list).

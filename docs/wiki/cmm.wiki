@@ -299,6 +299,19 @@ cmm_disable_list_field_for_item = {
 </syntaxhighlight>
 Call after registering the field. Right-click "apply to all" skips disabled items. Use <code>cmm_enable_list_field_for_item</code> with the same parameters to re-enable.
 
+=== Opening a Tab From a Button Field ===
+Make one item's button field open a tab instead of reporting its press:
+<syntaxhighlight lang="text">
+cmm_set_list_button_open_tab = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = settings
+	item = 1
+	tab_id = alpha
+}
+</syntaxhighlight>
+Call after registering the button field. Naming a tab that has sub-tabs opens the sub-tab it opens on. Use <code>cmm_clear_list_button_open_tab</code> with the same parameters to give the item back an ordinary press.
+
 === Hiding Specific Items ===
 Hide entire item rows from the menu (items remain in the datamodel):
 <syntaxhighlight lang="text">

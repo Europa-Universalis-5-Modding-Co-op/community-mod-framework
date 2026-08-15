@@ -23,6 +23,7 @@ _cmm_init_variable_maps = {
 	add_to_variable_map = { name = cmm_requires_unrestricted_tools_enabled key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_list_field_disabled key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_list_item_hidden key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_list_button_tab key = flag:cmm_init value = flag:cmm_init }
 	add_to_variable_map = { name = cmm_setting_owner_mod key = flag:cmm_init value = flag:cmm_init }
 	add_to_variable_map = { name = cmm_list_field_default key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_list_field_default_pending key = flag:cmm_init value = 0 }
@@ -68,6 +69,7 @@ _cmm_init_variable_maps = {
 			has_variable_map = cmm_requires_unrestricted_tools_enabled
 			has_variable_map = cmm_list_field_disabled
 			has_variable_map = cmm_list_item_hidden
+			has_variable_map = cmm_list_button_tab
 			has_variable_map = cmm_setting_owner_mod
 			has_variable_map = cmm_list_field_default
 			has_variable_map = cmm_list_field_default_pending
@@ -97,8 +99,8 @@ _cmm_init_variable_maps = {
 # default set after registration drive the initial value; the loc/format stores let
 # those config effects apply before or after registration. Clearing each pass keeps
 # loc/format reverting to field-id defaults when a mod stops asserting them. Item
-# hidden, field disabled, and sub-tab parent state clears each pass too; mods
-# re-assert it during registration.
+# hidden, field disabled, button tab target, and sub-tab parent state clears each
+# pass too; mods re-assert it during registration.
 # Scope: country
 _cmm_clear_registration_pass_state = {
 	clear_variable_list = cmm_list_field_seeded_this_pass
@@ -106,6 +108,7 @@ _cmm_clear_registration_pass_state = {
 	clear_variable_map = cmm_list_field_loc_key_pending
 	clear_variable_map = cmm_list_field_format_pending
 	clear_variable_map = cmm_list_item_hidden
+	clear_variable_map = cmm_list_button_tab
 	clear_variable_map = cmm_list_field_disabled
 	clear_variable_map = cmm_tab_parent
 	clear_variable_map = cmm_tab_default_child
@@ -113,6 +116,7 @@ _cmm_clear_registration_pass_state = {
 	add_to_variable_map = { name = cmm_list_field_loc_key_pending key = flag:cmm_init value = flag:cmm_init }
 	add_to_variable_map = { name = cmm_list_field_format_pending key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_list_item_hidden key = flag:cmm_init value = 0 }
+	add_to_variable_map = { name = cmm_list_button_tab key = flag:cmm_init value = flag:cmm_init }
 	add_to_variable_map = { name = cmm_list_field_disabled key = flag:cmm_init value = 0 }
 	add_to_variable_map = { name = cmm_tab_parent key = flag:cmm_init value = flag:cmm_init }
 	add_to_variable_map = { name = cmm_tab_default_child key = flag:cmm_init value = flag:cmm_init }

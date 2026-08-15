@@ -381,6 +381,19 @@ cmf_feature_test_register_cmf_mod = {
 		field_id = weight
 	}
 
+	# Button field opening a tab per item: three plain sub-tabs, a tab with sub-tabs
+	# (resolving to the sub-tab it opens on), and a tab with no sub-tabs.
+	cmm_register_list_button_field = {
+		mod_id = cmf_feature_test
+		setting_id = ordered_list
+		field_id = goto
+	}
+	cmm_set_list_button_open_tab = { mod_id = cmf_feature_test setting_id = ordered_list field_id = goto item = 1 tab_id = subtab_values }
+	cmm_set_list_button_open_tab = { mod_id = cmf_feature_test setting_id = ordered_list field_id = goto item = 2 tab_id = subtab_toggles }
+	cmm_set_list_button_open_tab = { mod_id = cmf_feature_test setting_id = ordered_list field_id = goto item = 3 tab_id = subtab_sliders }
+	cmm_set_list_button_open_tab = { mod_id = cmf_feature_test setting_id = ordered_list field_id = goto item = 4 tab_id = subtabs }
+	cmm_set_list_button_open_tab = { mod_id = cmf_feature_test setting_id = ordered_list field_id = goto item = 5 tab_id = settings }
+
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 1 value = root }
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 2 value = root }
 	cmm_set_list_item_value = { mod_id = cmf_feature_test setting_id = ordered_list item = 3 value = root }

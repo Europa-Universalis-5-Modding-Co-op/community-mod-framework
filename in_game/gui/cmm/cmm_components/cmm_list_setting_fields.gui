@@ -1425,22 +1425,26 @@
 		}
 	}
 
-	# Ordered list button field control firing a single per-row press.
+	# Ordered list button field control, either reporting a per-row press or opening a tab.
 	# Reads:
 	# - Scope.GetFlagName [string]: current ordered list item key.
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel.
 	# - GetVariableSystem.Get('cmm_list_hover_field_slot') [string]: cached hovered field slot for nested button actions.
+	# - CMMListItemButtonOpensTab [boolean]: whether this row's button carries a tab target.
 	# Writes:
 	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: marks the hovered row position.
 	# - GetScriptedGui('CMM_MarkListFieldSlot_<slot>').Execute(...) [effect]: marks the clicked field slot.
 	# - GetScriptedGui('CMM_MarkListButtonPress').Execute(...) [effect]: marks a button-field press.
 	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
+	# - GetVariableSystem.Set('cmm_selected_tab') [string]: selects the tab a targeted button opens.
+	# - GetVariableSystem.Set('<mod_id>__<parent_tab_id>_lsub') [string]: records that tab as its parent's open sub-tab.
 	type cmm_list_setting_button_field = widget {
 		size = { 100 28 }
 		minimumsize = { 100 28 }
 
 		button_regular = {
-			size = { -1 24 }
+			visible = "[Not(CMMListItemButtonOpensTab(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+			size = { 100% 24 }
 			parentanchor = center
 			widgetanchor = center
 			text = "[CMMListFieldButtonText(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
@@ -1455,6 +1459,24 @@
 			onclick = "[CMMExecuteGui('CMM_MarkListButtonPress')]"
 			onclick = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 			onclick = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
+		}
+
+		# Selecting a tab is client-local, so a targeted button reports no press and keeps
+		# working without a player country, where a scripted GUI Execute would be dropped.
+		button_regular = {
+			visible = "[CMMListItemButtonOpensTab(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			size = { 100% 24 }
+			parentanchor = center
+			widgetanchor = center
+			text = "[CMMListFieldButtonText(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			tagtooltip_enabled = yes
+			tooltip = "[CMMListFieldDescText(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			tooltip_enabled = "[CMMListFieldHasDesc(CMMListItemOwnerSettingKey(Scope.GetFlagName), ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel)))]"
+			tooltipwidget = {
+				BasicFunctionalTooltip = {}
+			}
+			onclick = "[GetVariableSystem.Set('cmm_selected_tab', CMMListItemButtonTabLeaf(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
+			onclick = "[GetVariableSystem.Set(CMMListItemButtonSubTabKey(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))), CMMListItemButtonTabLeaf(Scope.GetFlagName, ToString_int32(CMMWidgetIndexToOrdinal(PdxGuiWidget.GetIndexInDataModel))))]"
 		}
 	}
 

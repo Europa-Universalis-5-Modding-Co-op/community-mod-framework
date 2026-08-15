@@ -159,7 +159,7 @@
  cmf_feature_test__lists_name: "Lists"
  ## Ordered List (ordered_list) Group
  cmf_feature_test__lists__ordered_list_name: "Ordered List"
- cmf_feature_test__lists__ordered_list_desc: "Static ordered list with 5 items, 3 fields, and item values."
+ cmf_feature_test__lists__ordered_list_desc: "Static ordered list with 5 items, 4 fields, and item values."
  cmf_feature_test__ordered_list_item_column_name: "Item"
  cmf_feature_test__ordered_list_i1_name: "Alpha"
  cmf_feature_test__ordered_list_i2_name: "Beta"
@@ -179,6 +179,9 @@
  cmf_feature_test__ordered_list__weight_postfix_high: "#!"
  cmf_feature_test__ordered_list__weight_prefix_low: "#R "
  cmf_feature_test__ordered_list__weight_postfix_low: "#!"
+ cmf_feature_test__ordered_list__goto_name: "Go To"
+ cmf_feature_test__ordered_list__goto_desc: "Open the tab this item points at."
+ cmf_feature_test__ordered_list__goto_text: "Open"
  ## Unordered List (unordered_list) Group
  cmf_feature_test__lists__unordered_list_name: "Unordered List"
  cmf_feature_test__lists__unordered_list_desc: "Static unordered list with 3 items and 3 fields."
