@@ -1,4 +1,9 @@
-﻿widget = {
+﻿# Host-gated: a scripted GUI Execute reaches every machine, so one client firing is enough, and the
+# new-game branch consumes a one-shot flag that a second caller would take the load path on.
+
+# trigger_on_create fires regardless of visible, which is what lets this run at the country
+# selection screen, so the host answer travels as an argument instead of gating the widget.
+widget = {
 	name = "cmf_after_lobby_caller"
 	size = { 0 0 }
 	datacontext = "[GetPlayer]"
@@ -7,7 +12,7 @@
 	state = {
 		name = cmf_after_lobby_caller
 		trigger_on_create = yes
-		on_start = "[GetScriptedGui('cmf_after_lobby_caller').Execute(GuiScope.End)]"
+		on_start = "[GetScriptedGui('cmf_after_lobby_caller').Execute(GuiScope.AddScope('cmf_is_host_client', MakeScopeBool(Or(Not(GameIsMultiplayer), IsHost))).End)]"
 	}
 }
 
@@ -15,7 +20,8 @@ widget = {
 	name = "cmf_load_after_lobby_caller"
 	size = { 0 0 }
 	datacontext = "[GetPlayer]"
-	visible = "[And(Country.IsValid, Not(IsLobbyOpen))]"
+	visible_at_creation = no
+	visible = "[And3(Country.IsValid, Not(IsLobbyOpen), Or(Not(GameIsMultiplayer), IsHost))]"
 
 	state = {
 		name = _show
@@ -23,16 +29,15 @@ widget = {
 	}
 }
 
-# Hands the host answer to script. IsHost is a client-local reading, so it travels as an argument
-# rather than as a gate on this widget: every client fires and the effect keeps only the host's.
 widget = {
 	name = "cmf_mark_host_caller"
 	size = { 0 0 }
 	datacontext = "[GetPlayer]"
-	visible = "[And(Country.IsValid, Not(IsLobbyOpen))]"
+	visible_at_creation = no
+	visible = "[And3(Country.IsValid, Not(IsLobbyOpen), Or(Not(GameIsMultiplayer), IsHost))]"
 
 	state = {
 		name = _show
-		on_start = "[GetScriptedGui('cmf_mark_host_caller').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('cmf_is_host_client', MakeScopeBool(Or(Not(GameIsMultiplayer), IsHost))).End)]"
+		on_start = "[GetScriptedGui('cmf_mark_host_caller').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 	}
 }

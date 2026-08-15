@@ -111,302 +111,310 @@ types cmf_action_bar {
                         )
                     )]"
 
+                    # Each colour branch below reads this instead of localizing the key itself, which
+                    # one of them would do on every frame.
+                    state = {
+                        name = cmf_cache_action_bar_color
+                        trigger_on_create = yes
+                        on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_abclr'), Localize(Concatenate(Scope.GetFlagName, '_color')))]"
+                    }
+
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'blue')]"
                         blockoverride "base_color" {
                             using = color_blue_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'bone')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'bone')]"
                         blockoverride "base_color" {
                             using = color_bone_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'brown_leather')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'brown_leather')]"
                         blockoverride "base_color" {
                             using = color_brown_leather_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'intense_bg_blue')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'intense_bg_blue')]"
                         blockoverride "base_color" {
                             using = color_intense_bg_blue_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'dark_turquoise')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'dark_turquoise')]"
                         blockoverride "base_color" {
                             using = color_dark_turquoise_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'gold')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'gold')]"
                         blockoverride "base_color" {
                             using = color_gold_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'gold_dark')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'gold_dark')]"
                         blockoverride "base_color" {
                             using = color_gold_dark_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'grey')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'grey')]"
                         blockoverride "base_color" {
                             using = color_grey_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'intense_brown')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'intense_brown')]"
                         blockoverride "base_color" {
                             using = color_intense_brown_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'light_blue')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'light_blue')]"
                         blockoverride "base_color" {
                             using = color_light_blue_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'bronze')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'bronze')]"
                         blockoverride "base_color" {
                             using = color_bronze_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'silver')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'silver')]"
                         blockoverride "base_color" {
                             using = color_silver_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'super_dark_brown')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'super_dark_brown')]"
                         blockoverride "base_color" {
                             using = color_super_dark_brown_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'light_green')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'light_green')]"
                         blockoverride "base_color" {
                             using = color_light_green_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_blue')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'mid_blue')]"
                         blockoverride "base_color" {
                             using = color_mid_blue_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_green')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'mid_green')]"
                         blockoverride "base_color" {
                             using = color_mid_green_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'low_green')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'low_green')]"
                         blockoverride "base_color" {
                             using = color_low_green_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_light_green')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'mid_light_green')]"
                         blockoverride "base_color" {
                             using = color_mid_light_green_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_red')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'mid_red')]"
                         blockoverride "base_color" {
                             using = color_mid_red_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'new_gold')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'new_gold')]"
                         blockoverride "base_color" {
                             using = color_new_gold_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'paper')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'paper')]"
                         blockoverride "base_color" {
                             using = color_paper_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'light_paper')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'light_paper')]"
                         blockoverride "base_color" {
                             using = color_light_paper_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'progress_blue')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'progress_blue')]"
                         blockoverride "base_color" {
                             using = color_progress_blue_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'red')]"
                         blockoverride "base_color" {
                             using = color_red_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'dark_red')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'dark_red')]"
                         blockoverride "base_color" {
                             using = color_dark_red_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'light_red')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'light_red')]"
                         blockoverride "base_color" {
                             using = color_light_red_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'desat_red')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'desat_red')]"
                         blockoverride "base_color" {
                             using = color_desat_red_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'turquoise')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'turquoise')]"
                         blockoverride "base_color" {
                             using = color_turquoise_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'white')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'white')]"
                         blockoverride "base_color" {
                             using = color_white_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'yellow')]"
                         blockoverride "base_color" {
                             using = color_yellow_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_yellow')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'mid_yellow')]"
                         blockoverride "base_color" {
                             using = color_mid_yellow_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_orange')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'mid_orange')]"
                         blockoverride "base_color" {
                             using = color_mid_orange_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'purple')]"
                         blockoverride "base_color" {
                             using = color_purple_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple_02')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'purple_02')]"
                         blockoverride "base_color" {
                             using = color_purple_02_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'mid_purple')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'mid_purple')]"
                         blockoverride "base_color" {
                             using = color_mid_purple_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'dark_purple')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'dark_purple')]"
                         blockoverride "base_color" {
                             using = color_dark_purple_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'greyish')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'greyish')]"
                         blockoverride "base_color" {
                             using = color_greyish_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'whiteish')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'whiteish')]"
                         blockoverride "base_color" {
                             using = color_whiteish_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'raw_paper')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'raw_paper')]"
                         blockoverride "base_color" {
                             using = color_raw_paper_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'wood_brown')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'wood_brown')]"
                         blockoverride "base_color" {
                             using = color_wood_brown_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'dark_green')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'dark_green')]"
                         blockoverride "base_color" {
                             using = color_dark_green_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'muztard')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'muztard')]"
                         blockoverride "base_color" {
                             using = color_muztard_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'tool_blue')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'tool_blue')]"
                         blockoverride "base_color" {
                             using = color_tool_blue_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'market_green')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'market_green')]"
                         blockoverride "base_color" {
                             using = color_market_green_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'market_blue')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'market_blue')]"
                         blockoverride "base_color" {
                             using = color_market_blue_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'market_red')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'market_red')]"
                         blockoverride "base_color" {
                             using = color_market_red_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'market_grey')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'market_grey')]"
                         blockoverride "base_color" {
                             using = color_market_grey_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'enemy_red')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'enemy_red')]"
                         blockoverride "base_color" {
                             using = color_enemy_red_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'allied_blue')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'allied_blue')]"
                         blockoverride "base_color" {
                             using = color_allied_blue_texture
                         }
                     }
                     cmf_action_bar_button = {
-                        visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'default_brown')]"
+                        visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_abclr'), 'default_brown')]"
                         blockoverride "base_color" {
                             using = color_default_brown_texture
                         }

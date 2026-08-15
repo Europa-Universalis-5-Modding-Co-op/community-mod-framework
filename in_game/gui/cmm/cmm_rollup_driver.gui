@@ -1,6 +1,6 @@
 ﻿# Keeps the empty-container rollup current while the menu is open. One probe per
-# conditional setting mirrors its is_shown into cmm_setting_shown and rebuilds the
-# rollup whenever the two disagree, so empty groups, tabs, and mods hide live.
+# conditional setting mirrors its is_shown into cmm_setting_shown whenever the two
+# disagree, so empty groups, tabs, and mods hide live.
 # The probes are gated on cmm_window_ready, which is set only after the open-gate has
 # finished rebuilding cmm_conditional_setting_keys, so the items instantiate cleanly.
 # See cmm_core_rollup_effects.txt and cmm_core_rollup_scripted_gui.txt.
@@ -21,14 +21,28 @@ widget = {
 					name = cmm_rollup_probe_init
 					trigger_on_create = yes
 					on_start = "[CMMRollupMarkSetting(Scope.GetFlagName)]"
+					on_start = "[PdxGuiTriggerAllAnimations('cmm_rollup_settle')]"
 				}
 
 				state = {
 					name = cmm_rollup_probe_changed
 					trigger_when = "[Not(CMMRollupRecordIsCurrent(Scope.GetFlagName))]"
 					on_start = "[CMMRollupMarkSetting(Scope.GetFlagName)]"
+					on_start = "[PdxGuiTriggerAllAnimations('cmm_rollup_settle')]"
 				}
 			}
+		}
+	}
+
+	# Every probe marks its own setting, so the rebuild is deferred a frame and a whole burst of
+	# marks costs one rebuild instead of one each.
+	widget = {
+		size = { 0 0 }
+
+		state = {
+			name = cmm_rollup_settle
+			duration = 0.001
+			on_finish = "[GetScriptedGui('CMM_RecomputeRollup').Execute(GuiScope.SetRoot(CMMHomeScope).End)]"
 		}
 	}
 }

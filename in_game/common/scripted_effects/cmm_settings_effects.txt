@@ -27,17 +27,14 @@ _cmm_register_menu_settings = {
 		default_value = 0
 	}
 
-	# Debug mode is singleplayer-only (console command does not work in multiplayer)
-	if = {
-		limit = { has_multiple_players = no }
-		cmm_register_global_bool_setting = {
-			mod_id = cmf_core
-			setting_id = enable_debug_mode
-			tab_id = general
-			group_id = session
-			default_value = 0
-		}
+	cmm_register_global_bool_setting = {
+		mod_id = cmf_core
+		setting_id = enable_debug_mode
+		tab_id = general
+		group_id = session
+		default_value = 0
 	}
+	cmm_add_scripted_gui = { mod_id = cmf_core setting_id = enable_debug_mode }
 
 	cmm_register_button_setting = {
 		mod_id = cmf_core

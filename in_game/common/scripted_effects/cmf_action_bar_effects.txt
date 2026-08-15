@@ -92,6 +92,10 @@ _cmf_prune_stale_action_bar_elements = {
             name = cmf_action_bar_elements
             target = scope:_cmf_ab_element
         }
+        remove_list_global_variable = {
+            name = _cmf_action_bar_sgui_marked
+            target = scope:_cmf_ab_element
+        }
         remove_from_global_variable_map = { name = cmf_action_bar_element_name key = scope:_cmf_ab_element }
         every_country = {
             remove_list_variable = {
@@ -101,6 +105,8 @@ _cmf_prune_stale_action_bar_elements = {
             remove_from_variable_map = { name = cmf_has_sgui key = scope:_cmf_ab_element }
         }
     }
+
+    # Only elements still carrying a set flag need zeroing; cmf_has_sgui persists in the save.
     every_in_global_list = {
         variable = cmf_action_bar_elements
         save_scope_as = _cmf_ab_element
@@ -112,6 +118,14 @@ _cmf_prune_stale_action_bar_elements = {
                         target = scope:_cmf_ab_element
                     }
                 }
+                is_target_in_global_variable_list = {
+                    name = _cmf_action_bar_sgui_marked
+                    target = scope:_cmf_ab_element
+                }
+            }
+            remove_list_global_variable = {
+                name = _cmf_action_bar_sgui_marked
+                target = scope:_cmf_ab_element
             }
             every_country = {
                 add_to_variable_map = { name = cmf_has_sgui key = scope:_cmf_ab_element value = 0 }
@@ -131,4 +145,5 @@ _cmf_prune_stale_action_bar_elements = {
     cmf_suppress = { v = cmf_has_sgui }
     cmf_suppress = { v = _cmf_action_bar_live_elements }
     cmf_suppress = { v = _cmf_action_bar_live_sguis }
+    cmf_suppress = { v = _cmf_action_bar_sgui_marked }
 }

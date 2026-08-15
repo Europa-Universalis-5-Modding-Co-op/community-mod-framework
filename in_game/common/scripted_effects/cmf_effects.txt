@@ -10,9 +10,25 @@ cmf_register_scripted_gui = {
             name = _cmf_action_bar_live_sguis
             target = flag:$element$
         }
-        every_country = {
-            remove_from_variable_map = { name = cmf_has_sgui key = flag:$element$ }
-            add_to_variable_map = { name = cmf_has_sgui key = flag:$element$ value = 1 }
+
+        # cmf_has_sgui persists in the save, so the sweep is only needed when the element is not
+        # already marked. _cmf_prune_stale_action_bar_elements unmarks it when the flag goes back to 0.
+        if = {
+            limit = {
+                NOT = {
+                    is_target_in_global_variable_list = {
+                        name = _cmf_action_bar_sgui_marked
+                        target = flag:$element$
+                    }
+                }
+            }
+            add_to_global_variable_list = {
+                name = _cmf_action_bar_sgui_marked
+                target = flag:$element$
+            }
+            every_country = {
+                add_to_variable_map = { name = cmf_has_sgui key = flag:$element$ value = 1 }
+            }
         }
     }
 }

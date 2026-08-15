@@ -5,35 +5,35 @@ template cmf_alert_horizontal {
 	button = {
 		size = { 100% 100% }
 		alwaystransparent = yes
-		visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')]"
+		visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'green')]"
 		using = green_alert_horizontal
 	}
 
 	button = {
 		size = { 100% 100% }
 		alwaystransparent = yes
-		visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')]"
+		visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'yellow')]"
 		using = yellow_alert_horizontal
 	}
 
 	button = {
 		size = { 100% 100% }
 		alwaystransparent = yes
-		visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')]"
+		visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'orange')]"
 		using = orange_alert_horizontal
 	}
 
 	button = {
 		size = { 100% 100% }
 		alwaystransparent = yes
-		visible = "[EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple')]"
+		visible = "[GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'purple')]"
 		using = purple_alert_horizontal
 	}
 
 	button = {
 		size = { 100% 100% }
 		alwaystransparent = yes
-		visible = "[Or(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red'), EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war'))]"
+		visible = "[Or(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'red'), GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'red_war'))]"
 		using = red_alert_horizontal
 	}
 
@@ -42,12 +42,12 @@ template cmf_alert_horizontal {
 		size = { 100% 100% }
 		alwaystransparent = yes
 		visible = "[And6(
-			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')),
-			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')),
-			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')),
-			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple')),
-			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')),
-			Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war'))
+			Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'green')),
+			Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'yellow')),
+			Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'orange')),
+			Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'purple')),
+			Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'red')),
+			Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'red_war'))
 		)]"
 		using = blue_alert_horizontal
 	}
@@ -57,6 +57,13 @@ types "cmf_alert_settings_types" {
 
 	type cmf_alert_settings_entry = hbox {
 		layoutpolicy_horizontal = expanding
+
+		# cmf_alert_horizontal's colour buttons read this instead of localizing the key themselves.
+		state = {
+			name = cmf_cache_alert_settings_color
+			trigger_on_create = yes
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_aclr'), Localize(Concatenate(Scope.GetFlagName, '_color')))]"
+		}
 
 		widget = {
 			layoutpolicy_horizontal = expanding

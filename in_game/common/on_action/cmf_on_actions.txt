@@ -107,12 +107,7 @@ _cmf_on_monthly = {
 # Slightly more efficient than each mod checking for players individually
 # Scope: country
 cmf_yearly_human_country_pulse = {
-	on_actions = {
-		_cmf_on_cmm_registration
-		cmf_on_mod_registration
-		_cmf_on_action_bar_prune
-		_cmf_on_cmm_registration_late
-	}
+	on_actions = { }
 }
 
 # Unified monthly human country pulse

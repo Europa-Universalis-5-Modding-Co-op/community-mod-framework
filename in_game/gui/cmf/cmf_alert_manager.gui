@@ -22,14 +22,14 @@ types "cmf_types" {
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
                     visible = "[And(And8(
-                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue')),
-                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange')),
-                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red')),
-                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war')),
-                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'black')),
-                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow')),
-                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green')),
-                        Not(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple'))
+                        Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'blue')),
+                        Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'orange')),
+                        Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'red')),
+                        Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'red_war')),
+                        Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'black')),
+                        Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'yellow')),
+                        Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'green')),
+                        Not(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'purple'))
                     ), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
@@ -39,7 +39,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'blue'), CMFAlertOnBar(Scope.GetFlagName))]"
+                    visible = "[And(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'blue'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = blue_alert
@@ -48,7 +48,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'green'), CMFAlertOnBar(Scope.GetFlagName))]"
+                    visible = "[And(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'green'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = green_alert
@@ -57,7 +57,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'yellow'), CMFAlertOnBar(Scope.GetFlagName))]"
+                    visible = "[And(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'yellow'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = yellow_alert
@@ -66,7 +66,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'orange'), CMFAlertOnBar(Scope.GetFlagName))]"
+                    visible = "[And(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'orange'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = orange_alert
@@ -75,7 +75,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red'), CMFAlertOnBar(Scope.GetFlagName))]"
+                    visible = "[And(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'red'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = red_alert
@@ -84,7 +84,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'red_war'), CMFAlertOnBar(Scope.GetFlagName))]"
+                    visible = "[And(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'red_war'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = red_war_alert
@@ -93,7 +93,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'purple'), CMFAlertOnBar(Scope.GetFlagName))]"
+                    visible = "[And(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'purple'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = purple_alert
@@ -102,7 +102,7 @@ types "cmf_types" {
 
             cmf_alerts = {
                 blockoverride "alert_button_visibility" {
-                    visible = "[And(EqualTo_string(Localize(Concatenate(Scope.GetFlagName, '_color')), 'black'), CMFAlertOnBar(Scope.GetFlagName))]"
+                    visible = "[And(GetVariableSystem.HasValue(Concatenate(Scope.GetFlagName, '_aclr'), 'black'), CMFAlertOnBar(Scope.GetFlagName))]"
                 }
                 blockoverride "alert_button_attributes" {
                     using = black_alert
@@ -147,6 +147,14 @@ types "cmf_types" {
         maximumsize = { @alert_wide @alert_height }
         block "alert_button_visibility" {
             visible = no
+        }
+
+        # One colour bar carries the alert, but every bar tests for it, so the key is localized once
+        # here rather than by each test on every frame.
+        state = {
+            name = cmf_cache_alert_color
+            trigger_on_create = yes
+            on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_aclr'), Localize(Concatenate(Scope.GetFlagName, '_color')))]"
         }
 
         cmf_alert_button = {
