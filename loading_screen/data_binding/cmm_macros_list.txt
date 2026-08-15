@@ -17,6 +17,22 @@ macro = {
 }
 
 # Args: SettingKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached interactive state for one list setting, written by cmm_can_edit_list_*; per-setting keys stop one list reading another's"
+    definition = "CMMListCanEdit(SettingKey)"
+    replace_with = "GetVariableSystem.HasValue(Concatenate(SettingKey, '_cel'), 'yes')"
+}
+
+# Args: ItemKey (string)
+# Returns: boolean
+macro = {
+    description = "Cached interactive state for the setting owning one list item"
+    definition = "CMMListItemCanEdit(ItemKey)"
+    replace_with = "CMMListCanEdit(CMMListItemOwnerSettingKey(ItemKey))"
+}
+
+# Args: SettingKey (string)
 # Returns: int32
 macro = {
     description = "List field count for one setting"

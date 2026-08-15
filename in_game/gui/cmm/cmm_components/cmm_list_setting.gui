@@ -11,6 +11,7 @@
 	# - cmm_list_last_index variable map [value]: last valid row position for move-button visibility (keyed by setting flag).
 	# - GetVariableSystem.Get('cmm_list_hover_index') [string]: cached hovered row position for nested field interactions.
 	# Writes:
+	# - GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_cel'), ...) [effect]: caches whether this list setting's controls are interactive.
 	# - GetVariableSystem.Set('cmm_list_hover_index', ...) [effect]: caches the currently hovered row position.
 	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: stores the clicked row position.
 	# - GetScriptedGui('CMM_MarkListMove*').Execute(...) [effect]: stores the pending reorder action.
@@ -20,16 +21,23 @@
 		spacing = 1
 		margin = { 6 8 }
 
+		# Seeds the cache before either edge state can fire, so the first frame is already correct.
+		state = {
+			name = cmm_cache_can_edit_list
+			trigger_on_create = yes
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_cel'), Select_CString(CMMCachedSettingEnabled(Scope.GetFlagName), 'yes', 'no'))]"
+		}
+
 		state = {
 			name = cmm_can_edit_list_on
 			trigger_when = "[CMMCachedSettingEnabled(Scope.GetFlagName)]"
-			on_start = "[GetVariableSystem.Set('cmm_can_edit_list', 'yes')]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_cel'), 'yes')]"
 		}
 
 		state = {
 			name = cmm_can_edit_list_off
 			trigger_when = "[Not(CMMCachedSettingEnabled(Scope.GetFlagName))]"
-			on_start = "[GetVariableSystem.Set('cmm_can_edit_list', 'no')]"
+			on_start = "[GetVariableSystem.Set(Concatenate(Scope.GetFlagName, '_cel'), 'no')]"
 		}
 
 		# Delays cache refresh by one frame after a click so that scripted GUI effects have committed before values are read.
@@ -130,6 +138,7 @@
 	# - CMMHomeScope.GetVariable(Concatenate('cmm_list_item_owner_setting_', Scope.GetFlagName)) [flag]: owner setting key for the row item.
 	# - CMMHomeScope.GetVariable(Concatenate(Scope.GetFlagName, '_name')) [flag]: localized row item label.
 	# - CMMHomeScope.GetVariable(Concatenate('cmm_setting_list_is_ordered_', <setting_key>)) [value]: whether move controls are shown for the owner setting.
+	# - GetVariableSystem.Get(Concatenate(<setting_key>, '_cel')) [string]: cached interactive state for the owner setting.
 	# - cmm_list_last_index variable map [value]: last valid visible row index (keyed by setting flag).
 	# Writes:
 	# - GetVariableSystem.Set('cmm_list_hover_index', ...) [effect]: caches the currently hovered row position.
@@ -166,7 +175,7 @@
 				size = { 56 28 }
 				minimumsize = { 56 28 }
 				visible = "[CMMListItemSettingIsOrdered(Scope.GetFlagName)]"
-				enabled = "[GetVariableSystem.HasValue('cmm_can_edit_list', 'yes')]"
+				enabled = "[CMMListItemCanEdit(Scope.GetFlagName)]"
 
 				hbox = {
 					parentanchor = center
