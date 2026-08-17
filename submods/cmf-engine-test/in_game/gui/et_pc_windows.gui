@@ -1,12 +1,12 @@
-﻿# Console parse-cost rig (tests 117, 118). Self-starting, because the measurement is debug.log
+﻿# Console parse-cost rig (tests 112, 113). Self-starting, because the measurement is debug.log
 # volume and a run button would put its own Execute in the window.
 #
 # The two bursts are spaced far apart so their log lines separate cleanly by timestamp. The first
-# fires 5 seconds after the gate opens, which clears the 1-to-2 second console warm-up test 109
+# fires 5 seconds after the gate opens, which clears the 1-to-2 second console warm-up test 102
 # established, and the freshness marker is cleared last so its command lands outside both windows.
 #
 # The gate reads a country variable rather than a GUI variable: GUI variables survive from one game
-# to the next inside a client run (test 107), so a GUI marker would run the rig only in a session's
+# to the next inside a client run (test 100), so a GUI marker would run the rig only in a session's
 # first game.
 
 widget = {
@@ -28,7 +28,7 @@ widget = {
 			next = et_pc_burst_a
 		}
 
-		# Test 117: 20 commands, one call each.
+		# Test 112: 20 commands, one call each.
 		state = {
 			name = et_pc_burst_a
 			on_start = "[ExecuteConsoleCommandsForced('effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };effect c:CAS = { et_pc_tiny = yes };')]"
@@ -36,7 +36,7 @@ widget = {
 			next = et_pc_burst_b
 		}
 
-		# Test 118: 1 command, 20 calls.
+		# Test 113: 1 command, 20 calls.
 		state = {
 			name = et_pc_burst_b
 			on_start = "[ExecuteConsoleCommandsForced('effect c:CAS = { et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes et_pc_tiny = yes }')]"

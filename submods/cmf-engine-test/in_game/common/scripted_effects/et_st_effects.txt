@@ -1,12 +1,12 @@
-﻿# Tests 185-186: is_strait_connection_to. The trigger has no vanilla call site and no entry in the
+﻿# Tests 183-184: is_strait_connection_to. The trigger has no vanilla call site and no entry in the
 # 1.3 docs dump; the OGAS Optimized workshop mod calls it. An unknown trigger type breaks the
 # triggers of the file it sits in, so this call sits alone in a file of its own and the caller
 # seeds every global before invoking it.
 #
 # A branch whose limit holds an unknown trigger runs anyway, so asking about a genuine strait
-# proves nothing: the answer is yes either way. 185 asks about a LAND neighbour instead, which a
+# proves nothing: the answer is yes either way. 183 asks about a LAND neighbour instead, which a
 # working trigger answers no, and reports the trigger having said yes. So a missing trigger fails
-# 185, which is the whole point of asking it that way round.
+# 183, which is the whole point of asking it that way round.
 # Scope: none
 
 et_st_run = {
@@ -16,7 +16,7 @@ et_st_run = {
 		# location has: in_game/map_data/adjacencies.csv:2
 		if = {
 			limit = { is_strait_connection_to = { target = location:reggiocal } }
-			set_global_variable = { name = et_186_ok value = 1 }
+			set_global_variable = { name = et_184_ok value = 1 }
 		}
 		every_neighbor_location = {
 			if = {

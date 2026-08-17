@@ -2011,87 +2011,71 @@ window = {
 					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_71_passed').GetValue, '(CFixedPoint)1')))]" }
 				}
 
-				# Result: FAIL
-				# -- Test 75 -------------------------------------
+				# -- Test 72 -------------------------------------
+				# Expected FAIL: the bare middle state is expected to stall.
+				# Read against 73, which differs only by an on_start.
+				et_hw_row = {
+					blockoverride "et_hw_row_label" { text = "ET_72_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_72_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_72_passed').GetValue, '(CFixedPoint)1')))]" }
+				}
+
+				# -- Test 73 -------------------------------------
+				et_hw_row = {
+					blockoverride "et_hw_row_label" { text = "ET_73_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_73_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_73_passed').GetValue, '(CFixedPoint)1')))]" }
+				}
+
+				# -- Test 74 ------------------------------------
+				et_hw_row = {
+					blockoverride "et_hw_row_label" { text = "ET_74_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_74_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_74_passed').GetValue, '(CFixedPoint)1')))]" }
+				}
+
+				# -- Test 75 ------------------------------------
 				et_hw_row = {
 					blockoverride "et_hw_row_label" { text = "ET_75_LABEL" }
 					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_75_passed').GetValue, '(CFixedPoint)1'))]" }
 					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_75_passed').GetValue, '(CFixedPoint)1')))]" }
 				}
 
-				# -- Test 98 -------------------------------------
-				# Expected FAIL: the bare middle state is expected to stall.
-				# Read against 99, which differs only by an on_start.
+				# -- Test 76 ------------------------------------
 				et_hw_row = {
-					blockoverride "et_hw_row_label" { text = "ET_98_LABEL" }
-					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_98_passed').GetValue, '(CFixedPoint)1'))]" }
-					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_98_passed').GetValue, '(CFixedPoint)1')))]" }
+					blockoverride "et_hw_row_label" { text = "ET_76_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_76_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_76_passed').GetValue, '(CFixedPoint)1')))]" }
 				}
 
-				# -- Test 99 -------------------------------------
+				# -- Test 77 ------------------------------------
 				et_hw_row = {
-					blockoverride "et_hw_row_label" { text = "ET_99_LABEL" }
-					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_99_passed').GetValue, '(CFixedPoint)1'))]" }
-					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_99_passed').GetValue, '(CFixedPoint)1')))]" }
+					blockoverride "et_hw_row_label" { text = "ET_77_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_77_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_77_passed').GetValue, '(CFixedPoint)1')))]" }
 				}
 
-				# -- Test 100 ------------------------------------
+				# -- Test 78 ------------------------------------
 				et_hw_row = {
-					blockoverride "et_hw_row_label" { text = "ET_100_LABEL" }
-					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_100_passed').GetValue, '(CFixedPoint)1'))]" }
-					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_100_passed').GetValue, '(CFixedPoint)1')))]" }
+					blockoverride "et_hw_row_label" { text = "ET_78_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_78_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_78_passed').GetValue, '(CFixedPoint)1')))]" }
 				}
 
-				# -- Test 101 ------------------------------------
+				# -- Test 79 ------------------------------------
 				et_hw_row = {
-					blockoverride "et_hw_row_label" { text = "ET_101_LABEL" }
-					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_101_passed').GetValue, '(CFixedPoint)1'))]" }
-					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_101_passed').GetValue, '(CFixedPoint)1')))]" }
+					blockoverride "et_hw_row_label" { text = "ET_79_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_79_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_79_passed').GetValue, '(CFixedPoint)1')))]" }
 				}
 
-				# -- Test 102 ------------------------------------
+				# -- Test 80 ------------------------------------
 				et_hw_row = {
-					blockoverride "et_hw_row_label" { text = "ET_102_LABEL" }
-					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_102_passed').GetValue, '(CFixedPoint)1'))]" }
-					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_102_passed').GetValue, '(CFixedPoint)1')))]" }
+					blockoverride "et_hw_row_label" { text = "ET_80_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_80_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_80_passed').GetValue, '(CFixedPoint)1')))]" }
 				}
 
-				# -- Test 181 ------------------------------------
-				et_hw_row = {
-					blockoverride "et_hw_row_label" { text = "ET_181_LABEL" }
-					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_181_passed').GetValue, '(CFixedPoint)1'))]" }
-					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_181_passed').GetValue, '(CFixedPoint)1')))]" }
-				}
-
-				# -- Test 182 ------------------------------------
-				et_hw_row = {
-					blockoverride "et_hw_row_label" { text = "ET_182_LABEL" }
-					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_182_passed').GetValue, '(CFixedPoint)1'))]" }
-					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_182_passed').GetValue, '(CFixedPoint)1')))]" }
-				}
-
-				# -- Test 183 ------------------------------------
-				et_hw_row = {
-					blockoverride "et_hw_row_label" { text = "ET_183_LABEL" }
-					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_183_passed').GetValue, '(CFixedPoint)1'))]" }
-					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_183_passed').GetValue, '(CFixedPoint)1')))]" }
-				}
-
-				# -- Test 184 ------------------------------------
-				et_hw_row = {
-					blockoverride "et_hw_row_label" { text = "ET_184_LABEL" }
-					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_184_passed').GetValue, '(CFixedPoint)1'))]" }
-					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_184_passed').GetValue, '(CFixedPoint)1')))]" }
-				}
-
-				# -- Test 103 ------------------------------------
-				# GUI-side only: script cannot read the VariableSystem, so this
-				# compares '7' against '7.0' directly in the row.
-				et_nc_row = {
-					blockoverride "et_nc_row_label" { text = "ET_103_LABEL" }
-					blockoverride "et_nc_row_pass" { visible = "[And3(GetVariableSystem.Exists('et_nc_done'), GetVariableSystem.HasValue('et_nc_num', '7'), Not(GetVariableSystem.HasValue('et_nc_num', '7.0')))]" }
-					blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(And(GetVariableSystem.HasValue('et_nc_num', '7'), Not(GetVariableSystem.HasValue('et_nc_num', '7.0')))))]" }
-				}
 			}
 
 			# =======================================================
@@ -2117,7 +2101,7 @@ window = {
 				layoutpolicy_horizontal = expanding
 				spacing = 1
 
-				# -- Test 72 -------------------------------------
+				# -- Test 81 -------------------------------------
 				hbox = {
 					layoutpolicy_horizontal = expanding
 					ignoreinvisible = yes
@@ -2126,7 +2110,7 @@ window = {
 					text_single = {
 						layoutpolicy_horizontal = expanding
 						fontsize = 14
-						text = "ET_72_LABEL"
+						text = "ET_81_LABEL"
 					}
 
 					text_single = {
@@ -2135,18 +2119,18 @@ window = {
 						text = "ET_NOT_RUN"
 					}
 					text_single = {
-						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_72_passed').GetValue, '(CFixedPoint)1'))]"
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_81_passed').GetValue, '(CFixedPoint)1'))]"
 						fontsize = 14
 						text = "ET_PASS"
 					}
 					text_single = {
-						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_72_passed').GetValue, '(CFixedPoint)1')))]"
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_81_passed').GetValue, '(CFixedPoint)1')))]"
 						fontsize = 14
 						text = "ET_FAIL"
 					}
 				}
 
-				# -- Test 73 -------------------------------------
+				# -- Test 82 -------------------------------------
 				hbox = {
 					layoutpolicy_horizontal = expanding
 					ignoreinvisible = yes
@@ -2155,7 +2139,7 @@ window = {
 					text_single = {
 						layoutpolicy_horizontal = expanding
 						fontsize = 14
-						text = "ET_73_LABEL"
+						text = "ET_82_LABEL"
 					}
 
 					text_single = {
@@ -2164,18 +2148,18 @@ window = {
 						text = "ET_NOT_RUN"
 					}
 					text_single = {
-						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_73_passed').GetValue, '(CFixedPoint)1'))]"
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_82_passed').GetValue, '(CFixedPoint)1'))]"
 						fontsize = 14
 						text = "ET_PASS"
 					}
 					text_single = {
-						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_73_passed').GetValue, '(CFixedPoint)1')))]"
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_82_passed').GetValue, '(CFixedPoint)1')))]"
 						fontsize = 14
 						text = "ET_FAIL"
 					}
 				}
 
-				# -- Test 74 -------------------------------------
+				# -- Test 83 -------------------------------------
 				hbox = {
 					layoutpolicy_horizontal = expanding
 					ignoreinvisible = yes
@@ -2184,8 +2168,16 @@ window = {
 					text_single = {
 						layoutpolicy_horizontal = expanding
 						fontsize = 14
-						text = "ET_74_LABEL"
+						text = "ET_83_LABEL"
 					}
+
+				# Result: FAIL
+				# -- Test 84 -------------------------------------
+				et_hw_row = {
+					blockoverride "et_hw_row_label" { text = "ET_84_LABEL" }
+					blockoverride "et_hw_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_84_passed').GetValue, '(CFixedPoint)1'))]" }
+					blockoverride "et_hw_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_hw_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_84_passed').GetValue, '(CFixedPoint)1')))]" }
+				}
 
 					text_single = {
 						fontsize = 14
@@ -2193,644 +2185,21 @@ window = {
 						text = "ET_NOT_RUN"
 					}
 					text_single = {
-						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_74_passed').GetValue, '(CFixedPoint)1'))]"
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_83_passed').GetValue, '(CFixedPoint)1'))]"
 						fontsize = 14
 						text = "ET_PASS"
 					}
 					text_single = {
-						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_74_passed').GetValue, '(CFixedPoint)1')))]"
+						visible = "[And(Player.MakeScope.GetVariable('et_dups_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_83_passed').GetValue, '(CFixedPoint)1')))]"
 						fontsize = 14
 						text = "ET_FAIL"
 					}
 				}
 			}
 
-		# =======================================================
-		# Section 7b: Pure-Script Semantics (90-97)
-		# =======================================================
-
-		text_single = {
-			layoutpolicy_horizontal = expanding
-			fontsize = 16
-			text = "ET_SECTION_SCRIPT"
-			margin_top = 12
-		}
-
-		hbox = {
-			button_regular = {
-				text = "ET_RUN_SCRIPT"
-				minimumsize = { 180 30 }
-				fontsize = 14
-				onclick = "[GetScriptedGui('et_run_script').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
-				tooltip = "ET_RUN_SCRIPT_TOOLTIP"
-			}
-		}
-
-		vbox = {
-			layoutpolicy_horizontal = expanding
-			spacing = 1
-
-			# -- Test 90 -------------------------------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_90_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_90_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_90_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Test 91 -------------------------------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_91_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_91_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_91_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Test 92 -------------------------------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_92_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_92_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_92_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Test 93 -------------------------------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_93_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_93_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_93_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Test 94 -------------------------------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_94_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_94_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_94_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Test 95 -------------------------------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_95_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_95_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_95_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Test 96 -------------------------------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_96_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_96_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_96_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Test 97 -------------------------------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_97_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_97_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_97_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Test 106 ------------------------------------
-			# Runs with this suite because it is pure script, though it belongs
-			# to the saved-scope question test 70 left open.
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_106_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_106_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_106_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 119-121 -------------------------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_119_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_119_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_119_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_120_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_120_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_120_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_121_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_121_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_121_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 122-123 -------------------------------
-			# Both answers live in error.log; these rows only say the pair ran.
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_122_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_122_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_122_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_123_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_123_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_123_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 124-125 -------------------------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_124_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_124_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_124_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_125_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_125_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_125_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 126-127 -------------------------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_126_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_126_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_126_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_127_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_127_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_127_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 128-133: max level and is_at_max_level -
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_128_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_128_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_128_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# 149-151 bracket the same number; exactly one of 128, 149, 150, 151 passes.
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_149_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_149_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_149_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_150_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_150_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_150_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_151_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_151_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_151_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 156-157: the same trigger on vanilla types -
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_156_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_156_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_156_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_157_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_157_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_157_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 161-163: the same reads with the owner param -
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_161_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_161_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_161_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_162_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_162_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_162_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_163_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_163_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_163_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_129_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_129_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_129_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_152_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_152_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_152_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_153_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_153_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_153_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_130_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_130_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_130_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Test 158: how 131, 132 and 138 stand their levels -
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_158_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_158_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_158_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_131_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_131_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_131_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_132_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_132_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_132_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_133_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_133_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_133_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 134-135: levels under construction ----
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_134_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_134_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_134_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_135_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_135_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_135_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 136-138: construct and level effects --
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_136_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_136_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_136_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_137_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_137_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_137_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_138_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_138_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_138_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 139-142: need_good_relation -----------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_139_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_139_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_139_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_140_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_140_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_140_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_141_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_141_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_141_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_142_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_142_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_142_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 154-155: the opinion control for 140 ------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_154_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_154_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_154_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_155_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_155_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_155_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 143-146: construct_road ---------------
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_143_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_143_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_143_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_144_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_144_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_144_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_145_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_145_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_145_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_146_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_146_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_146_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 169-172: 146 read the wrong end -------
-			# 169 must pass for the other three to mean anything. All three failing is a refusal;
-			# 172 passing is an accepted order, whatever the two has_road_constructions rows say.
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_169_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_169_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_169_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_170_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_170_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_170_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_171_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_171_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_171_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_172_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_172_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_172_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 176-180: the cap triggers and the road charge --
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_176_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_176_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_176_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_177_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_177_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_177_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_178_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_178_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_178_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_179_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_179_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_179_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_180_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_180_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_180_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 185-189: straits ---------------------
-			# 185 is the row a missing trigger fails. 186 reads yes either way, since a limit
-			# holding an unknown trigger does not gate its branch.
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_185_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_185_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_185_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_186_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_186_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_186_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# 187 must pass for 188 and 189 to mean anything.
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_187_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_187_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_187_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_188_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_188_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_188_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_189_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_189_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_189_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# 191 must pass for 192 and 193 to mean anything.
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_191_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_191_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_191_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_192_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_192_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_192_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_193_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_193_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_193_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# 194 must pass for 195 and 196 to mean anything. The Re-read Probe Levels button
-			# re-takes all five.
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_194_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_194_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_194_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_195_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_195_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_195_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_196_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_196_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_196_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_197_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_197_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_197_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_198_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_198_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_198_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-
-			# -- Tests 199-203: what GetNextReplacementBuilding filters on ---
-			# Seeded by the run button, answered about 1.6s later by et_rp_core, so these read FAIL
-			# for a moment after the press. 199 and 202 are the guards; 200 and 201 are complements
-			# and a good run passes exactly one of them.
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_199_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_199_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_199_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_200_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_200_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_200_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_201_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_201_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_201_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_202_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_202_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_202_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_203_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_203_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_203_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 147-148: building handle round trip ---
-			# Seeded by the run button, answered about a second later by et_bt_core.
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_147_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_147_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_147_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_148_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_148_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_148_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 159-160: after game time has passed ---------
-			hbox = {
-				button_regular = {
-					text = "ET_RUN_RECHECK"
-					minimumsize = { 180 30 }
-					fontsize = 14
-					onclick = "[GetScriptedGui('et_run_probe_recheck').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
-					tooltip = "ET_RUN_RECHECK_TOOLTIP"
-				}
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_159_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_159_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_159_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_160_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_160_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_160_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_164_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_164_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_164_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_165_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_165_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_165_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_166_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_166_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_166_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_167_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_167_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_167_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_168_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_168_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_168_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# 190 needs months, not days. A FAIL is "not yet" until enough have passed.
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_190_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_190_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_190_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			# -- Tests 173-175: what the non-adjacent road order built --
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_173_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_173_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_173_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_174_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_174_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_174_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-			et_script_row = {
-				blockoverride "et_script_row_label" { text = "ET_175_LABEL" }
-				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_175_passed').GetValue, '(CFixedPoint)1'))]" }
-				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_175_passed').GetValue, '(CFixedPoint)1')))]" }
-			}
-
-		}
 
 		# =======================================================
-		# Section 8: Countryless Client Tests (76-89)
+		# Section 8: Countryless Client Tests (85-98)
 		# =======================================================
 		# No run button: a button's onclick is an Execute, which is the mechanism
 		# under test. et_nc_core self-starts and finishes about 4 seconds in.
@@ -2865,184 +2234,197 @@ window = {
 			layoutpolicy_horizontal = expanding
 			spacing = 1
 
-			# -- Test 76 -------------------------------------
+			# -- Test 85 -------------------------------------
 			# Separates "the Execute was dropped" from "the driver never ran".
 			et_nc_bool_row = {
-				blockoverride "et_nc_bool_label" { text = "ET_76_LABEL" }
+				blockoverride "et_nc_bool_label" { text = "ET_85_LABEL" }
 				blockoverride "et_nc_bool_true" { visible = "[GetVariableSystem.Exists('et_nc_fired')]" }
 				blockoverride "et_nc_bool_false" { visible = "[Not(GetVariableSystem.Exists('et_nc_fired'))]" }
 			}
 
-			# -- Test 77 -------------------------------------
+			# -- Test 86 -------------------------------------
 			et_nc_bool_row = {
-				blockoverride "et_nc_bool_label" { text = "ET_77_LABEL" }
+				blockoverride "et_nc_bool_label" { text = "ET_86_LABEL" }
 				blockoverride "et_nc_bool_true" { visible = "[GetPlayer.IsValid]" }
 				blockoverride "et_nc_bool_false" { visible = "[Not(GetPlayer.IsValid)]" }
 			}
 
-			# -- Test 78 -------------------------------------
+			# -- Test 87 -------------------------------------
 			et_nc_bool_row = {
-				blockoverride "et_nc_bool_label" { text = "ET_78_LABEL" }
+				blockoverride "et_nc_bool_label" { text = "ET_87_LABEL" }
 				blockoverride "et_nc_bool_true" { visible = "[IsPlayerValid]" }
 				blockoverride "et_nc_bool_false" { visible = "[Not(IsPlayerValid)]" }
 			}
 
-			# -- Test 79 -------------------------------------
+			# -- Test 88 -------------------------------------
 			et_nc_bool_row = {
-				blockoverride "et_nc_bool_label" { text = "ET_79_LABEL" }
+				blockoverride "et_nc_bool_label" { text = "ET_88_LABEL" }
 				blockoverride "et_nc_bool_true" { visible = "[IsPlayerObserver]" }
 				blockoverride "et_nc_bool_false" { visible = "[Not(IsPlayerObserver)]" }
 			}
 
-			# -- Test 80 -------------------------------------
-			# The claim under test. Read with 76: driver fired, Execute did not land.
+			# -- Test 89 -------------------------------------
+			# The claim under test. Read with 85: driver fired, Execute did not land.
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_80_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_89_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_exec').GetValue, '(CFixedPoint)1'))]" }
 				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_exec').GetValue, '(CFixedPoint)1')))]" }
 			}
 
-			# -- Test 81 -------------------------------------
+			# -- Test 90 -------------------------------------
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_81_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_90_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), GetScriptedGui('et_nc_shown_probe').IsShown(GuiScope.SetRoot(GetCountry('CAS').MakeScope).End))]" }
 				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(GetScriptedGui('et_nc_shown_probe').IsShown(GuiScope.SetRoot(GetCountry('CAS').MakeScope).End)))]" }
 			}
 
-			# -- Test 82 -------------------------------------
+			# -- Test 91 -------------------------------------
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_82_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_91_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), GetScriptedGui('et_nc_valid_probe').IsValid(GuiScope.SetRoot(GetCountry('CAS').MakeScope).End))]" }
 				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(GetScriptedGui('et_nc_valid_probe').IsValid(GuiScope.SetRoot(GetCountry('CAS').MakeScope).End)))]" }
 			}
 
-			# -- Test 83 -------------------------------------
+			# -- Test 92 -------------------------------------
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_83_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_92_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), GetVariableSystem.HasValue('et_nc_vs', 'seven'))]" }
 				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(GetVariableSystem.HasValue('et_nc_vs', 'seven')))]" }
 			}
 
-			# -- Test 84 -------------------------------------
+			# -- Test 93 -------------------------------------
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_84_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_93_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), EqualTo_CFixedPoint(GuiScope.AddScope('country', GetCountry('CAS').MakeScope).ScriptValue('et_nc_sv'), '(CFixedPoint)42'))]" }
 				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(EqualTo_CFixedPoint(GuiScope.AddScope('country', GetCountry('CAS').MakeScope).ScriptValue('et_nc_sv'), '(CFixedPoint)42')))]" }
 			}
 
-			# -- Test 85 -------------------------------------
+			# -- Test 94 -------------------------------------
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_85_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_94_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_console').GetValue, '(CFixedPoint)1'))]" }
 				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_console').GetValue, '(CFixedPoint)1')))]" }
 			}
 
-			# -- Test 86 -------------------------------------
+			# -- Test 95 -------------------------------------
 			# 1 confirms the one-command-at-a-time refusal; 3 overturns it.
 			et_nc_text_row = {
-				blockoverride "et_nc_text_label" { text = "ET_86_LABEL" }
-				blockoverride "et_nc_text_value" { text = "ET_86_VALUE" }
+				blockoverride "et_nc_text_label" { text = "ET_95_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_95_VALUE" }
 			}
 
-			# -- Test 87 -------------------------------------
+			# -- Test 96 -------------------------------------
 			et_nc_text_row = {
-				blockoverride "et_nc_text_label" { text = "ET_87_LABEL" }
-				blockoverride "et_nc_text_value" { text = "ET_87_VALUE" }
+				blockoverride "et_nc_text_label" { text = "ET_96_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_96_VALUE" }
 			}
 
-			# -- Tests 117 / 118 -----------------------------
-			# Both must land all 20 calls, or the two bursts' log volumes are not comparable.
+			# -- Test 97 -------------------------------------
 			et_nc_text_row = {
-				blockoverride "et_nc_text_label" { text = "ET_117_LABEL" }
-				blockoverride "et_nc_text_value" { text = "ET_117_VALUE" }
+				blockoverride "et_nc_text_label" { text = "ET_97_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_97_VALUE" }
 			}
 
-			# -- Test 88 -------------------------------------
-			et_nc_text_row = {
-				blockoverride "et_nc_text_label" { text = "ET_88_LABEL" }
-				blockoverride "et_nc_text_value" { text = "ET_88_VALUE" }
+			# -- Test 98 -------------------------------------
+			# et_gmap9 exists and holds flag:et_key_a, so this reads a missing key
+			# from a present map rather than a missing map.
+			et_nc_row = {
+				blockoverride "et_nc_row_label" { text = "ET_98_LABEL" }
+				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(GetVariableFromGlobalVariableMap('et_gmap9', MakeScopeFlag('et_nc_absent')).IsSet))]" }
+				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), GetVariableFromGlobalVariableMap('et_gmap9', MakeScopeFlag('et_nc_absent')).IsSet)]" }
 			}
 
-			# -- Test 108 ------------------------------------
+				# -- Test 99 ------------------------------------
+				# GUI-side only: script cannot read the VariableSystem, so this
+				# compares '7' against '7.0' directly in the row.
+				et_nc_row = {
+					blockoverride "et_nc_row_label" { text = "ET_99_LABEL" }
+					blockoverride "et_nc_row_pass" { visible = "[And3(GetVariableSystem.Exists('et_nc_done'), GetVariableSystem.HasValue('et_nc_num', '7'), Not(GetVariableSystem.HasValue('et_nc_num', '7.0')))]" }
+					blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(And(GetVariableSystem.HasValue('et_nc_num', '7'), Not(GetVariableSystem.HasValue('et_nc_num', '7.0')))))]" }
+				}
+
+			# -- Test 100 ------------------------------------
+			# et_nc_carried is set only when et_nc_persist was already present as
+			# this game's map came up, so FALSE on the first game of a client run
+			# and TRUE on the second is the claim holding.
+			et_nc_bool_row = {
+				blockoverride "et_nc_bool_label" { text = "ET_100_LABEL" }
+				blockoverride "et_nc_bool_true" { visible = "[GetVariableSystem.HasValue('et_nc_carried', 'yes')]" }
+				blockoverride "et_nc_bool_false" { visible = "[GetVariableSystem.HasValue('et_nc_carried', 'no')]" }
+			}
+
+			# -- Test 101 ------------------------------------
 			# The auto-run's answer only: the reset disarms these rather than
 			# re-firing them, so a manual re-run in a settled game cannot
 			# overwrite what the earliest pass recorded.
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_108_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_101_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_early_exec').GetValue, '(CFixedPoint)1')]" }
 				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_early_exec').GetValue, '(CFixedPoint)1'))]" }
 			}
 
-			# -- Test 109 ------------------------------------
+			# -- Test 102 ------------------------------------
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_109_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_102_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_early_console').GetValue, '(CFixedPoint)1')]" }
 				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_early_console').GetValue, '(CFixedPoint)1'))]" }
 			}
 
-			# -- Tests 110-112 -------------------------------
-			# Console warm-up ladder. Read with 109 (1s) and 85 (12s) to bracket
+			# -- Tests 103-105 -------------------------------
+			# Console warm-up ladder. Read with 102 (1s) and 94 (12s) to bracket
 			# how long the window lasts.
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_110_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_103_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_w2').GetValue, '(CFixedPoint)1')]" }
 				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_w2').GetValue, '(CFixedPoint)1'))]" }
 			}
 
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_111_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_104_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_w4').GetValue, '(CFixedPoint)1')]" }
 				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_w4').GetValue, '(CFixedPoint)1'))]" }
 			}
 
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_112_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_105_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_w8').GetValue, '(CFixedPoint)1')]" }
 				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_w8').GetValue, '(CFixedPoint)1'))]" }
 			}
 
-			# -- Tests 113-116 -------------------------------
+			# -- Tests 106-109 -------------------------------
 			# State-transition probes. These reach what the map-load probes
 			# cannot: at map load every client is still at the lobby.
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_113_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_106_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_tc_exec').GetValue, '(CFixedPoint)1')]" }
 				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_tc_exec').GetValue, '(CFixedPoint)1'))]" }
 			}
 
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_114_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_107_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_tc_console').GetValue, '(CFixedPoint)1')]" }
 				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_tc_console').GetValue, '(CFixedPoint)1'))]" }
 			}
 
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_115_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_108_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_to_exec').GetValue, '(CFixedPoint)1')]" }
 				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_to_exec').GetValue, '(CFixedPoint)1'))]" }
 			}
 
 			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_116_LABEL" }
+				blockoverride "et_nc_row_label" { text = "ET_109_LABEL" }
 				blockoverride "et_nc_row_pass" { visible = "[EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_to_console').GetValue, '(CFixedPoint)1')]" }
 				blockoverride "et_nc_row_fail" { visible = "[Not(EqualTo_CFixedPoint(GetCountry('CAS').MakeScope.GetVariable('et_nc_to_console').GetValue, '(CFixedPoint)1'))]" }
 			}
 
-			# -- Test 89 -------------------------------------
-			# et_gmap9 exists and holds flag:et_key_a, so this reads a missing key
-			# from a present map rather than a missing map.
-			et_nc_row = {
-				blockoverride "et_nc_row_label" { text = "ET_89_LABEL" }
-				blockoverride "et_nc_row_pass" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), Not(GetVariableFromGlobalVariableMap('et_gmap9', MakeScopeFlag('et_nc_absent')).IsSet))]" }
-				blockoverride "et_nc_row_fail" { visible = "[And(GetVariableSystem.Exists('et_nc_done'), GetVariableFromGlobalVariableMap('et_gmap9', MakeScopeFlag('et_nc_absent')).IsSet)]" }
-			}
 		}
 
 		# =======================================================
-		# Section 9: on_action, Timing and Persistence (104-107)
+		# Section 9: on_action, Timing and Persistence (100, 122, 110-111)
 		# =======================================================
-		# 104 and 105 count fires, so the count is the result: 1 means a no-scope
-		# hook, a per-country hook would run to hundreds. 105 and 107 need elapsed
+		# 110 and 111 count fires, so the count is the result: 1 means a no-scope
+		# hook, a per-country hook would run to hundreds. 111 and 100 need elapsed
 		# time and a second game, so both are display rows.
 
 		text_single = {
@@ -3056,26 +2438,840 @@ window = {
 			layoutpolicy_horizontal = expanding
 			spacing = 1
 
-			# -- Test 104 ------------------------------------
+			# -- Test 110 ------------------------------------
 			et_nc_text_row = {
-				blockoverride "et_nc_text_label" { text = "ET_104_LABEL" }
-				blockoverride "et_nc_text_value" { text = "ET_104_VALUE" }
+				blockoverride "et_nc_text_label" { text = "ET_110_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_110_VALUE" }
 			}
 
-			# -- Test 105 ------------------------------------
+			# -- Test 111 ------------------------------------
 			et_nc_text_row = {
-				blockoverride "et_nc_text_label" { text = "ET_105_LABEL" }
-				blockoverride "et_nc_text_value" { text = "ET_105_VALUE" }
+				blockoverride "et_nc_text_label" { text = "ET_111_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_111_VALUE" }
 			}
 
-			# -- Test 107 ------------------------------------
-			# et_nc_carried is set only when et_nc_persist was already present as
-			# this game's map came up, so FALSE on the first game of a client run
-			# and TRUE on the second is the claim holding.
-			et_nc_bool_row = {
-				blockoverride "et_nc_bool_label" { text = "ET_107_LABEL" }
-				blockoverride "et_nc_bool_true" { visible = "[GetVariableSystem.HasValue('et_nc_carried', 'yes')]" }
-				blockoverride "et_nc_bool_false" { visible = "[GetVariableSystem.HasValue('et_nc_carried', 'no')]" }
+			# -- Tests 112 / 113 -----------------------------
+			# Both must land all 20 calls, or the two bursts' log volumes are not comparable.
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_112_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_112_VALUE" }
+			}
+
+		# =======================================================
+		# Section 7b: Pure-Script Semantics (114-121)
+		# =======================================================
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 16
+			text = "ET_SECTION_SCRIPT"
+			margin_top = 12
+		}
+
+		hbox = {
+			button_regular = {
+				text = "ET_RUN_SCRIPT"
+				minimumsize = { 180 30 }
+				fontsize = 14
+				onclick = "[GetScriptedGui('et_run_script').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				tooltip = "ET_RUN_SCRIPT_TOOLTIP"
+			}
+		}
+			# -- Tests 181-182: after game time has passed ---------
+			hbox = {
+				button_regular = {
+					text = "ET_RUN_RECHECK"
+					minimumsize = { 180 30 }
+					fontsize = 14
+					onclick = "[GetScriptedGui('et_run_probe_recheck').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					tooltip = "ET_RUN_RECHECK_TOOLTIP"
+				}
+			}
+
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# -- Test 114 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_114_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_114_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_114_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 115 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_115_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_115_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_115_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 116 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_116_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_116_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_116_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 117 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_117_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_117_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_117_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 118 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_118_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_118_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_118_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 119 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_119_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_119_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_119_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 120 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_120_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_120_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_120_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 121 -------------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_121_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_121_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_121_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 122 ------------------------------------
+			# Runs with this suite because it is pure script, though it belongs
+			# to the saved-scope question test 70 left open.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_122_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_122_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_122_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 123-125 -------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_123_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_123_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_123_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_124_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_124_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_124_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_125_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_125_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_125_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 126-127 -------------------------------
+			# Both answers live in error.log; these rows only say the pair ran.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_126_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_126_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_126_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_127_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_127_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_127_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 128-129 -------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_128_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_128_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_128_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_129_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_129_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_129_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 130-131 -------------------------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_130_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_130_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_130_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_131_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_131_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_131_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 132-150: max level and is_at_max_level -
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_132_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_132_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_132_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# 133-135 bracket the same number; exactly one of 132, 133, 134, 135 passes.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_133_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_133_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_133_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_134_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_134_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_134_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_135_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_135_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_135_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 136-137: the same trigger on vanilla types -
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_136_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_136_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_136_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_137_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_137_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_137_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 138-140: the same reads with the owner param -
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_138_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_138_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_138_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_139_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_139_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_139_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_140_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_140_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_140_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_141_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_141_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_141_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_142_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_142_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_142_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_143_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_143_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_143_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_144_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_144_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_144_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_145_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_145_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_145_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_146_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_146_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_146_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_147_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_147_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_147_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_148_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_148_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_148_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_149_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_149_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_149_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_150_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_150_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_150_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_151_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_151_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_151_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_152_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_152_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_152_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Test 153: levels under construction ----------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_153_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_153_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_153_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 154-156: construct and level effects --
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_154_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_154_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_154_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_155_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_155_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_155_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_156_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_156_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_156_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 157-160: need_good_relation -----------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_157_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_157_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_157_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_158_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_158_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_158_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_159_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_159_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_159_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_160_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_160_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_160_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 161-162: the opinion control for 158 ------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_161_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_161_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_161_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_162_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_162_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_162_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 163-166: construct_road ---------------
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_163_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_163_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_163_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_164_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_164_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_164_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_165_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_165_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_165_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_166_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_166_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_166_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 167-170: 166 read the wrong end -------
+			# 167 must pass for the other three to mean anything. All three failing is a refusal;
+			# 170 passing is an accepted order, whatever the two has_road_constructions rows say.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_167_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_167_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_167_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_168_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_168_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_168_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_169_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_169_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_169_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_170_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_170_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_170_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 171-175: the cap triggers and the road charge --
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_171_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_171_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_171_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_172_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_172_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_172_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_173_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_173_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_173_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_174_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_174_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_174_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_175_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_175_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_175_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 176-178: what the non-adjacent road order built --
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_176_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_176_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_176_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_177_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_177_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_177_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_178_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_178_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_178_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 179-180: building handle round trip ---
+			# Seeded by the run button, answered about a second later by et_bt_core.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_179_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_179_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_179_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_180_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_180_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_180_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_181_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_181_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_181_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_182_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_182_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_182_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 183-187: straits ---------------------
+			# 183 is the row a missing trigger fails. 184 reads yes either way, since a limit
+			# holding an unknown trigger does not gate its branch.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_183_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_183_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_183_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_184_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_184_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_184_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# 185 must pass for 186 and 187 to mean anything.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_185_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_185_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_185_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_186_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_186_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_186_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_187_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_187_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_187_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# 188 needs months, not days. A FAIL is "not yet" until enough have passed.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_188_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_188_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_188_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# 189 must pass for 190 and 191 to mean anything.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_189_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_189_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_189_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_190_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_190_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_190_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_191_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_191_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_191_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# 192 must pass for 193 and 194 to mean anything. The Re-read Probe Levels button
+			# re-takes all five.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_192_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_192_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_192_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_193_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_193_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_193_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_194_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_194_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_194_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_195_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_195_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_195_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_196_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_196_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_196_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 197-200: what GetNextReplacementBuilding filters on ---
+			# Seeded by the run button, answered about 1.6s later by et_rp_core, so these read FAIL
+			# for a moment after the press. 197 and 202 are the guards; 198 and 199 are complements
+			# and a good run passes exactly one of them.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_197_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_197_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_197_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_198_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_198_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_198_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_199_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_199_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_199_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_200_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_200_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_200_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 201-213: a closed building across a change of owner ---
+			# Seeded by the run button, answered about a second later by et_ot_core, so these read
+			# FAIL for a moment after the press. 201, 205 and 209 are the guards on their own
+			# mechanism; 203 and 204, 207 and 208, 211 and 212 are complements and a good run
+			# passes exactly one of each pair.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_201_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_201_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_201_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_202_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_202_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_202_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_203_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_203_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_203_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_204_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_204_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_204_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_205_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_205_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_205_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_206_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_206_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_206_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_207_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_207_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_207_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_208_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_208_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_208_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_209_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_209_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_209_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_210_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_210_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_210_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_211_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_211_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_211_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_212_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_212_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_212_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_213_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_213_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_script_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_213_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			# -- Tests 214-217: the closed buildings after a tick --
+			# 217 is the control and the one to read first: all four failing lands on the closing
+			# rather than on the transfers.
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_214_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_214_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_214_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_215_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_215_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_215_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_216_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_216_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_216_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+			et_script_row = {
+				blockoverride "et_script_row_label" { text = "ET_217_LABEL" }
+				blockoverride "et_script_row_pass" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_217_passed').GetValue, '(CFixedPoint)1'))]" }
+				blockoverride "et_script_row_fail" { visible = "[And(Player.MakeScope.GetVariable('et_recheck_has_run').IsSet, Not(EqualTo_CFixedPoint(Player.MakeScope.GetVariable('et_217_passed').GetValue, '(CFixedPoint)1')))]" }
+			}
+
+		}
+		}
+
+		# =======================================================
+		# Section 10: GUI String Append Cost (218-224)
+		# =======================================================
+		# The result is wall clock, so the buttons are the instrument and the row
+		# below them is what says the appends happened. Arm a tier, reset the buffer,
+		# then time Grow against Fixed: both fire the same states doing the same three
+		# operations, and only Grow reads and rewrites a buffer that keeps growing.
+
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 16
+			text = "ET_SECTION_CC"
+			margin_top = 12
+		}
+
+		text_multi = {
+			layoutpolicy_horizontal = expanding
+			autoresize = yes
+			fontsize = 12
+			text = "ET_CC_INSTRUCTIONS"
+		}
+
+		hbox = {
+			spacing = 4
+			button_regular = {
+				text = "ET_CC_RESET"
+				minimumsize = { 150 30 }
+				fontsize = 14
+				onclick = "[GetVariableSystem.Set('et_cc_reset', '1')]"
+				tooltip = "ET_CC_RESET_TOOLTIP"
+			}
+			button_regular = {
+				text = "ET_CC_SUBMIT"
+				minimumsize = { 150 30 }
+				fontsize = 14
+				onclick = "[ExecuteConsoleCommandsForced(Concatenate(GetVariableSystem.Get('et_cc_buf'), ' }'))]"
+				tooltip = "ET_CC_SUBMIT_TOOLTIP"
+			}
+		}
+
+		hbox = {
+			spacing = 4
+			button_regular = {
+				text = "ET_CC_ARM_V"
+				minimumsize = { 110 30 }
+				fontsize = 14
+				onclick = "[GetVariableSystem.Set('et_cc_arm', 'v')]"
+				tooltip = "ET_CC_ARM_TOOLTIP"
+			}
+			button_regular = {
+				text = "ET_CC_ARM_A"
+				minimumsize = { 110 30 }
+				fontsize = 14
+				onclick = "[GetVariableSystem.Set('et_cc_arm', 'a')]"
+				tooltip = "ET_CC_ARM_TOOLTIP"
+			}
+			button_regular = {
+				text = "ET_CC_ARM_B"
+				minimumsize = { 110 30 }
+				fontsize = 14
+				onclick = "[GetVariableSystem.Set('et_cc_arm', 'b')]"
+				tooltip = "ET_CC_ARM_TOOLTIP"
+			}
+			button_regular = {
+				text = "ET_CC_ARM_C"
+				minimumsize = { 110 30 }
+				fontsize = 14
+				onclick = "[GetVariableSystem.Set('et_cc_arm', 'c')]"
+				tooltip = "ET_CC_ARM_TOOLTIP"
+			}
+		}
+
+		hbox = {
+			spacing = 4
+			button_regular = {
+				text = "ET_CC_GROW"
+				minimumsize = { 150 30 }
+				fontsize = 14
+				onclick = "[PdxGuiTriggerAllAnimations('et_cc_grow')]"
+				tooltip = "ET_CC_GROW_TOOLTIP"
+			}
+			button_regular = {
+				text = "ET_CC_FIXED"
+				minimumsize = { 150 30 }
+				fontsize = 14
+				onclick = "[PdxGuiTriggerAllAnimations('et_cc_fixed')]"
+				tooltip = "ET_CC_FIXED_TOOLTIP"
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+
+			# -- Tests 218-221 -------------------------------
+			# What the last submit landed. The expected counts are 70 for the verify
+			# tier, 12,600 at 1,800 appends, 50,400 at 7,200 and 201,600 at 28,800.
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_218_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_218_VALUE" }
 			}
 		}
 

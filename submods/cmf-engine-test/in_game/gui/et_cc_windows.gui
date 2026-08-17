@@ -1,0 +1,113 @@
+﻿# GUI string append cost (tests 218-224). The operation under test is
+# Set(key, Concatenate(Get(key), fragment)) on one GetVariableSystem key: the whole buffer read and
+# rewritten per append, which is how a console command string gets assembled a piece at a time.
+#
+# Each item carries ten appends, so a tier's append count is ten times its item count and the
+# widget count stays small enough that instantiation is not what is being timed. Only one tier is
+# armed at a time - the arm buttons write a tier letter to one key - so both animation names are
+# shared and every tier fires exactly its own items.
+#
+# The fixed-size states are the control. They run the same Get, the same Concatenate and the same
+# Set, against a source that never grows, so the difference between the two bursts at one tier is
+# the growth and nothing else.
+#
+# The fragment is 119 characters of valid script and the buffer opens with a command header, so the
+# whole buffer submits as one console command and et_cc_seen reports how many of the appended
+# statements are actually in it. Without that count a burst that appended nothing looks exactly
+# like a cheap one.
+
+template et_cc_states {
+	state = {
+		name = et_cc_grow
+		on_finish = "[GetVariableSystem.Set('et_cc_buf', Concatenate(GetVariableSystem.Get('et_cc_buf'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_buf', Concatenate(GetVariableSystem.Get('et_cc_buf'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_buf', Concatenate(GetVariableSystem.Get('et_cc_buf'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_buf', Concatenate(GetVariableSystem.Get('et_cc_buf'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_buf', Concatenate(GetVariableSystem.Get('et_cc_buf'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_buf', Concatenate(GetVariableSystem.Get('et_cc_buf'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_buf', Concatenate(GetVariableSystem.Get('et_cc_buf'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_buf', Concatenate(GetVariableSystem.Get('et_cc_buf'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_buf', Concatenate(GetVariableSystem.Get('et_cc_buf'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_buf', Concatenate(GetVariableSystem.Get('et_cc_buf'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+	}
+
+	state = {
+		name = et_cc_fixed
+		on_finish = "[GetVariableSystem.Set('et_cc_sink', Concatenate(GetVariableSystem.Get('et_cc_src'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_sink', Concatenate(GetVariableSystem.Get('et_cc_src'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_sink', Concatenate(GetVariableSystem.Get('et_cc_src'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_sink', Concatenate(GetVariableSystem.Get('et_cc_src'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_sink', Concatenate(GetVariableSystem.Get('et_cc_src'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_sink', Concatenate(GetVariableSystem.Get('et_cc_src'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_sink', Concatenate(GetVariableSystem.Get('et_cc_src'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_sink', Concatenate(GetVariableSystem.Get('et_cc_src'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_sink', Concatenate(GetVariableSystem.Get('et_cc_src'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+		on_finish = "[GetVariableSystem.Set('et_cc_sink', Concatenate(GetVariableSystem.Get('et_cc_src'), 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes '))]"
+	}
+}
+
+widget = {
+	name = "et_cc_core"
+	widgetid = et_cc_core
+	layer = top
+	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
+	position = { -10000 1 }
+
+	# Seeds the buffer with the command header that zeroes the counter, so every submit reports the
+	# statements that one buffer holds rather than a running total, and refills the control's source.
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[GetVariableSystem.Exists('et_cc_reset')]"
+
+		state = {
+			name = _show
+			duration = 0.1
+			on_finish = "[GetVariableSystem.Set('et_cc_buf', 'effect c:CAS = { set_variable = { name = et_cc_seen value = 0 } ')]"
+			on_finish = "[GetVariableSystem.Set('et_cc_src', 'et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes et_cc_tiny = yes ')]"
+			on_finish = "[GetVariableSystem.Clear('et_cc_reset')]"
+		}
+	}
+
+	# Ten appends. Small enough that the whole buffer can be submitted and counted cheaply, which is
+	# what establishes that all ten on_finish lines in one state fire and land in order.
+	widget = {
+		datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue('et_cc_arm', 'v'), '(int32)1', '(int32)0'))]"
+		item = {
+			widget = {
+				using = et_cc_states
+			}
+		}
+	}
+
+	# 1,800 appends, about 209KB. The size the console bridge this exists for actually builds.
+	widget = {
+		datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue('et_cc_arm', 'a'), '(int32)180', '(int32)0'))]"
+		item = {
+			widget = {
+				using = et_cc_states
+			}
+		}
+	}
+
+	# 7,200 appends, about 837KB.
+	widget = {
+		datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue('et_cc_arm', 'b'), '(int32)720', '(int32)0'))]"
+		item = {
+			widget = {
+				using = et_cc_states
+			}
+		}
+	}
+
+	# 28,800 appends, about 3.3MB. Four times the appends of the tier above it, so a cost that grows
+	# with the buffer owes sixteen times the work and a cost that does not owes four.
+	widget = {
+		datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue('et_cc_arm', 'c'), '(int32)2880', '(int32)0'))]"
+		item = {
+			widget = {
+				using = et_cc_states
+			}
+		}
+	}
+}

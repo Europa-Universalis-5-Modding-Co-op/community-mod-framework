@@ -1,4 +1,4 @@
-﻿# Countryless-client engine test rig (tests 76-89). Probes what still works on a
+﻿# Countryless-client engine test rig (tests 85-98). Probes what still works on a
 # client with no country of its own: the country-selection lobby, generic observer
 # mode, and observing a specific country.
 #
@@ -19,7 +19,7 @@ widget = {
 	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
 	position = { -10000 1 }
 
-	# Test 107. Both branches gate on c:CAS's et_nc_fresh, which et_nc_seed sets to
+	# Test 100. Both branches gate on c:CAS's et_nc_fresh, which et_nc_seed sets to
 	# 1 at on_game_start and whichever branch fires clears. A GUI variable cannot
 	# serve as the per-game marker here, because surviving the game boundary is the
 	# very thing under test: et_nc_persist and et_nc_done both carry over, so
@@ -38,7 +38,7 @@ widget = {
 		}
 	}
 
-	# The other half of test 107: no carried value at map load.
+	# The other half of test 100: no carried value at map load.
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
@@ -51,7 +51,7 @@ widget = {
 		}
 	}
 
-	# Tests 108/109: the earliest commands the rig can issue, about a second after
+	# Tests 101/102: the earliest commands the rig can issue, about a second after
 	# the map exists. Gated on c:CAS's et_nc_early_armed, which et_nc_seed sets and
 	# only the reset widget clears, so these keep the auto-run's answer and are not
 	# overwritten by a later manual re-run in a settled game.
@@ -67,10 +67,10 @@ widget = {
 		}
 	}
 
-	# Tests 110-112: how long the console warm-up lasts. Rungs at 2, 4 and 8
-	# seconds after the map exists, each one console command, read against 109's
-	# 1-second rung and against the main battery's 85 at 12s. Armed and disarmed
-	# with 108/109 so a settled re-run cannot overwrite the map-load answer.
+	# Tests 103-105: how long the console warm-up lasts. Rungs at 2, 4 and 8
+	# seconds after the map exists, each one console command, read against 102's
+	# 1-second rung and against the main battery's 94 at 12s. Armed and disarmed
+	# with 101/102 so a settled re-run cannot overwrite the map-load answer.
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
@@ -103,7 +103,7 @@ widget = {
 		}
 	}
 
-	# Tests 113/114: the first commands issued after this client takes a country,
+	# Tests 106/107: the first commands issued after this client takes a country,
 	# which is a state transition the map-load probes above can never reach - at
 	# map load every client is still at the lobby. Fires once per game on the
 	# hidden-to-shown edge of the gate.
@@ -119,7 +119,7 @@ widget = {
 		}
 	}
 
-	# Tests 115/116: the same pair on entering observer mode.
+	# Tests 108/109: the same pair on entering observer mode.
 	widget = {
 		size = { 0 0 }
 		visible_at_creation = no
@@ -139,7 +139,7 @@ widget = {
 	# Uses nothing but GetVariableSystem and the console, since a scripted GUI
 	# Execute is the mechanism under test and cannot be relied on here.
 	# et_nc_persist and et_nc_carried are deliberately left alone: they are the
-	# cross-game pair for test 107.
+	# cross-game pair for test 100.
 	widget = {
 		size = { 0 0 }
 		visible = "[GetVariableSystem.Exists('et_nc_reset')]"
@@ -167,7 +167,7 @@ widget = {
 		# 12s settle. A 0.5s settle put the auto-run inside a window where the
 		# command system accepts nothing: at about 4 seconds after map load both
 		# the Execute and every console command were lost, while the same battery
-		# a minute later passed in full. Tests 108/109 measure that window
+		# a minute later passed in full. Tests 101/102 measure that window
 		# deliberately; this delay keeps the main battery out of it.
 		state = {
 			name = _show
@@ -176,8 +176,8 @@ widget = {
 			next = et_nc_s1
 		}
 
-		# Test 83: value written here, read back by its row.
-		# Test 103: et_nc_num is written as the string '7', so its row can check
+		# Test 92: value written here, read back by its row.
+		# Test 99: et_nc_num is written as the string '7', so its row can check
 		# whether the VariableSystem compares as a string or as a number.
 		state = {
 			name = et_nc_s1
@@ -187,7 +187,7 @@ widget = {
 			next = et_nc_s2
 		}
 
-		# Test 80: the claim under test. Rooted at a valid country, which memory
+		# Test 89: the claim under test. Rooted at a valid country, which memory
 		# says does not help.
 		state = {
 			name = et_nc_s2
@@ -196,7 +196,7 @@ widget = {
 			next = et_nc_s3
 		}
 
-		# Test 85: single console command.
+		# Test 94: single console command.
 		state = {
 			name = et_nc_s3
 			on_start = "[ExecuteConsoleCommand('effect c:CAS = { set_variable = { name = et_nc_console value = 1 } }')]"
@@ -204,7 +204,7 @@ widget = {
 			next = et_nc_s4
 		}
 
-		# Test 86: three ExecuteConsoleCommand calls in one state. Memory says only
+		# Test 95: three ExecuteConsoleCommand calls in one state. Memory says only
 		# the first lands and the rest are refused, so et_nc_burst should read 1.
 		state = {
 			name = et_nc_s4
@@ -215,7 +215,7 @@ widget = {
 			next = et_nc_s5
 		}
 
-		# Test 87: the same three commands as one semicolon-separated string.
+		# Test 96: the same three commands as one semicolon-separated string.
 		state = {
 			name = et_nc_s5
 			on_start = "[ExecuteConsoleCommands('effect c:CAS = { change_variable = { name = et_nc_batch add = 1 } };effect c:CAS = { change_variable = { name = et_nc_batch add = 1 } };effect c:CAS = { change_variable = { name = et_nc_batch add = 1 } }')]"

@@ -1,4 +1,4 @@
-﻿# Readers for the replacement-tier rig (tests 199-203). All three are Executed from
+﻿# Readers for the replacement-tier rig (tests 197-200). All three are Executed from
 # et_rp_windows.gui; the seed that fills et_rp_list lives at the end of et_run_script.
 #
 # GetNextReplacementBuilding is a GUI-only promote taking a country argument, and all eight vanilla
@@ -48,13 +48,6 @@ et_rp_step = {
 
 	effect = {
 		research_advance = advance_type:dry_dock_advance
-
-		# Test 202: the grant took. Without it the after read says nothing at all.
-		if = {
-			limit = { has_advance = dry_dock_advance }
-			set_variable = { name = et_202_passed value = 1 }
-		}
-
 		set_variable = { name = et_rp_phase value = 2 }
 	}
 }
@@ -64,7 +57,7 @@ et_rp_check = {
 	scope = country
 
 	effect = {
-		# Tests 200 and 201 are complements gated on the before read having fired, so a good run
+		# Tests 198 and 199 are complements gated on the before read having fired, so a good run
 		# passes exactly one of them: either dock reported no dry_dock while dry_dock_advance was
 		# unresearched, or it reported it already. Both failing means the read never fired and the
 		# pair says nothing.
@@ -72,20 +65,23 @@ et_rp_check = {
 			limit = { exists = var:et_rp_read_1 }
 			if = {
 				limit = { NOT = { exists = var:et_rp_is_dry_1 } }
-				set_variable = { name = et_200_passed value = 1 }
+				set_variable = { name = et_198_passed value = 1 }
 			}
 			else = {
-				set_variable = { name = et_201_passed value = 1 }
+				set_variable = { name = et_199_passed value = 1 }
 			}
 		}
 
-		# Test 203: once the advance is in, dock reports dry_dock.
+		# Test 200: once the advance is in, dock reports dry_dock. The grant itself is checked here
+		# rather than scored as a row of its own, since a grant that never took would leave the
+		# after read reporting nothing and 200 failing for a reason that is not the filter.
 		if = {
 			limit = {
+				has_advance = dry_dock_advance
 				exists = var:et_rp_read_2
 				exists = var:et_rp_is_dry_2
 			}
-			set_variable = { name = et_203_passed value = 1 }
+			set_variable = { name = et_200_passed value = 1 }
 		}
 
 		remove_variable = et_rp_fire

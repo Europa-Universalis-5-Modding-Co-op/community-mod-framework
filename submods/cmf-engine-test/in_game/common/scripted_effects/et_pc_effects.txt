@@ -1,4 +1,4 @@
-﻿# Console parse-cost rig (tests 117, 118).
+﻿# Console parse-cost rig (tests 112, 113).
 #
 # A console effect command is parsed when it runs, and the claim under test is that this costs a
 # large fixed number of "Adding effect" / "Adding trigger" lines per COMMAND, rather than a cost

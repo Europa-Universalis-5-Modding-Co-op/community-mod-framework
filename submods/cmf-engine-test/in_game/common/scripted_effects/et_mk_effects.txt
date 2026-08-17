@@ -1,4 +1,4 @@
-﻿# Tests 194-198: whether every_market_present_in_country on an overlord reaches a market only a
+﻿# Tests 192-196: whether every_market_present_in_country on an overlord reaches a market only a
 # subject holds. Three market sets are built on the running country - the markets its own locations
 # sit in, what the iterator reports, and the markets its subjects hold that it holds none of - and
 # compared against each other.
@@ -6,8 +6,8 @@
 # Called from the run button and from the re-read button, so the answer can be taken again after a
 # tick has passed and any per-country market list the engine caches has been rebuilt.
 #
-# 197 and 198 together say the iterator is exactly the markets the country's own locations sit in.
-# An iterator that returned nothing at all would pass 196 and 197 on its own; 198 is what catches
+# 195 and 196 together say the iterator is exactly the markets the country's own locations sit in.
+# An iterator that returned nothing at all would pass 194 and 195 on its own; 196 is what catches
 # that.
 # Scope: country
 
@@ -42,7 +42,7 @@ et_mk_measure = {
 	# Nothing but a subject location writes et_mk_sub, so its size answers the whole guard.
 	if = {
 		limit = { variable_map_size = { name = et_mk_sub value >= 1 } }
-		set_variable = { name = et_194_passed value = 1 }
+		set_variable = { name = et_192_passed value = 1 }
 	}
 	set_local_variable = { name = et_mk_hit value = 0 }
 	every_key_in_variable_map = {
@@ -56,17 +56,17 @@ et_mk_measure = {
 	}
 	if = {
 		limit = {
-			var:et_194_passed = 1
+			var:et_192_passed = 1
 			local_var:et_mk_hit = 1
 		}
-		set_variable = { name = et_195_passed value = 1 }
+		set_variable = { name = et_193_passed value = 1 }
 	}
 	if = {
 		limit = {
-			var:et_194_passed = 1
+			var:et_192_passed = 1
 			local_var:et_mk_hit = 0
 		}
-		set_variable = { name = et_196_passed value = 1 }
+		set_variable = { name = et_194_passed value = 1 }
 	}
 	set_local_variable = { name = et_mk_extra value = 0 }
 	every_key_in_variable_map = {
@@ -79,7 +79,7 @@ et_mk_measure = {
 	}
 	if = {
 		limit = { local_var:et_mk_extra = 0 }
-		set_variable = { name = et_197_passed value = 1 }
+		set_variable = { name = et_195_passed value = 1 }
 	}
 	set_local_variable = { name = et_mk_miss value = 0 }
 	every_key_in_variable_map = {
@@ -92,6 +92,6 @@ et_mk_measure = {
 	}
 	if = {
 		limit = { local_var:et_mk_miss = 0 }
-		set_variable = { name = et_198_passed value = 1 }
+		set_variable = { name = et_196_passed value = 1 }
 	}
 }

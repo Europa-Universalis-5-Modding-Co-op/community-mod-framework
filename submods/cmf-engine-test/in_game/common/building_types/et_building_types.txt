@@ -1,4 +1,4 @@
-﻿# Probe building types for tests 128-155. Every gate is left open - no location_potential,
+﻿# Probe building types for tests 132-162. Every gate is left open - no location_potential,
 # no country_potential, an empty allow and all four ranks - so a refusal can only come from
 # the one field under test.
 #

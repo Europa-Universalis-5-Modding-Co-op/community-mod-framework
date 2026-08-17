@@ -1,4 +1,4 @@
-﻿# Hidden-window engine test rig (tests 39-67, 98-102). Probes the registered
+﻿# Hidden-window engine test rig (tests 39-67, 72-76). Probes the registered
 # hidden/driver window patterns used by CMF, Construction Manager, Autonomous
 # Diplomats, and SmartTaxes. Four registered top-level widgets:
 # - et_hw_core: dynamic always-true top-level holding the boot-driven
@@ -174,7 +174,7 @@ widget = {
 			next = et_hw_s19
 		}
 
-		# Tests 98/99: arms both stall-probe chains at once. They differ only in
+		# Tests 72/73: arms both stall-probe chains at once. They differ only in
 		# whether their middle state carries an on_start.
 		state = {
 			name = et_hw_s19
@@ -183,7 +183,7 @@ widget = {
 			next = et_hw_s20
 		}
 
-		# Tests 100/101: fire the global-list datamodels seeded by et_hw_seed.
+		# Tests 74/75: fire the global-list datamodels seeded by et_hw_seed.
 		state = {
 			name = et_hw_s20
 			duration = 0.1
@@ -192,7 +192,7 @@ widget = {
 			next = et_hw_s21
 		}
 
-		# Test 102 phase 2: swap the reuse list's contents for three different
+		# Test 76 phase 2: swap the reuse list's contents for three different
 		# targets. A reused widget keeps its original instantiation, so its
 		# trigger_on_create must not fire again.
 		state = {
@@ -209,7 +209,7 @@ widget = {
 			next = et_hw_s23
 		}
 
-		# Tests 181-184: opens both hidden-advance gates and lets each machine
+		# Tests 77-80: opens both hidden-advance gates and lets each machine
 		# count while its widget is shown.
 		state = {
 			name = et_hw_s23
@@ -360,7 +360,7 @@ widget = {
 					}
 				}
 
-				# Tests 181/182: next-chained loop, the shape a driver that hands one
+				# Tests 77/78: next-chained loop, the shape a driver that hands one
 				# state to the next uses. Every state carries an on_finish, without
 				# which a state reached through next never advances at all.
 				widget = {
@@ -386,7 +386,7 @@ widget = {
 					}
 				}
 
-				# Tests 183/184: test 64's self-TriggerAnimation shape on its own gate
+				# Tests 79/80: test 64's self-TriggerAnimation shape on its own gate
 				# and counter, so 64/65 keep measuring what they always did.
 				widget = {
 					size = { 0 0 }
@@ -434,7 +434,7 @@ widget = {
 		}
 	}
 
-	# Test 75: one flag seeded twice into the list; counts instantiations.
+	# Test 84: one flag seeded twice into the list; counts instantiations.
 	widget = {
 		datamodel = "[GetPlayer.MakeScope.GetList('et_g75_list')]"
 
@@ -486,7 +486,7 @@ widget = {
 		}
 	}
 
-	# Test 98: the middle state carries name, duration and next and nothing
+	# Test 72: the middle state carries name, duration and next and nothing
 	# else. If a bare delay state is a dead end, et_g98_tail never runs while
 	# et_g98_c still records that the chain started.
 	widget = {
@@ -513,7 +513,7 @@ widget = {
 		}
 	}
 
-	# Test 99: the control. Identical to 98 except its middle state has an
+	# Test 73: the control. Identical to 72 except its middle state has an
 	# on_start, so any difference in outcome isolates that one attribute.
 	widget = {
 		size = { 0 0 }
@@ -540,7 +540,7 @@ widget = {
 		}
 	}
 
-	# Test 100: a script-side global_variable_list bound straight into a
+	# Test 74: a script-side global_variable_list bound straight into a
 	# datamodel. Items arrive as generic Scope.
 	widget = {
 		datamodel = "[GetGlobalList('et_g100_list')]"
@@ -556,7 +556,7 @@ widget = {
 		}
 	}
 
-	# Test 101: an outer Scope-typed datamodel downcast to Location, then an
+	# Test 75: an outer Scope-typed datamodel downcast to Location, then an
 	# inner Location-typed datamodel in the same tree. The inner list is a fixed
 	# literal rather than derived from the outer item, so the result does not
 	# depend on how many locations any province holds: if the Scope slot survives
@@ -586,7 +586,7 @@ widget = {
 		}
 	}
 
-	# Test 102: datamodel_reuse_widgets with a bare trigger_on_create child. The
+	# Test 76: datamodel_reuse_widgets with a bare trigger_on_create child. The
 	# chain swaps the list contents once; a reused widget keeps its original
 	# instantiation, so the count should stay at the first seeding's 3.
 	widget = {

@@ -1,10 +1,10 @@
-﻿# Helper for test 106. Takes the SCOPE NAME as a macro param rather than the
+﻿# Helper for test 122. Takes the SCOPE NAME as a macro param rather than the
 # scope itself, which is the shape CMM's list reset used when the saved scope
 # came back unset. Test 70 covers the shape that works (plain nested
 # every_country read as a literal scope:X), not this one.
-et_106_helper = {
+et_122_helper = {
 	if = {
 		limit = { exists = scope:$key_scope$ }
-		set_global_variable = { name = et_106_ok value = 1 }
+		set_global_variable = { name = et_122_ok value = 1 }
 	}
 }

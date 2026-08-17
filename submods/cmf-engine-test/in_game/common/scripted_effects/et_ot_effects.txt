@@ -1,0 +1,71 @@
+﻿# Tests 201-217: whether a closed building stays closed when its location changes owner.
+#
+# EU5 has no open or close effect - the whole building-scope set is change_building_level,
+# change_building_owner, the production method iterators and set_subsidized - so the only way to
+# close one is the GUI global ToggleBuilding, reached through the variable list round trip tests
+# 179 and 180 measured. These two effects stand the buildings and read them back; the closing is in
+# et_ot_windows.gui and the transfers are in et_ot_scripted_gui.txt.
+
+# Stands a probe building and hands it to the list the closing rig binds. The building is handed
+# over only when it reads is_opened = yes, so the toggle can only ever close one; a location whose
+# probe never opened leaves that mechanism's guard row failing, which is what says the rest of its
+# rows mean nothing.
+# Scope: location
+# Args:
+# - OWNER (macro): the country the building belongs to
+# - et_probe_country (scope): the country paying for it and holding the list
+et_ot_seed_probe = {
+	construct_building = {
+		building_type = building_type:et_probe_multi
+		owner = $OWNER$
+		payer = scope:et_probe_country
+		instant = yes
+	}
+	# instant = yes leaves the level queued rather than standing (147, 148, 149), and a building
+	# with nothing standing is not what a cleanup pass closes.
+	change_building_level_in_location = {
+		building = building_type:et_probe_multi
+		value = 1
+	}
+	every_buildings_in_location = {
+		if = {
+			limit = {
+				building_type = building_type:et_probe_multi
+				is_opened = yes
+			}
+			scope:et_probe_country = { add_to_variable_list = { name = et_ot_list target = prev } }
+		}
+	}
+}
+
+# Records what the location's probe reads into one numbered slot, so the same three questions can be
+# asked before a transfer, after it, and again once game time has passed.
+# Scope: location
+# Args: SLOT (macro)
+et_ot_read = {
+	set_global_variable = { name = et_ot_$SLOT$_has value = 0 }
+	set_global_variable = { name = et_ot_$SLOT$_shut value = 0 }
+	set_global_variable = { name = et_ot_$SLOT$_open value = 0 }
+	if = {
+		limit = { any_buildings_in_location = { building_type = building_type:et_probe_multi } }
+		set_global_variable = { name = et_ot_$SLOT$_has value = 1 }
+	}
+	if = {
+		limit = {
+			any_buildings_in_location = {
+				building_type = building_type:et_probe_multi
+				is_opened = no
+			}
+		}
+		set_global_variable = { name = et_ot_$SLOT$_shut value = 1 }
+	}
+	if = {
+		limit = {
+			any_buildings_in_location = {
+				building_type = building_type:et_probe_multi
+				is_opened = yes
+			}
+		}
+		set_global_variable = { name = et_ot_$SLOT$_open value = 1 }
+	}
+}

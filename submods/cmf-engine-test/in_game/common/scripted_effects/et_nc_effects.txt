@@ -1,5 +1,5 @@
-﻿# Dead branch suppression for the countryless suite (tests 76-89) and the
-# on_action probes (tests 104-105). The script checker cannot see reads that
+﻿# Dead branch suppression for the countryless suite (tests 85-98) and the
+# on_action probes (tests 110-111). The script checker cannot see reads that
 # happen in GUI expressions, so every name written here is referenced below.
 et_nc_suppress_warnings = {
 	if = {

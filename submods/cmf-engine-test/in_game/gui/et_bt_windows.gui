@@ -1,4 +1,4 @@
-# Building-handle round trip rig (tests 147, 148). A building stored in a variable list,
+﻿# Building-handle round trip rig (tests 179, 180). A building stored in a variable list,
 # read back into a datamodel, downcast with Scope.GetBuilding and acted on by ToggleBuilding
 # is the shape Construction Manager's Building Cleanup close and reopen runs on, and it has
 # no vanilla or prior mod precedent.

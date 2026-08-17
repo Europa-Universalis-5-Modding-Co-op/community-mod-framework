@@ -1,9 +1,9 @@
-﻿# Countryless-client engine test scripted GUIs (tests 76-89).
+﻿# Countryless-client engine test scripted GUIs (tests 85-98).
 # The rig lives in gui/et_nc_windows.gui and self-starts; there is no run button,
 # because a button's onclick is an Execute and that is the mechanism under test.
 # Root is c:CAS for every entry, never the player.
 
-# Test 80: the Execute under test. Reaching this effect at all is the result.
+# Test 89: the Execute under test. Reaching this effect at all is the result.
 et_nc_exec_probe = {
 	scope = country
 
@@ -12,7 +12,7 @@ et_nc_exec_probe = {
 	}
 }
 
-# Test 108: the same Execute, issued about a second after the map exists instead
+# Test 101: the same Execute, issued about a second after the map exists instead
 # of after the main chain's settle.
 et_nc_early_probe = {
 	scope = country
@@ -22,7 +22,7 @@ et_nc_early_probe = {
 	}
 }
 
-# Test 113: the first Execute after this client takes a country.
+# Test 106: the first Execute after this client takes a country.
 et_nc_tc_probe = {
 	scope = country
 
@@ -31,7 +31,7 @@ et_nc_tc_probe = {
 	}
 }
 
-# Test 115: the first Execute after this client enters observer mode.
+# Test 108: the first Execute after this client enters observer mode.
 et_nc_to_probe = {
 	scope = country
 
@@ -40,7 +40,7 @@ et_nc_to_probe = {
 	}
 }
 
-# Test 81: an is_shown that always passes, read from the result row's visible.
+# Test 90: an is_shown that always passes, read from the result row's visible.
 et_nc_shown_probe = {
 	scope = country
 
@@ -49,7 +49,7 @@ et_nc_shown_probe = {
 	}
 }
 
-# Test 82: an is_valid that always passes, read the same way.
+# Test 91: an is_valid that always passes, read the same way.
 et_nc_valid_probe = {
 	scope = country
 

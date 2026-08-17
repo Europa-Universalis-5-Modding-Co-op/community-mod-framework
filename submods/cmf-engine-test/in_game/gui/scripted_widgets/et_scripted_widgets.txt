@@ -7,3 +7,5 @@ gui/et_nc_windows.gui = et_nc_core
 gui/et_pc_windows.gui = et_pc_core
 gui/et_bt_windows.gui = et_bt_core
 gui/et_rp_windows.gui = et_rp_core
+gui/et_ot_windows.gui = et_ot_core
+gui/et_cc_windows.gui = et_cc_core

@@ -1,0 +1,12 @@
+﻿# Tests 218-224: what a GUI string append costs as the string grows.
+#
+# The buffer is built out of this call repeated, so submitting it as one console command runs the
+# effect once per appended statement and the counter reports exactly how many survived the appends.
+# That is what turns a wall clock reading into a measurement: a burst that finished instantly
+# because nothing was appended reads the same as a cheap one until the counter is read.
+
+# Deliberately one statement, so a buffer of these is dominated by the appends rather than by what
+# the effect does when it eventually runs.
+et_cc_tiny = {
+	change_variable = { name = et_cc_seen add = 1 }
+}

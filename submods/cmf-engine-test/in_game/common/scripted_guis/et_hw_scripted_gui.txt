@@ -50,16 +50,16 @@ et_hw_reset = {
 		set_variable = { name = et_69_passed value = 0 }
 		set_variable = { name = et_70_passed value = 0 }
 		set_variable = { name = et_71_passed value = 0 }
+		set_variable = { name = et_84_passed value = 0 }
+		set_variable = { name = et_72_passed value = 0 }
+		set_variable = { name = et_73_passed value = 0 }
+		set_variable = { name = et_74_passed value = 0 }
 		set_variable = { name = et_75_passed value = 0 }
-		set_variable = { name = et_98_passed value = 0 }
-		set_variable = { name = et_99_passed value = 0 }
-		set_variable = { name = et_100_passed value = 0 }
-		set_variable = { name = et_101_passed value = 0 }
-		set_variable = { name = et_102_passed value = 0 }
-		set_variable = { name = et_181_passed value = 0 }
-		set_variable = { name = et_182_passed value = 0 }
-		set_variable = { name = et_183_passed value = 0 }
-		set_variable = { name = et_184_passed value = 0 }
+		set_variable = { name = et_76_passed value = 0 }
+		set_variable = { name = et_77_passed value = 0 }
+		set_variable = { name = et_78_passed value = 0 }
+		set_variable = { name = et_79_passed value = 0 }
+		set_variable = { name = et_80_passed value = 0 }
 
 		if = { limit = { has_variable = et_g39_c } remove_variable = et_g39_c }
 		if = { limit = { has_variable = et_g40_c } remove_variable = et_g40_c }
@@ -147,21 +147,21 @@ et_hw_seed = {
 		add_to_variable_list = { name = et_g52_list target = flag:et_hw_i1 }
 		add_to_variable_list = { name = et_g52_list target = flag:et_hw_i2 }
 		add_to_variable_list = { name = et_g52_list target = flag:et_hw_i3 }
-		# Test 75: one flag seeded twice.
+		# Test 84: one flag seeded twice.
 		add_to_variable_list = { name = et_g75_list target = flag:et_dup_b }
 		add_to_variable_list = { name = et_g75_list target = flag:et_dup_b }
 
-		# Test 100: a global list read straight into a datamodel by GetGlobalList.
+		# Test 74: a global list read straight into a datamodel by GetGlobalList.
 		clear_global_variable_list = et_g100_list
 		add_to_global_variable_list = { name = et_g100_list target = flag:et_hw_i1 }
 		add_to_global_variable_list = { name = et_g100_list target = flag:et_hw_i2 }
 		add_to_global_variable_list = { name = et_g100_list target = flag:et_hw_i3 }
 
-		# Test 101: one location, downcast from Scope in the outer datamodel.
+		# Test 75: one location, downcast from Scope in the outer datamodel.
 		clear_global_variable_list = et_g101_list
 		add_to_global_variable_list = { name = et_g101_list target = location:paris }
 
-		# Test 102 phase 1: three targets for the reuse datamodel.
+		# Test 76 phase 1: three targets for the reuse datamodel.
 		clear_variable_list = et_g102_list
 		add_to_variable_list = { name = et_g102_list target = flag:et_hw_i1 }
 		add_to_variable_list = { name = et_g102_list target = flag:et_hw_i2 }
@@ -196,7 +196,7 @@ et_hw_check_seeded = {
 		}
 
 		# Result: FAIL
-		# -- Test 75 ---------------------------------------------
+		# -- Test 84 ---------------------------------------------
 		# One flag seeded twice into et_g75_list: did the datamodel
 		# instantiate two item widgets for it?
 		if = {
@@ -204,7 +204,7 @@ et_hw_check_seeded = {
 				has_variable = et_g75_c
 				var:et_g75_c >= 2
 			}
-			set_variable = { name = et_75_passed value = 1 }
+			set_variable = { name = et_84_passed value = 1 }
 		}
 	}
 }
@@ -662,7 +662,7 @@ et_hw_check_trigger_when = {
 }
 
 # Final step: script-side scope and map-value tests, then publishes the run.
-# Recorders and steps for the state-stall and nesting tests (98-102).
+# Recorders and steps for the state-stall and nesting tests (72-76).
 et_hw_rec_98_start = {
 	scope = country
 
@@ -753,7 +753,7 @@ et_hw_arm_stall = {
 	}
 }
 
-# Test 102 phase 2: three different targets, same list.
+# Test 76 phase 2: three different targets, same list.
 et_hw_reseed_reuse = {
 	scope = country
 
@@ -771,7 +771,7 @@ et_hw_check_nesting = {
 
 	effect = {
 		# Result: FAIL
-		# -- Test 98 ---------------------------------------------
+		# -- Test 72 ---------------------------------------------
 		# Requires the chain to have STARTED as well as reached the tail, so a
 		# FAIL means "started and stalled at the bare middle state" rather than
 		# "never armed". The recorded claim says it stalls, so FAIL confirms it.
@@ -782,13 +782,13 @@ et_hw_check_nesting = {
 				has_variable = et_g98_c
 				var:et_g98_c >= 1
 			}
-			set_variable = { name = et_98_passed value = 1 }
+			set_variable = { name = et_72_passed value = 1 }
 		}
 
 		# Result: PASS
-		# -- Test 99 ---------------------------------------------
-		# The control: identical chain, middle state has an on_start. 98 FAIL
-		# with 99 PASS isolates the on_start as the only difference.
+		# -- Test 73 ---------------------------------------------
+		# The control: identical chain, middle state has an on_start. 72 FAIL
+		# with 73 PASS isolates the on_start as the only difference.
 		if = {
 			limit = {
 				has_variable = et_g99_start_c
@@ -796,22 +796,22 @@ et_hw_check_nesting = {
 				has_variable = et_g99_c
 				var:et_g99_c >= 1
 			}
-			set_variable = { name = et_99_passed value = 1 }
+			set_variable = { name = et_73_passed value = 1 }
 		}
 
 		# Result: PASS
-		# -- Test 100 --------------------------------------------
+		# -- Test 74 --------------------------------------------
 		# et_hw_seed puts 3 targets in the global list.
 		if = {
 			limit = {
 				has_variable = et_g100_c
 				var:et_g100_c >= 3
 			}
-			set_variable = { name = et_100_passed value = 1 }
+			set_variable = { name = et_74_passed value = 1 }
 		}
 
 		# Result: PASS
-		# -- Test 101 --------------------------------------------
+		# -- Test 75 --------------------------------------------
 		# Every inner row still saw paris as its outer context, and at least one
 		# inner row was NOT paris, which proves the two slots held different
 		# objects rather than agreeing by accident.
@@ -826,11 +826,11 @@ et_hw_check_nesting = {
 					var:et_g101_inner_paris < var:et_g101_c
 				}
 			}
-			set_variable = { name = et_101_passed value = 1 }
+			set_variable = { name = et_75_passed value = 1 }
 		}
 
 		# Result: PASS
-		# -- Test 102 --------------------------------------------
+		# -- Test 76 --------------------------------------------
 		# A pass means swapping the list contents produced no further
 		# trigger_on_create fires, i.e. the widgets were reused.
 		if = {
@@ -839,7 +839,7 @@ et_hw_check_nesting = {
 				has_variable = et_g102_phase1
 				var:et_g102_c = var:et_g102_phase1
 			}
-			set_variable = { name = et_102_passed value = 1 }
+			set_variable = { name = et_76_passed value = 1 }
 		}
 	}
 }
@@ -1320,17 +1320,17 @@ et_hw_check_hidden = {
 	scope = country
 
 	effect = {
-		# -- Test 181 --------------------------------------------
+		# -- Test 77 --------------------------------------------
 		# A next-chained machine advanced at all after its gate closed.
 		if = {
 			limit = {
 				has_variable = et_g181_c
 				var:et_g181_c > var:et_g181_snap
 			}
-			set_variable = { name = et_181_passed value = 1 }
+			set_variable = { name = et_77_passed value = 1 }
 		}
 
-		# -- Test 182 --------------------------------------------
+		# -- Test 78 --------------------------------------------
 		# A next-chained machine kept looping rather than stopping after the
 		# state it already had in flight.
 		if = {
@@ -1338,10 +1338,10 @@ et_hw_check_hidden = {
 				has_variable = et_g181_c
 				var:et_g181_c >= var:et_g181_snap3
 			}
-			set_variable = { name = et_182_passed value = 1 }
+			set_variable = { name = et_78_passed value = 1 }
 		}
 
-		# -- Test 183 --------------------------------------------
+		# -- Test 79 --------------------------------------------
 		# Same first question for the self-TriggerAnimation shape, which is
 		# what test 65 actually covered.
 		if = {
@@ -1349,10 +1349,10 @@ et_hw_check_hidden = {
 				has_variable = et_g183_c
 				var:et_g183_c > var:et_g183_snap
 			}
-			set_variable = { name = et_183_passed value = 1 }
+			set_variable = { name = et_79_passed value = 1 }
 		}
 
-		# -- Test 184 --------------------------------------------
+		# -- Test 80 --------------------------------------------
 		# The self-TriggerAnimation shape kept looping. This is the row test 65
 		# was read as proving and does not.
 		if = {
@@ -1360,7 +1360,7 @@ et_hw_check_hidden = {
 				has_variable = et_g183_c
 				var:et_g183_c >= var:et_g183_snap3
 			}
-			set_variable = { name = et_184_passed value = 1 }
+			set_variable = { name = et_80_passed value = 1 }
 		}
 	}
 }

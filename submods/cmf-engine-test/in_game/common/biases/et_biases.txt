@@ -1,4 +1,4 @@
-﻿# Opinion modifier for tests 154 and 155. 200 clears GOOD_RELATION_THRESHOLD_FOR_BUILDINGS
+﻿# Opinion modifier for tests 161 and 162. 200 clears GOOD_RELATION_THRESHOLD_FOR_BUILDINGS
 # (100, loading_screen/common/defines/00_defines.txt:2025) from any starting opinion.
 et_probe_opinion = {
 	value = 200

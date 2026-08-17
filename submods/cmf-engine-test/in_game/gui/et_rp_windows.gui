@@ -1,4 +1,4 @@
-﻿# Replacement-tier rig (tests 199-203). GetNextReplacementBuilding reads only in GUI, so the
+﻿# Replacement-tier rig (tests 197-200). GetNextReplacementBuilding reads only in GUI, so the
 # question of what its country argument filters on can only be asked from here.
 #
 # The seed in et_run_script grants the base tier's advances, fills et_rp_list with dock and sets

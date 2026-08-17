@@ -1,0 +1,48 @@
+﻿# Closing half of the ownership group (tests 201-217). Script has no way to close a building, so
+# the four seeded probes are closed here with ToggleBuilding, the same variable list round trip
+# tests 179 and 180 measured, and et_ot_transfer then does the transfers and the reads.
+#
+# The seed in et_run_script fills the list and sets et_ot_fire; the driver is pinned so the gate
+# going true makes the hidden->shown edge that fires _show. The datamodel is a statically visible
+# sibling rather than a child of the pinned driver, so its items are instantiated by the time the
+# sweep fires.
+
+widget = {
+	name = "et_ot_core"
+	widgetid = et_ot_core
+	layer = top
+	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
+	position = { -10000 1 }
+
+	widget = {
+		size = { 0 0 }
+		visible_at_creation = no
+		visible = "[And(GetPlayer.Exists, Player.MakeScope.GetVariable('et_ot_fire').IsSet)]"
+
+		state = {
+			name = _show
+			duration = 0.4
+			on_finish = "[PdxGuiTriggerAllAnimations('et_ot_close')]"
+			next = et_ot_settle
+		}
+
+		state = {
+			name = et_ot_settle
+			duration = 0.4
+			on_finish = "[GetScriptedGui('et_ot_transfer').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+
+	widget = {
+		datamodel = "[GetPlayer.MakeScope.GetList('et_ot_list')]"
+		item = {
+			widget = {
+				datacontext = "[Scope.GetBuilding]"
+				state = {
+					name = et_ot_close
+					on_finish = "[ToggleBuilding(Building.Self)]"
+				}
+			}
+		}
+	}
+}

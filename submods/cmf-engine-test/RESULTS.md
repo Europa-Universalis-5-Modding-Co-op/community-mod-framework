@@ -2,6 +2,20 @@
 
 Date: 2026-06-14
 
+## Numbering
+
+Tests are numbered 1 to 224 with no gaps, in the order they appear here, and the
+window lists them in that same order. A new test takes the next free number and
+goes at the END, in its own section or at the end of the last one; a test that
+belongs with an older group gets a pointer from that group rather than a number
+in the middle of it. Nothing is renumbered for an addition.
+
+Six rows were removed in the 2026-08-17 audit and the sequence closed over them:
+each asserted that a base-game effect did the thing its own name says, which is
+Paradox's to test and not ours. Where such a check kept a neighbouring row from
+passing for the wrong reason it was folded into that row's condition rather than
+deleted.
+
 ## Test Nation
 
 The suite runs as **Castile (`CAS`)**. Every rig that names a country absolutely
@@ -11,7 +25,7 @@ each `ExecuteConsoleCommand` string. Play Castile unless a section says otherwis
 Spain is not a usable anchor: EU5 has no `SPA` or `ESP` tag at all and no Spain
 formable, so Castile is the Iberian country the suite runs as.
 
-Test 94 is the one deliberate exception. It sets a local inside `c:FRA` and reads it
+Test 118 is the one deliberate exception. It sets a local inside `c:FRA` and reads it
 inside `c:ENG` to prove the local namespace spans the whole execution, so those two
 tags are arbitrary scope blocks rather than the test nation and work whoever you play.
 
@@ -161,10 +175,10 @@ Three engine findings from getting the builder loop clean:
 - **Numeric `var:` counter values work as distinct variable map keys.** The map reaching 1M distinct entries confirms `key = var:et_size_idx` keys on the counter's value; had the keys collapsed, the map size would stay 1 and every map tier would FAIL.
 - **Variable maps are dramatically faster than variable lists at scale (about 200x at 1M).** Building 1,000,000 entries took under 1 second for a map versus 3 minutes 20 seconds for a list. Building the 1k/10k/100k tiers was instant for a map and about 3 seconds for a list. Map insertion is near constant-time (hash map); list insertion cost grows with the list's current length (roughly quadratic total). For large per-country data, prefer a variable map over a variable list.
 
-## Re-run of Tests 1-75 (2026-07-27)
+## Re-run of Tests 1-84 (2026-07-27)
 
 Every prior test re-run alongside the new suites on 1.3.x. All results match the
-last recorded run exactly: 26, 27, 31, 36-38, 43, 47, 48, 50, 53, 61 and 72-75 FAIL,
+last recorded run exactly: 26, 27, 31, 36-38, 43, 47, 48, 50, 53, 61 and 81-84 FAIL,
 everything else PASS, and all 8 size tiers PASS. No behaviour changed since
 2026-07-05, so nothing in the earlier findings needs revisiting for this patch.
 
@@ -172,7 +186,7 @@ everything else PASS, and all 8 size tiers PASS. No behaviour changed since
 
 Re-run alongside the size tests; every result matches the prior run (26, 27, 31 FAIL; 36 displayed FAIL; 37, 38 displayed PASS as parse-error false positives; all others PASS). No behavior changed. (Macro tests 36-38 were redesigned to fail closed after this re-run; see the Macro Param Tests section.)
 
-## Hidden Window Tests (Tests 39-71)
+## Hidden Window Tests (39-71)
 
 Run 2026-07-02. Covers the registered hidden/driver-window patterns used by CMF, Construction Manager, Autonomous Diplomats, and SmartTaxes. The rig is four registered top-level widgets in `et_hw_windows.gui` (an always-visible dynamic core, a static `visible = yes` twin, a gated `window`, and a remote TriggerAllAnimations target). One button (Run Hidden Window Tests) arms a boot driver whose state chain steps every timed test with settle delays; the chain takes about 12 seconds and the rows fill in when it finishes. Re-clicking the button re-runs the suite; a click while a run is mid-chain restarts scoring, so click once and wait.
 
@@ -239,31 +253,132 @@ Expected-FAIL rows assert a pattern previously recorded as broken, so FAIL is th
 
 Tests 39-67 run inside the GUI rig; 68-71 are script-side and run inside et_hw_finish at the end of the chain. Test 50's finding means the after-lobby caller pattern's timing rests on when registered widgets are instantiated rather than on trigger_on_create deferring; the callers demonstrably work in production, but that instantiation timing is untested here.
 
-## Variable List Duplicate Tests (et_run_dups + hidden-window test 75)
+## State-Machine and Nesting (72-76)
+
+Added 2026-07-27. Runs with the hidden-window chain (Run Hidden Window Tests); the
+chain is about 4 seconds longer than before.
+
+Run 2026-07-27 on 1.3.x.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 72 | Chain reaches its tail past a bare name/duration/next state | FAIL (bare state stalls) | FAIL |
+| 73 | Control: same chain, middle state has an on_start | PASS | PASS |
+| 74 | GetGlobalList binds a global_variable_list to a datamodel | PASS | PASS |
+| 75 | Outer Scope context survives an inner Location datamodel | PASS | PASS |
+| 76 | datamodel_reuse_widgets keeps trigger_on_create from re-firing | PASS | PASS |
+
+### Findings
+
+**The bare-delay-state stall is real and now properly isolated (72 with 73).** Two
+chains identical except for an `on_start` on the middle state: the bare one never
+reached its tail, the control did, and both recorded that their `_show` fired first,
+so the failure is "started and stalled" rather than "never armed". The recorded
+lesson previously carried its own caveat that the state had been renamed in the same
+change, making `on_finish` the mechanism by inference; that caveat can be dropped.
+
+Possible mechanism, unconfirmed: the run logged one
+`pdx_gui_animation_runtime_state.cpp:613 Animation triggered has no valid state
+properties or sound effects` during the hidden-window suite. That is consistent with
+the engine refusing to play a state carrying nothing, which would be why the chain
+dies there. One occurrence, not attributed to a specific state, so it is a lead
+rather than a result. It does mean the "nothing is logged" half of the recorded
+lesson is doubtful.
+
+**`GetGlobalList` binds a script-side global_variable_list into a datamodel (74).**
+All 3 seeded targets instantiated.
+
+**An outer `Scope` datamodel binding survives an inner `Location` datamodel in the
+same tree (75).** Inside every inner row the outer `Scope.GetLocation` still
+resolved to the seeded paris, while the inner `Location` was a different location.
+Each type holds its own context slot; confirmed, and no longer resting only on a
+working fix in another mod.
+
+**`datamodel_reuse_widgets = yes` stops `trigger_on_create` firing per data item
+(76).** Swapping the list for three different targets produced no further fires.
+The CMM tab bar's deliberate exclusion from trigger_on_create caching rests on a
+real behaviour.
+
+72 and 73 are the controlled pair. The recorded claim came with its own caveat: the
+state was renamed in the same change that added the `on_finish`, so `on_finish` was
+"the mechanism by inference rather than by controlled test". These two chains are
+identical apart from the middle state's `on_start`, and both require their `_show`
+to have fired before scoring, so a FAIL means "started and stalled" rather than
+"never armed". Nothing in the existing rig covered this: every non-`_show` state in
+`et_hw_core` already carries an `on_start` or `on_finish`.
+
+75's inner datamodel is a fixed literal (`london`'s province locations) rather than
+one derived from the outer item, so the result does not depend on how many locations
+any province holds. If the `Scope` slot survives the `Location` rebinding,
+`Scope.GetLocation` is still paris inside every inner row; if it is shadowed, it is
+never paris. The check also requires at least one inner row where the two differ, so
+the two slots cannot pass by agreeing accidentally.
+
+76 seeds three targets, lets them instantiate, then swaps the list for three
+different targets. A PASS means no further `trigger_on_create` fires, i.e. the
+widgets were reused. This is the premise the CMM tab bar's exclusion from caching
+rests on; a FAIL means that exclusion is unnecessary.
+
+## Hidden State Machines, Counted (77-80)
+
+Added 2026-08-03. Runs with the hidden-window chain (Run Hidden Window Tests).
+
+Test 65 asked whether a state machine keeps advancing after its widget goes
+hidden and scored it `et_g64_c > et_g64_snap`. One further fire satisfies that,
+so it cannot tell a machine that kept looping for the whole 1.2s from one that
+merely finished the state it already had in flight, and 65's PASS was being read
+as the first when it only establishes the second. Two shapes also behave
+differently and only one of them was ever tested: 64/65 loop by re-triggering
+themselves with `PdxGuiWidget.TriggerAnimation`, while a driver that hands one
+state to the next with `next` was never covered.
+
+Both new widgets carry a 0.25s state and their own gate and counter, both gates
+close in one effect that snapshots both counters, and the check runs 1.5s later.
+A machine still looping owes about six fires over that window; one that stopped
+after the state in flight owes one. So the `>= 3` rows are the discriminator and
+the `> snapshot` rows only repeat what 65 already showed.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 77 | next-chained machine advances at all while hidden | PROBE | |
+| 78 | next-chained machine keeps looping while hidden | PROBE | |
+| 79 | self-trigger loop advances at all while hidden | PASS (65) | |
+| 80 | self-trigger loop keeps looping while hidden | PROBE | |
+
+Field observation this exists to settle, from Construction Manager's lucky-nation
+console bridge (2026-08-03, NOT a controlled test): a `next`-chained submitter
+gated on its queue being non-empty issued exactly two console commands per game
+month rather than one every 1.5s, and issued none at all while the game was
+paused. Both fit 77 PASS with 78 FAIL, a machine advancing about one state past
+the hide and then stopping. An earlier transition in the same session, where the
+gate went false for 14 seconds as the client took a country, logged no console
+line at all across the window, which fits the same reading.
+
+## Variable List Duplicate Tests (et_run_dups + hidden-window test 84)
 
 Run 2026-07-05. Probes whether a country variable list can hold the same target twice:
 two unguarded add_to_variable_list calls with one flag, then size, iteration, and
-removal checks (72-74, the Run List Duplicate Tests button), plus a GetList datamodel
-seeded with the same flag twice in the hidden-window rig (75, runs with the HW chain).
+removal checks (81-83, the Run List Duplicate Tests button), plus a GetList datamodel
+seeded with the same flag twice in the hidden-window rig (84, runs with the HW chain).
 
 | # | Test | Result |
 |---|------|--------|
-| 72 | add_to_variable_list appends a duplicate target (size 2) | FAIL |
-| 73 | every_in_list visits the duplicated entry twice | FAIL |
-| 74 | remove_list_variable removes one instance, not all | FAIL |
-| 75 | GetList datamodel instantiates a duplicated entry twice | FAIL |
+| 81 | add_to_variable_list appends a duplicate target (size 2) | FAIL |
+| 82 | every_in_list visits the duplicated entry twice | FAIL |
+| 83 | remove_list_variable removes one instance, not all | FAIL |
+| 84 | GetList datamodel instantiates a duplicated entry twice | FAIL |
 
 **0/4 passed.**
 
 ### Findings
 
 - **A variable list holds each target at most once.** Adding an already-present target
-  is a silent no-op: the size stays 1 (72), iteration visits one entry (73), and a GUI
-  GetList datamodel instantiates one item widget (75). Lists behave as target sets.
+  is a silent no-op: the size stays 1 (81), iteration visits one entry (82), and a GUI
+  GetList datamodel instantiates one item widget (84). Lists behave as target sets.
   `is_target_in_variable_list` guards before adds therefore do not change the list
   contents; they only matter for skipping side effects paired with the add (counters,
   first-add setup).
-- 74's failure is a consequence of 72, not a separate finding: only one entry ever
+- 83's failure is a consequence of 81, not a separate finding: only one entry ever
   existed, so the single remove_list_variable emptied the list and the size-1 assertion
   could not hold. Per-instance removal semantics are moot - duplicates cannot exist.
 - Consequence for mods: multiplicity cannot be represented by repeated list entries
@@ -277,7 +392,7 @@ existing save, or only when starting a NEW game. CMF added its own `on_game_load
 hook because vanilla has no load hook; this test confirms that directly instead of
 inferring it.
 
-The measurement is test 104's counter, `et_gs_fires`, read off its row in the
+The measurement is test 110's counter, `et_gs_fires`, read off its row in the
 on_action section. `et_on_game_start_scope_probe` seeds it only when the global is
 absent and increments it on every fire, and globals persist in the save, so a load
 that fires the hook raises the count instead of re-zeroing it.
@@ -287,7 +402,7 @@ at all, so that a negative in step 2 means "did not fire on load" and not "hook 
 
 1. Enable the engine test. Start a NEW game and read row 104. It reads 1. This
    confirms the on_action runs.
-2. Save, then load that save, and read row 104 again.
+2. Save, then load that save, and read row 110 again.
    - Reads 2 -> `on_game_start` DID fire on load.
    - Still reads 1 -> `on_game_start` did NOT fire on load.
 
@@ -306,11 +421,11 @@ mismatches, and a discriminated `nobles_estate`) and corrupted the country the r
 the suite is run as. The counter answers the same question non-destructively and is
 already on screen.
 
-Reading note: row 104's other claim, that `on_game_start` fires once and therefore in
+Reading note: row 110's other claim, that `on_game_start` fires once and therefore in
 no scope, is read on a fresh new game. Once a save has been loaded the count is
 cumulative across games rather than a per-fire figure.
 
-## Countryless Client Tests (76-89, 103, 107)
+## Countryless Client Tests (85-109)
 
 Added 2026-07-27. Probes what a client can still do with no country of its own.
 Every claim in this area rested on one comparison across CMM's own feature surface,
@@ -325,35 +440,35 @@ states. The one button, Re-run Countryless Suite, only sets a GUI variable, sinc
 scripted GUI Execute is the mechanism under test and would be dropped in exactly
 the states that matter.
 
-Test 76 exists to make the rest readable: without a marker proving the driver ran,
+Test 85 exists to make the rest readable: without a marker proving the driver ran,
 a blank row cannot be told apart from a dropped Execute.
 
 Run 2026-07-27 on 1.3.x.
 
 | # | Test | Lobby | Country | Generic obs | Specific obs |
 |---|------|-------|---------|-------------|--------------|
-| 76 | A pass has run this client session | TRUE | TRUE | TRUE | TRUE |
-| 77 | GetPlayer.IsValid | FALSE | TRUE | FALSE | TRUE |
-| 78 | IsPlayerValid | FALSE | TRUE | FALSE | TRUE |
-| 79 | IsPlayerObserver | FALSE | FALSE | TRUE | TRUE |
-| 80 | Scripted GUI Execute reached script | **PASS** | PASS | **FAIL** | **FAIL** |
-| 81 | Scripted GUI IsShown evaluates | PASS | PASS | PASS | PASS |
-| 82 | Scripted GUI IsValid evaluates | PASS | PASS | PASS | PASS |
-| 83 | GetVariableSystem write + read | PASS | PASS | PASS | PASS |
-| 84 | Data read off a named country | PASS | PASS | PASS | PASS |
-| 85 | ExecuteConsoleCommand reached script | PASS | PASS | PASS | PASS |
-| 86 | Commands landed from a 3-call burst | 1 of 3 | 1 of 3 | 1 of 3 | 1 of 3 |
-| 87 | Commands landed from one `;` string | 3 of 3 | 3 of 3 | 3 of 3 | 3 of 3 |
-| 88 | Location.GetKey on location:paris | 2191 | 2191 | 2191 | 2191 |
-| 89 | Missing global map key reads silently | PASS | PASS | PASS | PASS |
-| 103 | GetVariableSystem compares as a string | PASS | PASS | PASS | PASS |
-| 107 | GUI variable carried from an earlier game | see below | see below | see below | see below |
-| 108 | Execute ~1s after map load reached script | PASS | PASS | | |
-| 109 | Console ~1s after map load reached script | FAIL | FAIL | | |
+| 85 | A pass has run this client session | TRUE | TRUE | TRUE | TRUE |
+| 86 | GetPlayer.IsValid | FALSE | TRUE | FALSE | TRUE |
+| 87 | IsPlayerValid | FALSE | TRUE | FALSE | TRUE |
+| 88 | IsPlayerObserver | FALSE | FALSE | TRUE | TRUE |
+| 89 | Scripted GUI Execute reached script | **PASS** | PASS | **FAIL** | **FAIL** |
+| 90 | Scripted GUI IsShown evaluates | PASS | PASS | PASS | PASS |
+| 91 | Scripted GUI IsValid evaluates | PASS | PASS | PASS | PASS |
+| 92 | GetVariableSystem write + read | PASS | PASS | PASS | PASS |
+| 93 | Data read off a named country | PASS | PASS | PASS | PASS |
+| 94 | ExecuteConsoleCommand reached script | PASS | PASS | PASS | PASS |
+| 95 | Commands landed from a 3-call burst | 1 of 3 | 1 of 3 | 1 of 3 | 1 of 3 |
+| 96 | Commands landed from one `;` string | 3 of 3 | 3 of 3 | 3 of 3 | 3 of 3 |
+| 97 | Location.GetKey on location:paris | 2191 | 2191 | 2191 | 2191 |
+| 98 | Missing global map key reads silently | PASS | PASS | PASS | PASS |
+| 99 | GetVariableSystem compares as a string | PASS | PASS | PASS | PASS |
+| 100 | GUI variable carried from an earlier game | see below | see below | see below | see below |
+| 101 | Execute ~1s after map load reached script | PASS | PASS | | |
+| 102 | Console ~1s after map load reached script | FAIL | FAIL | | |
 
-Rows 76-89 and 103 are settled-state readings, taken via Re-run.
+Rows 85-98 and 99 are settled-state readings, taken via Re-run.
 
-**108/109 have no per-state columns and cannot have any.** They fire at map load, and
+**101/102 have no per-state columns and cannot have any.** They fire at map load, and
 at map load every client is still at the country-selection lobby: observer mode and
 taking a country are both reached through it. Two different questions were split out
 of that instead, and together they close the coverage:
@@ -362,52 +477,52 @@ Run 2026-07-27, one full client relaunch per column so the map-load probes are a
 
 | # | Test | Lobby | Country | Generic obs | Specific obs |
 |---|------|-------|---------|-------------|--------------|
-| 108 | Execute ~1s after map load | PASS | PASS | PASS | PASS |
-| 109 | Console ~1s after map load | FAIL | FAIL | FAIL | FAIL |
-| 110 | Console ~2s after map load | PASS | PASS | PASS | PASS |
-| 111 | Console ~4s after map load | PASS | PASS | PASS | FAIL* |
-| 112 | Console ~8s after map load | PASS | PASS | PASS | PASS |
-| 113 | First Execute after taking a country | n/a | PASS | n/a | n/a |
-| 114 | First console after taking a country | n/a | PASS | n/a | n/a |
-| 115 | First Execute after entering observer | n/a | n/a | FAIL | FAIL |
-| 116 | First console after entering observer | n/a | n/a | PASS | PASS |
+| 101 | Execute ~1s after map load | PASS | PASS | PASS | PASS |
+| 102 | Console ~1s after map load | FAIL | FAIL | FAIL | FAIL |
+| 103 | Console ~2s after map load | PASS | PASS | PASS | PASS |
+| 104 | Console ~4s after map load | PASS | PASS | PASS | FAIL* |
+| 105 | Console ~8s after map load | PASS | PASS | PASS | PASS |
+| 106 | First Execute after taking a country | n/a | PASS | n/a | n/a |
+| 107 | First console after taking a country | n/a | PASS | n/a | n/a |
+| 108 | First Execute after entering observer | n/a | n/a | FAIL | FAIL |
+| 109 | First console after entering observer | n/a | n/a | PASS | PASS |
 
 n/a means that transition never happened in that column, so the probe never fired and
 its row shows the seeded 0 as FAIL. Those cells are not results.
 
 ### Findings
 
-**The console warm-up ends between 1 and 2 seconds after map load.** 109 failed in all
-four sessions and 110 passed in all four, and 112 passed in all four. So the window is
+**The console warm-up ends between 1 and 2 seconds after map load.** 102 failed in all
+four sessions and 103 passed in all four, and 105 passed in all four. So the window is
 real, short, and identical in every column - which it must be, since at map load every
 client is still at the lobby.
 
-\* **111's single FAIL is a collision artifact, not a warm-up result.** A warm-up
+\* **104's single FAIL is a collision artifact, not a warm-up result.** A warm-up
 cannot fail at 4s while passing at 2s and 8s. In that column the observer transition
-happened while the ladder was running, and 116 passed, so the transition probe's own
+happened while the ladder was running, and 109 passed, so the transition probe's own
 console command was in flight when the 4s rung fired and the rung was refused - which
-is exactly test 86's one-command-at-a-time rule predicting its own interference. The
+is exactly test 95's one-command-at-a-time rule predicting its own interference. The
 window conclusion does not rest on this rung.
 
-**Execute needs no warm-up at all (108).** It reached script about a second after map
+**Execute needs no warm-up at all (101).** It reached script about a second after map
 load in every session, while the console at the same instant did not. The two command
 paths are not gated the same way.
 
-**No state transition re-opens a warm-up (114, 116).** The very first console command
+**No state transition re-opens a warm-up (107, 109).** The very first console command
 issued after taking a country, and after entering observer, both landed immediately.
 
-**115 with 116 is the decisive form of the observer finding.** At the first frame of
+**108 with 109 is the decisive form of the observer finding.** At the first frame of
 observer mode the Execute was already dead and the console already worked. Every
-timing explanation for test 80 is now excluded: it is not warm-up, not settling, and
+timing explanation for test 89 is now excluded: it is not warm-up, not settling, and
 not gating, because the same instant produced a working console command and a dead
-Execute. Paired with 113/114 passing on the country transition, the split is purely
+Execute. Paired with 106/107 passing on the country transition, the split is purely
 about observer status.
 
-**107 reads FALSE in all four columns and that is correct.** Each column was a fresh
-relaunch, so each was the first game of its session. 107 needs two games inside one
+**100 reads FALSE in all four columns and that is correct.** Each column was a fresh
+relaunch, so each was the first game of its session. 100 needs two games inside one
 client run, which the previous run established (FALSE then TRUE).
 
-**Test 107 CONFIRMED (re-run 2026-07-27 after the rebuild): GUI variables survive
+**Test 100 CONFIRMED (re-run 2026-07-27 after the rebuild): GUI variables survive
 from one game to the next inside a single client run.** First game of a fresh client
 session read FALSE, second game of the same session read TRUE, which is the shape the
 claim predicts and the shape the original broken version could not produce. The
@@ -420,7 +535,7 @@ retires an assertion that had sat in two memories with no verification behind it
 
 **The country-selection lobby is NOT a countryless client for Execute purposes.**
 This is the result that overturns the recorded lesson. `.Execute()` reached script
-at the lobby (80 PASS) with `GetPlayer.IsValid`, `IsPlayerValid` and
+at the lobby (89 PASS) with `GetPlayer.IsValid`, `IsPlayerValid` and
 `IsPlayerObserver` all reading FALSE, and failed in both observer states. The prior
 claim grouped "country-selection lobby, observer mode, between releasing one country
 and taking another" as one dead state; only the observer half holds. Selecting a
@@ -428,7 +543,7 @@ country in the lobby without pressing Play changes nothing: all four rows read t
 same as the unselected lobby, so that is not a distinct state.
 
 **The console has a warm-up of between 1 and 2 seconds after map load; scripted GUI
-Executes have none (108-112).** Across six sessions the Execute at ~1s always reached
+Executes have none (101-105).** Across six sessions the Execute at ~1s always reached
 script and the console at ~1s never did, while the console at ~2s and ~8s always did.
 Both probes are armed once per game by `et_nc_seed` and disarmed only by the reset, so
 a settled re-run cannot overwrite their answer. See the four-state table below.
@@ -436,27 +551,27 @@ a settled re-run cannot overwrite their answer. See the four-state table below.
 **RETRACTED: an earlier reading suggested "an early window where NO command lands,
 Execute and console alike". That was a rig artifact, not engine behaviour.** The
 driver's gate is `Not(GetVariableSystem.Exists('et_nc_done'))`, and that GUI variable
-survives the game boundary - which is exactly what test 107 confirms. So in any game
+survives the game boundary - which is exactly what test 100 confirms. So in any game
 after the first of a client run the driver never auto-runs at all, and every row
-reads the zeros `et_nc_seed` wrote. Step 2 of the 107 run reproduces it cleanly: 80
-and 85 FAIL with 0 of 3 on both console rows, then one press of Re-run in the SAME
-game turns all of them green. Nothing about elapsed time was involved. 108/109
+reads the zeros `et_nc_seed` wrote. Step 2 of the 100 run reproduces it cleanly: 89
+and 94 FAIL with 0 of 3 on both console rows, then one press of Re-run in the SAME
+game turns all of them green. Nothing about elapsed time was involved. 101/102
 supersede that reading entirely.
 
 **Consequence for anyone running this suite: press Re-run Countryless Suite in every
 state, including the first.** The auto-run only happens in the first game of a client
-session. Row 76 reads the same persisting GUI variable, so it reports TRUE in a later
+session. Row 85 reads the same persisting GUI variable, so it reports TRUE in a later
 game even when no pass ran there; treat it as "a pass has run at some point this
 session", not as "this state was measured".
 
-This does not touch the observer result, which tests 115/116 have since put beyond
+This does not touch the observer result, which tests 108/109 have since put beyond
 timing entirely: at the first frame of observer mode the console command landed and
 the Execute did not.
 
 Mechanism for the lobby accepting Executes at all is still unverified.
 
 **Observing a specific country is indistinguishable from playing on every accessor
-except `IsPlayerObserver`.** 77, 78 and 79 all read TRUE there, and 79 is the only
+except `IsPlayerObserver`.** 86, 87 and 88 all read TRUE there, and 88 is the only
 one that differs from a normal game. So `GetPlayer.IsValid` alone is worthless as a
 "this client controls a country" test, and `And(GetPlayer.IsValid,
 Not(IsPlayerObserver))` is exactly right. `CMFHasPlayerCountry` is confirmed correct.
@@ -470,20 +585,20 @@ status, not player validity.
 GetVariableSystem, arbitrary-country data reads and ExecuteConsoleCommand pass in
 all four states, including generic observer.
 
-**The console really does take one command at a time (86).** Three
+**The console really does take one command at a time (95).** Three
 `ExecuteConsoleCommand` calls in one state landed exactly 1, in every state, and the
 log carries exactly two `console.cpp:1268` "You can't add new commands while the
 console is still running commands" lines per pass. `ExecuteConsoleCommands` with
-`;` separators landed all 3 (87), so it is the only way to batch.
+`;` separators landed all 3 (96), so it is the only way to batch.
 
-**`Location.GetKey` returns the numeric runtime id (88).** `location:paris` reported
+**`Location.GetKey` returns the numeric runtime id (97).** `location:paris` reported
 `2191`, not `paris`. Confirmed.
 
-**A missing key in a global variable map reads silently in GUI (89).** No error, no
+**A missing key in a global variable map reads silently in GUI (98).** No error, no
 break. This is the opposite of the script side, where a quoted `variable_map()` on a
 trigger's left side logs two errors per evaluation.
 
-**Test 107 is VOID - the test was broken, not the claim.** Its gate was a live
+**Test 100 is VOID - the test was broken, not the claim.** Its gate was a live
 expression on `et_nc_persist`, so the driver's own end-of-pass write to that key
 flipped the gate and fired it mid-game. It read TRUE everywhere including the first
 game of the session, which is impossible if it were measuring what it claimed. The
@@ -496,9 +611,9 @@ being measured. Re-run needed; no conclusion either way yet.
 
 **Press Re-run Countryless Suite in every state, including the first.** The automatic
 pass fires only in the first game of a client session, because its gate reads a GUI
-variable that survives the game boundary (test 107). In any later game the rows
+variable that survives the game boundary (test 100). In any later game the rows
 otherwise show `et_nc_seed`'s zeros, which is indistinguishable from the engine
-dropping every command. Rows 108/109 are the exception: they fire once per game at
+dropping every command. Rows 101/102 are the exception: they fire once per game at
 map load and keep that answer.
 
 The normal-country run is the control and is not optional. Without a run where
@@ -516,144 +631,10 @@ broken rig.
 4. Start a new grand campaign, swap to observing Castile specifically. Once in
    game, press Re-run Countryless Suite, wait 5 seconds, record.
 
-Test 107 is answered by the second game of a client run, so it reads FALSE in step
+Test 100 is answered by the second game of a client run, so it reads FALSE in step
 1 and TRUE from step 3 onward as long as the game was never closed in between.
 
-## Pure-Script Semantics (90-97, 106)
-
-Added 2026-07-27. Run button: Run Script Tests. No GUI rig and no timing.
-
-Run 2026-07-27 on 1.3.x. Re-run 2026-07-31 alongside 119-123: every row matched
-exactly (93, 96 and 97 FAIL, the rest PASS), so nothing here changed.
-
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 90 | change_variable max = 9 raises 3 to 9 | PASS | PASS |
-| 91 | change_variable min = 3 lowers 9 to 3 | PASS | PASS |
-| 92 | change_variable max = 3 leaves 9 alone | PASS | PASS |
-| 93 | List-iterator limit sees the body's own counter | FAIL (limit is blind to it) | FAIL |
-| 94 | local_var set in one scope block reads in another | PASS | PASS |
-| 95 | Same-named locals at two nesting levels share a slot | PASS | PASS |
-| 96 | Variable written on a province_definition reads back there | PROBE | **FAIL** |
-| 97 | Same variable read through a location's province_definition link | PROBE | **FAIL** |
-| 106 | Nested every_in_list scope reaches a helper called by macro-param name | FAIL (the CMM shape) | **PASS** |
-
-### Findings
-
-**`change_variable` `min`/`max` are the min/max FUNCTIONS on the current value
-(90-92).** `max = 9` raised 3 to 9, `min = 3` lowered 9 to 3, and `max = 3` left 9
-alone. The ceiling-clamp reading, which a code review once "fixed" a running
-maximum into and shipped as a regression, is wrong: `max` never lowers a value.
-This is now settled by a test rather than by an incident report.
-
-**A list-iterator `limit` cannot see the body's own counter increments (93).** The
-limit was `local_var:i < 2` on a 5-entry list with the body incrementing `i`, and
-all 5 entries were visited. Confirmed, and now isolated rather than resting on an
-observation where the batch size changed in the same edit.
-
-**`local_var:` is execution-wide (94, 95).** A local set inside `c:FRA = { }` read
-back inside `c:ENG = { }` in the same execution, and a same-named local written by
-an inner loop was visible to the outer scope afterwards. Both halves of the claim
-confirmed, including the positive direction that had only ever been inferred from
-the engine's error text.
-
-**The province_definition round-trip is dead on the WRITE side (96, 97).** This is
-the isolation the memory asked for. 96 wrote a variable on a `province_definition`
-and read it back **in the same block**, and still failed, so the value never lands
-at all. 97's failure is a consequence, not a second finding. Never store variables
-on a province_definition; the working pattern remains writing to every province
-slice via `every_province_in_province_definition`.
-
-**106 OVERTURNS the narrowed nested-scope claim.** A scope saved in a nested
-`every_in_list` over a temp list, handed to a helper as a macro-param NAME, WAS set
-inside the helper. Test 70 had already disproved the general form; this was the
-shape the memory narrowed the claim to, "until re-isolated". Both are now
-disproved, so the CMM list-reset bug was caused by something else and the
-nested-loop saved-scope rule should not be carried forward as an engine fact.
-
-90-92 are the three-way split of the `change_variable` min/max question. The
-recorded claim is that they are the min/max FUNCTIONS on the current value, not the
-floor/ceiling clamps that `min`/`max` mean inside a `value = { }` block. 92 is the
-half a code review once inverted, shipping a regression: a clamp reading would drop
-9 to 3 there.
-
-96 and 97 are the isolation the province_definition memory says was never done. The
-claim is that definition-scope variables do not round-trip, without knowing whether
-the write or the link read is the dead side. 96 PASS with 97 FAIL means the link
-read; 96 FAIL means the write.
-
-106 is the shape test 70 left open. Test 70 disproved the general form (a plain
-nested `every_country` read as a literal `scope:X` in a called effect works), and
-the memory then narrowed the claim to nested `every_in_list` with the scope name
-passed as a macro param, "until re-isolated". This is that shape.
-
-## State-Machine and Nesting (98-102)
-
-Added 2026-07-27. Runs with the hidden-window chain (Run Hidden Window Tests); the
-chain is about 4 seconds longer than before.
-
-Run 2026-07-27 on 1.3.x.
-
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 98 | Chain reaches its tail past a bare name/duration/next state | FAIL (bare state stalls) | FAIL |
-| 99 | Control: same chain, middle state has an on_start | PASS | PASS |
-| 100 | GetGlobalList binds a global_variable_list to a datamodel | PASS | PASS |
-| 101 | Outer Scope context survives an inner Location datamodel | PASS | PASS |
-| 102 | datamodel_reuse_widgets keeps trigger_on_create from re-firing | PASS | PASS |
-
-### Findings
-
-**The bare-delay-state stall is real and now properly isolated (98 with 99).** Two
-chains identical except for an `on_start` on the middle state: the bare one never
-reached its tail, the control did, and both recorded that their `_show` fired first,
-so the failure is "started and stalled" rather than "never armed". The recorded
-lesson previously carried its own caveat that the state had been renamed in the same
-change, making `on_finish` the mechanism by inference; that caveat can be dropped.
-
-Possible mechanism, unconfirmed: the run logged one
-`pdx_gui_animation_runtime_state.cpp:613 Animation triggered has no valid state
-properties or sound effects` during the hidden-window suite. That is consistent with
-the engine refusing to play a state carrying nothing, which would be why the chain
-dies there. One occurrence, not attributed to a specific state, so it is a lead
-rather than a result. It does mean the "nothing is logged" half of the recorded
-lesson is doubtful.
-
-**`GetGlobalList` binds a script-side global_variable_list into a datamodel (100).**
-All 3 seeded targets instantiated.
-
-**An outer `Scope` datamodel binding survives an inner `Location` datamodel in the
-same tree (101).** Inside every inner row the outer `Scope.GetLocation` still
-resolved to the seeded paris, while the inner `Location` was a different location.
-Each type holds its own context slot; confirmed, and no longer resting only on a
-working fix in another mod.
-
-**`datamodel_reuse_widgets = yes` stops `trigger_on_create` firing per data item
-(102).** Swapping the list for three different targets produced no further fires.
-The CMM tab bar's deliberate exclusion from trigger_on_create caching rests on a
-real behaviour.
-
-98 and 99 are the controlled pair. The recorded claim came with its own caveat: the
-state was renamed in the same change that added the `on_finish`, so `on_finish` was
-"the mechanism by inference rather than by controlled test". These two chains are
-identical apart from the middle state's `on_start`, and both require their `_show`
-to have fired before scoring, so a FAIL means "started and stalled" rather than
-"never armed". Nothing in the existing rig covered this: every non-`_show` state in
-`et_hw_core` already carries an `on_start` or `on_finish`.
-
-101's inner datamodel is a fixed literal (`london`'s province locations) rather than
-one derived from the outer item, so the result does not depend on how many locations
-any province holds. If the `Scope` slot survives the `Location` rebinding,
-`Scope.GetLocation` is still paris inside every inner row; if it is shadowed, it is
-never paris. The check also requires at least one inner row where the two differ, so
-the two slots cannot pass by agreeing accidentally.
-
-102 seeds three targets, lets them instantiate, then swaps the list for three
-different targets. A PASS means no further `trigger_on_create` fires, i.e. the
-widgets were reused. This is the premise the CMM tab bar's exclusion from caching
-rests on; a FAIL means that exclusion is unnecessary.
-
-## on_action Scope and Periodic Pulses (104-105)
+## on_action Scope and Periodic Pulses (110-111)
 
 Added 2026-07-27. Both count fires into a global, and the count is the result: a
 no-scope hook fires once, a country-scope hook would fire once per country. The
@@ -663,31 +644,31 @@ Run 2026-07-27 on 1.3.x.
 
 | # | Test | Expected | Result |
 |---|------|----------|--------|
-| 104 | on_game_start fires (1 = no scope, many = country scope) | 1 | 1 |
-| 105 | weather_monthly_pulse fires (should track elapsed months) | 6 after 6 months | 6 |
+| 110 | on_game_start fires (1 = no scope, many = country scope) | 1 | 1 |
+| 111 | weather_monthly_pulse fires (should track elapsed months) | 6 after 6 months | 6 |
 
 ### Findings
 
-**`on_game_start` fires exactly once, in no scope (104).** A country-scoped hook
+**`on_game_start` fires exactly once, in no scope (110).** A country-scoped hook
 would have fired once per country and read in the hundreds. The project memory index
 line claiming it "fires before country selection, not after" describes something
 else and is not what this measures; the file it points at, "fires in no scope (not
 country scope)", is the one this confirms.
 
-**`weather_monthly_pulse` fires once per elapsed month in no scope (105).** Six fires
+**`weather_monthly_pulse` fires once per elapsed month in no scope (111).** Six fires
 between 1 April and 1 October, 1337. Not per country and not per location, so it is
 usable as the global monthly catch-up hook for a CMF-independent mod.
 
-104 settles a flat contradiction in the memory set: the project memory index line
+110 settles a flat contradiction in the memory set: the project memory index line
 says `on_game_start` "fires before country selection, not after", while the file it
 points at says it "fires in no scope (not country scope)". Those are different
 claims and only the scope half is testable here.
 
-For 105, run the step-1 save from 1 April, 1337 to 1 October, 1337 and read the
+For 111, run the step-1 save from 1 April, 1337 to 1 October, 1337 and read the
 count. Six means once per elapsed month in no scope. A number in the hundreds or
 thousands would mean the pulse is country- or location-scoped.
 
-## Console Parse Cost (117-118)
+## Console Parse Cost (112-113)
 
 Rig: `et_pc_effects.txt`, `et_pc_windows.gui`, seeded by `et_pc_seed`. Self-starting, so no
 Execute of its own lands inside the measurement windows.
@@ -704,13 +685,13 @@ pair below separates them.
 
 | # | Test | Expected if fixed per command | Expected if proportional |
 |---|------|-------------------------------|--------------------------|
-| 117 | 20 calls as 20 commands | ~20x the floor | same as 118 |
-| 118 | the same 20 calls in 1 command | ~1x the floor | same as 117 |
+| 112 | 20 calls as 20 commands | ~20x the floor | same as 113 |
+| 113 | the same 20 calls in 1 command | ~1x the floor | same as 112 |
 
 Both bursts call `et_pc_tiny`, a one-statement effect that names nothing, exactly 20 times. Equal
 call counts, different command counts, so the difference in log volume is the per-command floor.
-Burst 117 is submitted as one `;`-separated string rather than 20 `ExecuteConsoleCommand` calls,
-because the console refuses any command issued while another is running (test 86) and 20 separate
+Burst 112 is submitted as one `;`-separated string rather than 20 `ExecuteConsoleCommand` calls,
+because the console refuses any command issued while another is running (test 95) and 20 separate
 calls would land one.
 
 The counter row is the pass condition for both: `et_pc_n` must read 40. If either burst dropped
@@ -719,11 +700,11 @@ calls the volumes are not comparable and the measurement is void.
 ### Protocol
 
 New game as Castile, not ironman. The rig self-starts at map load: burst 117 fires 5 seconds in
-(clear of the 1-to-2 second console warm-up, test 109), burst 118 twelve seconds after that, and
+(clear of the 1-to-2 second console warm-up, test 102), burst 113 twelve seconds after that, and
 the freshness marker is cleared 8 seconds later so its own command sits outside both windows. Wait
 30 seconds on the map, then check the row reads 40 of 40 and read the volumes out of `debug.log`,
 which carries a `[HH:MM:SS]` stamp on every line, so the two bursts separate by timestamp. The
-`console.cpp:1175` lines mark each burst: 20 of them for 117, one for 118.
+`console.cpp:1175` lines mark each burst: 20 of them for 112, one for 118.
 
 ### Result
 
@@ -732,8 +713,8 @@ call and the volumes are comparable.
 
 | # | Test | Commands | Calls | `Adding effect` + `Adding trigger` lines |
 |---|------|----------|-------|------------------------------------------|
-| 117 | 20 calls as 20 commands | 20 | 20 | **67,535** |
-| 118 | the same 20 calls in 1 command | 1 | 20 | **3,395** |
+| 112 | 20 calls as 20 commands | 20 | 20 | **67,535** |
+| 113 | the same 20 calls in 1 command | 1 | 20 | **3,395** |
 
 **CONFIRMED: the cost is fixed per command, not proportional to the effect named.** The same 20
 calls cost 19.9x more spread across 20 commands than packed into one.
@@ -744,9 +725,9 @@ lines at six separate timestamps, 2 commands = 6,752, 3 commands = 10,128. So **
 lines per command**, and it is charged whatever the command names - `et_pc_tiny` is a single
 `change_variable` statement.
 
-The named effect's own size shows up as a small term on top: burst 118's one command came to 3,395,
+The named effect's own size shows up as a small term on top: burst 113's one command came to 3,395,
 which is the floor plus 19, against the 20 `et_pc_tiny` call sites it carries. About one line per
-statement instantiated. That is why burst 117 reads 3,377 per command rather than 3,376.
+statement instantiated. That is why burst 112 reads 3,377 per command rather than 3,376.
 
 This overturns the recorded lesson directly. The earlier reading of ~3,400 lines per command was
 attributed to the size of the scoring effect being named; a one-statement effect costing 3,376 shows
@@ -761,7 +742,75 @@ floor. This pair does not test that half, since a tree that size cannot be built
 generating a large amount of throwaway script. That half stays a live measurement.
 
 
-## Ordered Iterator Defaults (119-121)
+## Pure-Script Semantics (114-122)
+
+Added 2026-07-27. Run button: Run Script Tests. No GUI rig and no timing.
+
+Run 2026-07-27 on 1.3.x. Re-run 2026-07-31 alongside 123-127: every row matched
+exactly (117, 120 and 121 FAIL, the rest PASS), so nothing here changed.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 114 | change_variable max = 9 raises 3 to 9 | PASS | PASS |
+| 115 | change_variable min = 3 lowers 9 to 3 | PASS | PASS |
+| 116 | change_variable max = 3 leaves 9 alone | PASS | PASS |
+| 117 | List-iterator limit sees the body's own counter | FAIL (limit is blind to it) | FAIL |
+| 118 | local_var set in one scope block reads in another | PASS | PASS |
+| 119 | Same-named locals at two nesting levels share a slot | PASS | PASS |
+| 120 | Variable written on a province_definition reads back there | PROBE | **FAIL** |
+| 121 | Same variable read through a location's province_definition link | PROBE | **FAIL** |
+| 122 | Nested every_in_list scope reaches a helper called by macro-param name | FAIL (the CMM shape) | **PASS** |
+
+### Findings
+
+**`change_variable` `min`/`max` are the min/max FUNCTIONS on the current value
+(114-116).** `max = 9` raised 3 to 9, `min = 3` lowered 9 to 3, and `max = 3` left 9
+alone. The ceiling-clamp reading, which a code review once "fixed" a running
+maximum into and shipped as a regression, is wrong: `max` never lowers a value.
+This is now settled by a test rather than by an incident report.
+
+**A list-iterator `limit` cannot see the body's own counter increments (117).** The
+limit was `local_var:i < 2` on a 5-entry list with the body incrementing `i`, and
+all 5 entries were visited. Confirmed, and now isolated rather than resting on an
+observation where the batch size changed in the same edit.
+
+**`local_var:` is execution-wide (118, 119).** A local set inside `c:FRA = { }` read
+back inside `c:ENG = { }` in the same execution, and a same-named local written by
+an inner loop was visible to the outer scope afterwards. Both halves of the claim
+confirmed, including the positive direction that had only ever been inferred from
+the engine's error text.
+
+**The province_definition round-trip is dead on the WRITE side (120, 121).** This is
+the isolation the memory asked for. 120 wrote a variable on a `province_definition`
+and read it back **in the same block**, and still failed, so the value never lands
+at all. 121's failure is a consequence, not a second finding. Never store variables
+on a province_definition; the working pattern remains writing to every province
+slice via `every_province_in_province_definition`.
+
+**122 OVERTURNS the narrowed nested-scope claim.** A scope saved in a nested
+`every_in_list` over a temp list, handed to a helper as a macro-param NAME, WAS set
+inside the helper. Test 70 had already disproved the general form; this was the
+shape the memory narrowed the claim to, "until re-isolated". Both are now
+disproved, so the CMM list-reset bug was caused by something else and the
+nested-loop saved-scope rule should not be carried forward as an engine fact.
+
+114-116 are the three-way split of the `change_variable` min/max question. The
+recorded claim is that they are the min/max FUNCTIONS on the current value, not the
+floor/ceiling clamps that `min`/`max` mean inside a `value = { }` block. 116 is the
+half a code review once inverted, shipping a regression: a clamp reading would drop
+9 to 3 there.
+
+120 and 121 are the isolation the province_definition memory says was never done. The
+claim is that definition-scope variables do not round-trip, without knowing whether
+the write or the link read is the dead side. 120 PASS with 121 FAIL means the link
+read; 120 FAIL means the write.
+
+122 is the shape test 70 left open. Test 70 disproved the general form (a plain
+nested `every_country` read as a literal `scope:X` in a called effect works), and
+the memory then narrowed the claim to nested `every_in_list` with the scope name
+passed as a macro param, "until re-isolated". This is that shape.
+
+## Ordered Iterator Defaults (123-125)
 
 Added 2026-07-31. Run button: Run Script Tests. No GUI rig and no timing. Start on any
 country holding more than one location; all three rows read FAIL on a one-location country
@@ -771,19 +820,19 @@ Run 2026-07-31 on 1.3.x as France.
 
 | # | Test | Expected | Result |
 |---|------|----------|--------|
-| 119 | ordered_owned_location with no position and no max visits one location | PASS | PASS |
-| 120 | Control - the same iterator with max visits every location | PASS | PASS |
-| 121 | The one location the bare form visits is the top of the order | PASS | PASS |
+| 123 | ordered_owned_location with no position and no max visits one location | PASS | PASS |
+| 124 | Control - the same iterator with max visits every location | PASS | PASS |
+| 125 | The one location the bare form visits is the top of the order | PASS | PASS |
 
 ### Findings
 
 **An ordered list iterator with neither `position` nor `max` visits exactly one
-object (119 with 120).** The bare `ordered_owned_location` visited 1 of France's
+object (123 with 124).** The bare `ordered_owned_location` visited 1 of France's
 locations; the identical iterator carrying `max = 100000` and
 `check_range_bounds = no` visited every one. The max is the only difference between
-the two, so 119 is the iterator defaulting to one entry rather than failing outright.
+the two, so 123 is the iterator defaulting to one entry rather than failing outright.
 
-**The one object visited is the top of the order (121).** Ranks were assigned 1..N and
+**The one object visited is the top of the order (125).** Ranks were assigned 1..N and
 the single visit landed on rank N, so `order_by` is honoured in full and only the
 breadth is lost.
 
@@ -814,14 +863,14 @@ error logged. Adding `max` plus `check_range_bounds = no` fixed it.
 ### Design
 
 Every owned location is ranked 1..N into the location variable `et_119_rank` first, so
-the order is total and the visited entry is identifiable by its rank. 119 then runs the
-bare iterator and counts; 120 runs the identical iterator with `max = 100000` and
-`check_range_bounds = no` and counts; 121 reads which rank the bare form's single visit
-landed on. 119 and 120 differ in nothing but the max, which is what makes 120 the
+the order is total and the visited entry is identifiable by its rank. 123 then runs the
+bare iterator and counts; 124 runs the identical iterator with `max = 100000` and
+`check_range_bounds = no` and counts; 125 reads which rank the bare form's single visit
+landed on. 123 and 124 differ in nothing but the max, which is what makes 124 the
 control: without it, a count of 1 could mean the iterator failed outright rather than
 defaulting to one entry.
 
-121 exists because the ordering is honoured while the breadth is lost, which is exactly
+125 exists because the ordering is honoured while the breadth is lost, which is exactly
 what makes the bug hard to see: the one object visited is the correct top-ranked one, so
 the feature looks like it is picking well rather than like it is broken.
 
@@ -830,7 +879,7 @@ to 0 or `max` to 1. Both readings select the top of the order, so no observation
 distinguishes them, and the claim to record is the observable one - neither parameter
 means one entry.
 
-## building_type_max_level Error Pair (122-123)
+## building_type_max_level Error Pair (126-127)
 
 Added 2026-07-31. Run button: Run Script Tests. **The answer is in `error.log`, not in the
 rows** - the two rows only report that the pair ran. Builds masons in your capital and grants
@@ -840,22 +889,22 @@ Run 2026-07-31 on 1.3.x as France.
 
 | # | Test | Expected | Result |
 |---|------|----------|--------|
-| 122 | Five building_type_max_level evaluations, nothing queued between them | PASS = the pair ran | PASS |
-| 123 | The same five with construct_building between them | PASS = ran and a level landed | PASS |
+| 126 | Five building_type_max_level evaluations, nothing queued between them | PASS = the pair ran | PASS |
+| 127 | The same five with construct_building between them | PASS = ran and a level landed | PASS |
 
 **`error.log` carried zero `building_type_max_level` lines.**
 
 ### Findings
 
 **The pair did not reproduce the error, and the run is a valid measurement.** Both rows
-passed, so both loops completed their five evaluations and 123 landed a mason level:
+passed, so both loops completed their five evaluations and 127 landed a mason level:
 ten evaluations of the trigger in total, half of them immediately after a
 `construct_building`, and nothing logged.
 
 **The construct theory is not confirmed.** It is also not refuted, because this rig
 differs from the Construction Manager call sites in more than the construct. What the
 two share is already substantial: both evaluate the trigger inside a `while` limit under
-a scripted GUI Execute, and 123 queues a level between evaluations. What differs is the
+a scripted GUI Execute, and 127 queues a level between evaluations. What differs is the
 location. This pair ran on the capital; the sites that log run on ordinary owned
 locations reached through an iterator.
 
@@ -883,7 +932,7 @@ queued. This pair tests that and nothing else.
 
 Both loops evaluate the trigger exactly five times on the capital, against `building_type:mason`,
 with an OR that is always true so the counter is what ends them. They differ in one statement:
-123 queues a level between evaluations, 122 does not.
+127 queues a level between evaluations, 126 does not.
 
 Run the suite on a fresh save, then search `error.log` for `building_type_max_level`. The lines
 carry `[HH:MM:SS]` stamps and both loops run in the same press, so count them rather than trying
@@ -898,10 +947,10 @@ to separate them by time:
   ordinary owned locations under a scripted GUI Execute, so try moving the pair onto one of those
   before concluding the trigger is clean.
 
-If 123 reads FAIL, no level landed and the pair measured nothing: check the capital can take
+If 127 reads FAIL, no level landed and the pair measured nothing: check the capital can take
 another mason.
 
-## building_type_max_level, Owned Location (124-125)
+## building_type_max_level, Owned Location (128-129)
 
 Added 2026-07-31. Run button: Run Script Tests. **The answer is in `error.log`**, the rows only
 report that the pair ran. Builds masons on an owned location, so use a throwaway save.
@@ -910,16 +959,16 @@ report that the pair ran. Builds masons on an owned location, so use a throwaway
 
 | # | Test | Expected | Result |
 |---|------|----------|--------|
-| 124 | The 122 shape on an owned location reached by an iterator | PASS = the pair ran | - |
-| 125 | The 123 shape on that same location | PASS = ran and a level landed | - |
+| 128 | The 126 shape on an owned location reached by an iterator | PASS = the pair ran | - |
+| 129 | The 127 shape on that same location | PASS = ran and a level landed | - |
 
 ### Why
 
-122 and 123 ran clean on the capital, which left the location as the last difference from the
+126 and 127 ran clean on the capital, which left the location as the last difference from the
 Construction Manager call sites that log: those reach ordinary owned locations through an
-iterator, not through the `capital` link. 124 and 125 are 122 and 123 with that one thing
+iterator, not through the `capital` link. 128 and 129 are 126 and 127 with that one thing
 changed. Both take the first location `every_owned_location` hands back, cut to one location by
-an inner `if` because a list-iterator limit cannot see what its own body sets (test 93).
+an inner `if` because a list-iterator limit cannot see what its own body sets (test 117).
 
 ### How to read it
 
@@ -934,9 +983,9 @@ Search `error.log` for `building_type_max_level` after the run.
   something else in the Construction Manager sites entirely. At that point stop guessing from the
   outside and instrument the live call sites rather than adding a sixth variant here.
 
-If 125 reads FAIL, no level landed and the pair measured nothing.
+If 129 reads FAIL, no level landed and the pair measured nothing.
 
-## construct_building Skips Placement Validation (126-127)
+## construct_building Skips Placement Validation (130-131)
 
 Added 2026-07-31. Run button: Run Script Tests. Builds in your capital and grants 10000 gold,
 so use a throwaway save.
@@ -945,8 +994,8 @@ so use a throwaway save.
 
 | # | Test | Expected | Result |
 |---|------|----------|--------|
-| 126 | Control - the engine refuses rural_glassmaker in a town-or-better capital | PASS | - |
-| 127 | construct_building places it there anyway | PASS = the effect validates nothing | - |
+| 130 | Control - the engine refuses rural_glassmaker in a town-or-better capital | PASS | - |
+| 131 | construct_building places it there anyway | PASS = the effect validates nothing | - |
 
 ### Why
 
@@ -961,11 +1010,11 @@ its own measurement.
 
 `rural_glassmaker` is `rural_settlement = yes` with `town = no` and `city = no`
 (`in_game/common/building_types/rural_buildings.txt`), so no capital above rural rank can take
-one. 126 asserts the engine agrees, using `can_build_building` with the player as `scope:actor`,
-and is skipped on a rural capital by its own rank guard. 127 then calls `construct_building`
+one. 130 asserts the engine agrees, using `can_build_building` with the player as `scope:actor`,
+and is skipped on a rural capital by its own rank guard. 131 then calls `construct_building`
 for that same type at that same location and checks whether a level landed.
 
-A PASS on 127 confirms the effect places a building the engine refuses. A FAIL means it does
+A PASS on 131 confirms the effect places a building the engine refuses. A FAIL means it does
 validate, the diagnosis of the foreign bug was wrong, and the one-level-per-cycle change needs
 revisiting.
 
@@ -974,18 +1023,18 @@ This does not isolate `need_good_relation` specifically, only the general claim 
 that the same code path skips, and a rank rule is the one that can be forced deterministically
 without arranging a diplomatic state.
 
-If 126 reads FAIL, your capital is a rural settlement or the engine allowed the placement, and
-127 is skipped: the pair measured nothing.
+If 130 reads FAIL, your capital is a rural settlement or the engine allowed the placement, and
+131 is skipped: the pair measured nothing.
 
-## Probe Building Types (128-180)
+## Probe Building Types (132-182)
 
-Added 2026-07-31. Run button: Run Script Tests, plus Re-read Probe Levels for 159 and 160 and
-et_bt_core for 147 and 148. **Changes the save**: grants gold, builds in your capital, in one other
+Added 2026-07-31. Run button: Run Script Tests, plus Re-read Probe Levels for 181 and 182 and
+et_bt_core for 179 and 148. **Changes the save**: grants gold, builds in your capital, in one other
 owned location and in a neighbour's capital, raises opinion with that neighbour, researches Road
 Building and orders three roads. Use a throwaway save and press each button once.
 
 Five runs on 1.3.x as Castile, 2026-07-31. The column below is the current answer for each row,
-taken from the run that last exercised it. 169-172 were added after those runs and have not been
+taken from the run that last exercised it. 167-170 were added after those runs and have not been
 run; the group needs a country with at least two owned locations that are not neighbours of each
 other and hold no road construction, on top of what the rows below want.
 
@@ -1003,74 +1052,72 @@ suite's own test nation, satisfies all three.
 
 | # | Test | Expected | Result |
 |---|------|----------|-------|
-| 128 | building_type_max_level reports 3 for a max_levels = 3 type | one of 128/149/150/151 | FAIL |
-| 149 | ... or it reports 0 | one of 128/149/150/151 | **PASS** |
-| 150 | ... or it reports 1 or 2 | one of 128/149/150/151 | FAIL |
-| 151 | ... or it reports more than 3 | one of 128/149/150/151 | FAIL |
-| 156 | The same trigger reports more than 0 for vanilla mason | PASS | **FAIL** |
-| 157 | ... and reports 1 for vanilla royal_court, whose cap is a literal | PASS | **FAIL** |
-| 161 | With the owner param, the trigger reports more than 0 for vanilla mason | PASS | **FAIL** |
-| 162 | ... and reports 1 for vanilla royal_court | PASS | **FAIL** |
-| 163 | ... and reports 3 for the max_levels = 3 probe | PASS | **FAIL** |
-| 164 | After a month tick, the trigger reports 3 for the probe | PASS | **FAIL** |
-| 168 | ... or it still reports 0 | one of 164/168 | **PASS** |
-| 165 | After a month tick, with owner, it reports 3 for the probe | PASS | **FAIL** |
-| 166 | After a month tick, it reports more than 0 for vanilla mason | PASS | **FAIL** |
-| 167 | After a month tick, it reports 1 for vanilla royal_court | PASS | **FAIL** |
-| 130 | The reading does not move once a level is in place | PASS | PASS |
-| 129 | instant = yes puts the level up in the same tick | PASS | FAIL |
-| 152 | ... a building of that type exists there at all | PASS | PASS |
-| 153 | ... and nothing of that type is left under construction | PASS | FAIL |
-| 133 | construct_building places a fourth level past max_levels = 3 | PASS | PASS |
-| 158 | A positive change_building_level_in_location delta stands a level | PASS | PASS |
-| 131 | is_at_max_level reads no at one level of three | PASS | PASS |
-| 132 | is_at_max_level reads yes at three of three | PASS | PASS |
-| 134 | Guard - a queued max_levels = 1 type stands at 0 levels with 1 under construction | PASS | PASS |
-| 135 | That building reads is_at_max_level no | PASS | PASS |
-| 136 | cost_multiplier = 0 with instant = yes still places the level | PASS | FAIL |
-| 137 | And charges nothing for it | PASS | PASS |
-| 138 | A negative change_building_level_in_location delta lowers a building by one | PASS | PASS |
-| 139 | Guard - opinion is under 100 both ways | PASS | PASS |
-| 140 | can_build_building in location scope refuses the probe | PASS | **FAIL** |
-| 141 | The same trigger in country scope refuses it | PASS | **FAIL** |
-| 142 | construct_building places it there anyway | PASS | PASS |
-| 154 | Guard - opinion raised past 100 both ways | PASS | PASS |
-| 155 | Control - can_build_building now allows the same probe elsewhere | PASS | PASS |
-| 143 | Guard - Road Building researched, a road-less neighbour and one non-neighbour found | PASS | PASS |
-| 144 | construct_road between two neighbours starts a road construction | PASS | PASS |
-| 145 | That road took no civil construction slot | PASS | **FAIL** |
-| 146 | construct_road between two non-neighbours starts nothing | PASS | PASS, but see 169-172 |
-| 169 | Guard - two road-free owned locations that are not neighbours of each other | PASS | PASS |
-| 170 | An order between them shows a road construction at the from end | one of 170/171/172 answers | **PASS** |
-| 171 | ... and at the to end | one of 170/171/172 answers | **FAIL** |
-| 172 | ... and the from end's civil construction count moved | one of 170/171/172 answers | **PASS** |
-| 176 | building_max_level reports 3 for the probe at 3 of 3 | one of 176/177 answers | **PASS** |
-| 177 | ... or it reports 0 | one of 176/177 answers | FAIL |
-| 178 | is_max_level reads yes at 3 of 3 | PASS | PASS |
-| 179 | is_max_level reads no one level below the cap | PASS | PASS |
-| 180 | construct_road charges the order when it is issued | PASS | PASS |
-| 173 | The non-adjacent order left a new road at the from end | see below | **PASS** |
-| 174 | ... and at the to end | see below | **PASS** |
-| 175 | ... and the from end no longer reports a road construction | PASS | **PASS** |
-| 147 | A building crosses a variable list into a datamodel and downcasts with Scope.GetBuilding | PASS | PASS |
-| 148 | ToggleBuilding on that handle closes the building | PASS | PASS |
-| 159 | The capital's instant = yes levels have finished by the recheck | PASS | PASS |
-| 160 | The cost_multiplier = 0 plus instant = yes build stands by the recheck | PASS | PASS |
+| 132 | building_type_max_level reports 3 for a max_levels = 3 type | one of 132/133/134/135 | FAIL |
+| 133 | ... or it reports 0 | one of 132/133/134/135 | **PASS** |
+| 134 | ... or it reports 1 or 2 | one of 132/133/134/135 | FAIL |
+| 135 | ... or it reports more than 3 | one of 132/133/134/135 | FAIL |
+| 136 | The same trigger reports more than 0 for vanilla mason | PASS | **FAIL** |
+| 137 | ... and reports 1 for vanilla royal_court, whose cap is a literal | PASS | **FAIL** |
+| 138 | With the owner param, the trigger reports more than 0 for vanilla mason | PASS | **FAIL** |
+| 139 | ... and reports 1 for vanilla royal_court | PASS | **FAIL** |
+| 140 | ... and reports 3 for the max_levels = 3 probe | PASS | **FAIL** |
+| 141 | After a month tick, the trigger reports 3 for the probe | PASS | **FAIL** |
+| 142 | ... or it still reports 0 | one of 141/142 | **PASS** |
+| 143 | After a month tick, with owner, it reports 3 for the probe | PASS | **FAIL** |
+| 144 | After a month tick, it reports more than 0 for vanilla mason | PASS | **FAIL** |
+| 145 | After a month tick, it reports 1 for vanilla royal_court | PASS | **FAIL** |
+| 146 | The reading does not move once a level is in place | PASS | PASS |
+| 147 | instant = yes puts the level up in the same tick | PASS | FAIL |
+| 148 | ... a building of that type exists there at all | PASS | PASS |
+| 149 | ... and nothing of that type is left under construction | PASS | FAIL |
+| 150 | construct_building places a fourth level past max_levels = 3 | PASS | PASS |
+| 151 | is_at_max_level reads no at one level of three | PASS | PASS |
+| 152 | is_at_max_level reads yes at three of three | PASS | PASS |
+| 153 | That building reads is_at_max_level no | PASS | PASS |
+| 154 | cost_multiplier = 0 with instant = yes still places the level | PASS | FAIL |
+| 155 | And charges nothing for it | PASS | PASS |
+| 156 | A negative change_building_level_in_location delta lowers a building by one | PASS | PASS |
+| 157 | Guard - opinion is under 100 both ways | PASS | PASS |
+| 158 | can_build_building in location scope refuses the probe | PASS | **FAIL** |
+| 159 | The same trigger in country scope refuses it | PASS | **FAIL** |
+| 160 | construct_building places it there anyway | PASS | PASS |
+| 161 | Guard - opinion raised past 100 both ways | PASS | PASS |
+| 162 | Control - can_build_building now allows the same probe elsewhere | PASS | PASS |
+| 163 | Guard - Road Building researched, a road-less neighbour and one non-neighbour found | PASS | PASS |
+| 164 | construct_road between two neighbours starts a road construction | PASS | PASS |
+| 165 | That road took no civil construction slot | PASS | **FAIL** |
+| 166 | construct_road between two non-neighbours starts nothing | PASS | PASS, but see 167-170 |
+| 167 | Guard - two road-free owned locations that are not neighbours of each other | PASS | PASS |
+| 168 | An order between them shows a road construction at the from end | one of 168/169/170 answers | **PASS** |
+| 169 | ... and at the to end | one of 168/169/170 answers | **FAIL** |
+| 170 | ... and the from end's civil construction count moved | one of 168/169/170 answers | **PASS** |
+| 171 | building_max_level reports 3 for the probe at 3 of 3 | one of 171/172 answers | **PASS** |
+| 172 | ... or it reports 0 | one of 171/172 answers | FAIL |
+| 173 | is_max_level reads yes at 3 of 3 | PASS | PASS |
+| 174 | is_max_level reads no one level below the cap | PASS | PASS |
+| 175 | construct_road charges the order when it is issued | PASS | PASS |
+| 176 | The non-adjacent order left a new road at the from end | see below | **PASS** |
+| 177 | ... and at the to end | see below | **PASS** |
+| 178 | ... and the from end no longer reports a road construction | PASS | **PASS** |
+| 179 | A building crosses a variable list into a datamodel and downcasts with Scope.GetBuilding | PASS | PASS |
+| 180 | ToggleBuilding on that handle closes the building | PASS | PASS |
+| 181 | The capital's instant = yes levels have finished by the recheck | PASS | PASS |
+| 182 | The cost_multiplier = 0 plus instant = yes build stands by the recheck | PASS | PASS |
 
 ### Findings
 
 **`building_type_max_level` reports 0 with no `owner` param, for vanilla types as well as mod
-ones (149, 156, 157, 130).** Vanilla `mason`, whose cap comes from the `guild_max_level` script
+ones (133, 136, 137, 146).** Vanilla `mason`, whose cap comes from the `guild_max_level` script
 value, read not-more-than-0. Vanilla `royal_court`, whose cap is the literal 1, read not-1. The
 `max_levels = 3` probe read exactly 0, and kept reading 0 once a level stood. Nothing was logged in
-any of the five runs. The `owner` param does not change it either: 161-163 repeated all three
+any of the five runs. The `owner` param does not change it either: 138-140 repeated all three
 reads with `owner` supplied as the bare link and all three failed. **This is Construction Manager's
 fall-open reproduced in isolation: a `while` whose limit reads `value <= 0` passes forever and one
 reading `value > 0` never runs.** The engine itself knows the cap - `is_at_max_level` gets it right
 on the same building in the same run - so the value is not missing from the game, only from this
 trigger's answer.
 
-**The value is not stale either.** 164-168 repeated every read two months on, after two month ticks
+**The value is not stale either.** 141-145 repeated every read two months on, after two month ticks
 with the game running: the probe still reported 0 with and without `owner`, and vanilla `mason` and
 `royal_court` were still wrong. So across five runs the trigger returned 0 for a mod type and two
 vanilla types, one with a script-value cap and one with a literal cap, with and without the `owner`
@@ -1082,99 +1129,99 @@ context not tried is evaluating it from a plain on_action or event effect rather
 scripted-GUI Execute, and that is not worth another variant: every Construction Manager call site is
 the tested context, and five consistent runs is the answer.
 
-**`is_at_max_level` tracks the level count against `max_levels` (131, 132, 135).** No at one level
+**`is_at_max_level` tracks the level count against `max_levels` (151, 152, 153).** No at one level
 of three, yes at three of three, and no on a building whose only possible level is queued. Same
-building, same location, same employment situation in 131 and 132, with only the level count
+building, same location, same employment situation in 151 and 152, with only the level count
 moving, so the "working at full capacity" wording is about levels. The
 `building_levels_under_construction = 0` pairing Construction Manager uses is required rather than
 defensive.
 
-**`change_building_level_in_location` works in both directions (158, 138).** A positive delta stood
-a level on a building whose levels were all queued, and a negative one took a three-level stack down
-to two. Building Cleanup's `market_village` trim is sound, and the positive direction is a
-synchronous way to stand a level that `construct_building` does not offer.
+**`change_building_level_in_location` takes a negative delta (156).** It took a three-level stack
+down to two, so Building Cleanup's `market_village` trim is sound. The positive direction is the
+documented one and carries no row of its own; the suite uses it to stand levels for 151, 152 and
+156, each of which names the level count it needs in its own condition.
 
-**`instant = yes` skips the build time but the level lands on a later tick (129, 152, 153, 159,
-160).** Immediately after the call the building exists with levels queued and none standing; ten
+**`instant = yes` skips the build time but the level lands on a later tick (147, 148, 149, 181,
+182).** Immediately after the call the building exists with levels queued and none standing; ten
 game days later they had all resolved, and they were still standing two months on, the
 `cost_multiplier = 0` pairing included. So the
 lucky-nation governor relocation gets its seat back, just not in the same execution that destroyed
 the old one. Any chain that constructs instantly and reads the level back in the same block reads
 zero.
 
-**`can_build_building` does NOT enforce `need_good_relation` (139, 140, 141, 154, 155).** Both
+**`can_build_building` does NOT enforce `need_good_relation` (157, 158, 159, 161, 162).** Both
 guards passed at opinion under 100 in both directions, the control passed at opinion over 100, and
 the trigger allowed the type in both states, in location scope and in country scope alike. The field
 is real - the engine rejects a foreign type carrying none of the four relation gates - but the
 trigger does not read it. Consequence for Construction Manager: the foreign path's single placement
 gate does not cover relations, so foreign builds can land where relations forbid them.
 
-**`construct_building` skips every placement rule tested (126, 127, 133, 142).** A rural-only type
+**`construct_building` skips every placement rule tested (130, 131, 150, 160).** A rural-only type
 in a town-or-better capital, a fourth level of a `max_levels = 3` type, and a relation-gated foreign
 type at a neighbour's capital. All three placed.
 
-**A road takes a civil construction slot (145, three times).** `num_civil_constructions` rose across
+**A road takes a civil construction slot (165, three times).** `num_civil_constructions` rose across
 the `construct_road` call with nothing else between the two reads. This contradicts the play report
 the Roads category was ungated on, and agrees with vanilla's own
 `game_concept_civil_construction_desc` naming road building as a civil construction. Construction
 Manager's Roads drain currently issues orders against slots it does not count.
 
-**Rows 176-180 and 173-175 were added 2026-08-01 and have not been run.** 176-179 measure the two
+**Rows 171-175 and 176-178 were added 2026-08-01 and have not been run.** 171-174 measure the two
 triggers left as candidates for bounding a build loop now that `building_type_max_level`'s value is
 unusable: `building_max_level` and `is_max_level`, both building scope, read on the probe at 3 of 3
 and again one level below its cap. If `building_max_level` reports 3, Construction Manager's shared
-slot-filling batch can be given a real cap again; it currently has none. 180 reads gold across the
-144 order, which is the only unmeasured half of what a road order costs at issue.
+slot-filling batch can be given a real cap again; it currently has none. 175 reads gold across the
+164 order, which is the only unmeasured half of what a road order costs at issue.
 
-**173-175 answer what a non-adjacent order builds**, which 169-172 could not: they count the roaded
+**176-178 answer what a non-adjacent order builds**, which 167-170 could not: they count the roaded
 neighbours at each end before the order and again from the Re-read button once a gravel road has had
-time to finish. 173 alone means a stub or a partial path near the `from` end; 173 and 174 together
-mean the span was bridged; neither, with 175 passing, means the order resolved into nothing. The
+time to finish. 176 alone means a stub or a partial path near the `from` end; 176 and 177 together
+mean the span was bridged; neither, with 178 passing, means the order resolved into nothing. The
 lucky-nation reorganization waits on `has_road_to_capital` at a site it ordered a road to from the
-capital, so only the 173-and-174 outcome makes that path work as written.
+capital, so only the 176-and-177 outcome makes that path work as written.
 
 **The `jomini_script_system.cpp:252` error reproduces here (2026-08-01).** The 2026-08-01 run logged
 `building_type_max_level trigger [ building_type ]` at every one of this suite's own call sites for
-it - the 128/149/150/151 bracket, 130, 156/157 and 161-163 - which is the error the 122-125 variants
+it - the 132/133/134/135 bracket, 146, 136/137 and 138-140 - which is the error the 126-129 variants
 were written for and never produced. So it is not something about Construction Manager's
 environment. Whether the five earlier runs logged it too and nobody read the log is unknown.
 
-**`building_max_level` works where `building_type_max_level` does not (176, 177, 178, 179).** The
+**`building_max_level` works where `building_type_max_level` does not (171, 172, 173, 174).** The
 building-scope trigger reported exactly 3 for the `max_levels = 3` probe, and `is_max_level` read yes
 at 3 of 3 and no one level below the cap. So the engine will hand a script the cap after all; it is
 `building_type_max_level`, the building-TYPE-scope trigger, that is broken, and the working
 replacement needs a building of the type to be standing or queued at the location, which
-`any_buildings_in_location` reports from the moment the first level is ordered (152). Construction
+`any_buildings_in_location` reports from the moment the first level is ordered (148). Construction
 Manager's shared slot-filling batch is bounded on it again.
 
-**`construct_road` charges the order when it is issued (180).** The treasury moved across a single
+**`construct_road` charges the order when it is issued (175).** The treasury moved across a single
 call with nothing in between. Its first run was void and reported FAIL: the row was evaluated where
-it was written, after test 138, while the measurement that sets `et_180_ok` runs with test 144 much
+it was written, after test 156, while the measurement that sets `et_180_ok` runs with test 164 much
 further down, so the comparison read a global that did not exist yet and the log said so
 (`Failed to fetch variable for 'et_180_ok' due to not being set`). The evaluation now sits directly
-after 145 and the row passes, agreeing with a console check on a paused game and with what
+after 165 and the row passes, agreeing with a console check on a paused game and with what
 Construction Manager already had recorded from play. The amount and the duration are still
 unmeasured; only the timing is settled.
 
-**`construct_road` is accepted between neighbours (144).** The first measurement the effect has ever
+**`construct_road` is accepted between neighbours (164).** The first measurement the effect has ever
 had. Cost and duration are still unmeasured.
 
-**A NON-adjacent order is ACCEPTED, and 146 was reading the wrong end (169-172).** 146 orders from
-the capital, which already carries 144's order, so the only end it can read is the `to` end, and
+**A NON-adjacent order is ACCEPTED, and 166 was reading the wrong end (167-170).** 166 orders from
+the capital, which already carries 164's order, so the only end it can read is the `to` end, and
 three different behaviours all leave that end clear: a refusal, an acceptance that registers the
 construction at the `from` end alone, and an accepted order that starts a path near the `from` end.
-169-172 separate them by ordering between two road-free owned locations that are not neighbours of
+167-170 separate them by ordering between two road-free owned locations that are not neighbours of
 each other and reading both ends plus the `from` end's `num_civil_constructions`. The `from` end
-shows a road construction (170) and its civil construction count moved (172), so the order was
-taken and it occupies a slot exactly as an adjacent one does; the `to` end shows nothing (171). So
+shows a road construction (168) and its civil construction count moved (170), so the order was
+taken and it occupies a slot exactly as an adjacent one does; the `to` end shows nothing (169). So
 **`construct_road` does not require adjacency to be accepted, and `has_road_constructions` reports
-at the `from` end only.** 146's PASS was the `to` end being blind to an order that had in fact been
+at the `from` end only.** 166's PASS was the `to` end being blind to an order that had in fact been
 placed, not a refusal.
 
-**A non-adjacent order lays road at BOTH ends of the span and resolves (173, 174, 175).** Ordering
+**A non-adjacent order lays road at BOTH ends of the span and resolves (176, 177, 178).** Ordering
 between two road-free owned locations that are not neighbours of each other left each end holding a
 road to a neighbour it did not have before, and the from end no longer reporting a construction. A
-stub at the from end would have passed 173 alone. So the engine routes the order across the tiles
+stub at the from end would have passed 176 alone. So the engine routes the order across the tiles
 between rather than refusing it or dropping it on the spot. What the rows cannot show is every
 intermediate hop, since two non-adjacent locations can never hold a road to each other and
 `has_latest_road_to` between them is meaningless; both endpoints gaining one is the strongest signal
@@ -1182,30 +1229,30 @@ available from script.
 
 **This group cannot measure how long a road takes, and must not be read as if it does.** The order
 is issued after the probe buildings, which queue several levels in the capital, and a road takes a
-civil construction slot (145), so it waits behind them. The wall-clock between pressing the button
-and 173-175 passing is that queue, not the road. Observed road durations in ordinary play run about
+civil construction slot (165), so it waits behind them. The wall-clock between pressing the button
+and 176-178 passing is that queue, not the road. Observed road durations in ordinary play run about
 125 to 669 days depending on the corridor and the modifiers. Measuring it here would need the road
 ordered first, or ordered from a location the probe buildings never touch.
 
-**`construct_road` is accepted between neighbours (144).** The first measurement the effect has ever
+**`construct_road` is accepted between neighbours (164).** The first measurement the effect has ever
 had. Cost and duration are still unmeasured.
 
-**A NON-adjacent order is ACCEPTED, and 146 was reading the wrong end (169-172).** 146 orders from
-the capital, which already carries 144's order, so the only end it can read is the `to` end, and
+**A NON-adjacent order is ACCEPTED, and 166 was reading the wrong end (167-170).** 166 orders from
+the capital, which already carries 164's order, so the only end it can read is the `to` end, and
 three different behaviours all leave that end clear: a refusal, an acceptance that registers the
 construction at the `from` end alone, and an accepted order that starts a path near the `from` end.
-169-172 separate them by ordering between two road-free owned locations that are not neighbours of
+167-170 separate them by ordering between two road-free owned locations that are not neighbours of
 each other and reading both ends plus the `from` end's `num_civil_constructions`. The `from` end
-shows a road construction (170) and its civil construction count moved (172), so the order was
-taken and it occupies a slot exactly as an adjacent one does; the `to` end shows nothing (171). So
+shows a road construction (168) and its civil construction count moved (170), so the order was
+taken and it occupies a slot exactly as an adjacent one does; the `to` end shows nothing (169). So
 **`construct_road` does not require adjacency to be accepted, and `has_road_constructions` reports
-at the `from` end only.** 146's PASS was the `to` end being blind to an order that had in fact been
+at the `from` end only.** 166's PASS was the `to` end being blind to an order that had in fact been
 placed, not a refusal.
 
-**A non-adjacent order lays road at BOTH ends of the span and resolves (173, 174, 175).** Ordering
+**A non-adjacent order lays road at BOTH ends of the span and resolves (176, 177, 178).** Ordering
 between two road-free owned locations that are not neighbours of each other left each end holding a
 road to a neighbour it did not have before, and the from end no longer reporting a construction. A
-stub at the from end would have passed 173 alone. So the engine routes the order across the tiles
+stub at the from end would have passed 176 alone. So the engine routes the order across the tiles
 between rather than refusing it or dropping it on the spot. What the rows cannot show is every
 intermediate hop, since two non-adjacent locations can never hold a road to each other and
 `has_latest_road_to` between them is meaningless; both endpoints gaining one is the strongest signal
@@ -1215,21 +1262,21 @@ available from script.
 1343. So a multi-hop span takes something between roughly two and six years, against a single
 corridor that finishes far inside that. Any retry cadence written for a one-hop corridor will fire
 several times over a span that is progressing perfectly well, and `construct_road` charges each
-order when it is issued (180).
+order when it is issued (175).
 
-**`construct_road` is accepted between neighbours (144).** The first measurement the effect has ever
+**`construct_road` is accepted between neighbours (164).** The first measurement the effect has ever
 had. Cost and duration are still unmeasured.
 
-**A NON-adjacent order is ACCEPTED, and 146 was reading the wrong end (169-172).** 146 orders from
-the capital, which already carries 144's order, so the only end it can read is the `to` end, and
+**A NON-adjacent order is ACCEPTED, and 166 was reading the wrong end (167-170).** 166 orders from
+the capital, which already carries 164's order, so the only end it can read is the `to` end, and
 three different behaviours all leave that end clear: a refusal, an acceptance that registers the
 construction at the `from` end alone, and an accepted order that starts a path near the `from` end.
-169-172 separate them by ordering between two road-free owned locations that are not neighbours of
+167-170 separate them by ordering between two road-free owned locations that are not neighbours of
 each other and reading both ends plus the `from` end's `num_civil_constructions`. The `from` end
-shows a road construction (170) and its civil construction count moved (172), so the order was
-taken and it occupies a slot exactly as an adjacent one does; the `to` end shows nothing (171). So
+shows a road construction (168) and its civil construction count moved (170), so the order was
+taken and it occupies a slot exactly as an adjacent one does; the `to` end shows nothing (169). So
 **`construct_road` does not require adjacency to be accepted, and `has_road_constructions` reports
-at the `from` end only.** 146's PASS was the `to` end being blind to an order that had in fact been
+at the `from` end only.** 166's PASS was the `to` end being blind to an order that had in fact been
 placed, not a refusal.
 
 **What a non-adjacent order actually builds is still unknown.** Whether it produces a road that ever
@@ -1239,7 +1286,7 @@ run that lets the construction finish and then reads `has_latest_road_to` across
 what Construction Manager's lucky-nation reorganization rests on: it orders from the capital
 straight to a distant governor site and then waits for `has_road_to_capital` to come true there.
 
-**A building handle survives a variable list into GUI and `ToggleBuilding` acts on it (147, 148).**
+**A building handle survives a variable list into GUI and `ToggleBuilding` acts on it (179, 180).**
 Construction Manager's Building Cleanup close and reopen is sound, and the fort commit `5ee5715`
 that "deleted nothing in play" was not failing on the round trip.
 
@@ -1275,37 +1322,39 @@ Construction Manager depends on all of the following. All are now settled.
 
 ### How to read it
 
-**128, 149-151, 156, 157, 161-168.** Exactly one of 128/149/150/151 passes and which one is the
-answer; every run has said 0. 156 and 157 put that on vanilla types and both failed, so the 0 is not
-about the probe. 161-163 repeated all three reads with `owner` supplied as the bare link and all
-three failed, so the param is not what it wants. 164-168 repeated them two months on and 168 passed
-while 164-167 failed, so the value does not settle with time either. **The question is closed: the
+**132, 133-135, 136, 137, 138-168.** Exactly one of 132/133/134/135 passes and which one is the
+answer; every run has said 0. 136 and 137 put that on vanilla types and both failed, so the 0 is not
+about the probe. 138-140 repeated all three reads with `owner` supplied as the bare link and all
+three failed, so the param is not what it wants. 141-145 repeated them two months on and 142 passed
+while 141, 143-145 failed, so the value does not settle with time either. **The question is closed: the
 trigger's value is unusable in script, and no further variant is worth a run.**
 
 **130.** Compares the same bracket before and after a level is in place, so it answers whatever the
 number turns out to be. PASS means the reading is a cap and never moves as levels arrive.
 
-**129, 152, 153, 159, 160.** SETTLED. 152 PASS with 153 FAIL and 129 FAIL means the call queued a
-level rather than standing one; 159 and 160 PASS after ten game days mean it resolves on a later
-tick. 136 fails for the same reason 129 does and is not a separate problem; 160 is the row that
+**147, 148, 149, 181, 160.** SETTLED. 148 PASS with 149 FAIL and 147 FAIL means the call queued a
+level rather than standing one; 181 and 182 PASS after ten game days mean it resolves on a later
+tick. 154 fails for the same reason 147 does and is not a separate problem; 182 is the row that
 answers the relocation question.
 
-**158, 131, 132, 138.** SETTLED. 158 is the gate on the other three - it is how they stand levels,
-since `instant` does not do it synchronously.
+**151, 152, 138.** SETTLED. All three run on levels stood by a positive
+`change_building_level_in_location` delta, since `instant` does not stand one synchronously, and
+each names the level count it needs in its own condition rather than trusting a separate row to
+have checked it.
 
-**136-137.** Read 137 only when 136 passes; with no standing level nothing moves and 137 could pass
-for the wrong reason. Run 3 has 160 confirming the build did happen and did land, so 137 is real:
+**154-137.** Read 155 only when 154 passes; with no standing level nothing moves and 155 could pass
+for the wrong reason. Run 3 has 182 confirming the build did happen and did land, so 155 is real:
 the pairing charges nothing.
 
-**139-142, 154-155.** SETTLED. 139 and 154 are the guards on the two opinion states and 155 is the
-control; all three passed, and 140 and 141 both failed, so `can_build_building` is indifferent to
-`need_good_relation` in both scopes. 142 says `construct_building` places the type regardless.
+**157-162.** SETTLED. 157 and 161 are the guards on the two opinion states and 162 is the
+control; all three passed, and 158 and 159 both failed, so `can_build_building` is indifferent to
+`need_good_relation` in both scopes. 160 says `construct_building` places the type regardless.
 
-**143-146.** SETTLED. 143 is the guard. 144 and 146 settled adjacency; 145 settled the slot cost,
+**163-146.** SETTLED. 163 is the guard. 164 and 166 settled adjacency; 165 settled the slot cost,
 three times.
 
-**147-148.** These two rows stay FAIL for about a second after the button, because the button only
-seeds the list and `et_bt_core` does the work. Both passed. 147 PASS with 148 FAIL would have landed
+**179-148.** These two rows stay FAIL for about a second after the button, because the button only
+seeds the list and `et_bt_core` does the work. Both passed. 179 PASS with 180 FAIL would have landed
 the failure on the engine action rather than the storage, which is the split the Construction
 Manager fort commit `5ee5715` never got: it changed the handle and the round trip at once.
 
@@ -1325,70 +1374,35 @@ submod cannot reach them:
   picker, and whether it raises a message. Both halves are visual.
 - Whether `Country.GetDebugTag` is what broke the observer console bridge. The failure signal was
   the absence of a parse block in debug.log, which Claude cannot read.
-- Reproducing the `building_type_max_level` error itself. 122-125 are four variants that all came
+- Reproducing the `building_type_max_level` error itself. 126-129 are four variants that all came
   back clean; per that section's own reading guide the next step is instrumenting the live call
-  sites, not a sixth variant. 128 and 130 measure what the trigger reports rather than when it
+  sites, not a sixth variant. 132 and 146 measure what the trigger reports rather than when it
   errors, which is the half that has a consequence in the mod.
 
-## Hidden State Machines, Counted (181-184)
+## Straits and Multi-Hop Road Orders (183-191)
 
-Added 2026-08-03. Runs with the hidden-window chain (Run Hidden Window Tests).
-
-Test 65 asked whether a state machine keeps advancing after its widget goes
-hidden and scored it `et_g64_c > et_g64_snap`. One further fire satisfies that,
-so it cannot tell a machine that kept looping for the whole 1.2s from one that
-merely finished the state it already had in flight, and 65's PASS was being read
-as the first when it only establishes the second. Two shapes also behave
-differently and only one of them was ever tested: 64/65 loop by re-triggering
-themselves with `PdxGuiWidget.TriggerAnimation`, while a driver that hands one
-state to the next with `next` was never covered.
-
-Both new widgets carry a 0.25s state and their own gate and counter, both gates
-close in one effect that snapshots both counters, and the check runs 1.5s later.
-A machine still looping owes about six fires over that window; one that stopped
-after the state in flight owes one. So the `>= 3` rows are the discriminator and
-the `> snapshot` rows only repeat what 65 already showed.
+Added 2026-08-06. 183-187 and 189-191 run with the script chain (Run Script
+Tests); 188 runs with Re-Read Probe Levels.
 
 | # | Test | Expected | Result |
 |---|------|----------|--------|
-| 181 | next-chained machine advances at all while hidden | PROBE | |
-| 182 | next-chained machine keeps looping while hidden | PROBE | |
-| 183 | self-trigger loop advances at all while hidden | PASS (65) | |
-| 184 | self-trigger loop keeps looping while hidden | PROBE | |
+| 183 | is_strait_connection_to exists - reads no to a land neighbour of Messina | PROBE | FAIL |
+| 184 | ... and yes across the Strait of Messina | PROBE | PASS |
+| 185 | Guard - Castile owns Coruna and Ferrol, the path through Betanzos unbuilt | PROBE | PASS (see below) |
+| 186 | An order over the two-hop land path shows a construction at the from end | PROBE | PASS on a fresh path |
+| 187 | ... and the order was charged to the treasury | PROBE | PASS on a fresh path |
+| 188 | That order laid a direct road between the two endpoints | PROBE | FAIL |
+| 189 | Guard - Messina and Reggio are ours, no land path between them, no road yet | PROBE | PASS |
+| 190 | An order with no possible road path starts no construction | PROBE | PASS |
+| 191 | ... and costs nothing | PROBE | PASS |
 
-Field observation this exists to settle, from Construction Manager's lucky-nation
-console bridge (2026-08-03, NOT a controlled test): a `next`-chained submitter
-gated on its queue being non-empty issued exactly two console commands per game
-month rather than one every 1.5s, and issued none at all while the game was
-paused. Both fit 181 PASS with 182 FAIL, a machine advancing about one state past
-the hide and then stopping. An earlier transition in the same session, where the
-gate went false for 14 seconds as the client took a country, logged no console
-line at all across the window, which fits the same reading.
-
-## Straits and Multi-Hop Road Orders (185-193)
-
-Added 2026-08-06. 185-189 and 191-193 run with the script chain (Run Script
-Tests); 190 runs with Re-Read Probe Levels.
-
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 185 | is_strait_connection_to exists - reads no to a land neighbour of Messina | PROBE | FAIL |
-| 186 | ... and yes across the Strait of Messina | PROBE | PASS |
-| 187 | Guard - Castile owns Coruna and Ferrol, the path through Betanzos unbuilt | PROBE | PASS (see below) |
-| 188 | An order over the two-hop land path shows a construction at the from end | PROBE | PASS on a fresh path |
-| 189 | ... and the order was charged to the treasury | PROBE | PASS on a fresh path |
-| 190 | That order laid a direct road between the two endpoints | PROBE | FAIL |
-| 191 | Guard - Messina and Reggio are ours, no land path between them, no road yet | PROBE | PASS |
-| 192 | An order with no possible road path starts no construction | PROBE | PASS |
-| 193 | ... and costs nothing | PROBE | PASS |
-
-**`is_strait_connection_to` does not exist on 1.3 (185-186).** The run logged
+**`is_strait_connection_to` does not exist on 1.3 (183-184).** The run logged
 `Unknown trigger type: is_strait_connection_to` twice
 (`pdx_persistent_reader.cpp:289`), once per call site. So the OGAS Optimized
 workshop mod's strait filter is inert: its limit admits every neighbour. EU5
 exposes no way to detect a strait from script.
 
-**A limit holding an unknown trigger does not gate its branch (185-186).** This is
+**A limit holding an unknown trigger does not gate its branch (183-184).** This is
 the reusable finding and it is why the first version of this pair proved nothing.
 That version asked about the strait as its guard, on the reasoning that an invalid
 trigger reads false and would fail it. Both rows passed instead, on a trigger the
@@ -1397,10 +1411,10 @@ said. Whether the engine discards the whole limit or drops just the unknown
 condition is NOT separated here. What is established is the direction, and it is
 the dangerous one: a removed or misspelled trigger fails OPEN, running the branch
 it was meant to guard. The rows now discriminate without the log, and a missing
-trigger is the failing case: 185 asks about a LAND neighbour, which a working
+trigger is the failing case: 183 asks about a LAND neighbour, which a working
 trigger answers no.
 
-**187-190 are NOT a strait test, and were written as one.** Coruna and Ferrol
+**185-188 are NOT a strait test, and were written as one.** Coruna and Ferrol
 carry a `rias_altas` strait entry but also have a land route, through Betanzos.
 An `adjacencies.csv` entry ADDS a crossing; it does not mean the pair lacks a land
 connection, and that was the wrong assumption behind the whole group.
@@ -1408,26 +1422,26 @@ connection, and that was the wrong assumption behind the whole group.
 What they do establish, and it is worth having: **an order between two locations
 with no direct road routes along the land path between them and queues and charges
 EVERY segment on it** (user, 2026-08-06). The order went coruna - betanzos -
-ferrol and paid for both hops. That is also the cleanest reading of 173-175, where
+ferrol and paid for both hops. That is also the cleanest reading of 176-178, where
 a non-adjacent order left both ends holding a road to a neighbour they did not
 have before - a routed multi-hop path, not stubs. Three consequences follow:
 `has_road_to` between the two ENDPOINTS never becomes true on a multi-hop order,
-which is 190's FAIL; the cost is the sum of the path's segments rather than one
+which is 188's FAIL; the cost is the sum of the path's segments rather than one
 corridor's; and re-issuing once the path is built is refused and charges nothing,
-which is why a second press read 188 and 189 as FAIL while 187 still passed.
+which is why a second press read 186 and 187 as FAIL while 185 still passed.
 
-**187 was a broken guard for its first two runs and is fixed.** It asked whether
+**185 was a broken guard for its first two runs and is fixed.** It asked whether
 Coruna had a road to Ferrol, which a two-hop order never creates, so it read the
 same on a fresh game and on one where the whole path was already built and the
-order would be refused. That is why 188 and 189 read PASS on the first run and
-FAIL on later ones with 187 still passing: the path existed, the order was
+order would be refused. That is why 186 and 187 read PASS on the first run and
+FAIL on later ones with 185 still passing: the path existed, the order was
 refused, and the guard could not see it. It now asks about Coruna's road to
 Betanzos, the first hop, which is a real "nothing built yet" test. **An order
 whose path already exists is refused and charges nothing** - that is what those
 later runs measured, and it holds alongside the fresh-path result.
 
-**191-193 are the strait test, and all three passed.** An order with no possible
-road path is REFUSED and COSTS NOTHING. Their guard has none of 187's weakness:
+**189-191 are the strait test, and all three passed.** An order with no possible
+road path is REFUSED and COSTS NOTHING. Their guard has none of 185's weakness:
 no road between Messina and Reggio can ever exist, so a refused order leaves the
 state untouched and the group re-runs identically.
 
@@ -1452,24 +1466,24 @@ cannot exist.
 A strait-adjacent pair is adjacent to `every_neighbor_location` but not by road,
 which is what makes both cases reachable from a plan that walks neighbours.
 
-## Markets Reported For An Overlord (194-198)
+## Markets Reported For An Overlord (192-196)
 
 Added and run 2026-08-14. Runs with the script chain (Run Script Tests), and all
 five rows are re-taken by Re-read Probe Levels.
 
 | # | Test | Expected | Result |
 |---|------|----------|--------|
-| 194 | Guard - a subject holds at least one market we hold no location in | PROBE | PASS |
-| 195 | every_market_present_in_country reports one of those subject-only markets | PROBE | FAIL |
-| 196 | ... or it reports none of them | PROBE | PASS |
-| 197 | The iterator reports nothing beyond the markets our own locations sit in | PROBE | PASS |
-| 198 | ... and it reports every one of those | PROBE | PASS |
+| 192 | Guard - a subject holds at least one market we hold no location in | PROBE | PASS |
+| 193 | every_market_present_in_country reports one of those subject-only markets | PROBE | FAIL |
+| 194 | ... or it reports none of them | PROBE | PASS |
+| 195 | The iterator reports nothing beyond the markets our own locations sit in | PROBE | PASS |
+| 196 | ... and it reports every one of those | PROBE | PASS |
 
 **`every_market_present_in_country` is exactly the set of markets the country's
-OWN locations sit in.** A market only a subject holds is not in it (195/196), and
-neither is anything else: 197 and 198 close the set from both sides, so the
+OWN locations sit in.** A market only a subject holds is not in it (193/194), and
+neither is anything else: 195 and 196 close the set from both sides, so the
 iterator is not merely missing subjects, it reports own-location markets and
-nothing more. The Mamluk vassal held markets Castile has no location in (194) and
+nothing more. The Mamluk vassal held markets Castile has no location in (192) and
 none of them came back.
 
 The question is what "present in a country" counts. The docs say only "Iterate
@@ -1483,14 +1497,14 @@ market against the subset. So a market the iterator never reports can never ente
 the rotation, and any location in it is stranded rather than merely slow. That is
 what makes the subject case worth measuring rather than assuming.
 
-**How to read the rows.** 195 and 196 are complements and both are gated on the
-194 guard, so a good run shows exactly one of them PASS. Both FAIL means the
+**How to read the rows.** 193 and 194 are complements and both are gated on the
+192 guard, so a good run shows exactly one of them PASS. Both FAIL means the
 setup produced no subject-only market and the pair says nothing.
 
-197 and 198 together say the iterator is exactly the set of markets the country's
-own locations sit in. 197 alone rules out anything extra, subjects included; 198
+195 and 196 together say the iterator is exactly the set of markets the country's
+own locations sit in. 195 alone rules out anything extra, subjects included; 196
 alone rules out anything missing. An iterator that returned nothing at all would
-pass 196 and 197 on its own, and 198 is what catches that.
+pass 194 and 195 on its own, and 196 is what catches that.
 
 **Setup.** Castile owns no location outside Iberia, so the run makes the Mamluks
 a vassal (`make_subject_of` with `subject_type:vassal`) to supply markets the
@@ -1506,22 +1520,21 @@ Probe Levels on 1 June, 1337, and all five rows read the same both times, so the
 negative is the iterator's answer rather than a stale list. Nothing here waits on
 construction; two months is about cache refresh and is far more than that needs.
 
-## What GetNextReplacementBuilding Filters On (199-203)
+## What GetNextReplacementBuilding Filters On (197-200)
 
 Added and run 2026-08-14. Runs with the script chain (Run Script Tests).
 
 | # | Test | Expected | Result |
 |---|------|----------|--------|
-| 199 | Guard - dock is unlocked for us and dry_dock is not | PROBE | PASS |
-| 200 | Before the advance, GetNextReplacementBuilding on dock reports no dry_dock | PROBE | PASS |
-| 201 | ... or it reports dry_dock already | PROBE | FAIL |
-| 202 | Guard - research_advance granted dry_dock_advance | PROBE | PASS |
-| 203 | After the advance, GetNextReplacementBuilding on dock reports dry_dock | PROBE | PASS |
+| 197 | Guard - dock is unlocked for us and dry_dock is not | PROBE | PASS |
+| 198 | Before the advance, GetNextReplacementBuilding on dock reports no dry_dock | PROBE | PASS |
+| 199 | ... or it reports dry_dock already | PROBE | FAIL |
+| 200 | After the advance, GetNextReplacementBuilding on dock reports dry_dock | PROBE | PASS |
 
 **`GetNextReplacementBuilding` filters on the argument country's ADVANCE UNLOCKS.**
 With dock unlocked on both sides, it reported no replacement while
-`dry_dock_advance` was unresearched (200) and reported `dry_dock` once it was
-(203). Both guards passed and the complement failed as it should, so the pair is
+`dry_dock_advance` was unresearched (198) and reported `dry_dock` once it was
+(200). Both guards passed and the complement failed as it should, so the pair is
 a real before-and-after rather than a read that never fired.
 
 **What this does NOT establish** is that unlocks are the ONLY filter. Government
@@ -1552,18 +1565,19 @@ nothing could be explained by the base being locked rather than the replacement,
 and the test would prove nothing. With it, the replacement's own advance is the
 only thing that moves between the two answers.
 
-**How to read the rows.** 200 and 201 are complements gated on the before read
+**How to read the rows.** 198 and 199 are complements gated on the before read
 having fired, so a good run passes exactly one. Both failing means the read never
 fired and the pair says nothing.
 
-- 200 PASS and 203 PASS: the filter is advance unlocks. The assertion is
+- 198 PASS and 200 PASS: the filter is advance unlocks. The assertion is
   confirmed and Construction Manager's load-time upgrade-map refresh is doing
   what its comments say.
-- 201 PASS and 203 PASS: the replacement was reported before its advance was
+- 199 PASS and 200 PASS: the replacement was reported before its advance was
   researched, so unlocks are NOT the filter. The refresh is then chasing
   something else, and what the country argument selects on is still open.
-- 203 FAIL: inconclusive whatever 200 and 201 did. Check 202 first, since a
-  refused `research_advance` explains it without the engine being involved.
+- 200 FAIL: inconclusive whatever 198 and 199 did. Its condition carries
+  `has_advance` alongside the read, so a refused `research_advance` fails it
+  without the filter being involved at all.
 
 **Rig.** `et_rp_windows.gui` (`et_rp_core`, registered in
 `et_scripted_widgets.txt`) holds a pinned driver and a statically visible
@@ -1573,3 +1587,194 @@ Executes `et_rp_check`. Every state carries an `on_finish`, since a state reache
 through another's `next` that has none never advances and the chain behind it
 silently never runs. About 1.6s end to end, so the five rows read FAIL for a
 moment after the press.
+
+## A Closed Building Across A Change Of Owner (201-217)
+
+Added 2026-08-17. 201-213 run with the script chain (Run Script Tests); 214-217
+run with Re-read Probe Levels.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 201 | Guard - the first location's probe reads closed before any transfer | PROBE | PASS |
+| 202 | ... the location still holds a probe building | PROBE | PASS |
+| 203 | ... and it still reads closed | PROBE | FAIL |
+| 204 | ... or it reads open again | PROBE | PASS |
+| 205 | Guard - the second location's probe reads closed before any transfer | PROBE | PASS |
+| 206 | ... the location still holds a probe building | PROBE | PASS |
+| 207 | ... and it still reads closed | PROBE | FAIL |
+| 208 | ... or it reads open again | PROBE | PASS |
+| 209 | Guard - the probe in a second neighbour's capital reads closed before the annexation | PROBE | FAIL |
+| 210 | ... the location still holds a probe building | PROBE | PASS |
+| 211 | ... and it still reads closed | PROBE | FAIL |
+| 212 | ... or it reads open again | PROBE | FAIL |
+| 213 | Control - the fourth probe, in a location nothing transfers, reads closed | PROBE | PASS |
+| 214 | After a tick, the change_location_owner location's probe still reads closed | PROBE | FAIL |
+| 215 | After a tick, the forceful transfer's probe still reads closed | PROBE | FAIL |
+| 216 | After a tick, the annexed capital's probe still reads closed | PROBE | FAIL |
+| 217 | Control - after a tick, the untransferred probe still reads closed | PROBE | PASS |
+
+**A closed building REOPENS when its location changes owner.** Both direct
+ownership effects agree and neither destroys or replaces anything: the probe is
+still standing after the transfer (202, 206) and reads open again (204, 208),
+having read closed the instant before it in the same execution (201, 205). The
+re-reads a month later say the same (214, 215).
+
+**The control is what makes that the transfer's doing.** A fourth probe, closed
+the same way in a location nothing hands over, read closed in that execution
+(213) and still read closed after a month tick (217). So closing sticks by
+itself, and the two transferred buildings did not reopen because the toggle
+failed to take or because closure decays on a tick.
+
+**Three rows were removed after the first run: 205, 210 and 215, each asserting
+that the transfer effect it names moved the location.** That is the base game
+doing the thing its own name says, which is Paradox's to test and not ours. The
+check itself is load-bearing, since a transfer that silently did not happen
+would leave the building closed and read as PASS on the very claim under test,
+so it now rides inside the conditions of 203/204, 207/208 and 211/212 instead of
+scoring rows of its own. The numbers stay retired rather than renumbered.
+
+**The annexation case is UNMEASURED, and 211/212 must not be read as an answer.**
+Its guard failed (209): the probe built in the second neighbour's capital and
+owned by that neighbour never reached the closing list, because the seed only
+hands over a building reading `is_opened = yes`. 210 says the building was
+there, so what is missing is the close, not the setup. 211 and 212 are both
+gated on the guard, so both reading FAIL is the pair saying nothing rather than
+a third result. 216 is the same row after a tick and is equally empty. Why a
+foreign-owned probe in a foreign capital never opened is not established here;
+the run says only that it did not.
+
+So conquest, which is how a location actually changes hands in play, is still
+untested. What is settled is that the two effects that move a location directly
+both reopen the buildings standing in it.
+
+**What decides it.** Construction Manager's Building Cleanup records which
+buildings it closed and reopens them later from that record. If a closed
+building survives a change of owner, a transferred one is orphaned: the
+conqueror holds a building only the previous owner's record can reopen, and that
+record is erased by the previous owner's own validation pass. If the engine
+reopens, replaces or destroys buildings on transfer, none of that can happen.
+
+**Why three mechanisms.** The transfer half of the question was open, and a
+result that holds for a direct ownership effect need not hold for a conquest.
+201-204 use `change_location_owner` and 205-208 `change_location_owner_forcefully`,
+both moving one of our locations out; 209-212 use `annex_country` on a different
+neighbour, which brings a whole country's locations in and carries a building
+that country owned. Peace-deal transfers are not covered: no script effect
+reaches one.
+
+**How to read the rows.** 201, 205 and 209 are the guards, and 203/204, 207/208
+and 211/212 are complements gated on them, so a good run passes exactly one of
+each pair. Both failing means the close never took at that location and the pair
+says nothing. 202, 206 and 210 separate a building the engine destroyed or
+replaced from one it reopened: has, closed and open all failing is a building
+that is no longer there.
+
+213 and 217 are the control, and 217 is the row to read first among the
+re-reads. Every read behind 201-212 is taken in the same execution as its
+transfer, so a building the engine reopens on the next tick rather than on the
+transfer itself would read closed there and open at the re-read. If all four
+re-read rows fail, including the control whose location never moved, the closing
+does not survive a tick at all and the group says nothing about ownership.
+
+**Rig.** There is no script way to close a building - the whole building-scope
+effect set is `change_building_level`, `change_building_owner`, the production
+method iterators and `set_subsidized` - so the four probes are closed with the
+GUI global `ToggleBuilding` through the variable list round trip tests 179 and
+175 measured. `et_ot_windows.gui` (`et_ot_core`) holds the pinned driver and a
+statically visible datamodel sibling; the driver fires the closing sweep and
+0.4s later Executes `et_ot_transfer`, which does the transfers and the reads. So
+the sixteen run-button rows read FAIL for about a second after the press.
+
+Each probe is seeded only when it reads `is_opened = yes`, so the toggle can
+only ever close one; a location whose probe never opened leaves its guard row
+failing rather than silently measuring an opening.
+
+The three owned locations are marked at the top of the run pass, before any
+other test picks a location, and every picker in the pass skips a marked one.
+Two of them leave Castile's hands partway through, so no other test can be
+allowed to land on them.
+
+## GUI String Append Cost (218-224)
+
+Added 2026-08-17. Its own section of buttons at the bottom of the window; no run
+button and no script chain.
+
+| # | Test | Expected | Result |
+|---|------|----------|--------|
+| 218 | The ten appends in one state all land in the buffer (submit reads 70) | PROBE | PASS, read 70 |
+| 219 | A 1,800-append buffer holds every fragment (submit reads 12,600) | PROBE | PASS, read 12,600 |
+| 220 | A 7,200-append buffer holds every fragment (submit reads 50,400) | PROBE | PASS, read 50,400 |
+| 221 | A 28,800-append buffer holds every fragment (submit reads 201,600) | PROBE | not read |
+| 222 | Growing appends at 1,800 cost no more wall clock than the fixed-size control | PROBE | PASS, neither hung |
+| 223 | ... at 7,200 | PROBE | PASS, neither hung |
+| 224 | ... at 28,800 | PROBE | FAIL, growing froze about 5s |
+
+**At the size this exists to answer, appending costs nothing.** 1,800 appends
+built the ~209KB buffer with no perceptible hang, and the fixed-size control at
+the same tier was equally instant, so there is nothing for the growth to be
+hiding behind. The submit read 12,600, the exact statement count, so every append
+landed and the whole buffer reached the console intact.
+
+**The per-append cost does grow with the buffer.** Each tier is four times the
+appends of the one below it. 28,800 froze for about five seconds while its
+fixed-size control, the same widgets firing the same states, did not hang at all,
+so the freeze is the growth. A cost that tracked the append count alone would put
+7,200 at a quarter of that, over a second, which was not observed; a cost that
+tracks the buffer length puts it at a sixteenth, about a third of a second, which
+fits. So the shape is what a read-and-rewrite of the whole string implies, and it
+is invisible until the buffer is an order of magnitude past 200KB.
+
+That reading rests on three coarse wall-clock readings, two of them reported as
+no hang at all, so it separates the two shapes without pinning a constant.
+
+**The submit is its own cost and is not the appends.** The console parse of the
+finished buffer was the only thing that hung at 7,200 (sub-second, 50,400
+statements) and cost about two seconds at 28,800. It is the per-command parse
+floor plus a line per statement, the same thing 112 and 113 measured.
+
+**221 was not read**, so the 28,800 tier has no count confirming all its appends
+landed. It does not change the reading: the timing pair at that tier is
+growing-versus-fixed on identical widgets, and appends that went missing would
+mean the five seconds bought even less work than assumed.
+
+**What decides it.** Construction Manager's observer console bridge builds one
+command string per lucky nation by repeated append and submits it as a single
+console command. The operation is `Set(key, Concatenate(Get(key), fragment))` on
+one `GetVariableSystem` key, so the whole buffer is read and rewritten per
+append. Fragments there run about 110 characters and there are about 1,800 of
+them per cycle, which puts the finished string near 200KB. If that is cheap the
+current shape stays; if the cost grows with the buffer in a way that bites at
+that size, the buffer has to be sharded across several keys and joined once at
+submission.
+
+**The measurement is wall clock, so the control is what makes it one.** Each
+tier fires the same states doing the same three operations twice: once appending
+to the buffer, and once writing the same concatenation to a sink from a source
+that never grows. Only the growth differs between the two bursts, so a tier
+where both are instant says the growth is free and a tier where Grow is slower
+says what the growth costs. Widget instantiation is paid by the Arm button
+before either burst and is not in the timing.
+
+Tiers are 1,800 appends (about 209KB, the size the bridge actually builds),
+7,200 and 28,800. Each tier is four times the one below it, so a per-append cost
+that grows with the buffer owes sixteen times the work per step up and a cost
+that does not owes four.
+
+**Why the submit rows exist.** A burst that appended nothing finishes instantly
+and reads exactly like a cheap one, so timing alone cannot be trusted. The
+fragment is 119 characters of valid script - seven `et_cc_tiny = yes` calls -
+and the buffer opens with a command header that zeroes a counter, so the whole
+buffer submits as one console command and the counter reports how many of the
+appended statements were actually in it. That covers the two ways a burst can
+lie at once: whether all ten `on_finish` lines in a state fire, and whether the
+buffer keeps everything appended to it at that size.
+
+**How to read the rows.** 218 first: a count of 70 says a state's ten appends
+all land, and until it does the tier rows measure an unknown number of appends.
+Then each tier's count against its expected value. A count short of expected at
+one tier and right at the tier below is where the buffer starts losing content,
+which is a finding in its own right. A submit that lands nothing at all at a
+large tier is the console refusing a command of that length, also a finding, and
+it does not say the appends failed.
+
+222-224 are the timings, reported as wall clock rather than scored.

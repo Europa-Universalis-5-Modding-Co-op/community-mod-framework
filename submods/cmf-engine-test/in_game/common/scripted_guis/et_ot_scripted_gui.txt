@@ -1,0 +1,193 @@
+﻿# Transfer half of the ownership group (tests 201-213). Executed by et_ot_windows.gui once the
+# closing sweep has run, so every read here is taken on buildings already reading is_opened = no.
+#
+# Three mechanisms, because the engine could plausibly treat them differently: two direct ownership
+# effects moving one of our locations out, and an annexation bringing a whole country's locations
+# in. The annexation names a different neighbour from the one A and B hand their locations to, so
+# the three cannot undo each other.
+#
+# Every mechanism scores under its own _ran flag: the slot globals only exist where et_ot_read ran,
+# and a scoring line that reads one it never wrote would report a comparison against nothing.
+
+et_ot_transfer = {
+	scope = country
+
+	effect = {
+		set_variable = { name = et_201_passed value = 0 }
+		set_variable = { name = et_202_passed value = 0 }
+		set_variable = { name = et_203_passed value = 0 }
+		set_variable = { name = et_204_passed value = 0 }
+		set_variable = { name = et_205_passed value = 0 }
+		set_variable = { name = et_206_passed value = 0 }
+		set_variable = { name = et_207_passed value = 0 }
+		set_variable = { name = et_208_passed value = 0 }
+		set_variable = { name = et_209_passed value = 0 }
+		set_variable = { name = et_210_passed value = 0 }
+		set_variable = { name = et_211_passed value = 0 }
+		set_variable = { name = et_212_passed value = 0 }
+		set_variable = { name = et_213_passed value = 0 }
+		set_global_variable = { name = et_ot_a_ran value = 0 }
+		set_global_variable = { name = et_ot_b_ran value = 0 }
+		set_global_variable = { name = et_ot_c_ran value = 0 }
+		set_global_variable = { name = et_ot_d_ran value = 0 }
+		set_global_variable = { name = et_ot_a_moved value = 0 }
+		set_global_variable = { name = et_ot_b_moved value = 0 }
+		set_global_variable = { name = et_ot_c_moved value = 0 }
+		save_temporary_scope_as = et_ot_ctry
+
+		# -- Tests 201-204: change_location_owner ----------------
+		if = {
+			limit = {
+				global_var:et_ot_n = 3
+				global_var:et_fp_done = 1
+			}
+			set_global_variable = { name = et_ot_a_ran value = 1 }
+			global_var:et_ot_a = {
+				et_ot_read = { SLOT = a1 }
+				change_location_owner = global_var:et_fp_ctry
+				if = {
+					limit = { owner ?= global_var:et_fp_ctry }
+					set_global_variable = { name = et_ot_a_moved value = 1 }
+				}
+				et_ot_read = { SLOT = a2 }
+			}
+		}
+		if = {
+			limit = { global_var:et_ot_a_ran = 1 }
+			if = {
+				limit = { global_var:et_ot_a1_shut = 1 }
+				set_variable = { name = et_201_passed value = 1 }
+			}
+			if = {
+				limit = { global_var:et_ot_a2_has = 1 }
+				set_variable = { name = et_202_passed value = 1 }
+			}
+			# 203 and 204 are complements and both hang off the guard, so a run where the close
+			# never took reads FAIL on both rather than PASS on one by default. The moved check
+			# rides inside them rather than scoring a row: a transfer that did not happen would
+			# leave the building closed and read as PASS on 203, which is the answer being sought.
+			if = {
+				limit = {
+					global_var:et_ot_a1_shut = 1
+					global_var:et_ot_a_moved = 1
+					global_var:et_ot_a2_shut = 1
+				}
+				set_variable = { name = et_203_passed value = 1 }
+			}
+			if = {
+				limit = {
+					global_var:et_ot_a1_shut = 1
+					global_var:et_ot_a_moved = 1
+					global_var:et_ot_a2_open = 1
+				}
+				set_variable = { name = et_204_passed value = 1 }
+			}
+		}
+
+		# -- Tests 205-208: change_location_owner_forcefully -----
+		if = {
+			limit = {
+				global_var:et_ot_n = 3
+				global_var:et_fp_done = 1
+			}
+			set_global_variable = { name = et_ot_b_ran value = 1 }
+			global_var:et_ot_b = {
+				et_ot_read = { SLOT = b1 }
+				change_location_owner_forcefully = global_var:et_fp_ctry
+				if = {
+					limit = { owner ?= global_var:et_fp_ctry }
+					set_global_variable = { name = et_ot_b_moved value = 1 }
+				}
+				et_ot_read = { SLOT = b2 }
+			}
+		}
+		if = {
+			limit = { global_var:et_ot_b_ran = 1 }
+			if = {
+				limit = { global_var:et_ot_b1_shut = 1 }
+				set_variable = { name = et_205_passed value = 1 }
+			}
+			if = {
+				limit = { global_var:et_ot_b2_has = 1 }
+				set_variable = { name = et_206_passed value = 1 }
+			}
+			if = {
+				limit = {
+					global_var:et_ot_b1_shut = 1
+					global_var:et_ot_b_moved = 1
+					global_var:et_ot_b2_shut = 1
+				}
+				set_variable = { name = et_207_passed value = 1 }
+			}
+			if = {
+				limit = {
+					global_var:et_ot_b1_shut = 1
+					global_var:et_ot_b_moved = 1
+					global_var:et_ot_b2_open = 1
+				}
+				set_variable = { name = et_208_passed value = 1 }
+			}
+		}
+
+		# -- Tests 209-212: annex_country ------------------------
+		# The other direction as well as the other mechanism: the location arrives holding a
+		# building the annexed country owned, which is what a conquest actually hands over.
+		if = {
+			limit = { global_var:et_ot_c_done = 1 }
+			set_global_variable = { name = et_ot_c_ran value = 1 }
+			global_var:et_ot_c_loc = { et_ot_read = { SLOT = c1 } }
+			annex_country = { country = global_var:et_ot_c }
+			if = {
+				limit = { global_var:et_ot_c_loc = { owner ?= scope:et_ot_ctry } }
+				set_global_variable = { name = et_ot_c_moved value = 1 }
+			}
+			global_var:et_ot_c_loc = { et_ot_read = { SLOT = c2 } }
+		}
+		if = {
+			limit = { global_var:et_ot_c_ran = 1 }
+			if = {
+				limit = { global_var:et_ot_c1_shut = 1 }
+				set_variable = { name = et_209_passed value = 1 }
+			}
+			if = {
+				limit = { global_var:et_ot_c2_has = 1 }
+				set_variable = { name = et_210_passed value = 1 }
+			}
+			if = {
+				limit = {
+					global_var:et_ot_c1_shut = 1
+					global_var:et_ot_c_moved = 1
+					global_var:et_ot_c2_shut = 1
+				}
+				set_variable = { name = et_211_passed value = 1 }
+			}
+			if = {
+				limit = {
+					global_var:et_ot_c1_shut = 1
+					global_var:et_ot_c_moved = 1
+					global_var:et_ot_c2_open = 1
+				}
+				set_variable = { name = et_212_passed value = 1 }
+			}
+		}
+
+		# -- Test 213: the control -------------------------------
+		# A fourth building closed the same way in a location nothing transfers. It is what says a
+		# closed building stays closed at all, so a run where every transferred building reopened
+		# and this one did too lands on the closing rather than on the transfer.
+		if = {
+			limit = { global_var:et_ot_n = 3 }
+			set_global_variable = { name = et_ot_d_ran value = 1 }
+			global_var:et_ot_d = { et_ot_read = { SLOT = d1 } }
+		}
+		if = {
+			limit = { global_var:et_ot_d_ran = 1 }
+			if = {
+				limit = { global_var:et_ot_d1_shut = 1 }
+				set_variable = { name = et_213_passed value = 1 }
+			}
+		}
+
+		remove_variable = et_ot_fire
+	}
+}
