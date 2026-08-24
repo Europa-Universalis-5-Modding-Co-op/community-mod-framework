@@ -206,7 +206,7 @@ final_messages = []
 # 3.5. Auto-commit new infrastructure files that don't overwrite existing content.
 print("Applying infrastructure files...")
 
-AUTO_COMMIT_PATHS = ["tools/", ".ignore", ".gitignore", ".gitattributes", ".editorconfig"]
+AUTO_COMMIT_PATHS = ["tools/", ".github/", ".ignore", ".gitignore", ".gitattributes", ".editorconfig"]
 
 for path in AUTO_COMMIT_PATHS:
     run_git(["checkout", "FETCH_HEAD", "--", path], check=False)

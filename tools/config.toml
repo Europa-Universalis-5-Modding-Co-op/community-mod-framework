@@ -25,6 +25,15 @@ workshop_name = "" # Optional: override the release Workshop title when it shoul
 workshop_dev_name = "" # Optional: override dev mod name for upload.py -d/--dev
 workshop_version_card = "" # Optional: untranslated version card added to the Workshop title in every language. Bracket prefix formats: "1.x" for one version, "1.x & 1.y" for two versions, "1.x-1.y" for a version range. Suffix formats appended after the title: "- 1.x" or "- v1.x", optionally with a version name like "- v1.x Pavia"
 
+### Release Workflow (GitHub Actions) ###
+ci_release_upload_trigger = "off" # When the workflow publishes the release Workshop item on its own. Options: off, push, pr-merge
+ci_release_upload_branches = ["main"] # Branches watched by ci_release_upload_trigger
+ci_release_upload_submods = false # Should an automatic release upload also upload submods?
+ci_dev_upload_trigger = "off" # When the workflow publishes the dev Workshop item on its own. Options: off, push, pr-merge
+ci_dev_upload_branches = ["dev"] # Branches watched by ci_dev_upload_trigger
+ci_dev_upload_workshop_description = false # Should an automatic dev upload also update the Workshop description?
+ci_release_files = [] # Optional: repo files attached to every GitHub release as-is, e.g. ["tools/cmm-visual-editor.bat"]
+
 ### GUI Update ###
 game_directory = "" # Path to EU5 game directory (e.g. "C:/Steam/steamapps/common/Europa Universalis V/game"). Auto-detected if empty.
 beta_game_directory = "" # Path to the EU5 closed-beta game directory (Project Caesar Review), used with --beta. Auto-detected if empty.
@@ -33,3 +42,8 @@ beta_game_directory = "" # Path to the EU5 closed-beta game directory (Project C
 # [[submods]]
 # mod_id = "your_submod_id"
 # workshop_id = 0
+
+### Optional GitHub release archives (used by the release workflow) ###
+# [[ci_release_archives]]
+# name = "my-extra-download"
+# files = [{ from = "path/in/repo.gui", to = "path/inside/the/zip.gui" }]

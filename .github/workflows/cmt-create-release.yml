@@ -1,0 +1,293 @@
+name: Create Release
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: 'Workshop channel'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - 'release'
+          - 'dev'
+      publish:
+        description: 'Publish on Workshop'
+        required: false
+        default: true
+        type: boolean
+      upload-workshop-description:
+        description: 'Upload the Workshop description'
+        required: false
+        default: true
+        type: boolean
+      upload-change-notes:
+        description: 'Upload change notes'
+        required: false
+        default: true
+        type: boolean
+      upload-submods:
+        description: 'Upload submods'
+        required: false
+        default: false
+        type: boolean
+  push:
+    branches: ['**']
+    tags-ignore: ['**']
+  pull_request:
+    types: [closed]
+
+env:
+  TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name }}
+
+jobs:
+  gate:
+    name: "Check Configuration"
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.gate.outputs.run }}
+      channel: ${{ steps.gate.outputs.channel }}
+      item-id: ${{ steps.gate.outputs.item-id }}
+      version: ${{ steps.gate.outputs.version }}
+      last-tag: ${{ steps.gate.outputs.last-tag }}
+      publish: ${{ steps.gate.outputs.publish }}
+      upload-description: ${{ steps.gate.outputs.upload-description }}
+      upload-change-notes: ${{ steps.gate.outputs.upload-change-notes }}
+      upload-submods: ${{ steps.gate.outputs.upload-submods }}
+      should-release-github: ${{ steps.gate.outputs.should-release-github }}
+      should-release-steam: ${{ steps.gate.outputs.should-release-steam }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name }}
+          fetch-depth: 1
+          fetch-tags: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+        # Resolves the channel, the Workshop item id, and every upload target.
+        # A push or merged pull request that no configured trigger matches stops here.
+      - name: Resolve Run
+        id: gate
+        env:
+          WORKSHOP_USERNAME: ${{ secrets.WORKSHOP_USERNAME }}
+          WORKSHOP_PASSWORD: ${{ secrets.WORKSHOP_PASSWORD }}
+        run: |
+          python3 tools/ci_release.py gate \
+            --event "${{ github.event_name }}" \
+            --ref-name "$TARGET_BRANCH" \
+            --pr-merged "${{ github.event.pull_request.merged }}" \
+            --channel "${{ inputs.channel || 'release' }}" \
+            --publish "${{ inputs.publish }}" \
+            --upload-workshop-description "${{ inputs.upload-workshop-description }}" \
+            --upload-change-notes "${{ inputs.upload-change-notes }}" \
+            --upload-submods "${{ inputs.upload-submods }}"
+
+  release:
+    name: "Publish Release"
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: cmt-workshop-publish-${{ github.repository }}-${{ needs.gate.outputs.channel }}
+      cancel-in-progress: ${{ needs.gate.outputs.channel == 'dev' }}
+    env:
+      CHANNEL: ${{ needs.gate.outputs.channel }}
+      ITEM_ID: ${{ needs.gate.outputs.item-id }}
+      VERSION: ${{ needs.gate.outputs.version }}
+      STEAM_DIR: ${{ runner.temp }}/steam
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup Git
+        if: ${{ needs.gate.outputs.channel == 'release' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+        # Copies the mod content listed in tools/upload.py, writes the channel's
+        # metadata.json, and picks the channel's thumbnail.
+      - name: Stage Release Build
+        id: stage
+        run: python3 tools/ci_release.py stage --channel "$CHANNEL"
+
+      - name: Collect Commits
+        if: ${{ needs.gate.outputs.channel == 'release' && needs.gate.outputs.should-release-github == 'true' }}
+        env:
+          LAST_TAG: ${{ needs.gate.outputs.last-tag }}
+        run: |
+          echo "# Commits" >> "$GITHUB_STEP_SUMMARY"
+          git log "$LAST_TAG..HEAD" --no-merges --pretty=format:' - %s' >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Write Release Notes
+        if: ${{ needs.gate.outputs.channel == 'release' && needs.gate.outputs.should-release-github == 'true' }}
+        env:
+          LAST_TAG: ${{ needs.gate.outputs.last-tag }}
+          COMPARE_BASE: ${{ github.server_url }}/${{ github.repository }}/compare
+        run: |
+          python3 tools/ci_release.py change-notes \
+            --version "$VERSION" \
+            --item-id "$ITEM_ID" \
+            --format markdown \
+            --out "${{ github.workspace }}/release-notes.md"
+          {
+            echo ""
+            echo "**Full Changelog**: ${COMPARE_BASE}/${LAST_TAG}...${VERSION}"
+          } >> "${{ github.workspace }}/release-notes.md"
+
+        # The mod zip, plus anything listed in ci_release_files / ci_release_archives.
+      - name: Package Release Downloads
+        id: assets
+        if: ${{ needs.gate.outputs.channel == 'release' && needs.gate.outputs.should-release-github == 'true' }}
+        env:
+          RELEASE_DIR: ${{ steps.stage.outputs.release-dir }}
+        run: |
+          python3 tools/ci_release.py assets \
+            --release-dir "$RELEASE_DIR" \
+            --out-dir "${{ github.workspace }}/release-downloads" \
+            --archive-name "${{ github.event.repository.name }}-${VERSION}.zip"
+
+      - name: Upload Workflow Artifact
+        if: ${{ needs.gate.outputs.channel == 'release' && needs.gate.outputs.should-release-github == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Release
+          path: ${{ github.workspace }}/release-downloads
+
+      - name: Write Change Notes
+        id: notes
+        if: ${{ needs.gate.outputs.publish == 'true' && needs.gate.outputs.upload-change-notes == 'true' && needs.gate.outputs.should-release-steam == 'true' }}
+        run: |
+          python3 tools/ci_release.py change-notes \
+            --version "$VERSION" \
+            --item-id "$ITEM_ID" \
+            --format bbcode \
+            --out "$STEAM_DIR/change-notes.bbcode"
+
+      - name: Create Workshop Metadata
+        id: metadata
+        if: ${{ needs.gate.outputs.publish == 'true' && needs.gate.outputs.should-release-steam == 'true' }}
+        env:
+          WORKSHOP_TITLE: ${{ steps.stage.outputs.workshop-title }}
+          RELEASE_DIR: ${{ steps.stage.outputs.release-dir }}
+          PREVIEW_PATH: ${{ steps.stage.outputs.preview-path }}
+        run: |
+          python3 tools/ci_release.py vdf \
+            --item-id "$ITEM_ID" \
+            --title "$WORKSHOP_TITLE" \
+            --content-dir "$RELEASE_DIR" \
+            --preview "$PREVIEW_PATH" \
+            --change-notes-file "$STEAM_DIR/change-notes.bbcode" \
+            --out "$STEAM_DIR/workshop.vdf"
+
+      - name: Setup SteamCMD
+        if: ${{ needs.gate.outputs.publish == 'true' && needs.gate.outputs.should-release-steam == 'true' }}
+        uses: CyberAndrii/setup-steamcmd@v1
+
+      - name: Publish to Workshop
+        if: ${{ needs.gate.outputs.publish == 'true' && needs.gate.outputs.should-release-steam == 'true' }}
+        env:
+          WORKSHOP_USERNAME: ${{ secrets.WORKSHOP_USERNAME }}
+          WORKSHOP_PASSWORD: ${{ secrets.WORKSHOP_PASSWORD }}
+        run: |
+          steamcmd +login "$WORKSHOP_USERNAME" "$WORKSHOP_PASSWORD" \
+            +workshop_build_item "${{ steps.metadata.outputs.path }}" +quit
+
+        # SteamCMD writes the item's default language page only. Translated pages
+        # come from `python tools/upload.py -wp`.
+      - name: Create Workshop Page Metadata
+        id: page
+        if: ${{ needs.gate.outputs.publish == 'true' && needs.gate.outputs.upload-description == 'true' && needs.gate.outputs.should-release-steam == 'true' }}
+        env:
+          WORKSHOP_TITLE: ${{ steps.stage.outputs.workshop-title }}
+        run: |
+          python3 tools/ci_release.py page-vdf \
+            --item-id "$ITEM_ID" \
+            --title "$WORKSHOP_TITLE" \
+            --out "$STEAM_DIR/workshop-page.vdf"
+
+      - name: Upload Workshop Description
+        if: ${{ needs.gate.outputs.publish == 'true' && needs.gate.outputs.upload-description == 'true' && needs.gate.outputs.should-release-steam == 'true' }}
+        env:
+          WORKSHOP_USERNAME: ${{ secrets.WORKSHOP_USERNAME }}
+          WORKSHOP_PASSWORD: ${{ secrets.WORKSHOP_PASSWORD }}
+        run: |
+          steamcmd +login "$WORKSHOP_USERNAME" "$WORKSHOP_PASSWORD" \
+            +workshop_build_item "${{ steps.page.outputs.path }}" +quit
+          echo "# Workshop Description" >> "$GITHUB_STEP_SUMMARY"
+          echo "Uploaded the ${{ steps.page.outputs.language }} Workshop description." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create Submod Metadata
+        id: submods
+        if: ${{ needs.gate.outputs.publish == 'true' && needs.gate.outputs.upload-submods == 'true' && needs.gate.outputs.should-release-steam == 'true' }}
+        run: |
+          python3 tools/ci_release.py submod-vdfs \
+            --out-dir "$STEAM_DIR/submods" \
+            --change-notes "${{ needs.gate.outputs.upload-change-notes }}"
+
+      - name: Upload Submods
+        if: ${{ needs.gate.outputs.publish == 'true' && needs.gate.outputs.upload-submods == 'true' && needs.gate.outputs.should-release-steam == 'true' && steps.submods.outputs.count != '0' }}
+        env:
+          WORKSHOP_USERNAME: ${{ secrets.WORKSHOP_USERNAME }}
+          WORKSHOP_PASSWORD: ${{ secrets.WORKSHOP_PASSWORD }}
+        run: |
+          while IFS= read -r vdf; do
+            [ -n "$vdf" ] || continue
+            echo "Uploading $(basename "$vdf")..."
+            steamcmd +login "$WORKSHOP_USERNAME" "$WORKSHOP_PASSWORD" \
+              +workshop_build_item "$vdf" +quit
+          done < "${{ steps.submods.outputs.list-file }}"
+
+        # Tagged after the Workshop upload, so a Steam failure leaves nothing to unpick.
+      - name: Create Tag
+        if: ${{ needs.gate.outputs.channel == 'release' && needs.gate.outputs.should-release-github == 'true' }}
+        run: |
+          git tag "$VERSION"
+          git push origin "$VERSION"
+
+      - name: Publish GitHub Release
+        if: ${{ needs.gate.outputs.channel == 'release' && needs.gate.outputs.should-release-github == 'true' }}
+        uses: softprops/action-gh-release@v2.2.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: false
+          files: |
+            ${{ steps.assets.outputs.files }}
+          tag_name: ${{ needs.gate.outputs.version }}
+          name: ${{ needs.gate.outputs.version }}
+          body_path: ${{ github.workspace }}/release-notes.md
+
+        # Lets a local `python tools/upload.py` see that this version is published.
+      - name: Record Uploaded Version
+        if: ${{ needs.gate.outputs.channel == 'release' && needs.gate.outputs.publish == 'true' && needs.gate.outputs.should-release-steam == 'true' }}
+        continue-on-error: true
+        run: |
+          python3 tools/ci_release.py record-version --version "$VERSION"
+          git add tools/dependencies/.upload_versions.json
+          if git diff --cached --quiet; then
+            echo "Upload version cache is already current."
+            exit 0
+          fi
+          git commit -m "Bump upload versions to ${VERSION}"
+          git fetch origin "$TARGET_BRANCH"
+          git rebase "origin/$TARGET_BRANCH"
+          git push origin "HEAD:$TARGET_BRANCH"
