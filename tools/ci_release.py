@@ -433,8 +433,7 @@ def cmd_page_vdf(args):
             "`python tools/upload.py -wp` locally for per-language pages."
         )
 
-    description_path = upload.resolve_description_path(args.channel == "dev")
-    description = upload.read_text(description_path)
+    description, description_path = upload.load_workshop_description(args.channel == "dev")
     if description is None:
         fail(f"Workshop description not found at {description_path}.")
     log(f"Using {os.path.relpath(description_path, ROOT_DIR)}")
