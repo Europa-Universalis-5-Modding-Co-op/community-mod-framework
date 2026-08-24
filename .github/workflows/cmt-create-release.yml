@@ -259,6 +259,7 @@ jobs:
           WORKSHOP_TITLE: ${{ steps.stage.outputs.workshop-title }}
         run: |
           python3 tools/ci_release.py page-vdf \
+            --channel "$CHANNEL" \
             --item-id "$ITEM_ID" \
             --title "$WORKSHOP_TITLE" \
             --out "$STEAM_DIR/workshop-page.vdf"

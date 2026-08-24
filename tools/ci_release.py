@@ -433,9 +433,11 @@ def cmd_page_vdf(args):
             "`python tools/upload.py -wp` locally for per-language pages."
         )
 
-    description = upload.read_text(upload.WORKSHOP_DESCRIPTION_PATH)
+    description_path = upload.resolve_description_path(args.channel == "dev")
+    description = upload.read_text(description_path)
     if description is None:
-        fail(f"Workshop description not found at {upload.WORKSHOP_DESCRIPTION_PATH}.")
+        fail(f"Workshop description not found at {description_path}.")
+    log(f"Using {os.path.relpath(description_path, ROOT_DIR)}")
     description = upload.apply_workshop_item_id(upload.split_workshop_description(description), args.item_id)
     description = upload.trim_description(description, source_language)
 
@@ -628,6 +630,7 @@ def build_parser():
     item.set_defaults(func=cmd_vdf)
 
     page = sub.add_parser("page-vdf", help="Write the SteamCMD Workshop page metadata")
+    page.add_argument("--channel", required=True, choices=["release", "dev"])
     page.add_argument("--item-id", required=True, type=int)
     page.add_argument("--title", required=True)
     page.add_argument("--out", required=True)

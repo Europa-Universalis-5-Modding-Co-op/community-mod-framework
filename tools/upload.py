@@ -31,6 +31,7 @@ ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.toml")
 METADATA_PATH = os.path.join(ROOT_DIR, ".metadata", "metadata.json")
 WORKSHOP_DESCRIPTION_PATH = os.path.join(ROOT_DIR, "assets", "workshop", "workshop-description.bbcode")
+WORKSHOP_DESCRIPTION_DEV_PATH = os.path.join(ROOT_DIR, "assets", "workshop", "workshop-description-dev.bbcode")
 CHANGE_NOTES_PATH = os.path.join(ROOT_DIR, "assets", "workshop", "change-notes.bbcode")
 TRANSLATIONS_DIR = os.path.join(ROOT_DIR, "assets", "workshop", "translations")
 APP_ID = 3450310
@@ -1134,15 +1135,27 @@ def enforce_title_length(title, lang_label, fallback=None):
         return None
     return title
 
+def resolve_description_path(dev_mode=False):
+    """The dev description when a dev upload has one, otherwise the release description.
+
+    An empty dev file reads as absent, so a placeholder never blanks the dev page.
+    """
+    if dev_mode:
+        dev_text = read_text(WORKSHOP_DESCRIPTION_DEV_PATH)
+        if dev_text and dev_text.strip():
+            return WORKSHOP_DESCRIPTION_DEV_PATH
+    return WORKSHOP_DESCRIPTION_PATH
+
 def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None, workshop_name=None, version_card=""):
     """Collect source and translated workshop title/description payloads."""
     source_language = load_source_language(config)
     if source_language is None:
         return None
 
-    base_description = read_text(WORKSHOP_DESCRIPTION_PATH)
+    description_path = resolve_description_path(dev_mode)
+    base_description = read_text(description_path)
     if base_description is None:
-        print(f"Error: Workshop description file not found: {WORKSHOP_DESCRIPTION_PATH}")
+        print(f"Error: Workshop description file not found: {description_path}")
         return None
 
     base_description = split_workshop_description(base_description)
