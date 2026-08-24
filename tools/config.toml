@@ -15,7 +15,7 @@ gemini_additional_context = "This is the Community Mod Framework (CMF), a commun
 
 ### Uploading ####
 workshop_upload_item_id = 3692202776 # Replace with your mod's Workshop item ID (0 creates a new item)
-workshop_upload_item_id_dev = 0 # Optional: dev Workshop item ID for upload.py -d/--dev (0 creates a new item)
+workshop_upload_item_id_dev = 3789103426 # Optional: dev Workshop item ID for upload.py -d/--dev (0 creates a new item)
 upload_mod_by_default = true # Should running upload.py upload the mod? You can also use -m/--mod instead.
 upload_workshop_pages_by_default = true # Should running upload.py upload the mod's Workshop pages? You can also use -wp/--workshop-pages instead.
 upload_only_on_version_change = true # If true, mod/submod uploads only run when the metadata.json version changed since the last successful upload.
@@ -25,6 +25,15 @@ workshop_name = "" # Optional: override the release Workshop title when it shoul
 workshop_dev_name = "" # Optional: override dev mod name for upload.py -d/--dev
 workshop_version_card = "" # Optional: untranslated version card added to the Workshop title in every language. Bracket prefix formats: "1.x" for one version, "1.x & 1.y" for two versions, "1.x-1.y" for a version range. Suffix formats appended after the title: "- 1.x" or "- v1.x", optionally with a version name like "- v1.x Pavia"
 
+### Release Workflow (GitHub Actions) ###
+ci_release_upload_trigger = "off" # When the workflow publishes the release Workshop item on its own. Options: off, push, pr-merge, nightly
+ci_release_upload_branches = ["main"] # Branches watched by ci_release_upload_trigger
+ci_release_upload_submods = false # Should an automatic release upload also upload submods?
+ci_dev_upload_trigger = "off" # When the workflow publishes the dev Workshop item on its own. Options: off, push, pr-merge, nightly
+ci_dev_upload_branches = ["dev"] # Branches watched by ci_dev_upload_trigger
+ci_dev_upload_workshop_description = false # Should an automatic dev upload also update the Workshop description?
+ci_release_files = ["tools/cmm-visual-editor.bat"] # Optional: repo files attached to every GitHub release as-is
+
 ### GUI Update ###
 game_directory = "" # Path to EU5 game directory (e.g. "C:/Steam/steamapps/common/Europa Universalis V/game"). Auto-detected if empty.
 beta_game_directory = "" # Path to the EU5 closed-beta game directory (Project Caesar Review), used with --beta. Auto-detected if empty.
@@ -33,3 +42,8 @@ beta_game_directory = "" # Path to the EU5 closed-beta game directory (Project C
 # [[submods]]
 # mod_id = "your_submod_id"
 # workshop_id = 0
+
+### GitHub release archives (used by the release workflow) ###
+[[ci_release_archives]]
+name = "cmf-dependency-check"
+files = [{ from = "submods/cmf-example-mod/main_menu/gui/cmf_dependency_check.gui", to = "main_menu/gui/cmf_dependency_check.gui" }]
