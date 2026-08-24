@@ -21,8 +21,8 @@ upload_workshop_pages_by_default = true # Should running upload.py upload the mo
 upload_only_on_version_change = true # If true, mod/submod uploads only run when the metadata.json version changed since the last successful upload.
 upload_change_notes_by_default = true # Should running upload.py upload change notes? You can also use -cn/--change-notes instead.
 upload_submods_by_default = false # Should running upload.py upload all submods from submods/? You can also use -s/--submods instead.
-workshop_name = "Community Mod Framework - Dev Build" # Optional: override the release Workshop title when it should differ from the metadata.json name
-workshop_dev_name = "" # Optional: override dev mod name for upload.py -d/--dev
+workshop_name = "" # Optional: override the release Workshop title when it should differ from the metadata.json name
+workshop_dev_name = "Community Mod Framework - Dev Build" # Optional: override dev mod name for upload.py -d/--dev
 workshop_version_card = "" # Optional: untranslated version card added to the Workshop title in every language. Bracket prefix formats: "1.x" for one version, "1.x & 1.y" for two versions, "1.x-1.y" for a version range. Suffix formats appended after the title: "- 1.x" or "- v1.x", optionally with a version name like "- v1.x Pavia"
 
 ### Release Workflow (GitHub Actions) ###
