@@ -376,6 +376,14 @@ def get_cache_bucket(hash_data, cache_key):
 
 	return cache_bucket
 
+def get_file_language_hashes(cache_bucket):
+	"""Return the per-source-file, per-language translated-source hashes for a cache bucket."""
+	file_languages = cache_bucket.setdefault("file_languages", {})
+	if not isinstance(file_languages, dict):
+		file_languages = {}
+		cache_bucket["file_languages"] = file_languages
+	return file_languages
+
 def get_translator():
 	"""Create a DeepL Translator instance."""
 	try:
@@ -421,6 +429,20 @@ def hash_text(text):
 	Stable hash of the source value to detect changes.
 	"""
 	return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+def translation_signature(text, translator_name):
+	"""Hash source text together with the provider that translates it."""
+	return hash_text(f"{translator_name}\n{text}")
+
+def read_output_text(path):
+	"""Read an output file, returning None when it is missing or unreadable."""
+	if not os.path.exists(path):
+		return None
+	try:
+		with open(path, "r", encoding="utf-8-sig") as f:
+			return f.read()
+	except (OSError, UnicodeDecodeError):
+		return None
 
 def mask_text_var(text):
 	"""
@@ -1436,6 +1458,7 @@ def translate_workshop_assets(
 	translator,
 	source_language,
 	source_lang_deepl,
+	hash_data,
 	cache_bucket,
 	workshop_description_translator,
 	gemini_description_system_prompt,
@@ -1497,27 +1520,30 @@ def translate_workshop_assets(
 	description_changed = False
 	translator_changed = workshop_cache.get("description_translator") != workshop_description_translator
 	description_hash = None
+	description_signature = None
 	if description is not None:
 		description_hash = hash_text(description)
+		description_signature = translation_signature(description, workshop_description_translator)
 		# Re-translate when source text or provider changes.
 		description_changed = workshop_cache.get("description_hash") != description_hash or translator_changed
 
 	change_notes_changed = False
 	change_notes_hash = None
+	change_notes_signature = None
 	change_notes_translator_changed = workshop_cache.get("change_notes_translator") != workshop_description_translator
 	if change_notes is not None:
 		change_notes_hash = hash_text(change_notes)
+		change_notes_signature = translation_signature(change_notes, workshop_description_translator)
 		change_notes_changed = workshop_cache.get("change_notes_hash") != change_notes_hash or change_notes_translator_changed
 
 	title_changed = False
 	title_hash = None
+	title_signature = None
 	title_translator_changed = workshop_cache.get("title_translator") != workshop_title_translator
 	if title is not None:
 		title_hash = hash_text(title)
+		title_signature = translation_signature(title, workshop_title_translator)
 		title_changed = workshop_cache.get("title_hash") != title_hash or title_translator_changed
-
-	template_hash = hash_text(translation_template) if translation_template is not None else None
-	template_changed = template_hash != workshop_cache.get("template_hash")
 
 	description_success = True
 	title_success = True
@@ -1532,13 +1558,14 @@ def translate_workshop_assets(
 			workshop_translations_dir,
 			WORKSHOP_TRANSLATION_FILENAME.format(lang=folder_name)
 		)
-		file_changed = False
 		cache_entry = translation_cache.setdefault(folder_name, {})
 		cached_title = cache_entry.get("title")
 		cached_description = cache_entry.get("description")
+		title_done = cached_title is not None and cache_entry.get("title_signature") == title_signature
+		description_done = cached_description is not None and cache_entry.get("description_signature") == description_signature
 
 		if title:
-			if cached_title is None or title_changed:
+			if (cached_title is None or title_changed) and not title_done:
 				provider_label = "gemini-3-flash" if workshop_title_translator == "gemini-3-flash" else "deepl"
 				print(f"{log_prefix}Translating workshop title -> {folder_name} ({provider_label})...")
 				if workshop_title_translator == "gemini-3-flash":
@@ -1559,15 +1586,17 @@ def translate_workshop_assets(
 				if translated_title is not None:
 					cached_title = translated_title
 					cache_entry["title"] = translated_title
+					cache_entry["title_signature"] = title_signature
+					# Persist after each language so an interrupted run resumes at the next one.
+					save_hashes(HASHES_PATH, hash_data)
 					cache_changed = True
-					file_changed = True
 				else:
 					title_success = False
 			else:
 				print(f"{log_prefix}Workshop title cached -> {folder_name}; skipping.")
 
 		if description is not None:
-			needs_description = description_changed or cached_description is None
+			needs_description = (description_changed or cached_description is None) and not description_done
 			if needs_description:
 				provider_label = "gemini-3-flash" if workshop_description_translator == "gemini-3-flash" else "deepl"
 				print(f"{log_prefix}Translating workshop description -> {folder_name} ({provider_label})...")
@@ -1591,14 +1620,19 @@ def translate_workshop_assets(
 					continue
 				cached_description = translated_description
 				cache_entry["description"] = translated_description
+				cache_entry["description_signature"] = description_signature
+				save_hashes(HASHES_PATH, hash_data)
 				cache_changed = True
-				file_changed = True
 			else:
 				print(f"{log_prefix}Workshop description unchanged -> {folder_name}; skipping.")
 
 		if change_notes is not None:
 			cached_change_notes = cache_entry.get("change_notes")
-			needs_change_notes = change_notes_changed or cached_change_notes is None
+			change_notes_done = (
+				cached_change_notes is not None
+				and cache_entry.get("change_notes_signature") == change_notes_signature
+			)
+			needs_change_notes = (change_notes_changed or cached_change_notes is None) and not change_notes_done
 			if needs_change_notes:
 				provider_label = "gemini-3-flash" if workshop_description_translator == "gemini-3-flash" else "deepl"
 				print(f"{log_prefix}Translating change notes -> {folder_name} ({provider_label})...")
@@ -1620,6 +1654,8 @@ def translate_workshop_assets(
 				if translated_change_notes is not None:
 					cached_change_notes = translated_change_notes
 					cache_entry["change_notes"] = translated_change_notes
+					cache_entry["change_notes_signature"] = change_notes_signature
+					save_hashes(HASHES_PATH, hash_data)
 					cache_changed = True
 				else:
 					change_notes_success = False
@@ -1634,9 +1670,7 @@ def translate_workshop_assets(
 				with open(change_notes_translation_path, "w", encoding="utf-8", newline="\n") as f:
 					f.write(cached_change_notes)
 
-		if translate_pages and (file_changed or template_changed or not os.path.exists(translation_path)):
-			if cached_title is None and cached_description is None:
-				continue
+		if translate_pages and (cached_title is not None or cached_description is not None):
 			translated_language = LANGUAGE_DISPLAY_NAMES.get(folder_name, folder_name)
 			original_language = LANGUAGE_DISPLAY_NAMES.get(source_language, source_language)
 			output = render_workshop_translation_text(
@@ -1648,8 +1682,9 @@ def translate_workshop_assets(
 				translated_language,
 				original_language
 			)
-			with open(translation_path, "w", encoding="utf-8", newline="\n") as f:
-				f.write(output)
+			if read_output_text(translation_path) != output:
+				with open(translation_path, "w", encoding="utf-8", newline="\n") as f:
+					f.write(output)
 
 	if description is not None and description_changed and description_success:
 		workshop_cache["description_hash"] = description_hash
@@ -1664,10 +1699,6 @@ def translate_workshop_assets(
 	if title is not None and title_changed and title_success:
 		workshop_cache["title_hash"] = title_hash
 		workshop_cache["title_translator"] = workshop_title_translator
-		cache_changed = True
-
-	if workshop_cache.get("template_hash") != template_hash:
-		workshop_cache["template_hash"] = template_hash
 		cache_changed = True
 
 	return cache_changed
@@ -1737,6 +1768,7 @@ def main():
 		source_dir = os.path.join(loc_base_path, source_language)
 		cache_bucket = get_cache_bucket(hash_data, cache_key)
 		file_hashes = cache_bucket["files"]
+		file_languages = get_file_language_hashes(cache_bucket)
 		processed_files = set()
 
 		if translate_mod:
@@ -1758,6 +1790,7 @@ def main():
 
 						source_rel_path = os.path.relpath(source_filepath, loc_base_path)
 						processed_files.add(source_rel_path)
+						source_file_hash = hash_text("".join(source_lines))
 
 						# Determine which keys changed since last run.
 						prev_hashes = file_hashes.get(source_rel_path, {})
@@ -1766,10 +1799,14 @@ def main():
 							if prev_hashes.get(key) != current_hash:
 								changed_keys.add(key)
 
+						language_hashes = file_languages.setdefault(source_rel_path, {})
 						failed_keys = set()
 						for folder_name, deepl_code in TARGET_LANGUAGES.items():
 							if folder_name == source_language:
 								continue
+
+							language_done = language_hashes.get(folder_name) == source_file_hash
+							language_failed_keys = set()
 							process_file(
 								translator,
 								source_lines,
@@ -1780,13 +1817,20 @@ def main():
 								deepl_code,
 								source_lang_id,
 								source_lang_deepl,
-								changed_keys,
+								set() if language_done else changed_keys,
 								localization_translator,
 								gemini_localization_system_prompt,
 								gemini_additional_context,
 								log_prefix,
-								failed_keys
+								language_failed_keys
 							)
+
+							if language_failed_keys:
+								failed_keys.update(language_failed_keys)
+							elif not language_done:
+								language_hashes[folder_name] = source_file_hash
+								# Persist after each language so an interrupted run resumes at the next one.
+								save_hashes(HASHES_PATH, hash_data)
 
 						# Uncached keys are retried on the next run.
 						if failed_keys:
@@ -1805,6 +1849,11 @@ def main():
 						del file_hashes[rel_path]
 						hashes_modified = True
 
+				for rel_path in list(file_languages.keys()):
+					if rel_path not in processed_files:
+						del file_languages[rel_path]
+						hashes_modified = True
+
 				remove_orphan_translations(
 					loc_base_path,
 					{os.path.basename(p) for p in processed_files},
@@ -1817,12 +1866,16 @@ def main():
 				if file_hashes:
 					file_hashes.clear()
 					hashes_modified = True
+				if file_languages:
+					file_languages.clear()
+					hashes_modified = True
 
 		if translate_wp or translate_cn:
 			hashes_modified = translate_workshop_assets(
 				translator,
 				source_language,
 				source_lang_deepl,
+				hash_data,
 				cache_bucket,
 				workshop_description_translator,
 				gemini_description_system_prompt,
