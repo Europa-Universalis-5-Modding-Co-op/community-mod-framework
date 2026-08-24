@@ -35,7 +35,8 @@ DEV_DESCRIPTION_KEY = "ci_dev_upload_workshop_description"
 RELEASE_FILES_KEY = "ci_release_files"
 RELEASE_ARCHIVES_KEY = "ci_release_archives"
 
-TRIGGER_VALUES = ("off", "push", "pr-merge")
+TRIGGER_VALUES = ("off", "push", "pr-merge", "nightly")
+DEV_MARKER_TAG_PREFIX = "cmt-dev-uploaded-"
 
 # --- Output plumbing ---
 
@@ -176,6 +177,31 @@ def skip(reason):
 def trigger_matches(trigger, branches, event_trigger, branch):
     return trigger == event_trigger and branch in branches
 
+def dev_marker_tag(branch):
+    """The tag recording which commit the dev item was last built from."""
+    return DEV_MARKER_TAG_PREFIX + re.sub(r"[^A-Za-z0-9._-]", "-", branch)
+
+def nightly_channel(config):
+    """The channel set to nightly, release winning if somehow both are."""
+    if read_trigger(config, RELEASE_TRIGGER_KEY) == "nightly":
+        return "release"
+    if read_trigger(config, DEV_TRIGGER_KEY) == "nightly":
+        return "dev"
+    return None
+
+def nightly_branch(config, channel):
+    key = RELEASE_BRANCHES_KEY if channel == "release" else DEV_BRANCHES_KEY
+    default = ["main"] if channel == "release" else ["dev"]
+    branches = read_branches(config, key, default)
+    return branches[0] if branches else ""
+
+def cmd_nightly_branch(args):
+    """Print the branch a scheduled run publishes from. A schedule always fires on the
+    default branch, so the workflow has to switch to this one before anything else."""
+    config = read_config()
+    channel = nightly_channel(config)
+    print(nightly_branch(config, channel) if channel else "")
+
 def cmd_gate(args):
     config = read_config()
 
@@ -187,23 +213,40 @@ def cmd_gate(args):
     automatic = args.event != "workflow_dispatch"
 
     if automatic:
-        if args.event == "pull_request":
-            if not as_bool(args.pr_merged):
-                skip("Pull request closed without merging.")
-            event_trigger = "pr-merge"
+        if args.event == "schedule":
+            channel = nightly_channel(config)
+            if channel is None:
+                skip("No channel is set to a nightly upload in tools/config.toml.")
+            if not args.ref_name:
+                skip(f"The {channel} channel is set to nightly but names no branch.")
+            # A release only publishes on a version change, which the gate below already
+            # tests. A dev upload has no version to compare, so it compares commits.
+            if channel == "dev":
+                # The marker is a lightweight tag, so the ref holds the commit itself and
+                # reads correctly out of the shallow clone a scheduled run checks out.
+                marker = dev_marker_tag(args.ref_name)
+                head = git_output(["rev-parse", "HEAD"])
+                uploaded = git_output(["rev-parse", "--verify", "--quiet", "refs/tags/" + marker])
+                if head and head == uploaded:
+                    skip(f"Nothing new on '{args.ref_name}' since the last dev upload.")
         else:
-            event_trigger = "push"
+            if args.event == "pull_request":
+                if not as_bool(args.pr_merged):
+                    skip("Pull request closed without merging.")
+                event_trigger = "pr-merge"
+            else:
+                event_trigger = "push"
 
-        if trigger_matches(release_trigger, release_branches, event_trigger, args.ref_name):
-            channel = "release"
-        elif trigger_matches(dev_trigger, dev_branches, event_trigger, args.ref_name):
-            channel = "dev"
-        else:
-            skip(
-                f"No automatic upload is configured for a {event_trigger} on '{args.ref_name}'. "
-                f"{RELEASE_TRIGGER_KEY} is '{release_trigger}' for {release_branches}, "
-                f"{DEV_TRIGGER_KEY} is '{dev_trigger}' for {dev_branches}."
-            )
+            if trigger_matches(release_trigger, release_branches, event_trigger, args.ref_name):
+                channel = "release"
+            elif trigger_matches(dev_trigger, dev_branches, event_trigger, args.ref_name):
+                channel = "dev"
+            else:
+                skip(
+                    f"No automatic upload is configured for a {event_trigger} on '{args.ref_name}'. "
+                    f"{RELEASE_TRIGGER_KEY} is '{release_trigger}' for {release_branches}, "
+                    f"{DEV_TRIGGER_KEY} is '{dev_trigger}' for {dev_branches}."
+                )
 
         publish = True
         upload_change_notes = channel == "release"
@@ -266,9 +309,11 @@ def cmd_gate(args):
     emit("run", "true")
     emit("skip-reason", "")
     emit("channel", channel)
+    emit("target-branch", args.ref_name)
     emit("item-id", item_id)
     emit("version", version)
     emit("last-tag", last_tag() if channel == "release" else "")
+    emit("dev-marker-tag", dev_marker_tag(args.ref_name) if channel == "dev" else "")
     emit("publish", yn(publish))
     emit("upload-description", yn(upload_description))
     emit("upload-change-notes", yn(upload_change_notes))
@@ -548,8 +593,11 @@ def build_parser():
     parser = argparse.ArgumentParser(description="Release helper for the GitHub Actions workflow.")
     sub = parser.add_subparsers(dest="command", required=True)
 
+    branch = sub.add_parser("nightly-branch", help="Print the branch a scheduled run publishes from")
+    branch.set_defaults(func=cmd_nightly_branch)
+
     gate = sub.add_parser("gate", help="Decide whether this run publishes, and on which channel")
-    gate.add_argument("--event", required=True, choices=["push", "pull_request", "workflow_dispatch"])
+    gate.add_argument("--event", required=True, choices=["push", "pull_request", "schedule", "workflow_dispatch"])
     gate.add_argument("--ref-name", default="")
     gate.add_argument("--pr-merged", default="false")
     gate.add_argument("--channel", default="release", choices=["release", "dev"])

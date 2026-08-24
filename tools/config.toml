@@ -26,10 +26,10 @@ workshop_dev_name = "" # Optional: override dev mod name for upload.py -d/--dev
 workshop_version_card = "" # Optional: untranslated version card added to the Workshop title in every language. Bracket prefix formats: "1.x" for one version, "1.x & 1.y" for two versions, "1.x-1.y" for a version range. Suffix formats appended after the title: "- 1.x" or "- v1.x", optionally with a version name like "- v1.x Pavia"
 
 ### Release Workflow (GitHub Actions) ###
-ci_release_upload_trigger = "off" # When the workflow publishes the release Workshop item on its own. Options: off, push, pr-merge
+ci_release_upload_trigger = "off" # When the workflow publishes the release Workshop item on its own. Options: off, push, pr-merge, nightly
 ci_release_upload_branches = ["main"] # Branches watched by ci_release_upload_trigger
 ci_release_upload_submods = false # Should an automatic release upload also upload submods?
-ci_dev_upload_trigger = "off" # When the workflow publishes the dev Workshop item on its own. Options: off, push, pr-merge
+ci_dev_upload_trigger = "off" # When the workflow publishes the dev Workshop item on its own. Options: off, push, pr-merge, nightly
 ci_dev_upload_branches = ["dev"] # Branches watched by ci_dev_upload_trigger
 ci_dev_upload_workshop_description = false # Should an automatic dev upload also update the Workshop description?
 ci_release_files = [] # Optional: repo files attached to every GitHub release as-is, e.g. ["tools/cmm-visual-editor.bat"]
