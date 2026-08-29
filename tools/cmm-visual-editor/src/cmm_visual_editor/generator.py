@@ -1,6 +1,7 @@
 """Code generator: ModModel -> Paradox script files."""
 
 import json
+import re
 from .models import ModModel, Setting, ListField
 
 
@@ -739,6 +740,20 @@ def _gen_setting_sgui_block(qid: str, visible: str = None, enabled: str = None) 
     return "\n".join(lines)
 
 
+_LOC_MARKUP_RE = re.compile(r'\\n|\[.*?\]|\$.*?\$|@[a-zA-Z0-9_]+!?|#[a-zA-Z0-9_]+|#!')
+_LOC_LETTER_RE = re.compile(r'[^\W\d_]')
+
+
+def _loc_has_words(value: str) -> bool:
+    """Whether a value holds anything a translator would read, using the auto-skip test from tools/translate.py."""
+    return _LOC_LETTER_RE.search(_LOC_MARKUP_RE.sub("", value)) is not None
+
+
+def _loc_line(key: str, value: str) -> str:
+    marker = "" if _loc_has_words(value) else " # NO-TRANSLATE"
+    return f' {key}: "{value}"{marker}'
+
+
 def _gen_localization(model: ModModel) -> str:
     mod_id = model.mod_id
     lines = []
@@ -746,14 +761,14 @@ def _gen_localization(model: ModModel) -> str:
 
     # Mod
     lines.append(" # Mod")
-    lines.append(f' {mod_id}_name: "{_esc(model.mod_name)}"')
-    lines.append(f' {mod_id}_desc: "{_esc(model.mod_desc)}"')
+    lines.append(_loc_line(f"{mod_id}_name", _esc(model.mod_name)))
+    lines.append(_loc_line(f"{mod_id}_desc", _esc(model.mod_desc)))
 
     if model.lobby_banner:
-        lines.append(f' game_concept_{mod_id}_banner_logo: ""')
-        lines.append(f' game_concept_{mod_id}_banner_logo_desc: ""')
-        lines.append(f' game_concept_{mod_id}_banner_background: ""')
-        lines.append(f' game_concept_{mod_id}_banner_background_desc: ""')
+        lines.append(_loc_line(f"game_concept_{mod_id}_banner_logo", ""))
+        lines.append(_loc_line(f"game_concept_{mod_id}_banner_logo_desc", ""))
+        lines.append(_loc_line(f"game_concept_{mod_id}_banner_background", ""))
+        lines.append(_loc_line(f"game_concept_{mod_id}_banner_background_desc", ""))
 
     # Tabs, groups, and settings
     seen_groups = set()
@@ -765,7 +780,7 @@ def _gen_localization(model: ModModel) -> str:
             continue
         lines.append("")
         lines.append(f" # {tab.name or tab.tab_id} ({tab.tab_id}) Tab")
-        lines.append(f' {mod_id}__{tab.tab_id}_name: "{_esc(tab.name or tab.tab_id)}"')
+        lines.append(_loc_line(f"{mod_id}__{tab.tab_id}_name", _esc(tab.name or tab.tab_id)))
         if not has_settings:
             continue
 
@@ -775,9 +790,9 @@ def _gen_localization(model: ModModel) -> str:
             lines.append(f" ## {group.name or group.group_id} ({group.group_id}) Group")
             if (tab.tab_id, group.group_id) not in seen_groups:
                 seen_groups.add((tab.tab_id, group.group_id))
-                lines.append(f' {mod_id}__{tab.tab_id}__{group.group_id}_name: "{_esc(group.name or group.group_id)}"')
+                lines.append(_loc_line(f"{mod_id}__{tab.tab_id}__{group.group_id}_name", _esc(group.name or group.group_id)))
                 if group.desc:
-                    lines.append(f' {mod_id}__{tab.tab_id}__{group.group_id}_desc: "{_esc(group.desc)}"')
+                    lines.append(_loc_line(f"{mod_id}__{tab.tab_id}__{group.group_id}_desc", _esc(group.desc)))
 
             for setting in group.settings:
                 _emit_setting_loc(lines, mod_id, setting)
@@ -805,6 +820,7 @@ def _gen_localization(model: ModModel) -> str:
 
     lines.append("")
     lines.append(" # Optional: self-referencing flag keys to suppress IDE warnings (safe to remove if you want)")
+    lines.append(" # NO-TRANSLATE BELOW")
     for key in flag_keys:
         lines.append(f' {key}: "{key}"')
 
@@ -817,14 +833,14 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
 
     if st == "list":
         # Lists use the group name as their display name; no setting-level name/desc.
-        lines.append(f' {qid}_item_column_name: "{_esc(setting.item_column_name or "Item")}"')
+        lines.append(_loc_line(f"{qid}_item_column_name", _esc(setting.item_column_name or "Item")))
         if not setting.list_source:
             descs = setting.item_descs or []
             for i, name in enumerate(setting.item_names or [], start=1):
-                lines.append(f' {qid}_i{i}_name: "{_esc(name)}"')
+                lines.append(_loc_line(f"{qid}_i{i}_name", _esc(name)))
                 desc = descs[i - 1] if i - 1 < len(descs) else ""
                 if desc:
-                    lines.append(f' {qid}_i{i}_desc: "{_esc(desc)}"')
+                    lines.append(_loc_line(f"{qid}_i{i}_desc", _esc(desc)))
 
         for field in (setting.fields or []):
             fqid = f"{qid}__{field.field_id}"
@@ -834,56 +850,56 @@ def _emit_setting_loc(lines: list, mod_id: str, setting: Setting):
             else:
                 name_key = f"{fqid}_name"
                 root = fqid
-            lines.append(f' {name_key}: "{_esc(field.name or field.field_id)}"')
+            lines.append(_loc_line(name_key, _esc(field.name or field.field_id)))
             if field.desc:
-                lines.append(f' {root}_desc: "{_esc(field.desc)}"')
+                lines.append(_loc_line(f"{root}_desc", _esc(field.desc)))
             if field.field_type == "button":
-                lines.append(f' {root}_text: "{_esc(field.button_text or field.name or field.field_id)}"')
+                lines.append(_loc_line(f"{root}_text", _esc(field.button_text or field.name or field.field_id)))
             if field.field_type == "text":
                 for i, val in enumerate(field.item_text_values or [], start=1):
                     if not val:
                         continue
-                    lines.append(f' {root}_i{i}_text: "{_esc(val)}"')
+                    lines.append(_loc_line(f"{root}_i{i}_text", _esc(val)))
             if field.display_format and "$VALUE$" in field.display_format:
                 parts = field.display_format.split("$VALUE$", 1)
                 if parts[0]:
-                    lines.append(f' {root}_prefix: "{_esc(parts[0])}"')
+                    lines.append(_loc_line(f"{root}_prefix", _esc(parts[0])))
                 if parts[1]:
-                    lines.append(f' {root}_postfix: "{_esc(parts[1])}"')
+                    lines.append(_loc_line(f"{root}_postfix", _esc(parts[1])))
             if field.display_format_high and "$VALUE$" in field.display_format_high:
                 parts = field.display_format_high.split("$VALUE$", 1)
                 if parts[0]:
-                    lines.append(f' {root}_prefix_high: "{_esc(parts[0])}"')
+                    lines.append(_loc_line(f"{root}_prefix_high", _esc(parts[0])))
                 if parts[1]:
-                    lines.append(f' {root}_postfix_high: "{_esc(parts[1])}"')
+                    lines.append(_loc_line(f"{root}_postfix_high", _esc(parts[1])))
             if field.display_format_low and "$VALUE$" in field.display_format_low:
                 parts = field.display_format_low.split("$VALUE$", 1)
                 if parts[0]:
-                    lines.append(f' {root}_prefix_low: "{_esc(parts[0])}"')
+                    lines.append(_loc_line(f"{root}_prefix_low", _esc(parts[0])))
                 if parts[1]:
-                    lines.append(f' {root}_postfix_low: "{_esc(parts[1])}"')
+                    lines.append(_loc_line(f"{root}_postfix_low", _esc(parts[1])))
             if field.field_type == "dropdown":
                 for opt in (field.options or []):
-                    lines.append(f' {fqid}_option_{opt.index}_name: "{_esc(opt.name)}"')
+                    lines.append(_loc_line(f"{fqid}_option_{opt.index}_name", _esc(opt.name)))
                     if opt.desc:
-                        lines.append(f' {fqid}_option_{opt.index}_desc: "{_esc(opt.desc)}"')
+                        lines.append(_loc_line(f"{fqid}_option_{opt.index}_desc", _esc(opt.desc)))
         return
 
-    lines.append(f' {qid}_name: "{_esc(setting.name or setting.setting_id)}"')
-    lines.append(f' {qid}_desc: "{_esc(setting.desc)}"')
+    lines.append(_loc_line(f"{qid}_name", _esc(setting.name or setting.setting_id)))
+    lines.append(_loc_line(f"{qid}_desc", _esc(setting.desc)))
 
     if st in ("numeric", "slider") and setting.display_format:
         fmt = _esc(setting.display_format).replace("$VALUE$", f"[CMMV('{qid}')]")
-        lines.append(f' {qid}_format: "{fmt}"')
+        lines.append(_loc_line(f"{qid}_format", fmt))
 
     if st == "button":
-        lines.append(f' {qid}_text: "{_esc(setting.button_text or "Run")}"')
+        lines.append(_loc_line(f"{qid}_text", _esc(setting.button_text or "Run")))
 
     elif st == "dropdown":
         for opt in (setting.options or []):
-            lines.append(f' {qid}_option_{opt.index}_name: "{_esc(opt.name)}"')
+            lines.append(_loc_line(f"{qid}_option_{opt.index}_name", _esc(opt.name)))
             if opt.desc:
-                lines.append(f' {qid}_option_{opt.index}_desc: "{_esc(opt.desc)}"')
+                lines.append(_loc_line(f"{qid}_option_{opt.index}_desc", _esc(opt.desc)))
 
 
 METADATA_MANAGED_KEYS = (
