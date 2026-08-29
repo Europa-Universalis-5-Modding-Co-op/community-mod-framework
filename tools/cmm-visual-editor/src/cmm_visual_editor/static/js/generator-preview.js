@@ -818,19 +818,29 @@ ${prefix}_register_lobby_banner = {
         lines.push(`}`);
     },
 
+    // Whether a value holds anything a translator would read, using the auto-skip test from tools/translate.py.
+    _locHasWords(value) {
+        return /[\p{L}\p{Nl}\p{No}]/u.test(value.replace(/\\n|\[.*?\]|\$.*?\$|@[a-zA-Z0-9_]+!?|#[a-zA-Z0-9_]+|#!/g, ''));
+    },
+
+    _locLine(key, value) {
+        const marker = this._locHasWords(value) ? '' : ' # NO-TRANSLATE';
+        return ` ${key}: "${value}"${marker}`;
+    },
+
     genLocalization(state) {
         const modId = state.mod_id;
         const lines = [];
         lines.push('l_english:');
         lines.push(' # Mod');
-        lines.push(` ${modId}_name: "${this._esc(state.mod_name)}"`);
-        lines.push(` ${modId}_desc: "${this._esc(state.mod_desc)}"`);
+        lines.push(this._locLine(`${modId}_name`, this._esc(state.mod_name)));
+        lines.push(this._locLine(`${modId}_desc`, this._esc(state.mod_desc)));
 
         if (state.lobby_banner) {
-            lines.push(` game_concept_${modId}_banner_logo: ""`);
-            lines.push(` game_concept_${modId}_banner_logo_desc: ""`);
-            lines.push(` game_concept_${modId}_banner_background: ""`);
-            lines.push(` game_concept_${modId}_banner_background_desc: ""`);
+            lines.push(this._locLine(`game_concept_${modId}_banner_logo`, ''));
+            lines.push(this._locLine(`game_concept_${modId}_banner_logo_desc`, ''));
+            lines.push(this._locLine(`game_concept_${modId}_banner_background`, ''));
+            lines.push(this._locLine(`game_concept_${modId}_banner_background_desc`, ''));
         }
 
         // Tabs, groups, and settings
@@ -846,7 +856,7 @@ ${prefix}_register_lobby_banner = {
             if (!hasContent && !parentTabs.has(tab.tab_id)) continue;
             lines.push('');
             lines.push(` # ${tab.name || tab.tab_id} (${tab.tab_id}) Tab`);
-            lines.push(` ${modId}__${tab.tab_id}_name: "${this._esc(tab.name || tab.tab_id)}"`);
+            lines.push(this._locLine(`${modId}__${tab.tab_id}_name`, this._esc(tab.name || tab.tab_id)));
             if (!hasContent) continue;
 
             for (const group of (tab.groups || [])) {
@@ -855,9 +865,9 @@ ${prefix}_register_lobby_banner = {
                 const groupDedup = `${tab.tab_id}__${group.group_id}`;
                 if (!seenGroups.has(groupDedup)) {
                     seenGroups.add(groupDedup);
-                    lines.push(` ${modId}__${tab.tab_id}__${group.group_id}_name: "${this._esc(group.name || group.group_id)}"`);
+                    lines.push(this._locLine(`${modId}__${tab.tab_id}__${group.group_id}_name`, this._esc(group.name || group.group_id)));
                     if (group.desc) {
-                        lines.push(` ${modId}__${tab.tab_id}__${group.group_id}_desc: "${this._esc(group.desc)}"`);
+                        lines.push(this._locLine(`${modId}__${tab.tab_id}__${group.group_id}_desc`, this._esc(group.desc)));
                     }
                 }
                 for (const s of group.settings) {
@@ -900,6 +910,7 @@ ${prefix}_register_lobby_banner = {
 
         lines.push('');
         lines.push(' # Optional: self-referencing flag keys to suppress IDE warnings (safe to remove if you want)');
+        lines.push(' # NO-TRANSLATE BELOW');
         for (const key of flagKeys) {
             lines.push(` ${key}: "${key}"`);
         }
@@ -912,13 +923,13 @@ ${prefix}_register_lobby_banner = {
 
         if (setting.setting_type === 'list') {
             // Lists use the group name as their display name; no setting-level name/desc.
-            lines.push(` ${qid}_item_column_name: "${this._esc(setting.item_column_name || 'Item')}"`);
+            lines.push(this._locLine(`${qid}_item_column_name`, this._esc(setting.item_column_name || 'Item')));
             if (!setting.list_source) {
                 const descs = setting.item_descs || [];
                 for (let i = 0; i < (setting.item_names || []).length; i++) {
-                    lines.push(` ${qid}_i${i + 1}_name: "${this._esc(setting.item_names[i])}"`);
+                    lines.push(this._locLine(`${qid}_i${i + 1}_name`, this._esc(setting.item_names[i])));
                     if (descs[i]) {
-                        lines.push(` ${qid}_i${i + 1}_desc: "${this._esc(descs[i])}"`);
+                        lines.push(this._locLine(`${qid}_i${i + 1}_desc`, this._esc(descs[i])));
                     }
                 }
             }
@@ -926,52 +937,52 @@ ${prefix}_register_lobby_banner = {
                 const fqid = `${qid}__${field.field_id}`;
                 const nameKey = (field.loc_name_key && field.loc_root_key) ? field.loc_name_key : `${fqid}_name`;
                 const root = (field.loc_name_key && field.loc_root_key) ? field.loc_root_key : fqid;
-                lines.push(` ${nameKey}: "${this._esc(field.name || field.field_id)}"`);
+                lines.push(this._locLine(nameKey, this._esc(field.name || field.field_id)));
                 if (field.desc) {
-                    lines.push(` ${root}_desc: "${this._esc(field.desc)}"`);
+                    lines.push(this._locLine(`${root}_desc`, this._esc(field.desc)));
                 }
                 if (field.field_type === 'button') {
-                    lines.push(` ${root}_text: "${this._esc(field.button_text || field.name || field.field_id)}"`);
+                    lines.push(this._locLine(`${root}_text`, this._esc(field.button_text || field.name || field.field_id)));
                 }
                 if (field.field_type === 'text') {
                     const textVals = field.item_text_values || [];
                     for (let i = 0; i < textVals.length; i++) {
                         if (!textVals[i]) continue;
-                        lines.push(` ${root}_i${i + 1}_text: "${this._esc(textVals[i])}"`);
+                        lines.push(this._locLine(`${root}_i${i + 1}_text`, this._esc(textVals[i])));
                     }
                 }
                 if (field.display_format && field.display_format.includes('$VALUE$')) {
                     const parts = field.display_format.split('$VALUE$');
                     if (parts[0]) {
-                        lines.push(` ${root}_prefix: "${this._esc(parts[0])}"`);
+                        lines.push(this._locLine(`${root}_prefix`, this._esc(parts[0])));
                     }
                     if (parts[1]) {
-                        lines.push(` ${root}_postfix: "${this._esc(parts[1])}"`);
+                        lines.push(this._locLine(`${root}_postfix`, this._esc(parts[1])));
                     }
                 }
                 if (field.display_format_high && field.display_format_high.includes('$VALUE$')) {
                     const parts = field.display_format_high.split('$VALUE$');
                     if (parts[0]) {
-                        lines.push(` ${root}_prefix_high: "${this._esc(parts[0])}"`);
+                        lines.push(this._locLine(`${root}_prefix_high`, this._esc(parts[0])));
                     }
                     if (parts[1]) {
-                        lines.push(` ${root}_postfix_high: "${this._esc(parts[1])}"`);
+                        lines.push(this._locLine(`${root}_postfix_high`, this._esc(parts[1])));
                     }
                 }
                 if (field.display_format_low && field.display_format_low.includes('$VALUE$')) {
                     const parts = field.display_format_low.split('$VALUE$');
                     if (parts[0]) {
-                        lines.push(` ${root}_prefix_low: "${this._esc(parts[0])}"`);
+                        lines.push(this._locLine(`${root}_prefix_low`, this._esc(parts[0])));
                     }
                     if (parts[1]) {
-                        lines.push(` ${root}_postfix_low: "${this._esc(parts[1])}"`);
+                        lines.push(this._locLine(`${root}_postfix_low`, this._esc(parts[1])));
                     }
                 }
                 if (field.field_type === 'dropdown') {
                     for (const opt of (field.options || [])) {
-                        lines.push(` ${fqid}_option_${opt.index}_name: "${this._esc(opt.name)}"`);
+                        lines.push(this._locLine(`${fqid}_option_${opt.index}_name`, this._esc(opt.name)));
                         if (opt.desc) {
-                            lines.push(` ${fqid}_option_${opt.index}_desc: "${this._esc(opt.desc)}"`);
+                            lines.push(this._locLine(`${fqid}_option_${opt.index}_desc`, this._esc(opt.desc)));
                         }
                     }
                 }
@@ -979,21 +990,21 @@ ${prefix}_register_lobby_banner = {
             return;
         }
 
-        lines.push(` ${qid}_name: "${this._esc(setting.name || setting.setting_id)}"`);
-        lines.push(` ${qid}_desc: "${this._esc(setting.desc)}"`);
+        lines.push(this._locLine(`${qid}_name`, this._esc(setting.name || setting.setting_id)));
+        lines.push(this._locLine(`${qid}_desc`, this._esc(setting.desc)));
 
         if ((setting.setting_type === 'numeric' || setting.setting_type === 'slider') && setting.display_format) {
             const fmt = this._esc(setting.display_format).replace(/\$VALUE\$/g, `[CMMV('${qid}')]`);
-            lines.push(` ${qid}_format: "${fmt}"`);
+            lines.push(this._locLine(`${qid}_format`, fmt));
         }
 
         if (setting.setting_type === 'button') {
-            lines.push(` ${qid}_text: "${this._esc(setting.button_text || 'Run')}"`);
+            lines.push(this._locLine(`${qid}_text`, this._esc(setting.button_text || 'Run')));
         } else if (setting.setting_type === 'dropdown') {
             for (const opt of (setting.options || [])) {
-                lines.push(` ${qid}_option_${opt.index}_name: "${this._esc(opt.name)}"`);
+                lines.push(this._locLine(`${qid}_option_${opt.index}_name`, this._esc(opt.name)));
                 if (opt.desc) {
-                    lines.push(` ${qid}_option_${opt.index}_desc: "${this._esc(opt.desc)}"`);
+                    lines.push(this._locLine(`${qid}_option_${opt.index}_desc`, this._esc(opt.desc)));
                 }
             }
         }

@@ -1136,24 +1136,39 @@ def enforce_title_length(title, lang_label, fallback=None):
         return None
     return title
 
-def load_workshop_description(dev_mode=False):
-    """Return (text, source_path) for a channel's description, or (None, missing_path).
+def load_dev_description_template(dev_mode=False):
+    """The dev description, or None when a dev upload has nothing usable in it.
 
-    A dev upload uses the dev description when it holds anything, expanding
-    $release-description$ into the release description. An empty dev file reads as
-    absent, so a placeholder never blanks the dev page.
+    An empty file reads as absent, so a placeholder never blanks the dev page.
     """
-    dev_text = read_text(WORKSHOP_DESCRIPTION_DEV_PATH) if dev_mode else None
-    use_dev = bool(dev_text and dev_text.strip())
+    if not dev_mode:
+        return None
+    text = read_text(WORKSHOP_DESCRIPTION_DEV_PATH)
+    return text if (text and text.strip()) else None
 
-    if use_dev and WORKSHOP_DESCRIPTION_TOKEN not in dev_text:
-        return dev_text, WORKSHOP_DESCRIPTION_DEV_PATH
+def apply_dev_description(template, description):
+    """Fill the dev template's $release-description$ slot with one language's description.
+
+    The template is the same for every language, so the dev text stays in the source
+    language while the description it wraps is whichever one was passed in.
+    """
+    if template is None or description is None:
+        return description
+    if WORKSHOP_DESCRIPTION_TOKEN not in template:
+        return template
+    return template.replace(WORKSHOP_DESCRIPTION_TOKEN, description)
+
+def load_workshop_description(dev_mode=False):
+    """Return (text, source_path) for a channel's description, or (None, missing_path)."""
+    template = load_dev_description_template(dev_mode)
+    if template is not None and WORKSHOP_DESCRIPTION_TOKEN not in template:
+        return template, WORKSHOP_DESCRIPTION_DEV_PATH
 
     release_text = read_text(WORKSHOP_DESCRIPTION_PATH)
     if release_text is None:
         return None, WORKSHOP_DESCRIPTION_PATH
-    if use_dev:
-        return dev_text.replace(WORKSHOP_DESCRIPTION_TOKEN, release_text), WORKSHOP_DESCRIPTION_DEV_PATH
+    if template is not None:
+        return apply_dev_description(template, release_text), WORKSHOP_DESCRIPTION_DEV_PATH
     return release_text, WORKSHOP_DESCRIPTION_PATH
 
 def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None, workshop_name=None, version_card=""):
@@ -1185,6 +1200,10 @@ def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None, 
         print(f"Warning: Translations folder not found: {TRANSLATIONS_DIR}")
         return updates
 
+    # Every language's description goes through the same dev wrapper, so the dev
+    # notice reaches translated pages too.
+    dev_template = load_dev_description_template(dev_mode)
+
     translations = {}
     for filename in os.listdir(TRANSLATIONS_DIR):
         match = WORKSHOP_TRANSLATION_FILENAME_RE.match(filename)
@@ -1197,6 +1216,7 @@ def build_workshop_page_updates(config, item_id, dev_mode=False, dev_name=None, 
             continue
 
         title_text, desc_text = parse_workshop_translation(text)
+        desc_text = apply_dev_description(dev_template, desc_text)
         title_text = apply_workshop_item_id(title_text, item_id)
         desc_text = apply_workshop_item_id(desc_text, item_id)
         if title_text is None and desc_text is None:
