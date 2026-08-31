@@ -100,6 +100,7 @@ jobs:
         env:
           WORKSHOP_USERNAME: ${{ secrets.WORKSHOP_USERNAME }}
           WORKSHOP_PASSWORD: ${{ secrets.WORKSHOP_PASSWORD }}
+          STEAM_CONFIG_VDF: ${{ secrets.STEAM_CONFIG_VDF }}
         run: |
           python3 tools/ci_release.py gate \
             --event "${{ github.event_name }}" \
@@ -124,7 +125,6 @@ jobs:
       TARGET_BRANCH: ${{ needs.gate.outputs.target-branch }}
       ITEM_ID: ${{ needs.gate.outputs.item-id }}
       VERSION: ${{ needs.gate.outputs.version }}
-      STEAM_DIR: ${{ runner.temp }}/steam
 
     steps:
       - name: Checkout
@@ -202,7 +202,7 @@ jobs:
             --version "$VERSION" \
             --item-id "$ITEM_ID" \
             --format bbcode \
-            --out "$STEAM_DIR/change-notes.bbcode"
+            --out "$RUNNER_TEMP/steam/change-notes.bbcode"
 
       - name: Create Workshop Metadata
         id: metadata
@@ -217,8 +217,8 @@ jobs:
             --title "$WORKSHOP_TITLE" \
             --content-dir "$RELEASE_DIR" \
             --preview "$PREVIEW_PATH" \
-            --change-notes-file "$STEAM_DIR/change-notes.bbcode" \
-            --out "$STEAM_DIR/workshop.vdf"
+            --change-notes-file "$RUNNER_TEMP/steam/change-notes.bbcode" \
+            --out "$RUNNER_TEMP/steam/workshop.vdf"
 
       - name: Setup SteamCMD
         if: ${{ needs.gate.outputs.publish == 'true' && needs.gate.outputs.should-release-steam == 'true' }}
@@ -247,7 +247,7 @@ jobs:
           WORKSHOP_USERNAME: ${{ secrets.WORKSHOP_USERNAME }}
           WORKSHOP_PASSWORD: ${{ secrets.WORKSHOP_PASSWORD }}
         run: |
-          steamcmd +login "$WORKSHOP_USERNAME" "$WORKSHOP_PASSWORD" \
+          steamcmd +login "$WORKSHOP_USERNAME" ${WORKSHOP_PASSWORD:+"$WORKSHOP_PASSWORD"} \
             +workshop_build_item "${{ steps.metadata.outputs.path }}" +quit
 
         # SteamCMD writes the item's default language page only. Translated pages
@@ -262,7 +262,7 @@ jobs:
             --channel "$CHANNEL" \
             --item-id "$ITEM_ID" \
             --title "$WORKSHOP_TITLE" \
-            --out "$STEAM_DIR/workshop-page.vdf"
+            --out "$RUNNER_TEMP/steam/workshop-page.vdf"
 
       - name: Upload Workshop Description
         if: ${{ needs.gate.outputs.publish == 'true' && needs.gate.outputs.upload-description == 'true' && needs.gate.outputs.should-release-steam == 'true' }}
@@ -270,7 +270,7 @@ jobs:
           WORKSHOP_USERNAME: ${{ secrets.WORKSHOP_USERNAME }}
           WORKSHOP_PASSWORD: ${{ secrets.WORKSHOP_PASSWORD }}
         run: |
-          steamcmd +login "$WORKSHOP_USERNAME" "$WORKSHOP_PASSWORD" \
+          steamcmd +login "$WORKSHOP_USERNAME" ${WORKSHOP_PASSWORD:+"$WORKSHOP_PASSWORD"} \
             +workshop_build_item "${{ steps.page.outputs.path }}" +quit
           echo "# Workshop Description" >> "$GITHUB_STEP_SUMMARY"
           echo "Uploaded the ${{ steps.page.outputs.language }} Workshop description." >> "$GITHUB_STEP_SUMMARY"
@@ -280,7 +280,7 @@ jobs:
         if: ${{ needs.gate.outputs.publish == 'true' && needs.gate.outputs.upload-submods == 'true' && needs.gate.outputs.should-release-steam == 'true' }}
         run: |
           python3 tools/ci_release.py submod-vdfs \
-            --out-dir "$STEAM_DIR/submods" \
+            --out-dir "$RUNNER_TEMP/steam/submods" \
             --change-notes "${{ needs.gate.outputs.upload-change-notes }}"
 
       - name: Upload Submods
@@ -292,7 +292,7 @@ jobs:
           while IFS= read -r vdf; do
             [ -n "$vdf" ] || continue
             echo "Uploading $(basename "$vdf")..."
-            steamcmd +login "$WORKSHOP_USERNAME" "$WORKSHOP_PASSWORD" \
+            steamcmd +login "$WORKSHOP_USERNAME" ${WORKSHOP_PASSWORD:+"$WORKSHOP_PASSWORD"} \
               +workshop_build_item "$vdf" +quit
           done < "${{ steps.submods.outputs.list-file }}"
 
