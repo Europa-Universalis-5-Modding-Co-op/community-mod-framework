@@ -271,11 +271,12 @@ def cmd_gate(args):
     if version is None:
         fail("Could not read the mod version from .metadata/metadata.json.")
 
-    have_secrets = bool(os.environ.get("WORKSHOP_USERNAME")) and bool(os.environ.get("WORKSHOP_PASSWORD"))
-    if publish and not have_secrets:
+    have_username = bool(os.environ.get("WORKSHOP_USERNAME"))
+    have_credential = bool(os.environ.get("STEAM_CONFIG_VDF")) or bool(os.environ.get("WORKSHOP_PASSWORD"))
+    if publish and not (have_username and have_credential):
         message = (
-            "WORKSHOP_USERNAME and WORKSHOP_PASSWORD are not both set. "
-            "Add them as repository secrets to publish to the Workshop."
+            "Publishing needs WORKSHOP_USERNAME plus either STEAM_CONFIG_VDF or "
+            "WORKSHOP_PASSWORD. Add them as repository secrets."
         )
         if not automatic:
             fail(message)
