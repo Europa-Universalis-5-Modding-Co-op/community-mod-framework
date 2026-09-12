@@ -1156,7 +1156,6 @@ cmm_build_list_field_map = {
 		cmf_suppress = { v = cmm_blfm_value }
 		cmf_suppress = { v = _cmm_tmp_field_map }
 		cmf_suppress = { v = _cmm_tmp_map_key }
-		cmf_suppress = { v = cmm_tmp_key }
 	}
 }
 
@@ -1180,6 +1179,12 @@ _cmm_build_list_field_map_item = {
 	}
 	change_variable = { name = cmm_blfm_value multiply = var:cmm_blfm_multiply }
 	add_to_variable_map = { name = _cmm_tmp_field_map key = scope:cmm_list_current_item_value value = var:cmm_blfm_value }
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_key }
+	}
 }
 
 # Build a variable list of item values where a bool field is true.
@@ -1239,6 +1244,12 @@ _cmm_build_list_bool_list_item = {
 			limit = { "variable_map(cmm|local_var:cmm_tmp_key)" >= 1 }
 			add_to_variable_list = { name = _cmm_tmp_bool_list target = scope:cmm_list_current_item_value }
 		}
+	}
+
+	# Benign warning suppression
+	if = {
+		limit = { always = no }
+		cmf_suppress = { v = cmm_tmp_key }
 	}
 }
 
