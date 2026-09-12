@@ -140,7 +140,7 @@
 		}
 	}
 
-	# Ordered list bool field control with optional right-click-apply-to-all behavior.
+	# Ordered list bool field control with column, row and whole-list bulk toggles.
 	# Reads:
 	# - Scope.GetFlagName [string]: current ordered list item key.
 	# - PdxGuiWidget.GetIndexInDataModel [int32]: current field slot index in the repeated field datamodel.
@@ -150,11 +150,15 @@
 	# - GetScriptedGui('CMM_MarkListPosition_<index>').Execute(...) [effect]: marks the hovered row position.
 	# - GetScriptedGui('CMM_MarkListFieldSlot_<slot>').Execute(...) [effect]: marks the clicked field slot.
 	# - GetScriptedGui('CMM_MarkListFieldToggle').Execute(...) [effect]: marks a single-row bool toggle.
-	# - GetScriptedGui('CMM_MarkListFieldToggleAll').Execute(...) [effect]: marks a bulk bool toggle.
+	# - GetScriptedGui('CMM_MarkListFieldToggleAll').Execute(...) [effect]: marks a column bool toggle.
+	# - GetScriptedGui('CMM_MarkListFieldToggleRow').Execute(...) [effect]: marks a row bool toggle.
+	# - GetScriptedGui('CMM_MarkListFieldToggleList').Execute(...) [effect]: marks a whole-list bool toggle.
 	# - GetScriptedGui(Concatenate(<setting_key>, '_on_changed')).Execute(...) [effect]: applies the queued list change.
 	type cmm_list_setting_bool_field = widget {
 		size = { 48 28 }
 		minimumsize = { 48 28 }
+		parentanchor = center
+		widgetanchor = center
 
 		checkbox_square_alt = {
 			parentanchor = center
@@ -173,10 +177,35 @@
 			action_tooltip = {
 				click_mode = single
 				click_type = left
+				click_modifier = default
 				title = "CMM_LIST_TOGGLE"
 				on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
 				on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
 				on_action = "[CMMExecuteGui('CMM_MarkListFieldToggle')]"
+				on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+				on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
+			}
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				click_modifier = ctrl
+				title = "CMM_LIST_TOGGLE_ROW"
+				on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				on_action = "[CMMExecuteGui('CMM_MarkListFieldToggleRow')]"
+				on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
+				on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
+			}
+
+			action_tooltip = {
+				click_mode = single
+				click_type = left
+				click_modifier = shift
+				title = "CMM_LIST_TOGGLE_LIST"
+				on_action = "[CMMExecuteGuiSuffix('CMM_MarkListPosition_', GetVariableSystem.Get('cmm_list_hover_index'))]"
+				on_action = "[CMMExecuteGuiSuffix('CMM_MarkListFieldSlot_', GetVariableSystem.Get('cmm_list_hover_field_slot'))]"
+				on_action = "[CMMExecuteGui('CMM_MarkListFieldToggleList')]"
 				on_action = "[CMMExecuteListItemSettingChanged(Scope.GetFlagName)]"
 				on_action = "[PdxGuiTriggerAllAnimations('cmm_recache_delay')]"
 			}

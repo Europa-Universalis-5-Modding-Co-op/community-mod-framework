@@ -274,6 +274,17 @@ cmm_set_list_field_format = {
 </syntaxhighlight>
 Then define <code>_prefix</code> / <code>_postfix</code> localization keys. For sign-conditional formatting (<code>_prefix_high</code> / <code>_postfix_high</code> / <code>_prefix_low</code> / <code>_postfix_low</code>), use <code>cmm_set_list_field_conditional_format</code> instead.
 
+=== List Field Width ===
+Set a field's column width in pixels. Call after registering the field, every registration pass:
+<syntaxhighlight lang="text">
+cmm_set_list_field_width = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = enabled
+	width = 140
+}
+</syntaxhighlight>
+
 === Repointing Field Localization ===
 Repoint a field's localization keys at runtime, for example to relabel a column when another setting changes its meaning:
 <syntaxhighlight lang="text">
@@ -445,6 +456,25 @@ cmm_set_list_field_default_for_item = {
 	setting_id = your_list
 	field_id = enabled
 	item = 1
+	value = 1
+}
+</syntaxhighlight>
+
+== Setting Values From Script ==
+Store a value for a setting without firing <code>cmf_on_callback</code>:
+<syntaxhighlight lang="text">
+cmm_set_setting_value = {
+	setting = your_mod__your_dropdown
+	value = 2
+}
+</syntaxhighlight>
+Store one item's field in a settings list without running the list callback:
+<syntaxhighlight lang="text">
+cmm_set_list_field_value = {
+	mod_id = your_mod
+	setting_id = your_list
+	field_id = enabled
+	item = 3
 	value = 1
 }
 </syntaxhighlight>

@@ -425,7 +425,7 @@ _cmm_list_apply_field_slot_at_item = {
 			remove_variable = cmm_tmp_field_new
 		}
 		else_if = {
-			limit = { AND = { OR = { var:cmm_list_action_to_apply = 9 var:cmm_list_action_to_apply = 10 var:cmm_list_action_to_apply = 11 var:cmm_list_action_to_apply = 13 } has_variable = cmm_list_field_value_to_apply } }
+			limit = { AND = { OR = { var:cmm_list_action_to_apply = 9 var:cmm_list_action_to_apply = 10 var:cmm_list_action_to_apply = 11 var:cmm_list_action_to_apply = 13 var:cmm_list_action_to_apply = 15 var:cmm_list_action_to_apply = 16 } has_variable = cmm_list_field_value_to_apply } }
 			set_variable = { name = cmm_tmp_field_new value = var:cmm_list_field_value_to_apply }
 			if = {
 				limit = { AND = { var:cmm_list_field_$slot$_type_$setting$ = 1 var:cmm_tmp_field_new < 0 } }
@@ -483,6 +483,35 @@ _cmm_list_apply_field_at_item = {
 	}
 }
 
+# Apply the prepared bulk field value to every bool field slot of one item identity.
+# Scope: country
+# Args:
+# - setting (key): Composite setting key `<mod_id>__<setting_id>`.
+# - item (number): Stable item identity ordinal (`1..50`).
+# - vt (variable/global_variable): Variable type token.
+_cmm_list_apply_field_value_to_bool_slots_at_item = {
+	if = {
+		limit = { has_variable = cmm_list_field_1_type_$setting$ var:cmm_list_field_1_type_$setting$ = 1 }
+		_cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 1 vt = $vt$ }
+	}
+	if = {
+		limit = { has_variable = cmm_list_field_2_type_$setting$ var:cmm_list_field_2_type_$setting$ = 1 }
+		_cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 2 vt = $vt$ }
+	}
+	if = {
+		limit = { has_variable = cmm_list_field_3_type_$setting$ var:cmm_list_field_3_type_$setting$ = 1 }
+		_cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 3 vt = $vt$ }
+	}
+	if = {
+		limit = { has_variable = cmm_list_field_4_type_$setting$ var:cmm_list_field_4_type_$setting$ = 1 }
+		_cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 4 vt = $vt$ }
+	}
+	if = {
+		limit = { has_variable = cmm_list_field_5_type_$setting$ var:cmm_list_field_5_type_$setting$ = 1 }
+		_cmm_list_apply_field_slot_at_item = { setting = $setting$ item = $item$ slot = 5 vt = $vt$ }
+	}
+}
+
 # Record a button-field press on one item identity for the list's `_on_changed` to read.
 # Scope: country
 # Args:
@@ -514,6 +543,7 @@ _cmm_list_dispatch_item_action = {
 		5 = { _cmm_list_apply_slider_field_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
 		6 = { _cmm_list_prepare_header_field_value_from_item = { setting = $setting$ item = $item$ } }
 		7 = { _cmm_list_record_button_press = { item = $item$ } }
+		8 = { _cmm_list_apply_field_value_to_bool_slots_at_item = { setting = $setting$ item = $item$ vt = $vt$ } }
 	}
 }
 
@@ -826,6 +856,28 @@ _cmm_apply_list_change_internal = {
 			if = {
 				limit = { has_variable = cmm_list_field_value_to_apply }
 				_cmm_list_apply_field_value_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
+			}
+		}
+		else_if = {
+			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_list_action_to_apply = 15 has_variable = cmm_list_field_slot_to_apply } }
+			set_variable = { name = cmm_list_dispatch_action value = 1 }
+			_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+
+			if = {
+				limit = { has_variable = cmm_list_field_value_to_apply }
+				set_variable = { name = cmm_list_dispatch_action value = 8 }
+				_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+			}
+		}
+		else_if = {
+			limit = { AND = { has_variable = cmm_list_action_to_apply var:cmm_list_action_to_apply = 16 has_variable = cmm_list_field_slot_to_apply } }
+			set_variable = { name = cmm_list_dispatch_action value = 1 }
+			_cmm_list_apply_dispatch_to_marked_position = { setting = $setting$ lt = $lt$ vt = $vt$ }
+
+			if = {
+				limit = { has_variable = cmm_list_field_value_to_apply }
+				set_variable = { name = cmm_list_dispatch_action value = 8 }
+				_cmm_list_apply_dispatch_to_all_items = { setting = $setting$ lt = $lt$ vt = $vt$ }
 			}
 		}
 		else_if = {

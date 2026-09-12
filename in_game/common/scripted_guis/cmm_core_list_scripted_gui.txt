@@ -178,6 +178,22 @@ CMM_MarkListFieldToggleAll = {
 	}
 }
 
+# Mark the next ordered list interaction as toggling every bool field of one row.
+# Scope: country
+CMM_MarkListFieldToggleRow = {
+	effect = {
+		set_variable = { name = cmm_list_action_to_apply value = 15 }
+	}
+}
+
+# Mark the next ordered list interaction as toggling every bool field of every row.
+# Scope: country
+CMM_MarkListFieldToggleList = {
+	effect = {
+		set_variable = { name = cmm_list_action_to_apply value = 16 }
+	}
+}
+
 # Mark the next ordered list interaction as selecting a dropdown-field option.
 # Scope: country
 CMM_MarkListFieldSelectDropdown = {

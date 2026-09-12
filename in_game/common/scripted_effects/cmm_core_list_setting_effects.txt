@@ -556,6 +556,43 @@ cmm_set_list_field_conditional_format = {
 	}
 }
 
+# Set the column width of one list field, header and cells alike. Registration resets the
+# width to the field type's default each pass, so call it after the field registration every pass.
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Field id whose column to widen.
+# - width (number): Column width in pixels.
+cmm_set_list_field_width = {
+	if = {
+		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
+		switch = {
+			trigger = var:cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$
+			1 = {
+				set_variable = { name = cmm_list_field_1_width_$mod_id$__$setting_id$ value = $width$ }
+				set_variable = { name = cmm_list_field_1_header_max_width_$mod_id$__$setting_id$ value = $width$ }
+			}
+			2 = {
+				set_variable = { name = cmm_list_field_2_width_$mod_id$__$setting_id$ value = $width$ }
+				set_variable = { name = cmm_list_field_2_header_max_width_$mod_id$__$setting_id$ value = $width$ }
+			}
+			3 = {
+				set_variable = { name = cmm_list_field_3_width_$mod_id$__$setting_id$ value = $width$ }
+				set_variable = { name = cmm_list_field_3_header_max_width_$mod_id$__$setting_id$ value = $width$ }
+			}
+			4 = {
+				set_variable = { name = cmm_list_field_4_width_$mod_id$__$setting_id$ value = $width$ }
+				set_variable = { name = cmm_list_field_4_header_max_width_$mod_id$__$setting_id$ value = $width$ }
+			}
+			5 = {
+				set_variable = { name = cmm_list_field_5_width_$mod_id$__$setting_id$ value = $width$ }
+				set_variable = { name = cmm_list_field_5_header_max_width_$mod_id$__$setting_id$ value = $width$ }
+			}
+		}
+	}
+}
+
 # Repoint one list field's localization keys. The column header localizes $name$
 # directly; desc, prefix, and postfix localize from `$root$_desc`, `$root$_prefix`,
 # and `$root$_postfix`. Registration resets the keys to the field-id defaults each
@@ -810,16 +847,17 @@ cmm_set_list_item_value = {
 	add_to_variable_list = { name = $mod_id$__$setting_id$_i$item$_value target = $value$ }
 }
 
-# Update the displayed value of a data field for one item in a list setting.
-# Call after the data field has been registered (cmm_register_list_data_field).
+# Store a value for one item's field in a list setting without running the list callback: a bool
+# field takes 0 or 1, a dropdown field an option ordinal, numeric, slider and data fields a number.
+# Call after the field has been registered.
 # Scope: country
 # Args:
 # - mod_id (key): Owner mod id.
 # - setting_id (key): Target list setting id within the mod.
-# - field_id (key): Data field id to update.
+# - field_id (key): Field id to update.
 # - item (number): Item ordinal to update (`1..item_count`).
-# - value (number): New display value.
-cmm_set_list_data_value = {
+# - value (number): Value to store.
+cmm_set_list_field_value = {
 	if = {
 		limit = { has_variable = cmm_list_field_slot_$mod_id$__$setting_id$__$field_id$ }
 		set_local_variable = { name = cmm_tmp_flag value = flag:$mod_id$__$setting_id$ }
@@ -850,6 +888,19 @@ cmm_set_list_data_value = {
 			cmf_suppress = { v = cmm_tmp_flag }
 		}
 	}
+}
+
+# Update the displayed value of a data field for one item in a list setting.
+# Call after the data field has been registered (cmm_register_list_data_field).
+# Scope: country
+# Args:
+# - mod_id (key): Owner mod id.
+# - setting_id (key): Target list setting id within the mod.
+# - field_id (key): Data field id to update.
+# - item (number): Item ordinal to update (`1..item_count`).
+# - value (number): New display value.
+cmm_set_list_data_value = {
+	cmm_set_list_field_value = { mod_id = $mod_id$ setting_id = $setting_id$ field_id = $field_id$ item = $item$ value = $value$ }
 }
 
 # Set the localization key shown by a text field for one item in a list setting.
