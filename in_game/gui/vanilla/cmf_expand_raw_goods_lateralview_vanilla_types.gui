@@ -56,6 +56,17 @@ template build_rgo_entry {
 					on_action = "[ShowGoods(Location.GetRawMaterial)]"
 				}
 
+				action_tooltip = {
+					click_type = right
+					click_mode = single
+					title = "GOODS_MARKET_CTXMENU_OPEN"
+					on_action = "[PdxGuiWidget.ToggleContextMenu]"
+				}
+
+				contextmenu_widget = {
+					GoodsMarketContextMenu = {}
+				}
+
 				datacontext = "[Location.GetRawMaterial]"
 				datacontext = "[Location.GetOwner]"
 				datacontext = "[Location.GetMarket]"
@@ -381,11 +392,13 @@ template build_rgo_entry {
 								click_type = left
 								title = "[SelectLocalization(IsAutoExpandRGO(Location.Self), 'TOGGLE_AUTO_EXPAND_RGO_ON', 'TOGGLE_AUTO_EXPAND_RGO_OFF')]"
 								on_action = "[ToggleAutoExpandRGO(Location.Self)]"
+								description = "[GetAutoExpandRGOAutomationWarning]"
 							}
 							action_tooltip = {
 								click_type = right
 								title = "TOGGLE_AUTO_EXPAND_ALL_RGO"
 								on_action = "[ExpandRawGoodsLateralView.ToggleAutoExpandAllRGOs]"
+								description = "[GetAutoExpandRGOAutomationWarning]"
 							}
 						}
 					}
@@ -587,6 +600,7 @@ template build_rgo_entry {
 									}
 									
 								}
+
 							}
 						}
 

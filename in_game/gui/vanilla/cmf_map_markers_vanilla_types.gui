@@ -256,24 +256,21 @@ template unit_marker_bg {
 template unit_marker_item_unit_strength {
 	layoutpolicy_horizontal = expanding
 
+	onmousehierarchyenter = "[UnitMarkerItem.OnHover]"
+	onmousehierarchyleave = "[UnitMarkerItem.OnLeave]"
+
 	# block "unit_strength_size" {
 		size = { -1 @unit_marker_frame_height }
 	# }
 
 	background = {
-		texture = "gfx/interface/component_tiles/map_markers/map_marker_shadow.dds"
-		texture_density = 2
-		spriteType = corneredstretched
-		spriteBorder = {35 35}
+		using = bg_map_marker_shadow_texture
 		margin_bottom = 15
 		blend_mode = multiply
 		alpha = 0.5
 	}
 	background = {
-		texture = "gfx/interface/component_tiles/map_markers/map_marker_shadow.dds"
-		texture_density = 2
-		spriteType = corneredstretched
-		spriteBorder = {35 35}
+		using = bg_map_marker_shadow_texture
 		margin = {5 0}
 		margin_bottom = 15
 		blend_mode = multiply
@@ -284,9 +281,7 @@ template unit_marker_item_unit_strength {
 	background = {
 		using = marker_unit_side_color
 		visible ="[Unit.IsArmy]"
-		texture = "gfx/interface/component_tiles/bg_army_unit_map.dds"
-		texture_density = 2
-		spriteType = corneredstretched
+		using = bg_army_unit_map_texture
 		spriteBorder = { 20 0 }
 		margin_left = -11
 		margin_right = -3
@@ -309,9 +304,7 @@ template unit_marker_item_unit_strength {
 	background = {
 		using = marker_unit_side_color
 		visible ="[Not(Unit.IsArmy)]"
-		texture = "gfx/interface/component_tiles/bg_navy_unit_map.dds"
-		texture_density = 2
-		spriteType = corneredstretched
+		using = bg_navy_unit_map_texture
 		spriteBorder = { 20 0 }
 		margin_left = -3
 		margin_right = -8
@@ -338,6 +331,7 @@ template unit_marker_item_unit_strength {
 			margin_left = @[unit_marker_morale_progressbar_size * 0.6]
 			margin_right = @unit_marker_frame_text_margin
 			text = "[UnitMarkerItem.GetLabel]"
+			snap_to_pixels = "[IsLowestIconScalingQuality]"
 		}
 	}
 
@@ -369,7 +363,7 @@ template unit_marker_item_unit_strength {
 				click_type = right
 				click_mode = single
 	
-				visible = "[And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
+				visible = "[And(And(And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToMerge)),Not(UnitMarkerItem.RightClickToEmbark)),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
 				cursor = "unit_menu"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK"
 				on_action = "[PdxGuiWidget.ToggleContextMenu]"
@@ -380,7 +374,7 @@ template unit_marker_item_unit_strength {
 				click_mode = single
 				cursor = "unit_transport"
 	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, UnitMarkerItem.GetUnit.IsNavy)]"
+				visible = "[UnitMarkerItem.RightClickToEmbark]"
 				title = "EMBARK_ACTION"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
@@ -388,10 +382,20 @@ template unit_marker_item_unit_strength {
 			action_tooltip = {
 				click_type = right
 				click_mode = single
-				cursor = "unit_movement" # TODO: "unit_join"
-	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, Not(UnitMarkerItem.GetUnit.IsNavy))]"
+				cursor = "unit_movement"
+
+				visible = "[UnitMarkerItem.RightClickToJoin]"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK_JOIN"
+				on_action = "[UnitMarkerItem.OnRightClick]"
+			}
+
+			action_tooltip = {
+				click_type = right
+				click_mode = single
+				cursor = "merge_unit"
+
+				visible = "[UnitMarkerItem.RightClickToMerge]"
+				title = "MERGE_UNITS"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
 	
@@ -429,7 +433,7 @@ template unit_marker_item_unit_strength {
 				click_type = right
 				click_mode = single
 	
-				visible = "[And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
+				visible = "[And(And(And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToMerge)),Not(UnitMarkerItem.RightClickToEmbark)),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
 				cursor = "unit_menu"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK"
 				on_action = "[PdxGuiWidget.ToggleContextMenu]"
@@ -440,7 +444,7 @@ template unit_marker_item_unit_strength {
 				click_mode = single
 				cursor = "unit_transport"
 	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, UnitMarkerItem.GetUnit.IsNavy)]"
+				visible = "[UnitMarkerItem.RightClickToEmbark]"
 				title = "EMBARK_ACTION"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
@@ -448,10 +452,20 @@ template unit_marker_item_unit_strength {
 			action_tooltip = {
 				click_type = right
 				click_mode = single
-				cursor = "unit_movement" # TODO: "unit_join"
-	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, Not(UnitMarkerItem.GetUnit.IsNavy))]"
+				cursor = "unit_movement"
+
+				visible = "[UnitMarkerItem.RightClickToJoin]"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK_JOIN"
+				on_action = "[UnitMarkerItem.OnRightClick]"
+			}
+
+			action_tooltip = {
+				click_type = right
+				click_mode = single
+				cursor = "merge_unit"
+
+				visible = "[UnitMarkerItem.RightClickToMerge]"
+				title = "MERGE_UNITS"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
 	
@@ -501,7 +515,7 @@ template unit_marker_item_unit_strength {
 				click_type = right
 				click_mode = single
 	
-				visible = "[And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
+				visible = "[And(And(And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToMerge)),Not(UnitMarkerItem.RightClickToEmbark)),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
 				cursor = "unit_menu"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK"
 				on_action = "[PdxGuiWidget.ToggleContextMenu]"
@@ -512,7 +526,7 @@ template unit_marker_item_unit_strength {
 				click_mode = single
 				cursor = "unit_transport"
 	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, UnitMarkerItem.GetUnit.IsNavy)]"
+				visible = "[UnitMarkerItem.RightClickToEmbark]"
 				title = "EMBARK_ACTION"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
@@ -520,10 +534,20 @@ template unit_marker_item_unit_strength {
 			action_tooltip = {
 				click_type = right
 				click_mode = single
-				cursor = "unit_movement" # TODO: "unit_join"
-	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, Not(UnitMarkerItem.GetUnit.IsNavy))]"
+				cursor = "unit_movement"
+
+				visible = "[UnitMarkerItem.RightClickToJoin]"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK_JOIN"
+				on_action = "[UnitMarkerItem.OnRightClick]"
+			}
+
+			action_tooltip = {
+				click_type = right
+				click_mode = single
+				cursor = "merge_unit"
+
+				visible = "[UnitMarkerItem.RightClickToMerge]"
+				title = "MERGE_UNITS"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
 	
@@ -567,7 +591,7 @@ template unit_marker_item_unit_strength {
 				click_type = right
 				click_mode = single
 	
-				visible = "[And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
+				visible = "[And(And(And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToMerge)),Not(UnitMarkerItem.RightClickToEmbark)),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
 				cursor = "unit_menu"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK"
 				on_action = "[PdxGuiWidget.ToggleContextMenu]"
@@ -578,7 +602,7 @@ template unit_marker_item_unit_strength {
 				click_mode = single
 				cursor = "unit_transport"
 	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, UnitMarkerItem.GetUnit.IsNavy)]"
+				visible = "[UnitMarkerItem.RightClickToEmbark]"
 				title = "EMBARK_ACTION"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
@@ -586,10 +610,20 @@ template unit_marker_item_unit_strength {
 			action_tooltip = {
 				click_type = right
 				click_mode = single
-				cursor = "unit_movement" # TODO: "unit_join"
-	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, Not(UnitMarkerItem.GetUnit.IsNavy))]"
+				cursor = "unit_movement"
+
+				visible = "[UnitMarkerItem.RightClickToJoin]"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK_JOIN"
+				on_action = "[UnitMarkerItem.OnRightClick]"
+			}
+
+			action_tooltip = {
+				click_type = right
+				click_mode = single
+				cursor = "merge_unit"
+
+				visible = "[UnitMarkerItem.RightClickToMerge]"
+				title = "MERGE_UNITS"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
 	
@@ -639,7 +673,7 @@ template unit_marker_item_unit_strength {
 				click_type = right
 				click_mode = single
 	
-				visible = "[And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
+				visible = "[And(And(And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToMerge)),Not(UnitMarkerItem.RightClickToEmbark)),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
 				cursor = "unit_menu"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK"
 				on_action = "[PdxGuiWidget.ToggleContextMenu]"
@@ -650,7 +684,7 @@ template unit_marker_item_unit_strength {
 				click_mode = single
 				cursor = "unit_transport"
 	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, UnitMarkerItem.GetUnit.IsNavy)]"
+				visible = "[UnitMarkerItem.RightClickToEmbark]"
 				title = "EMBARK_ACTION"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
@@ -658,10 +692,20 @@ template unit_marker_item_unit_strength {
 			action_tooltip = {
 				click_type = right
 				click_mode = single
-				cursor = "unit_movement" # TODO: "unit_join"
-	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, Not(UnitMarkerItem.GetUnit.IsNavy))]"
+				cursor = "unit_movement"
+
+				visible = "[UnitMarkerItem.RightClickToJoin]"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK_JOIN"
+				on_action = "[UnitMarkerItem.OnRightClick]"
+			}
+
+			action_tooltip = {
+				click_type = right
+				click_mode = single
+				cursor = "merge_unit"
+
+				visible = "[UnitMarkerItem.RightClickToMerge]"
+				title = "MERGE_UNITS"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
 	
@@ -705,7 +749,7 @@ template unit_marker_item_unit_strength {
 				click_type = right
 				click_mode = single
 	
-				visible = "[And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
+				visible = "[And(And(And(And(Not(UnitMarkerItem.RightClickToJoin),Not(UnitMarkerItem.RightClickToMerge)),Not(UnitMarkerItem.RightClickToEmbark)),Not(UnitMarkerItem.RightClickToChase)), UnitMarkerItem.IsPlayer)]"
 				cursor = "unit_menu"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK"
 				on_action = "[PdxGuiWidget.ToggleContextMenu]"
@@ -716,7 +760,7 @@ template unit_marker_item_unit_strength {
 				click_mode = single
 				cursor = "unit_transport"
 	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, UnitMarkerItem.GetUnit.IsNavy)]"
+				visible = "[UnitMarkerItem.RightClickToEmbark]"
 				title = "EMBARK_ACTION"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
@@ -724,10 +768,20 @@ template unit_marker_item_unit_strength {
 			action_tooltip = {
 				click_type = right
 				click_mode = single
-				cursor = "unit_movement" # TODO: "unit_join"
-	
-				visible = "[And(UnitMarkerItem.RightClickToJoin, Not(UnitMarkerItem.GetUnit.IsNavy))]"
+				cursor = "unit_movement"
+
+				visible = "[UnitMarkerItem.RightClickToJoin]"
 				title = "UNIT_CLICK_TOOLTIP_RIGHT_CLICK_JOIN"
+				on_action = "[UnitMarkerItem.OnRightClick]"
+			}
+
+			action_tooltip = {
+				click_type = right
+				click_mode = single
+				cursor = "merge_unit"
+
+				visible = "[UnitMarkerItem.RightClickToMerge]"
+				title = "MERGE_UNITS"
 				on_action = "[UnitMarkerItem.OnRightClick]"
 			}
 	
@@ -779,9 +833,7 @@ template unit_marker_item_commander {
 	# }
 
 	background = {
-		texture = "gfx/interface/component_tiles/bg_navy_unit_map.dds"
-		texture_density = 2
-		spriteType = corneredstretched
+		using = bg_navy_unit_map_texture
 		spriteBorder = { 20 20 }
 		margin = {0 -2}
 
@@ -1817,16 +1869,10 @@ template unit_marker_item_unit_banners {
 
 			icon = {
 				size = { 90% 90% }
-				texture = "gfx/interface/icons/flat_icons/unit_selection_shield.dds"
-				texture_density = 2
+				using = bg_unit_selection_shield_texture
 				visible = "[IsUnitSelected(Unit.Self)]"
 
-				background = {
-					texture = "gfx/interface/icons/flat_icons/unit_selection_shield.dds"
-					texture_density = 2
-					margin = {1 1}
-					alpha = 0.6
-				}
+				using = bg_unit_selection_shield_shadow
 
 				modify_texture = {
 					using = color_gold_texture
@@ -1841,16 +1887,10 @@ template unit_marker_item_unit_banners {
 			
 			icon = {
 				size = { 90% 90% }
-				texture = "gfx/interface/icons/flat_icons/unit_selection_shield.dds"
-				texture_density = 2
+				using = bg_unit_selection_shield_texture
 				visible = "[Not(IsUnitSelected(Unit.Self))]"
 
-				background = {
-					texture = "gfx/interface/icons/flat_icons/unit_selection_shield.dds"
-					texture_density = 2
-					margin = {1 1}
-					alpha = 0.6
-				}
+				using = bg_unit_selection_shield_shadow
 
 				using = marker_unit_side_color
 
@@ -1920,10 +1960,7 @@ types unit_marker_types {
 		size = { 59 85 }
 
 		background = {
-			texture = "gfx/interface/component_tiles/map_markers/map_marker_shadow.dds"
-			texture_density = 2
-			spriteType = corneredstretched
-			spriteBorder = {35 35}
+			using = bg_map_marker_shadow_texture
 			margin_bottom = 15
 			blend_mode = multiply
 			alpha = 0.7
@@ -2300,9 +2337,7 @@ template combat_side_marker {
 					}
 
 					background = {
-						texture = "gfx/interface/component_tiles/bg_navy_unit_map.dds"
-						texture_density = 2
-						spriteType = corneredstretched
+						using = bg_navy_unit_map_texture
 						spriteBorder = { 20 20 }
 				
 						modify_texture = {
@@ -2345,9 +2380,7 @@ template combat_side_marker {
 				background = {
 					using = marker_unit_side_color
 					visible ="[Unit.IsArmy]"
-					texture = "gfx/interface/component_tiles/bg_army_unit_map.dds"
-					texture_density = 2
-					spriteType = corneredstretched
+					using = bg_army_unit_map_texture
 					spriteBorder = { 20 0 }
 					block "combat_side_marker_army_margin" {
 						margin_left = -11
@@ -2368,9 +2401,7 @@ template combat_side_marker {
 				background = {
 					using = marker_unit_side_color
 					visible ="[Not(Unit.IsArmy)]"
-					texture = "gfx/interface/component_tiles/bg_navy_unit_map.dds"
-					texture_density = 2
-					spriteType = corneredstretched
+					using = bg_navy_unit_map_texture
 					spriteBorder = { 20 0 }
 					block "combat_side_marker_navy_margin" {
 						margin_left = -4

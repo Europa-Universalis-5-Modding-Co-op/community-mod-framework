@@ -100,15 +100,6 @@ types SubheaderTypes {
 	type diplomatic_relations_content = filtered_sorted_list {
 		datacontext = "[ForeignCountryView.GetDiplomaticRelationsSortSearch]"
 
-		blockoverride "scroll_list_is_empty" {
-			visible = "[IsDataModelEmpty(ForeignCountryView.GetDiplomaticRelations)]"
-		}
-
-		blockoverride "scroll_list_is_empty_text" {
-			position = { 0 87 }
-			text = "FOREIGN_COUNTRY_LIST_EMPTY"
-		}
-
 		blockoverride "scroll_list_setup" {
 			using = layoutpolicy_expanding
 			scrollbarpolicy_horizontal = always_off
@@ -134,25 +125,7 @@ types SubheaderTypes {
 					using = bg_cabinet_card_frame
 
 					blockoverride "bg_card_header_01_bg" {
-						background = {
-							texture = "gfx/interface/component_tiles/square_tile.dds"
-							texture_density = 2
-							spriteType = corneredtiled
-							spriteborder = { 10 10 }
-
-							modify_texture = {
-								using = color_purple_texture
-								blend_mode = multiply
-							}
-
-							modify_texture = {
-								texture = "gfx/interface/cards/headers/header_pattern_07.dds"
-								alpha = 0.7
-								texture_density = 2
-								spriteType = corneredtiled
-								blend_mode = overlay
-							}
-						}
+						using = bg_card_header_purple_tile
 
 						background = {
 							using = color_black_texture
@@ -230,7 +203,7 @@ types SubheaderTypes {
 											blockoverride "header_button_frame_inner" {visible = no}
 											blockoverride "icon_texture" {visible = no}
 											blockoverride "header_button_text_layout" {}
-											onmousehierarchyenter = "[Country.Self]"
+											onmousehierarchyenter = "[PdxGuiWidget.SetHighlightCountry(Country.Self)]"
 											tooltipwidget = {
 												using = notable_disposition_tooltip
 											}
@@ -294,25 +267,7 @@ types SubheaderTypes {
 					using = bg_cabinet_card_frame
 
 					blockoverride "bg_card_header_01_bg" {
-						background = {
-							texture = "gfx/interface/component_tiles/square_tile.dds"
-							texture_density = 2
-							spriteType = corneredtiled
-							spriteborder = { 10 10 }
-
-							modify_texture = {
-								using = color_purple_texture
-								blend_mode = multiply
-							}
-
-							modify_texture = {
-								texture = "gfx/interface/cards/headers/header_pattern_07.dds"
-								alpha = 0.7
-								texture_density = 2
-								spriteType = corneredtiled
-								blend_mode = overlay
-							}
-						}
+						using = bg_card_header_purple_tile
 
 						background = {
 							using = color_black_texture
@@ -437,25 +392,7 @@ types SubheaderTypes {
 					using = bg_cabinet_card_frame
 
 					blockoverride "bg_card_header_01_bg" {
-						background = {
-							texture = "gfx/interface/component_tiles/square_tile.dds"
-							texture_density = 2
-							spriteType = corneredtiled
-							spriteborder = { 10 10 }
-
-							modify_texture = {
-								using = color_purple_texture
-								blend_mode = multiply
-							}
-
-							modify_texture = {
-								texture = "gfx/interface/cards/headers/header_pattern_07.dds"
-								alpha = 0.7
-								texture_density = 2
-								spriteType = corneredtiled
-								blend_mode = overlay
-							}
-						}
+						using = bg_card_header_purple_tile
 
 						background = {
 							using = color_black_texture
@@ -580,25 +517,7 @@ types SubheaderTypes {
 					using = bg_cabinet_card_frame
 
 					blockoverride "bg_card_header_01_bg" {
-						background = {
-							texture = "gfx/interface/component_tiles/square_tile.dds"
-							texture_density = 2
-							spriteType = corneredtiled
-							spriteborder = { 10 10 }
-
-							modify_texture = {
-								using = color_purple_texture
-								blend_mode = multiply
-							}
-
-							modify_texture = {
-								texture = "gfx/interface/cards/headers/header_pattern_07.dds"
-								alpha = 0.7
-								texture_density = 2
-								spriteType = corneredtiled
-								blend_mode = overlay
-							}
-						}
+						using = bg_card_header_purple_tile
 
 						background = {
 							using = color_black_texture

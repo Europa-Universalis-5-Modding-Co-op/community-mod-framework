@@ -1063,12 +1063,12 @@ types SingleUnitWindowTypes
 										}
 										
 										blockoverride "tooltip_content" {
-											TooltipListScrollArea = {
+											TooltipScrolledContentSection = {
 												blockoverride "block_scrollarea" {
 													maximumsize = { -1 400 }
 												}
 									
-												blockoverride "scrollarea_content" {
+												blockoverride "section_content" {
 													vbox = {
 														set_parent_dimension_to_minimum = height
 														layoutpolicy_horizontal = expanding
@@ -1619,12 +1619,12 @@ types SingleUnitWindowTypes
 										}
 										
 										blockoverride "tooltip_content" {
-											TooltipListScrollArea = {
+											TooltipScrolledContentSection = {
 												blockoverride "block_scrollarea" {
 													maximumsize = { -1 400 }
 												}
 									
-												blockoverride "scrollarea_content" {
+												blockoverride "section_content" {
 													vbox = {
 														set_parent_dimension_to_minimum = height
 														layoutpolicy_horizontal = expanding
@@ -2303,7 +2303,7 @@ types SingleUnitWindowTypes
 			block "unit_category_secondary_icon_size" {
 				size = {18 18}
 			}
-			visible = "[And(Not(Or(SubUnit.IsMercenary, SubUnit.IsLevy)), Not(SubUnit.IsShip))]"
+			visible = "[And3(Not(Or(SubUnit.IsMercenary, SubUnit.IsLevy)), Not(SubUnit.IsShip), Not(SubUnit.IsEstatePrivate))]"
 			tooltip = "[regulars|e]"
 			tagtooltip_enabled = yes
 
@@ -2445,6 +2445,28 @@ types SingleUnitWindowTypes
 				size = { 100% 100% }
 				
 				texture = "[GetConceptTexture('army_levy')]"
+
+				glow = {
+					name = "drop_shadow"
+					glow_radius = 3
+					color = {0.0 0.0 0.0 1.0}
+					alpha = 0.3
+				}
+			}
+		}
+
+		widget = {
+			block "unit_category_secondary_icon_size" {
+				size = {18 18}
+			}
+			visible = "[SubUnit.IsEstatePrivate]"
+			tooltip = "[private_regiment|e]"
+			tagtooltip_enabled = yes
+
+			icon = {
+				size = { 100% 100% }
+
+				texture = "[GetConceptTexture('private_regiment')]"
 
 				glow = {
 					name = "drop_shadow"
@@ -2684,6 +2706,7 @@ types SingleUnitWindowTypes
 										# }
 
 										header_button_left = {
+											onmousehierarchyenter = "[PdxGuiWidget.SetHighlightUnitAbility(UnitActionItem.Self)]"
 											visible = "[Not(UnitActionItem.IsToggleAction)]"
 											parentanchor = bottom|left
 											size = { 34 34 }
@@ -2742,7 +2765,6 @@ types SingleUnitWindowTypes
 											enabled = "[UnitActionItem.IsEnabled]"
 											
 											input_action = "[UnitActionItem.GetShortcut]"
-											use_global_input_instance = yes
 											datacontext = "[UnitActionItem]"
 											tooltipwidget = {
 												using = UnitAction_tooltip
@@ -2779,7 +2801,6 @@ types SingleUnitWindowTypes
 	
 											enabled = "[UnitActionItem.CanSingleLeftClick]"
 											input_action = "[UnitActionItem.GetShortcut]"
-											use_global_input_instance = yes
 											down = "[UnitActionItem.IsActive]"												
 	
 											datacontext = "[UnitActionItem]"
@@ -2883,7 +2904,7 @@ types SingleUnitWindowTypes
 					header_button_left = {
 						size = { 37 37 }
 						datacontext = "[MercenaryTypeItem.GetUIAction]"
-						enabled = "[Or(UIActionProvider.IsLeftClickAndConfirmEnabled, CanDelistMercenary(MercenaryTypeItem.GetMercenary.Self))]"
+						enabled = "[Or(UIActionProvider.IsLeftClickAndConfirmEnabled, Or(CanDelistMercenary(MercenaryTypeItem.GetMercenary.Self), CanDismissMercenary(MercenaryTypeItem.GetMercenary.Self)))]"
 
 						action_tooltip = {
 							click_type = left
@@ -2909,8 +2930,46 @@ types SingleUnitWindowTypes
 							on_action = "[DelistMercenary(MercenaryTypeItem.GetMercenary.Self)]"
 						}
 
+						action_tooltip = {
+							click_type = right
+							click_mode = confirm
+							visible = "[ShowDismissMercenary(MercenaryTypeItem.GetMercenary.Self)]"
+							enabled = "[CanDismissMercenary(MercenaryTypeItem.GetMercenary.Self)]"
+							title = "DISMISS_MERCENARY"
+							description = "[GetDismissMercenaryTooltip(MercenaryTypeItem.GetMercenary.Self)]"
+							on_action = "[DismissMercenary(MercenaryTypeItem.GetMercenary.Self)]"
+						}
+
 						tooltipwidget = {
-							BasicFunctionalTooltip = {}
+							ContextualTooltipType = {
+								blockoverride "title_icon" {
+									icon = {
+										visible = "[Not(MercenaryTypeItem.GetMercenary.IsShip)]"
+										using = tooltip_title_icon_size
+										texture = "gfx/interface/icons/unit_category/mercenary.dds"
+									}
+									icon = {
+										visible = "[MercenaryTypeItem.GetMercenary.IsShip]"
+										using = tooltip_title_icon_size
+										texture = "gfx/interface/icons/unit_category/mercenary_navy.dds"
+										texture_density = 2
+									}
+								}
+
+								blockoverride "title_text" {
+									text = "[MercenaryTypeItem.GetMercenary.GetNameWithNoTooltip]"
+								}
+
+								blockoverride "concept_link" {
+									text = [mercenary|E]
+								}
+
+								blockoverride "tooltip_content" {
+									TooltipStringPairList = {
+										textcontext = "[MercenaryTypeItem.GetMercenary.GetUITooltip]"
+									}
+								}
+							}
 						}
 
 						blockoverride "header_button_full_content" {
@@ -3092,39 +3151,39 @@ template reinforcement_rate_tootlip {
 template subunit_illustration { 
 	masked_threecolor_icon = {
 		visible = "[Not(SubUnitType.GetCategory.IsArmy)]"
-		texture = "[GetSubunitTypeIllustration(SubUnitType.Self, SubUnit.GetCulture)]"
+		texture = "[GetSubunitIllustration(SubUnit.Self)]"
 		size = { 100% 100% }
 		texture_density = 2
 		spriteborder = { 0 0 }
 		frame_grid = {3 1}
 		frame = 2
-		mask =  "[GetSubunitTypeIllustrationMask(SubUnitType.Self, SubUnit.GetCulture)]"
+		mask =  "[GetSubunitIllustrationMask(SubUnit.Self)]"
 		primary_color = "[GetCountryUnitPrimaryColor(SubUnit.GetOwner, SubUnitType.Self)]"
 		secondary_color = "[GetCountryUnitSecondaryColor(SubUnit.GetOwner, SubUnitType.Self)]"
 		tertiary_color = "[GetCountryUnitTertiaryColor(SubUnit.GetOwner, SubUnitType.Self)]"
 	}
 	masked_threecolor_icon = {
 		visible = "[And(SubUnitType.GetCategory.IsArmy, Not(SubUnitType.HasStat('artillery_barrage')))]"
-		texture = "[GetSubunitTypeIllustration(SubUnitType.Self, SubUnit.GetCulture)]"
+		texture = "[GetSubunitIllustration(SubUnit.Self)]"
 		size = { 100% 100% }
 		texture_density = 2
 		spriteborder = { 0 0 }
 		frame_grid = {3 1}
 		frame = 1
-		mask =  "[GetSubunitTypeIllustrationMask(SubUnitType.Self, SubUnit.GetCulture)]"
+		mask =  "[GetSubunitIllustrationMask(SubUnit.Self)]"
 		primary_color = "[GetCountryUnitPrimaryColor(SubUnit.GetOwner, SubUnitType.Self)]"
 		secondary_color = "[GetCountryUnitSecondaryColor(SubUnit.GetOwner, SubUnitType.Self)]"
 		tertiary_color = "[GetCountryUnitTertiaryColor(SubUnit.GetOwner, SubUnitType.Self)]"
 	}
 	masked_threecolor_icon = {
 		visible = "[And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('artillery_barrage'))]"
-		texture = "[GetSubunitTypeIllustration(SubUnitType.Self, SubUnit.GetCulture)]"
+		texture = "[GetSubunitIllustration(SubUnit.Self)]"
 		size = { 100% 100% }
 		texture_density = 2
 		spriteborder = { 0 0 }
 		frame_grid = {3 1}
 		frame = 2
-		mask =  "[GetSubunitTypeIllustrationMask(SubUnitType.Self, SubUnit.GetCulture)]"
+		mask =  "[GetSubunitIllustrationMask(SubUnit.Self)]"
 		primary_color = "[GetCountryUnitPrimaryColor(SubUnit.GetOwner, SubUnitType.Self)]"
 		secondary_color = "[GetCountryUnitSecondaryColor(SubUnit.GetOwner, SubUnitType.Self)]"
 		tertiary_color = "[GetCountryUnitTertiaryColor(SubUnit.GetOwner, SubUnitType.Self)]"

@@ -90,8 +90,7 @@ types OutlinerEntriesTypes
 		size = { 100% 100% }
 		# using = bg_paper_card
 		background = {
-			texture = "gfx/interface/component_tiles/balance_card_bg.dds"
-			texture_density = 2
+			using = bg_balance_card_texture
 			using = button_outliner_effect
 		}
 		widget = {
@@ -464,7 +463,7 @@ types AgendaTypes
 template cabinet_entry_action_progress {
 	hbox = {
 		spacing = 4
-		portrait_standard_head_button = {
+		portrait_standard_head_cached_button = {
 			datacontext = "[Cabinet.GetCharacter]"
 			visible = "[Cabinet.IsCharacterSet]"
 			size = { 28 28 }
@@ -488,7 +487,7 @@ template cabinet_entry_action_progress {
 			blockoverride "rightclick" {}
 			# blockoverride "hover" {}
 		}
-		portrait_standard_head_button = {
+		portrait_standard_head_cached_button = {
 			datacontext = "[Cabinet.GetCharacter]"
 			visible = "[Not(Cabinet.IsCharacterSet)]"
 			size = { 28 28 }
@@ -552,7 +551,7 @@ template cabinet_entry_small_action_progress {
 			using = outliner_entry_margin
 			spacing = 5
 
-			portrait_standard_head_button = {
+			portrait_standard_head_cached_button = {
 				datacontext = "[Cabinet.GetCharacter]"
 				size = { 28 28 }
 		
@@ -591,7 +590,7 @@ template cabinet_entry_small_action_progress {
 			visible = "[Cabinet.IsActive]"
 			using = outliner_entry_margin
 			spacing = 5
-			portrait_standard_head_button = {
+			portrait_standard_head_cached_button = {
 				datacontext = "[Cabinet.GetCharacter]"
 				visible = "[Cabinet.IsCharacterSet]"
 				size = { 28 28 }
@@ -615,7 +614,7 @@ template cabinet_entry_small_action_progress {
 				blockoverride "rightclick" {}
 				# blockoverride "hover" {}
 			}
-			portrait_standard_head_button = {
+			portrait_standard_head_cached_button = {
 				datacontext = "[Cabinet.GetCharacter]"
 				visible = "[Not(Cabinet.IsCharacterSet)]"
 				size = { 28 28 }
@@ -657,7 +656,7 @@ template cabinet_entry_small_action_progress {
 template cabinet_entry_icon_empty {
 	OutlinerIconBg = {
 		visible = "[Not(Cabinet.IsActive)]"
-		portrait_standard_head_button = {
+		portrait_standard_head_cached_button = {
 			datacontext = "[Cabinet.GetCharacter]"
 			alwaystransparent = yes
 			parentanchor = center
@@ -764,6 +763,7 @@ template "diplomacy_expanded_big_content"
 			spacing = 5
 			country_flag_very_small = {
 				datacontext = "[OutlinerDiplomacyEntry.GetTargetCountry]"
+				blockoverride "tooltip" {}
 			}
 			OutlinerTextBase = {
 				using = layoutpolicy_expanding
@@ -793,6 +793,7 @@ template "diplomacy_expanded_small_content"
 
 			country_flag_very_small = {
 				datacontext = "[OutlinerDiplomacyEntry.GetTargetCountry]"
+				blockoverride "tooltip" {}
 			}
 			expand = {}
 
@@ -935,8 +936,7 @@ template category_big_template {
 					size = {30 -1}
 					layoutpolicy_vertical = expanding
 					background = {
-						texture = "gfx/interface/component_tiles/balance_card_bg.dds"
-						texture_density = 2
+						using = bg_balance_card_texture
 						using = button_outliner_effect
 					}
 					widget = {
@@ -960,8 +960,7 @@ template category_big_template {
 				widget = {
 					size = { 23 23 }
 					background = {
-						texture = "gfx/interface/buttons/checkbox_bg_round.dds"
-						texture_density = 2
+						using = bg_checkbox_round_texture
 						using = button_outliner_effect
 					}
 
@@ -1075,8 +1074,7 @@ template category_small_template {
 					size = {30 -1}
 					layoutpolicy_vertical = expanding
 					background = {
-						texture = "gfx/interface/component_tiles/balance_card_bg.dds"
-						texture_density = 2
+						using = bg_balance_card_texture
 						using = button_outliner_effect
 					}
 					widget = {
@@ -1096,8 +1094,7 @@ template category_small_template {
 				widget = {
 					size = { 23 23 }
 					background = {
-						texture = "gfx/interface/buttons/checkbox_bg_round.dds"
-						texture_density = 2
+						using = bg_checkbox_round_texture
 						using = button_outliner_effect
 					}
 					icon = {
@@ -1159,8 +1156,7 @@ template category_icon_template {
 	widget = {
 		size = { 100% 100% }
 		background = {
-			texture = "gfx/interface/component_tiles/balance_card_bg.dds"
-			texture_density = 2
+			using = bg_balance_card_texture
 			using = button_outliner_effect
 		}
 		widget = {

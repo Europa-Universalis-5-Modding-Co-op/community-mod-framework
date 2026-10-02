@@ -162,7 +162,7 @@ template special_advance {
 					}
 
 					blockoverride "tooltip_content" {
-						TooltipScrolledRequirementsList = {
+						TooltipScrolledTextBlock = {
 							blockoverride "block_scrollarea" { maximumsize = { -1 400 } }
 							textcontext = "[TitleDescTooltip.GetDesc.GetStringView]"
 						}
@@ -1022,8 +1022,6 @@ types AdvancesTreeView
 										datacontext = "[AdvanceNode.GetItem.GetAdvance.GetDefinition]"
 										datacontext = "[GetPlayer]"
 										using = advance_icon_base
-										blockoverride "advance_enabled_visible"  { visible = "[AdvanceNode.GetItem.IsOwned]" }
-										blockoverride "advance_disabled_visible" { visible = "[Not(AdvanceNode.GetItem.IsOwned)]" }
 									}
 								}
 							}
@@ -1094,8 +1092,8 @@ types AdvancesTreeView
 									datacontext = "[AdvanceNode.GetItem.GetAdvance.GetDefinition]"
 									datacontext = "[GetPlayer]"
 									using = advance_icon_base
-									blockoverride "advance_enabled_visible"  { visible = "[AdvanceNode.GetItem.IsOwned]" }
-									blockoverride "advance_disabled_visible" { visible = "[Not(AdvanceNode.GetItem.IsOwned)]" }
+									blockoverride "advance_enabled_visible"  { visible = "[Or(AdvanceNode.GetItem.CanAddToResearchQueue, AdvanceNode.GetItem.IsInResearchQueue)]" }
+									blockoverride "advance_disabled_visible" { visible = "[Not(Or(AdvanceNode.GetItem.CanAddToResearchQueue, AdvanceNode.GetItem.IsInResearchQueue))]" }
 								}
 							}
 						}
@@ -1536,6 +1534,7 @@ template advances_tree_item_modifiers {
 				margin_bottom = 10
 
 				scroll_list = {
+					alwaystransparent = yes
 					blockoverride "scroll_list_layout" {
 						vbox = {
 							layoutpolicy_vertical = expanding

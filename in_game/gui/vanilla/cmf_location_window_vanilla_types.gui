@@ -3,6 +3,170 @@
 
 types LocationWindowTypes
 {
+	type construction_queue_card = hbox {
+		using = layoutpolicy_expanding
+		margin = { 0 3 }
+
+		tagtooltip_enabled = yes
+		tooltip = "[Construction.GetShortName]"
+
+		hbox = {
+			using = layoutpolicy_expanding
+			spacing = 4
+
+			background = {
+				using = bg_map_banner_texture
+
+				block "queue_card_tint" {
+					modify_texture = {
+						visible = "[Construction.HasConstructionTint]"
+						texture = "[GetConstructionTintTexture(Construction.Self)]"
+						# alpha = 0.8
+						blend_mode = normal
+					}
+				}
+
+				glow = {
+					name = "drop_shadow"
+					glow_radius = 7
+					color = {0.0 0.0 0.0 1.0}
+					alpha = 1
+				}
+			}
+
+			widget = {
+				size = { 34 34 }
+				ignore_layout = yes
+				parentanchor = left|vcenter
+				position = { 2 0 }
+
+				piechart = {
+					visible = "[Construction.IsBeingBuilt]"
+					parentanchor = center
+					size = { 100% 100% }
+					using = bg_circle_piechart
+					using = piechart_angles
+					pieslice_no_highlight = {
+						texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+						value = "[Construction.GetProgress]"
+						color = { 0.01 0.6 0.9 1 }
+						alwaystransparent = yes
+					}
+					pieslice_no_highlight = {
+						texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+						value = "[Construction.GetInverseProgress]"
+						color = { 0.0 0.1 0.1 1 }
+						alwaystransparent = yes
+					}
+				}
+
+				icon = {
+					parentanchor = center
+					size = { 70% 70% }
+					texture = "[GetConstructionIcon(Construction.Self)]"
+					texture_density = 2
+					tooltipwidget = {
+						container = {
+							alwaystransparent = no
+							datacontext = "[Construction.GetBuilding.GetType]"
+							datacontext = "[Construction.GetLocation.GetRawMaterial]"
+							container = {
+								visible = "[Construction.IsBuilding]"
+								using = BuildingType_tooltip
+							}
+							container = {
+								visible = "[Construction.IsRGO]"
+								using = Goods_tooltip
+							}
+						}
+					}
+				}
+
+				icon = {
+					visible = "[Construction.IsStalled]"
+					size = { 50% 50% }
+					parentanchor = vcenter|hcenter
+					using = icon_locked
+					using = overlay_color_red
+				}
+			}
+
+			# Construction Name
+			text_single = {
+				margin_left = 40
+				layoutpolicy_horizontal = expanding
+				align = nobaseline
+				default_format = "#yellow_titles"
+				fontsize = 13
+				tagtooltip_enabled = yes
+				text = "[Construction.GetShortName]"
+			}
+
+			# Days/Stalled
+			text_single = {
+				visible = "[And(Not(Construction.IsStalled), Construction.IsBeingBuilt)]"
+				align = nobaseline
+				text = "CONSTRUCTION_DURATION_DAYS"
+			}
+			text_single = {
+				visible = "[And(Construction.IsStalled, Construction.IsBeingBuilt)]"
+				maximumsize = { 100 -1 }
+				align = nobaseline
+				text = "CONSTRUCTION_INFO_STALLED_SHORT"
+			}
+
+			widget = {
+				size = { 32 28 }
+
+				widget = {
+					visible = "[Construction.IsBuiltByEstate]"
+					parentanchor = center
+					size = { 22 22 }
+					alwaystransparent = no
+					datacontext = "[Construction.GetEstateType]"
+					tooltipwidget = {
+						using = EstateType_tooltip
+					}
+					background = {
+						texture = "gfx/interface/component_decoration/flag_frames/frame_1.dds"
+						texture_density = 2
+					}
+					icon = {
+						parentanchor = center
+						size = { 20 20 }
+						texture = "[GetEstateIcon(Construction.GetEstateType)]"
+					}
+				}
+
+				country_flag_small = {
+					visible = "[And(Not(Construction.IsBuiltByEstate), Construction.GetBuilding.GetType.IsForeign)]"
+					parentanchor = center
+					datacontext = "[Construction.GetBuilding.GetOwner]"
+					size = { 31 20 }
+				}
+
+				button_square_plus = {
+					visible = "[And(Not(Construction.IsBuiltByEstate), Not(Construction.GetBuilding.GetType.IsForeign))]"
+					parentanchor = center
+					size = { 18 18 }
+					enabled = "[LocationViewBuildingQueue.Parent.CanCancelConstruction(Construction.Self)]"
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						title = "LOCATION_BUILDING_QUEUE_CANCEL"
+						enabled = "[LocationViewBuildingQueue.Parent.CanCancelConstruction(Construction.Self)]"
+						description = "[LocationViewBuildingQueue.Parent.GetCancelConstructionDesc(Construction.Self)]"
+						on_action = "[LocationViewBuildingQueue.Parent.CancelConstruction(Construction.Self)]"
+					}
+					blockoverride "plusminus_icon" {
+						texture = "gfx/interface/buttons/flats/clean_text.dds"
+					}
+					tooltipwidget = { BasicFunctionalTooltip = {} }
+				}
+			}
+		}
+	}
+
 	type location_building_levels_piechart = widget {
 		size = { 30 30 }
 
@@ -60,6 +224,55 @@ types LocationWindowTypes
 				size = { 59% 59% }
 				parentanchor = center
 				texture = "[GetConceptTexture('supported_building_levels')]"
+			}
+		}
+	}
+
+	type location_queue_button = header_button_left {
+		size = { 52 34 }
+
+		blockoverride "header_button_full_content" {}
+
+		block "queue_button_visible" {}
+
+		block "queue_button_datacontext" {}
+
+		tooltipwidget = { using = Construction_tooltip }
+		action_tooltip = {
+			click_type = right
+			click_mode = single
+			title = "CANCEL_CONSTRUCTION"
+			on_action = "[ShowConstructionCancellationDialog(Construction.Self, '(bool)no')]"
+		}
+		action_tooltip = {
+			click_type = right
+			click_mode = single
+			click_modifier = shift
+			title = "CANCEL_CONSTRUCTION_FORCED"
+			on_action = "[ShowConstructionCancellationDialog(Construction.Self, '(bool)yes')]"
+		}
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			margin_left = 6
+			margin_right = 5
+			text_single = {
+				align = center
+				minimumsize = { 13 -1 }
+				maximumsize = { 13 -1 }
+				fontsize = 13
+				block "queue_button_count" {}
+			}
+			expand = {}
+			icon = {
+				size = { 24 24 }
+				block "queue_button_icon" {}
+				glow = {
+					name = "drop_shadow"
+					glow_radius = 3
+					color = { 0.0 0.0 0.0 1.0 }
+					alpha = 0.3
+				}
 			}
 		}
 	}
@@ -175,7 +388,6 @@ types LocationWindowTypes
 	type card_button_alt = button {
 
 		background = {
-			# using = card_button_bg_alt
 			using = color_dark_brown_texture
 		}
 
@@ -285,6 +497,15 @@ types LocationWindowTypes
 						title = "BUILD_BUILDING_FROM_LOCATION"
 						on_action = "[SelectLocationToBuildDefault(LocationBuildingItem.GetBuilding.GetType)]"
 					}
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						click_modifier = alt
+						title = "[SelectLocalization(IsAutoExpand(Building.Self), 'TOGGLE_AUTO_EXPAND_ON', 'TOGGLE_AUTO_EXPAND_OFF')]"
+						visible = "[Building.GetType.IsMultipleLevels]"
+						on_action = "[ToggleAutoExpandBuilding(Building.Self)]"
+						description = "[GetAutoExpandBuildingsAutomationWarning]"
+					}
 					enabled = "[LocationBuildingItem.IsPlayerBuilding]"
 
 					tooltipwidget = {
@@ -325,6 +546,15 @@ types LocationWindowTypes
 							title = "BUILD_BUILDING_FROM_LOCATION"
 							on_action = "[SetUIFocusMarket(Location.GetMarket)]"
 							on_action = "[SelectLocationToBuildDefault(LocationBuildingItem.GetBuilding.GetType)]"
+						}
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							click_modifier = alt
+							title = "[SelectLocalization(IsAutoExpand(Building.Self), 'TOGGLE_AUTO_EXPAND_ON', 'TOGGLE_AUTO_EXPAND_OFF')]"
+							enabled = "[Building.GetType.IsMultipleLevels]"
+							on_action = "[ToggleAutoExpandBuilding(Building.Self)]"
+							description = "[GetAutoExpandBuildingsAutomationWarning]"
 						}
 						
 						tooltipwidget = {
@@ -517,7 +747,7 @@ types LocationWindowTypes
 					icon = {
 						parentanchor = top|right
 						size = { 10 10 }
-						position = { 1 -1 }
+						position = { 3 0 }
 						visible = "[IsAutoExpand(LocationBuildingItem.GetBuilding.Self)]"
 						datacontext = "[LocationBuildingItem.GetBuilding]"
 						texture = "gfx/interface/icons/flat_icons/mass_upgrade.dds"
@@ -579,12 +809,10 @@ types LocationWindowTypes
 								block "square_icon_out_size_minus" {
 									size = { -1 12 }
 								}
-								datacontext = "[LocationBuildingItem.GetBuilding]"
 								enabled = "[Or(And(Not(LocationBuildingItem.IsBuildingUnderConstruction), LocationBuildingItem.CanDestroy), And(LocationBuildingItem.IsBuildingUnderConstruction, LocationBuildingItem.CanDequeue))]"
 								action_tooltip = {
 									click_mode = confirm
 									click_type = left
-									datacontext = "[Building.GetType]"
 									title = "L_DESTROY_BUILDING_ACTION"
 									visible = "[Not(LocationBuildingItem.IsBuildingUnderConstruction)]"
 									enabled = "[LocationBuildingItem.CanDestroy]"
@@ -610,6 +838,9 @@ types LocationWindowTypes
 									size = {10 10}
 								}
 							}
+						}
+						blockoverride "flag_estate_building_card_flag_visible" {
+							visible = "[And(LocationBuildingItem.GetBuilding.GetType.IsForeign, Not(And3(LocationBuildingItem.IsPlayerBuilding, LocationBuildingItem.GetBuilding.CanPlayerUpgrade, Not(LocationBuildingItem.GetBuilding.GetType.OnlyEstatesCanBuild))))]"
 						}
 						blockoverride "flag_estate_building_card_flag_size" {
 							block "tooltip_flag_estate_building_card_flag_size" {
@@ -674,6 +905,18 @@ types LocationWindowTypes
 	
 							on_action = "[ExpandBuildingShift(LocationBuildingItem.GetBuilding.Self)]"
 						}
+
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							click_modifier = alt
+
+							title = "BUILDING_IN_LOCATION_ACTION_ALT"
+							description = "[LocationBuildingItem.GetExpandBuildingInfo]"
+							enabled = "[LocationBuildingItem.CanExpandBuilding]"
+
+							on_action = "[ExpandBuildingAlt(LocationBuildingItem.GetBuilding.Self)]"
+						}
 						tooltipwidget = { using = construct_building_in_location_tt }
 					}
 
@@ -686,7 +929,7 @@ types LocationWindowTypes
 						blockoverride "plusminus_icon" {
 							texture = "gfx/interface/buttons/flats/upgrade_button2.dds"
 						}
-						visible = "[And3(LocationBuildingItem.GetBuilding.CanPlayerUpgrade, Not(LocationBuildingItem.GetBuilding.GetType.IsForeign), Not(LocationBuildingItem.GetBuilding.GetType.OnlyEstatesCanBuild))]"
+						visible = "[And3(LocationBuildingItem.GetBuilding.CanPlayerUpgrade, Or(Not(LocationBuildingItem.GetBuilding.GetType.IsForeign), LocationBuildingItem.IsPlayerBuilding), Not(LocationBuildingItem.GetBuilding.GetType.OnlyEstatesCanBuild))]"
 						datacontext = "[LocationBuildingItem.GetBuilding.GetType.GetNextReplacementBuilding(Player.Self)]"
 						datacontext = "[LocationBuildingItem.GetBuilding.GetLocation]"
 						enabled = "[CanUpgradeToBuilding(BuildingType.Self, Location.Self)]"
@@ -795,7 +1038,7 @@ types LocationWindowTypes
 		}
 	}
 
-	type garrison_sortie_button = header_action_button_left {		
+	type garrison_sortie_button = header_action_button_left_uber {
 		blockoverride "icon_texture" {
 			texture = "gfx/interface/buttons/flats/garrison.dds"
 		}
@@ -804,13 +1047,20 @@ types LocationWindowTypes
 		blockoverride "header_button_icon_size" { size = { 25 25 } }
 		blockoverride "header_button_text_layout" {}
 		size = { 25 25 }
-		title = "GARRISON_SORTIE_TT"
-		actor = "[GetPlayer]"
-		parameter = {
-			parameter_name = "target"
-			parameter_value = "[Siege.MakeScope]"
+
+		visible = "[PdxGuiWidget.IsUberButtonVisible]"
+		enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+		scripted_action_tooltip = {
+			click_type = left
+			click_mode = confirm
+			action_name = "garrison_sortie"
+			actor = "[GetPlayer]"
+			parameter = {
+				parameter_name = "target"
+				parameter_value = "[Siege.MakeScope]"
+			}
 		}
-		left_click_and_hold_action = { action_name = "garrison_sortie" }
 	}
 
 	type location_card = hbox {
@@ -819,6 +1069,8 @@ types LocationWindowTypes
 		# LOCATION
 		hbox = {
 			using = layoutpolicy_expanding
+
+			block "location_card_rank_slot" {}
 
 			vbox = {
 				using = layoutpolicy_expanding
@@ -832,280 +1084,100 @@ types LocationWindowTypes
 					using = layoutpolicy_expanding
 					# layoutstretchfactor_vertical = 5
 					margin_left = 1
-					spacing = 2 
+					block "location_card_top_content_spacing" {
+						spacing = 2
+					}
 					
-					# UPGRADE RANK
-					widget = {
-						size = { 33 33 }
-						# visible = "[Or(Location.CanUpgradeRank, Location.CanDowngradeRank)]"
-						button_regular = {
-							size = { 100% 100% }
-							position = {0 1}
+					block "location_card_rank_button" {
+						# UPGRADE RANK
+						widget = {
+							size = { 33 33 }
+							# visible = "[Or(Location.CanUpgradeRank, Location.CanDowngradeRank)]"
+							button_regular = {
+								size = { 100% 100% }
+								position = {0 1}
 
-							action_tooltip = {
-								click_type = left
-								click_mode = confirm
-								enabled = "[Location.CanUpgradeRank]"
-								title = "[Location.GetUpgradeRankName]"
-								cost = "[Location.GetUpgradeRankPrice]"
-								description = "[Location.GetUpgradeRankDescription]"
-								effects = "[Location.GetUpgradeRankEffects]"
-								conditions = "[Location.GetUpgradeRankConditions]"
-								on_action = "[UpgradeLocationRank(Location.Self)]"
-							}
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									enabled = "[Location.CanUpgradeRank]"
+									title = "[Location.GetUpgradeRankName]"
+									cost = "[Location.GetUpgradeRankPrice]"
+									description = "[Location.GetUpgradeRankDescription]"
+									effects = "[Location.GetUpgradeRankEffects]"
+									conditions = "[Location.GetUpgradeRankConditions]"
+									on_action = "[UpgradeLocationRank(Location.Self)]"
+								}
 
-							action_tooltip = {
-								click_type = right
-								click_mode = confirm
-								enabled = "[Location.CanDowngradeRank]"
-								title = "location_downgrade"
-								cost = "[Location.GetDowngradeRankPrice]"
-								description = "[Location.GetDowngradeRankDescription]"
-								effects = "[Location.GetDowngradeRankEffects]"
-								conditions = "[Location.GetDowngradeRankConditions]"
-								on_action = "[DowngradeLocationRank(Location.Self)]"
-							}
+								action_tooltip = {
+									click_type = right
+									click_mode = confirm
+									enabled = "[Location.CanDowngradeRank]"
+									title = "location_downgrade"
+									cost = "[Location.GetDowngradeRankPrice]"
+									description = "[Location.GetDowngradeRankDescription]"
+									effects = "[Location.GetDowngradeRankEffects]"
+									conditions = "[Location.GetDowngradeRankConditions]"
+									on_action = "[DowngradeLocationRank(Location.Self)]"
+								}
 
-							enabled = "[Or(Location.CanUpgradeRank, Location.CanDowngradeRank)]"
+								enabled = "[Or(Location.CanUpgradeRank, Location.CanDowngradeRank)]"
 
-							tooltipwidget = {
-								using = location_rank_tooltip
-								blockoverride "location_rank_tooltip_button" {
-									TooltipBlockList = {
-										visible = "[Not(StringIsEmpty(Location.GetUpgradeRankPriceBreakdown))]"
-										textcontext = "[Location.GetUpgradeRankPriceBreakdown]"
+								tooltipwidget = {
+									using = location_rank_tooltip
+									blockoverride "location_rank_tooltip_button" {
+										TooltipBlockList = {
+											visible = "[Not(StringIsEmpty(Location.GetUpgradeRankPriceBreakdown))]"
+											textcontext = "[Location.GetUpgradeRankPriceBreakdown]"
+										}
 									}
 								}
 							}
-						}
 
-						icon = {
-							size = { 20 20 }
-							parentanchor = center
-							texture = "[Location.GetRankIcon]"
-						}
+							icon = {
+								size = { 20 20 }
+								parentanchor = center
+								texture = "[Location.GetRankIcon]"
+							}
 
-						block "location_rank_sort_highlight" {}
+							block "location_rank_sort_highlight" {}
+						}
 					}
 
 					# Town Rights
-					widget = {
-						size = { 33 33 }
-						visible = "[Or(GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0'), And(Location.GetOwner.IsPlayer, Not(Location.GetRank.IsDefault)))]"
-						enabled = "[And(ShowGrantLocationTownRights(Location.Self), Not(Location.GetRank.IsDefault))]"
-
-						button_townrights = {
-							visible = "[Not(GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0'))]"
-							
-							size = { 100% 100% }
-							# position = {0 1}
-
-							tooltipwidget = {
-								using = location_town_rights_tooltip
-							}
-
-							action_tooltip = {
-								click_type = left
-								click_mode = single
-								title = "GRANT_NEW_TOWN_RIGHTS"
-								on_action = "[GrantLocationTownRights(Location.Self)]"
-								conditions = "[AddLocalizationIf(Not(Location.GetOwner.IsPlayer), 'TWR_NOT_OTHER_COUNTRY_LOCATIONS')]"
-								conditions = "[AddLocalizationIf(And(Location.GetOwner.IsPlayer, Location.GetRank.IsDefault), 'TWR_ONLY_URBAN_LOCATIONS')]"
-								conditions = "[AddLocalizationIf(And3(Location.GetOwner.IsPlayer, Not(Location.GetRank.IsDefault), Not(ShowGrantLocationTownRights(Location.Self))), 'TWR_NOT_CAPABLE')]"
-								enabled = "[And(ShowGrantLocationTownRights(Location.Self), Not(Location.GetRank.IsDefault))]"
-							}
-						}
-
+					block "location_card_town_rights_slot" {
 						widget = {
-							size = { 100% 100% }
-							position = {0 1}
-
+							using = location_card_town_rights
 						}
-
-						button_regular = {
-							visible = "[GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)1')]"
-							size = { 100% 100% }
-							position = {0 1}
-
-							action_tooltip = {
-								click_type = left
-								click_mode = single
-								title = "GRANT_NEW_TOWN_RIGHTS"
-								on_action = "[GrantLocationTownRights(Location.Self)]"
-								conditions = "[AddLocalizationIf(Not(Location.GetOwner.IsPlayer), 'TWR_NOT_OTHER_COUNTRY_LOCATIONS')]"
-								conditions = "[AddLocalizationIf(And(Location.GetOwner.IsPlayer, Location.GetRank.IsDefault), 'TWR_ONLY_URBAN_LOCATIONS')]"
-								conditions = "[AddLocalizationIf(And3(Location.GetOwner.IsPlayer, Not(Location.GetRank.IsDefault), Not(ShowGrantLocationTownRights(Location.Self))), 'TWR_NOT_CAPABLE')]"
-								enabled = "[And(ShowGrantLocationTownRights(Location.Self), Not(Location.GetRank.IsDefault))]"
-							}
-
-							tooltipwidget = {
-								using = location_town_rights_tooltip
-							}
-						}
-
-						# No Town Rights Selected
-						icon = {
-							visible = "[Not(GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0'))]"
-							size = { 18 18 }
-							parentanchor = center
-							texture = "gfx/interface/buttons/estate_privileges/ep_plus.dds"
-							texture_density = 2
-
-							modify_texture = {
-								using = color_new_gold_texture
-								blend_mode = add
-							}
-
-							glow = {
-								name = "drop_shadow"
-								glow_radius = 3
-								color = {0.0 0.0 0.0 1.0}
-								alpha = 0.8
-							}
-						}
-
-						# ONE TOWN RIGHT SELECTED
-						hbox = {
-							visible = "[EqualTo_int32(GetDataModelSize(Location.GetTownRights), '(int32)1')]"
-							datamodel = "[Location.GetTownRights]"
-							item = {
-								button_townrights = {
-									using = layoutpolicy_expanding
-
-									action_tooltip = {
-										click_type = left
-										click_mode = single
-										title = "GRANT_NEW_TOWN_RIGHTS"
-										on_action = "[GrantLocationTownRights(Location.Self)]"
-										conditions = "[AddLocalizationIf(Not(Location.GetOwner.IsPlayer), 'TWR_NOT_OTHER_COUNTRY_LOCATIONS')]"
-										conditions = "[AddLocalizationIf(And(Location.GetOwner.IsPlayer, Location.GetRank.IsDefault), 'TWR_ONLY_URBAN_LOCATIONS')]"
-										conditions = "[AddLocalizationIf(And3(Location.GetOwner.IsPlayer, Not(Location.GetRank.IsDefault), Not(ShowGrantLocationTownRights(Location.Self))), 'TWR_NOT_CAPABLE')]"
-										enabled = "[And(ShowGrantLocationTownRights(Location.Self), Not(Location.GetRank.IsDefault))]"
-									}
-									action_tooltip = {
-										click_type = right
-										click_mode = confirm
-										title = "REVOKE_LOCATION_TOWN_RIGHT"
-										cost = "[Location.GetRevokeFirstTownRightCost]"
-										on_action = "[Location.RevokeFirstTownRight]"
-										conditions = "[AddLocalizationIf(Not(Location.GetOwner.IsPlayer), 'TWR_NOT_OTHER_COUNTRY_LOCATIONS')]"
-										enabled = "[Location.GetOwner.IsPlayer]"
-									}
-									tooltipwidget = {
-										using = location_town_rights_tooltip
-									}
-									icon = {
-										size = { 24 24 }
-										parentanchor = center
-										texture = "[TownRights.GetIcon]"
-									}
-								}
-							}
-						}
-
-						# MORE THAN ONE TOWN RIGHT SELECTED
-						hbox = {
-							visible = "[GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)1')]"
-							margin = { 2 0 }
-							text_single = {
-								using = layoutpolicy_expanding
-								align = center
-								autoresize = no
-								text = "[GetDataModelSize(Location.GetTownRights)]"
-							}
-							icon = {
-								size = { 16 16 }
-								texture = "[GetConceptTexture('town_rights')]"
-							}
-						}
-
-						block "location_town_rights_sort_highlight" {}
 					}
 
 					hbox = {
 						# INTEGRATION/CORE
-						widget = {
-							size = { 31 31 }
-							visible = "[Location.HasOwner]"
-
-							# NOT INTEGRATED
-							header_button_left = {
-								visible = "[And(Not(Location.IsOccupied), Not(Location.IsIntegrated))]"
-								size = { 31 31 }
-								blockoverride "button_icon_stretch_sprite" {}
-								blockoverride "header_button_frame_inner" {visible = no}
-								blockoverride "header_button_icon_size" { size = { 31 31 } }
-								blockoverride "header_button_text_layout" {}
-								
-								blockoverride "icon_texture" {
-									texture = "[GetIntegrationLevelIcon(Location.GetIntegrationLevel)]"
-									size = {55% 55%}
-								}
-								action_tooltip = {
-									click_type = left
-									click_mode = single
-									title = "AUTOMATED_SYSTEM_CABINETMEMBERS_CLICK"
-									on_action = "[OpenLateralViewWithParams('government', 'tabcontent = cabinet')]"
-								}
-								tooltipwidget = {
-									using = location_core_tooltip
-								}
-								
-								# BEING INTEGRATED
-								onclick = "[OpenLateralViewWithParams('government', 'tabcontent = cabinet')]"
-								piechart = {
-									using = bg_circle
-									using = bg_circle_piechart
-									using = piechart_angles
-									size = { 20 20 }
-									parentanchor = center
-									visible = "[And(Not(Location.IsOccupied), And(Location.HasOwner, And(Location.IsCurrentlyBeingIntegrated, HasIntegrationIntelOn(Location.Self))))]"
-	
-									pieslice = {
-										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
-										value = "[Location.GetIntegrationProgressFloat]"
-										color = { 1 1 1 1 }
-										alwaystransparent = yes
-									}
-	
-									pieslice = {
-										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-										value = "[Subtract_float('(float)100.0', Location.GetIntegrationProgressFloat)]"
-										color = { 1 1 1 1 }
-										alwaystransparent = yes
-									}
-	
-									icon = {
-										size = { 58% 58% }
-										parentanchor = center
-										texture = "[GetIntegrationLevelIcon(Location.GetIntegrationLevel)]"
-										alwaystransparent = yes
-									}								
-								}
+						block "location_card_core_slot" {
+							widget = {
+								using = location_card_core
 							}
-							
+						}
 
-							# INTEGRATED
+						# HELPFUL ACTIONS HINT (M5) — newly-colonized, player-owned
+						button = {
+							visible = "[And(Location.IsColonized, Location.GetOwner.IsPlayer)]"
+							size = { 22 22 }
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								title = "COLONY_HELPFUL_ACTIONS_TITLE"
+								description = "COLONY_HELPFUL_ACTIONS_LOCATION_DESC"
+								on_action = "[OpenHelpfulCabinetActions('location')]"
+							}
 							icon = {
-								visible = "[Or(Location.IsIntegrated, And(Not(Location.GetOwner.IsPlayer), Not(Location.IsCurrentlyBeingIntegrated)))]"
-								size = { 25 25 }
-								parentanchor = center
-								texture = "[GetIntegrationLevelIcon(Location.GetIntegrationLevel)]"
-								alwaystransparent = no
-
-								tooltipwidget = {
-									using = location_core_tooltip
-								}
-
-								glow = {
-									name = "drop_shadow"
-									glow_radius = 3
-									color = {0.0 0.0 0.0 1.0}
-									alpha = 0.3
-								}
+								size = { 22 22 }
+								texture = "gfx/interface/icons/flat_icons/tabicons/info_flat_icon.dds"
 							}
 						}
 					}
+
+					block "location_card_name_prefix" {}
 
 					hbox = {
 						layoutpolicy_horizontal = expanding
@@ -1131,7 +1203,9 @@ types LocationWindowTypes
 						# LOCATION BUTTON
 						card_header_button_04 = {
 							layoutpolicy_horizontal = expanding
-							size = {-1 31}
+							block "location_card_name_button_size" {
+								size = {-1 31}
+							}
 
 							using = location_background
 
@@ -1164,7 +1238,9 @@ types LocationWindowTypes
 							}
 
 							hbox = {
-								margin = {5 0}
+								block "location_card_name_margins" {
+									margin = {5 0}
+								}
 								spacing = 5
 								using = bg_black_fade_horizontal
 
@@ -1173,6 +1249,7 @@ types LocationWindowTypes
 									autoresize = no
 									align = nobaseline
 									text = "[Location.GetNameWithNoTooltip]"
+									block "location_card_name_format" {}
 									block "location_name_sort_highlight" {}
 								}
 
@@ -1218,13 +1295,17 @@ types LocationWindowTypes
 
 					# RIGHT BUTTONS
 					hbox = {
-						margin = { 3 0 }
+						block "location_card_right_buttons_margins" {
+							margin = { 3 0 }
+						}
 						spacing = 2
 
 						# FORT LEVEL & GARRISON
 						card_header_button_04 = {
 							onmousehierarchyenter = "[PdxGuiWidget.SetHighlightFort(Location.Self)]"
-							size = {160 31}
+							block "location_card_right_button_size" {
+								size = {160 31}
+							}
 							visible = "[Not(
 							And4(Location.IsOccupied, Not(Location.HasSiege), Not(IsLateralViewOpened('select_interaction_target')), Or(Location.GetController.IsPlayer, Location.GetController.GetDiplomacy.IsSubjectOf(GetPlayer))))]"
 
@@ -1250,7 +1331,9 @@ types LocationWindowTypes
 
 						# TRANSFER OCCUPATION
 						card_header_button_04 = {
-							size = {160 31}
+							block "location_card_right_button_size" {
+								size = {160 31}
+							}
 							visible = "[And4(Location.IsOccupied, Not(Location.HasSiege), Not(IsLateralViewOpened('select_interaction_target')), Or(Location.GetController.IsPlayer, Location.GetController.GetDiplomacy.IsSubjectOf(GetPlayer)))]"
 
 							using = location_background
@@ -1310,380 +1393,157 @@ types LocationWindowTypes
 					margin = { 2 1 }
 					spacing = 1
 
-					# SATISFACTION & POPULATION
-					button_regular = {
-						# layoutpolicy_horizontal = expanding
-						# size = { -1 28 }
-
-						size = { 120 28 }
-
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							title = "OPEN_PEOPLE_VIEW"
-							on_action = "[ShowCountryPeopleViewWithLocation(Location.GetId, '(bool)yes')]"
-						}
-
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							click_modifier = shift
-							title = "encourage_migration"
-							on_action = "[ShowSelectCabinetToEncourageMigration(Location.Self)]"
-							enabled = "[IsCabinetActionAllowed('encourage_migration')]"
-							conditions = "[GetCabinetActionTooltip('encourage_migration')]"
-						}
-
-						action_tooltip = {
-							click_type = right
-							click_mode = single
-							click_modifier = shift
-							title = "expel_people"
-							on_action = "[ShowSelectCabinetToExpelPeople(Location.GetProvince)]"
-							enabled = "[And(Or(IsCabinetActionAllowed('expel_people'), IsCabinetActionAllowed('encourage_migration')), Location.GetOwner.IsPlayer)]"
-							conditions = "[GetCabinetActionTooltip('expel_people')]"
-						}
-
-						tooltipwidget = {
-							using = population_location_tooltip
-						}
-
-						hbox = {
-							margin_left = 3
-							spacing = 5
-							widget = {
-								size = { 28 28 }
-								visible = "[HasPopBreakdownIntelOn(Location.Self)]"
-								
-
-								tooltipwidget = {
-									using = AverageSatisfaction_tooltip
-								}
-								piechart = {
-									parentanchor = center
-									size = { 25 25 }
-									alwaystransparent = yes
-
-									using = piechart_angles
-
-									pieslice_no_highlight = {
-										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
-										value = "[FixedPointToFloat(Location.GetAverageSatisfaction)]"
-										color = { 1 1 1 1 }
-										alwaystransparent = yes
-									}
-
-									pieslice_no_highlight = {
-										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-										value = "[Subtract_float('(float)1.0', FixedPointToFloat(Location.GetAverageSatisfaction))]"
-										color = { 1 1 1 1 }
-										alwaystransparent = yes
-									}
-
-									hbox = {
-										widget = {
-											using = layoutpolicy_expanding
-											icon = {
-												size = { 61% 61% }
-												parentanchor = center
-												name = "sad face"
-												visible = "[LessThanOrEqualTo_CFixedPoint(Location.GetAverageSatisfaction,'(CFixedPoint)0.25')]"
-												texture = "gfx/interface/icons/flat_icons/sad.dds"
-												texture_density = 2
-											}
-
-											icon = {
-												size = { 61% 61% }
-												parentanchor = center
-												name = "neutral face"
-												visible = "[BetweenInclusiveOfMax_CFixedPoint(Location.GetAverageSatisfaction,'(CFixedPoint)0.25', '(CFixedPoint)0.5')]"
-												texture = "gfx/interface/icons/flat_icons/neutral.dds"
-												texture_density = 2
-											}
-
-											icon = {
-												size = { 61% 61% }
-												parentanchor = center
-												name = "happy face"
-												visible = "[GreaterThan_CFixedPoint(Location.GetAverageSatisfaction,'(CFixedPoint)0.5')]"
-												texture = "gfx/interface/icons/flat_icons/happy.dds"
-												texture_density = 2
-											}
-										}
-									}
-									using = bg_circle_piechart
-								}
-							}
-
-							vbox = {
-								layoutpolicy_horizontal = expanding
-								margin_right = 8
-								margin_bottom = 3
-
-								text_single = {
-									layoutpolicy_horizontal = expanding
-									autoresize = no
-									align = center
-									size = { -1 15 }
-									visible = "[HasPopBreakdownIntelOn(Location.Self)]"
-									raw_text = "[Location.GetTotalPopulation]@population!"
-									fontsize = 13
-									block "location_population_sort_highlight" {}
-								}
-
-								text_single = {
-									layoutpolicy_horizontal = expanding
-									autoresize = no
-									align = center
-									size = { -1 15 }
-									visible = "[Not(HasPopBreakdownIntelOn(Location.Self))]"
-									tagtooltip_enabled = yes
-									text = "INTEL_FOG_LOC_POPULATION_UNKNOWN"
-									fontsize = 13
-								}
-
-								progressbar = {
-									layoutpolicy_horizontal = expanding
-									size = { -1 5 }
-									visible = "[HasPopBreakdownIntelOn(Location.Self)]"
-									using = progress_bar_green_alt
-									value = "[Location.GetCapacityPercentage]"
-									direction = horizontal
-								}
-							}
-						}
-					}
+					block "location_card_bottom_prefix" {}
 
 					# MARKET ACCESS
-					button_regular = {
-						# layoutpolicy_horizontal = expanding
-						# size = { -1 28 }
-						size = { 90 28 }
-
-						datacontext = "[Location.GetMarket]"
-
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							title = "OPEN_MARKET"
-							on_action = "[ShowMarket(Market.Self)]"
-						}
-
-						action_tooltip = {
-							click_type = right
-							click_mode = confirm
-							title = "LOC_VIEW_CREATE_MARKET"
-							visible = "[Not(Location.IsMarketCenter)]"
-							enabled = "[Location.CanCreateMarket]"
-							cost = "[Location.GetCreateMarketPrice]"
-							on_action = "[CreateMarketInLocation(Location.Self)]"
-							conditions = "[Location.GetCreateMarketConditions]"
-						}
-
-						action_tooltip = {
-							click_type = right
-							click_mode = confirm
-							title = "LOC_VIEW_DESTROY_MARKET"
-							visible = "[Location.IsMarketCenter]"
-							enabled = "[Location.CanDestroyMarket]"
-							on_action = "[DestroyMarketInLocation(Location.Self)]"
-							conditions = "[Location.GetDestroyMarketConditions]"
-							description = "[Location.GetDestroyMarketPriceDesc]"
-							cost = "[Location.GetDestroyMarketPrice]"
-						}
-
-						# action_tooltip = {
-						# 	click_type = right
-						# 	click_mode = single
-
-						# 	cursor = "market_menu"
-						# 	title = "CLICK_ACTION_MARKET_CONTEXT_MENU"
-						# 	on_action = "[PdxGuiWidget.ToggleContextMenu]"
-						# }
-
-						# contextmenu_widget = {
-						# 	MarketContextMenu = {}
-						# }
-
-						onmousehierarchyenter = "[PdxGuiWidget.SetHighlightMarket(Market.Self)]"
-						ondoubleclick = "[PanToLocation(Market.GetCenterLocation)]"
-
-						tooltipwidget = {
-							using = location_market_tooltip
-						}
-
-						hbox = {
-							hbox = {
-								layoutpolicy_horizontal = expanding
-								margin_right = 5
-								margin_left = 3
-								spacing = 3
-								widget = {
-									size = {28 28}
-									piechart = {
-										parentanchor = center
-										size = { 25 25 }
-										alwaystransparent = yes
-										using = piechart_angles
-
-										pieslice_no_highlight = {
-											texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
-											value = "[FixedPointToFloat(Location.GetMarketAccess)]"
-											color = { 1 1 1 1 }
-											alwaystransparent = yes
-										}
-
-										pieslice_no_highlight = {
-											texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-											value = "[Subtract_float('(float)1.0', FixedPointToFloat(Location.GetMarketAccess))]"
-											color = { 1 1 1 1 }
-											alwaystransparent = yes
-										}
-
-										icon = {
-											size = { 61% 61% }
-											parentanchor = center
-											texture = "gfx/interface/icons/location_icons/market.dds"
-										}
-
-										using = bg_circle_piechart
-									}
-								}
-
-								text_single = {
-									align = left|nobaseline
-									layoutpolicy_horizontal = expanding
-									autoresize = no
-									fontsize = 14
-									raw_text = "[Location.GetMarketAccess|0%]"
-								}
-							}
+					block "location_card_market_button" {
+						button_regular = {
+							using = location_card_market_button_body
 						}
 					}
 
-					# CONTROL
-					button_regular = {
-						# layoutpolicy_horizontal = expanding
-						# size = { -1 28 }
+					# SATISFACTION & POPULATION
+					block "location_card_population_button" {
+						button_regular = {
+							using = location_card_population_button_body
+						}
+					}
 
-						size = { 90 28 }
+					block "location_card_control_button" {
+						# CONTROL
+						button_regular = {
+							# layoutpolicy_horizontal = expanding
+							# size = { -1 28 }
 
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							title = "increase_control_province"
-							on_action = "[ShowSelectCabinetToIncreaseControl(Location.GetProvince)]"
+							size = { 90 28 }
+
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								title = "increase_control_province"
+								on_action = "[ShowSelectCabinetToIncreaseControl(Location.GetProvince)]"
+								enabled = "[And(IsCabinetActionAllowed('increase_control_province'), Location.GetOwner.IsPlayer)]"
+								conditions = "[GetCabinetActionTooltip('increase_control_province')]"
+							}
+							action_tooltip = {
+								visible = "[And(IsCabinetActionAllowed('increase_control_province'), Location.GetOwner.IsPlayer)]"
+								click_modifier = shift
+								click_type = left
+								title = "OPEN_HINT"
+								click_modifier_description = "OPEN_HINT_TEXT"
+								on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_control')]"
+							}
 							enabled = "[And(IsCabinetActionAllowed('increase_control_province'), Location.GetOwner.IsPlayer)]"
-							conditions = "[GetCabinetActionTooltip('increase_control_province')]"
-						}
-						action_tooltip = {
-							visible = "[And(IsCabinetActionAllowed('increase_control_province'), Location.GetOwner.IsPlayer)]"
-							click_modifier = shift
-							click_type = left
-							title = "OPEN_HINT"
-							click_modifier_description = "OPEN_HINT_TEXT"
-							on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_control')]"
-						}
-						enabled = "[And(IsCabinetActionAllowed('increase_control_province'), Location.GetOwner.IsPlayer)]"
 
-						tooltipwidget = {
-							using = location_control_tooltip
-						}
+							tooltipwidget = {
+								using = location_control_tooltip
+							}
 
-						hbox = {
 							hbox = {
-								layoutpolicy_horizontal = expanding
-								margin_right = 5
-								margin_left = 3
-								spacing = 3
-								widget = {
-									size = {28 28}
-									piechart = {
-										parentanchor = center
-										size = { 25 25 }
-										alwaystransparent = yes
-										using = piechart_angles
-
-										pieslice_no_highlight = {
-											texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
-											value = "[FixedPointToFloat(Location.GetControl)]"
-											color = { 1 1 1 1 }
-											alwaystransparent = yes
-										}
-
-										pieslice_no_highlight = {
-											texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-											value = "[Subtract_float('(float)1.0', FixedPointToFloat(Location.GetControl))]"
-											color = { 1 1 1 1 }
-											alwaystransparent = yes
-										}
-
-										icon = {
-											size = { 61% 61% }
-											parentanchor = center
-											texture = "gfx/interface/icons/location_icons/control.dds"
-										}
-
-										using = bg_circle_piechart
-									}
-								}
-
-								text_single = {
-									align = left|nobaseline
+								hbox = {
 									layoutpolicy_horizontal = expanding
-									autoresize = no
-									fontsize = 14
-									raw_text = "[Location.GetControl|0%]"
-									block "location_control_sort_highlight" {}
+									margin_right = 5
+									margin_left = 3
+									spacing = 3
+									widget = {
+										size = {28 28}
+										piechart = {
+											parentanchor = center
+											size = { 25 25 }
+											alwaystransparent = yes
+											using = piechart_angles
+
+											pieslice_no_highlight = {
+												texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+												value = "[FixedPointToFloat(Location.GetControl)]"
+												color = { 1 1 1 1 }
+												alwaystransparent = yes
+											}
+
+											pieslice_no_highlight = {
+												texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+												value = "[Subtract_float('(float)1.0', FixedPointToFloat(Location.GetControl))]"
+												color = { 1 1 1 1 }
+												alwaystransparent = yes
+											}
+
+											icon = {
+												size = { 61% 61% }
+												parentanchor = center
+												texture = "gfx/interface/icons/location_icons/control.dds"
+											}
+
+											using = bg_circle_piechart
+										}
+									}
+
+									text_single = {
+										align = left|nobaseline
+										layoutpolicy_horizontal = expanding
+										autoresize = no
+										fontsize = 14
+										raw_text = "[Location.GetControl|0%]"
+										block "location_control_sort_highlight" {}
+									}
 								}
 							}
 						}
 					}
 
-					# RGO
-					button_regular = {
-						# layoutpolicy_horizontal = expanding
-						# size = { -1 28 }
-						size = { 90 28 }
-						enabled = "[Or(Location.CanUpgradeRGO, Location.CanReduceRGO)]"
+					block "location_card_goods_button" {
+						# RGO
+						button_regular = {
+							# layoutpolicy_horizontal = expanding
+							# size = { -1 28 }
+							size = { 90 28 }
+							enabled = "[Or(Location.CanUpgradeRGO, Location.CanReduceRGO)]"
 
-						tooltipwidget = {
-							using = location_rgo_button_tooltip
-						}
+							tooltipwidget = {
+								using = location_rgo_button_tooltip
+							}
 
-						action_tooltip = {
-							click_type = left
-							click_mode = single
+							action_tooltip = {
+								click_type = left
+								click_mode = single
 
-							title = "LOCATION_VIEW_EXPAND_RGO_TITLE"
-							enabled = "[Location.CanUpgradeRGO]"
-							description = "[Location.GetUpgradeRGOTooltip]"
-							on_action = "[Location.UpgradeRGO]"
-						}
+								title = "LOCATION_VIEW_EXPAND_RGO_TITLE"
+								enabled = "[Location.CanUpgradeRGO]"
+								description = "[Location.GetUpgradeRGOTooltip]"
+								on_action = "[Location.UpgradeRGO]"
+							}
 
-						action_tooltip = {
-							click_type = right
-							click_mode = single
+							action_tooltip = {
+								click_type = right
+								click_mode = single
 
-							title = "LOCATION_VIEW_UNQUEUE_RGO_TITLE"
-							visible = "[Location.IsMaxRGOWorkersUnderConstruction]"
-							enabled = "[Location.CanReduceRGO]"
-							description = "[Location.GetReduceRGOTooltip]"
-							on_action = "[Location.ReduceRGO]"
-						}
+								title = "LOCATION_VIEW_UNQUEUE_RGO_TITLE"
+								visible = "[Location.IsMaxRGOWorkersUnderConstruction]"
+								enabled = "[Location.CanReduceRGO]"
+								description = "[Location.GetReduceRGOTooltip]"
+								on_action = "[Location.ReduceRGO]"
+							}
 
-						action_tooltip = {
-							click_type = right
-							click_mode = confirm
+							action_tooltip = {
+								click_type = right
+								click_mode = confirm
 
-							title = "LOCATION_VIEW_REDUCE_RGO_TITLE"
-							visible = "[Not(Location.IsMaxRGOWorkersUnderConstruction)]"
-							enabled = "[Location.CanReduceRGO]"
-							description = "[Location.GetReduceRGOTooltip]"
-							on_action = "[Location.ReduceRGO]"
-						}
+								title = "LOCATION_VIEW_REDUCE_RGO_TITLE"
+								visible = "[Not(Location.IsMaxRGOWorkersUnderConstruction)]"
+								enabled = "[Location.CanReduceRGO]"
+								description = "[Location.GetReduceRGOTooltip]"
+								on_action = "[Location.ReduceRGO]"
+							}
 
-						hbox = {
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								click_modifier = alt
+
+								title = "[SelectLocalization(IsAutoExpandRGO(Location.Self), 'TOGGLE_AUTO_EXPAND_RGO_ON', 'TOGGLE_AUTO_EXPAND_RGO_OFF')]"
+								on_action = "[ToggleAutoExpandRGO(Location.Self)]"
+								description = "[GetAutoExpandRGOAutomationWarning]"
+							}
+
 							hbox = {
 								layoutpolicy_horizontal = expanding
 								margin_right = 5
@@ -1691,6 +1551,7 @@ types LocationWindowTypes
 								spacing = 3
 								widget = {
 									size = {28 28}
+								
 									piechart = {
 										visible = "[And(HasRgoWorkersIntelOn(Location.Self),GreaterThan_CFixedPoint(Location.GetMaxRGOWorkers, '(CFixedPoint)0'))]"
 										alwaystransparent = yes
@@ -1755,117 +1616,126 @@ types LocationWindowTypes
 						}
 					}
 
-					# TAX BASE
-					button_regular = {
-						layoutpolicy_horizontal = expanding
-						size = { -1 28 }
+					block "location_card_wealth_button" {
+						# TAX BASE
+						button_regular = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 28 }
 
-						tooltipwidget = {
-							using = location_tax_base_tooltip
-						}
+							down = "[IsLateralViewOpened('location_production')]"
+							blockoverride "button_push_properties" {
+								using = button_tab_toggle_properties_template
+							}
 
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							title = "MANAGE_LOCATION_BUILDINGS"
-							on_action = "[ShowLocationProductionView(Location.GetId, '(bool)no')]"
-							on_action = "[OpenLateralViewWithParams('location_production', 'display = lists')]"
-						}
+							tooltipwidget = {
+								using = location_tax_base_tooltip
+							}
 
-						hbox = {
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								title = "MANAGE_LOCATION_BUILDINGS"
+								on_action = "[ShowLocationProductionView(Location.GetId, '(bool)no')]"
+								on_action = "[OpenLateralViewWithParams('location_production', 'display = lists')]"
+							}
+
 							hbox = {
-								layoutpolicy_horizontal = expanding
-								margin = { 5 0 }
-								margin_left = 3
-								spacing = 4
-								widget = {
-									size = {28 28}
-									# TAX BASE CHART
-									icon_pie_left = {
-										visible = "[HasLocationTaxBaseIntelOn(Location.Self)]"
-										tooltipwidget = {
-											using = location_tax_base_tooltip
-										}
-										blockoverride "PieSize" { size = { 26 26 } }
-										blockoverride "pie_datamodel" {
-											datacontext = "[Location.GetPopulationChart]"
-											datacontext = "[LocationPopulationChart.GetPopsPiechartWidget]"
-											datamodel = "[PopsPiechartWidget.GetTax]"
-										}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									margin = { 5 0 }
+									margin_left = 3
+									spacing = 4
+									widget = {
+										size = {28 28}
+										# TAX BASE CHART
+										icon_pie_left = {
+											visible = "[HasLocationTaxBaseIntelOn(Location.Self)]"
+											tooltipwidget = {
+												using = location_tax_base_tooltip
+											}
+											blockoverride "PieSize" { size = { 26 26 } }
+											blockoverride "pie_datamodel" {
+												datacontext = "[Location.GetPopulationChart]"
+												datacontext = "[LocationPopulationChart.GetPopsPiechartWidget]"
+												datamodel = "[PopsPiechartWidget.GetTax]"
+											}
 
-										blockoverride "pieslice_item" {
-											pieslice_no_highlight = {
-												texture = "gfx/interface/pie_charts/piechart_alpha.dds"
+											blockoverride "pieslice_item" {
+												pieslice_no_highlight = {
+													texture = "gfx/interface/pie_charts/piechart_alpha.dds"
+													texture_density = 2
+													tooltip_enabled = no
+													value = "[PopTaxItem.GetPercentage]"
+													color = "[PopTaxItem.GetColor]"
+													alpha = 0.99
+													alwaystransparent = yes
+												}
+											}
+											blockoverride "Icon_Size" { size = { 61% 61% } }
+											blockoverride "Icon" {
+												texture = "[GetConceptTexture('wealth')]"
 												texture_density = 2
-												tooltip_enabled = no
-												value = "[PopTaxItem.GetPercentage]"
-												color = "[PopTaxItem.GetColor]"
-												alpha = 0.99
 												alwaystransparent = yes
 											}
-										}
-										blockoverride "Icon_Size" { size = { 61% 61% } }
-										blockoverride "Icon" {
-											texture = "[GetConceptTexture('wealth')]"
-											texture_density = 2
-											alwaystransparent = yes
-										}
 
-										background = {
-											texture = "gfx/interface/component_tiles/hud_corners/circle_frame.dds"
-											texture_density = 2
+											background = {
+												texture = "gfx/interface/component_tiles/hud_corners/circle_frame.dds"
+												texture_density = 2
 
-											modify_texture = {
-												using = color_gold_texture
+												modify_texture = {
+													using = color_gold_texture
+												}
+
+												using = overlay_gold
 											}
-
-											using = overlay_gold
 										}
+										block "location_income_sort_highlight" {}
 									}
-									block "location_income_sort_highlight" {}
-								}
 
-								text_single = {
-									align = center
-									layoutpolicy_horizontal = expanding
-									size = { -1 17 }
-									autoresize = no
-									fontsize = 14
-									visible = "[HasLocationTaxBaseIntelOn(Location.Self)]"
-									raw_text = "[Location.GetTotalPossibleTaxBase|W2]"
-									block "location_wealth_sort_highlight" {}
-								}
+									text_single = {
+										align = center
+										layoutpolicy_horizontal = expanding
+										size = { -1 17 }
+										autoresize = no
+										fontsize = 14
+										visible = "[HasLocationTaxBaseIntelOn(Location.Self)]"
+										raw_text = "[Location.GetTotalPossibleTaxBase|W2]"
+										block "location_wealth_sort_highlight" {}
+									}
 
-								text_single = {
-									align = center
-									layoutpolicy_horizontal = expanding
-									size = { -1 17 }
-									autoresize = no
-									fontsize = 14
-									visible = "[Not(HasLocationTaxBaseIntelOn(Location.Self))]"
-									tagtooltip_enabled = yes
-									text = "INTEL_FOG_LOC_TAX_BASE_UNKNOWN"
-								}
+									text_single = {
+										align = center
+										layoutpolicy_horizontal = expanding
+										size = { -1 17 }
+										autoresize = no
+										fontsize = 14
+										visible = "[Not(HasLocationTaxBaseIntelOn(Location.Self))]"
+										tagtooltip_enabled = yes
+										text = "INTEL_FOG_LOC_TAX_BASE_UNKNOWN"
+									}
 
-								# text_single = {
-								# 	align = left|nobaseline
-								# 	layoutpolicy_horizontal = expanding
-								# 	size = {-1 17}
-								# 	autoresize = no
-								# 	fontsize = 14
-								# 	raw_text = "([Location.GetTotalIncome|+=2])"
-								# }
+									# text_single = {
+									# 	align = left|nobaseline
+									# 	layoutpolicy_horizontal = expanding
+									# 	size = {-1 17}
+									# 	autoresize = no
+									# 	fontsize = 14
+									# 	raw_text = "([Location.GetTotalIncome|+=2])"
+									# }
 
-								icon = {
-									size = { 20 20 }
-									texture = "gfx/interface/icons/flat_icons/building_panel/build.dds"
-								}
+									icon = {
+										size = { 20 20 }
+										texture = "gfx/interface/icons/flat_icons/building_panel/build.dds"
+									}
 								
+								}
 							}
 						}
 					}
 
-					expand = {}
+					block "location_card_bottom_expand" {
+						expand = {}
+					}
 				}
 			}
 		}
@@ -2585,50 +2455,608 @@ types LocationWindowTypes
 }
 
 
+template location_card_market_button_body {
+	block "location_card_market_size" {
+		size = { 90 28 }
+	}
+
+	datacontext = "[Location.GetMarket]"
+
+	action_tooltip = {
+		click_type = left
+		click_mode = single
+		title = "OPEN_MARKET"
+		on_action = "[ShowMarket(Market.Self)]"
+	}
+
+	block "location_card_market_right_click" {
+		action_tooltip = {
+			click_type = right
+			click_mode = confirm
+			title = "LOC_VIEW_CREATE_MARKET"
+			visible = "[Not(Location.IsMarketCenter)]"
+			enabled = "[Location.CanCreateMarket]"
+			cost = "[Location.GetCreateMarketPrice]"
+			on_action = "[CreateMarketInLocation(Location.Self)]"
+			conditions = "[Location.GetCreateMarketConditions]"
+		}
+
+		action_tooltip = {
+			click_type = right
+			click_mode = confirm
+			title = "LOC_VIEW_DESTROY_MARKET"
+			visible = "[Location.IsMarketCenter]"
+			enabled = "[Location.CanDestroyMarket]"
+			on_action = "[DestroyMarketInLocation(Location.Self)]"
+			conditions = "[Location.GetDestroyMarketConditions]"
+			description = "[Location.GetDestroyMarketPriceDesc]"
+			cost = "[Location.GetDestroyMarketPrice]"
+		}
+	}
+
+	onmousehierarchyenter = "[PdxGuiWidget.SetHighlightMarket(Market.Self)]"
+	ondoubleclick = "[PanToLocation(Market.GetCenterLocation)]"
+
+	tooltipwidget = {
+		using = location_market_tooltip
+	}
+
+	hbox = {
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			margin_right = 5
+			margin_left = 3
+			spacing = 3
+			widget = {
+				size = {28 28}
+				piechart = {
+					parentanchor = center
+					block "location_card_market_piechart_layout" {
+						size = { 25 25 }
+					}
+					alwaystransparent = yes
+					using = piechart_angles
+
+					pieslice_no_highlight = {
+						texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+						value = "[FixedPointToFloat(Location.GetMarketAccess)]"
+						color = { 1 1 1 1 }
+						alwaystransparent = yes
+					}
+
+					pieslice_no_highlight = {
+						texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+						value = "[Subtract_float('(float)1.0', FixedPointToFloat(Location.GetMarketAccess))]"
+						color = { 1 1 1 1 }
+						alwaystransparent = yes
+					}
+
+					icon = {
+						block "location_card_market_piechart_icon_size" {
+							size = { 61% 61% }
+						}
+						parentanchor = center
+						texture = "gfx/interface/icons/location_icons/market.dds"
+					}
+
+					using = bg_circle_piechart
+				}
+			}
+
+			block "location_card_market_text" {
+				text_single = {
+					align = left|nobaseline
+					layoutpolicy_horizontal = expanding
+					autoresize = no
+					fontsize = 14
+					raw_text = "[Location.GetMarketAccess|0%]"
+				}
+			}
+
+			block "location_card_market_trade_icons" {}
+
+			block "location_card_market_construction" {}
+		}
+	}
+}
+
+
+template location_card_population_button_body {
+	block "location_card_population_size" {
+		size = { 120 28 }
+	}
+
+	block "location_card_population_click" {
+		action_tooltip = {
+			click_type = left
+			click_mode = single
+			title = "OPEN_PEOPLE_VIEW"
+			on_action = "[ShowCountryPeopleViewWithLocation(Location.GetId, '(bool)yes')]"
+		}
+	}
+
+	action_tooltip = {
+		click_type = left
+		click_mode = single
+		click_modifier = shift
+		title = "encourage_migration"
+		on_action = "[ShowSelectCabinetToEncourageMigration(Location.Self)]"
+		enabled = "[IsCabinetActionAllowed('encourage_migration')]"
+		conditions = "[GetCabinetActionTooltip('encourage_migration')]"
+	}
+
+	action_tooltip = {
+		click_type = right
+		click_mode = single
+		click_modifier = shift
+		title = "expel_people"
+		on_action = "[ShowSelectCabinetToExpelPeople(Location.GetProvince)]"
+		enabled = "[And(Or(IsCabinetActionAllowed('expel_people'), IsCabinetActionAllowed('encourage_migration')), Location.GetOwner.IsPlayer)]"
+		conditions = "[GetCabinetActionTooltip('expel_people')]"
+	}
+
+	tooltipwidget = {
+		using = population_location_tooltip
+	}
+
+	hbox = {
+		margin_left = 3
+		spacing = 5
+		widget = {
+			size = { 28 28 }
+			visible = "[HasPopBreakdownIntelOn(Location.Self)]"
+			
+
+			tooltipwidget = {
+				using = AverageSatisfaction_tooltip
+			}
+			piechart = {
+				parentanchor = center
+				block "location_card_population_piechart_layout" {
+					size = { 25 25 }
+				}
+				alwaystransparent = yes
+
+				using = piechart_angles
+
+				pieslice_no_highlight = {
+					texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+					value = "[FixedPointToFloat(Location.GetAverageSatisfaction)]"
+					color = { 1 1 1 1 }
+					alwaystransparent = yes
+				}
+
+				pieslice_no_highlight = {
+					texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+					value = "[Subtract_float('(float)1.0', FixedPointToFloat(Location.GetAverageSatisfaction))]"
+					color = { 1 1 1 1 }
+					alwaystransparent = yes
+				}
+
+				hbox = {
+					widget = {
+						using = layoutpolicy_expanding
+						icon = {
+							block "location_card_population_piechart_icon_size" {
+								size = { 61% 61% }
+							}
+							parentanchor = center
+							name = "sad face"
+							visible = "[LessThanOrEqualTo_CFixedPoint(Location.GetAverageSatisfaction,'(CFixedPoint)0.25')]"
+							texture = "gfx/interface/icons/flat_icons/sad.dds"
+							texture_density = 2
+						}
+
+						icon = {
+							block "location_card_population_piechart_icon_size" {
+								size = { 61% 61% }
+							}
+							parentanchor = center
+							name = "neutral face"
+							visible = "[BetweenInclusiveOfMax_CFixedPoint(Location.GetAverageSatisfaction,'(CFixedPoint)0.25', '(CFixedPoint)0.5')]"
+							texture = "gfx/interface/icons/flat_icons/neutral.dds"
+							texture_density = 2
+						}
+
+						icon = {
+							block "location_card_population_piechart_icon_size" {
+								size = { 61% 61% }
+							}
+							parentanchor = center
+							name = "happy face"
+							visible = "[GreaterThan_CFixedPoint(Location.GetAverageSatisfaction,'(CFixedPoint)0.5')]"
+							texture = "gfx/interface/icons/flat_icons/happy.dds"
+							texture_density = 2
+						}
+					}
+				}
+				using = bg_circle_piechart
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			margin_right = 8
+			margin_bottom = 3
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				autoresize = no
+				align = center
+				size = { -1 15 }
+				visible = "[HasPopBreakdownIntelOn(Location.Self)]"
+				raw_text = "[Location.GetTotalPopulation]@population!"
+				block "location_card_population_text_format" {}
+				fontsize = 13
+				block "location_population_sort_highlight" {}
+			}
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				autoresize = no
+				align = center
+				size = { -1 15 }
+				visible = "[Not(HasPopBreakdownIntelOn(Location.Self))]"
+				tagtooltip_enabled = yes
+				text = "INTEL_FOG_LOC_POPULATION_UNKNOWN"
+				block "location_card_population_text_format" {}
+				fontsize = 13
+			}
+
+			block "location_card_population_progressbar" {
+				progressbar = {
+					layoutpolicy_horizontal = expanding
+					size = { -1 5 }
+					visible = "[HasPopBreakdownIntelOn(Location.Self)]"
+					using = progress_bar_green_alt
+					value = "[Location.GetCapacityPercentage]"
+					direction = horizontal
+				}
+			}
+		}
+	}
+}
+
+
+template location_card_core {
+	block "location_card_core_size" {
+		size = { 31 31 }
+	}
+	visible = "[Location.HasOwner]"
+
+	# NOT INTEGRATED
+	header_button_left = {
+		visible = "[And(Not(Location.IsOccupied), And(Location.GetOwner.IsPlayer, Not(Location.IsIntegrated)))]"
+		block "location_card_core_size" {
+			size = { 31 31 }
+		}
+		blockoverride "button_icon_stretch_sprite" {}
+		blockoverride "header_button_frame_inner" {visible = no}
+		blockoverride "header_button_icon_size" {
+			block "location_card_core_size" {
+				size = { 31 31 }
+			}
+		}
+		blockoverride "header_button_text_layout" {}
+		
+		blockoverride "icon_texture" {
+			texture = "[GetIntegrationLevelIcon(Location.GetIntegrationLevel)]"
+			size = {55% 55%}
+		}
+		action_tooltip = {
+			click_type = left
+			click_mode = single
+			title = "AUTOMATED_SYSTEM_CABINETMEMBERS_CLICK"
+			on_action = "[OpenLateralViewWithParams('government', 'tabcontent = cabinet')]"
+		}
+		tooltipwidget = {
+			using = location_core_tooltip
+		}
+		onclick = "[OpenLateralViewWithParams('government', 'tabcontent = cabinet')]"
+	}
+
+	# BEING INTEGRATED
+	piechart = {
+		using = bg_circle
+		using = bg_circle_piechart
+		using = piechart_angles
+		size = { 22 22 }
+		parentanchor = center
+		visible = "[And(Not(Location.IsOccupied), And(Location.HasOwner, And(Location.IsCurrentlyBeingIntegrated, HasIntegrationIntelOn(Location.Self))))]"
+
+		tooltipwidget = {
+			using = location_core_tooltip
+		}
+
+		pieslice = {
+			texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+			value = "[Location.GetIntegrationProgressFloat]"
+			color = { 1 1 1 1 }
+			alwaystransparent = yes
+		}
+
+		pieslice = {
+			texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+			value = "[Subtract_float('(float)100.0', Location.GetIntegrationProgressFloat)]"
+			color = { 1 1 1 1 }
+			alwaystransparent = yes
+		}
+
+		icon = {
+			size = { 58% 58% }
+			parentanchor = center
+			texture = "[GetIntegrationLevelIcon(Location.GetIntegrationLevel)]"
+			alwaystransparent = yes
+		}
+	}
+	
+
+	# INTEGRATED
+	icon = {
+		visible = "[Or(Location.IsIntegrated, And(Not(Location.GetOwner.IsPlayer), Not(And(Location.IsCurrentlyBeingIntegrated, HasIntegrationIntelOn(Location.Self)))))]"
+		block "location_card_core_icon_size" {
+			size = { 25 25 }
+		}
+		parentanchor = center
+		texture = "[GetIntegrationLevelIcon(Location.GetIntegrationLevel)]"
+		alwaystransparent = no
+
+		tooltipwidget = {
+			using = location_core_tooltip
+		}
+
+		glow = {
+			name = "drop_shadow"
+			glow_radius = 3
+			color = {0.0 0.0 0.0 1.0}
+			alpha = 0.3
+		}
+	}
+}
+
+
+template location_card_town_rights_empty_body {
+	visible = "[Not(GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0'))]"
+	
+	block "location_card_town_rights_empty_size" {
+		size = { 100% 100% }
+	}
+	# position = {0 1}
+
+	tooltipwidget = {
+		using = location_town_rights_tooltip
+	}
+
+	action_tooltip = {
+		click_type = left
+		click_mode = single
+		title = "GRANT_NEW_TOWN_RIGHTS"
+		on_action = "[GrantLocationTownRights(Location.Self)]"
+		conditions = "[AddLocalizationIf(Not(Location.GetOwner.IsPlayer), 'TWR_NOT_OTHER_COUNTRY_LOCATIONS')]"
+		conditions = "[AddLocalizationIf(And(Location.GetOwner.IsPlayer, Location.GetRank.IsDefault), 'TWR_ONLY_URBAN_LOCATIONS')]"
+		conditions = "[AddLocalizationIf(And3(Location.GetOwner.IsPlayer, Not(Location.GetRank.IsDefault), Not(ShowGrantLocationTownRights(Location.Self))), 'TWR_NOT_CAPABLE')]"
+		enabled = "[And(ShowGrantLocationTownRights(Location.Self), Not(Location.GetRank.IsDefault))]"
+	}
+}
+
+
+template location_card_town_rights_item_body {
+	using = layoutpolicy_expanding
+
+	action_tooltip = {
+		block "location_card_town_rights_item_action" {}
+		click_type = left
+		click_mode = single
+		title = "GRANT_NEW_TOWN_RIGHTS"
+		on_action = "[GrantLocationTownRights(Location.Self)]"
+		conditions = "[AddLocalizationIf(Not(Location.GetOwner.IsPlayer), 'TWR_NOT_OTHER_COUNTRY_LOCATIONS')]"
+		conditions = "[AddLocalizationIf(And(Location.GetOwner.IsPlayer, Location.GetRank.IsDefault), 'TWR_ONLY_URBAN_LOCATIONS')]"
+		conditions = "[AddLocalizationIf(And3(Location.GetOwner.IsPlayer, Not(Location.GetRank.IsDefault), Not(ShowGrantLocationTownRights(Location.Self))), 'TWR_NOT_CAPABLE')]"
+		enabled = "[And(ShowGrantLocationTownRights(Location.Self), Not(Location.GetRank.IsDefault))]"
+	}
+	action_tooltip = {
+		block "location_card_town_rights_item_action" {}
+		click_type = right
+		click_mode = confirm
+		title = "REVOKE_LOCATION_TOWN_RIGHT"
+		cost = "[Location.GetRevokeFirstTownRightCost]"
+		on_action = "[Location.RevokeFirstTownRight]"
+		conditions = "[AddLocalizationIf(Not(Location.GetOwner.IsPlayer), 'TWR_NOT_OTHER_COUNTRY_LOCATIONS')]"
+		enabled = "[Location.GetOwner.IsPlayer]"
+	}
+	tooltipwidget = {
+		using = location_town_rights_tooltip
+	}
+	icon = {
+		block "location_card_town_rights_item_icon_layout" {
+			size = { 24 24 }
+			parentanchor = center
+		}
+		texture = "[TownRights.GetIcon]"
+	}
+	block "location_card_town_rights_item_extra" {}
+	block "location_card_town_rights_item_hover" {}
+}
+
+
+template location_card_town_rights {
+	block "location_card_town_rights_size" {
+		size = { 33 33 }
+	}
+	visible = "[Or(GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0'), And(Location.GetOwner.IsPlayer, Not(Location.GetRank.IsDefault)))]"
+	block "location_card_town_rights_enabled" {
+		enabled = "[And(ShowGrantLocationTownRights(Location.Self), Not(Location.GetRank.IsDefault))]"
+	}
+
+	block "location_card_town_rights_empty_button" {
+		button_townrights = {
+			using = location_card_town_rights_empty_body
+		}
+	}
+
+	block "location_card_town_rights_multi_button" {
+		button_regular = {
+			visible = "[GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)1')]"
+			size = { 100% 100% }
+			position = {0 1}
+
+			action_tooltip = {
+				click_type = left
+				click_mode = single
+				title = "GRANT_NEW_TOWN_RIGHTS"
+				on_action = "[GrantLocationTownRights(Location.Self)]"
+				conditions = "[AddLocalizationIf(Not(Location.GetOwner.IsPlayer), 'TWR_NOT_OTHER_COUNTRY_LOCATIONS')]"
+				conditions = "[AddLocalizationIf(And(Location.GetOwner.IsPlayer, Location.GetRank.IsDefault), 'TWR_ONLY_URBAN_LOCATIONS')]"
+				conditions = "[AddLocalizationIf(And3(Location.GetOwner.IsPlayer, Not(Location.GetRank.IsDefault), Not(ShowGrantLocationTownRights(Location.Self))), 'TWR_NOT_CAPABLE')]"
+				enabled = "[And(ShowGrantLocationTownRights(Location.Self), Not(Location.GetRank.IsDefault))]"
+			}
+
+			tooltipwidget = {
+				using = location_town_rights_tooltip
+			}
+		}
+	}
+
+	# No Town Rights Selected
+	icon = {
+		visible = "[Not(GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0'))]"
+		block "location_card_town_rights_empty_icon_layout" {
+			size = { 18 18 }
+			parentanchor = center
+		}
+		texture = "gfx/interface/buttons/estate_privileges/ep_plus.dds"
+		texture_density = 2
+
+		modify_texture = {
+			using = color_new_gold_texture
+			blend_mode = add
+		}
+
+		glow = {
+			name = "drop_shadow"
+			glow_radius = 3
+			color = {0.0 0.0 0.0 1.0}
+			alpha = 0.8
+		}
+	}
+
+	block "location_card_town_rights_empty_extra" {}
+
+	# ONE TOWN RIGHT SELECTED
+	hbox = {
+		block "location_card_town_rights_single_visible" {
+			visible = "[EqualTo_int32(GetDataModelSize(Location.GetTownRights), '(int32)1')]"
+		}
+		datamodel = "[Location.GetTownRights]"
+		item = {
+			widget = {
+				using = layoutpolicy_expanding
+				block "location_card_town_rights_item_visible" {}
+
+				block "location_card_town_rights_item_button" {
+					button_townrights = {
+						size = { 100% 100% }
+						using = location_card_town_rights_item_body
+					}
+				}
+			}
+		}
+	}
+
+	# MORE THAN ONE TOWN RIGHT SELECTED
+	block "location_card_town_rights_multi_display" {
+		hbox = {
+			visible = "[GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)1')]"
+			margin = { 2 0 }
+			text_single = {
+				using = layoutpolicy_expanding
+				align = center
+				autoresize = no
+				text = "[GetDataModelSize(Location.GetTownRights)]"
+			}
+			hbox = {
+				datamodel = "[Location.GetTownRights]"
+				item = {
+					icon = {
+						visible = "[EqualTo_int32(PdxGuiWidget.GetIndexInParent, '(int32)0')]"
+						size = { 16 16 }
+						texture = "[TownRights.GetIcon]"
+					}
+				}
+			}
+		}
+	}
+
+	block "location_town_rights_sort_highlight" {}
+}
+
+
 template location_fort_status {
 	hbox = {
+		block "location_fort_status_icons_margins" {}
 		spacing = 2
-		icon = {
+		hbox = {
 			visible = "[Not(Location.HasFort)]"
-			size = { 21 21 }
-			alwaystransparent = yes
-			texture = "gfx/interface/icons/flat_icons/no_fort.dds"
-		}
-	
-		piechart = {
-			visible = "[And(Location.HasFort, HasGarrisonIntelOn(Location.Self))]"
-			size = { 21 21 }
-			alwaystransparent = yes
-
-			pieslice_no_highlight = {
-				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
-				value = "[FixedPointToFloat(Location.GetGarrisonPercentage)]"
-				color = { 1 1 1 1 }
-				alwaystransparent = yes
-			}
-
-			pieslice_no_highlight = {
-				texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-				value = "[Subtract_float('(float)1.0', FixedPointToFloat(Location.GetGarrisonPercentage))]"
-				color = { 1 1 1 1 }
-				alwaystransparent = yes
-			}
+			block "location_fort_status_no_fort_margins" {}
 
 			icon = {
-				size = { 62% 62% }
-				parentanchor = center
-				texture = "[GetConceptTexture('fort')]"
-				texture_density = 2
+				visible = "[Not(Location.HasFort)]"
+				block "location_fort_status_icon_layout" {
+					size = { 21 21 }
+				}
+				alwaystransparent = yes
+				texture = "gfx/interface/icons/flat_icons/no_fort.dds"
 			}
+		}
+	
+		hbox = {
+			visible = "[And(Location.HasFort, HasGarrisonIntelOn(Location.Self))]"
+			block "location_fort_status_piechart_margins" {}
 
-			using = bg_circle_piechart
+			piechart = {
+				visible = "[And(Location.HasFort, HasGarrisonIntelOn(Location.Self))]"
+				block "location_fort_status_piechart_layout" {
+					size = { 21 21 }
+				}
+				alwaystransparent = yes
+
+				pieslice_no_highlight = {
+					texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+					value = "[FixedPointToFloat(Location.GetGarrisonPercentage)]"
+					color = { 1 1 1 1 }
+					alwaystransparent = yes
+				}
+
+				pieslice_no_highlight = {
+					texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+					value = "[Subtract_float('(float)1.0', FixedPointToFloat(Location.GetGarrisonPercentage))]"
+					color = { 1 1 1 1 }
+					alwaystransparent = yes
+				}
+
+				icon = {
+					size = { 62% 62% }
+					parentanchor = center
+					texture = "[GetConceptTexture('fort')]"
+					texture_density = 2
+				}
+
+				using = bg_circle_piechart
+			}
 		}
 
-		icon = {
+		hbox = {
 			visible = "[And(Location.HasFort, Not(HasGarrisonIntelOn(Location.Self)))]"
-			size = { 21 21 }
-			alwaystransparent = yes
-			texture = "[GetConceptTexture('fort')]"
+			block "location_fort_status_fort_icon_margins" {}
+
+			icon = {
+				visible = "[And(Location.HasFort, Not(HasGarrisonIntelOn(Location.Self)))]"
+				block "location_fort_status_icon_layout" {
+					size = { 21 21 }
+				}
+				alwaystransparent = yes
+				texture = "[GetConceptTexture('fort')]"
+			}
 		}
 	
 		text_single = {
@@ -2644,6 +3072,7 @@ template location_fort_status {
 		margin_left = 5
 		visible = "[And(Not(Location.HasSiege), HasFortLevelIntelOn(Location.Self))]"
 		text = "[SelectLocalization(GreaterThan_int32(Location.GetFortLevel, '(int32)0' ), 'FORT_LOCATION_LEVEL', 'NO_FORT_LOCATION_LEVEL')]"
+		block "location_fort_status_label_format" {}
 		layoutpolicy_horizontal = expanding
 		size = { -1 20 }
 		autoresize = no
@@ -2659,6 +3088,7 @@ template location_fort_status {
 		align = left|nobaseline
 		tagtooltip_enabled = yes
 		text = "INTEL_FOG_LOC_FORT_LEVEL_UNKNOWN"
+		block "location_fort_status_label_format" {}
 	}
 
 	expand = {}
@@ -2934,6 +3364,132 @@ template location_background {
 			using = color_black_texture
 			alpha = 0.4
 			blend_mode = multiply
+		}
+	}
+}
+
+
+template culture_breakdown_tooltip {
+	tooltipwidget = {
+		ContextualTooltipType = {
+			blockoverride "title_icon" {
+				icon = {
+					using = tooltip_title_icon_size
+					using = culture_icon
+
+					glow = {
+						name = "drop_shadow"
+						glow_radius = 3
+						color = {0.0 0.0 0.0 1.0}
+						alpha = 0.3
+					}
+				}
+			}
+			blockoverride "title_text" {
+				text = "POP_CULTURE_OF_ITEM"
+			}
+			blockoverride "concept_link" {
+				text = [culture|E]
+			}
+
+			blockoverride "tooltip_content" {
+				TooltipStringPairList = {
+					textcontext =  "[LocationView.GetLocation.GetPopsCultureInfo(PopCultureItem.GetCulture)]"
+				}
+				TooltipBlockList = {
+					visible = "[Not(StringIsEmpty(LocationView.GetLocation.GetMonthlyChangeBreakdownForCulture(PopCultureItem.GetCulture)))]"
+					textcontext = "[LocationView.GetLocation.GetMonthlyChangeBreakdownForCulture(PopCultureItem.GetCulture)]"
+				}
+				TooltipBlockList = {
+					visible = "[Not(StringIsEmpty(LocationView.GetLocation.GetAssimilateInfoForCulture(PopCultureItem.GetCulture)))]"
+					blockoverride "block_scrollarea" { maximumsize = { -1 220 }}
+					textcontext = "[LocationView.GetLocation.GetAssimilateInfoForCulture(PopCultureItem.GetCulture)]"
+				}
+				TooltipTextBlock = {
+					visible = "[Not(StringIsEmpty(LocationView.GetLocation.GetAssimilatePrimaryDescriptionForCulture(PopCultureItem.GetCulture)))]"
+					blockoverride "text" {
+						text = "[LocationView.GetLocation.GetAssimilatePrimaryDescriptionForCulture(PopCultureItem.GetCulture)]"
+					}
+				}
+			}
+		}
+	}
+}
+
+
+template religion_breakdown_tooltip {
+	tooltipwidget = {
+		ContextualTooltipType = {
+			blockoverride "title_icon" {
+				icon = {
+					using = tooltip_title_icon_size
+					texture = "[GetReligionIcon(PopReligionItem.GetReligion.Self)]"
+
+					glow = {
+						name = "drop_shadow"
+						glow_radius = 3
+						color = {0.0 0.0 0.0 1.0}
+						alpha = 0.3
+					}
+				}
+			}
+			blockoverride "title_text" {
+				text = "POP_RELIGION_OF_ITEM"
+			}
+			blockoverride "concept_link" {
+				text = [religion|E]
+			}
+
+			blockoverride "tooltip_content" {
+				TooltipTableField = {
+					blockoverride "field_background" {
+						background = {
+							using = bg_round_corners
+							alpha = 0.4
+							margin = { -1 0 }
+						}
+					}
+					blockoverride "field_content" {
+						margin = { 10 0 }
+						spacing = 5
+
+						text_single = {
+							icon = {
+								position = { -22 2 }
+								texture = "gfx/interface/pie_charts/piechart_legend.dds"
+								size = { 18 18 }
+								color = "[PopReligionItem.GetColor]"
+							}
+							autoresize = yes
+							text = "[PopReligionItem.GetName]"
+						}
+
+						text_single = {
+							autoresize = yes
+							text = "[PopReligionItem.GetAbsoluteSize]"
+						}
+
+						text_single = {
+							autoresize = yes
+							text = "[PopReligionItem.GetPercentage|%2]"
+						}
+					}
+				}
+				TooltipBlockList = {
+					visible = "[Not(StringIsEmpty(LocationView.GetLocation.GetMonthlyChangeBreakdownForReligion(PopReligionItem.GetReligion)))]"
+					textcontext = "[LocationView.GetLocation.GetMonthlyChangeBreakdownForReligion(PopReligionItem.GetReligion)]"
+				}
+				TooltipBlockList = {
+					visible = "[Not(StringIsEmpty(LocationView.GetLocation.GetConvertInfoForReligion(PopReligionItem.GetReligion)))]"
+					textcontext = "[LocationView.GetLocation.GetConvertInfoForReligion(PopReligionItem.GetReligion)]"
+				}
+				TooltipTextBlock = {
+					visible = "[Not(StringIsEmpty(LocationView.GetLocation.GetConvertPrimaryDescriptionForReligion(PopReligionItem.GetReligion)))]"
+					blockoverride "text" {
+						text = "[LocationView.GetLocation.GetConvertPrimaryDescriptionForReligion(PopReligionItem.GetReligion)]"
+					}
+				}
+			}
 		}
 	}
 }

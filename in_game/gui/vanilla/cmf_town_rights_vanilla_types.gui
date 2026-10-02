@@ -3,6 +3,7 @@
 
 template town_rights_type_item {
 	card_header_button_pinned = {
+
 		block "item_size" {
 			size = { 47 43 }
 		}
@@ -19,25 +20,622 @@ template town_rights_type_item {
 			on_action = "[TownRightsItem.RevokeFirst]"
 		}
 
-		hbox = {
-			expand = {}
+		action_tooltip = {
+			click_type = left
+			click_mode = confirm
+			visible = "[TownRightsItem.HasUpgradePath]"
+			enabled = "[TownRightsItem.CanUpgradeFirst]"
+			title = "UPGRADE_TOWN_RIGHTS_TO"
+			conditions = "[TownRightsItem.GetUpgradeFirstConditions]"
+			cost = "[TownRightsItem.GetUpgradeCost]"
+			on_action = "[TownRightsItem.UpgradeFirst]"
+		}
 
-			text_single = {
-				visible = "[GreaterThan_int32(TownRightsItem.GetLocationsAmount, '(int32)1')]"
-				using = Font_Size_Small
-				size = { 15 20 }
-				autoresize = no
-				align = nobaseline|right
-				text = "[TownRightsItem.GetLocationsAmount]"
+		icon = {
+			parentanchor = center
+			size = { 28 28 }
+			texture = "[TownRightsItem.GetType.GetIcon]"
+			texture_density = 2
+		}
+
+		text_single = {
+			visible = "[GreaterThan_int32(TownRightsItem.GetLocationsAmount, '(int32)1')]"
+			using = Font_Size_Small
+			parentanchor = bottom|hcenter
+			widgetanchor = vcenter|hcenter
+			position = { 0 0 }
+			autoresize = yes
+			align = center|nobaseline
+			text = "[TownRightsItem.GetLocationsAmount]"
+
+			background = {
+				texture = "gfx/interface/component_tiles/urban_rights_amount_bg.dds"
+				texture_density = 2
+				spriteType = corneredstretched
+				spriteborder = { 14 14 }
+				margin = { 6 3 }
+				margin_top = 0
+				margin_bottom = 5
+			}
+		}
+	}
+}
+
+
+# Hover tooltip for a filled industry-promotion slot: name + icon, the location/country effects,
+# then the area's totals and the buildings behind them.
+template IndustryPromotion_tooltip {
+	ContextualTooltipType = {
+		blockoverride "title_icon" {
+			icon = {
+				texture = "[IndustryPromotionSlot.GetPromotion.GetIcon]"
+				using = tooltip_title_icon_size
+			}
+		}
+		blockoverride "title_text" {
+			text = "[IndustryPromotionSlot.GetPromotion.GetName]"
+		}
+		blockoverride "concept_link" {
+			text = [industry_promotion|E]
+		}
+		blockoverride "tooltip_content" {
+			TooltipStringPairList = {
+				textcontext = "[IndustryPromotionSlot.GetType.GetTooltip]"
+			}
+
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "INDUSTRY_SLOT_STATS_TT_TEXT"
+				}
+			}
+
+			TooltipListBase = {
+				TooltipScrolledContentSection = {
+					blockoverride "block_scrollarea" {
+						maximumsize = { -1 200 }
+					}
+
+					blockoverride "section_content" {
+						TooltipListColumnContent = {
+							TooltipTableColumn = {
+								blockoverride "column_title" {}
+								blockoverride "column_title_text" {
+									text = "[building_type|e]"
+								}
+								blockoverride "column_title_right" {
+									expand = {}
+								}
+								blockoverride "field_left" {
+									icon = {
+										size = { 25 25 }
+										texture = "[GetBuildingIcon(Building.GetType.Self)]"
+									}
+								}
+								blockoverride "field_text" {
+									align = left|nobaseline
+									raw_text = "[Building.GetLevel|0] [Building.GetType.GetName]"
+								}
+								blockoverride "field_right" {
+									expand = {}
+								}
+							}
+
+							TooltipTableColumn = {
+								blockoverride "column_title" {}
+								blockoverride "column_title_left" {
+									expand = {}
+								}
+								blockoverride "column_title_text" { text = "[tax_base|e]" }
+								blockoverride "field_left" {
+									expand = {}
+								}
+								blockoverride "field_text" {
+									raw_text = "[Building.GetTaxBaseValue|+=2]@tax_base!"
+								}
+							}
+
+							TooltipTableColumn = {
+								blockoverride "column_title" {}
+								blockoverride "column_title_left" {
+									expand = {}
+								}
+								blockoverride "column_title_text" { text = "[income|e]" }
+								blockoverride "field_left" {
+									expand = {}
+								}
+								blockoverride "field_text" {
+									raw_text = "[Building.GetIncomeToOwner|+=2]@income!"
+								}
+							}
+
+							blockoverride "column_datamodel" { datamodel = "[QuickIndustryBuildings.GetIndustryBuildings]" }
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+template industry_slot_item {
+	widget = {
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+
+		card_list_button = {
+			visible = "[Not(IndustryPromotionSlot.IsEmpty)]"
+			size = { 100% 100% }
+
+			datacontext = "[GetQuickIndustryBuildings(IndustryPromotionSlot.GetArea, IndustryPromotionSlot.GetType)]"
+
+			tooltipwidget = {
+				using = IndustryPromotion_tooltip
+			}
+
+			action_tooltip = {
+				click_type = right
+				click_mode = confirm
+				title = "UNPROMOTE_INDUSTRY_FROM"
+				on_action = "[IndustryPromotionSlot.Revoke]"
+				enabled = "[Not(IndustryPromotionSlot.IsEmpty)]"
+			}
+
+			action_tooltip = {
+				click_type = left
+				click_mode = single
+				title = "PROMOTE_INDUSTRY"
+				cost = "[GetPromoteIndustryCost]"
+				on_action = "[SelectIndustryPromotion]"
+				enabled = "[Not(IndustryPromotionSlot.IsEmpty)]"
+			}
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 5 5 }
+				spacing = 0
+
+				widget = {
+					layoutpolicy_horizontal = expanding
+					size = { -1 56 }
+					icon = {
+						parentanchor = hcenter
+						position = { 0 2 }
+						size = { 52 52 }
+						texture = "[IndustryPromotionSlot.GetPromotion.GetIcon]"
+						texture_density = 2
+						using = bg_circle_piechart
+					}
+				}
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					size = { -1 20 }
+					autoresize = no
+					using = Font_Size_Medium
+					margin_top = -4
+					align = center|nobaseline
+					default_format = "#T"
+					text = "[IndustryPromotionSlot.GetType.GetNameWithNoTooltip]"
+				}
+
+				vbox = {
+					using = bg_number_container_bckg
+					blockoverride "number_container_extra" {
+						margin = { 1 1 }
+					}
+					layoutpolicy_horizontal = expanding
+					spacing = 8
+
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						size = { -1 16 }
+						autoresize = no
+						using = Font_Size_Small
+						align = center|nobaseline
+						margin_top = 15
+						raw_text = "@area! [IndustryPromotionSlot.GetAreaName]"
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						margin = { 2 0 }
+						spacing = 4
+
+						text_single = {
+							autoresize = yes
+							align = nobaseline
+							raw_text = "[GetAreaIndustryTaxBase(IndustryPromotionSlot.GetArea, IndustryPromotionSlot.GetType)|+=2]@tax_base!"
+						}
+						text_single = {
+							autoresize = yes
+							align = nobaseline
+							raw_text = "[GetAreaIndustryIncome(IndustryPromotionSlot.GetArea, IndustryPromotionSlot.GetType)|+=2]@income!"
+						}
+
+						hbox = {
+							spacing = 1
+
+							text_single = {
+								autoresize = yes
+								align = nobaseline
+								raw_text = "[GetAreaIndustryLevels(IndustryPromotionSlot.GetArea, IndustryPromotionSlot.GetType)|0]"
+							}
+							icon = {
+								size = { 16 16 }
+								texture = "gfx/interface/icons/industry_types/_default.dds"
+							}
+						}
+					}
+				}
+
+				widget = {
+					layoutpolicy_horizontal = expanding
+					size = { -1 34 }
+					visible = "[DataModelHasItems(IndustryPromotionSlot.GetLocationModifierIcons)]"
+
+					overlappingitembox = {
+						parentanchor = center
+						maximumsize = { 120 30 }
+						direction = horizontal
+						autoresize = yes
+						spacing = 2
+						datamodel = "[IndustryPromotionSlot.GetLocationModifierIcons]"
+						item = {
+							icon = {
+								size = { 28 28 }
+								texture = "[IndustryModifierIcon.GetIcon]"
+								using = bg_output_good
+							}
+						}
+					}
+				}
+
+
+			}
+		}
+
+		estate_add_reform_button = {
+			visible = "[IndustryPromotionSlot.IsEmpty]"
+			size = { 100% 100% }
+			blockoverride "estate_add_reform_button_icon_size" { size = { 40 40 } }
+			blockoverride "estate_add_reform_button" {
+				card_list_button_2 = {
+					size = { 100% 100% }
+					tooltipwidget = {
+						BasicFunctionalTooltip = {}
+					}
+					action_tooltip = {
+						click_type = left
+						click_mode = single
+						title = "PROMOTE_INDUSTRY"
+						cost = "[GetPromoteIndustryCost]"
+						on_action = "[SelectIndustryPromotion]"
+						enabled = "[IndustryPromotionSlot.IsEmpty]"
+					}
+
+					icon = {
+						parentanchor = center
+						size = { 40 40 }
+						texture = "gfx/interface/buttons/estate_privileges/ep_plus.dds"
+						texture_density = 2
+
+						modify_texture = {
+							using = color_new_gold_texture
+							blend_mode = add
+						}
+
+						glow = {
+							name = "drop_shadow"
+							glow_radius = 3
+							color = {0.0 0.0 0.0 1.0}
+							alpha = 0.8
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# Industry-promotion capacity: the concept, then where the capacity comes from (advances, reforms, ranks, ...).
+template PossibleIndustryPromotions_tooltip {
+	ContextualTooltipType = {
+		blockoverride "title_icon_texture" {
+			texture = "[GetConceptTexture('industry_promotion')]"
+		}
+
+		blockoverride "title_text" {
+			text = "MODIFIER_TYPE_NAME_possible_industry_promotions"
+		}
+
+		blockoverride "concept_link" {
+			text = [industry_promotion|E]
+		}
+
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "MODIFIER_TYPE_DESC_possible_industry_promotions"
+				}
+			}
+
+			TooltipStringPairList = {
+				blockoverride "block_title" {
+					text = "LIST_TITLE_SOURCES"
+				}
+				tooltipmeta = {
+					texture = "[GetConceptTexture('industry_promotion')]"
+				}
+				textcontext = "[Country.GetDescriptionFor('possible_industry_promotions')]"
+			}
+		}
+	}
+}
+
+
+template location_town_rights_icon_strip {
+	scroll_list = {
+		blockoverride "scroll_list_layout" {
+			fixedgridbox = {
+				addcolumn = 50
+				addrow = 40
+				datamodel = "[Location.GetTownRights]"
+				flipdirection = yes
+				datamodel_wrap = 10
+				item = {
+					button = {
+						size = { 40 40 }
+
+						tooltipwidget = {
+							using = TownRights_tooltip
+						}
+
+						background = {
+							texture = "gfx/interface/component_tiles/town_rights_paper_background.dds"
+							spriteType = Corneredstretched
+							texture_density = 2
+						}
+
+						icon = {
+							parentanchor = center
+							size = { 34 34 }
+							texture = "[TownRights.GetType.GetIcon]"
+							texture_density = 2
+						}
+
+						action_tooltip = {
+							click_type = left
+							click_mode = confirm
+							visible = "[TownRights.HasUpgradePath]"
+							enabled = "[TownRights.CanUpgrade]"
+							title = "UPGRADE_LOCATION_TOWN_RIGHT"
+							conditions = "[TownRights.GetUpgradeConditions]"
+							cost = "[TownRights.GetUpgradeCost]"
+							on_action = "[TownRights.Upgrade]"
+						}
+
+						action_tooltip = {
+							click_type = right
+							click_mode = confirm
+							title = "REVOKE_LOCATION_TOWN_RIGHT"
+							cost = "[TownRights.GetRevokeCost]"
+							on_action = "[TownRights.Revoke]"
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+template urban_rights_location_card {
+	vbox = {
+		layoutpolicy_horizontal = expanding
+		margin = { 5 5 }
+		spacing = 4
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			using = bg_card_header_01_production
+			blockoverride "header_pattern_texture_density" {texture_density = 1.8}
+			margin = { 10 5 }
+			spacing = 6
+
+			background = {
+				texture = "gfx/interface/colors/whiteish.dds"
+				blend_mode = overlay
+				alpha = 0.1
 			}
 
 			icon = {
-				size = { 25 25 }
-				texture = "[TownRightsItem.GetType.GetIcon]"
-				texture_density = 2
+				size = { 22 22 }
+				texture = "[Location.GetRankIcon]"
 			}
 
-			expand = {}
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				autoresize = no
+				align = left|nobaseline
+				using = Font_Size_Medium
+				text = "[Location.GetName]"
+			}
+
+			text_single = {
+				autoresize = yes
+				align = right|nobaseline
+				using = Font_Size_Medium
+				raw_text = "[GetDataModelSize(Location.GetTownRights)]/[Location.GetPossibleTownRights]"
+
+				tooltipwidget = {
+					ContextualTooltipType = {
+						blockoverride "title_text" {
+							text = "LOCATION_TOWN_RIGHTS_TITLE"
+						}
+
+						blockoverride "concept_link" {
+							text = "[town_rights|e]"
+						}
+
+						blockoverride "title_icon_texture" {
+							texture = "[GetConceptTexture('town_rights')]"
+						}
+
+						blockoverride "tooltip_content" {
+							TooltipStringPairList = {
+								textcontext = "[Location.GetPossibleTownRightsInfo]"
+							}
+						}
+					}
+				}
+			}
+		}
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			margin = { 8 2 }
+			spacing = 4
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { -1 40 }
+				hbox = {
+					parentanchor = vcenter
+					spacing = 4
+
+					hbox = {
+						spacing = 4
+						datamodel = "[DataModelFirst(Location.GetTownRights, '(int32)10')]"
+						item = {
+							button = {
+								size = { 40 40 }
+
+								tooltipwidget = {
+									using = TownRights_tooltip
+								}
+
+								background = {
+									texture = "gfx/interface/component_tiles/town_rights_paper_background.dds"
+									spriteType = Corneredstretched
+									texture_density = 2
+								}
+
+								icon = {
+									parentanchor = center
+									size = { 34 34 }
+									texture = "[TownRights.GetType.GetIcon]"
+									texture_density = 2
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									visible = "[TownRights.HasUpgradePath]"
+									enabled = "[TownRights.CanUpgrade]"
+									title = "UPGRADE_LOCATION_TOWN_RIGHT"
+									conditions = "[TownRights.GetUpgradeConditions]"
+									cost = "[TownRights.GetUpgradeCost]"
+									on_action = "[TownRights.Upgrade]"
+								}
+
+								action_tooltip = {
+									click_type = right
+									click_mode = confirm
+									title = "REVOKE_LOCATION_TOWN_RIGHT"
+									cost = "[TownRights.GetRevokeCost]"
+									on_action = "[TownRights.Revoke]"
+								}
+							}
+						}
+					}
+
+					text_single = {
+						margin = { 6 0 }
+						using = Font_Type_Headers
+						raw_text = "+[Subtract_int32(GetDataModelSize(Location.GetTownRights), '(int32)10')]"
+						align = nobaseline
+						visible = "[GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)10')]"
+						using = bg_number_container_bckg
+						tooltipwidget = {
+							ContextualTooltipType = {
+								blockoverride "title_text" {
+									text = "TOWN_RIGHTS_TEXT"
+								}
+
+								blockoverride "concept_link" {
+									text = [town_rights|E]
+								}
+
+								blockoverride "title_icon_texture" {
+									texture = "[GetConceptTexture('town_rights')]"
+								}
+
+								blockoverride "tooltip_layout_policy" { }
+
+								blockoverride "tooltip_content" {
+									TooltipListBase = {
+										TooltipScrolledContentSection = {
+											blockoverride "section_content" {
+												vbox = {
+													layoutpolicy_horizontal = expanding
+													spacing = 2
+													datamodel = "[DataModelSkipFirst(Location.GetTownRights, '(int32)10')]"
+													item = {
+														hbox = {
+															layoutpolicy_horizontal = expanding
+															minimumsize = { 180 24 }
+															spacing = 6
+
+															icon = {
+																size = { 22 22 }
+																texture = "[TownRights.GetType.GetIcon]"
+															}
+
+															text_single = {
+																layoutpolicy_horizontal = expanding
+																align = left|nobaseline
+																text = "[TownRights.GetType.GetNameWithNoTooltip]"
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					expand = {}
+				}
+			}
+
+			estate_add_reform_button = {
+				size = { 30 38 }
+				visible = "[And(Location.GetOwner.IsPlayer, Not(Location.GetRank.IsDefault))]"
+				enabled = "[And(ShowGrantLocationTownRights(Location.Self), Not(Location.GetRank.IsDefault))]"
+				blockoverride "estate_add_reform_button" {
+					card_header_button_04 = {
+						size = {100% 100%}
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							title = "GRANT_NEW_TOWN_RIGHTS"
+							on_action = "[GrantLocationTownRights(Location.Self)]"
+							conditions = "[AddLocalizationIf(Not(Location.GetOwner.IsPlayer), 'TWR_NOT_OTHER_COUNTRY_LOCATIONS')]"
+							conditions = "[AddLocalizationIf(And(Location.GetOwner.IsPlayer, Location.GetRank.IsDefault), 'TWR_ONLY_URBAN_LOCATIONS')]"
+							conditions = "[AddLocalizationIf(And3(Location.GetOwner.IsPlayer, Not(Location.GetRank.IsDefault), Not(ShowGrantLocationTownRights(Location.Self))), 'TWR_NOT_CAPABLE')]"
+							enabled = "[And(ShowGrantLocationTownRights(Location.Self), Not(Location.GetRank.IsDefault))]"
+						}
+					
+						tooltipwidget = {
+							BasicFunctionalTooltip = {}
+						}
+					}
+				}
+			}
 		}
 	}
 }

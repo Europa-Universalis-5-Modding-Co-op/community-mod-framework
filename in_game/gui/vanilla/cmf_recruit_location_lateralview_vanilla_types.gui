@@ -188,7 +188,7 @@ template recruit_location_entry {
 					size = { 60 20 }
 					autoresize = no
 					align = center
-					raw_text = "#l [LocationToRecruitItem.GetGoldCostValue|2]#!@gold!"
+					raw_text = "[LocationToRecruitItem.GetGoldCostValue|2]@gold!"
 
 					tooltipwidget = {
 						ContextualTooltipType = {
@@ -273,7 +273,7 @@ template recruit_location_entry {
 																size = { 60 20 }
 																autoresize = no
 																align = center
-																raw_text = "#l [TemplateAssignment.GetGoldCost|2]#!@gold!"
+																raw_text = "[TemplateAssignment.GetGoldCost|2]@gold!"
 																tooltip = "[TemplateAssignment.GetUnitGoldCost]"
 																tagtooltip_enabled = yes
 															}					
@@ -498,7 +498,7 @@ template recruit_location_entry {
 					margin = {5 0}
 					button_minus = {
 						size = { 18 18 }
-						visible = "[Not(RecruitInLocationLateralView.IsUnitTemplate)]"
+						visible = "[And(Not(RecruitInLocationLateralView.IsUnitTemplate), Not(RecruitInLocationLateralView.IsMercenary))]"
 						enabled = "[LocationToRecruitItem.CanCancel]"
 
 						tooltipwidget = {
@@ -506,7 +506,24 @@ template recruit_location_entry {
 						}
 
 						action_tooltip = {
+							click_type = left
 							title = "UNIT_CANCEL_ACTION_TT"
+							enabled = "[LocationToRecruitItem.CanCancel]"
+							conditions = "[LocationToRecruitItem.CanCancelTT]"
+							on_action = "[LocationToRecruitItem.Cancel]"
+						}
+						action_tooltip = {
+							click_modifier = shift
+							click_type = left
+							title = "UNIT_CANCEL_ACTION_SHIFT_TT"
+							enabled = "[LocationToRecruitItem.CanCancel]"
+							conditions = "[LocationToRecruitItem.CanCancelTT]"
+							on_action = "[LocationToRecruitItem.Cancel]"
+						}
+						action_tooltip = {
+							click_modifier = ctrl
+							click_type = left
+							title = "UNIT_CANCEL_ACTION_CTRL_TT"
 							enabled = "[LocationToRecruitItem.CanCancel]"
 							conditions = "[LocationToRecruitItem.CanCancelTT]"
 							on_action = "[LocationToRecruitItem.Cancel]"
@@ -618,31 +635,6 @@ template recruit_location_entry {
 							}
 						}
 	
-						text_single = {
-							visible = "[And(RecruitInLocationLateralView.IsMercenary, Not(LocationToRecruitItem.HasConstruction))]"
-							size = { 50 20 }
-							autoresize = no
-							raw_text = "0"
-							align = center|nobaseline
-							tooltipwidget = {
-								SimpleContextualTooltipType = {
-									blockoverride "title_icon" {
-										icon = {
-											using = tooltip_title_icon_size
-											texture = "gfx/interface/icons/unit_category/mercenary.dds"
-										}
-									}
-	
-									blockoverride "concept_link" {
-										raw_text = "[mercenaries|e]"
-									}
-									
-									lowpriotextcontext = "RECRUIT_MERCENARIES_LOCATION_NUMBER"
-	
-								}
-							}
-						}
-
 						sort_by_small_highlight = {
 							name = "needs"
 							ignore_layout = yes
@@ -793,7 +785,7 @@ template levy_possible_category_tt {
 				blockoverride "rowlist_datamodel_has_items" { visible = "[DataModelHasItems(RecruitInLocationLateralView.GetValidLeviesForCategory(SubUnitCategory.Self))]" }
 				blockoverride "rowlist_datamodel" { datamodel = "[RecruitInLocationLateralView.GetValidLeviesForCategory(SubUnitCategory.Self)]" }
 				blockoverride "rowlist_item" {
-					raw_text = "[GetLevySetupLabel(LevySetup.Self)]: [RecruitInLocationLateralView.GetLevySetupStrengthForUI(LevySetup.Self)]"
+					raw_text = "[GetLevySetupLabel(LevySetup.Self)]: [RecruitInLocationLateralView.GetLevySetupStrengthForUI(LevySetup.Self)][RecruitInLocationLateralView.GetLevySetupUnmetRequirementsForUI(LevySetup.Self)]"
 				}
 			}
 		}
