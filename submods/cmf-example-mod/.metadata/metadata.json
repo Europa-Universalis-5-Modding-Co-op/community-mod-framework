@@ -1,7 +1,7 @@
 {
     "name": "Community Mod Framework Example Mod",
     "id": "community_mod_framework_example",
-    "version": "0.1",
+    "version": "0.2.0",
     "game_id": "eu5",
     "supported_game_version": "1.4.*",
     "cmf_last_updated_game_version": "1.4.0",

@@ -1,7 +1,7 @@
 {
     "name": "CMF Feature Test",
     "id": "community_mod_framework_feature_test",
-    "version": "0.1",
+    "version": "0.2.0",
     "game_id": "eu5",
     "supported_game_version": "1.4.*",
     "cmf_last_updated_game_version": "1.4.0",

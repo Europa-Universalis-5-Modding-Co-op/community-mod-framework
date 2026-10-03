@@ -1,7 +1,7 @@
 {
     "name": "Community Mod Framework Dev",
     "id": "community_mod_framework.dev",
-    "version": "2.4.2",
+    "version": "2.5.0",
     "game_id": "eu5",
     "supported_game_version": "1.4.*",
     "cmf_last_updated_game_version": "1.4.0",
@@ -9,7 +9,6 @@
     "tags": [
         "Utilities",
         "User Interface",
-		"1.3",
 		"1.4"
     ],
 	"relationships": [],
