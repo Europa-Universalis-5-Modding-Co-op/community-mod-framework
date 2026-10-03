@@ -183,8 +183,10 @@ types cmf_dependency_auto_enable
 
 			editbox_single = {
 				name = "create_playset_editbox"
+				visible = "[GetVariableSystem.Exists( 'create_playset_open' )]"
 				layoutpolicy_horizontal = expanding
 				layoutpolicy_vertical = fixed
+				focus_on_visible = yes
 				tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "MODS_GUI_PLAYSET_LABEL_TOOLTIP" } } }
 
 				blockoverride "editbox_label" {
@@ -197,14 +199,24 @@ types cmf_dependency_auto_enable
 				tooltipwidget = {BasicFunctionalTooltip = {}}
 
 				action_tooltip = {
+					visible = "[Not( GetVariableSystem.Exists( 'create_playset_open' ) )]"
+					click_type = left
+					click_mode = single
+					title = "MODS_GUI_CREATE_PLAYSET"
+					on_action = "[GetVariableSystem.Set( 'create_playset_open', 'yes' )]"
+				}
+
+				action_tooltip = {
+					visible = "[GetVariableSystem.Exists( 'create_playset_open' )]"
 					click_type = left
 					click_mode = single
 					title = "[ModsGui.CreatePlaysetTooltip(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
 					on_action = "[ModsGui.CreatePlayset(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
 					on_action = "[PdxClearEditBoxText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox'))]"
+					on_action = "[GetVariableSystem.Clear( 'create_playset_open' )]"
 					enabled = "[ModsGui.CanCreatePlayset(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
 				}
-				enabled = "[ModsGui.CanCreatePlayset(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox')))]"
+				enabled = "[Or( Not( GetVariableSystem.Exists( 'create_playset_open' ) ), ModsGui.CanCreatePlayset(PdxGuiEditboxGetText(PdxGuiWidget.AccessParent.FindChild('create_playset_editbox'))) )]"
 				align = center|nobaseline
 				using = button_resize_to_fit_text
 			}

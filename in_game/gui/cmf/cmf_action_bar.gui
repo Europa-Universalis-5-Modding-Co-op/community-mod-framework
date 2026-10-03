@@ -541,9 +541,6 @@ types cmf_action_bar {
                     Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmf_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmf_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1'))
                 )]"
             }
-            blockoverride "base_color" {
-                using = color_intense_bg_blue_texture
-            }
             blockoverride "icon" {
                 icon = {
                     size = { 20 20 }
@@ -582,9 +579,6 @@ types cmf_action_bar {
                     And(GameIsMultiplayer, Not(IsHost)),
                     Or(Not(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmf_core__action_bar_buttons_i1_f1')).IsSet), EqualTo_CFixedPoint(GetPlayer.MakeScope.GetVariableFromVariableMap('cmm', MakeScopeFlag('cmf_core__action_bar_buttons_i1_f1')).GetValue, '(CFixedPoint)1'))
                 )]"
-            }
-            blockoverride "base_color" {
-                using = color_intense_bg_blue_texture
             }
             blockoverride "icon" {
                 icon = {
