@@ -1449,34 +1449,6 @@ et_run_script = {
 			set_variable = { name = et_149_passed value = 1 }
 		}
 
-		# -- Test 146 --------------------------------------------
-		# The same bracket run again with a level in place. A pass means the reading does not
-		# move as levels arrive, so it is the cap and a while whose limit reads value > 0 is
-		# never bounded by it. It compares the two brackets rather than a fixed 3, so it
-		# answers even when the number itself is not the configured max.
-		set_global_variable = { name = et_ml_b value = 0 }
-		capital = {
-			if = {
-				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value = 0 } }
-				set_global_variable = { name = et_ml_b value = 1 }
-			}
-			else_if = {
-				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value <= 2 } }
-				set_global_variable = { name = et_ml_b value = 2 }
-			}
-			else_if = {
-				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value = 3 } }
-				set_global_variable = { name = et_ml_b value = 3 }
-			}
-			else = {
-				set_global_variable = { name = et_ml_b value = 4 }
-			}
-		}
-		if = {
-			limit = { global_var:et_ml_b = global_var:et_ml_a }
-			set_variable = { name = et_146_passed value = 1 }
-		}
-
 		# -- Tests 136, 137 --------------------------------------
 		# Whether building_type_max_level works at all. 133 read 0 for et_probe_multi, so these
 		# ask two vanilla types at the same location: mason takes its cap from the
@@ -1612,6 +1584,34 @@ et_run_script = {
 		if = {
 			limit = { global_var:et_151_ok = 1 }
 			set_variable = { name = et_151_passed value = 1 }
+		}
+
+		# -- Test 146 --------------------------------------------
+		# Compare the cap after a completed level is present.
+		set_global_variable = { name = et_ml_b value = 0 }
+		capital = {
+			if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value = 0 } }
+				set_global_variable = { name = et_ml_b value = 1 }
+			}
+			else_if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value <= 2 } }
+				set_global_variable = { name = et_ml_b value = 2 }
+			}
+			else_if = {
+				limit = { building_type_max_level = { building_type = building_type:et_probe_multi value = 3 } }
+				set_global_variable = { name = et_ml_b value = 3 }
+			}
+			else = {
+				set_global_variable = { name = et_ml_b value = 4 }
+			}
+		}
+		if = {
+			limit = {
+				global_var:et_151_ok = 1
+				global_var:et_ml_b = global_var:et_ml_a
+			}
+			set_variable = { name = et_146_passed value = 1 }
 		}
 
 		# -- Test 152 --------------------------------------------
@@ -2483,7 +2483,10 @@ et_run_script = {
 		}
 		if = {
 			limit = { global_var:et_ot_c_done = 1 }
-			global_var:et_ot_c_loc = { et_ot_seed_probe = { OWNER = global_var:et_ot_c } }
+			global_var:et_ot_c_loc = {
+				et_ot_seed_probe = { OWNER = global_var:et_ot_c }
+				et_ot_read = { SLOT = c0 }
+			}
 		}
 		set_variable = { name = et_ot_fire value = 1 }
 

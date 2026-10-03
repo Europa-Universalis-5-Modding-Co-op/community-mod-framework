@@ -620,8 +620,7 @@ et_hw_check_poll = {
 
 		# Result: PASS
 		# -- Test 65 ---------------------------------------------
-		# The loop kept advancing after the widget went hidden; stop-guards
-		# belong in the effect, not in visibility.
+		# One further fire does not establish continuous looping.
 		if = {
 			limit = {
 				has_variable = et_g64_c

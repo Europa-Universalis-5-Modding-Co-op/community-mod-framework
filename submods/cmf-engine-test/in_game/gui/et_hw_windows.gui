@@ -345,9 +345,7 @@ widget = {
 					}
 				}
 
-				# Tests 64/65: self-loop poll state (the SmartTaxes / ATD
-				# reserve-poller shape). The loop keeps running while hidden;
-				# the check compares against the snapshot taken at gate close.
+				# Test 65 needs only one further fire after hiding.
 				widget = {
 					size = { 0 0 }
 					visible = "[And(GetPlayer.Exists, GetScriptedGui('et_g64_should').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
