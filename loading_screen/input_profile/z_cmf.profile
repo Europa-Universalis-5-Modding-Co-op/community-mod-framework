@@ -1,763 +1,230 @@
-input_context={
-	name="common"
+version=4
 
-	input_action={
-		name="close_window"
-		text="SETTING_INPUT_ACTION_CLOSE"
-		scancode=41
-	}
+# CMF: M shortcut (loading_screen/input_profile/_input_profile.info:101).
+input_action={
+	name="cmm_open_menu"
+	text="CMM_INPUT_ACTION_OPEN_MENU"
+	scancode=16
+}
 
-	input_action={
-		name="close_window_left"
-		text="SETTING_INPUT_ACTION_CLOSE_LEFT"
-	}
-
-	input_action={
-		name="close_window_right"
-		text="SETTING_INPUT_ACTION_CLOSE_RIGHT"
-	}
-
-	input_action={
-		name="confirm"
-		text="SETTING_INPUT_ACTION_CONFIRM"
-		scancode=40
-		scancode=6
-	}
-
-	input_action={
-		name="decline"
-		text="SETTING_INPUT_ACTION_DECLINE"
-		scancode=29
-	}
-
-	input_action={
-		name="increase_speed"
-		text="SETTING_INPUT_ACTION_INCREASE_SPEED"
-		scancode=46
-		scancode=87
-	}
-
-	input_action={
-		name="decrease_speed"
-		text="SETTING_INPUT_ACTION_DECREASE_SPEED"
-		scancode=45
-		scancode=86
-	}
-
-	input_action={
-		name="speed_1"
-		text="SETTING_INPUT_ACTION_SPEED_ONE"
-		scancode=89
-	}
-
-	input_action={
-		name="speed_2"
-		text="SETTING_INPUT_ACTION_SPEED_TWO"
-		scancode=90
-	}
-
-	input_action={
-		name="speed_3"
-		text="SETTING_INPUT_ACTION_SPEED_THREE"
-		scancode=91
-	}
-
-	input_action={
-		name="speed_4"
-		text="SETTING_INPUT_ACTION_SPEED_FOUR"
-		scancode=92
-	}
-
-	input_action={
-		name="speed_5"
-		text="SETTING_INPUT_ACTION_SPEED_FIVE"
-		scancode=93
-	}
-
-	input_action={
-		name="speed_6"
-		text="SETTING_INPUT_ACTION_SPEED_SIX"
-		scancode=94
-	}
-
-	input_action={
-		name="speed_7"
-		text="SETTING_INPUT_ACTION_SPEED_SEVEN"
-		scancode=95
-	}
-
-	input_action={
-		name="console"
-		text="SETTING_INPUT_ACTION_CONSOLE"
-		scancode=53
-
-		binding={
-			scancode=6
-			modifier=alt
-		}
-	}
-	
-	input_action={
-		name="disable_gui"
-		text="SETTING_INPUT_ACTION_DISABLE_GUI"
-		binding={
-			scancode=66
-			modifier=ctrl
-		}
-	}
-	
-	input_action={
-		name="lock_camera"
-		text="SETTING_INPUT_ACTION_LOCK_CAMERA"
-		binding={
-			scancode=67
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="cmm_open_menu"
-		text="CMM_INPUT_ACTION_OPEN_MENU"
-		scancode=16
-	}
+# CMF: Free M for the mod menu
+input_action={
+	name="mapmode_menu"
+	text="SETTING_INPUT_ACTION_MAPMODE_MENU"
 }
 
 input_context={
 	name="map"
 
-	input_action={
-		name="show_menu"
-		text="SETTING_INPUT_ACTION_SHOW_MENU"
-		gamepad_button=GAMEPAD_START
-	}
+	input_action="close_window"
+	input_action="close_window_left"
+	input_action="close_window_right"
+	input_action="confirm"
+	input_action="decline"
+	input_action="increase_speed"
+	input_action="decrease_speed"
+	input_action="speed_1"
+	input_action="speed_2"
+	input_action="speed_3"
+	input_action="speed_4"
+	input_action="speed_5"
+	input_action="disable_gui"
+	input_action="lock_camera"
 
-	input_action={
-		name="toggle_pause"
-		text="SETTING_INPUT_ACTION_TOGGLE_PAUSE"
-		scancode=44
-	}
+	input_action="show_menu"
+	input_action="toggle_pause"
+	input_action="pause"
+	input_action="previous_window"
+	input_action="previous_window_left"
+	input_action="previous_window_right"
+	input_action="toggle_window_collapse"
+	input_action="next_window"
+	input_action="next_window_left"
+	input_action="next_window_right"
+	input_action="top_left_1"
+	input_action="top_left_2"
+	input_action="top_left_3"
+	input_action="top_left_4"
+	input_action="top_left_5"
+	input_action="top_left_6"
+	input_action="top_left_7"
+	input_action="top_left_8"
+	input_action="top_left_9"
+	input_action="top_left_10"
+	input_action="top_right_1"
+	input_action="top_right_2"
+	input_action="top_right_3"
+	input_action="top_right_4"
+	input_action="top_right_5"
+	input_action="top_right_6"
+	input_action="top_right_7"
+	input_action="top_right_8"
+	input_action="top_right_9"
+	input_action="top_right_10"
+	input_action="unpause"
+	input_action="camera_drag"
+	input_action="camera_rotate"
+	input_action="camera_up"
+	input_action="camera_down"
+	input_action="camera_left"
+	input_action="camera_right"
+	input_action="find_province"
+	input_action="go_to_capital"
+	input_action="consolidate"
+	input_action="detach_siege"
+	input_action="detach_damaged_ship"
+	input_action="split_half"
+	input_action="reorg_units"
+	input_action="merge_units"
+	input_action="screenshot"
+	input_action="screenshot_map"
+	input_action="max_zoom_out"
+	input_action="delete"
+	input_action="allow_attach"
+	input_action="attach_to_unit"
+	input_action="create_new_unit"
+	input_action="detach_support"
+	input_action="disband"
+	input_action="do_shattered_retreat"
+	input_action="load_on_fleet"
+	input_action="recruit_to"
+	input_action="select_objective"
+	input_action="report_issue"
+	input_action="toggle_alert_stash"
+	input_action="mapmode_menu"
+	input_action="mapmode_terrain"
+	input_action="mapmode_political"
+	input_action="mapmode_culture"
+	input_action="mapmode_location_religion"
+	input_action="control_group_0"
+	input_action="control_group_1"
+	input_action="control_group_2"
+	input_action="control_group_3"
+	input_action="control_group_4"
+	input_action="control_group_5"
+	input_action="control_group_6"
+	input_action="control_group_7"
+	input_action="control_group_8"
+	input_action="control_group_9"
+	input_action="mapmode_control"
+	input_action="mapmode_proximity"
+	input_action="mapmode_population"
+	input_action="mapmode_market"
+	input_action="mapmode_diplomacy"
+	input_action="mapmode_tactical"
+	input_action="mapmode_tax_base"
+	input_action="mapmode_raw_material"
 
-	input_action={
-		name="pause"
-		text="SETTING_INPUT_ACTION_PAUSE"
-		scancode=47
-	}
+	input_action="mapmode_building_based"
+	input_action="mapmode_pop_based"
+	input_action="mapmode_timeline_ownership"
+	input_action="mapmode_army_based"
+	input_action="mapmode_government"
+	input_action="mapmode_country_rank"
+	input_action="mapmode_dynasty"
+	input_action="mapmode_court_language"
+	input_action="mapmode_integration"
+	input_action="mapmode_stability"
+	input_action="mapmode_net_building_profit"
+	input_action="mapmode_potential_tax_base"
+	input_action="mapmode_uncontrolled_wealth"
+	input_action="mapmode_economical_base"
+	input_action="mapmode_development"
+	input_action="mapmode_advances"
+	input_action="mapmode_satisfaction"
+	input_action="mapmode_peasant_enfranchisement"
+	input_action="mapmode_nobles_percentage"
+	input_action="mapmode_burghers_percentage"
+	input_action="mapmode_laborers_percentage"
+	input_action="mapmode_peasants_percentage"
+	input_action="mapmode_prosperity"
+	input_action="mapmode_cities"
+	input_action="mapmode_town_rights"
+	input_action="mapmode_food"
+	input_action="mapmode_food_productivity"
+	input_action="mapmode_crown_power"
+	input_action="mapmode_missing_control"
+	input_action="mapmode_max_control"
+	input_action="mapmode_roads"
+	input_action="mapmode_market_access"
+	input_action="mapmode_market_food_balance"
+	input_action="mapmode_market_food_stockpile"
+	input_action="mapmode_trade_range"
+	input_action="mapmode_market_language"
+	input_action="mapmode_pop_types"
+	input_action="mapmode_nobles"
+	input_action="mapmode_clergy"
+	input_action="mapmode_burghers"
+	input_action="mapmode_laborers"
+	input_action="mapmode_soldiers"
+	input_action="mapmode_peasants"
+	input_action="mapmode_tribesmen"
+	input_action="mapmode_slaves"
+	input_action="mapmode_migration"
+	input_action="mapmode_country_culture"
+	input_action="mapmode_culture_group"
+	input_action="mapmode_language"
+	input_action="mapmode_language_power"
+	input_action="mapmode_dialect"
+	input_action="mapmode_common_language"
+	input_action="mapmode_liturgical_language"
+	input_action="mapmode_language_family"
+	input_action="mapmode_country_religion"
+	input_action="mapmode_religious_school"
+	input_action="mapmode_location_religion_group"
+	input_action="mapmode_holy_sites"
+	input_action="mapmode_works_of_art"
+	input_action="mapmode_literacy"
+	input_action="mapmode_institution"
+	input_action="mapmode_opinion"
+	input_action="mapmode_antagonism"
+	input_action="mapmode_threat"
+	input_action="mapmode_great_power_areas"
+	input_action="mapmode_gp_score_areas"
+	input_action="mapmode_great_powers"
+	input_action="mapmode_war"
+	input_action="mapmode_coalition"
+	input_action="mapmode_players"
+	input_action="mapmode_country_truce"
+	input_action="mapmode_power_projection"
+	input_action="mapmode_fort"
+	input_action="mapmode_supply"
+	input_action="mapmode_country_military_access"
+	input_action="mapmode_warscore"
+	input_action="mapmode_locations"
+	input_action="mapmode_provinces"
+	input_action="mapmode_area"
+	input_action="mapmode_region"
+	input_action="mapmode_sub_continent"
+	input_action="mapmode_continent"
+	input_action="mapmode_naked"
+	input_action="mapmode_topography"
+	input_action="mapmode_vegetation"
+	input_action="mapmode_climate"
+	input_action="mapmode_winter"
+	input_action="mapmode_rivers"
+	input_action="mapmode_weather"
+	input_action="mapmode_location_modifiers"
+	input_action="mapmode_maritime"
+	input_action="mapmode_natural_harbor_suitability"
+	input_action="mapmode_harbor_capacity"
+	input_action="mapmode_naval_range"
+	input_action="mapmode_expeditions"
+	input_action="mapmode_privateering"
+	input_action="mapmode_colonial"
+	input_action="mapmode_rebels"
+	input_action="mapmode_movements"
+	input_action="mapmode_religious_orders"
 
-	input_action={
-		name="previous_window"
-		text="SETTING_INPUT_ACTION_PREVIOUS_WINDOW"
-		binding={
-			scancode=80
-			modifier=alt
-		}
-		mouse_button=MOUSE_X1
-	}
+	# CMF: Mod menu shortcut
+	input_action="cmm_open_menu"
+}
 
-	input_action={
-		name="previous_window_left"
-		text="SETTING_INPUT_ACTION_PREVIOUS_WINDOW_LEFT"
-	}
+input_context={
+	name="pause_menu"
 
-	input_action={
-		name="previous_window_right"
-		text="SETTING_INPUT_ACTION_PREVIOUS_WINDOW_RIGHT"
-	}
+	input_action="resume"
 
-	input_action={
-		name="toggle_window_collapse"
-		text="SETTING_INPUT_ACTION_TOGGLE_WINDOW_COLLAPSE"
-	}
-
-	input_action={
-		name="next_window"
-		text="SETTING_INPUT_ACTION_NEXT_WINDOW"
-		binding={
-			scancode=79
-			modifier=alt
-		}
-		mouse_button=MOUSE_X2
-	}
-
-	input_action={
-		name="next_window_left"
-		text="SETTING_INPUT_ACTION_NEXT_WINDOW_LEFT"
-	}
-
-	input_action={
-		name="next_window_right"
-		text="SETTING_INPUT_ACTION_NEXT_WINDOW_RIGHT"
-	}
-
-	input_action={
-		name="top_left_1"
-		text="SETTING_INPUT_ACTION_TOP_LEFT_1"
-		scancode=58
-	}
-	
-	input_action={
-		name="top_left_2"
-		text="SETTING_INPUT_ACTION_TOP_LEFT_2"
-		scancode=59
-	}
-	
-	input_action={
-		name="top_left_3"
-		text="SETTING_INPUT_ACTION_TOP_LEFT_3"
-		scancode=60
-	}
-	
-	input_action={
-		name="top_left_4"
-		text="SETTING_INPUT_ACTION_TOP_LEFT_4"
-		scancode=61
-	}
-	
-	input_action={
-		name="top_left_5"
-		text="SETTING_INPUT_ACTION_TOP_LEFT_5"
-		scancode=62
-	}
-	
-	input_action={
-		name="top_left_6"
-		text="SETTING_INPUT_ACTION_TOP_LEFT_6"
-		scancode=63
-	}
-	
-	input_action={
-		name="top_left_7"
-		text="SETTING_INPUT_ACTION_TOP_LEFT_7"
-		scancode=64
-	}
-	
-	input_action={
-		name="top_left_8"
-		text="SETTING_INPUT_ACTION_TOP_LEFT_8"
-		scancode=65
-	}
-	
-	input_action={
-		name="top_left_9"
-		text="SETTING_INPUT_ACTION_TOP_LEFT_9"
-		scancode=66
-	}
-	
-	input_action={
-		name="top_left_10"
-		text="SETTING_INPUT_ACTION_TOP_LEFT_10"
-		scancode=67
-	}
-
-	input_action={
-		name="top_right_1"
-		text="SETTING_INPUT_ACTION_TOP_RIGHT_1"
-		binding={
-			scancode=58
-			modifier=shift
-		}
-	}
-	
-	input_action={
-		name="top_right_2"
-		text="SETTING_INPUT_ACTION_TOP_RIGHT_2"
-		binding={
-			scancode=59
-			modifier=shift
-		}
-	}
-	
-	input_action={
-		name="top_right_3"
-		text="SETTING_INPUT_ACTION_TOP_RIGHT_3"
-		binding={
-			scancode=60
-			modifier=shift
-		}
-	}
-	
-	input_action={
-		name="top_right_4"
-		text="SETTING_INPUT_ACTION_TOP_RIGHT_4"
-		binding={
-			scancode=61
-			modifier=shift
-		}
-	}
-	
-	input_action={
-		name="top_right_5"
-		text="SETTING_INPUT_ACTION_TOP_RIGHT_5"
-		binding={
-			scancode=62
-			modifier=shift
-		}
-	}
-	
-	input_action={
-		name="top_right_6"
-		text="SETTING_INPUT_ACTION_TOP_RIGHT_6"
-		binding={
-			scancode=63
-			modifier=shift
-		}
-	}
-	
-	input_action={
-		name="top_right_7"
-		text="SETTING_INPUT_ACTION_TOP_RIGHT_7"
-		binding={
-			scancode=64
-			modifier=shift
-		}
-	}
-	
-	input_action={
-		name="top_right_8"
-		text="SETTING_INPUT_ACTION_TOP_RIGHT_8"
-		binding={
-			scancode=65
-			modifier=shift
-		}
-	}
-	
-	input_action={
-		name="top_right_9"
-		text="SETTING_INPUT_ACTION_TOP_RIGHT_9"
-		binding={
-			scancode=66
-			modifier=shift
-		}
-	}
-	
-	input_action={
-		name="top_right_10"
-		text="SETTING_INPUT_ACTION_TOP_RIGHT_10"
-		binding={
-			scancode=67
-			modifier=shift
-		}
-	}
-	
-	input_action={
-		name="control_group_0"
-		text="SETTING_INPUT_ACTION_CONTROL_GROUP_0"
-		scancode=39
-		
-		binding={
-			scancode=39
-			modifier=ctrl
-		}
-	}
-	
-	input_action={
-		name="control_group_1"
-		text="SETTING_INPUT_ACTION_CONTROL_GROUP_1"
-		scancode=30
-		
-		binding={
-			scancode=30
-			modifier=ctrl
-		}
-	}
-	
-	input_action={
-		name="control_group_2"
-		text="SETTING_INPUT_ACTION_CONTROL_GROUP_2"
-		scancode=31
-		
-		binding={
-			scancode=31
-			modifier=ctrl
-		}
-	}
-	
-	input_action={
-		name="control_group_3"
-		text="SETTING_INPUT_ACTION_CONTROL_GROUP_3"
-		scancode=32
-		
-		binding={
-			scancode=32
-			modifier=ctrl
-		}
-	}
-	
-	input_action={
-		name="control_group_4"
-		text="SETTING_INPUT_ACTION_CONTROL_GROUP_4"
-		scancode=33
-		
-		binding={
-			scancode=33
-			modifier=ctrl
-		}
-	}
-	
-	input_action={
-		name="control_group_5"
-		text="SETTING_INPUT_ACTION_CONTROL_GROUP_5"
-		scancode=34
-		
-		binding={
-			scancode=34
-			modifier=ctrl
-		}
-	}
-	
-	input_action={
-		name="control_group_6"
-		text="SETTING_INPUT_ACTION_CONTROL_GROUP_6"
-		scancode=35
-		
-		binding={
-			scancode=35
-			modifier=ctrl
-		}
-	}
-	
-	input_action={
-		name="control_group_7"
-		text="SETTING_INPUT_ACTION_CONTROL_GROUP_7"
-		scancode=36
-		
-		binding={
-			scancode=36
-			modifier=ctrl
-		}
-	}
-	
-	input_action={
-		name="control_group_8"
-		text="SETTING_INPUT_ACTION_CONTROL_GROUP_8"
-		scancode=37
-		
-		binding={
-			scancode=37
-			modifier=ctrl
-		}
-	}
-	
-	input_action={
-		name="control_group_9"
-		text="SETTING_INPUT_ACTION_CONTROL_GROUP_9"
-		scancode=38
-		
-		binding={
-			scancode=38
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="unpause"
-		text="SETTING_INPUT_ACTION_UNPAUSE"
-		scancode=48
-	}
-
-	input_action={
-		name="camera_drag"
-		text="SETTING_INPUT_ACTION_CAMERA_DRAG"
-		mouse_button=MOUSE_MIDDLE
-		mode=press
-	}
-
-	input_action={
-		name="camera_rotate"
-		text="SETTING_INPUT_ACTION_CAMERA_ROTATE"
-		mouse_button=MOUSE_RIGHT
-		mode=press
-	}
-
-	input_action={
-		name="camera_up"
-		text="SETTING_INPUT_ACTION_CAMERA_UP"
-		scancode=26
-		scancode=82
-	}
-
-	input_action={
-		name="camera_down"
-		text="SETTING_INPUT_ACTION_CAMERA_DOWN"
-		scancode=22
-		scancode=81
-	}
-
-	input_action={
-		name="camera_left"
-		text="SETTING_INPUT_ACTION_CAMERA_LEFT"
-		scancode=4
-		scancode=80
-	}
-
-	input_action={
-		name="camera_right"
-		text="SETTING_INPUT_ACTION_CAMERA_RIGHT"
-		scancode=7
-		scancode=79
-	}
-
-	input_action={
-		name="camera_zoom_in"
-		text="SETTING_INPUT_ACTION_CAMERA_ZOOM_IN"
-	}
-
-	input_action={
-		name="camera_zoom_out"
-		text="SETTING_INPUT_ACTION_CAMERA_ZOOM_OUT"
-	}
-
-	input_action={
-		name="find_province"
-		text="SETTING_INPUT_ACTION_FIND_PROVINCE"
-		scancode=9
-	}
-
-	input_action={
-		name="go_to_capital"
-		text="SETTING_INPUT_ACTION_GO_TO_CAPITAL"
-		scancode=74
-	}
-
-	input_action={
-		name="consolidate"
-		text="SETTING_INPUT_ACTION_CONSOLIDATE"
-		scancode=14
-	}
-
-	input_action={
-		name="detach_siege"
-		text="SETTING_INPUT_ACTION_DETACH_SIEGE"
-		scancode=13
-	}
-
-	input_action={
-		name="detach_damaged_ship"
-		text="SETTING_INPUT_ACTION_DETACH_DAMAGED_SHIP"
-		scancode=20
-	}
-
-	input_action={
-		name="split_half"
-		text="SETTING_INPUT_ACTION_SPLIT_HALF"
-		scancode=11
-	}
-
-	input_action={
-		name="reorg_units"
-		text="SETTING_INPUT_ACTION_REORG_UNITS"
-		scancode=5
-	}
-
-	input_action={
-		name="merge_units"
-		text="SETTING_INPUT_ACTION_MERGE_UNITS"
-		scancode=10
-	}
-
-	input_action={
-		name="macro_builder"
-		text="SETTING_INPUT_ACTION_MACRO_BUILDER"
-		scancode=29
-	}
-
-	input_action={
-		name="screenshot"
-		text="SETTING_INPUT_ACTION_SCREENSHOT"
-		scancode=68
-	}
-
-	input_action={
-		name="screenshot_map"
-		text="SETTING_INPUT_ACTION_SCREENSHOT_MAP"
-		binding={
-			scancode=68
-			modifier=shift
-		}
-	}
-
-	input_action={
-		name="max_zoom_out"
-		text="SETTING_INPUT_ACTION_MAX_ZOOM_OUT"
-		scancode=43
-		mode=press_and_release
-	}
-
-	input_action={
-		name="delete"
-		text="SETTING_INPUT_ACTION_DELETE"
-		scancode=76
-	}
-
-	input_action={
-		name="allow_attach"
-		text="SETTING_INPUT_ACTION_ALLOW_ATTACH"
-	}
-
-	input_action={
-		name="attach_to_unit"
-		text="SETTING_INPUT_ACTION_ATTACH_TO_UNIT"
-	}
-
-	input_action={
-		name="create_new_unit"
-		text="SETTING_INPUT_ACTION_CREATE_NEW_UNIT"
-	}
-
-	input_action={
-		name="detach_support"
-		text="SETTING_INPUT_ACTION_DETACH_SUPPORT"
-	}
-
-	input_action={
-		name="disband"
-		text="SETTING_INPUT_ACTION_DISBAND"
-	}
-
-	input_action={
-		name="do_shattered_retreat"
-		text="SETTING_INPUT_ACTION_DO_SHATTERED_RETREAT"
-	}
-
-	input_action={
-		name="load_on_fleet"
-		text="SETTING_INPUT_ACTION_EMBARK"
-	}
-
-	input_action={
-		name="recruit_to"
-		text="SETTING_INPUT_ACTION_RECRUIT_TO"
-	}
-
-	input_action={
-		name="select_objective"
-		text="SETTING_INPUT_ACTION_SELECT_OBJECTIVE"
-	}
-	
-	input_action={
-		name="report_issue"
-		text="SETTING_INPUT_ACTION_REPORT_ISSUE"
-		binding={
-			scancode=64
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="toggle_alert_stash"
-		text="SETTING_INPUT_ACTION_TOGGLE_ALERT_STASH"
-		scancode=8
-	}
-
-	input_action={
-		name="mapmode_menu"
-		text="SETTING_INPUT_ACTION_MAPMODE_MENU"
-	}
-
-	input_action={
-		name="mapmode_slot_1"
-		text="mapmode_slot_1_name"
-		binding={
-			scancode=20
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_slot_2"
-		text="mapmode_slot_2_name"
-		binding={
-			scancode=26
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_slot_3"
-		text="mapmode_slot_3_name"
-		binding={
-			scancode=8
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_slot_4"
-		text="mapmode_slot_4_name"
-		binding={
-			scancode=21
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_slot_5"
-		text="mapmode_slot_5_name"
-		binding={
-		scancode=23
-		modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_slot_6"
-		text="mapmode_slot_6_name"
-		binding={
-			scancode=28
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_slot_7"
-		text="mapmode_slot_7_name"
-		binding={
-			scancode=4
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_slot_8"
-		text="mapmode_slot_8_name"
-		binding={
-			scancode=22
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_slot_9"
-		text="mapmode_slot_9_name"
-		binding={
-			scancode=7
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_slot_10"
-		text="mapmode_slot_10_name"
-		binding={
-			scancode=9
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_slot_11"
-		text="mapmode_slot_11_name"
-		binding={
-			scancode=10
-			modifier=ctrl
-		}
-	}
-
-	input_action={
-		name="mapmode_slot_12"
-		text="mapmode_slot_12_name"
-		binding={
-			scancode=11
-			modifier=ctrl
-		}
-	}
+	# CMF: Mod menu shortcut
+	input_action="cmm_open_menu"
 }

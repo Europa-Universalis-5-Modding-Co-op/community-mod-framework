@@ -1,5 +1,5 @@
-@unique_content_width = 105
-@unique_content_height = 55
+﻿@unique_content_width = 105
+@unique_content_height = 52
 @countryinfo_block_height = 47
 
 types MultiplayerLobby
@@ -232,7 +232,6 @@ types MultiplayerLobby
 						onclick = "[LobbyView.SetShowPlayerList( '(bool)no' )]"
 						action_tooltip = {
 							title = "OPEN_TAB"
-							on_action = "[RefreshModsView]"
 						}
 						down = "[Not(LobbyView.ShowPlayerList)]"
 					}
@@ -394,12 +393,24 @@ types MultiplayerLobby
 									size = {35 35}
 									name = "hotjoin_autoaccept"
 									down = "[LobbyView.IsAutoAccept]"
+									tooltipmeta = {
+										title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+									}
 									action_tooltip = {
 										title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+										description = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT_TT"
 										enabled = "[CanEditSettingsAfterHost]"
 										on_action = "[LobbyView.ToggleAutoAccept]"
 									}
-									tooltipwidget = { BasicFunctionalTooltip = {} }
+									tooltipwidget = {
+										using = action_tooltip_pop_out
+										blockoverride "title_icon" {
+											icon = {
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/players.dds"
+											}
+										}
+									}
 									enabled = "[CanEditSettingsAfterHost]"
 								}
 							}
@@ -470,6 +481,20 @@ types MultiplayerLobby
 			}
 
 			expand = {}
+		}
+
+		widget = {
+			parentanchor = right
+			size = { 40 40 }
+	
+			ui_direction_button_holder_right = {}
+	
+			button_close_alt = {
+				blockoverride "close_on_action" {
+					on_action = "[GameLobby.Vars.SetOrToggle('tab','multiplayer')]"
+				}
+				blockoverride "close_inputaction" {}
+			}
 		}
 
 		window_bottom_paper_template = {}
@@ -685,11 +710,23 @@ types MultiplayerLobby
 						}
 
 						button_checkbox = {
+							tooltipmeta = {
+								title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+							}
 							action_tooltip = {
 								title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+								description = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT_TT"
 								on_action = "[GameLobby.ToggleAutoAccept]"
 							}
-							tooltipwidget = { BasicFunctionalTooltip = {} }
+							tooltipwidget = {
+								using = action_tooltip_pop_out
+								blockoverride "title_icon" {
+									icon = {
+										using = tooltip_title_icon_size
+										texture = "gfx/interface/icons/players.dds"
+									}
+								}
+							}
 							down = "[GameLobby.IsAutoAccept]"
 						}
 
@@ -899,12 +936,12 @@ types MultiplayerLobby
 													}
 
 													background = {
-														texture = "gfx/interface/colors/mid_blue.dds"
+														using = color_mid_blue_texture
 														margin = {0 0}
 														alpha = 0.8
 
 														modify_texture = {
-															texture = "gfx/interface/component_masks/mask_fade_horizontal.dds"
+															using = bg_mask_fade_horizontal_texture
 															blend_mode = alphamultiply
 															mirror = horizontal
 														}
@@ -1117,6 +1154,20 @@ types MultiplayerLobby
 			expand = {}
 		}
 
+		widget = {
+			parentanchor = right
+			size = { 40 40 }
+	
+			ui_direction_button_holder_right = {}
+	
+			button_close_alt = {
+				blockoverride "close_on_action" {
+					on_action = "[GameLobby.Vars.SetOrToggle('tab','country_list')]"
+				}
+				blockoverride "close_inputaction" {}
+			}
+		}
+
 		window_bottom_paper_template = {}
 	}
 
@@ -1126,9 +1177,10 @@ types MultiplayerLobby
 		# GO TO MAIN MENU BUTTON
 		button_regular = {
 			size = { 34 34 }
+			enabled = "[Not(IsShowingDialog)]"
 
+			using = snd_UI_backward
 			input_action = "close_window"
-			use_global_input_instance = yes
 			action_tooltip = {
 				click_mode = confirm
 				on_action = "[LobbyView.GoBack]"
@@ -1136,6 +1188,7 @@ types MultiplayerLobby
 				title = "GO_TO_MAIN_MENU"
 				enabled = "[LobbyView.CanGoBack]"
 			}
+
 			tooltipwidget = {
 				ContextualTooltipType = {
 					blockoverride "title_icon" {
@@ -1157,93 +1210,26 @@ types MultiplayerLobby
 					}
 				}
 			}
+
 			button = {
-				using = ui_direction_button_overlay
-				using = back_button_alt_texture
+				alwaystransparent = yes
 				size = {80% 80%}
 				parentanchor = center
 
-				background = {
-					using = bg_button_light_round_texture
-					modify_texture = {
-						using = color_dark_blue_texture
-					}
+				using = bg_button_light_round_texture
+				modify_texture = {
+					using = color_dark_blue_texture
 				}
-
-				input_action = "close_window"
-				use_global_input_instance = yes
-				action_tooltip = {
-					click_mode = confirm
-					on_action = "[LobbyView.GoBack]"
-					on_action = "[HideGameRules]"
-					title = "GO_TO_MAIN_MENU"
-					enabled = "[LobbyView.CanGoBack]"
-				}
-
-				tooltipwidget = {
-					ContextualTooltipType = {
-						blockoverride "title_icon" {
-							icon = {
-								using = tooltip_title_icon_size
-								texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
-							}
-						}
-
-						blockoverride "title_text" {
-							text = "GO_TO_MAIN_MENU"
-						}
-						blockoverride "tooltip_content" {
-							TooltipTextBlock = {
-								blockoverride "text" {
-									text = "GO_TO_MAIN_MENU_desc"
-								}
-							}
-						}
-					}
-				}
-
-				using = snd_UI_backward
 			}
-			# button = {
-			# 	parentanchor = center
-			# 	size = {80% 80%}
-			# 	texture = "gfx/interface/buttons/flats/back_button.dds"
-			# 	texture_density = 2
 
-			# 	modify_texture = {
-			# 		using = overlay_window_texture
-			# 		blend_mode = overlay
-			# 		alpha = 0.7
-			# 	}
-			# 	modify_texture = {
-			# 		using = overlay_stone_texture
-			# 		blend_mode = overlay
-			# 		alpha = 0.8
-			# 	}
+			button = {
+				alwaystransparent = yes
+				size = {80% 80%}
+				parentanchor = center
 
-			# 	modify_texture = {
-			# 		using = color_new_gold_texture
-			# 	}
-
-			# 	glow = {
-			# 		glow_radius = 5
-			# 		color = { 1.0 0.85 0.55 1.0 }
-			# 		alpha = 0.6
-
-			# 		block "glow_visible" {
-			# 			visible = no
-			# 		}
-			# 	}
-
-			# 	background = {
-			# 		using = bg_circle_texture
-			# 		margin = {3 3}
-			# 		modify_texture = {
-			# 			using = color_dark_blue_texture
-			# 			blend_mode = multiply
-			# 		}
-			# 	}
-			# }
+				using = ui_direction_button_overlay
+				using = back_button_alt_texture
+			}
 		}
 
 		# random country
@@ -1445,7 +1431,7 @@ types MultiplayerLobby
 				texture_density = 2
 			}
 			background = {
-				texture = "gfx/interface/component_tiles/square_glow.dds"
+				using = bg_square_glow_texture
 				margin = {5 5}
 				block "header_button_modify_visible" {}
 				modify_texture = {
@@ -1655,7 +1641,7 @@ types MultiplayerLobby
 							item = {
 								widget = {
 									size = { 99% 48 }
-									visible = "[HasActiveMod(CString.GetString)]"
+									visible = "[HasActiveModPath(CString.GetString)]"
 									datacontext = "[AccessActiveMod(CString.GetString)]"
 									mod_ingame_card = {}
 								}
@@ -1732,6 +1718,7 @@ JominiMultiplayerLobby = {
 		visible = "[HasErrors]"
 		parentanchor = bottom|right
 		position = { -500 0 }
+		using = Animation_Show_Hide_UI_Lobby
 	}
 
 	# READY BUTTON
@@ -1900,25 +1887,65 @@ JominiMultiplayerLobby = {
 			widget = {
 				using = layoutpolicy_expanding
 
-				# BACK TO SINGLE PLAYER BUTTON
-				button_regular = {
-					size = { 210 100% }
-					position = { 15 0 }
-					visible_at_creation = no
-					visible = "[Or(GameIsMultiplayer, LobbyView.HasServerInfo)]"
+				hbox = {
+					# BACK TO SINGLE PLAYER BUTTON
+					button_regular = {
+						size = { 34 34 }
+						visible_at_creation = no
+						visible = "[Or(GameIsMultiplayer, LobbyView.HasServerInfo)]"
 
-					fontsize = 15
-					text = "BECOME_SINGLE_PLAYER"
+						fontsize = 15
 
-					tooltipwidget = {BasicFunctionalTooltip = {}}
+						tooltipwidget = { BasicFunctionalTooltip = {}}
 
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-						title = "BECOME_SINGLE_PLAYER_TT"
-						on_action = "[BecomeSinglePlayer]"
-						on_action = "[UnselectLobbyCountry]"
+						action_tooltip = {
+							click_type = left
+							click_mode = confirm
+							title = "BECOME_SINGLE_PLAYER_TT"
+							on_action = "[BecomeSinglePlayer]"
+							on_action = "[UnselectLobbyCountry]"
+						}
+
+						icon = {
+							texture = "gfx/interface/icons/flat_icons/common_language_old.dds"
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.8
+								blend_mode = overlay
+							}
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.6
+							}
+							texture_density = 2
+							size = { 20 20 }
+							parentanchor = center
+			
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = no }
+						}
+
+						icon = {
+							texture = "gfx/interface/icons/flat_icons/disable_icon.dds"
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.8
+								blend_mode = overlay
+							}
+							modify_texture = {
+								using = color_red_texture
+								alpha = 0.8
+							}
+							texture_density = 2
+							size = { 30 30 }
+							parentanchor = center
+			
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = no }
+						}
 					}
+
+					expand = {}
 				}
 
 				hbox = {
@@ -1957,188 +1984,65 @@ JominiMultiplayerLobby = {
 					expand = {}
 				}
 
+				expand = {}
+
 				hbox = {
 					visible_at_creation = no
 					visible = "[GameIsMultiplayer]"
 					spacing = 10
-					margin = {10 0}
 
 					expand = {}
 
 					text_single = {
-						layoutpolicy_vertical = expanding
-						maximumsize = {200 -1}
-
+						autoresize = yes
 						using = Font_Type_Headers
 						using = Font_Size_Medium
 						default_format = "#color_white"
 						text = "LOBBY_MULTIPLAYER_GAME"
-
 					}
 
-					# header_button_left = {
-					# 	size = { 25 25 }
+					button_regular = {
+						size = { 34 34 }
 
-					# 	enabled = "[TransferUnit.CanTransfer]"
-					# 	action_tooltip = {
-					# 		click_type = left
-					# 		click_mode = single
-					# 		enabled = "[TransferUnit.CanTransfer]"
-					# 		title = "[TransferUnit.GetTransferInfo]"
-					# 		on_action = "[TransferUnit.Transfer]"
-					# 	}
+						action_tooltip = {
+							title = "[GetMultiplayerChat.GetTooltip]"
+							on_action = "[ToggleMultiplayerChat]"
+						}
+						tooltipwidget = { BasicFunctionalTooltip = {} }
 
-					# 	tooltipwidget = {
-					# 		BasicFunctionalTooltip = {}
-					# 	}
-
-					# 	onclick = "[ToggleMultiplayerChat]"
-					# 	tooltipwidget = {
-					# 		LeftClickButtonTooltip = {
-					# 			blockoverride "onclick_text" { text = "[GetMultiplayerChat.GetTooltip]" }
-					# 		}
-					# 	}
-
-					# 	blockoverride "button_icon_stretch_sprite" {}
-					# 	blockoverride "header_button_frame_inner" {visible = no}
-					# 	blockoverride "header_button_icon_size" { size = { 24 24 } }
-					# 	blockoverride "header_button_text_layout" {}
-					# 	blockoverride "icon_texture" {
-					# 		texture = "gfx/interface/icons/flat_icons/dialect.dds"
-					# 		using = button_panel_tab_icon_effect
-					# 		blockoverride "icon_effect_visible" {visible = "[IsMultiplayerChatShown]"}
-					# 	}
-					# 	piechart = {
-					# 		using = bg_circle
-					# 		parentanchor = top|right
-					# 		visible = "[MPChatNewMessage]"
-					# 		size = { 10 10 }
-
-					# 		pieslice_no_highlight = {
-					# 			alwaystransparent = yes
-					# 			texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
-					# 			value = 100
-					# 			color = { 1 1 1 1 }
-					# 		}
-					# 	}
-					# }
-
-					widget = {
-						size = { 30 30 }
-
-						header_button_left = {
-							size = { 100% 100% }
+						icon = {
+							texture = "gfx/interface/icons/flat_icons/dialect.dds"
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.8
+								blend_mode = overlay
+							}
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.6
+							}
+							texture_density = 2
+							size = { 20 20 }
 							parentanchor = center
-							position = { 0 -1 }
+			
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = no }
+						}
 
-							action_tooltip = {
-								title = "[GetMultiplayerChat.GetTooltip]"
-								on_action = "[ToggleMultiplayerChat]"
-							}
-							tooltipwidget = { BasicFunctionalTooltip = {} }
+						piechart = {
+							ignore_layout = yes
+							using = bg_circle
+							parentanchor = top|right
+							visible = "[MPChatNewMessage]"
+							size = { 10 10 }
 
-							blockoverride "icon_overlay" {
-								modify_texture = {
-									visible = "[IsMultiplayerChatShown]"
-									using = color_bone_texture
-									alpha = 0.3
-								}
-
-								glow = {
-									visible = "[IsMultiplayerChatShown]"
-									glow_radius = 3
-									color = { 0.80 0.68 0.39 1.0 }
-									alpha = 0.6
-								}
-
-							}
-							blockoverride "button_icon_stretch_sprite" {}
-							blockoverride "header_button_frame_inner" {visible = no}
-							blockoverride "header_button_icon_size" { size = { 24 24 } }
-							blockoverride "header_button_text_layout" {
-
-							}
-							blockoverride "icon_texture" {
-								texture = "gfx/interface/icons/flat_icons/dialect.dds"
-							}
-							blockoverride "header_button_widget_extra" {
-								piechart = {
-									ignore_layout = yes
-									using = bg_circle
-									parentanchor = top|right
-									visible = "[MPChatNewMessage]"
-									size = { 10 10 }
-
-									pieslice_no_highlight = {
-										alwaystransparent = yes
-										texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
-										value = 100
-										color = { 1 1 1 1 }
-									}
-								}
+							pieslice_no_highlight = {
+								alwaystransparent = yes
+								texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+								value = 100
+								color = { 1 1 1 1 }
 							}
 						}
-						# card_header_button_01 = {
-						# 	size = { 100% 100% }
-						# 	parentanchor = center
-						# 	position = { 0 -1 }
-
-						# 	using = bg_card_header_01
-						# 	blockoverride "bg_card_header_01_bg" {
-						# 		background = {
-						# 			texture = "gfx/interface/component_tiles/square_tile.dds"
-						# 			texture_density = 2
-						# 			spriteType = corneredtiled
-						# 			spriteborder = { 10 10 }
-
-						# 			modify_texture = {
-						# 				using = color_greyish_texture
-						# 				blend_mode = multiply
-						# 			}
-
-						# 			modify_texture = {
-						# 				texture = "gfx/interface/cards/headers/header_pattern_07.dds"
-						# 				alpha = 0.7
-						# 				texture_density = 2
-						# 				spriteType = corneredtiled
-						# 				blend_mode = overlay
-						# 			}
-						# 		}
-						# 	}
-
-						# 	onclick = "[ToggleMultiplayerChat]"
-						# 	tooltipwidget = {
-						# 		LeftClickButtonTooltip = {
-						# 			blockoverride "onclick_text" { text = "[GetMultiplayerChat.GetTooltip]" }
-						# 		}
-						# 	}
-						# 	icon = {
-						# 		parentanchor = center
-						# 		size = { 60% 60% }
-						# 		texture = "gfx/interface/icons/flat_icons/dialect.dds"
-
-						# 		modify_texture = {
-						# 			using = color_new_gold_texture
-						# 			blend_mode = multiply
-						# 			alpha = 0.1
-						# 		}
-						# 		using = button_panel_tab_icon_effect
-						# 		blockoverride "icon_effect_visible" {visible = "[IsMultiplayerChatShown]"}
-						# 	}
-						# 	piechart = {
-						# 		using = bg_circle
-						# 		parentanchor = top|right
-						# 		visible = "[MPChatNewMessage]"
-						# 		size = { 10 10 }
-
-						# 		pieslice_no_highlight = {
-						# 			alwaystransparent = yes
-						# 			texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
-						# 			value = 100
-						# 			color = { 1 1 1 1 }
-						# 		}
-						# 	}
-						# }
 					}
 				}
 			}
@@ -2253,42 +2157,6 @@ JominiMultiplayerLobby = {
 		}
 	}
 
-	widget = {
-		visible = "[GameLobby.Vars.Exists('tab')]"
-		parentanchor = top|right
-		position = { 0 42 }
-		size = { 40 40 }
-
-		ui_direction_button_holder_right = {}
-
-		close_right_tabs = {
-			visible = "[GameLobby.Vars.HasValue('tab', 'GameRules')]"
-			blockoverride "close_on_action" {
-				on_action = "[HideGameRules]"
-				on_action = "[GameLobby.Vars.SetOrToggle('tab','GameRules')]"
-			}
-		}
-		close_right_tabs = {
-			visible = "[GameLobby.Vars.HasValue('tab', 'country_list')]"
-			blockoverride "close_on_action" {
-				on_action = "[HideModsView]"
-				on_action = "[GameLobby.Vars.SetOrToggle('tab','country_list')]"
-			}
-		}
-		close_right_tabs = {
-			visible = "[GameLobby.Vars.HasValue('tab', 'DLC')]"
-			blockoverride "close_on_action" {
-				on_action = "[HideModsView]"
-				on_action = "[GameLobby.Vars.SetOrToggle('tab','DLC')]"
-			}
-		}
-		close_right_tabs = {
-			visible = "[GameLobby.Vars.HasValue('tab', 'multiplayer')]"
-			blockoverride "close_on_action" {
-				on_action = "[GameLobby.Vars.SetOrToggle('tab','multiplayer')]"
-			}
-		}
-	}
 	blockoverride "left_panel_content" {
 		using = layoutpolicy_expanding
 		margin_top = 40
@@ -2309,6 +2177,7 @@ JominiMultiplayerLobby = {
 			parentanchor = right
 			widgetanchor = right
 			filter_mouse = all
+			allow_outside = yes
 
 			@right_panel_width = 430
 			@right_panel_x = 0
@@ -2335,6 +2204,16 @@ JominiMultiplayerLobby = {
 			vbox = {
 				margin_top = 40
 				LobbyViewGameInfoPanel = {}
+				allow_outside = yes
+
+				vbox = {
+					using = layoutpolicy_expanding
+					using = bg_lateralview
+					visible_at_creation = no
+					visible = "[GameLobby.Vars.HasValue( 'tab', 'game_rules' )]"
+					allow_outside = yes
+					GameRulesPanel = {}
+				}
 
 				vbox = {
 					using = layoutpolicy_expanding
@@ -2828,10 +2707,7 @@ JominiMultiplayerLobby = {
 		background = {
 			margin_left = 5
 			margin_top = 0
-			texture = "gfx/editor_gui/editor_field.dds"
-			spriteType = CorneredStretched
-			spriteborder = { 4 4 }
-			shaderfile = "gfx/FX/pdxgui_default.shader"
+			using = bg_editor_field_texture
 		}
 	}
 
@@ -3300,68 +3176,67 @@ basic_dialog_phoenix = {
 	blockoverride "content_outside"  {
 		vbox = {
 			margin = { 10 15 }
+			margin_top = 20
 			spacing = 10
 
 			widget = {
-				size = { 596 235 }
-				using = bg_age_event_frame
-
+				size = { 596 243 }
+				
 				background = {
 					texture = "[GameDLC.GetTooltipBackground]"
 					texture_density = 2
 					fittype = centercrop
 				}
-			}
 
-			hbox = {
-				layoutpolicy_horizontal = expanding
-				using = bg_text_mask_container_dark_blue
-				margin = { 10 7 }
-
-				text_multi = {
-					layoutpolicy_horizontal = expanding
-					text = "[GameDLC.GetTooltipDesc]"
-					align = left|nobaseline
-					default_format = "#color_light_gray"
-					fontsize = 14
-					autoresize = yes
+				widget = {
+					size = {100% 100%}
+					using = bg_age_event_frame
+					ignore_layout = yes
 				}
 			}
-			hbox = {
+
+			vbox = {
 				layoutpolicy_horizontal = expanding
-				margin = { 4 4 }
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					using = bg_text_mask_container_dark_blue
+					margin = { 10 7 }
+
+					text_multi = {
+						layoutpolicy_horizontal = expanding
+						text = "[GameDLC.GetTooltipDesc]"
+						align = left|nobaseline
+						default_format = "#color_light_gray"
+						fontsize = 14
+						autoresize = yes
+					}
+				}
+
 				hbox = {
 					using = layoutpolicy_expanding
-					margin = { 12 0}
-					margin_top = -15
+					margin = { 10 0 }
 
-					using = bg_corner_flavor
-					blockoverride "corner_flavor_texture" {
-					}
-					blockoverride "corner_flavor_color" {
-						modify_texture = {
-							using = color_bg_blue_texture
-							blend_mode = multiply
-						}
-					}
-					widget = {
-						size = { 43 53  }
-						background = {
-							texture = "gfx/interface/component_decoration/fate_of_the_phoenix/banner_arrow.dds"
-							texture_density = 2
-						}
-
-						hbox = {
-							margin_bottom = 12
-							datamodel = "[GameLobbyDLCView.GetRelatedCountries]"
-							item = {
-								country_flag_small = {}
+					hbox = {
+						datamodel = "[GameLobbyDLCView.GetRelatedCountries]"
+						item = {
+							icon = {
+								texture = "gfx/interface/component_decoration/fate_of_the_phoenix/banner_arrow.dds"
+								texture_density = 2
+								
+								country_flag_small = {
+									parentanchor = hcenter
+									position = { 0 5 }
+								}
 							}
 						}
 					}
+					
 					expand = {}
 				}
 			}
+			
+			
 
 			fixedgridbox = {
 				datamodel = "[DataModelFirst(GameLobbyDLCView.GetUniqueContentItemShowcase, '(int32)8')]"
@@ -3394,7 +3269,12 @@ basic_dialog_phoenix = {
 				flowcontainer = {
 					direction = vertical
 					datamodel = "[DataModelRepeatedItem(
-					Add_int32(Divide_int32(GetDataModelSize(GameLobbyDLCView.GetUniqueContentTypeCategories),'(int32)5'), '(int32)1')
+					Add_int32(Divide_int32(Add_int32(GetDataModelSize(GameLobbyDLCView.GetUniqueContentTypeCategories),
+					Add_int32(Add_int32(Add_int32('(int32)1', Select_int32(GreaterThan_int32(GameLobbyDLCView.GetUniqueContentDescription.GetPortraitAssetsAmount,'(int32)0'),'(int32)1','(int32)0')),
+					Select_int32(GreaterThan_int32(GameLobbyDLCView.GetUniqueContentDescription.GetLoadingScreensAmount,'(int32)0'),'(int32)1','(int32)0')),
+					Add_int32(Select_int32(GreaterThan_int32(GameLobbyDLCView.GetUniqueContentDescription.GetMusicTracksAmount,'(int32)0'),'(int32)1','(int32)0'),
+					Select_int32(GreaterThan_int32(GameLobbyDLCView.GetUniqueContentDescription.GetUnitIllustrationsAmount,'(int32)0'),'(int32)1','(int32)0')))
+					),'(int32)5'), '(int32)1')
 					)]"
 
 					item = {
@@ -3417,6 +3297,189 @@ basic_dialog_phoenix = {
 				flowcontainer = {
 					wrap_count = 5
 					ignoreinvisible = yes
+					righttoleft = yes
+
+					unique_content_type_category_item = {
+						datacontext = "[GameLobbyDLCView.GetUniqueContentDescription]"
+						visible = "[GreaterThan_int32(UniqueContentDescription.GetUnitIllustrationsAmount, '(int32)0')]"
+
+						blockoverride "unique_content_type_category_icon" {
+							texture = "gfx/interface/icons/flat_icons/tabicons/military.dds"
+						}
+						blockoverride "unique_content_type_category_text" {
+							text = "[UniqueContentDescription.GetUnitIllustrationsAmount]"
+						}
+						blockoverride "unique_content_type_category_tooltip" {
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_text" {
+										text = "UNIT_ILLUSTRATIONS_CONTENT_CATEGORY"
+									}
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/flat_icons/tabicons/military.dds"
+										}
+									}
+									blockoverride "concept_link" {
+										visible = no
+									}
+									blockoverride "tooltip_content" {
+										TooltipListBase = {
+											TooltipScrolledContentSection = {
+												blockoverride "section_content" {
+													flowcontainer = {
+														margin = { 10 10 }
+														spacing = 10
+														wrap_count = 3
+														datamodel = "[UniqueContentDescription.GetUnitIllustrationItems]"
+														item = {
+															unit_illustration_item = {}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					unique_content_type_category_item = {
+						datacontext = "[GameLobbyDLCView.GetUniqueContentDescription]"
+						visible = "[GreaterThan_int32(UniqueContentDescription.GetMusicTracksAmount, '(int32)0')]"
+
+						blockoverride "unique_content_type_category_icon" {
+							texture = "gfx/interface/icons/flat_icons/tabicons/music.dds"
+						}
+						blockoverride "unique_content_type_category_text" {
+							text = "[UniqueContentDescription.GetMusicTracksAmount]"
+						}
+						blockoverride "unique_content_type_category_tooltip" {
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_text" {
+										text = "MUSIC_CONTENT_CATEGORY"
+									}
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/flat_icons/tabicons/music.dds"
+										}
+									}
+									blockoverride "concept_link" {
+										visible = no
+									}
+									blockoverride "tooltip_content" {
+										TooltipListBase = {
+											TooltipScrolledContentSection = {
+												blockoverride "section_content" {
+													margin = { 5 5 }
+													datamodel = "[UniqueContentDescription.GetMusicTrackItems]"
+													item = {
+														music_player_track_item = {}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					unique_content_type_category_item = {
+						datacontext = "[GameLobbyDLCView.GetUniqueContentDescription]"
+						visible = "[GreaterThan_int32(UniqueContentDescription.GetLoadingScreensAmount, '(int32)0')]"
+
+						blockoverride "unique_content_type_category_icon" {
+							texture = "gfx/interface/icons/flat_icons/art_works.dds"
+						}
+						blockoverride "unique_content_type_category_text" {
+							text = "[UniqueContentDescription.GetLoadingScreensAmount]"
+						}
+						blockoverride "unique_content_type_category_tooltip" {
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_text" {
+										text = "LOADING_SCREENS_CONTENT_CATEGORY"
+									}
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/flat_icons/art_works.dds"
+										}
+									}
+									blockoverride "concept_link" {
+										visible = no
+									}
+									blockoverride "tooltip_content" {
+										TooltipListBase = {
+											TooltipScrolledContentSection = {
+												blockoverride "section_content" {
+													margin_right = 10
+													flowcontainer = {
+														spacing = 5
+														margin = { 5 5 }
+														wrap_count = 2
+														datamodel = "[UniqueContentDescription.GetLoadingScreenItems]"
+														item = {
+															loading_screen_item = {}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					unique_content_type_category_item = {
+						datacontext = "[GameLobbyDLCView.GetUniqueContentDescription]"
+						visible = "[GreaterThan_int32(UniqueContentDescription.GetPortraitAssetsAmount, '(int32)0')]"
+
+						blockoverride "unique_content_type_category_icon" {
+							texture = "gfx/interface/icons/flat_icons/geography/characters.dds"
+						}
+						blockoverride "unique_content_type_category_text" {
+							text = "[UniqueContentDescription.GetPortraitAssetsAmount]"
+						}
+						blockoverride "unique_content_type_category_tooltip" {
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_text" {
+										text = "PORTRAIT_ASSETS_CONTENT_CATEGORY"
+									}
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/flat_icons/geography/characters.dds"
+										}
+									}
+									blockoverride "concept_link" {
+										visible = no
+									}
+									blockoverride "tooltip_content" {
+										TooltipScrolledContentSection = {
+											blockoverride "section_content" {
+												margin_right = 10
+												flowcontainer = {
+													wrap_count = 4
+													datamodel = "[UniqueContentDescription.GetPortraitAssetItems]"
+													item = {
+														portrait_asset_item = {}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 
 					unique_content_type_category_item = {
 						datacontext = "[GameLobbyDLCView.GetUniqueContentDescription]"
@@ -3596,4 +3659,5 @@ basic_dialog_phoenix = {
 			blockoverride "close_on_action" { on_action = "[GameLobbyDLCView.Close]" }
 		}
 	}
+
 }

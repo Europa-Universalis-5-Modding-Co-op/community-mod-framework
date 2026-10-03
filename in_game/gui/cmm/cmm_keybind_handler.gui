@@ -5,7 +5,6 @@
 
 	button = {
 		visible = "[And(CMFHasPlayerCountry, Or(Not(GameIsMultiplayer), IsHost))]"
-		use_global_input_instance = yes
 		input_action = "cmm_open_menu"
 		on_input_action_shortcut = "[GetScriptedGui('CMM_SetHostAndRegisterCoreMod').Execute(GuiScope.SetRoot(CMMHomeScope).End)]"
 		on_input_action_shortcut = "[GetVariableSystem.Clear('cmm_mod_search_text')]"
@@ -17,7 +16,6 @@
 
 	button = {
 		visible = "[Or(Not(CMFHasPlayerCountry), And(GameIsMultiplayer, Not(IsHost)))]"
-		use_global_input_instance = yes
 		input_action = "cmm_open_menu"
 		on_input_action_shortcut = "[GetScriptedGui('CMM_RegisterCoreMod').Execute(GuiScope.SetRoot(CMMHomeScope).End)]"
 		on_input_action_shortcut = "[GetVariableSystem.Clear('cmm_mod_search_text')]"

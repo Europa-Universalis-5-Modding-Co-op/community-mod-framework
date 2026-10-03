@@ -66,7 +66,7 @@ VANILLA_FILES = [
 	"map_markers.gui",
 	"multiplayer_chat.gui",
 	"multiplayer_lobby.gui",
-	"organization/catholic_church.gui",
+	"panels/organization/catholic_church.gui",
 	"outliner_entries.gui",
 	"production_lateralview.gui",
 	"recruit_location_lateralview.gui",

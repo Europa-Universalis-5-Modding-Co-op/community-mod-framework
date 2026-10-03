@@ -16,7 +16,7 @@ end_of_line = crlf
 charset = utf-8-bom
 
 # The engine fails to parse a game-start setup file that carries a BOM.
-[main_menu/setup/start/*.txt]
+[main_menu/setup/1337/*.txt]
 charset = utf-8
 
 [*.yml]

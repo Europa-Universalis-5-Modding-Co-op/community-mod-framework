@@ -2283,7 +2283,7 @@ et_run_script = {
 		}
 
 		# -- Tests 185-187: an order over a two-hop land path ----
-		# coruna and ferrol are both Castile's at 1337 (main_menu/setup/start/10_countries.txt,
+		# coruna and ferrol are both Castile's at 1337 (main_menu/setup/1337/10_countries.txt:14537,
 		# the CAS own_control_core block) and carry a rias_altas strait entry
 		# (in_game/map_data/adjacencies.csv), with no road between them at start.
 		#

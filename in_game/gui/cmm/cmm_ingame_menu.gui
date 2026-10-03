@@ -7,13 +7,12 @@
 		using = FrontEndMiddleSectionButton
 		name = "resume_button"
 		text = "RESUME"
-		use_global_input_instance = yes
 		action_tooltip = {
 			title = "PAUSE_MENU_RESUME_TOOLTIP"
 			on_action = "[PauseMenu.Resume]"
 		}
 		tooltipwidget = { BasicFunctionalTooltip = {} }
-		enabled = yes
+		enabled = "[Not(IsShowingDialog)]"
 		input_action = "close_window"
 	}
 
@@ -135,7 +134,7 @@
 		tooltipwidget = { BasicFunctionalTooltip = {} }
 	}
 
-	# CMF: CMM open menu button
+	# CMF: Mod menu button
 	button_wax = {
 		blockoverride "button_texture" {
 			texture = "gfx/interface/buttons/button_wax_blue.dds"
@@ -153,7 +152,7 @@
 		tooltipwidget = { LeftClickButtonTooltip = { blockoverride "onclick_text" { text = "CMM_PAUSE_MENU_BUTTON_TOOLTIP" } } }
 	}
 
-	# CMF: CMM open menu button, read-only variant
+	# CMF: Mod menu button, read-only variant
 	button_wax = {
 		blockoverride "button_texture" {
 			texture = "gfx/interface/buttons/button_wax_blue.dds"
