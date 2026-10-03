@@ -14,68 +14,67 @@ basic_dialog_phoenix = {
 	blockoverride "content_outside"  {
 		vbox = {
 			margin = { 10 15 }
+			margin_top = 20
 			spacing = 10
 
 			widget = {
-				size = { 596 235 }
-				using = bg_age_event_frame
-
+				size = { 596 243 }
+				
 				background = {
 					texture = "[GameDLC.GetTooltipBackground]"
 					texture_density = 2
 					fittype = centercrop
 				}
-			}
-			
-			hbox = {
-				layoutpolicy_horizontal = expanding
-				using = bg_text_mask_container_dark_blue
-				margin = { 10 7 }
 
-				text_multi = {
-					layoutpolicy_horizontal = expanding
-					text = "[GameDLC.GetTooltipDesc]"
-					align = left|nobaseline
-					default_format = "#color_light_gray"
-					fontsize = 14
-					autoresize = yes
+				widget = {
+					size = {100% 100%}
+					using = bg_age_event_frame
+					ignore_layout = yes
 				}
 			}
-			hbox = {
-				layoutpolicy_horizontal = expanding	
-				margin = { 4 4 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					using = bg_text_mask_container_dark_blue
+					margin = { 10 7 }
+
+					text_multi = {
+						layoutpolicy_horizontal = expanding
+						text = "[GameDLC.GetTooltipDesc]"
+						align = left|nobaseline
+						default_format = "#color_light_gray"
+						fontsize = 14
+						autoresize = yes
+					}
+				}
+
 				hbox = {
 					using = layoutpolicy_expanding
-					margin = { 12 0}
-					margin_top = -15
+					margin = { 10 0 }
 
-					using = bg_corner_flavor
-					blockoverride "corner_flavor_texture" {
-					}
-					blockoverride "corner_flavor_color" {
-						modify_texture = {
-							using = color_bg_blue_texture
-							blend_mode = multiply
-						}
-					}
-					widget = {
-						size = { 43 53  }
-						background = {
-							texture = "gfx/interface/component_decoration/fate_of_the_phoenix/banner_arrow.dds"
-							texture_density = 2
-						}	
-						
-						hbox = {
-							margin_bottom = 12
-							datamodel = "[GameLobbyDLCView.GetRelatedCountries]"
-							item = {
-								country_flag_small = {}
+					hbox = {
+						datamodel = "[GameLobbyDLCView.GetRelatedCountries]"
+						item = {
+							icon = {
+								texture = "gfx/interface/component_decoration/fate_of_the_phoenix/banner_arrow.dds"
+								texture_density = 2
+								
+								country_flag_small = {
+									parentanchor = hcenter
+									position = { 0 5 }
+								}
 							}
 						}
 					}
+					
 					expand = {}
 				}
 			}
+			
+			
 
 			fixedgridbox = {
 				datamodel = "[DataModelFirst(GameLobbyDLCView.GetUniqueContentItemShowcase, '(int32)8')]"
@@ -108,7 +107,12 @@ basic_dialog_phoenix = {
 				flowcontainer = {
 					direction = vertical
 					datamodel = "[DataModelRepeatedItem(
-					Add_int32(Divide_int32(GetDataModelSize(GameLobbyDLCView.GetUniqueContentTypeCategories),'(int32)5'), '(int32)1')
+					Add_int32(Divide_int32(Add_int32(GetDataModelSize(GameLobbyDLCView.GetUniqueContentTypeCategories),
+					Add_int32(Add_int32(Add_int32('(int32)1', Select_int32(GreaterThan_int32(GameLobbyDLCView.GetUniqueContentDescription.GetPortraitAssetsAmount,'(int32)0'),'(int32)1','(int32)0')),
+					Select_int32(GreaterThan_int32(GameLobbyDLCView.GetUniqueContentDescription.GetLoadingScreensAmount,'(int32)0'),'(int32)1','(int32)0')),
+					Add_int32(Select_int32(GreaterThan_int32(GameLobbyDLCView.GetUniqueContentDescription.GetMusicTracksAmount,'(int32)0'),'(int32)1','(int32)0'),
+					Select_int32(GreaterThan_int32(GameLobbyDLCView.GetUniqueContentDescription.GetUnitIllustrationsAmount,'(int32)0'),'(int32)1','(int32)0')))
+					),'(int32)5'), '(int32)1')
 					)]"
 					
 					item = {
@@ -131,7 +135,190 @@ basic_dialog_phoenix = {
 				flowcontainer = {
 					wrap_count = 5
 					ignoreinvisible = yes
-					
+					righttoleft = yes
+
+					unique_content_type_category_item = {
+						datacontext = "[GameLobbyDLCView.GetUniqueContentDescription]"
+						visible = "[GreaterThan_int32(UniqueContentDescription.GetUnitIllustrationsAmount, '(int32)0')]"
+
+						blockoverride "unique_content_type_category_icon" {
+							texture = "gfx/interface/icons/flat_icons/tabicons/military.dds"
+						}
+						blockoverride "unique_content_type_category_text" {
+							text = "[UniqueContentDescription.GetUnitIllustrationsAmount]"
+						}
+						blockoverride "unique_content_type_category_tooltip" {
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_text" {
+										text = "UNIT_ILLUSTRATIONS_CONTENT_CATEGORY"
+									}
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/flat_icons/tabicons/military.dds"
+										}
+									}
+									blockoverride "concept_link" {
+										visible = no
+									}
+									blockoverride "tooltip_content" {
+										TooltipListBase = {
+											TooltipScrolledContentSection = {
+												blockoverride "section_content" {
+													flowcontainer = {
+														margin = { 10 10 }
+														spacing = 10
+														wrap_count = 3
+														datamodel = "[UniqueContentDescription.GetUnitIllustrationItems]"
+														item = {
+															unit_illustration_item = {}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					unique_content_type_category_item = {
+						datacontext = "[GameLobbyDLCView.GetUniqueContentDescription]"
+						visible = "[GreaterThan_int32(UniqueContentDescription.GetMusicTracksAmount, '(int32)0')]"
+
+						blockoverride "unique_content_type_category_icon" {
+							texture = "gfx/interface/icons/flat_icons/tabicons/music.dds"
+						}
+						blockoverride "unique_content_type_category_text" {
+							text = "[UniqueContentDescription.GetMusicTracksAmount]"
+						}
+						blockoverride "unique_content_type_category_tooltip" {
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_text" {
+										text = "MUSIC_CONTENT_CATEGORY"
+									}
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/flat_icons/tabicons/music.dds"
+										}
+									}
+									blockoverride "concept_link" {
+										visible = no
+									}
+									blockoverride "tooltip_content" {
+										TooltipListBase = {
+											TooltipScrolledContentSection = {
+												blockoverride "section_content" {
+													margin = { 5 5 }
+													datamodel = "[UniqueContentDescription.GetMusicTrackItems]"
+													item = {
+														music_player_track_item = {}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					unique_content_type_category_item = {
+						datacontext = "[GameLobbyDLCView.GetUniqueContentDescription]"
+						visible = "[GreaterThan_int32(UniqueContentDescription.GetLoadingScreensAmount, '(int32)0')]"
+
+						blockoverride "unique_content_type_category_icon" {
+							texture = "gfx/interface/icons/flat_icons/art_works.dds"
+						}
+						blockoverride "unique_content_type_category_text" {
+							text = "[UniqueContentDescription.GetLoadingScreensAmount]"
+						}
+						blockoverride "unique_content_type_category_tooltip" {
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_text" {
+										text = "LOADING_SCREENS_CONTENT_CATEGORY"
+									}
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/flat_icons/art_works.dds"
+										}
+									}
+									blockoverride "concept_link" {
+										visible = no
+									}
+									blockoverride "tooltip_content" {
+										TooltipListBase = {
+											TooltipScrolledContentSection = {
+												blockoverride "section_content" {
+													margin_right = 10
+													flowcontainer = {
+														spacing = 5
+														margin = { 5 5 }
+														wrap_count = 2
+														datamodel = "[UniqueContentDescription.GetLoadingScreenItems]"
+														item = {
+															loading_screen_item = {}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					unique_content_type_category_item = {
+						datacontext = "[GameLobbyDLCView.GetUniqueContentDescription]"
+						visible = "[GreaterThan_int32(UniqueContentDescription.GetPortraitAssetsAmount, '(int32)0')]"
+
+						blockoverride "unique_content_type_category_icon" {
+							texture = "gfx/interface/icons/flat_icons/geography/characters.dds"
+						}
+						blockoverride "unique_content_type_category_text" {
+							text = "[UniqueContentDescription.GetPortraitAssetsAmount]"
+						}
+						blockoverride "unique_content_type_category_tooltip" {
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_text" {
+										text = "PORTRAIT_ASSETS_CONTENT_CATEGORY"
+									}
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "gfx/interface/icons/flat_icons/geography/characters.dds"
+										}
+									}
+									blockoverride "concept_link" {
+										visible = no
+									}
+									blockoverride "tooltip_content" {
+										TooltipScrolledContentSection = {
+											blockoverride "section_content" {
+												margin_right = 10
+												flowcontainer = {
+													wrap_count = 4
+													datamodel = "[UniqueContentDescription.GetPortraitAssetItems]"
+													item = {
+														portrait_asset_item = {}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
 					unique_content_type_category_item = {
 						datacontext = "[GameLobbyDLCView.GetUniqueContentDescription]"
 
@@ -310,4 +497,5 @@ basic_dialog_phoenix = {
 			blockoverride "close_on_action" { on_action = "[GameLobbyDLCView.Close]" }
 		}
 	}
+
 }

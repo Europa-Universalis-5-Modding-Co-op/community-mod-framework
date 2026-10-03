@@ -229,7 +229,6 @@
 						onclick = "[LobbyView.SetShowPlayerList( '(bool)no' )]"
 						action_tooltip = {
 							title = "OPEN_TAB"
-							on_action = "[RefreshModsView]"
 						}
 						down = "[Not(LobbyView.ShowPlayerList)]"
 					}
@@ -391,12 +390,24 @@
 									size = {35 35}
 									name = "hotjoin_autoaccept"
 									down = "[LobbyView.IsAutoAccept]"
+									tooltipmeta = {
+										title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+									}
 									action_tooltip = {
 										title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+										description = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT_TT"
 										enabled = "[CanEditSettingsAfterHost]"
 										on_action = "[LobbyView.ToggleAutoAccept]"
 									}
-									tooltipwidget = { BasicFunctionalTooltip = {} }
+									tooltipwidget = {
+										using = action_tooltip_pop_out
+										blockoverride "title_icon" {
+											icon = {
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/players.dds"
+											}
+										}
+									}
 									enabled = "[CanEditSettingsAfterHost]"
 								}
 							}
@@ -466,6 +477,20 @@
 			}
 
 			expand = {}
+		}
+
+		widget = {
+			parentanchor = right
+			size = { 40 40 }
+	
+			ui_direction_button_holder_right = {}
+	
+			button_close_alt = {
+				blockoverride "close_on_action" {
+					on_action = "[GameLobby.Vars.SetOrToggle('tab','multiplayer')]"
+				}
+				blockoverride "close_inputaction" {}
+			}
 		}
 
 		window_bottom_paper_template = {}

@@ -154,7 +154,7 @@
 							item = {
 								widget = {
 									size = { 99% 48 }
-									visible = "[HasActiveMod(CString.GetString)]"
+									visible = "[HasActiveModPath(CString.GetString)]"
 									datacontext = "[AccessActiveMod(CString.GetString)]"
 									mod_ingame_card = {}
 								}

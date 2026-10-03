@@ -211,11 +211,23 @@
 						}
 
 						button_checkbox = {
+							tooltipmeta = {
+								title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+							}
 							action_tooltip = {
 								title = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT"
+								description = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT_TT"
 								on_action = "[GameLobby.ToggleAutoAccept]"
 							}
-							tooltipwidget = { BasicFunctionalTooltip = {} }
+							tooltipwidget = {
+								using = action_tooltip_pop_out
+								blockoverride "title_icon" {
+									icon = {
+										using = tooltip_title_icon_size
+										texture = "gfx/interface/icons/players.dds"
+									}
+								}
+							}
 							down = "[GameLobby.IsAutoAccept]"
 						}
 

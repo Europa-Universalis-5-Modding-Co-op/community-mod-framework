@@ -52,6 +52,7 @@ JominiMultiplayerLobby = {
 		visible = "[HasErrors]"
 		parentanchor = bottom|right
 		position = { -500 0 }
+		using = Animation_Show_Hide_UI_Lobby
 	}
 
 	# READY BUTTON
@@ -220,25 +221,65 @@ JominiMultiplayerLobby = {
 			widget = {
 				using = layoutpolicy_expanding
 
-				# BACK TO SINGLE PLAYER BUTTON
-				button_regular = {
-					size = { 210 100% }
-					position = { 15 0 }
-					visible_at_creation = no
-					visible = "[Or(GameIsMultiplayer, LobbyView.HasServerInfo)]"
+				hbox = {
+					# BACK TO SINGLE PLAYER BUTTON
+					button_regular = {
+						size = { 34 34 }
+						visible_at_creation = no
+						visible = "[Or(GameIsMultiplayer, LobbyView.HasServerInfo)]"
 
-					fontsize = 15
-					text = "BECOME_SINGLE_PLAYER"
+						fontsize = 15
 
-					tooltipwidget = {BasicFunctionalTooltip = {}}
+						tooltipwidget = { BasicFunctionalTooltip = {}}
 
-					action_tooltip = {
-						click_type = left
-						click_mode = single
-						title = "BECOME_SINGLE_PLAYER_TT"
-						on_action = "[BecomeSinglePlayer]"
-						on_action = "[UnselectLobbyCountry]"
+						action_tooltip = {
+							click_type = left
+							click_mode = confirm
+							title = "BECOME_SINGLE_PLAYER_TT"
+							on_action = "[BecomeSinglePlayer]"
+							on_action = "[UnselectLobbyCountry]"
+						}
+
+						icon = {
+							texture = "gfx/interface/icons/flat_icons/common_language_old.dds"
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.8
+								blend_mode = overlay
+							}
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.6
+							}
+							texture_density = 2
+							size = { 20 20 }
+							parentanchor = center
+			
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = no }
+						}
+
+						icon = {
+							texture = "gfx/interface/icons/flat_icons/disable_icon.dds"
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.8
+								blend_mode = overlay
+							}
+							modify_texture = {
+								using = color_red_texture
+								alpha = 0.8
+							}
+							texture_density = 2
+							size = { 30 30 }
+							parentanchor = center
+			
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = no }
+						}
 					}
+
+					expand = {}
 				}
 
 				hbox = {
@@ -277,188 +318,65 @@ JominiMultiplayerLobby = {
 					expand = {}
 				}
 
+				expand = {}
+
 				hbox = {
 					visible_at_creation = no
 					visible = "[GameIsMultiplayer]"
 					spacing = 10
-					margin = {10 0}
 
 					expand = {}
 
 					text_single = {
-						layoutpolicy_vertical = expanding
-						maximumsize = {200 -1}
-
+						autoresize = yes
 						using = Font_Type_Headers
 						using = Font_Size_Medium
 						default_format = "#color_white"
 						text = "LOBBY_MULTIPLAYER_GAME"
-
 					}
 
-					# header_button_left = {
-					# 	size = { 25 25 }
+					button_regular = {
+						size = { 34 34 }
 
-					# 	enabled = "[TransferUnit.CanTransfer]"
-					# 	action_tooltip = {
-					# 		click_type = left
-					# 		click_mode = single
-					# 		enabled = "[TransferUnit.CanTransfer]"
-					# 		title = "[TransferUnit.GetTransferInfo]"	
-					# 		on_action = "[TransferUnit.Transfer]"
-					# 	}
+						action_tooltip = {
+							title = "[GetMultiplayerChat.GetTooltip]"
+							on_action = "[ToggleMultiplayerChat]"
+						}
+						tooltipwidget = { BasicFunctionalTooltip = {} }
 
-					# 	tooltipwidget = {
-					# 		BasicFunctionalTooltip = {}
-					# 	}	
-
-					# 	onclick = "[ToggleMultiplayerChat]"
-					# 	tooltipwidget = {
-					# 		LeftClickButtonTooltip = {
-					# 			blockoverride "onclick_text" { text = "[GetMultiplayerChat.GetTooltip]" }
-					# 		}
-					# 	}
-
-					# 	blockoverride "button_icon_stretch_sprite" {}
-					# 	blockoverride "header_button_frame_inner" {visible = no}
-					# 	blockoverride "header_button_icon_size" { size = { 24 24 } }
-					# 	blockoverride "header_button_text_layout" {}
-					# 	blockoverride "icon_texture" {
-					# 		texture = "gfx/interface/icons/flat_icons/dialect.dds"
-					# 		using = button_panel_tab_icon_effect
-					# 		blockoverride "icon_effect_visible" {visible = "[IsMultiplayerChatShown]"}
-					# 	}
-					# 	piechart = {
-					# 		using = bg_circle
-					# 		parentanchor = top|right
-					# 		visible = "[MPChatNewMessage]"
-					# 		size = { 10 10 }
-
-					# 		pieslice_no_highlight = {
-					# 			alwaystransparent = yes
-					# 			texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
-					# 			value = 100
-					# 			color = { 1 1 1 1 }
-					# 		}
-					# 	}
-					# }
-
-					widget = {
-						size = { 30 30 }
-
-						header_button_left = {
-							size = { 100% 100% }
+						icon = {
+							texture = "gfx/interface/icons/flat_icons/dialect.dds"
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.8
+								blend_mode = overlay
+							}
+							modify_texture = {
+								using = color_new_gold_texture
+								alpha = 0.6
+							}
+							texture_density = 2
+							size = { 20 20 }
 							parentanchor = center
-							position = { 0 -1 }
+			
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = no }
+						}
 
-							action_tooltip = {
-								title = "[GetMultiplayerChat.GetTooltip]"
-								on_action = "[ToggleMultiplayerChat]"
-							}
-							tooltipwidget = { BasicFunctionalTooltip = {} }
+						piechart = {
+							ignore_layout = yes
+							using = bg_circle
+							parentanchor = top|right
+							visible = "[MPChatNewMessage]"
+							size = { 10 10 }
 
-							blockoverride "icon_overlay" {
-								modify_texture = {
-									visible = "[IsMultiplayerChatShown]"
-									using = color_bone_texture
-									alpha = 0.3
-								}
-
-								glow = {
-									visible = "[IsMultiplayerChatShown]"
-									glow_radius = 3
-									color = { 0.80 0.68 0.39 1.0 }
-									alpha = 0.6
-								}
-								
-							}
-							blockoverride "button_icon_stretch_sprite" {}
-							blockoverride "header_button_frame_inner" {visible = no}
-							blockoverride "header_button_icon_size" { size = { 24 24 } }
-							blockoverride "header_button_text_layout" {
-
-							}
-							blockoverride "icon_texture" {
-								texture = "gfx/interface/icons/flat_icons/dialect.dds"
-							}
-							blockoverride "header_button_widget_extra" {
-								piechart = {
-									ignore_layout = yes
-									using = bg_circle
-									parentanchor = top|right
-									visible = "[MPChatNewMessage]"
-									size = { 10 10 }
-		
-									pieslice_no_highlight = {
-										alwaystransparent = yes
-										texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
-										value = 100
-										color = { 1 1 1 1 }
-									}
-								}
+							pieslice_no_highlight = {
+								alwaystransparent = yes
+								texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+								value = 100
+								color = { 1 1 1 1 }
 							}
 						}
-						# card_header_button_01 = {
-						# 	size = { 100% 100% }
-						# 	parentanchor = center
-						# 	position = { 0 -1 }
-	
-						# 	using = bg_card_header_01
-						# 	blockoverride "bg_card_header_01_bg" {
-						# 		background = {
-						# 			texture = "gfx/interface/component_tiles/square_tile.dds"
-						# 			texture_density = 2
-						# 			spriteType = corneredtiled
-						# 			spriteborder = { 10 10 }
-	
-						# 			modify_texture = {
-						# 				using = color_greyish_texture
-						# 				blend_mode = multiply
-						# 			}
-	
-						# 			modify_texture = {
-						# 				texture = "gfx/interface/cards/headers/header_pattern_07.dds"
-						# 				alpha = 0.7
-						# 				texture_density = 2
-						# 				spriteType = corneredtiled
-						# 				blend_mode = overlay
-						# 			}
-						# 		}
-						# 	}
-	
-						# 	onclick = "[ToggleMultiplayerChat]"
-						# 	tooltipwidget = {
-						# 		LeftClickButtonTooltip = {
-						# 			blockoverride "onclick_text" { text = "[GetMultiplayerChat.GetTooltip]" }
-						# 		}
-						# 	}
-						# 	icon = {
-						# 		parentanchor = center
-						# 		size = { 60% 60% }
-						# 		texture = "gfx/interface/icons/flat_icons/dialect.dds"
-	
-						# 		modify_texture = {
-						# 			using = color_new_gold_texture
-						# 			blend_mode = multiply
-						# 			alpha = 0.1
-						# 		}
-						# 		using = button_panel_tab_icon_effect
-						# 		blockoverride "icon_effect_visible" {visible = "[IsMultiplayerChatShown]"}
-						# 	}
-						# 	piechart = {
-						# 		using = bg_circle
-						# 		parentanchor = top|right
-						# 		visible = "[MPChatNewMessage]"
-						# 		size = { 10 10 }
-	
-						# 		pieslice_no_highlight = {
-						# 			alwaystransparent = yes
-						# 			texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
-						# 			value = 100
-						# 			color = { 1 1 1 1 }
-						# 		}
-						# 	}
-						# }
 					}
 				}
 			}
@@ -561,42 +479,6 @@ JominiMultiplayerLobby = {
 		}
 	}
 
-	widget = {
-		visible = "[GameLobby.Vars.Exists('tab')]"
-		parentanchor = top|right
-		position = { 0 42 }
-		size = { 40 40 }
-
-		ui_direction_button_holder_right = {}
-
-		close_right_tabs = {
-			visible = "[GameLobby.Vars.HasValue('tab', 'GameRules')]"
-			blockoverride "close_on_action" {
-				on_action = "[HideGameRules]"
-				on_action = "[GameLobby.Vars.SetOrToggle('tab','GameRules')]"
-			}
-		}
-		close_right_tabs = {
-			visible = "[GameLobby.Vars.HasValue('tab', 'country_list')]"
-			blockoverride "close_on_action" {
-				on_action = "[HideModsView]"
-				on_action = "[GameLobby.Vars.SetOrToggle('tab','country_list')]"
-			}
-		}
-		close_right_tabs = {
-			visible = "[GameLobby.Vars.HasValue('tab', 'DLC')]"
-			blockoverride "close_on_action" {
-				on_action = "[HideModsView]"
-				on_action = "[GameLobby.Vars.SetOrToggle('tab','DLC')]"
-			}
-		}
-		close_right_tabs = {
-			visible = "[GameLobby.Vars.HasValue('tab', 'multiplayer')]"
-			blockoverride "close_on_action" {
-				on_action = "[GameLobby.Vars.SetOrToggle('tab','multiplayer')]"
-			}
-		}
-	}
 	blockoverride "left_panel_content" {
 		using = layoutpolicy_expanding
 		margin_top = 40
@@ -617,6 +499,7 @@ JominiMultiplayerLobby = {
 			parentanchor = right
 			widgetanchor = right
 			filter_mouse = all
+			allow_outside = yes
 
 			@right_panel_width = 430
 			@right_panel_x = 0
@@ -643,6 +526,16 @@ JominiMultiplayerLobby = {
 			vbox = {
 				margin_top = 40
 				LobbyViewGameInfoPanel = {}
+				allow_outside = yes
+
+				vbox = {
+					using = layoutpolicy_expanding
+					using = bg_lateralview
+					visible_at_creation = no
+					visible = "[GameLobby.Vars.HasValue( 'tab', 'game_rules' )]"
+					allow_outside = yes
+					GameRulesPanel = {}
+				}
 
 				vbox = {
 					using = layoutpolicy_expanding
@@ -1136,10 +1029,7 @@ JominiMultiplayerLobby = {
 		background = {
 			margin_left = 5
 			margin_top = 0
-			texture = "gfx/editor_gui/editor_field.dds"
-			spriteType = CorneredStretched
-			spriteborder = { 4 4 }
-			shaderfile = "gfx/FX/pdxgui_default.shader"
+			using = bg_editor_field_texture
 		}
 	}
 

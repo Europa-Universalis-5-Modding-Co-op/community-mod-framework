@@ -114,12 +114,12 @@
 													}
 
 													background = {
-														texture = "gfx/interface/colors/mid_blue.dds"
+														using = color_mid_blue_texture
 														margin = {0 0}
 														alpha = 0.8
 
 														modify_texture = {
-															texture = "gfx/interface/component_masks/mask_fade_horizontal.dds"
+															using = bg_mask_fade_horizontal_texture
 															blend_mode = alphamultiply
 															mirror = horizontal
 														}
@@ -329,6 +329,20 @@
 			}
 
 			expand = {}
+		}
+
+		widget = {
+			parentanchor = right
+			size = { 40 40 }
+	
+			ui_direction_button_holder_right = {}
+	
+			button_close_alt = {
+				blockoverride "close_on_action" {
+					on_action = "[GameLobby.Vars.SetOrToggle('tab','country_list')]"
+				}
+				blockoverride "close_inputaction" {}
+			}
 		}
 
 		window_bottom_paper_template = {}
