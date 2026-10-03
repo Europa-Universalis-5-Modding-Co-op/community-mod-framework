@@ -188,45 +188,47 @@ Re-run alongside the size tests; every result matches the prior run (26, 27, 31 
 
 ## Hidden Window Tests (39-71)
 
+The 1.4.0 columns record screenshots from 2026-10-03. The hidden-window results are from the fresh single run, except 74, which was captured in the earlier run. Script results include the paused run and rechecks after game time advanced.
+
 Run 2026-07-02. Covers the registered hidden/driver-window patterns used by CMF, Construction Manager, Autonomous Diplomats, and SmartTaxes. The rig is four registered top-level widgets in `et_hw_windows.gui` (an always-visible dynamic core, a static `visible = yes` twin, a gated `window`, and a remote TriggerAllAnimations target). One button (Run Hidden Window Tests) arms a boot driver whose state chain steps every timed test with settle delays; the chain takes about 12 seconds and the rows fill in when it finishes. Re-clicking the button re-runs the suite; a click while a run is mid-chain restarts scoring, so click once and wait.
 
 Expected-FAIL rows assert a pattern previously recorded as broken, so FAIL is the result that CONFIRMS the lesson; probe rows had no expected value. Outcome: 23 results matched expectations, the 5 probes got answers (45, 60, 61, 65, 67), and 5 results overturned previously recorded lessons (41, 48, 50, 57, 70). Raw counts are not displayed in the UI, so where a count is cited below it is inferred from the pass/fail combinations.
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 39 | IsShown(scripted GUI) gate: _show fires when script sets the var | PASS | PASS |
-| 40 | GetVariable('x').IsSet gate: _show fires | PASS | PASS |
-| 41 | ScriptValue-compare gate: _show re-fires on later var changes | FAIL (sticky visible) | **PASS** |
-| 42 | ScriptValue-compare gate evaluated at widget creation (pinned) | PASS | PASS |
-| 43 | Static visible = yes top-level: descendant gate _show fires | FAIL (frozen subtree) | FAIL |
-| 44 | Unpinned gate cycled off->on twice: _show fired both times | PASS | PASS |
-| 45 | Pinned (visible_at_creation = no) gate cycled twice: _show re-fires | PROBE | PASS |
-| 46 | Gated window, inner gate pre-set, pinned child: _show fires at creation | PASS | PASS |
-| 47 | Same, unpinned child: _show fires | FAIL (created shown, no edge) | FAIL |
-| 48 | Gated `window` re-creates children per show (trigger_on_create count = 2) | PASS | **FAIL** |
-| 49 | Gated `widget` keeps children (trigger_on_create count = 1) | PASS | PASS |
-| 50 | trigger_on_create defers while the parent is hidden | PASS | **FAIL** |
-| 51 | trigger_on_create does not re-fire on gate cycles | PASS | PASS |
-| 52 | Datamodel items seeded post-build instantiate and fire on create | PASS | PASS |
-| 53 | Same-state on_finish: TriggerAllAnimations + immediate read sees items | FAIL (states play later) | FAIL |
-| 54 | Chained-state read after a settle sees all items | PASS | PASS |
-| 55 | Per-item scope passed from TriggerAllAnimations-fired states | PASS | PASS |
-| 56 | Mid-cycle list append under statically-visible parent: items fire | PASS | PASS |
-| 57 | Mid-cycle list append under dynamic-visible wrapper: items fire | FAIL (never instantiate) | **PASS** |
-| 58 | TriggerAllAnimations reaches a state in another registered window | PASS | PASS |
-| 59 | GetScriptedGui(Concatenate(...)) dynamic dispatch | PASS | PASS |
-| 60 | Execute runs the effect despite is_shown = { always = no } | PROBE | PASS |
-| 61 | Execute runs the effect despite is_valid = { always = no } | PROBE | FAIL |
-| 62 | AddScope MakeScopeValue(3 * 4) + MakeScopeBool round-trip | PASS | PASS |
-| 63 | save_temporary_scope_as inside an is_shown trigger | PASS | PASS |
-| 64 | Self-loop poll state (trigger_on_create + self TriggerAnimation) keeps firing | PASS | PASS |
-| 65 | Poll loop keeps advancing while its widget is hidden | PROBE | PASS |
-| 66 | trigger_when fires when its condition flips true | PASS | PASS |
-| 67 | trigger_when fires exactly once while the condition stays true | PROBE | PASS |
-| 68 | Variable map value holding a flag target, read back and compared | PASS | PASS |
-| 69 | Outermost every_* saved scope visible in a called sub-effect | PASS | PASS |
-| 70 | Nested every_* saved scope visible in a called sub-effect | FAIL (reads as unset) | **PASS** |
-| 71 | local_var captured in the nested loop reaches the sub-effect | PASS | PASS |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 39 | IsShown(scripted GUI) gate: _show fires when script sets the var | PASS | PASS | PASS |
+| 40 | GetVariable('x').IsSet gate: _show fires | PASS | PASS | PASS |
+| 41 | ScriptValue-compare gate: _show re-fires on later var changes | FAIL (sticky visible) | **PASS** | PASS |
+| 42 | ScriptValue-compare gate evaluated at widget creation (pinned) | PASS | PASS | PASS |
+| 43 | Static visible = yes top-level: descendant gate _show fires | FAIL (frozen subtree) | FAIL | FAIL |
+| 44 | Unpinned gate cycled off->on twice: _show fired both times | PASS | PASS | PASS |
+| 45 | Pinned (visible_at_creation = no) gate cycled twice: _show re-fires | PROBE | PASS | PASS |
+| 46 | Gated window, inner gate pre-set, pinned child: _show fires at creation | PASS | PASS | PASS |
+| 47 | Same, unpinned child: _show fires | FAIL (created shown, no edge) | FAIL | FAIL |
+| 48 | Gated `window` re-creates children per show (trigger_on_create count = 2) | PASS | **FAIL** | FAIL |
+| 49 | Gated `widget` keeps children (trigger_on_create count = 1) | PASS | PASS | PASS |
+| 50 | trigger_on_create defers while the parent is hidden | PASS | **FAIL** | FAIL |
+| 51 | trigger_on_create does not re-fire on gate cycles | PASS | PASS | PASS |
+| 52 | Datamodel items seeded post-build instantiate and fire on create | PASS | PASS | PASS |
+| 53 | Same-state on_finish: TriggerAllAnimations + immediate read sees items | FAIL (states play later) | FAIL | FAIL |
+| 54 | Chained-state read after a settle sees all items | PASS | PASS | PASS |
+| 55 | Per-item scope passed from TriggerAllAnimations-fired states | PASS | PASS | PASS |
+| 56 | Mid-cycle list append under statically-visible parent: items fire | PASS | PASS | PASS |
+| 57 | Mid-cycle list append under dynamic-visible wrapper: items fire | FAIL (never instantiate) | **PASS** | PASS |
+| 58 | TriggerAllAnimations reaches a state in another registered window | PASS | PASS | PASS |
+| 59 | GetScriptedGui(Concatenate(...)) dynamic dispatch | PASS | PASS | PASS |
+| 60 | Execute runs the effect despite is_shown = { always = no } | PROBE | PASS | PASS |
+| 61 | Execute runs the effect despite is_valid = { always = no } | PROBE | FAIL | FAIL |
+| 62 | AddScope MakeScopeValue(3 * 4) + MakeScopeBool round-trip | PASS | PASS | PASS |
+| 63 | save_temporary_scope_as inside an is_shown trigger | PASS | PASS | PASS |
+| 64 | Self-loop poll state (trigger_on_create + self TriggerAnimation) keeps firing | PASS | PASS | PASS |
+| 65 | Poll loop keeps advancing while its widget is hidden | PROBE | PASS | PASS |
+| 66 | trigger_when fires when its condition flips true | PASS | PASS | PASS |
+| 67 | trigger_when fires exactly once while the condition stays true | PROBE | PASS | PASS |
+| 68 | Variable map value holding a flag target, read back and compared | PASS | PASS | PASS |
+| 69 | Outermost every_* saved scope visible in a called sub-effect | PASS | PASS | PASS |
+| 70 | Nested every_* saved scope visible in a called sub-effect | FAIL (reads as unset) | **PASS** | PASS |
+| 71 | local_var captured in the nested loop reaches the sub-effect | PASS | PASS | PASS |
 
 ### Key Findings
 
@@ -241,7 +243,7 @@ Expected-FAIL rows assert a pattern previously recorded as broken, so FAIL is th
 
 - **45: `visible_at_creation = no` does NOT freeze `_show`.** The pinned widget re-fired on each off->on gate flip, same as the unpinned one (44). The pin's only job is forcing the created-hidden state so a pre-true gate still produces a first-show edge; a one-shot driver is one-shot because its gate arms once per lobby, not because of the pin. A recurring driver may carry the pin safely.
 - **60/61: `is_shown` does not gate Execute, `is_valid` DOES.** A scripted GUI with `is_shown = { always = no }` still ran its effect when Executed; one with `is_valid = { always = no }` did not. is_shown is display-only; is_valid is the real execution guard, so an is_valid gate protects against Executes fired from stale or force-triggered GUI paths.
-- **65: state machines keep running while their widget is hidden.** The poll loop kept advancing after its gate closed, so hiding a poller does not stop it; the stop-guard belongs in the scripted GUI's effect.
+- **65: a state machine can advance after its widget becomes hidden.** This row requires only one further fire; continuous looping is measured separately by 77-80.
 - **67: trigger_when is edge-triggered.** One fire per false->true flip; no re-firing while the condition stays true for a full second.
 
 **Overturned expectations:**
@@ -260,13 +262,13 @@ chain is about 4 seconds longer than before.
 
 Run 2026-07-27 on 1.3.x.
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 72 | Chain reaches its tail past a bare name/duration/next state | FAIL (bare state stalls) | FAIL |
-| 73 | Control: same chain, middle state has an on_start | PASS | PASS |
-| 74 | GetGlobalList binds a global_variable_list to a datamodel | PASS | PASS |
-| 75 | Outer Scope context survives an inner Location datamodel | PASS | PASS |
-| 76 | datamodel_reuse_widgets keeps trigger_on_create from re-firing | PASS | PASS |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 72 | Chain reaches its tail past a bare name/duration/next state | FAIL (bare state stalls) | FAIL | FAIL |
+| 73 | Control: same chain, middle state has an on_start | PASS | PASS | PASS |
+| 74 | GetGlobalList binds a global_variable_list to a datamodel | PASS | PASS | PASS (earlier 1.4.0 run) |
+| 75 | Outer Scope context survives an inner Location datamodel | PASS | PASS | PASS |
+| 76 | datamodel_reuse_widgets keeps trigger_on_create from re-firing | PASS | PASS | PASS |
 
 ### Findings
 
@@ -338,12 +340,14 @@ A machine still looping owes about six fires over that window; one that stopped
 after the state in flight owes one. So the `>= 3` rows are the discriminator and
 the `> snapshot` rows only repeat what 65 already showed.
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 77 | next-chained machine advances at all while hidden | PROBE | |
-| 78 | next-chained machine keeps looping while hidden | PROBE | |
-| 79 | self-trigger loop advances at all while hidden | PASS (65) | |
-| 80 | self-trigger loop keeps looping while hidden | PROBE | |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 77 | next-chained machine advances at all while hidden | PROBE | | PASS |
+| 78 | next-chained machine keeps looping while hidden | PROBE | | FAIL |
+| 79 | self-trigger loop advances at all while hidden | PASS (65) | | PASS |
+| 80 | self-trigger loop keeps looping while hidden | PROBE | | FAIL |
+
+**1.4.0 result (2026-10-03):** 77/79 PASS and 78/80 FAIL. Both machines advanced after being hidden, but neither gained the three fires required by the sustained-loop checks over 1.5 seconds. These rows had no recorded earlier result, so this does not establish a patch regression.
 
 Field observation this exists to settle, from Construction Manager's lucky-nation
 console bridge (2026-08-03, NOT a controlled test): a `next`-chained submitter
@@ -749,17 +753,17 @@ Added 2026-07-27. Run button: Run Script Tests. No GUI rig and no timing.
 Run 2026-07-27 on 1.3.x. Re-run 2026-07-31 alongside 123-127: every row matched
 exactly (117, 120 and 121 FAIL, the rest PASS), so nothing here changed.
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 114 | change_variable max = 9 raises 3 to 9 | PASS | PASS |
-| 115 | change_variable min = 3 lowers 9 to 3 | PASS | PASS |
-| 116 | change_variable max = 3 leaves 9 alone | PASS | PASS |
-| 117 | List-iterator limit sees the body's own counter | FAIL (limit is blind to it) | FAIL |
-| 118 | local_var set in one scope block reads in another | PASS | PASS |
-| 119 | Same-named locals at two nesting levels share a slot | PASS | PASS |
-| 120 | Variable written on a province_definition reads back there | PROBE | **FAIL** |
-| 121 | Same variable read through a location's province_definition link | PROBE | **FAIL** |
-| 122 | Nested every_in_list scope reaches a helper called by macro-param name | FAIL (the CMM shape) | **PASS** |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 114 | change_variable max = 9 raises 3 to 9 | PASS | PASS | PASS |
+| 115 | change_variable min = 3 lowers 9 to 3 | PASS | PASS | PASS |
+| 116 | change_variable max = 3 leaves 9 alone | PASS | PASS | PASS |
+| 117 | List-iterator limit sees the body's own counter | FAIL (limit is blind to it) | FAIL | FAIL |
+| 118 | local_var set in one scope block reads in another | PASS | PASS | PASS |
+| 119 | Same-named locals at two nesting levels share a slot | PASS | PASS | PASS |
+| 120 | Variable written on a province_definition reads back there | PROBE | **FAIL** | FAIL |
+| 121 | Same variable read through a location's province_definition link | PROBE | **FAIL** | FAIL |
+| 122 | Nested every_in_list scope reaches a helper called by macro-param name | FAIL (the CMM shape) | **PASS** | PASS |
 
 ### Findings
 
@@ -818,11 +822,11 @@ by design, since the guard demands N > 1.
 
 Run 2026-07-31 on 1.3.x as France.
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 123 | ordered_owned_location with no position and no max visits one location | PASS | PASS |
-| 124 | Control - the same iterator with max visits every location | PASS | PASS |
-| 125 | The one location the bare form visits is the top of the order | PASS | PASS |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 123 | ordered_owned_location with no position and no max visits one location | PASS | PASS | PASS |
+| 124 | Control - the same iterator with max visits every location | PASS | PASS | PASS |
+| 125 | The one location the bare form visits is the top of the order | PASS | PASS | PASS |
 
 ### Findings
 
@@ -887,10 +891,10 @@ rows** - the two rows only report that the pair ran. Builds masons in your capit
 
 Run 2026-07-31 on 1.3.x as France.
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 126 | Five building_type_max_level evaluations, nothing queued between them | PASS = the pair ran | PASS |
-| 127 | The same five with construct_building between them | PASS = ran and a level landed | PASS |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 126 | Five building_type_max_level evaluations, nothing queued between them | PASS = the pair ran | PASS | PASS |
+| 127 | The same five with construct_building between them | PASS = ran and a level landed | PASS | PASS |
 
 **`error.log` carried zero `building_type_max_level` lines.**
 
@@ -957,10 +961,10 @@ report that the pair ran. Builds masons on an owned location, so use a throwaway
 
 **Not yet run.**
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 128 | The 126 shape on an owned location reached by an iterator | PASS = the pair ran | - |
-| 129 | The 127 shape on that same location | PASS = ran and a level landed | - |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 128 | The 126 shape on an owned location reached by an iterator | PASS = the pair ran | - | PASS |
+| 129 | The 127 shape on that same location | PASS = ran and a level landed | - | PASS |
 
 ### Why
 
@@ -992,10 +996,10 @@ so use a throwaway save.
 
 **Not yet run.**
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 130 | Control - the engine refuses rural_glassmaker in a town-or-better capital | PASS | - |
-| 131 | construct_building places it there anyway | PASS = the effect validates nothing | - |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 130 | Control - the engine refuses rural_glassmaker in a town-or-better capital | PASS | - | PASS |
+| 131 | construct_building places it there anyway | PASS = the effect validates nothing | - | PASS |
 
 ### Why
 
@@ -1050,61 +1054,67 @@ Nothing here names a country, but the group needs one with a land neighbour, mor
 location, and at least one owned location that does not border its capital. Castile at 1337, the
 suite's own test nation, satisfies all three.
 
-| # | Test | Expected | Result |
-|---|------|----------|-------|
-| 132 | building_type_max_level reports 3 for a max_levels = 3 type | one of 132/133/134/135 | FAIL |
-| 133 | ... or it reports 0 | one of 132/133/134/135 | **PASS** |
-| 134 | ... or it reports 1 or 2 | one of 132/133/134/135 | FAIL |
-| 135 | ... or it reports more than 3 | one of 132/133/134/135 | FAIL |
-| 136 | The same trigger reports more than 0 for vanilla mason | PASS | **FAIL** |
-| 137 | ... and reports 1 for vanilla royal_court, whose cap is a literal | PASS | **FAIL** |
-| 138 | With the owner param, the trigger reports more than 0 for vanilla mason | PASS | **FAIL** |
-| 139 | ... and reports 1 for vanilla royal_court | PASS | **FAIL** |
-| 140 | ... and reports 3 for the max_levels = 3 probe | PASS | **FAIL** |
-| 141 | After a month tick, the trigger reports 3 for the probe | PASS | **FAIL** |
-| 142 | ... or it still reports 0 | one of 141/142 | **PASS** |
-| 143 | After a month tick, with owner, it reports 3 for the probe | PASS | **FAIL** |
-| 144 | After a month tick, it reports more than 0 for vanilla mason | PASS | **FAIL** |
-| 145 | After a month tick, it reports 1 for vanilla royal_court | PASS | **FAIL** |
-| 146 | The reading does not move once a level is in place | PASS | PASS |
-| 147 | instant = yes puts the level up in the same tick | PASS | FAIL |
-| 148 | ... a building of that type exists there at all | PASS | PASS |
-| 149 | ... and nothing of that type is left under construction | PASS | FAIL |
-| 150 | construct_building places a fourth level past max_levels = 3 | PASS | PASS |
-| 151 | is_at_max_level reads no at one level of three | PASS | PASS |
-| 152 | is_at_max_level reads yes at three of three | PASS | PASS |
-| 153 | That building reads is_at_max_level no | PASS | PASS |
-| 154 | cost_multiplier = 0 with instant = yes still places the level | PASS | FAIL |
-| 155 | And charges nothing for it | PASS | PASS |
-| 156 | A negative change_building_level_in_location delta lowers a building by one | PASS | PASS |
-| 157 | Guard - opinion is under 100 both ways | PASS | PASS |
-| 158 | can_build_building in location scope refuses the probe | PASS | **FAIL** |
-| 159 | The same trigger in country scope refuses it | PASS | **FAIL** |
-| 160 | construct_building places it there anyway | PASS | PASS |
-| 161 | Guard - opinion raised past 100 both ways | PASS | PASS |
-| 162 | Control - can_build_building now allows the same probe elsewhere | PASS | PASS |
-| 163 | Guard - Road Building researched, a road-less neighbour and one non-neighbour found | PASS | PASS |
-| 164 | construct_road between two neighbours starts a road construction | PASS | PASS |
-| 165 | That road took no civil construction slot | PASS | **FAIL** |
-| 166 | construct_road between two non-neighbours starts nothing | PASS | PASS, but see 167-170 |
-| 167 | Guard - two road-free owned locations that are not neighbours of each other | PASS | PASS |
-| 168 | An order between them shows a road construction at the from end | one of 168/169/170 answers | **PASS** |
-| 169 | ... and at the to end | one of 168/169/170 answers | **FAIL** |
-| 170 | ... and the from end's civil construction count moved | one of 168/169/170 answers | **PASS** |
-| 171 | building_max_level reports 3 for the probe at 3 of 3 | one of 171/172 answers | **PASS** |
-| 172 | ... or it reports 0 | one of 171/172 answers | FAIL |
-| 173 | is_max_level reads yes at 3 of 3 | PASS | PASS |
-| 174 | is_max_level reads no one level below the cap | PASS | PASS |
-| 175 | construct_road charges the order when it is issued | PASS | PASS |
-| 176 | The non-adjacent order left a new road at the from end | see below | **PASS** |
-| 177 | ... and at the to end | see below | **PASS** |
-| 178 | ... and the from end no longer reports a road construction | PASS | **PASS** |
-| 179 | A building crosses a variable list into a datamodel and downcasts with Scope.GetBuilding | PASS | PASS |
-| 180 | ToggleBuilding on that handle closes the building | PASS | PASS |
-| 181 | The capital's instant = yes levels have finished by the recheck | PASS | PASS |
-| 182 | The cost_multiplier = 0 plus instant = yes build stands by the recheck | PASS | PASS |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 132 | building_type_max_level reports 3 for a max_levels = 3 type | one of 132/133/134/135 | FAIL | PASS |
+| 133 | ... or it reports 0 | one of 132/133/134/135 | **PASS** | FAIL |
+| 134 | ... or it reports 1 or 2 | one of 132/133/134/135 | FAIL | FAIL |
+| 135 | ... or it reports more than 3 | one of 132/133/134/135 | FAIL | FAIL |
+| 136 | The same trigger reports more than 0 for vanilla mason | PASS | **FAIL** | PASS |
+| 137 | ... and reports 1 for vanilla royal_court, whose cap is a literal | PASS | **FAIL** | PASS |
+| 138 | With the owner param, the trigger reports more than 0 for vanilla mason | PASS | **FAIL** | PASS |
+| 139 | ... and reports 1 for vanilla royal_court | PASS | **FAIL** | PASS |
+| 140 | ... and reports 3 for the max_levels = 3 probe | PASS | **FAIL** | PASS |
+| 141 | After a month tick, the trigger reports 3 for the probe | PASS | **FAIL** | PASS |
+| 142 | ... or it still reports 0 | one of 141/142 | **PASS** | FAIL |
+| 143 | After a month tick, with owner, it reports 3 for the probe | PASS | **FAIL** | PASS |
+| 144 | After a month tick, it reports more than 0 for vanilla mason | PASS | **FAIL** | PASS |
+| 145 | After a month tick, it reports 1 for vanilla royal_court | PASS | **FAIL** | PASS |
+| 146 | The reading does not move once a level is in place | PASS | PASS | PASS (queued level only) |
+| 147 | instant = yes puts the level up in the same tick | PASS | FAIL | FAIL |
+| 148 | ... a building of that type exists there at all | PASS | PASS | PASS |
+| 149 | ... and nothing of that type is left under construction | PASS | FAIL | FAIL |
+| 150 | construct_building places a fourth level past max_levels = 3 | PASS | PASS | PASS |
+| 151 | is_at_max_level reads no at one level of three | PASS | PASS | PASS |
+| 152 | is_at_max_level reads yes at three of three | PASS | PASS | PASS |
+| 153 | That building reads is_at_max_level no | PASS | PASS | PASS |
+| 154 | cost_multiplier = 0 with instant = yes still places the level | PASS | FAIL | FAIL |
+| 155 | And charges nothing for it | PASS | PASS | PASS |
+| 156 | A negative change_building_level_in_location delta lowers a building by one | PASS | PASS | PASS |
+| 157 | Guard - opinion is under 100 both ways | PASS | PASS | PASS |
+| 158 | can_build_building in location scope refuses the probe | PASS | **FAIL** | FAIL |
+| 159 | The same trigger in country scope refuses it | PASS | **FAIL** | FAIL |
+| 160 | construct_building places it there anyway | PASS | PASS | PASS |
+| 161 | Guard - opinion raised past 100 both ways | PASS | PASS | PASS |
+| 162 | Control - can_build_building now allows the same probe elsewhere | PASS | PASS | PASS |
+| 163 | Guard - Road Building researched, a road-less neighbour and one non-neighbour found | PASS | PASS | PASS |
+| 164 | construct_road between two neighbours starts a road construction | PASS | PASS | PASS |
+| 165 | That road took no civil construction slot | PASS | **FAIL** | FAIL |
+| 166 | construct_road between two non-neighbours starts nothing | PASS | PASS, but see 167-170 | PASS |
+| 167 | Guard - two road-free owned locations that are not neighbours of each other | PASS | PASS | PASS |
+| 168 | An order between them shows a road construction at the from end | one of 168/169/170 answers | **PASS** | PASS |
+| 169 | ... and at the to end | one of 168/169/170 answers | **FAIL** | PASS |
+| 170 | ... and the from end's civil construction count moved | one of 168/169/170 answers | **PASS** | PASS |
+| 171 | building_max_level reports 3 for the probe at 3 of 3 | one of 171/172 answers | **PASS** | PASS |
+| 172 | ... or it reports 0 | one of 171/172 answers | FAIL | FAIL |
+| 173 | is_max_level reads yes at 3 of 3 | PASS | PASS | PASS |
+| 174 | is_max_level reads no one level below the cap | PASS | PASS | PASS |
+| 175 | construct_road charges the order when it is issued | PASS | PASS | PASS |
+| 176 | The non-adjacent order left a new road at the from end | see below | **PASS** | PASS |
+| 177 | ... and at the to end | see below | **PASS** | PASS |
+| 178 | ... and the from end no longer reports a road construction | PASS | **PASS** | PASS |
+| 179 | A building crosses a variable list into a datamodel and downcasts with Scope.GetBuilding | PASS | PASS | PASS |
+| 180 | ToggleBuilding on that handle closes the building | PASS | PASS | PASS |
+| 181 | The capital's instant = yes levels have finished by the recheck | PASS | PASS | PASS |
+| 182 | The cost_multiplier = 0 plus instant = yes build stands by the recheck | PASS | PASS | PASS |
 
 ### Findings
+
+**1.4.0 result (2026-10-03):** 132 and 136-141 PASS, 142 FAIL, and 143-145 PASS. The trigger returns the tested caps with and without `owner`, including the recheck after game time advanced. Neither fresh main log contains `building_type_max_level`. The captured version of 146 compared before the queued level completed, so its PASS does not establish cap versus headroom. The revised check runs after a synchronous completed-level change and has not been retested. Saved-scope owner arguments and foreign-owner contexts remain unmeasured.
+
+**1.4.0 roads:** the fresh order passed 168, 169 and 170, so a non-adjacent order can report construction at both ends. Row 166 uses a different pair and still passes; the older from-end-only result is not universal. Rows 176-178 all passed after completion.
+
+**Historical 1.3.x findings follow.**
 
 **`building_type_max_level` reports 0 with no `owner` param, for vanilla types as well as mod
 ones (133, 136, 137, 146).** Vanilla `mason`, whose cap comes from the `guild_max_level` script
@@ -1384,17 +1394,17 @@ submod cannot reach them:
 Added 2026-08-06. 183-187 and 189-191 run with the script chain (Run Script
 Tests); 188 runs with Re-Read Probe Levels.
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 183 | is_strait_connection_to exists - reads no to a land neighbour of Messina | PROBE | FAIL |
-| 184 | ... and yes across the Strait of Messina | PROBE | PASS |
-| 185 | Guard - Castile owns Coruna and Ferrol, the path through Betanzos unbuilt | PROBE | PASS (see below) |
-| 186 | An order over the two-hop land path shows a construction at the from end | PROBE | PASS on a fresh path |
-| 187 | ... and the order was charged to the treasury | PROBE | PASS on a fresh path |
-| 188 | That order laid a direct road between the two endpoints | PROBE | FAIL |
-| 189 | Guard - Messina and Reggio are ours, no land path between them, no road yet | PROBE | PASS |
-| 190 | An order with no possible road path starts no construction | PROBE | PASS |
-| 191 | ... and costs nothing | PROBE | PASS |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 183 | is_strait_connection_to exists - reads no to a land neighbour of Messina | PROBE | FAIL | FAIL |
+| 184 | ... and yes across the Strait of Messina | PROBE | PASS | PASS |
+| 185 | Guard - Castile owns Coruna and Ferrol, the path through Betanzos unbuilt | PROBE | PASS (see below) | PASS |
+| 186 | An order over the two-hop land path shows a construction at the from end | PROBE | PASS on a fresh path | PASS |
+| 187 | ... and the order was charged to the treasury | PROBE | PASS on a fresh path | PASS |
+| 188 | That order laid a direct road between the two endpoints | PROBE | FAIL | FAIL |
+| 189 | Guard - Messina and Reggio are ours, no land path between them, no road yet | PROBE | PASS | PASS |
+| 190 | An order with no possible road path starts no construction | PROBE | PASS | PASS |
+| 191 | ... and costs nothing | PROBE | PASS | PASS |
 
 **`is_strait_connection_to` does not exist on 1.3 (183-184).** The run logged
 `Unknown trigger type: is_strait_connection_to` twice
@@ -1471,13 +1481,13 @@ which is what makes both cases reachable from a plan that walks neighbours.
 Added and run 2026-08-14. Runs with the script chain (Run Script Tests), and all
 five rows are re-taken by Re-read Probe Levels.
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 192 | Guard - a subject holds at least one market we hold no location in | PROBE | PASS |
-| 193 | every_market_present_in_country reports one of those subject-only markets | PROBE | FAIL |
-| 194 | ... or it reports none of them | PROBE | PASS |
-| 195 | The iterator reports nothing beyond the markets our own locations sit in | PROBE | PASS |
-| 196 | ... and it reports every one of those | PROBE | PASS |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 192 | Guard - a subject holds at least one market we hold no location in | PROBE | PASS | PASS |
+| 193 | every_market_present_in_country reports one of those subject-only markets | PROBE | FAIL | FAIL |
+| 194 | ... or it reports none of them | PROBE | PASS | PASS |
+| 195 | The iterator reports nothing beyond the markets our own locations sit in | PROBE | PASS | PASS |
+| 196 | ... and it reports every one of those | PROBE | PASS | PASS |
 
 **`every_market_present_in_country` is exactly the set of markets the country's
 OWN locations sit in.** A market only a subject holds is not in it (193/194), and
@@ -1524,12 +1534,12 @@ construction; two months is about cache refresh and is far more than that needs.
 
 Added and run 2026-08-14. Runs with the script chain (Run Script Tests).
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 197 | Guard - dock is unlocked for us and dry_dock is not | PROBE | PASS |
-| 198 | Before the advance, GetNextReplacementBuilding on dock reports no dry_dock | PROBE | PASS |
-| 199 | ... or it reports dry_dock already | PROBE | FAIL |
-| 200 | After the advance, GetNextReplacementBuilding on dock reports dry_dock | PROBE | PASS |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 197 | Guard - dock is unlocked for us and dry_dock is not | PROBE | PASS | PASS |
+| 198 | Before the advance, GetNextReplacementBuilding on dock reports no dry_dock | PROBE | PASS | PASS |
+| 199 | ... or it reports dry_dock already | PROBE | FAIL | FAIL |
+| 200 | After the advance, GetNextReplacementBuilding on dock reports dry_dock | PROBE | PASS | PASS |
 
 **`GetNextReplacementBuilding` filters on the argument country's ADVANCE UNLOCKS.**
 With dock unlocked on both sides, it reported no replacement while
@@ -1593,25 +1603,25 @@ moment after the press.
 Added 2026-08-17. 201-213 run with the script chain (Run Script Tests); 214-217
 run with Re-read Probe Levels.
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 201 | Guard - the first location's probe reads closed before any transfer | PROBE | PASS |
-| 202 | ... the location still holds a probe building | PROBE | PASS |
-| 203 | ... and it still reads closed | PROBE | FAIL |
-| 204 | ... or it reads open again | PROBE | PASS |
-| 205 | Guard - the second location's probe reads closed before any transfer | PROBE | PASS |
-| 206 | ... the location still holds a probe building | PROBE | PASS |
-| 207 | ... and it still reads closed | PROBE | FAIL |
-| 208 | ... or it reads open again | PROBE | PASS |
-| 209 | Guard - the probe in a second neighbour's capital reads closed before the annexation | PROBE | FAIL |
-| 210 | ... the location still holds a probe building | PROBE | PASS |
-| 211 | ... and it still reads closed | PROBE | FAIL |
-| 212 | ... or it reads open again | PROBE | FAIL |
-| 213 | Control - the fourth probe, in a location nothing transfers, reads closed | PROBE | PASS |
-| 214 | After a tick, the change_location_owner location's probe still reads closed | PROBE | FAIL |
-| 215 | After a tick, the forceful transfer's probe still reads closed | PROBE | FAIL |
-| 216 | After a tick, the annexed capital's probe still reads closed | PROBE | FAIL |
-| 217 | Control - after a tick, the untransferred probe still reads closed | PROBE | PASS |
+| # | Test | Expected | 1.3.x result | 1.4.0 result |
+|---|------|----------|---------------|--------------|
+| 201 | Guard - the first location's probe reads closed before any transfer | PROBE | PASS | PASS |
+| 202 | ... the location still holds a probe building | PROBE | PASS | PASS |
+| 203 | ... and it still reads closed | PROBE | FAIL | FAIL |
+| 204 | ... or it reads open again | PROBE | PASS | PASS |
+| 205 | Guard - the second location's probe reads closed before any transfer | PROBE | PASS | PASS |
+| 206 | ... the location still holds a probe building | PROBE | PASS | PASS |
+| 207 | ... and it still reads closed | PROBE | FAIL | FAIL |
+| 208 | ... or it reads open again | PROBE | PASS | PASS |
+| 209 | Guard - the probe in a second neighbour's capital reads closed before the annexation | PROBE | FAIL | FAIL |
+| 210 | ... the location still holds a probe building | PROBE | PASS | PASS |
+| 211 | ... and it still reads closed | PROBE | FAIL | FAIL (guard 209 failed) |
+| 212 | ... or it reads open again | PROBE | FAIL | FAIL (guard 209 failed) |
+| 213 | Control - the fourth probe, in a location nothing transfers, reads closed | PROBE | PASS | PASS |
+| 214 | After a tick, the change_location_owner location's probe still reads closed | PROBE | FAIL | FAIL |
+| 215 | After a tick, the forceful transfer's probe still reads closed | PROBE | FAIL | FAIL |
+| 216 | After a tick, the annexed capital's probe still reads closed | PROBE | FAIL | FAIL (guard 209 failed) |
+| 217 | Control - after a tick, the untransferred probe still reads closed | PROBE | PASS | PASS |
 
 **A closed building REOPENS when its location changes owner.** Both direct
 ownership effects agree and neither destroys or replaces anything: the probe is
