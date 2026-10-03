@@ -1,0 +1,18 @@
+﻿l_english:
+ cmf_feature_test_hook_title: "Hook Timing"
+ cmf_feature_test_hook_columns: "Calls / Last order / Human countries at call / ROOT set"
+ cmf_feature_test_hook_saved: "Counts are saved. Compare against the values before saving."
+ cmf_feature_test_hook_lobby: "Lobby open"
+ cmf_feature_test_hook_player: "Player valid"
+ cmf_feature_test_hook_start_label: "Vanilla on_game_start"
+ cmf_feature_test_hook_native_label: "Vanilla on_game_started_after_lobby"
+ cmf_feature_test_hook_cmf_start_label: "CMF on_game_start_after_lobby"
+ cmf_feature_test_hook_cmf_load_label: "CMF on_game_load"
+ cmf_feature_test_hook_cmf_load_after_label: "CMF on_game_load_after_lobby"
+ # NO-TRANSLATE BELOW
+ cmf_feature_test_hook_state: "$cmf_feature_test_hook_lobby$: [SelectLocalization(IsLobbyOpen, 'YES', 'NO')] | $cmf_feature_test_hook_player$: [SelectLocalization(GetPlayer.IsValid, 'YES', 'NO')]"
+ cmf_feature_test_hook_start_values: "[GetGlobalVariable('cmf_feature_test_hook_start_count').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_start_order').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_start_humans').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_start_root').GetValue|0]"
+ cmf_feature_test_hook_native_values: "[GetGlobalVariable('cmf_feature_test_hook_native_count').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_native_order').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_native_humans').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_native_root').GetValue|0]"
+ cmf_feature_test_hook_cmf_start_values: "[GetGlobalVariable('cmf_feature_test_hook_cmf_start_count').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_cmf_start_order').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_cmf_start_humans').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_cmf_start_root').GetValue|0]"
+ cmf_feature_test_hook_cmf_load_values: "[GetGlobalVariable('cmf_feature_test_hook_cmf_load_count').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_cmf_load_order').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_cmf_load_humans').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_cmf_load_root').GetValue|0]"
+ cmf_feature_test_hook_cmf_load_after_values: "[GetGlobalVariable('cmf_feature_test_hook_cmf_load_after_count').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_cmf_load_after_order').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_cmf_load_after_humans').GetValue|0] / [GetGlobalVariable('cmf_feature_test_hook_cmf_load_after_root').GetValue|0]"

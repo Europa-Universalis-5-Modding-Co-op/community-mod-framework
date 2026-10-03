@@ -1,0 +1,67 @@
+﻿types {
+	type cmf_feature_test_hook_row = hbox {
+		layoutpolicy_horizontal = expanding
+		spacing = 10
+		text_single = {
+			size = { 390 25 }
+			fontsize = 14
+			block "cmf_feature_test_hook_label" { text = "" }
+		}
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 14
+			block "cmf_feature_test_hook_values" { text = "" }
+		}
+	}
+}
+
+window = {
+	name = "cmf_feature_test_hook_timing"
+	parentanchor = center
+	widgetanchor = center
+	position = { 0 -260 }
+	size = { 740 290 }
+	movable = yes
+	allow_outside = yes
+	layer = top
+	using = bg_window_default_alt
+	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
+
+	vbox = {
+		using = window_margin_alt
+		spacing = 4
+		text_single = {
+			using = Font_Size_Big
+			text = "cmf_feature_test_hook_title"
+		}
+		text_single = { text = "cmf_feature_test_hook_state" }
+		text_single = {
+			fontsize = 14
+			text = "cmf_feature_test_hook_columns"
+		}
+		cmf_feature_test_hook_row = {
+			blockoverride "cmf_feature_test_hook_label" { text = "cmf_feature_test_hook_start_label" }
+			blockoverride "cmf_feature_test_hook_values" { text = "cmf_feature_test_hook_start_values" }
+		}
+		cmf_feature_test_hook_row = {
+			blockoverride "cmf_feature_test_hook_label" { text = "cmf_feature_test_hook_native_label" }
+			blockoverride "cmf_feature_test_hook_values" { text = "cmf_feature_test_hook_native_values" }
+		}
+		cmf_feature_test_hook_row = {
+			blockoverride "cmf_feature_test_hook_label" { text = "cmf_feature_test_hook_cmf_start_label" }
+			blockoverride "cmf_feature_test_hook_values" { text = "cmf_feature_test_hook_cmf_start_values" }
+		}
+		cmf_feature_test_hook_row = {
+			blockoverride "cmf_feature_test_hook_label" { text = "cmf_feature_test_hook_cmf_load_label" }
+			blockoverride "cmf_feature_test_hook_values" { text = "cmf_feature_test_hook_cmf_load_values" }
+		}
+		cmf_feature_test_hook_row = {
+			blockoverride "cmf_feature_test_hook_label" { text = "cmf_feature_test_hook_cmf_load_after_label" }
+			blockoverride "cmf_feature_test_hook_values" { text = "cmf_feature_test_hook_cmf_load_after_values" }
+		}
+		text_single = {
+			fontsize = 14
+			text = "cmf_feature_test_hook_saved"
+		}
+	}
+}

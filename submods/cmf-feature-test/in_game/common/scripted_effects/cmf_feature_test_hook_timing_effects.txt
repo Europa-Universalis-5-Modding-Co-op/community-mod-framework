@@ -1,0 +1,42 @@
+﻿# Record hook calls and their execution order.
+# Scope: any
+# Args: HOOK (token)
+cmf_feature_test_record_hook = {
+	if = {
+		limit = { NOT = { has_global_variable = cmf_feature_test_hook_sequence } }
+		set_global_variable = { name = cmf_feature_test_hook_sequence value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_start_count value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_start_order value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_start_humans value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_start_root value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_native_count value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_native_order value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_native_humans value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_native_root value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_start_count value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_start_order value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_start_humans value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_start_root value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_load_count value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_load_order value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_load_humans value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_load_root value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_load_after_count value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_load_after_order value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_load_after_humans value = 0 }
+		set_global_variable = { name = cmf_feature_test_hook_cmf_load_after_root value = 0 }
+	}
+	change_global_variable = { name = cmf_feature_test_hook_sequence add = 1 }
+	change_global_variable = { name = cmf_feature_test_hook_$HOOK$_count add = 1 }
+	set_global_variable = { name = cmf_feature_test_hook_$HOOK$_order value = global_var:cmf_feature_test_hook_sequence }
+	set_global_variable = { name = cmf_feature_test_hook_$HOOK$_humans value = 0 }
+	every_country = {
+		limit = { is_ai = no }
+		change_global_variable = { name = cmf_feature_test_hook_$HOOK$_humans add = 1 }
+	}
+	set_global_variable = { name = cmf_feature_test_hook_$HOOK$_root value = 0 }
+	if = {
+		limit = { exists = root }
+		set_global_variable = { name = cmf_feature_test_hook_$HOOK$_root value = 1 }
+	}
+}
