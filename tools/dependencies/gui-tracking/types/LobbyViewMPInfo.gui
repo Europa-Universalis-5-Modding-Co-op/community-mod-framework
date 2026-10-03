@@ -53,6 +53,7 @@
 
 					enabled = "[LobbyView.HasEnabledDLCs]"
 					onclick = "[LobbyView.ToggleShowEnabledDLCs]"
+					# CMF: avoids a tooltip error
 					tooltipwidget = { BasicFunctionalTooltip = {} }
 				}
 
@@ -138,6 +139,7 @@
 
 					enabled = "[LobbyView.HasEnabledMods]"
 					onclick = "[LobbyView.ToggleShowEnabledMods]"
+					# CMF: avoids a tooltip error
 					tooltipwidget = { BasicFunctionalTooltip = {} }
 				}
 

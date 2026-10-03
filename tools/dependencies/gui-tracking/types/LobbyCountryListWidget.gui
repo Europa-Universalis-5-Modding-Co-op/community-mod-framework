@@ -247,6 +247,7 @@
 																		blockoverride "concept_link" {
 																			text = "[country|E]"
 																		}
+																		# CMF: avoids a tooltip error
 																		lowpriotextcontext = "[Country.GetDifficultyLevelDesc]"
 																	}
 																}

@@ -511,13 +511,13 @@ JominiMultiplayerLobby = {
 					}
 				}
 
-				# CMM: Mod Banners
+				# CMF: Mod Banners
 				expand = {}
 				hbox = {
 					spacing = 5
 					datamodel = "[GetGlobalList('cmf_lobby_banner_mod_ids')]"
 					item = {
-						mod_banner = { }
+						cmf_lobby_banner = { }
 					}
 				}
 			}

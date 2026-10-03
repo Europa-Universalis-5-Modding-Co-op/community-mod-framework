@@ -408,6 +408,7 @@
 											texture = "gfx/interface/icons/players.dds"
 										}
 									}
+									# CMF: avoids a tooltip error
 									lowpriotextcontext = "JOMINI_MULTIPLAYER_GUI_AUTO_ACCEPT_TT"
 								}
 							}
