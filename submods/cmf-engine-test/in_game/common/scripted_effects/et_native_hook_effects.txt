@@ -1,0 +1,9 @@
+﻿et_native_hook_initialize = {
+	if = {
+		limit = { NOT = { has_global_variable = et_native_hook_calls } }
+		set_global_variable = { name = et_native_hook_calls value = 0 }
+		set_global_variable = { name = et_native_hook_root_set value = 0 }
+		set_global_variable = { name = et_native_hook_root_country value = 0 }
+		set_global_variable = { name = et_native_hook_humans value = 0 }
+	}
+}

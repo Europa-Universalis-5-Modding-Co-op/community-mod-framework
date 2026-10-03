@@ -158,12 +158,8 @@ _cmf_on_cmm_registration_late = {
 	}
 }
 
-# Post-lobby game start hook. Fires once on a new game when the in-game UI
-# is created, after the player has selected their country. Vanilla on_game_start
-# fires before the country selection screen, so player-scoped effects
-# (is_ai = no) don't work there since no country has been selected yet.
-# Scope: none
-on_game_start_after_lobby = {
+# CMF: New-game initialization and compatibility hook.
+on_game_started_after_lobby = {
 	effect = {
 		every_country = {
 			limit = { is_ai = no }
@@ -173,10 +169,18 @@ on_game_start_after_lobby = {
 		}
 		_cmf_capture_game_start_mods = yes
 	}
+	on_actions = { on_game_start_after_lobby }
+}
+
+# DEPRECATED: obsolete since vanilla added on_game_started_after_lobby in EU5 1.4.0.
+# Use on_game_started_after_lobby instead; on_game_start_after_lobby will eventually be removed from CMF.
+# Fires once after country selection on a new game.
+# Scope: none
+on_game_start_after_lobby = {
 	on_actions = { }
 }
 
-# Human country variant of on_game_start_after_lobby.
+# Human country variant of on_game_started_after_lobby.
 # Scope: country
 on_game_start_after_lobby_human_country = {
 	on_actions = {

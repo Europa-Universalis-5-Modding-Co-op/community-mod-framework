@@ -1,0 +1,37 @@
+﻿on_game_start = {
+	on_actions = { et_native_hook_seed }
+}
+
+et_native_hook_seed = {
+	effect = {
+		et_native_hook_initialize = yes
+	}
+}
+
+on_game_started_after_lobby = {
+	on_actions = { et_native_hook_probe }
+}
+
+et_native_hook_probe = {
+	effect = {
+		et_native_hook_initialize = yes
+		change_global_variable = { name = et_native_hook_calls add = 1 }
+		set_global_variable = { name = et_native_hook_root_set value = 0 }
+		set_global_variable = { name = et_native_hook_root_country value = 0 }
+		if = {
+			limit = { exists = root }
+			set_global_variable = { name = et_native_hook_root_set value = 1 }
+			root = {
+				if = {
+					limit = { scope_type = country }
+					set_global_variable = { name = et_native_hook_root_country value = 1 }
+				}
+			}
+		}
+		set_global_variable = { name = et_native_hook_humans value = 0 }
+		every_country = {
+			limit = { is_ai = no }
+			change_global_variable = { name = et_native_hook_humans add = 1 }
+		}
+	}
+}

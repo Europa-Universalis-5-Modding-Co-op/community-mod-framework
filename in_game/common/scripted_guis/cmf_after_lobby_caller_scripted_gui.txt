@@ -1,8 +1,4 @@
-﻿# Fired by GUI trigger_on_create after the player selects a country.
-# New game: fires on_game_start_after_lobby.
-# Save load: fires on_game_load.
-# Every client fires this, so the branch below runs only for the host's copy; a second caller would
-# find the new-game flag already consumed and take the save-load path on a new game.
+﻿# Classifies new games and dispatches save loads.
 # Scope: none
 # Args: cmf_is_host_client (bool)
 cmf_after_lobby_caller = {
@@ -15,9 +11,6 @@ cmf_after_lobby_caller = {
 				remove_global_variable = _cmf_pending_new_game
 				set_global_variable = { name = cmf_game_started_after_lobby value = yes }
 				set_global_variable = { name = cmf_is_new_game value = yes }
-				trigger_event_silently = {
-					on_action = on_game_start_after_lobby
-				}
 			}
 			else = {
 				set_global_variable = { name = cmf_game_started_after_lobby value = yes }

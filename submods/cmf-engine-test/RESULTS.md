@@ -1,10 +1,10 @@
-﻿# Engine Test Results
+# Engine Test Results
 
 Date: 2026-06-14
 
 ## Numbering
 
-Tests are numbered 1 to 224 with no gaps, in the order they appear here, and the
+Tests are numbered 1 to 228 with no gaps, in the order they appear here, and the
 window lists them in that same order. A new test takes the next free number and
 goes at the END, in its own section or at the end of the last one; a test that
 belongs with an older group gets a pointer from that group rather than a number
@@ -404,7 +404,7 @@ that fires the hook raises the count instead of re-zeroing it.
 Protocol (both steps are required - step 1 is the control that proves the hook works
 at all, so that a negative in step 2 means "did not fire on load" and not "hook broken"):
 
-1. Enable the engine test. Start a NEW game and read row 104. It reads 1. This
+1. Enable only the engine test submod. Start a NEW game and read row 110. It reads 1. This
    confirms the on_action runs.
 2. Save, then load that save, and read row 110 again.
    - Reads 2 -> `on_game_start` DID fire on load.
@@ -437,7 +437,7 @@ in a single unspecified observer state, so the distinct client states were never
 separated.
 
 The rig is `et_nc_core` in `et_nc_windows.gui`. It self-starts once the map exists
-and finishes about 4 seconds later, and it roots at `c:CAS` rather than the player.
+and finishes about 15 seconds later, and it roots at `c:CAS` rather than the player.
 Its rows in `et_window.gui` read only `GetCountry('CAS')` and `GetVariableSystem`;
 nothing in section 8 touches `Player`, which comes back blank in three of the four
 states. The one button, Re-run Countryless Suite, only sets a GUI variable, since a
@@ -493,6 +493,51 @@ Run 2026-07-27, one full client relaunch per column so the map-load probes are a
 
 n/a means that transition never happened in that column, so the probe never fired and
 its row shows the seeded 0 as FAIL. Those cells are not results.
+
+EU5 1.4.0 follow-up on 2026-10-03, screenshots 025548, 025705 and 025746:
+
+| # | Test | Lobby | Generic obs | Specific obs |
+|---|------|-------|-------------|--------------|
+| 85 | A pass has run this client session | TRUE | TRUE | TRUE |
+| 86 | GetPlayer.IsValid | FALSE | FALSE | TRUE |
+| 87 | IsPlayerValid | FALSE | FALSE | TRUE |
+| 88 | IsPlayerObserver | FALSE | TRUE | TRUE |
+| 89 | Scripted GUI Execute reached script | PASS | FAIL | FAIL |
+| 90 | Scripted GUI IsShown evaluates | PASS | PASS | PASS |
+| 91 | Scripted GUI IsValid evaluates | PASS | PASS | PASS |
+| 92 | GetVariableSystem write + read | PASS | PASS | PASS |
+| 93 | Data read off a named country | PASS | PASS | PASS |
+| 94 | ExecuteConsoleCommand reached script | PASS | PASS | PASS |
+| 95 | Commands landed from a 3-call burst | 1 of 3 | 1 of 3 | 1 of 3 |
+| 96 | Commands landed from one `;` string | 3 of 3 | 3 of 3 | 3 of 3 |
+| 97 | Location.GetKey on location:paris | 2191 | 2191 | 2191 |
+| 98 | Missing global map key reads silently | PASS | PASS | PASS |
+| 99 | GetVariableSystem compares as a string | PASS | PASS | PASS |
+| 100 | GUI variable carried from an earlier game | FALSE | FALSE | FALSE |
+| 101 | Execute ~1s after map load | PASS | PASS | PASS |
+| 102 | Console ~1s after map load | FAIL | FAIL | FAIL |
+| 103 | Console ~2s after map load | PASS | PASS | PASS |
+| 104 | Console ~4s after map load | PASS | PASS | PASS |
+| 105 | Console ~8s after map load | PASS | PASS | PASS |
+| 106 | First Execute after taking a country | n/a | n/a | n/a |
+| 107 | First console after taking a country | n/a | n/a | n/a |
+| 108 | First Execute after entering observer | n/a | FAIL | FAIL |
+| 109 | First console after entering observer | n/a | PASS | PASS |
+
+Rows 101-105 retain the map-load reading, rather than measuring the captured
+observer state. Rows 106/107 show FAIL in these captures because the country-taking
+probe did not fire; the earlier 1.4.0 normal-country capture had both PASS.
+
+The second-game screenshot 030220 reads TRUE for 100, confirming GUI-variable
+carry-over within the same client run. Screenshots 030256 and 030515 both read 1
+for 110, before and after the reported save load: `on_game_start` did not fire on
+that load. Its counter initializes only when absent and increments on every fire.
+
+The fresh logs identify CMF Engine Test on EU5 1.4.0. They contain the console
+refusals exercised by 95, the existing map-name and strait-trigger probe warnings,
+and save-read errors with no source file. Two invalid-country trigger errors at
+03:01:21 and 03:03:15 have `<unknown>:0` locations and are unattributed. No
+countryless-probe parse error was found.
 
 ### Findings
 
@@ -625,15 +670,15 @@ every row can pass, a wall of FAILs in observer mode is indistinguishable from a
 broken rig.
 
 1. Enable only the engine test. Start a new grand campaign. At the country-
-   selection lobby, wait 5 seconds and record the section 8 and 9 rows: that is
+   selection lobby, press Re-run Countryless Suite, wait 20 seconds and record the section 8 and 9 rows: that is
    the lobby state. If the window does not render there, record that instead; the
    other states still stand on their own.
-2. Take Castile and enter the game. Press Re-run Countryless Suite, wait 5 seconds,
+2. Take Castile and enter the game. Press Re-run Countryless Suite, wait 20 seconds,
    and record the same rows. This is the control.
 3. Start a new grand campaign, swap to generic observer at the lobby, taking no
-   country. Once in game, press Re-run Countryless Suite, wait 5 seconds, record.
+   country. Once in game, press Re-run Countryless Suite, wait 20 seconds, record.
 4. Start a new grand campaign, swap to observing Castile specifically. Once in
-   game, press Re-run Countryless Suite, wait 5 seconds, record.
+   game, press Re-run Countryless Suite, wait 20 seconds, record.
 
 Test 100 is answered by the second game of a client run, so it reads FALSE in step
 1 and TRUE from step 3 onward as long as the game was never closed in between.
@@ -650,6 +695,8 @@ Run 2026-07-27 on 1.3.x.
 |---|------|----------|--------|
 | 110 | on_game_start fires (1 = no scope, many = country scope) | 1 | 1 |
 | 111 | weather_monthly_pulse fires (should track elapsed months) | 6 after 6 months | 6 |
+
+EU5 1.4.0 follow-up on 2026-10-03: test 111 read 33 on 20 January, 1340.
 
 ### Findings
 
@@ -1644,14 +1691,12 @@ so it now rides inside the conditions of 203/204, 207/208 and 211/212 instead of
 scoring rows of its own. The numbers stay retired rather than renumbered.
 
 **The annexation case is UNMEASURED, and 211/212 must not be read as an answer.**
-Its guard failed (209): the probe built in the second neighbour's capital and
-owned by that neighbour never reached the closing list, because the seed only
-hands over a building reading `is_opened = yes`. 210 says the building was
-there, so what is missing is the close, not the setup. 211 and 212 are both
-gated on the guard, so both reading FAIL is the pair saying nothing rather than
-a third result. 216 is the same row after a tick and is equally empty. Why a
-foreign-owned probe in a foreign capital never opened is not established here;
-the run says only that it did not.
+Its guard failed (209). The probe existed (210), but did not read closed
+before annexation. The captured checks do not distinguish an unopened seed
+from an unsuccessful GUI toggle. Rows 211, 212 and 216 therefore give no
+annexation result. The revised 209 label exposes the seeded present/open/closed
+readings and the closed reading after the toggle; those diagnostics have not
+been run.
 
 So conquest, which is how a location actually changes hands in play, is still
 untested. What is settled is that the two effects that move a location directly
@@ -1709,41 +1754,48 @@ allowed to land on them.
 Added 2026-08-17. Its own section of buttons at the bottom of the window; no run
 button and no script chain.
 
-| # | Test | Expected | Result |
-|---|------|----------|--------|
-| 218 | The ten appends in one state all land in the buffer (submit reads 70) | PROBE | PASS, read 70 |
-| 219 | A 1,800-append buffer holds every fragment (submit reads 12,600) | PROBE | PASS, read 12,600 |
-| 220 | A 7,200-append buffer holds every fragment (submit reads 50,400) | PROBE | PASS, read 50,400 |
-| 221 | A 28,800-append buffer holds every fragment (submit reads 201,600) | PROBE | not read |
-| 222 | Growing appends at 1,800 cost no more wall clock than the fixed-size control | PROBE | PASS, neither hung |
-| 223 | ... at 7,200 | PROBE | PASS, neither hung |
-| 224 | ... at 28,800 | PROBE | FAIL, growing froze about 5s |
+| # | Test | Expected | Pre-1.4 result | 1.4.0 result (2026-10-03) |
+|---|------|----------|----------------|-------------------------|
+| 218 | The ten appends in one state all land in the buffer (submit reads 70) | PROBE | PASS, read 70 | PASS, read 70 |
+| 219 | A 1,800-append buffer holds every fragment (submit reads 12,600) | PROBE | PASS, read 12,600 | PASS, read 12,600 |
+| 220 | A 7,200-append buffer holds every fragment (submit reads 50,400) | PROBE | PASS, read 50,400 | PASS, read 50,400 |
+| 221 | A 28,800-append buffer holds every fragment (submit reads 201,600) | PROBE | not read | PASS, read 201,600 |
+| 222 | Growing appends at 1,800 cost no more wall clock than the fixed-size control | PROBE | PASS, neither hung | No Grow freeze reported; Fixed had no noticeable freeze |
+| 223 | ... at 7,200 | PROBE | PASS, neither hung | No Grow freeze reported; Fixed had no noticeable freeze |
+| 224 | ... at 28,800 | PROBE | FAIL, growing froze about 5s | FAIL, Grow had a moderate freeze; Fixed had no noticeable freeze |
 
-**At the size this exists to answer, appending costs nothing.** 1,800 appends
+The 1.4.0 captures 031022, 031100, 031116 and 031134 confirm the respective
+counts 70, 12,600, 50,400 and 201,600. The run repeated the button tests to
+assess lag. Submit Buffer caused a minor freeze at 7,200 and a moderate freeze
+at 28,800; Grow caused a moderate freeze at 28,800. Fixed caused no noticeable
+freeze at any tier. These are eye-measured observations, with no durations
+reported. The observations below concern the earlier run.
+
+The fresh logs contain the same 95 variable-validation lines for each submit:
+17 used-but-never-set warnings, three set-but-never-used warnings, and 75
+possible-match lines. They include the deliberate map-name probes' identifiers
+and vanilla identifiers. The bursts coincide with Submit Buffer console commands;
+no new error category appears during the supplied step-4 captures.
+
+**At the tested 1,800-append size, there was no perceptible hang.** 1,800 appends
 built the ~209KB buffer with no perceptible hang, and the fixed-size control at
 the same tier was equally instant, so there is nothing for the growth to be
 hiding behind. The submit read 12,600, the exact statement count, so every append
 landed and the whole buffer reached the console intact.
 
-**The per-append cost does grow with the buffer.** Each tier is four times the
+**Growing the buffer has a visible cost at 28,800 appends.** Each tier is four times the
 appends of the one below it. 28,800 froze for about five seconds while its
 fixed-size control, the same widgets firing the same states, did not hang at all,
-so the freeze is the growth. A cost that tracked the append count alone would put
-7,200 at a quarter of that, over a second, which was not observed; a cost that
-tracks the buffer length puts it at a sixteenth, about a third of a second, which
-fits. So the shape is what a read-and-rewrite of the whole string implies, and it
-is invisible until the buffer is an order of magnitude past 200KB.
-
-That reading rests on three coarse wall-clock readings, two of them reported as
-no hang at all, so it separates the two shapes without pinning a constant.
+so the growing-versus-fixed pair establishes a perceptible growth cost at that
+tier. These coarse timings do not establish a complexity class.
 
 **The submit is its own cost and is not the appends.** The console parse of the
 finished buffer was the only thing that hung at 7,200 (sub-second, 50,400
 statements) and cost about two seconds at 28,800. It is the per-command parse
 floor plus a line per statement, the same thing 112 and 113 measured.
 
-**221 was not read**, so the 28,800 tier has no count confirming all its appends
-landed. It does not change the reading: the timing pair at that tier is
+**221 was not read in the earlier run**, so that run has no count confirming
+all its appends landed at the 28,800 tier. It does not change the reading: the timing pair at that tier is
 growing-versus-fixed on identical widgets, and appends that went missing would
 mean the five seconds bought even less work than assumed.
 
@@ -1761,7 +1813,7 @@ submission.
 tier fires the same states doing the same three operations twice: once appending
 to the buffer, and once writing the same concatenation to a sink from a source
 that never grows. Only the growth differs between the two bursts, so a tier
-where both are instant says the growth is free and a tier where Grow is slower
+where neither has a perceptible hang leaves the growth cost below observation and a tier where Grow is slower
 says what the growth costs. Widget instantiation is paid by the Arm button
 before either burst and is not in the timing.
 
@@ -1788,3 +1840,36 @@ large tier is the console refusing a command of that length, also a finding, and
 it does not say the appends failed.
 
 222-224 are the timings, reported as wall clock rather than scored.
+
+## 11. Vanilla Post-Lobby Hook (225-228)
+
+| # | Probe | Result |
+|---|-------|--------|
+| 225 | `on_game_started_after_lobby` call count | 0 in the new-game lobby, 1 after entering; remains 1 through both save-load paths |
+| 226 | Whether ROOT exists at the last call | 0: no ROOT |
+| 227 | Whether ROOT is a country at the last call | 0: no ROOT |
+| 228 | Human countries at the last call | 1 after entering as Castile |
+
+The counter is initialized only when absent and increments on every native hook
+call. It is saved with the game, so a reload can be compared with the pre-save
+count. Rows 226-228 describe the most recent call; zeroes before the first call
+are seeded values. The GUI status line reports the current lobby and player state.
+
+EU5 1.4.0 run on 2026-10-03, kept paused:
+
+| Stage | Capture | Calls | ROOT exists | ROOT country | Humans |
+|-------|---------|-------|-------------|--------------|--------|
+| New-game country selection | 034839 | 0 | 0 | 0 | 0 |
+| Entered new game as Castile | 034956 | 1 | 0 | 0 | 1 |
+| In-game save reload | 035123 | 1 | 0 | 0 | 1 |
+| Main-menu save load into country selection | 035231 | 1 | 0 | 0 | 1 |
+| Entered the loaded save as Castile | 035243 | 1 | 0 | 0 | 1 |
+
+The hook fired after new-game country selection with no ROOT and one human
+country. It did not fire on the tested in-game reload or the main-menu load
+through country selection. Rows 226-228 on reload retain the new-game call's
+values. Multiplayer and observer starts were not tested.
+
+The matching run logs contain no native-hook parse error. The ROOT result
+variables each produced 43 set-but-never-used warnings because their reads are
+in localization; they now have references in the existing suppression effect.

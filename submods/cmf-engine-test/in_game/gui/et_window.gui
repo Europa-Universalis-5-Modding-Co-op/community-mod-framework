@@ -3275,6 +3275,34 @@ window = {
 			}
 		}
 
+		text_single = {
+			layoutpolicy_horizontal = expanding
+			fontsize = 16
+			text = "ET_SECTION_NATIVE_HOOK"
+			margin_top = 12
+		}
+		text_single = { text = "ET_NATIVE_HOOK_STATE" }
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 1
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_225_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_225_VALUE" }
+			}
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_226_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_226_VALUE" }
+			}
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_227_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_227_VALUE" }
+			}
+			et_nc_text_row = {
+				blockoverride "et_nc_text_label" { text = "ET_228_LABEL" }
+				blockoverride "et_nc_text_value" { text = "ET_228_VALUE" }
+			}
+		}
+
 			} # end blockoverride "scrollbox_content"
 		} # end scrollbox
 	}

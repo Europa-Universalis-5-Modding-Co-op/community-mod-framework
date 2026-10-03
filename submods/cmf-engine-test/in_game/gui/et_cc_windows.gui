@@ -69,8 +69,7 @@ widget = {
 		}
 	}
 
-	# Ten appends. Small enough that the whole buffer can be submitted and counted cheaply, which is
-	# what establishes that all ten on_finish lines in one state fire and land in order.
+	# Submission counts measure whether all on_finish actions fire.
 	widget = {
 		datamodel = "[DataModelRepeatedItem(Select_int32(GetVariableSystem.HasValue('et_cc_arm', 'v'), '(int32)1', '(int32)0'))]"
 		item = {

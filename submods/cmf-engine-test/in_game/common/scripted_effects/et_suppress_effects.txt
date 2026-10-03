@@ -210,6 +210,8 @@ et_suppress_warnings = {
 			exists = global_var:et_ot_d1_open
 			exists = global_var:et_ot_d3_has
 			exists = global_var:et_ot_d3_open
+			exists = global_var:et_native_hook_root_set
+			exists = global_var:et_native_hook_root_country
 			# Suppress "set but never used" for local variables
 			exists = local_var:et_lv
 			exists = local_var:et_map_name

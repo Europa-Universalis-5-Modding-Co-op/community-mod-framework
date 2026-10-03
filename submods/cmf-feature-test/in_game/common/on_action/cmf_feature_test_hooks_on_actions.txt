@@ -1,14 +1,14 @@
 ﻿# Post-lobby hook tests (no scope).
-# on_game_start_after_lobby: changes France's pops to Albanian (new game only).
+# on_game_started_after_lobby: changes France's pops to Albanian (new game only).
 # on_game_load: changes England's pops to Bacan (every save load).
 # on_game_load_after_lobby: changes Castile's pops to Cabecar (save load, past lobby only).
-on_game_start_after_lobby = {
+on_game_started_after_lobby = {
 	on_actions = {
-		cmf_feature_test_on_game_start_after_lobby
+		cmf_feature_test_on_game_started_after_lobby
 	}
 }
 
-cmf_feature_test_on_game_start_after_lobby = {
+cmf_feature_test_on_game_started_after_lobby = {
 	effect = {
 		c:FRA = {
 			every_owned_location = {
