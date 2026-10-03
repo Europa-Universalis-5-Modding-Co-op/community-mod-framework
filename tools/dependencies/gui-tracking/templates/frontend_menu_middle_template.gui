@@ -10,13 +10,12 @@ template frontend_menu_middle_template {
 		using = FrontEndMiddleSectionButton
 		name = "resume_button"
 		text = "RESUME"
-		use_global_input_instance = yes
 		action_tooltip = {
 			title = "PAUSE_MENU_RESUME_TOOLTIP"
 			on_action = "[PauseMenu.Resume]"
 		}
 		tooltipwidget = { BasicFunctionalTooltip = {} }
-		enabled = yes
+		enabled = "[Not(IsShowingDialog)]"
 		input_action = "close_window"
 	}
 

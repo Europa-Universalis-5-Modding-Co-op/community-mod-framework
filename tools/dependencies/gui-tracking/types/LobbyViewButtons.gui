@@ -7,9 +7,10 @@
 		# GO TO MAIN MENU BUTTON
 		button_regular = {
 			size = { 34 34 }
+			enabled = "[Not(IsShowingDialog)]"
 
+			using = snd_UI_backward
 			input_action = "close_window"
-			use_global_input_instance = yes
 			action_tooltip = {
 				click_mode = confirm
 				on_action = "[LobbyView.GoBack]"
@@ -17,6 +18,7 @@
 				title = "GO_TO_MAIN_MENU"
 				enabled = "[LobbyView.CanGoBack]"
 			}
+
 			tooltipwidget = {
 				ContextualTooltipType = {
 					blockoverride "title_icon" {
@@ -38,93 +40,26 @@
 					}
 				}
 			}
+
 			button = {
-				using = ui_direction_button_overlay
-				using = back_button_alt_texture
+				alwaystransparent = yes
 				size = {80% 80%}
 				parentanchor = center
 
-				background = {
-					using = bg_button_light_round_texture
-					modify_texture = {
-						using = color_dark_blue_texture
-					}
+				using = bg_button_light_round_texture
+				modify_texture = {
+					using = color_dark_blue_texture
 				}
-
-				input_action = "close_window"
-				use_global_input_instance = yes
-				action_tooltip = {
-					click_mode = confirm
-					on_action = "[LobbyView.GoBack]"
-					on_action = "[HideGameRules]"
-					title = "GO_TO_MAIN_MENU"
-					enabled = "[LobbyView.CanGoBack]"
-				}
-
-				tooltipwidget = {
-					ContextualTooltipType = {
-						blockoverride "title_icon" {
-							icon = {
-								using = tooltip_title_icon_size
-								texture = "gfx/interface/icons/flat_icons/tabicons/settings_flat_icon.dds"
-							}
-						}
-
-						blockoverride "title_text" {
-							text = "GO_TO_MAIN_MENU"
-						}
-						blockoverride "tooltip_content" {
-							TooltipTextBlock = {
-								blockoverride "text" {
-									text = "GO_TO_MAIN_MENU_desc"
-								}
-							}
-						}
-					}
-				}
-
-				using = snd_UI_backward
 			}
-			# button = {
-			# 	parentanchor = center
-			# 	size = {80% 80%}
-			# 	texture = "gfx/interface/buttons/flats/back_button.dds"
-			# 	texture_density = 2
 
-			# 	modify_texture = {
-			# 		using = overlay_window_texture
-			# 		blend_mode = overlay
-			# 		alpha = 0.7
-			# 	}
-			# 	modify_texture = {
-			# 		using = overlay_stone_texture
-			# 		blend_mode = overlay
-			# 		alpha = 0.8
-			# 	}
+			button = {
+				alwaystransparent = yes
+				size = {80% 80%}
+				parentanchor = center
 
-			# 	modify_texture = {
-			# 		using = color_new_gold_texture
-			# 	}
-
-			# 	glow = {
-			# 		glow_radius = 5
-			# 		color = { 1.0 0.85 0.55 1.0 }
-			# 		alpha = 0.6
-
-			# 		block "glow_visible" {
-			# 			visible = no
-			# 		}
-			# 	}
-
-			# 	background = {
-			# 		using = bg_circle_texture
-			# 		margin = {3 3}
-			# 		modify_texture = {
-			# 			using = color_dark_blue_texture
-			# 			blend_mode = multiply
-			# 		}
-			# 	}
-			# }
+				using = ui_direction_button_overlay
+				using = back_button_alt_texture
+			}
 		}
 
 		# random country
@@ -326,7 +261,7 @@
 				texture_density = 2
 			}
 			background = {
-				texture = "gfx/interface/component_tiles/square_glow.dds"
+				using = bg_square_glow_texture
 				margin = {5 5}
 				block "header_button_modify_visible" {}
 				modify_texture = {
