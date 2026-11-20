@@ -23,9 +23,10 @@ types FoodProductionTypes {
 					using = bg_paper_card
 					using = bg_card_header_01_production
 					blockoverride "header_pattern_texture_density" {texture_density = 1.4}
-	
+					onmousehierarchyenter = "[PdxGuiWidget.SetHighlightProvince(FoodProvinceItem.GetProvince)]"
+
 					card_header_button_04 = {
-												
+
 						size = { 100% 100% }
 						action_tooltip = {
 							click_type = left

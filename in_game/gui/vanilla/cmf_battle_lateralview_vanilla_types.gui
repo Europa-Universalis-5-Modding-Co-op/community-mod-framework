@@ -1672,7 +1672,7 @@ types BattleTypes
 				vbox = {
 					margin = {3 0}
 					spacing = 8
-					visible = "[CombatSide.GetCommander.IsValid]"
+					visible = "[And(CombatSide.GetCommander.IsValid, CombatSide.GetCommander.ShowsStats)]"
 					datacontext = "[CombatSide.GetCommander]"
 					tagtooltip_enabled = yes
 					tooltip = "[Character.GetAbilityTooltipAsGeneral]"

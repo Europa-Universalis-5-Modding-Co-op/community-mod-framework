@@ -810,7 +810,7 @@ types CountryHeaders {
 
 									blockoverride "section_content" {
 										dynamicgridbox = {
-											parentanchor = center
+											parentanchor = left
 											flipdirection = yes
 											datamodel_wrap = 7
 											spacing = 4

@@ -1705,12 +1705,12 @@ types SingleUnitWindowTypes
 										blockoverride "concept_link" {
 											text = "[attrition|e]"
 										}
-										lowpriotextcontext =  "[Location.GetAttritionDescription]"
+										lowpriotextcontext =  "[Location.GetAttritionDescriptionForCountry(Siege.GetBesieger.GetCountry)]"
 									}
 								}
 								text_single = {
 									maximumsize = { 40 20 }
-									text = "[Location.GetAppliedAttrition(Player.Self)|=-1/%]"
+									text = "[Location.GetAppliedAttrition(Siege.GetBesieger.GetCountry)|=-1/%]"
 									align = right|nobaseline
 									fontsize = 14
 								}
@@ -2793,9 +2793,56 @@ types SingleUnitWindowTypes
 														alpha = 0.2
 													}
 												}
+												background = {
+													texture = "gfx/interface/component_tiles/square_glow.dds"
+													margin = {9 9}
+													visible = "[UnitActionItem.IsSecondaryActive]"
+													modify_texture = {
+														using = color_new_gold_texture
+													}
+												}
 											}
 											blockoverride "header_button_modify_visible" {
 												visible = "[UnitActionItem.IsActive]"
+											}
+
+											action_tooltip = {
+												click_type = right
+												click_mode = single
+												visible = "[UnitActionItem.HasSingleRightAction]"
+												title = "[UnitActionItem.GetSecondaryName]"
+												on_action = "[UnitActionItem.SingleRightClick]"
+												enabled = "[UnitActionItem.CanSingleRightClick]"
+												description = "[UnitActionItem.GetRightClickDescription]"
+											}
+
+											widget = {
+												visible = "[UnitActionItem.HasSingleRightAction]"
+												parentanchor = top|left
+												size = { 16 16 }
+												alwaystransparent = yes
+
+												background = {
+													texture = "gfx/interface/buttons/checkbox_auto_bg.dds"
+													texture_density = 2
+													using = color_dark_blue
+													margin = { 1 1 }
+													shaderfile = "gfx/FX/pdxgui_default.shader"
+												}
+
+												icon = {
+													visible = "[Not(UnitActionItem.IsSecondaryActive)]"
+													size = { 100% 100% }
+													using = checkbox_auto_texture
+													frame = 1
+												}
+
+												icon = {
+													visible = "[UnitActionItem.IsSecondaryActive]"
+													size = { 100% 100% }
+													using = checkbox_auto_texture
+													frame = 2
+												}
 											}
 											
 	

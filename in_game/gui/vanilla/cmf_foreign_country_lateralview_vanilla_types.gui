@@ -118,6 +118,7 @@ types SubheaderTypes {
 				
 				#AI Disposition
 				header_paper_card_horizontal = {
+					visible = "[Not(Country.HasHumanController)]"
 					blockoverride "header_paper_card_size"{
 						size = { -1 85 }
 					}
